@@ -96,7 +96,8 @@ class buildLink {
 
         sendEnergy('58b4cd8ee974380f1de2f9f7', '58afd5afe6b54f9d2738d242', 700);
         sendEnergy('58afe9e63c5e431f63d27903', '58afd5afe6b54f9d2738d242');
-        // This is the one from the side
+
+
         sendEnergy('58b001ce20048565118f241c', '58b4df8c5da64e904b11a6fc');
         sendEnergy('58b4df8c5da64e904b11a6fc', '58b4ce36d29202cf03ebf22a');
         sendEnergy('58b4ce36d29202cf03ebf22a', '58afd5afe6b54f9d2738d242');
