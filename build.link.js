@@ -28,7 +28,12 @@ function linkTransfer() {
     let LINK;
     let ttarget;
     for (var e in _links) {
+
+
         LINK = Game.getObjectById(_links[e]);
+
+
+
         if (LINK != undefined && LINK.energy !== 800) {
             let targets = LINK.pos.findInRange(FIND_MY_CREEPS, 1, {
                 filter: s => s.carry[RESOURCE_ENERGY] > 0 && s.memory.linkID == _links[e]
