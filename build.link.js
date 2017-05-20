@@ -1,8 +1,8 @@
-"use strict";
+function use() {"use strict";}
 var total = 0;
 var _links = [
     // Spawn 1 room
-    '58b001ce20048565118f241c', '58afe9e63c5e431f63d27903', '58b06b3d17873fff51b4e9d3', '58b06b3d17873fff51b4e9d3',
+    '58b001ce20048565118f241c', '58afe9e63c5e431f63d27903', 
     // spawn 3 room
     '58b0e62dabc23087239d8454', '58ef09f13685233e323f2786',
     // spawn 2 room
@@ -10,31 +10,24 @@ var _links = [
     // Spawn room 4.
     '58c4c2337a92cc7169fb0aeb', '58d4a16e13994446731e4986',
     '58bb7684b591b9fc7d0a9df2', '58df611bbeb92e3de67dff2f',
-    // spawn room 5
-    '58bf189bedfec13b4a9da734',
     // Spawn room 6
     '58baf3bdefbd256c113625e9',
     //E35S73
     '58e292aa2748ce6edec91dbe', '58ed5954cc4792513b19b417', '58eee4540c9a49987f234952',
-    // spawn room 9 
-    '58dda53b5246af1013b6090d',
     // Spawn room E38S72
     '58ffa4eaff28ce410959868a', '5908d7b565640df9183ab7cb', '5908fc066303cfc31b28f48a',
     // Spawn room W4S93
-    '590f55b87ed675bb51e96132'
-];
+    '590f55b87ed675bb51e96132'];
 
 function linkTransfer() {
-    let LINK;
-    let ttarget;
+    var LINK;
+    var ttarget;
     for (var e in _links) {
 
 
         LINK = Game.getObjectById(_links[e]);
 
-
-
-        if (LINK != undefined && LINK.energy !== 800) {
+        if (LINK !== null && LINK.energy !== 800) {
             let targets = LINK.pos.findInRange(FIND_MY_CREEPS, 1, {
                 filter: s => s.carry[RESOURCE_ENERGY] > 0 && s.memory.linkID == _links[e]
             });

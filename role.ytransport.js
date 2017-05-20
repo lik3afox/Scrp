@@ -16,30 +16,21 @@ var roleParent = require('role.parent');
 
 var classLevels = [
     // MAX level 6 
-[MOVE,CARRY,
-MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY
-,MOVE,CARRY,MOVE,CARRY]
+[MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY
+,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY
+,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY
+,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY]
 
 ];
 var _ignoreRoad = true;
 
 function shouldDie(creep) {
-    if (creep.hits == creep.hitsMax) return;
+    if (creep.hits === creep.hitsMax) return;
 
     let death = true;
 
     for (var e in creep.body) {
-        if (creep.body[e].type == 'move' && creep.body[e].hits > 0) {
+        if (creep.body[e].type === 'move' && creep.body[e].hits > 0) {
             death = false;
         }
     }
@@ -70,7 +61,7 @@ if (level > classLevels.length-1 )       level = classLevels.length-1;
         
      //   super._movement.checkForBadsPlaceFlag(creep);
         shouldDie(creep);
-        if (creep.memory.keeperLairID == 'none') {
+        if (creep.memory.keeperLairID === 'none') {
             creep.memory.keeperLairID = undefined;
             //            console.log('heya, here we set up a different parent so it goes back there');
         }
@@ -94,7 +85,7 @@ if (level > classLevels.length-1 )       level = classLevels.length-1;
         if (super._movement.runAway(creep)) {
             return;
         }
-        if (creep.memory.gohome == undefined) {
+        if (creep.memory.gohome === undefined) {
             creep.memory.gohome = false;
         }
 
@@ -126,7 +117,7 @@ if(!creep.pos.isNearTo(Game.flags[creep.memory.focusFlagName]))
 } else { // IF not going home. 
 
 
-            if (_goal == undefined) {
+            if (_goal === null) {
                 var goingTo = super._movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveTo(goingTo, {
                     ignoreRoads: _ignoreRoad,
@@ -135,11 +126,11 @@ if(!creep.pos.isNearTo(Game.flags[creep.memory.focusFlagName]))
                         fill: 'transparent',
                         stroke: '#ff0',
                         lineStyle: 'dashed',
-                        strokeWidth: .15,
-                        opacity: .5
+                        strokeWidth: 0.15,
+                        opacity: 0.5
                     }
                 });
-            } else if (_goal != undefined && _goal.room.name != creep.room.name) {
+            } else if (_goal !== null && _goal.room.name != creep.room.name) {
                 if (!super.guardRoom(creep)) {
 //                    if(!super.avoidArea(creep)) { 
 
@@ -150,8 +141,8 @@ if(!creep.pos.isNearTo(Game.flags[creep.memory.focusFlagName]))
                             fill: 'transparent',
                             stroke: '#ff0',
                             lineStyle: 'dashed',
-                            strokeWidth: .15,
-                            opacity: .5
+                            strokeWidth: 0.15,
+                            opacity: 0.5
                         }
                     });
         //        }
@@ -161,10 +152,10 @@ if(!creep.pos.isNearTo(Game.flags[creep.memory.focusFlagName]))
 
                 let foxy = require('foxMethods');
                 // If in the same room and with in a square of 5 away from goal. 
-                if (_goal.room.name == creep.room.name) {
+                if (_goal.room.name === creep.room.name) {
                     // First look for containers and picking up stuff.
                     // Then assigns it to memory.
-if(creep.memory.gotoID == undefined) {
+if(creep.memory.gotoID === undefined) {
 
 
 let target; // This is where you want to go. 
@@ -172,7 +163,7 @@ let targetAmount = 0;
 let isDropped = true;
 var tmp = creep.room.find(FIND_DROPPED_ENERGY);
 
-if(tmp.length == 0 ) {
+if(tmp.length === 0 ) {
     isDropped = false;
 } else {
     for(var e in tmp) {
@@ -186,15 +177,15 @@ if(tmp.length == 0 ) {
 if(targetAmount < 200) {// If the energy on the gound is now. then
 var containerz = creep.room.find(FIND_STRUCTURES,{
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER);
+                return (structure.structureType === STRUCTURE_CONTAINER);
             }
         });
 
 if(containerz.length > 0) {
-    for(var e in containerz) {
-        if((containerz[e].store[RESOURCE_ENERGY] * .75 ) > targetAmount ) {
-            target = containerz[e].id;
-            targetAmount = containerz[e].store[RESOURCE_ENERGY];
+    for(var o in containerz) {
+        if((containerz[o].store[RESOURCE_ENERGY] * 0.75 ) > targetAmount ) {
+            target = containerz[o].id;
+            targetAmount = containerz[o].store[RESOURCE_ENERGY];
 //            isDropped = true;
         }
     }
@@ -206,18 +197,18 @@ creep.memory.gotoID = target;
 }
 
                                 var      bads = creep.pos.findInRange(creep.room.hostilesHere(),5);
-      if(bads.length == 0) {
+      if(bads.length === 0) {
 
 if (!super._constr.moveToPickUpEnergyIn(creep, 5)) {
 let target = Game.getObjectById(creep.memory.gotoID);
-if(target != undefined) {
+if(target !== null) {
 
                     // Then it goes to it.
 
                     // Once picked up, clears memory so it can pick up something new.
                     if(creep.pos.isNearTo(target)){
 
-                        if(target.structureType == STRUCTURE_CONTAINER) {
+                        if(target.structureType === STRUCTURE_CONTAINER) {
                             creep.withdraw(target,RESOURCE_ENERGY);
                             creep.memory.gotoID = undefined;
                         }else {
@@ -235,13 +226,13 @@ if(target != undefined) {
                             fill: 'transparent',
                             stroke: '#ff0',
                             lineStyle: 'dashed',
-                            strokeWidth: .15,
-                            opacity: .5
+                            strokeWidth: 0.15,
+                            opacity: 0.5
                         }
                     });
   //                  }
                     }
-if(target.structureType == STRUCTURE_CONTAINER && _.sum(target.store) == 0 ) {
+if(target.structureType === STRUCTURE_CONTAINER && _.sum(target.store) === 0 ) {
     creep.memory.gotoID = undefined;
 }
 

@@ -1,4 +1,4 @@
-var allies
+var allies;
 
 function scanHostileBelowToughness(target){
     // What we want from scanbody, an list of tough parts that are enhanced

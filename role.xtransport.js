@@ -41,12 +41,12 @@ var classLevels =
 var _ignoreRoad = true;
 
 function shouldDie(creep) {
-    if (creep.hits == creep.hitsMax) return;
+    if (creep.hits === creep.hitsMax) return;
 
     let death = true;
 
     for (var e in creep.body) {
-        if (creep.body[e].type == 'move' && creep.body[e].hits > 0) {
+        if (creep.body[e].type === 'move' && creep.body[e].hits > 0) {
             death = false;
         }
     }
@@ -64,13 +64,13 @@ function buildConstructionRoad(creep) {
     // First make sure there are no roads or constructionsites in 4 spaces
     let radius = 4;
     let strcts = creep.pos.findInRange(FIND_STRUCTURES,radius, {filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_ROAD);
+                        return (structure.structureType === STRUCTURE_ROAD);
                     } });
     let sites = creep.pos.findInRange(FIND_CONSTRUCTION_SITES,radius, {filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_ROAD);
+                        return (structure.structureType === STRUCTURE_ROAD);
                     } });
     console.log(strcts.length,sites.length,creep.name,creep.pos);
-    if(strcts.length == 0 &&  sites.length == 0) {
+    if(strcts.length === 0 &&  sites.length === 0) {
         creep.room.createConstructionSite(creep.pos,STRUCTURE_ROAD);
     }
 }
@@ -89,25 +89,25 @@ class transport extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if(super.doTask(creep)) {return;}      
-       if(creep.saying == 'zZzZ') {
+       if(creep.saying === 'zZzZ') {
             creep.say('zZz');
             return;
        }
-       if(creep.saying == 'zZz') {
+       if(creep.saying === 'zZz') {
             return;
        }
         
         var start;
   //      super._movement.checkForBadsPlaceFlag(creep);
         shouldDie(creep);
-        if (creep.memory.keeperLairID == 'none') {
+        if (creep.memory.keeperLairID === 'none') {
             creep.memory.keeperLairID = undefined;
             //            console.log('heya, here we set up a different parent so it goes back there');
         }
         if (super.returnEnergy(creep)) {
             return;
         }
-        if(creep.memory.roadConstruct == undefined) {
+        if(creep.memory.roadConstruct === undefined) {
             creep.memory.roadConstruct = 10;
         }
 
@@ -134,7 +134,7 @@ class transport extends roleParent {
         if (super.keeperWatch(creep)) { // two parter - keeperFind happens when
             return;
         }
-        if (creep.memory.gohome == undefined) {
+        if (creep.memory.gohome === undefined) {
             creep.memory.gohome = false;
         }
 
@@ -164,7 +164,7 @@ let carry = _.sum(creep.carry);
 
         } else { // IF not going home. 
 
-            if (_goal == undefined) {
+            if (_goal === null) {
                 var goingTo = super._movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveTo(goingTo, {
                     ignoreRoads: _ignoreRoad,
@@ -173,11 +173,11 @@ let carry = _.sum(creep.carry);
                         fill: 'transparent',
                         stroke: '#ff0',
                         lineStyle: 'dashed',
-                        strokeWidth: .15,
-                        opacity: .5
+                        strokeWidth: 0.15,
+                        opacity: 0.5
                     }
                 });
-            } else if (_goal != undefined && _goal.room.name != creep.room.name) {
+            } else if (_goal != null && _goal.room.name != creep.room.name) {
       //          if(creep.room.name == 'E26S77'||creep.room.name == 'E35S74' ) {
                     _ignoreRoad = false;
     //            } else {
@@ -201,9 +201,9 @@ let carry = _.sum(creep.carry);
                 let foxy = require('foxMethods');
                 // If in the same room and with in a square of 5 away from goal. 
 if (!super._constr.moveToPickUpEnergyIn(creep, 5)) 
-                if (_goal.room.name == creep.room.name && foxy.isInRange(creep, _goal.pos.x, _goal.pos.y, 5)) {
+                if (_goal.room.name === creep.room.name && foxy.isInRange(creep, _goal.pos.x, _goal.pos.y, 5)) {
                     //                    if (!constr.pickUpEnergy(creep)) {
-                    if (creep.memory.workContain == undefined) {
+                    if (creep.memory.workContain === undefined) {
                         let contain = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                             filter: {
                                 structureType: STRUCTURE_CONTAINER
@@ -222,7 +222,7 @@ if (!super._constr.moveToPickUpEnergyIn(creep, 5))
                         if (creep.pos.isNearTo(contain)) {
                             if (_.sum(contain.store) > 0) {
                                 for (var e in contain.store) {
-                                    if (creep.withdraw(contain, e) == OK) {
+                                    if (creep.withdraw(contain, e) === OK) {
                                         super.keeperFind(creep);
                                     }
                                 }
@@ -244,7 +244,7 @@ if (!super._constr.moveToPickUpEnergyIn(creep, 5))
                     // This here is to prevent moving back and forth.
                     if (creep.memory.keeperLairID != undefined) {
                         let sKep = Game.getObjectById(creep.memory.keeperLairID);
-                        if (sKep.ticksToSpawn == undefined || sKep.ticksToSpawn < 25 || sKep.ticksToSpawn > 295) {
+                        if (sKep.ticksToSpawn === null || sKep.ticksToSpawn < 25 || sKep.ticksToSpawn > 295) {
                             return;
                         }
                     }

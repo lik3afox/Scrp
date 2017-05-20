@@ -19,6 +19,7 @@ module.exports = function(grunt) {
             all: ['*.js'],
             options: {
                 esversion: 6,
+                laxcomma:true,
                 loopfunc: true,
                 globals: {
                     "_": false,
