@@ -106,7 +106,7 @@ class roleUpgrader extends roleParent{
           if(creep.room.name != 'E38S72')
           creep.moveTo(creep.room.controller);
               }
-        if(creep.room.name == 'E38S72' && creep.memory.roleID == 0) {
+        if(creep.room.name == 'E38S72' && creep.memory.roleID === 0) {
           let zz = new RoomPosition(36,34,'E38S72');
           if(!creep.pos.isEqualTo(zz))
               creep.moveTo(zz);
@@ -146,6 +146,6 @@ class roleUpgrader extends roleParent{
 
        
     }
-};
+}
 
 module.exports = roleUpgrader;

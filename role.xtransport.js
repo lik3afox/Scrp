@@ -177,7 +177,7 @@ let carry = _.sum(creep.carry);
                         opacity: 0.5
                     }
                 });
-            } else if (_goal != null && _goal.room.name != creep.room.name) {
+            } else if (_goal !== null && _goal.room.name != creep.room.name) {
       //          if(creep.room.name == 'E26S77'||creep.room.name == 'E35S74' ) {
                     _ignoreRoad = false;
     //            } else {
@@ -191,8 +191,8 @@ let carry = _.sum(creep.carry);
                             fill: 'transparent',
                             stroke: '#ff0',
                             lineStyle: 'dashed',
-                            strokeWidth: .15,
-                            opacity: .5
+                            strokeWidth: 0.15,
+                            opacity: 0.5
                         }
                     });
                 }
@@ -209,7 +209,7 @@ if (!super._constr.moveToPickUpEnergyIn(creep, 5))
                                 structureType: STRUCTURE_CONTAINER
                             }
                         });
-                        if (contain != undefined) {
+                        if (contain !== null) {
                             creep.memory.workContain = contain.id;
                         }
 
@@ -218,7 +218,7 @@ if (!super._constr.moveToPickUpEnergyIn(creep, 5))
 
 
                     let contain = Game.getObjectById(creep.memory.workContain);
-                    if (contain != undefined) {
+                    if (contain !== null) {
                         if (creep.pos.isNearTo(contain)) {
                             if (_.sum(contain.store) > 0) {
                                 for (var e in contain.store) {
@@ -242,7 +242,7 @@ if (!super._constr.moveToPickUpEnergyIn(creep, 5))
                 } else {
 
                     // This here is to prevent moving back and forth.
-                    if (creep.memory.keeperLairID != undefined) {
+                    if (creep.memory.keeperLairID !== undefined) {
                         let sKep = Game.getObjectById(creep.memory.keeperLairID);
                         if (sKep.ticksToSpawn === null || sKep.ticksToSpawn < 25 || sKep.ticksToSpawn > 295) {
                             return;
@@ -257,8 +257,8 @@ if (!super._constr.moveToPickUpEnergyIn(creep, 5))
                                 fill: 'transparent',
                                 stroke: '#fff',
                                 lineStyle: 'dashed',
-                                strokeWidth: .15,
-                                opacity: .5
+                                strokeWidth: 0.15,
+                                opacity: 0.5
                             }
                         });
                     }

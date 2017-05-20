@@ -55,14 +55,14 @@ var constr = require('commands.toStructure');
 function rampartDefense(creep) {
   // Flag triggers rampartDefense,
   if(!creep.memory.rampartDefense) return false;
-   if (creep.carry.energy == 0) {
+   if (creep.carry.energy === 0) {
                 if (!containers.withdrawFromStorage(creep)) {
                 }
             } else {
 
- if(creep.memory.constructionID != undefined){
+ if(creep.memory.constructionID !== undefined){
                 var strucs = Game.getObjectById(creep.memory.constructionID);
-                if(strucs != undefined) {
+                if(strucs !== null) {
                   if( creep.build(strucs) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(strucs,{reusePath:15});
                   }
@@ -73,7 +73,7 @@ function rampartDefense(creep) {
                 constr.moveToRepairWall(creep);
             }
 
-            if (creep.carry.energy == 0) {
+            if (creep.carry.energy === 0) {
                 creep.memory.repair = false;
             }
 
@@ -82,7 +82,7 @@ function rampartDefense(creep) {
             }
   creep.say('repair');
   var named = 'rampartD'+creep.room.name;
-  if(Game.flags[named] == undefined)
+  if(Game.flags[named] === undefined || Game.flags[named] === null )
     creep.memory.rampartDefense = false;
   return true;
 }
@@ -121,7 +121,7 @@ zz = super.boosted(creep,['GH']);
 
 
         // Logic here to determine action.
-        if (creep.memory.upgrading == undefined) {
+        if (creep.memory.upgrading === undefined) {
             creep.memory.upgrading = true;
         }
         if (creep.memory.upgrading && creep.carry.energy < 51) {
@@ -132,15 +132,16 @@ zz = super.boosted(creep,['GH']);
                 super._containers.withdrawFromTerminal(creep);
             } else if (creep.room.name == 'E29S79') {
                 let link = Game.getObjectById('58d5773ea599843615337062');
-                if (link != undefined && link.energy != 0) {
+                if (link !== null && link.energy !== 0) {
                     if (creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         creep.moveTo(link);
                 }
             } else if (creep.pos.isNearTo(creep.room.storage)) {
 
                 super._containers.withdrawFromStorage(creep);
-            } else if (creep.carry.energy == 0) {
-                if(creep.room.storage != undefined && creep.room.storage[RESOURCE_ENERGY] == 0) {
+            } else if (creep.carry.energy === 0) {
+
+                if(creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
 
                     if(super._containers.withdrawFromTerminal(creep))
                         if(!containers.moveToWithdraw(creep)) {
@@ -157,9 +158,9 @@ zz = super.boosted(creep,['GH']);
   //              }
 
             }
-            if (creep.memory.constructionID == undefined) {
+            if (creep.memory.constructionID === undefined) {
                 let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-                if (strucs != undefined)
+                if (strucs !== null)
                     creep.memory.constructionID = strucs.id;
             }
 
@@ -180,7 +181,7 @@ zz = super.boosted(creep,['GH']);
 
             var strucs = Game.getObjectById(creep.memory.constructionID);
 
-            if (strucs != undefined) {
+            if (strucs !== null) {
                 if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(strucs);
                 }
@@ -204,6 +205,6 @@ zz = super.boosted(creep,['GH']);
         }
 
     }
-};
+}
 
 module.exports = roleUpbuilder;

@@ -24,7 +24,7 @@ var classLevels = [
     [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
     [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
     [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]
-]
+];
 
 var boost = ['LH'];
 var roleParent = require('role.parent');
@@ -47,9 +47,9 @@ if(super.boosted(creep,boost)) { return;}
 
 
         if(creep.memory.repair) {
-            if(creep.memory.constructionID != undefined){
+            if(creep.memory.constructionID !== undefined){
                 var strucs = Game.getObjectById(creep.memory.constructionID);
-                if(strucs != undefined) {
+                if(strucs !== null) {
                   if( creep.build(strucs) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(strucs,{reusePath:15});
                   }
@@ -60,7 +60,7 @@ if(super.boosted(creep,boost)) { return;}
                 constr.moveToRepairWall(creep);
             }
 
-            if (creep.carry.energy == 0) {
+            if (creep.carry.energy === 0) {
                 creep.memory.repair = false;
             }
         } else {
@@ -77,7 +77,7 @@ if(super.boosted(creep,boost)) { return;}
               if (creep.carry.energy > creep.carryCapacity-50) {
                 creep.memory.repair = true;
             let strucs = creep.pos.findClosestByRange( FIND_CONSTRUCTION_SITES );
-            if(strucs != undefined ) creep.memory.constructionID = strucs.id;
+            if(strucs !== null ) creep.memory.constructionID = strucs.id;
                 creep.memory.wallTargetID = undefined;
               }
 
