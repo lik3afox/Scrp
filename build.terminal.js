@@ -27,7 +27,7 @@ var focusID; // = '591365a95128141e7200c235';
 var focusMin; // = 'XGH2O'
 
 // Every terminal needs this amount or else...
-var required = [{ resource: RESOURCE_POWER, amount: 100 }];
+var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amount: 500 }];
 
 // This is when you cannot change.
 var prohibited = ['KO', 'GH', 'LO', 'UO', 'LH', 'H', 'O', 'G', 'OH', 'GO', 'GH2O', 'GHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGH2O', 'XGHO2', 'XZH2O', 'XLHO2', 'XKHO2', 'XKH2O', 'XZHO2'];

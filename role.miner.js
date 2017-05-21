@@ -182,7 +182,6 @@ class settler extends roleParent {
                 //            if(!creep.pos.isEqualTo(contain.pos)) {
                 //                  creep.moveTo(contain.pos);
                 //                } else {
-                creep.say("here?");
 
                 if (creep.harvest(_source) == OK) {
                     if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {
