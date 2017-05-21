@@ -142,14 +142,14 @@ class settler extends roleParent {
         if (super.returnEnergy(creep)) return;
         if (movement.runAway(creep)) return;
         if (super.keeperWatch(creep)) {
-            return; }
+            return;
+        }
 
         movement.checkForBadsPlaceFlag(creep);
 
         var _source = Game.getObjectById(creep.memory.goal);
 
         if (_source !== null && (_source.pos.roomName != creep.room.name)) creep.memory.distance++;
-
 
         if (creep.pos.isNearTo(_source)) {
             if (_.sum(creep.carry) >= creep.carryCapacity - 15) {
@@ -178,10 +178,12 @@ class settler extends roleParent {
             }
 
             let contain = Game.getObjectById(creep.memory.workContainer);
-            if (contain !== null && _source.energy !== 0 && _.sum(contain.store) < contain.storeCapacity) {
+            if (contain === null || (contain !== null && _source.energy !== 0 && _.sum(contain.store) < contain.storeCapacity)) {
                 //            if(!creep.pos.isEqualTo(contain.pos)) {
                 //                  creep.moveTo(contain.pos);
                 //                } else {
+                creep.say("here?");
+
                 if (creep.harvest(_source) == OK) {
                     if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {
                         super.keeperFind(creep);
