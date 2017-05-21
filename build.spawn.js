@@ -988,7 +988,7 @@ class theSpawn {
                     var start;
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'fighter' || Game.creeps[name].memory.role == 'healer') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 'xtransport') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning)

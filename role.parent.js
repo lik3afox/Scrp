@@ -268,9 +268,20 @@ class baseParent {
                 // Game.Order.creep('58e987f98dd21b4f7aa198a7',{sing:['never','let','me']});          
                 break;
 
+            case "focusMoveTo":
+                this.goToFocusFlag(creep, Game.flags[creep.memory.focusFlagName]);
+                if (!constr.doCloseRoadRepair(creep))
+                    constr.doCloseRoadBuild(creep);
+
+                if (_.sum(creep.carry) === 0) {
+                    orderComplete = true;
+                }
+                break;
+
             case "keeperMoveTo":
                 // To do keeper moveTo you need
-                // task.pos,task.options,task.order
+                // task.pos,task.options,task.order,task.happyRange
+
                 creep.say('T:Kmove');
 
                 var tmp = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
@@ -280,11 +291,15 @@ class baseParent {
                 } else {
                     creep.say('failG');
                 }
-                //              if (task.room) {
-                if (creep.room.name == task.pos.roomName) {
-                    orderComplete = true;
+                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
+                    if (creep.room.name == task.pos.roomName) {
+                        orderComplete = true;
+                    }
+                } else {
+                    if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
+                        orderComplete = true;
+                    }
                 }
-                //                } 
                 break;
 
 
@@ -297,6 +312,9 @@ class baseParent {
                     creep.moveTo(tmp2, task.options);
                 }
 
+                if (creep.room.name == task.pos.roomName) {
+                    orderComplete = true;
+                }
                 break;
 
             case "attack":

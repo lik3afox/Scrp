@@ -153,7 +153,7 @@ module.exports = function() {
             return object.hits < object.hitsMax;
         });
         hurtz.sort((a, b) => a.hits - b.hits);
-        if (hurtz[0] !== undefined) {
+        if (hurtz.length > 0) {
             if (!this.pos.isNearTo(hurtz[0])) {
                 this.rangedHeal(hurtz[0]);
                 this.moveTo(hurtz[0]);
@@ -255,7 +255,7 @@ module.exports = function() {
         }
 
         if (this.fatigue > 0) return;
-        //	if(targets)
+        //  if(targets)
 
 
         if (xxx !== undefined) {
@@ -295,7 +295,7 @@ module.exports = function() {
         if (this.memory.stuckCount > 5)
             this.memory.stuckCount = 5;
 
-        //	options.reusePath = samePath;
+        //  options.reusePath = samePath;
         if (options.visualizePathStyle === undefined) {
             options.visualizePathStyle = {
                 stroke: '#faF',
@@ -317,13 +317,13 @@ module.exports = function() {
             if (this.memory.stuckCount > 2) {
                 options.reusePath = 5;
                 options.ignoreCreeps = false;
-                //			options.maxOps = 200;
+                //          options.maxOps = 200;
             }
         }
 
         moveStatus = this.moveTo(target, options);
         if (moveStatus == ERR_NO_PATH) {
-            //		this.moveFromExit();
+            //      this.moveFromExit();
         }
 
         return moveStatus;

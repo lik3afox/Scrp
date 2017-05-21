@@ -99,6 +99,11 @@ class roleUpbuilder extends roleParent {
 
     /** @param {Creep} creep **/
     static run(creep) {
+        if (creep.saying == '⚡' && creep.carry.energy > 51) {
+            creep.upgradeController(creep.room.controller);
+            creep.say('⚡', true);
+            return;
+        }
         if (super.returnEnergy(creep)) {
             return;
         }
@@ -141,8 +146,8 @@ class roleUpbuilder extends roleParent {
                         creep.moveTo(link);
                 }
             } else if (creep.pos.isNearTo(creep.room.storage)) {
-
-                super._containers.withdrawFromStorage(creep);
+                creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                //                super._containers.withdrawFromStorage(creep);
             } else if (creep.carry.energy === 0) {
 
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
@@ -154,12 +159,8 @@ class roleUpbuilder extends roleParent {
                         if (!containers.moveToWithdraw(creep)) {}
 
                 }
-                //                if (!super._containers.withdrawFromStorage(creep)) {
-                //                        super._containers.moveToWithdraw(creep);
-                //                    }
-                //              }
-
             }
+
             if (creep.memory.constructionID === undefined) {
                 let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                 if (strucs !== null)
@@ -202,6 +203,7 @@ class roleUpbuilder extends roleParent {
                         }
                         break;
                     case OK:
+                        creep.say('⚡');
                         break;
                 }
             }

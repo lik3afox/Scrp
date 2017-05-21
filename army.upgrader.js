@@ -54,7 +54,7 @@ class upgraderzClass extends roleParent {
 
         //if(creep.memory.roleID == 0) creep.moveTo(9,32)
         if (creep.room.name == 'W4S93') {
-            let zz = super.boosted(creep, boost);
+            let zz = super.boosted(creep, ['GH']);
             if (zz) {
                 return;
             }

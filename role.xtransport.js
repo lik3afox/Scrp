@@ -91,10 +91,6 @@ class transport extends roleParent {
         }
         // FIND_DROPPED_ENERGY
     static run(creep) {
-        super.calcuateStats(creep);
-        if (super.doTask(creep)) {
-            return;
-        }
         if (creep.saying === 'zZzZ') {
             creep.say('zZz');
             return;
@@ -136,6 +132,10 @@ class transport extends roleParent {
         if (super._movement.runAway(creep)) {
             return;
         }
+        super.calcuateStats(creep);
+        if (super.doTask(creep)) {
+            return;
+        }
 
         if (super.keeperWatch(creep)) { // two parter - keeperFind happens when
             return;
@@ -163,10 +163,25 @@ class transport extends roleParent {
 
         if (creep.memory.gohome) {
 
-            super.goToFocusFlag(creep, Game.flags[creep.memory.focusFlagName]);
-
+            /*super.goToFocusFlag(creep, Game.flags[creep.memory.focusFlagName]);
             if (!super._constr.doCloseRoadRepair(creep))
                 super._constr.doCloseRoadBuild(creep);
+*/
+            let task = {};
+            task.options = {
+                reusePath: 49,
+                visualizePathStyle: {
+                    fill: 'transparent',
+                    stroke: '#ff0',
+                    lineStyle: 'dashed',
+                    strokeWidth: 0.15,
+                    opacity: 0.5
+                }
+            };
+            task.pos = _goal.pos;
+            task.order = "focusMoveTo";
+            creep.memory.task.push(task);
+
 
         } else { // IF not going home. 
 
@@ -185,23 +200,41 @@ class transport extends roleParent {
                 });
             } else if (_goal !== null && _goal.room.name != creep.room.name) {
                 //          if(creep.room.name == 'E26S77'||creep.room.name == 'E35S74' ) {
-                _ignoreRoad = false;
-                //            } else {
-                //                  _ignoreRoad = true;
-                //                }
-                if (!super.guardRoom(creep)) {
-                    creep.moveTo(_goal, {
-                        ignoreRoads: _ignoreRoad,
-                        reusePath: 49,
-                        visualizePathStyle: {
-                            fill: 'transparent',
-                            stroke: '#ff0',
-                            lineStyle: 'dashed',
-                            strokeWidth: 0.15,
-                            opacity: 0.5
-                        }
-                    });
-                }
+                /*                _ignoreRoad = false;
+                                //            } else {
+                                //                  _ignoreRoad = true;
+                                //                }
+                                if (!super.guardRoom(creep)) {
+                                    creep.moveTo(_goal, {
+                                        ignoreRoads: _ignoreRoad,
+                                        reusePath: 49,
+                                        visualizePathStyle: {
+                                            fill: 'transparent',
+                                            stroke: '#ff0',
+                                            lineStyle: 'dashed',
+                                            strokeWidth: 0.15,
+                                            opacity: 0.5
+                                        }
+                                    });
+                                } */
+
+                let task = {};
+                task.options = {
+                    ignoreRoads: _ignoreRoad,
+                    reusePath: 49,
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#ff0',
+                        lineStyle: 'dashed',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                };
+                task.pos = _goal.pos;
+                task.order = "keeperMoveTo";
+                task.happyRange = 5;
+                creep.memory.task.push(task);
+
             } else {
 
                 let foxy = require('foxMethods');
