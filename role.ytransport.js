@@ -55,7 +55,8 @@ class transport extends roleParent {
         var start;
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         //   super._movement.checkForBadsPlaceFlag(creep);
         shouldDie(creep);

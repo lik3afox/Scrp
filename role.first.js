@@ -64,7 +64,8 @@ function mineralContainerEmpty(creep) {
     if (creep.memory.mineralContainerID !== undefined) {
         let contains = creep.room.find(FIND_STRUCTURES);
         contains = _.filter(contains, function(o) {
-            return o.structureType == STRUCTURE_CONTAINER; });
+            return o.structureType == STRUCTURE_CONTAINER;
+        });
 
         for (var e in contains) {
             for (var a in contains[e].store) {
@@ -77,8 +78,8 @@ function mineralContainerEmpty(creep) {
 
     let contain = Game.getObjectById(creep.memory.mineralContainerID);
     if (creep.pos.isNearTo(contain)) {
-        for(var o in contain){
-            creep.withdraw(contain,o);
+        for (var o in contain) {
+            creep.withdraw(contain, o);
         }
         return true;
     } else {
@@ -301,13 +302,17 @@ class roleFirst extends roleParent {
             creep.say('zZzZ');
             return;
         }
-        if (creep.saying == 'zZzZ') { creep.say('zZz');
-            return; }
+        if (creep.saying == 'zZzZ') {
+            creep.say('zZz');
+            return;
+        }
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
         if (this.returnEnergy(creep)) {
-            return false; }
+            return false;
+        }
         this.rebirth(creep);
         if (creep.memory.roleID === 0)
             if (super._power.getPowerToSpawn(creep)) return;

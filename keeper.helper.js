@@ -1,10 +1,9 @@
 // designed to carry and help keeper.guard, then goes to the targetSource;
 
 // only 1 level and 
-var classLevels = 
-[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
-CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY
-,CARRY,RANGED_ATTACK,HEAL,HEAL];
+var classLevels = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+    CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, RANGED_ATTACK, HEAL, HEAL
+];
 
 /*
 warinternal [4:18 PM] 
@@ -18,18 +17,17 @@ var struct = require('commands.toStructure');
 var targetId = '587022ea601aa5b440019da3';
 
 function getLeader(creep) {
-	for(var e in Game.creeps) {
-        if(Game.creeps[e].memory.role == 'guard'){
+    for (var e in Game.creeps) {
+        if (Game.creeps[e].memory.role == 'guard') {
             creep.memory.leaderID = Game.creeps[e].id;
             return Game.creeps[e].id;
         }
-	}
+    }
 }
 
-function moveCreep(creep) {
-}
+function moveCreep(creep) {}
 
-class roleGuard extends roleParent{
+class roleGuard extends roleParent {
     static levels(level) {
         return classLevels;
     }
@@ -39,52 +37,52 @@ class roleGuard extends roleParent{
         if (super.returnEnergy(creep)) {
             return;
         }
-    	if(!super.run(creep)) return;
-    	creep.say('fol');
+        if (!super.run(creep)) return;
+        creep.say('fol');
 
-        if(creep.memory.leaderID === undefined) {
+        if (creep.memory.leaderID === undefined) {
             creep.memory.leaderID = getLeader(creep);
-            if( creep.memory.leaderID === undefined) {
+            if (creep.memory.leaderID === undefined) {
                 creep.say('NO');
                 return;
             }
         }
 
-        if(_.sum(creep.carry) === creep.carryCapacity) {
+        if (_.sum(creep.carry) === creep.carryCapacity) {
             creep.memory.full = true;
         }
-        if(_.sum(creep.carry) === 0 ) {
+        if (_.sum(creep.carry) === 0) {
             creep.memory.full = false;
         }
-        
-        if(creep.memory.full) {
+
+        if (creep.memory.full) {
             let target = Game.getObjectById(targetId);
-            if(creep.pos.isNearTo(target)) {
-                creep.transfer(target,RESOURCE_ENERGY);
-            }else {
-                creep.moveTo(target,{reusePath:20});
+            if (creep.pos.isNearTo(target)) {
+                creep.transfer(target, RESOURCE_ENERGY);
+            } else {
+                creep.moveTo(target, { reusePath: 20 });
                 creep.heal(creep);
             }
-        }else {
+        } else {
 
-            let ldr = Game.getObjectById( creep.memory.leaderID);
+            let ldr = Game.getObjectById(creep.memory.leaderID);
 
-            if( creep.hits < creep.hitsMax) {
+            if (creep.hits < creep.hitsMax) {
                 creep.heal(creep);
-            }else if( ldr !== null && ldr.hits < ldr.hitsMax) {
-                if(creep.pos.isNearTo(ldr)) {
+            } else if (ldr !== null && ldr.hits < ldr.hitsMax) {
+                if (creep.pos.isNearTo(ldr)) {
                     creep.heal(ldr);
                 }
             }
 
 
-            if(!struct.moveToPickUpEnergyIn(creep,7)) {
-                if(creep.room.name != ldr.room.name) {
-                        creep.moveTo(ldr );    
-                    } else {
-                        creep.move(creep.pos.getDirectionTo(ldr));
-                    }
-            } 
+            if (!struct.moveToPickUpEnergyIn(creep, 7)) {
+                if (creep.room.name != ldr.room.name) {
+                    creep.moveTo(ldr);
+                } else {
+                    creep.move(creep.pos.getDirectionTo(ldr));
+                }
+            }
         }
 
     }

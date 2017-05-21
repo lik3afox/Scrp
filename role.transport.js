@@ -108,7 +108,8 @@ class transport extends roleParent {
         super.rebirth(creep);
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         var link = require('build.link');
         let total = _.sum(creep.carry);
@@ -129,11 +130,14 @@ class transport extends roleParent {
         shouldDie(creep);
 
         if (super.returnEnergy(creep)) {
-            return; }
+            return;
+        }
         if (movement.runAway(creep)) {
-            return; }
+            return;
+        }
         if (super.keeperWatch(creep)) {
-            return; }
+            return;
+        }
 
         let _goal = Game.getObjectById(creep.memory.goal);
         super.deathWatch(creep);

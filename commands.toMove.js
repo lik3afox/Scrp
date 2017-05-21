@@ -500,7 +500,7 @@ class MoveInteract {
         });
 
         for (var e in Game.flags) {
-           if ((hostiles.length === 0) && (creep.room.name == Game.flags[e].pos.roomName)) {
+            if ((hostiles.length === 0) && (creep.room.name == Game.flags[e].pos.roomName)) {
                 Game.flags[e].remove();
                 return true;
             }
@@ -671,19 +671,19 @@ class MoveInteract {
         if (Game.flags[creep.memory.party] === undefined) return false;
         creep.moveMe(Game.flags[creep.memory.party], { ignoreRoads: true, reusePath: 75 });
         return true;
-/*
-        if (creep.memory.partyFlag === undefined) {
+        /*
+                if (creep.memory.partyFlag === undefined) {
 
-            for (var e in Game.flags) {
-                if (Game.flags[e].color == FLAG.RALLY && creep.memory.party == Game.flags[e].name) {
-                    creep.moveTo(Game.flags[e], { ignoreRoads: true });
-                    creep.memory.partyFlag = Game.flags[e].name;
-                    break;
+                    for (var e in Game.flags) {
+                        if (Game.flags[e].color == FLAG.RALLY && creep.memory.party == Game.flags[e].name) {
+                            creep.moveTo(Game.flags[e], { ignoreRoads: true });
+                            creep.memory.partyFlag = Game.flags[e].name;
+                            break;
+                        }
+                    }
                 }
-            }
-        }
-        return true;
-*/
+                return true;
+        */
     }
 
     static moveToFlag(creep) {
@@ -743,7 +743,8 @@ class MoveInteract {
 
             var bads = creep.room.find(FIND_HOSTILE_CREEPS);
             bads = _.filter(bads, function(o) {
-                return o.owner.username == 'Invader'; });
+                return o.owner.username == 'Invader';
+            });
 
             if (bads.length > 0) {
                 var flagz = creep.room.find(FIND_FLAGS, {

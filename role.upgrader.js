@@ -55,14 +55,17 @@ class roleUpgrader extends roleParent {
 
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         if (creep.room.controller.level != 8)
             if (super.boosted(creep, ['XGH2O'])) {
-                return; }
+                return;
+            }
 
         if (super.returnEnergy(creep)) {
-            return; }
+            return;
+        }
         if (super.depositNonEnergy(creep)) return;
         if (creep.memory.level > 5) super.renew(creep);
 

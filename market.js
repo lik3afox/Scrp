@@ -1,9 +1,9 @@
 //STRUCTURE_POWER_BANK:
-class marketInteract{
+class marketInteract {
 
-balance() {
-	console.log( 'your game credits',  Game.market.credits);
-}  
+    balance() {
+        console.log('your game credits', Game.market.credits);
+    }
 
 }
 

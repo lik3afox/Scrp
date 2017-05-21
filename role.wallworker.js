@@ -44,7 +44,8 @@ class roleWallWorker extends roleParent {
     static run(creep) {
         if (super.depositNonEnergy(creep)) return;
         if (super.boosted(creep, boost)) {
-            return; }
+            return;
+        }
 
 
         if (creep.memory.repair) {

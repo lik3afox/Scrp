@@ -482,7 +482,8 @@ function analyzeSource(expand) {
 
     if (expand.allDistance.length > 30) {
         expand.allDistance.sort(function(a, b) {
-            return a - b; });
+            return a - b;
+        });
         do {
             expand.allDistance.shift();
             expand.allDistance.pop();
@@ -671,13 +672,13 @@ function getModuleLevel(spawn) {
 
 function getNuke(spawn) {
     return spawn.room.nuke;
-/*    let nukes = ['58b8846bb286c56d754d0161'];
-    for (var e in nukes) {
-        let nuker = Game.getObjectById(nukes[e]);
-        if (nuker != undefined && nuker.pos.roomName == spawn.pos.roomName) {
-            return nuker;
-        }
-    }*/
+    /*    let nukes = ['58b8846bb286c56d754d0161'];
+        for (var e in nukes) {
+            let nuker = Game.getObjectById(nukes[e]);
+            if (nuker != undefined && nuker.pos.roomName == spawn.pos.roomName) {
+                return nuker;
+            }
+        }*/
 }
 
 function getCurrentModule(spawn) {
@@ -748,9 +749,11 @@ function changeBuild(build, room) { // Input [body,body,carry],room
     if (available === undefined) return build;
 
     let workparts = _.filter(build, function(n) {
-        return n == WORK; });
+        return n == WORK;
+    });
     let otherParts = _.filter(build, function(n) {
-        return n != WORK; });
+        return n != WORK;
+    });
 
     let workCount = workparts.length;
 
@@ -778,9 +781,11 @@ function changeBuild(build, room) { // Input [body,body,carry],room
     // Then we will do move - move will always be last.
 
     otherParts = _.filter(build, function(n) {
-        return n != MOVE && n != CARRY; }); // for miner atm
+        return n != MOVE && n != CARRY;
+    }); // for miner atm
     carryParts = _.filter(build, function(n) {
-        return n == CARRY; });
+        return n == CARRY;
+    });
     let bneeded = Math.ceil((otherParts.length * 2) / 4); // This is for ZO 
     needed = Math.ceil(bneeded * 0.50); // We'll start everything using roads. 
     //    console.log(bneeded,otherParts,needed,room.memory.labMinerals['ZO'],room.memory.calledMinerals['ZO'] ,needed*30 )
@@ -881,7 +886,8 @@ class theSpawn {
         var total = 0;
 
         var spawnCreeps = _.filter(Game.creeps, function(o) {
-            return (o.memory.parent == spawnID); });
+            return (o.memory.parent == spawnID);
+        });
 
         for (var name in spawnCreeps) { // Start of creep loop
             for (var type in allModule) {

@@ -1,8 +1,8 @@
 class SourceInteract {
-    run(){
+    run() {
 
     }
-    
+
 }
 
 module.exports = SourceInteract;

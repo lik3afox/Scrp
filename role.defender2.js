@@ -15,7 +15,7 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, ATTACK, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL], // 4
 
     //5
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,HEAL],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL],
 
     //6
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL],
@@ -70,21 +70,21 @@ function attackCreep(creep, bads) {
 }
 
 function restingSpot(creep) {
-    switch(creep.memory.home) {
+    switch (creep.memory.home) {
         case 'E35S73':
-            return new RoomPosition(41,37,creep.memory.home);
+            return new RoomPosition(41, 37, creep.memory.home);
         case 'E26S73':
-            return new RoomPosition(30,30,creep.memory.home);
+            return new RoomPosition(30, 30, creep.memory.home);
         case 'E28S73':
-            return new RoomPosition(23,41,creep.memory.home);
+            return new RoomPosition(23, 41, creep.memory.home);
         case 'E28S77':
-            return new RoomPosition(13,10,creep.memory.home);
+            return new RoomPosition(13, 10, creep.memory.home);
         case 'E35S83':
-            return new RoomPosition(9,17,creep.memory.home);
+            return new RoomPosition(9, 17, creep.memory.home);
         case 'E38S72':
-            return new RoomPosition(38,27,creep.memory.home);
+            return new RoomPosition(38, 27, creep.memory.home);
         case 'W4S93':
-            return new RoomPosition(3,38,creep.memory.home);
+            return new RoomPosition(3, 38, creep.memory.home);
 
 
         default:
@@ -96,15 +96,15 @@ function getHostiles(creep) {
     //    flag.isAreaSafe(creep,4) // looking for bad hostiles.
     //    flag.getBadInArea(creep,4)
     //    flag.getClosestBad(creep);
-/*    let zz = creep.room.find(FIND_FLAGS, {filter: s => s.color == COLOR_BLUE});
-    if(zz.length > 0){
-            return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
-                filter: object => (object.owner.username != 'zolox')
-            });
-    } */
-    return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4,{
-//                filter: object => (object.owner.username != 'admon')
-            });
+    /*    let zz = creep.room.find(FIND_FLAGS, {filter: s => s.color == COLOR_BLUE});
+        if(zz.length > 0){
+                return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
+                    filter: object => (object.owner.username != 'zolox')
+                });
+        } */
+    return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
+        //                filter: object => (object.owner.username != 'admon')
+    });
 }
 
 function lootRun(creep) {
@@ -129,42 +129,42 @@ function lootRun(creep) {
 }
 
 function rampartDefense(creep) {
-  // Flag triggers rampartDefense,
-  if(!creep.memory.rampartDefense) return false;
+    // Flag triggers rampartDefense,
+    if (!creep.memory.rampartDefense) return false;
     creep.say('RAMP');
-    var named = 'rampartD'+creep.room.name;
+    var named = 'rampartD' + creep.room.name;
 
-  if (Game.flags[named] !== undefined) {
-    if(creep.memory.party === undefined) {
-         creep.memory.party = named;
-    }
-    if(!creep.pos.isEqualTo(Game.flags[named])) {
-        creep.moveTo(Game.flags[named]);
-    }
-    var badzs = getHostiles(creep);
-    creep.say(badzs.length);
-    if(badzs.length > 0) {
-        creep.attack(badzs[0]);
-        creep.rangedAttack(badzs[0]);
-//        creep.rangedMassAttack();
-    }
-
-  } else {
-    creep.memory.rampartDefense = false;
-  }
-
-  let zz = creep.room.lookForAtArea(LOOK_CREEPS, creep.y-1,creep.x-1,creep.y+1,creep.x+1);
-console.log(zz.length,'looking for other creeps,');
-// so if it finds zz it will back up and just range shoot, other wise it will stay up front.
-        var bads2 = getHostiles(creep);
-        if (bads2.length > 0) {
-        let enemy = creep.pos.findClosestByRange(bads2);
-            if (creep.pos.isNearTo(enemy)) {
-                        creep.say('FU',true);
-                        creep.attack(enemy);
-                        creep.rangedMassAttack();
-            }                    
+    if (Game.flags[named] !== undefined) {
+        if (creep.memory.party === undefined) {
+            creep.memory.party = named;
         }
+        if (!creep.pos.isEqualTo(Game.flags[named])) {
+            creep.moveTo(Game.flags[named]);
+        }
+        var badzs = getHostiles(creep);
+        creep.say(badzs.length);
+        if (badzs.length > 0) {
+            creep.attack(badzs[0]);
+            creep.rangedAttack(badzs[0]);
+            //        creep.rangedMassAttack();
+        }
+
+    } else {
+        creep.memory.rampartDefense = false;
+    }
+
+    let zz = creep.room.lookForAtArea(LOOK_CREEPS, creep.y - 1, creep.x - 1, creep.y + 1, creep.x + 1);
+    console.log(zz.length, 'looking for other creeps,');
+    // so if it finds zz it will back up and just range shoot, other wise it will stay up front.
+    var bads2 = getHostiles(creep);
+    if (bads2.length > 0) {
+        let enemy = creep.pos.findClosestByRange(bads2);
+        if (creep.pos.isNearTo(enemy)) {
+            creep.say('FU', true);
+            creep.attack(enemy);
+            creep.rangedMassAttack();
+        }
+    }
     return true;
 }
 
@@ -174,19 +174,21 @@ var roleParent = require('role.parent');
 
 class roleNewDefender extends roleParent {
     static levels(level) {
- if (level > classLevels.length-1 )       level = classLevels.length-1;        
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
         return classLevels[level];
     }
 
     static run(creep) {
         super.calcuateStats(creep);
-        if(super.doTask(creep)) {return;}
-        
-        if(creep.saying == 'ZzZz')  {
+        if (super.doTask(creep)) {
+            return; }
+
+        if (creep.saying == 'ZzZz') {
             creep.say('zZz');
             return;
         }
-        if(rampartDefense(creep)){return;}
+        if (rampartDefense(creep)) {
+            return; }
 
         creep.say('nDef');
 
@@ -206,28 +208,28 @@ class roleNewDefender extends roleParent {
                 }
             });
             creep.memory.renewSpawnID = _struct[_struct.length - 1].id;
-                var ccSpawn = require('commands.toSpawn');
-                ccSpawn.wantRenew(creep);
+            var ccSpawn = require('commands.toSpawn');
+            ccSpawn.wantRenew(creep);
         }
 
         let mom = Game.getObjectById(creep.memory.renewSpawnID);
         // If no defend flag then
         //        console.log(Game.flags['rampartDefender'],'rayrayray');
-        
 
-//let movement = require('commands.toMove');
+
+        //let movement = require('commands.toMove');
         if (super._movement.moveToDefendFlag(creep)) {
 
             super._constr.pickUpNonEnergy(creep);
             var badzs = getHostiles(creep);
-        creep.say('nDef'+badzs.length+creep.memory.active);
+            creep.say('nDef' + badzs.length + creep.memory.active);
             if (badzs.length > 0) {
                 attackCreep(creep, badzs);
                 super._constr.pickUpNonEnergy(creep);
-  //              return;
+                //              return;
             } else {
                 super._constr.pickUpNonEnergy(creep);
-           //     return;
+                //     return;
             }
             creep.memory.active = true;
         } else { // go to mom and renew
@@ -237,27 +239,27 @@ class roleNewDefender extends roleParent {
             if (creep.room.name == creep.memory.home)
                 if (lootRun(creep)) return;
 
-let rest = restingSpot(creep);
-if(!rest) {
-            if (creep.pos.isNearTo(mom)) {
-                creep.say('ZzZz', true);
+            let rest = restingSpot(creep);
+            if (!rest) {
+                if (creep.pos.isNearTo(mom)) {
+                    creep.say('ZzZz', true);
 
-               // if (!mom.spawning && creep.ticksToLive < 1400)  mom.renewCreep(creep);
+                    // if (!mom.spawning && creep.ticksToLive < 1400)  mom.renewCreep(creep);
+                } else {
+                    super._constr.pickUpNonEnergy(creep);
+                    creep.moveTo(mom);
+                }
             } else {
-                super._constr.pickUpNonEnergy(creep);
-                creep.moveTo(mom);
-            }
-} else {
-    if(creep.pos.isEqualTo(rest)) {
-                creep.say('ZzZz', true);
-               // if (!mom.spawning && creep.ticksToLive < 1400)  mom.renewCreep(creep);
-    } else {
-            
-                super._constr.pickUpNonEnergy(creep);
-                creep.moveTo(rest);
-    }
+                if (creep.pos.isEqualTo(rest)) {
+                    creep.say('ZzZz', true);
+                    // if (!mom.spawning && creep.ticksToLive < 1400)  mom.renewCreep(creep);
+                } else {
 
-}
+                    super._constr.pickUpNonEnergy(creep);
+                    creep.moveTo(rest);
+                }
+
+            }
 
 
 

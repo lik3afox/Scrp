@@ -104,7 +104,8 @@ class roleUpbuilder extends roleParent {
         }
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
 
         if (creep.ticksToLive > 1450 && creep.room.controller.level == 8) {
@@ -115,7 +116,8 @@ class roleUpbuilder extends roleParent {
                 zz = super.boosted(creep, ['GH']);
             }
             if (zz) {
-                return; }
+                return;
+            }
 
         }
         if (super.depositNonEnergy(creep)) return;
@@ -174,7 +176,8 @@ class roleUpbuilder extends roleParent {
 
         }
         if (rampartDefense(creep)) {
-            return; }
+            return;
+        }
 
         if (creep.memory.upgrading) {
             var spawn = require('commands.toSpawn');

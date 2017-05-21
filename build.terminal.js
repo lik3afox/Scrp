@@ -351,7 +351,8 @@ function makeMineralOrder() {
     for (var e in minMinerals) {
         if (Memory.totalMinerals[e] < 25000) {
             let zz = _.filter(Game.market.orders, function(o) {
-                return o.type == "buy" && o.resourceType == e && o.active === true; });
+                return o.type == "buy" && o.resourceType == e && o.active === true;
+            });
             //    console.log(e,'less than 25000',Memory.totalMinerals[e],zz.length);
             if (zz.length === 0) {
                 var amount;
@@ -363,7 +364,7 @@ function makeMineralOrder() {
                 bb += zz[zz.length - 3].price;
                 bb += zz[zz.length - 4].price;
                 amount = (bb / 4);
-                    //bb = Math.floor( bb / 5 );
+                //bb = Math.floor( bb / 5 );
                 let qq = Game.market.createOrder(ORDER_BUY, e, amount, 50000, "E28S71");
                 console.log('Created Buy Order for ', e, 'amount:', amount, qq);
             }

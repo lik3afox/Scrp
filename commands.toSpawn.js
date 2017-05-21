@@ -624,7 +624,7 @@ class SpawnInteract {
 
             // RawMemory.segments[memory.segmentID]
 
-            let report = '>>' + spawn.memory.TotalBuild + '/1500' + '(' + spawn.memory.totalCreep + ')' + '<<' + spawn.name + ' RM: ' + spawn.room.name + '(E:' + spawn.room.energyAvailable + "/" + spawn.room.energyCapacityAvailable + ")" + '>MD:' + spawn.memory.mode + ' Bld:' + getModuleLevel(spawn)                + '|MD:' + spawn.memory.currentStack + 'C:' + spawn.memory.create.length + 'W:' + spawn.memory.warCreate.length + 'E:' + spawn.memory.expandCreate.length;
+            let report = '>>' + spawn.memory.TotalBuild + '/1500' + '(' + spawn.memory.totalCreep + ')' + '<<' + spawn.name + ' RM: ' + spawn.room.name + '(E:' + spawn.room.energyAvailable + "/" + spawn.room.energyCapacityAvailable + ")" + '>MD:' + spawn.memory.mode + ' Bld:' + getModuleLevel(spawn) + '|MD:' + spawn.memory.currentStack + 'C:' + spawn.memory.create.length + 'W:' + spawn.memory.warCreate.length + 'E:' + spawn.memory.expandCreate.length;
             //        let zotal = spawn.memory.expandCreate.length+spawn.memory.create.length+spawn.memory.warCreate.length;
             //if(spawn.memory.create.length != 0|| spawn.memory.warCreate.length != 0|| spawn.memory.expandCreate.length != 0)
 
@@ -646,7 +646,7 @@ class SpawnInteract {
                     } */
             if (spawn.spawning !== undefined) {
                 if (spawn.memory.CreatedMsg !== undefined && spawn.spawning !== undefined) {
-//                    report2 = spawn.name + " " + "/" + spawn.spawning.needTime + " " + spawn.memory.CreatedMsg;
+                    //                    report2 = spawn.name + " " + "/" + spawn.spawning.needTime + " " + spawn.memory.CreatedMsg;
                     RawMemory.segments[2] = RawMemory.segments[2] + JSON.stringify(report2);
                     //            RawMemory.segments[spawn.memory.segmentID] += report2;
                 }

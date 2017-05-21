@@ -1,8 +1,8 @@
-function use() {"use strict";}
+function use() { "use strict"; }
 var total = 0;
 var _links = [
     // Spawn 1 room
-    '58b001ce20048565118f241c', '58afe9e63c5e431f63d27903', 
+    '58b001ce20048565118f241c', '58afe9e63c5e431f63d27903',
     // spawn 3 room
     '58b0e62dabc23087239d8454', '58ef09f13685233e323f2786',
     // spawn 2 room
@@ -17,7 +17,8 @@ var _links = [
     // Spawn room E38S72
     '58ffa4eaff28ce410959868a', '5908d7b565640df9183ab7cb', '5908fc066303cfc31b28f48a',
     // Spawn room W4S93
-    '590f55b87ed675bb51e96132'];
+    '590f55b87ed675bb51e96132'
+];
 
 function linkTransfer() {
     var LINK;
@@ -53,13 +54,13 @@ function linkTransfer() {
 
 function sendEnergy(from, to, amount) {
     if (amount === undefined) amount = 0;
-        var linkFrom;
-        var linkTo;
+    var linkFrom;
+    var linkTo;
 
     if (_.isArray(from)) {
-         linkTo = Game.getObjectById(to);
+        linkTo = Game.getObjectById(to);
         for (var e in from) {
-             linkFrom = Game.getObjectById(from[e]);
+            linkFrom = Game.getObjectById(from[e]);
             if (linkFrom !== null && linkTo !== null) {
                 linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' });
                 if (linkTo.energy < linkFrom.energy && linkFrom.cooldown === 0 && linkFrom.energy >= amount) {
@@ -72,8 +73,8 @@ function sendEnergy(from, to, amount) {
         }
 
     } else {
-         linkFrom = Game.getObjectById(from);
-         linkTo = Game.getObjectById(to);
+        linkFrom = Game.getObjectById(from);
+        linkTo = Game.getObjectById(to);
 
         if (linkFrom === null || linkTo === null) return false;
         linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' });

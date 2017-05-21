@@ -21,10 +21,10 @@ var classLevels = [
 ];
 
 function memoryCheck(creep) {
-        if (creep.memory.distance === undefined) {
-            creep.memory.distance = 0;
-        }
-//        creep.memory.mineralID = creep.memory.goal;
+    if (creep.memory.distance === undefined) {
+        creep.memory.distance = 0;
+    }
+    //        creep.memory.mineralID = creep.memory.goal;
 }
 
 class mineralRole extends roleParent {
@@ -34,33 +34,35 @@ class mineralRole extends roleParent {
 
     static run(creep) {
         super.calcuateStats(creep);
-        if(super.doTask(creep)) {return;}
-        
+        if (super.doTask(creep)) {
+            return; }
+
         memoryCheck(creep);
 
         let carry = _.sum(creep.carry);
-/*
-        if(creep.memory.keeperLairID != undefined && creep.memory.goal != undefined && creep.memory.ExtractID != undefined ) {
-            console.log('has it all');
-                let goal = Game.getObjectById(creep.memory.goal);
-                if(creep.pos.isNearTo(goal) && carry < creep.carryCapacity - 45 ) {
-                    let sKep = Game.getObjectById(creep.memory.keeperLairID);
-                    if (sKep.ticksToSpawn != undefined && sKep.ticksToSpawn > 15) {
-                        let extract = Game.getObjectById(creep.memory.ExtractID);
-                        if(extract.cooldown == 0) {
-                            console.log('har');
-                            creep.harvest(goal);
-                            return;
+        /*
+                if(creep.memory.keeperLairID != undefined && creep.memory.goal != undefined && creep.memory.ExtractID != undefined ) {
+                    console.log('has it all');
+                        let goal = Game.getObjectById(creep.memory.goal);
+                        if(creep.pos.isNearTo(goal) && carry < creep.carryCapacity - 45 ) {
+                            let sKep = Game.getObjectById(creep.memory.keeperLairID);
+                            if (sKep.ticksToSpawn != undefined && sKep.ticksToSpawn > 15) {
+                                let extract = Game.getObjectById(creep.memory.ExtractID);
+                                if(extract.cooldown == 0) {
+                                    console.log('har');
+                                    creep.harvest(goal);
+                                    return;
+                                }
+                                console.log('skip');
+                                return;
+                            }
                         }
-                        console.log('skip');
-                        return;
-                    }
-                }
 
-        } */
+                } */
         // needs keeperlairID, need mineralID, need ExtractID, 
 
-        if (super.boosted(creep, boost)) {return;}
+        if (super.boosted(creep, boost)) {
+            return; }
         if (super.returnEnergy(creep)) return;
         if (movement.runAway(creep)) return;
 
@@ -82,7 +84,7 @@ class mineralRole extends roleParent {
             return;
         }
 
-//        constr.pickUpNonEnergy(creep);
+        //        constr.pickUpNonEnergy(creep);
 
         // He's not in 5 spaces of his goal. so he needs to move there. 
         if (creep.memory.goHome) {
@@ -115,9 +117,9 @@ class mineralRole extends roleParent {
                 //                  creep.say('home');
                 if (!super.guardRoom(creep)) {
                     if (creep.memory.goal == '5836bb2241230b6b7a5b9a35z' || creep.memory.goal == '5836bb2241230b6b7a5b9a35' || creep.memory.goal == '5836bb2241230b6b7a5b9a33z') {
-//                        if (!super.goToFocusFlag(creep)) {
-                            super._movement.moveHome(creep);
-//                        }
+                        //                        if (!super.goToFocusFlag(creep)) {
+                        super._movement.moveHome(creep);
+                        //                        }
                     } else {
                         super._movement.moveHome(creep);
                     }
@@ -152,12 +154,12 @@ class mineralRole extends roleParent {
                 if (_source.mineralAmount === 0) creep.memory.goHome = true;
 
                 if (creep.pos.isNearTo(_source)) {
-                    if(creep.memory.ExtractID  === undefined) {
-                        let vr = creep.room.find(FIND_STRUCTURES, {filter: s => s.structureType == STRUCTURE_EXTRACTOR});
+                    if (creep.memory.ExtractID === undefined) {
+                        let vr = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_EXTRACTOR });
                         creep.memory.ExtractID = vr[0].id;
                     }
                     let extract = Game.getObjectById(creep.memory.ExtractID);
-                    if(extract.cooldown === 0) {
+                    if (extract.cooldown === 0) {
                         if (creep.harvest(_source) == OK) {
                             super.keeperFind(creep);
                         }

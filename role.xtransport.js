@@ -93,7 +93,8 @@ class transport extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
         if (creep.saying === 'zZzZ') {
             creep.say('zZz');
             return;

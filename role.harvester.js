@@ -31,39 +31,39 @@ class roleHarvester extends roleParent {
     }
 
     static levels(level) {
-         if (level > classLevels.length-1)       level = classLevels.length-1;
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
         return classLevels[level];
     }
 
     static run(creep) {
         super.calcuateStats(creep);
-//        if(creep.memory.needBoost!= undefined && creep.memory.needBoost.length > 0) {
-//            creep.say('mod');
-//            if(super.boosted(creep,creep.memory.needBoost)) { return;}
-//        }
-creep.pickUpEnergy();
-        
-        if (creep.memory.distance === undefined) {            creep.memory.distance = 0;        }
-        if(creep.memory.isThere === undefined) {            creep.memory.isThere = false;        }
+        //        if(creep.memory.needBoost!= undefined && creep.memory.needBoost.length > 0) {
+        //            creep.say('mod');
+        //            if(super.boosted(creep,creep.memory.needBoost)) { return;}
+        //        }
+        creep.pickUpEnergy();
+
+        if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
+        if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
         super.rebirth(creep);
-        if (super.returnEnergy(creep)) { return; }
-//        if (super.depositNonEnergy(creep)) return;
+        if (super.returnEnergy(creep)) {
+            return; }
+        //        if (super.depositNonEnergy(creep)) return;
         if (creep.memory.level > 1) super.renew(creep);
-        if(creep.room.name == 'E38S72') constr.pickUpEnergy(creep);
+        if (creep.room.name == 'E38S72') constr.pickUpEnergy(creep);
         // Logic paths
-        if(!creep.memory.isThere) creep.memory.distance++;
+        if (!creep.memory.isThere) creep.memory.distance++;
 
 
         if (creep.carry.energy == creep.carryCapacity) {
-                let spawnz = Game.getObjectById(creep.memory.renewSpawnID);
-                if (spawnz !== null && spawnz.energy < spawnz.energyCapacity) {
-                    creep.transfer(spawnz, RESOURCE_ENERGY);
-                } else {
-                    if (!link.deposit(creep)) {
-                        if (!containers.toContainer(creep)) {
-                        }
-                    }
+            let spawnz = Game.getObjectById(creep.memory.renewSpawnID);
+            if (spawnz !== null && spawnz.energy < spawnz.energyCapacity) {
+                creep.transfer(spawnz, RESOURCE_ENERGY);
+            } else {
+                if (!link.deposit(creep)) {
+                    if (!containers.toContainer(creep)) {}
                 }
+            }
 
         }
         sources.moveToWithdraw(creep);

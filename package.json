@@ -1,23 +1,23 @@
 {
-  "name": "izzy.4",
-  "version": "1.0.0",
-  "description": "Screeps",
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lik3afox/Scrp.git"
-  },
-  "author": "Lik3afox",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/lik3afox/Scrp/issues"
-  },
-  "homepage": "https://github.com/lik3afox/Scrp#readme",
-  "devDependencies": {
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-screeps": "^1.2.1"
-  }
+    "name": "izzy.4",
+    "version": "1.0.0",
+    "description": "Screeps",
+    "main": "main.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lik3afox/Scrp.git"
+    },
+    "author": "Lik3afox",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/lik3afox/Scrp/issues"
+    },
+    "homepage": "https://github.com/lik3afox/Scrp#readme",
+    "devDependencies": {
+        "grunt-contrib-watch": "^1.0.0",
+        "grunt-screeps": "^1.2.1"
+    }
 }

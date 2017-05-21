@@ -113,13 +113,15 @@ function globalCreep() {
     if (Memory.scientistCheck < 0) {
         Memory.scientistCheck = 250;
         let sci = _.filter(Game.creeps, function(o) {
-            return o.memory.role == 'scientist'; });
+            return o.memory.role == 'scientist';
+        });
         let total = 0;
         total += sci.length;
         for (var e in Game.spawns) {
             if (Game.spawns[e].memory.alphaSpawn) {
                 let sci2 = _.filter(Game.spawns[e].memory.create, function(o) {
-                    return o.memory.role == 'scientist'; });
+                    return o.memory.role == 'scientist';
+                });
                 if (sci2.length !== 0)
                     console.log('sci spawns', sci2.length);
                 total += sci2.length;
@@ -190,7 +192,8 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
                 spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
                 let zz = spawn.room.find(FIND_CREEPS);
                 zz = _.filter(zz, function(o) {
-                    return o.memory.role == 'miner'; });
+                    return o.memory.role == 'miner';
+                });
                 if (zz.length > 0) zz[0].suicide();
             }
         }
@@ -302,7 +305,8 @@ module.exports.loop = function() {
                 if (Game.spawns[title].memory.alphaSpawn) {
 
                     let zz = _.filter(Game.spawns, function(o) {
-                        return (o.spawning === null || o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn; });
+                        return (o.spawning === null || o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
+                    });
                     if (zz.length > 0) anySpawn = true;
                     if (anySpawn) {
                         if (Game.spawns[title].memory.checkCount === undefined) {

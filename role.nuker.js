@@ -13,13 +13,13 @@
 var classLevels = [
     [CARRY, MOVE], // 300
 
-    [CARRY,CARRY, CARRY, CARRY,MOVE,MOVE,MOVE,CARRY,MOVE], // 550
+    [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, CARRY, MOVE], // 550
 
-   [MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY], // 800
-   [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY], //1300
+    [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], // 800
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], //1300
 
-   [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]
-   
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY]
+
 ];
 
 var roleParent = require('role.parent');
@@ -31,51 +31,51 @@ var sources = require('commands.toSource');
 var structures = require('commands.toStructure');
 
 class roleNuker extends roleParent {
-   static levels(level) {
-     if (level > classLevels.length-1 )       level = classLevels.length-1;
+    static levels(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
         return classLevels[level];
     }
 
-   static run(creep) {
-  //  creep.say('nuke');
+    static run(creep) {
+        //  creep.say('nuke');
         let nuke = creep.room.nuke;
-        let total = _.sum(  creep.carry );
+        let total = _.sum(creep.carry);
 
-        if( total === 0) {
+        if (total === 0) {
             creep.memory.filled = false;
-        } else  {
+        } else {
             creep.memory.filled = true;
         }
 
-        if(!creep.memory.filled) { 
+        if (!creep.memory.filled) {
 
-//            creep.say('g'+total);
-        if(nuke.ghodium < nuke.ghodiumCapacity) {
-            if( creep.pos.isNearTo(creep.room.terminal) ) {
-                creep.withdraw(creep.room.terminal,'G');
-            } else {
-                creep.moveTo(creep.room.terminal);
+            //            creep.say('g'+total);
+            if (nuke.ghodium < nuke.ghodiumCapacity) {
+                if (creep.pos.isNearTo(creep.room.terminal)) {
+                    creep.withdraw(creep.room.terminal, 'G');
+                } else {
+                    creep.moveTo(creep.room.terminal);
+                }
+
             }
 
-        }
+            if (nuke.energy < nuke.energyCapacity) {
 
-        if(nuke.energy < nuke.energyCapacity) {
-
-            if( creep.pos.isNearTo(creep.room.storage) ) {
-                creep.withdraw(creep.room.storage,RESOURCE_ENERGY);
-            } else {
-                creep.moveTo(creep.room.storage);
+                if (creep.pos.isNearTo(creep.room.storage)) {
+                    creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                } else {
+                    creep.moveTo(creep.room.storage);
+                }
             }
-        }
 
         } else {
-//            creep.say('t');
-            if(creep.pos.isNearTo(nuke)) {
-                for(var e in creep.carry) {
-                    creep.transfer(nuke,e);
-                } 
-            }else {
-              creep.moveTo(nuke);
+            //            creep.say('t');
+            if (creep.pos.isNearTo(nuke)) {
+                for (var e in creep.carry) {
+                    creep.transfer(nuke, e);
+                }
+            } else {
+                creep.moveTo(nuke);
             }
         }
 

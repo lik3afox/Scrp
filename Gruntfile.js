@@ -15,11 +15,11 @@ module.exports = function(grunt) {
                 src: ['*.js']
             }
         },
-          jshint: {
+        jshint: {
             all: ['*.js'],
             options: {
                 esversion: 6,
-                laxcomma:true,
+                laxcomma: true,
                 loopfunc: true,
                 globals: {
                     "_": false,
@@ -126,6 +126,6 @@ module.exports = function(grunt) {
             }
         }
     });
-  grunt.task.registerTask('default', ['jshint']);
-  grunt.task.registerTask('deploy', ['jshint', 'screeps']);
+    grunt.task.registerTask('default', ['jshint']);
+    grunt.task.registerTask('deploy', ['jshint', 'screeps']);
 };

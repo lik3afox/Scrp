@@ -69,7 +69,8 @@ function getSKContainers(creep) {
             let fs = room.find(FIND_STRUCTURES);
             if (fs !== null) {
                 fs = _.filter(fs, function(o) {
-                    return o.structureType == STRUCTURE_CONTAINER; });
+                    return o.structureType == STRUCTURE_CONTAINER;
+                });
                 for (var a in fs) {
                     containers.push(fs[a].id);
                 }
@@ -91,7 +92,8 @@ function repairRoad(creep, range) {
     let target = Game.getObjectById(creep.memory.repairTarget);
     let zbuild = creep.pos.findInRange(FIND_STRUCTURES, range);
     zbuild = _.filter(zbuild, function(o) {
-        return (o.structureType == STRUCTURE_ROAD && o.hits < o.hitsMax - 1500); });
+        return (o.structureType == STRUCTURE_ROAD && o.hits < o.hitsMax - 1500);
+    });
     if (zbuild.length > 0) {
         let ztarget = creep.pos.findClosestByRange(zbuild);
         if (creep.pos.inRangeTo(ztarget.pos, 3)) {

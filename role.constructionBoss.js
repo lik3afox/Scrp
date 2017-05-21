@@ -9,21 +9,22 @@
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
 var classLevels = [
-    [MOVE,MOVE],
-    [MOVE,MOVE,MOVE],
-    [MOVE,MOVE,MOVE],
-    [MOVE,MOVE,MOVE]
+    [MOVE, MOVE],
+    [MOVE, MOVE, MOVE],
+    [MOVE, MOVE, MOVE],
+    [MOVE, MOVE, MOVE]
 ];
 class constructionBoss extends roleParent {
     static levels(level) {
-         if (level > classLevels.length-1 )       level = classLevels.length-1;
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
         return classLevels[level];
     }
 
     static run(creep) {
         super.calcuateStats(creep);
-        if(super.doTask(creep)) {return;}
-        
+        if (super.doTask(creep)) {
+            return; }
+
         /*
         for (var name in Game.rooms) {
             var motherSpawn;
@@ -37,29 +38,29 @@ class constructionBoss extends roleParent {
             var sources = croom.find(FIND_SOURCES);
         } */
 
-        if(creep.memory.goal !== undefined)  {
-          // Go to goal. 
+        if (creep.memory.goal !== undefined) {
+            // Go to goal. 
             var constr = require('commands.toStructure');
-            let lastMovement = {x:creep.pos.x,y:creep.pos.y};
-//            console.log(lastMovement,'rayray',Game.getObjectById(creep.memory.goal));
+            let lastMovement = { x: creep.pos.x, y: creep.pos.y };
+            //            console.log(lastMovement,'rayray',Game.getObjectById(creep.memory.goal));
 
-                if(Game.getObjectById(creep.memory.goal) === null) {
-/*                    var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+            if (Game.getObjectById(creep.memory.goal) === null) {
+                /*                    var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
 
-                console.log(goingTo);
-                    creep.moveTo(goingTo);*/
+                                console.log(goingTo);
+                                    creep.moveTo(goingTo);*/
 
                 movement.moveToGoal(creep);
 
             } else {
-            creep.moveTo(Game.getObjectById(creep.memory.goal));
-        }
+                creep.moveTo(Game.getObjectById(creep.memory.goal));
+            }
             constr.createRoadAt(creep);
         }
 
         var target = Game.getObjectById(creep.memory.goal);
-//        console.log(target, creep.memory.goal,Game.getObjectById(creep.memory.goal));
-        if(target !== null && creep.pos.inRangeTo(target, 1)) {
+        //        console.log(target, creep.memory.goal,Game.getObjectById(creep.memory.goal));
+        if (target !== null && creep.pos.inRangeTo(target, 1)) {
             creep.say('Reporting');
             var parent = Game.getObjectById(creep.memory.parent);
             var spawn = require('build.spawn');
@@ -67,7 +68,7 @@ class constructionBoss extends roleParent {
             spawn.reportFrom(creep);
 
 
-            creep.suicide(); 
+            creep.suicide();
         }
 
 
