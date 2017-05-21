@@ -238,7 +238,7 @@ class baseParent {
         }
 
         let task = Thetasks[0];
-        console.log('Doing task', task.order, task.options, creep.pos);
+        console.log(creep, 'Doing task', task.order, task.options, creep.pos);
         // Task should be an object
         // That does it things
         // It checks first to see if the task is done
@@ -280,9 +280,11 @@ class baseParent {
                 } else {
                     creep.say('failG');
                 }
+                //              if (task.room) {
                 if (creep.room.name == task.pos.roomName) {
                     orderComplete = true;
                 }
+                //                } 
                 break;
 
 
@@ -664,7 +666,8 @@ class baseParent {
                 if (creep.pos.isEqualTo(spot)) {
                     let spwns = creep.room.find(FIND_STRUCTURES);
                     spwns = _.filter(spwns, function(o) {
-                        return o.structureType == STRUCTURE_SPAWN; });
+                        return o.structureType == STRUCTURE_SPAWN;
+                    });
 
                     for (var e in spwns) {
                         if (creep.pos.isNearTo(spwns[e])) {
@@ -754,7 +757,8 @@ class baseParent {
 
         if (creep.memory.focusFlagName === undefined) {
             flags = _.filter(Game.flags, function(f) {
-                return f.color == COLOR_CYAN; });
+                return f.color == COLOR_CYAN;
+            });
             for (var e in flags) {
                 var distance = Game.map.getRoomLinearDistance(creep.room.name, flags[e].pos.roomName);
                 if (distance < 5) {

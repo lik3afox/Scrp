@@ -74,15 +74,15 @@ class roleNuker extends roleParent {
 
             if (nuke.energy < nuke.energyCapacity) {
 
-                if (creep.pos.isNearTo(creep.room.storage)) {
-                    creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                if (creep.pos.isNearTo(creep.room.terminal)) {
+                    creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
                 } else {
-                    creep.moveTo(creep.room.storage);
+                    creep.moveTo(creep.room.terminal);
                 }
             }
 
         } else {
-            if (nuke.ghodium == nuke.ghodiumCapacity && nuke.energy == nuke.energyCapacity) {
+            if (creep.carry.G > 0 && nuke.ghodium == nuke.ghodiumCapacity && nuke.energy == nuke.energyCapacity) {
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     for (var a in creep.carry) {
                         creep.transfer(creep.room.terminal, a);
@@ -91,7 +91,7 @@ class roleNuker extends roleParent {
                     creep.moveTo(creep.room.terminal);
                 }
 
-            } else if (nuke.ghodium == nuke.ghodiumCapacity || nuke.energy == nuke.energyCapacity) {
+            } else if (creep.carry[RESOURCE_ENERGY] > 0 && nuke.energy == nuke.energyCapacity) {
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     for (var z in creep.carry) {
                         creep.transfer(creep.room.terminal, z);

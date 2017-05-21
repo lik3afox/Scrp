@@ -123,6 +123,18 @@ class transportz extends roleParent {
                     var zz = super._containers.moveToTerminal(creep);
             } else {
                 super._movement.moveHome(creep);
+
+                let task = {};
+                task.options = {
+                    ignoreRoads: _ignoreRoad,
+                    reusePath: 49,
+                    visualizePathStyle: pathVis
+                };
+                task.pos = Game.getObjectById(creep.memory.parent).pos;
+                task.order = "keeperMoveTo";
+                task.room = true;
+                creep.memory.task.push(task);
+
             }
 
         } else { // IF not going home. 
@@ -139,25 +151,14 @@ class transportz extends roleParent {
 
                 let task = {};
                 task.options = {
-                    ignoreRoads: _ignoreRoad,
+                    //                    ignoreRoads: _ignoreRoad,
                     reusePath: 49,
                     visualizePathStyle: pathVis
                 };
                 task.pos = _goal.pos;
                 task.order = "keeperMoveTo";
-
-                console.log(task.order, creep.pos);
+                task.room = true;
                 creep.memory.task.push(task);
-                /*                if (!super.guardRoom(creep)) {
-                //                    if(!super.avoidArea(creep)) { 
-
-                                    creep.moveTo(_goal, {
-                                        ignoreRoads: _ignoreRoad,
-                                        reusePath: 49,
-                                        visualizePathStyle:pathVis
-                                    });
-                        //        }
-                            }*/
 
             } else {
                 creep.say("Bitches and weed");

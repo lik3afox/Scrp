@@ -21,7 +21,7 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY]
 
 ];
-var boost = ['XGH2O'];
+var boost = ['XGH2O', 'GH'];
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');

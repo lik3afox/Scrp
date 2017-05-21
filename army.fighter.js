@@ -37,7 +37,8 @@ var roleParent = require('role.parent');
 function findNewParty(creep) {
     // first we will look at Game.falgs
     let pbFlags = _.filter(Game.flags, function(o) {
-        return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED; });
+        return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED;
+    });
     for (var a in pbFlags) {
         let dis = Game.map.getRoomLinearDistance(creep.room.name, pbFlags[a].pos.roomName);
         if (dis <= 5 && pbFlags[a].name != creep.memory.party) {
@@ -149,6 +150,15 @@ function powerAction(creep) {
         } else {
             creep.countDistance();
             movement.flagMovement(creep);
+            let task = {};
+            task.options = {
+                reusePath: 49
+            };
+            task.pos = Game.flags[creep.memory.party].pos;
+            task.order = "moveTo";
+            task.room = true;
+            creep.memory.task.push(task);
+
             return true;
         }
     } else {
@@ -169,10 +179,12 @@ class fighterClass extends roleParent {
     static run(creep) {
         creep.say('fight');
         if (super.returnEnergy(creep)) {
-            return; }
+            return;
+        }
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         //   if(super.boosted(creep,boost)) { return;}
 
@@ -188,7 +200,8 @@ class fighterClass extends roleParent {
         }
         if (creep.memory.level == 11) {
             if (super.boosted(creep, ['XZHO2', 'XGHO2'])) {
-                return; }
+                return;
+            }
         }
 
         var enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3, {

@@ -198,7 +198,7 @@ var E35S73Module = [ // Spawn11 Room E28S77
     //        ['builder',    require('role.builder'),1, 5],
     ['scientist', require('role.scientist'), 0, 3],
     ['minHarvest', require('role.mineral'), 1, 4],
-    ['nuker', require('role.nuker'), 1, 4],
+    ['nuker', require('role.nuker'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['wallwork', require('role.wallworker'), 1, 4],
     ['harvester', require('role.harvester'), 2, 2]
@@ -231,6 +231,7 @@ var E38W75Module = [
 
 var E38S72Module = [
     ['first', require('role.first'), 2, 3],
+    ['nuker', require('role.nuker'), 1, 3],
     ['linker', require('role.linker'), 1, 3],
     ['scientist', require('role.scientist'), 0, 3],
     ['homeDefender', require('role.defender2'), 1, 6],
@@ -674,13 +675,6 @@ function getModuleLevel(spawn) {
 
 function getNuke(spawn) {
     return spawn.room.nuke;
-    /*    let nukes = ['58b8846bb286c56d754d0161'];
-        for (var e in nukes) {
-            let nuker = Game.getObjectById(nukes[e]);
-            if (nuker != undefined && nuker.pos.roomName == spawn.pos.roomName) {
-                return nuker;
-            }
-        }*/
 }
 
 function getCurrentModule(spawn) {
