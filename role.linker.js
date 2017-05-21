@@ -350,7 +350,7 @@ function spawn8Room(creep) {
 
             goto = Game.getObjectById('58dc2df7ca1434d44e7c7d06');
             if (goto !== null)
-                if (creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
+                if (creep.room.storage.store[RESOURCE_ENERGY] < 900000 && creep.room.terminal.store[RESOURCE_ENERGY] > 15000) {
                     if (creep.pos.isNearTo(creep.room.terminal)) {
                         if (creep.withdraw(creep.room.terminal, RESOURCE_ENERGY) == OK) {
                             creep.moveTo(creep.room.storage);
@@ -934,7 +934,8 @@ class roleLinker extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
         //{color: '#97c39b ',stroke: '#000000 ',strokeWidth: 0.123,font: 0.5}
 
         if (creep.memory.roleID === 0) {

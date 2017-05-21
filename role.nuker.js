@@ -40,9 +40,15 @@ class roleNuker extends roleParent {
         //  creep.say('nuke');
         let nuke = creep.room.nuke;
         let total = _.sum(creep.carry);
+        if (super.returnEnergy(creep)) {
+            return;
+        }
 
         if (total === 0) {
             creep.memory.filled = false;
+            if (nuke.ghodium == nuke.ghodiumCapacity && nuke.energy == nuke.energyCapacity) {
+                creep.memory.death = true;
+            }
         } else {
             creep.memory.filled = true;
         }
@@ -53,6 +59,13 @@ class roleNuker extends roleParent {
             if (nuke.ghodium < nuke.ghodiumCapacity) {
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     creep.withdraw(creep.room.terminal, 'G');
+                } else {
+                    creep.moveTo(creep.room.terminal);
+                }
+
+            } else {
+                if (creep.pos.isNearTo(creep.room.terminal)) {
+                    creep.transfer(creep.room.terminal, 'G');
                 } else {
                     creep.moveTo(creep.room.terminal);
                 }
@@ -69,13 +82,32 @@ class roleNuker extends roleParent {
             }
 
         } else {
-            //            creep.say('t');
-            if (creep.pos.isNearTo(nuke)) {
-                for (var e in creep.carry) {
-                    creep.transfer(nuke, e);
+            if (nuke.ghodium == nuke.ghodiumCapacity && nuke.energy == nuke.energyCapacity) {
+                if (creep.pos.isNearTo(creep.room.terminal)) {
+                    for (var a in creep.carry) {
+                        creep.transfer(creep.room.terminal, a);
+                    }
+                } else {
+                    creep.moveTo(creep.room.terminal);
                 }
+
+            } else if (nuke.ghodium == nuke.ghodiumCapacity || nuke.energy == nuke.energyCapacity) {
+                if (creep.pos.isNearTo(creep.room.terminal)) {
+                    for (var z in creep.carry) {
+                        creep.transfer(creep.room.terminal, z);
+                    }
+                } else {
+                    creep.moveTo(creep.room.terminal);
+                }
+
             } else {
-                creep.moveTo(nuke);
+                if (creep.pos.isNearTo(nuke)) {
+                    for (var e in creep.carry) {
+                        creep.transfer(nuke, e);
+                    }
+                } else {
+                    creep.moveTo(nuke);
+                }
             }
         }
 

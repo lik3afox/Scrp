@@ -745,7 +745,7 @@ class MoveInteract {
             bads = _.filter(bads, function(o) {
                 return o.owner.username == 'Invader';
             });
-
+            //            console.log(bads.length, 'checkForBadsPlaceFlag', creep.room);
             if (bads.length > 0) {
                 var flagz = creep.room.find(FIND_FLAGS, {
                     filter: (flag) => {
@@ -754,15 +754,16 @@ class MoveInteract {
                 });
                 //             return (flag.color == FLAG.DEFEND || flag.color == FLAG.GUARD);}} ); 
                 let type = bads[0].owner.username;
+                let z = bads[0].id[Math.floor(Math.random() * 15)];
+                //                console.log(flagz.length, 'okay so bads are here', flagz.length == 0, flagz.length === 0);
                 if (flagz.length === 0) {
-                    creep.room.createFlag(bads[0].pos.x, bads[0].pos.y, type + " " + bads.length + bads[0].id[22], FLAG.DEFEND);
-                    for (var e in Game.flags) {
+                    creep.room.createFlag(bads[0].pos.x, bads[0].pos.y, type + z + " " + bads.length + bads[0].id[22], FLAG.DEFEND);
+                    /*for (var e in Game.flags) {
                         if (Game.flags[e].pos.roomName == creep.pos.roomName && (Game.flags[e].color == COLOR_WHITE || Game.flags[e].color == COLOR_BLUE)) {
                             Game.flags[e].memory.goldMined = 0;
                             Game.flags[e].memory.attack++;
                         }
-
-                    }
+                    } */
                 }
             }
 

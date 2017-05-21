@@ -136,6 +136,7 @@ class settler extends roleParent {
             }
         }
         shouldDie(creep);
+        movement.checkForBadsPlaceFlag(creep);
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
         if (creep.memory.level > 2) super.rebirth(creep);
@@ -145,7 +146,6 @@ class settler extends roleParent {
             return;
         }
 
-        movement.checkForBadsPlaceFlag(creep);
 
         var _source = Game.getObjectById(creep.memory.goal);
 

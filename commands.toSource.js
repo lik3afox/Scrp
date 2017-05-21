@@ -3,7 +3,7 @@ class SourceInteract {
     static moveToWithdraw(creep) {
 
         let source = Game.getObjectById(creep.memory.sourceID);
-        if (creep.memory.sourceID === null || source.energy === 0 || source.energy === undefined) {
+        if (source === null || source.energy === 0 || source.energy === undefined) {
             var total = creep.room.find(FIND_SOURCES);
             for (var z in total) {
                 let otherHasIt = false;

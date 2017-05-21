@@ -414,7 +414,7 @@ function forEveryTerminal(terminal) {
             }
 
             if (doit) {
-                giveMinerals(terminal, reNeeded, 100);
+                giveMinerals(terminal, reNeeded, reAmount);
             }
         }
     }
