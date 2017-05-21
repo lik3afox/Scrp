@@ -8,7 +8,7 @@ module.exports = function(grunt) {
             options: {
                 email: '<%= creds.email %>',
                 password: '<%= creds.password %>',
-                branch: grunt.option('branch') || 'default',
+                branch: grunt.option('branch') || 'ewicko1',
                 ptr: false
             },
             dist: {
