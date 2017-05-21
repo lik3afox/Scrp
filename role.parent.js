@@ -15,7 +15,7 @@ function getCost(module) {
   return total;
 }
 function keeperFindAt(xx,yy,creep) {
-        if(creep.memory.keeperLairID == undefined) {
+        if(creep.memory.keeperLairID === undefined) {
           let varen = 9;
           if(yy-varen < 0)  yy = varen;
           if(xx-varen < 0)  xx = varen;
@@ -28,7 +28,7 @@ function keeperFindAt(xx,yy,creep) {
                 return;
               }
             }
-            if(creep.memory.keeperLairID == undefined ) {
+            if(creep.memory.keeperLairID === undefined ) {
             creep.memory.keeperLairID = 'none';
             }
         } 
@@ -87,7 +87,7 @@ switch(boost) {
 }
   for(var e in creep.body) {
 //    console.log(creep.body[e].boost, boost);
-if(creep.body[e].type == type && creep.body[e].boost == undefined){
+if(creep.body[e].type == type && (creep.body[e].boost === undefined&&creep.body[e].boost === null)){
 //console.log(boost,type,creep.body[e].boost,creep.body[e].type,creep.pos);
   return true; 
 }
@@ -98,17 +98,6 @@ if(creep.body[e].type == type && creep.body[e].boost == undefined){
   }
 
 return true;  
-
-
-
-
-  for(var e in creep.body) {
-    if(creep.body[e].boost == undefined && creep.body[e].type == type) {
-      return true;
-    }
-  }
-
-  return false;
 }
 function getCost(module) {
   var total = 0;
@@ -129,7 +118,7 @@ function getParts(creep) {
     carry:0,
     heal:0,
     tough:0    
-  }
+  };
 
 let workParts = _.filter(creep.body,{type:WORK}).length;
 let healParts = _.filter(creep.body,{type:HEAL}).length;
@@ -142,27 +131,18 @@ function getDeathSpot(roomName){
   switch(roomName){
     case "E38S72":
     return new RoomPosition(37,34,roomName);
-    break;
     case "E29S79":
     return new RoomPosition(23,28,roomName);
-    break;
     case "E35S83":
     return new RoomPosition(7,21,roomName);
-    break;
     case "E26S73":
     return new RoomPosition(37,21,roomName);
-    break;
     case "E28S71":
     return new RoomPosition(18,28,roomName);
-    break;
     case "E28S73":
     return new RoomPosition(21,41,roomName);
-    break;
-
-    break;
     default:
     return;
-    break;
   }
 }
 
@@ -170,7 +150,7 @@ function getDeathSpot(roomName){
 class baseParent {
 
     static calcuateStats(creep) {
-      if(creep.memory.stats != undefined) return;
+      if(creep.memory.stats !== undefined) return;
       let wParts = _.filter(creep.body,{type:WORK}).length;
       let mParts = _.filter(creep.body,{type:MOVE}).length;
       let hParts = _.filter(creep.body,{type:HEAL}).length;
@@ -192,9 +172,9 @@ class baseParent {
         repair:wParts*100,
         repairEnergy:wParts,
         upgrade:wParts,
-        carry: cParts * 50,
+        carryMax: cParts * 50,
         dismanle: wParts * 50,
-        heal: hParts * 12,
+        healMax: hParts * 12,
         rangeHeal: hParts *4,
         massMax: rParts * 1,
         massMid: rParts * 4,
@@ -230,32 +210,27 @@ class baseParent {
         case "ty":
          creep.say('bye', true);
           return false;
-        break;
         case "here":
           creep.say('zZzZz',true);   
           return true;
-        break;
         case "zZzZz":
          creep.say('zZzZ',true);
           return true;
-        break;
         case "ZzZz":
         creep.say('zZz',true); 
           return true;
-        break;
         case "zZz":
           return true;
-        break;
       }
       return false;
     }
 
     static doTask(creep) {
-      if(creep.memory.task == undefined) {
+      if(creep.memory.task === undefined) {
         creep.memory.task = [];
       }
       let Thetasks = creep.memory.task;
-      if(Thetasks.length == 0) {
+      if(Thetasks.length === 0) {
         return false;
       }
 
@@ -281,7 +256,7 @@ class baseParent {
       var target;
       switch(task.order) {
         case "sing":
-        if( creep.memory.singing == undefined ){
+        if( creep.memory.singing === undefined ){
             creep.say('singing');
             creep.memory.song = task.sing;
             creep.memory.singing = 0;
@@ -300,7 +275,7 @@ class baseParent {
             if (!this.guardRoom(creep)) {
               creep.moveTo(tmp,task.options);
             } else {
-              creep.say('failG')
+              creep.say('failG');
             }
             if(creep.room.name == task.pos.roomName) {
               orderComplete = true;
@@ -310,11 +285,11 @@ class baseParent {
 
         case "moveTo":
         creep.say('T:move');
-        var tmp = new RoomPosition(task.pos.x,task.pos.y, task.pos.roomName);
-          if(creep.pos.isNearTo(tmp)) {
+        var tmp2 = new RoomPosition(task.pos.x,task.pos.y, task.pos.roomName);
+          if(creep.pos.isNearTo(tmp2)) {
             orderComplete = true;
           }else {
-            creep.moveTo(tmp,task.options);
+            creep.moveTo(tmp2,task.options);
             }
 
         break;
@@ -323,7 +298,7 @@ class baseParent {
         creep.say('T:att');
           target = Game.getObjectById(task.targetID);
           let distance = creep.pos.getRangeTo(target);
-          if(target == undefined) orderComplete = true;
+          if(target === undefined) orderComplete = true;
           if(distance == 1) {
             //status check to see if we have attack damage.
             creep.attack(target);
@@ -360,7 +335,7 @@ class baseParent {
             for(var e in creep.carry){
               creep.transfer(target,e);
             }
-          if(_.sum( creep.carry) == 0 ){
+          if(_.sum( creep.carry) === 0 ){
             orderComplete = true;
           }
 
@@ -372,11 +347,11 @@ class baseParent {
         case "get":
         creep.say('T:get');
           target = Game.getObjectById(task.targetID);
-          if(target == undefined) {
+          if(target === null) {
             orderComplete = true;
           } else {
           if(creep.pos.isNearTo(target)) {
-              if(target.structureType == undefined) {
+              if(target.structureType === undefined) {
                 creep.pickup(target);
               } else {
                 creep.withdraw(target,task.resource);
@@ -390,8 +365,8 @@ class baseParent {
 
         case "wait":
         // Tick amount to wait.
-        if(creep.memory.taskWait == undefined) {
-          if(task.timed == undefined) {
+        if(creep.memory.taskWait === undefined) {
+          if(task.timed === undefined) {
             console.log('Cannot wait due to no task.timed');
           } else {
             creep.memory.taskWait = task.timed;
@@ -399,7 +374,7 @@ class baseParent {
         }
         creep.say('W:'+creep.memory.taskWait);
           creep.memory.taskWait--;
-          if(creep.memory.taskWait == 0) {
+          if(creep.memory.taskWait === 0) {
             creep.memory.taskWait = undefined;
             orderComplete = true;
           }
@@ -433,7 +408,7 @@ class baseParent {
 
       }
       if(orderComplete) {
-        console.log('task completed')
+        console.log('task completed');
         let zz = creep.memory.task.shift();
         if( task.repeat ) {
             creep.memory.task.push(zz);
@@ -491,7 +466,7 @@ class baseParent {
     static boosted(creep,boosted) {
       if(creep.ticksToLive < 1400) return false; 
 
-          if(creep.memory.boostNeeded ==  undefined) {
+          if(creep.memory.boostNeeded ===  undefined) {
             creep.memory.boostNeeded = boosted;
         }
         
@@ -539,14 +514,14 @@ class baseParent {
     static keeperWatch(creep) {
         // finds the structure 
         if(creep.memory.keeperLairID == 'none') return;
-        if(creep.memory.keeperLairID != undefined) { // THis is obtained when 
+        if(creep.memory.keeperLairID !== undefined) { // THis is obtained when 
           let keeper = Game.getObjectById(creep.memory.keeperLairID);
 //          if(creep.memory.keeperLairID != undefined &&  keeper.ticksToSpawn  == undefined) return true;
-          if(keeper == undefined) return false;
-          if(keeper.ticksToSpawn != undefined)
+          if(keeper === null) return false;
+          if(keeper.ticksToSpawn !== undefined)
           keeper.room.visual.text(keeper.ticksToSpawn,keeper.pos.x,keeper.pos.y,{color: '#97c39b ',stroke: '#000000 ',strokeWidth: 0.123,font: 0.5});
 
-          if(creep.room.name == keeper.room.name && (keeper.ticksToSpawn == undefined || keeper.ticksToSpawn < 15 || keeper.ticksToSpawn > 285) ) {
+          if(creep.room.name == keeper.room.name && (keeper.ticksToSpawn === undefined || keeper.ticksToSpawn < 15 || keeper.ticksToSpawn > 285) ) {
               let _goal = Game.getObjectById(creep.memory.goal);
 //if(creep.memory.role == 'miner')              creep.dropEverything();
               let newPos = new RoomPosition(_goal.pos.x,_goal.pos.y,_goal.pos.roomName);
@@ -559,7 +534,7 @@ class baseParent {
               //ID: 
               if(creep.memory.role == 'miner' && creep.carry[RESOURCE_ENERGY] > 0) {
                 let zz = Game.getObjectById(creep.memory.workContainer);
-                if(zz != undefined) {
+                if(zz !== null) {
                   creep.transfer(zz,RESOURCE_ENERGY);
                 }
               }
@@ -570,10 +545,10 @@ class baseParent {
                 creep.moveMe(Game.getObjectById(creep.memory.parent));
               } else {
               for(var e in Game.flags) {
-                if(Game.flags[e].room!= undefined && Game.flags[e].room.name == creep.room.name) {
+                if(Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
                   let contain = Game.getObjectById(creep.memory.workContainer);
-                  if(contain != undefined && creep.pos.isNearTo(contain)) {
-                    creep.transfer(contain,RESOURCE_ENERGY)
+                  if(contain !== null && creep.pos.isNearTo(contain)) {
+                    creep.transfer(contain,RESOURCE_ENERGY);
                   }
                   creep.moveMe(Game.flags[e],{ignoreRoads:true});
                   break;
@@ -595,8 +570,8 @@ static guardRoom(creep) {
   // IF this returns false - means that it's safe to move.
   // If this returns true - means that it's not safe to move.
      let sKep = Game.getObjectById(creep.memory.keeperLairID);
- if (sKep != undefined && sKep.pos.roomName == creep.pos.roomName) {
-                    if (sKep.ticksToSpawn == undefined || sKep.ticksToSpawn < 15 || sKep.ticksToSpawn > 295) {
+ if (sKep !== null && sKep.pos.roomName == creep.pos.roomName) {
+                    if (sKep.ticksToSpawn === undefined || sKep.ticksToSpawn < 15 || sKep.ticksToSpawn > 295) {
                         return true;
                     }
                 }     
@@ -605,7 +580,7 @@ var stay = creep.pos.findInRange(creep.room.hostilesHere(),5);
 //    stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS,4);  
 //}
 
-if(stay.length == 0) return false;
+if(stay.length === 0) return false;
 
 var close = creep.pos.findInRange(stay,4);
 //if(creep.room.name == 'E35S84')console.log(stay.length , close.length  )
@@ -618,28 +593,28 @@ if(stay.length - close.length != stay.length ) {
 }
 
 static deathWatch(creep) {
-  if(creep.memory.deathDistance == undefined)         {
+  if(creep.memory.deathDistance === undefined)         {
     let vv = Game.getObjectById(creep.memory.parent);
     for(var a in vv.memory.roadsTo){
         if(creep.memory.goal == vv.memory.roadsTo[a].source) {
-            if(vv.memory.roadsTo[a].aveDistance != undefined) {
+            if(vv.memory.roadsTo[a].aveDistance !== undefined) {
                 creep.memory.deathDistance = vv.memory.roadsTo[a].aveDistance*2;
             }
         }
     }
-    if(creep.memory.deathDistance == undefined) {
+    if(creep.memory.deathDistance === undefined) {
         creep.memory.deathDistance = 'none';
     }
 }
 if(creep.memory.deathDistance != 'none') {
     if(creep.ticksToLive < creep.memory.deathDistance) {
-        if(_.sum(creep.carry) == 0) {
+        if(_.sum(creep.carry) === 0) {
             if(!creep.memory.reportDeath) {
             let spawnsDo = require('build.spawn');
                 spawnsDo.reportDeath(creep);
                 creep.memory.reportDeath = true;
             }
-            creep.suicide();;
+            creep.suicide();
         } else {
             creep.memory.gohome = true;
         }
@@ -669,14 +644,14 @@ if(creep.memory.deathDistance != 'none') {
     } */
 
 	static returnEnergy(creep) {
-      if( creep.memory.death == undefined ) {
+      if( creep.memory.death === undefined ) {
 //        creep.memory.returnSource = false;
         creep.memory.death  = false;
       }
       if( creep.memory.returnSource||creep.memory.death ) {
         creep.say('💀');
         let spot = getDeathSpot(creep.memory.home);
-        if(spot == undefined) {
+        if(spot === undefined) {
           let parent = Game.getObjectById(creep.memory.parent);
           creep.moveTo(parent,{reusePath:25});
           if(creep.pos.isNearTo(parent) ) {
@@ -685,7 +660,7 @@ if(creep.memory.deathDistance != 'none') {
         } else {
           if(creep.pos.isEqualTo(spot)) {
             let spwns = creep.room.find(FIND_STRUCTURES);
-            spwns = _.filter(spwns,function(o){return o.structureType == STRUCTURE_SPAWN});
+            spwns = _.filter(spwns,function(o){return o.structureType == STRUCTURE_SPAWN;});
 
             for(var e in spwns){
               if(creep.pos.isNearTo(spwns[e])) {
@@ -715,17 +690,17 @@ static intelligence(creep) {
 }
 
 static goToPortal(creep){
-  if(Game.flags['portal'] == undefined) return false;
+  if(Game.flags.portal === undefined) return false;
 //    console.log(creep.room.name , Game.flags['portal'].pos.roomName );
 //  console.log(creep.memory.throughPortal);
   if(creep.memory.throughPortal) return false;
-    creep.moveMe(Game.flags['portal'],{reusePath:40});
+    creep.moveMe(Game.flags.portal,{reusePath:40});
 //    creep.say(creep.room.name == Game.flags['portal'].pos.roomName);
-    if(creep.room.name == Game.flags['portal'].pos.roomName) {
+    if(creep.room.name == Game.flags.portal.pos.roomName) {
       // then he's in the room with te portal
       creep.memory.throughPortal = false;
     }else{
-      if(creep.memory.throughPortal != undefined && creep.memory.throughPortal == false){
+      if(creep.memory.throughPortal !== undefined && creep.memory.throughPortal === false){
         creep.memory.throughPortal = true;
       }
       // Gone through the portal
@@ -734,7 +709,7 @@ static goToPortal(creep){
 }
 
 static signControl(creep) {
-	 if(creep.room.controller.sign  == undefined || creep.room.controller.sign.text != sign) {
+	 if(creep.room.controller.sign  === undefined || creep.room.controller.sign.text != sign) {
 creep.say('sign');
                 if(creep.pos.isNearTo(creep.room.controller)){
                creep.signController(creep.room.controller,sign );
@@ -744,8 +719,8 @@ creep.say('sign');
 }
 
 static moveToSignControl(creep) {
-	if(creep.room.controller == undefined) return false;
-	 if(creep.room.controller.sign  == undefined || creep.room.controller.sign.text != sign) {
+	if(creep.room.controller === undefined) return false;
+	 if(creep.room.controller.sign  === undefined || creep.room.controller.sign.text != sign) {
 creep.say('resign');
                 if(creep.pos.isNearTo(creep.room.controller)){
                creep.signController(creep.room.controller,sign);
@@ -758,7 +733,7 @@ creep.say('resign');
 }
 
 static isPowerParty(creep) {
-  if(creep.memory.powerParty != undefined) {
+  if(creep.memory.powerParty !== undefined) {
     return creep.memory.powerParty;
   } else {
     if( creep.memory.party.substr(0,5) == 'power') {
@@ -774,7 +749,7 @@ static isPowerParty(creep) {
 
 static goToFocusFlag(creep,flags) {
 
-  if(creep.memory.focusFlagName == undefined) {
+  if(creep.memory.focusFlagName === undefined) {
     flags = _.filter(Game.flags, function(f) {return f.color == COLOR_CYAN;});
     for(var e in flags) {
       var distance = Game.map.getRoomLinearDistance(creep.room.name, flags[e].pos.roomName);
@@ -787,7 +762,7 @@ static goToFocusFlag(creep,flags) {
     
     let focusFlag = Game.flags[creep.memory.focusFlagName];
                 if (focusFlag.pos.roomName == creep.room.name) {
-                    if (creep.room.controller.level >= 4 && creep.room.storage != undefined ) {
+                    if (creep.room.controller.level >= 4 && creep.room.storage !== undefined ) {
                         if(creep.room.controller.level < 6) {
                           if(creep.room.storage.store[RESOURCE_ENERGY] < 1000000) {
                             containers.moveToStorage(creep);
@@ -798,7 +773,7 @@ static goToFocusFlag(creep,flags) {
                             creep.drop(RESOURCE_ENERGY);
                         }
 }
-                          } else if (creep.room.controller.level >= 6 && creep.room.terminal != undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000) {
+                          } else if (creep.room.controller.level >= 6 && creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000) {
                             containers.moveToTerminal(creep);
                         } else {
                           let tSum = _.sum(creep.room.terminal.store);
@@ -837,8 +812,8 @@ static goToFocusFlag(creep,flags) {
                                     fill: 'transparent',
                                     stroke: '#fa0',
                                     lineStyle: 'dashed',
-                                    strokeWidth: .25,
-                                    opacity: .5
+                                    strokeWidth: 0.25,
+                                    opacity: 0.5
                                 }
                             });
                 //        }
@@ -851,10 +826,10 @@ static goToFocusFlag(creep,flags) {
 }
 
 static depositNonEnergy(creep) {
-  if(creep.room.terminal == undefined && creep.room.storage == undefined) return false;
+  if(creep.room.terminal === undefined && creep.room.storage === undefined) return false;
 
 let target;
-if(creep.room.terminal != undefined && creep.room.controller != undefined && creep.room.controller.level >= 6)  {
+if(creep.room.terminal !== undefined && creep.room.controller !== undefined && creep.room.controller.level >= 6)  {
   target = creep.room.terminal;
 }else {
   target = creep.room.storage;
@@ -868,7 +843,7 @@ if(creep.room.terminal != undefined && creep.room.controller != undefined && cre
         }else {
             creep.moveTo(target);
         }
-        return true;;
+        return true;
     }
   }
 return false;
@@ -878,11 +853,11 @@ static doNotStand(creep,pos) {
 //  var pos;
 //  var pos = new RoomPosition(35,27,'E26S75');
   if(creep.pos.isEqualTo(pos)) {
-    if(creep.memory.standingTime == undefined) creep.memory.standingTime = 0;
+    if(creep.memory.standingTime === undefined) creep.memory.standingTime = 0;
     creep.memory.standingTime++;
     if(creep.memory.standingTime > 3) {
       return true;
-      creep.moveTo( Game.getObjectById( creep.memory.parent) );
+//      creep.moveTo( Game.getObjectById( creep.memory.parent) );
     }
   }
   return false;
@@ -897,7 +872,7 @@ static doNotStand(creep,pos) {
             break;
     }
 
-    if(creep.memory.distance != undefined) distance = creep.memory.distance;
+    if(creep.memory.distance !== undefined) distance = creep.memory.distance;
 
             if (creep.ticksToLive < ((3*creep.body.length)+distance)) {
             creep.memory.reportDeath = true;
@@ -914,7 +889,7 @@ static doNotStand(creep,pos) {
     let targetID;
     let lowest = 300;
 
-if(creep.memory.mineralRoomID == undefined) {
+if(creep.memory.mineralRoomID === undefined) {
         let tempinz = creep.room.find(FIND_MINERALS);
         creep.memory.mineralRoomID = tempinz[0].id;
     }  
@@ -925,8 +900,8 @@ if(creep.memory.mineralRoomID == undefined) {
 //        let lair = Game.getObjectById(  creep.memory.keeperLair[creep.memory.goTo].id)
 //        console.log(keeperTarget,keepers[e].id,keeperTarget.ticksToSpawn,e,lowest,":",targetID);
     if(tempin.pos.inRangeTo(keeperTarget,10)&&creep.room.name != "E26S76"  ){
-        if(tempin.mineralAmount != 0){
-        if(keeperTarget.ticksToSpawn == undefined) {
+        if(tempin.mineralAmount !== 0){
+        if(keeperTarget.ticksToSpawn === undefined) {
             targetID = e;
             break;
             //Winner
@@ -936,7 +911,7 @@ if(creep.memory.mineralRoomID == undefined) {
         } 
         }
     }else {
-        if(keeperTarget.ticksToSpawn == undefined) {
+        if(keeperTarget.ticksToSpawn === undefined) {
             targetID = e;
             break;
             //Winner
@@ -955,16 +930,16 @@ if(creep.memory.mineralRoomID == undefined) {
 
 
   static renew(creep) {
-    if(creep.memory.birthTime == undefined) creep.memory.birthTime = Game.time;
+    if(creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
 
     if(creep.ticksToLive > 750) return false;
     if(creep.memory.renewSpawnID == 'none') return false;
-    if(creep.memory.renewSpawnID == undefined) {
+    if(creep.memory.renewSpawnID === undefined) {
     let Fspawn = creep.pos.findInRange(FIND_MY_STRUCTURES,1,{
 filter: object => (object.structureType == STRUCTURE_SPAWN)       
     });
 
-    if(Fspawn.length == 0) { 
+    if(Fspawn.length === 0) { 
       creep.memory.renewSpawnID = 'none';
       return;
     }
@@ -995,8 +970,8 @@ return true;
 
   static isFlagged(creep) {
     let flagged = false;
-    if (creep.memory.party != undefined) {
-      if (Game.flags[creep.memory.party] != undefined) {
+    if (creep.memory.party !== undefined) {
+      if (Game.flags[creep.memory.party] !== undefined) {
         return true;
 
       }
@@ -1019,7 +994,7 @@ if(creep.room.name == 'E26S75') {
 
 //  return false;
 creep.say(greyflag.length);
-    if(greyflag.length == 0){
+    if(greyflag.length === 0){
     if(creep.memory.greyFlag) {
       creep.memory.greyFlag = undefined;
       creep.memory.greyPos = undefined;
@@ -1027,7 +1002,7 @@ creep.say(greyflag.length);
       return false;
     } 
 
-    if(creep.memory.greyFlag == undefined) {
+    if(creep.memory.greyFlag === undefined) {
       creep.memory.greyFlag = false;
       creep.memory.greyPos = greyflag[0].pos;
     } 
@@ -1043,11 +1018,11 @@ creep.say(greyflag.length);
                             fill: 'transparent',
                             stroke: '#ff0',
                             lineStyle: 'dashed',
-                            strokeWidth: .15,
-                            opacity: .5
+                            strokeWidth: 0.15,
+                            opacity: 0.5
                         }
                     }
-        )
+        );
       return true;
     }
 

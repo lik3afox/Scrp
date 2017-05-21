@@ -25,7 +25,7 @@ class hackerClass extends roleParent{
 //		var target = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES,2);
 //{filter: {structureType: STRUCTURE_WALL}}
 //console.log('acon',Game.flags.control , creep.pos.roomName , Game.flags.control.pos.roomName);
-            if(Game.flags.control != undefined && creep.pos.roomName == Game.flags.control.pos.roomName) {
+            if(Game.flags.control !== undefined && creep.pos.roomName == Game.flags.control.pos.roomName) {
             	let what = creep.claimController(creep.room.controller);
                     creep.say(what);
 

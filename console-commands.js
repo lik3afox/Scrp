@@ -1,10 +1,10 @@
 function checkNCreate(id) {
         let creep = Game.getObjectById(id);
-        if(creep == undefined){
+        if(creep === undefined){
           console.log('Id is invalid');
           return false;
         } 
-        if(creep.memory.task == undefined) {
+        if(creep.memory.task === undefined) {
           console.log('Failure creep doesn"t accept taskts');
         }
         return creep;
@@ -41,18 +41,18 @@ function setupCommands() {
     },
     clear(id) {
       let creep = checkNCreate(id);
-      console.log('Clearing Task list',task.length)
+      console.log('Clearing Task list',task.length);
     },
     pop(id) {
       let creep = checkNCreate(id);
       let task = creep.memory.task;
-      console.log('Poping Last')
+      console.log('Poping Last');
       task.pop();
     },
     shift(id) {
       let creep = checkNCreate(id);
       let task = creep.memory.task;
-      console.log('Shift First')
+      console.log('Shift First');
       task.shift();
     }
 
@@ -66,4 +66,4 @@ module.exports = {
   setupCommands();
   	return callback();
   }
-}
+};

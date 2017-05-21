@@ -35,7 +35,7 @@ function getHostiles(creep) {
 
     return creep.pos.findInRange(creep.room.hostilesHere(),range);
 
-
+/*
     range = 4;
     if(creep.room.name == 'E34S84') range = 6 ;   
     if(creep.room.name == 'E25S74'||creep.room.name == 'E24S74'||creep.room.name == 'E35S74') {
@@ -63,11 +63,11 @@ function getHostiles(creep) {
             }
         }
         return creep.pos.findInRange(badGuys,range);
-    }
+    }*/
 }
 
 function attackCreep(creep,bads){
-	  if(bads.length == 0)  { 
+	  if(bads.length === 0)  { 
         creep.memory.needed = undefined;
         return true;
         }
@@ -86,7 +86,7 @@ if(enemy.owner.username != 'Source Keeper' || enemy.hits <= 100 ){
 }
             } else if ( distance < 4){
 
-                var targets = creep.pos.findInRange(bads, 3)
+                var targets = creep.pos.findInRange(bads, 3);
 
                 // Ranged attack.
                 if(targets.length > 2) {
@@ -120,7 +120,7 @@ function analyzeSourceKeeper(creep) {
     let targetID;
     let lowest = 300;
 
-if(creep.memory.mineralRoomID == undefined) {
+if(creep.memory.mineralRoomID === undefined) {
         let tempinz = creep.room.find(FIND_MINERALS);
         creep.memory.mineralRoomID = tempinz[0].id;
     }  
@@ -132,8 +132,8 @@ if(creep.memory.mineralRoomID == undefined) {
 //        console.log(keeperTarget,keepers[e].id,keeperTarget.ticksToSpawn,e,lowest,":",targetID);
     if(tempin.pos.inRangeTo(keeperTarget,10)&&creep.room.name != "E26S76" &&creep.room.name != "E25S76"  ){
         if(creep.room.name != "E35S84"){
-        if(tempin.mineralAmount != 0){
-        if(keeperTarget.ticksToSpawn == undefined) {
+        if(tempin.mineralAmount !== 0){
+        if(keeperTarget.ticksToSpawn === undefined) {
             targetID = e;
             break;
             //Winner
@@ -145,7 +145,7 @@ if(creep.memory.mineralRoomID == undefined) {
             
         }
     }else {
-        if(keeperTarget.ticksToSpawn == undefined) {
+        if(keeperTarget.ticksToSpawn === undefined) {
             targetID = e;
             break;
             //Winner
@@ -165,11 +165,11 @@ if(creep.memory.mineralRoomID == undefined) {
 }
 
 function moveCreep(creep) {
-    if(creep.memory.goTo == undefined) {
+    if(creep.memory.goTo === undefined) {
      creep.memory.goTo =      analyzeSourceKeeper(creep);
     }
 
-    let gota = Game.getObjectById( creep.memory.keeperLair[creep.memory.goTo].id )
+    let gota = Game.getObjectById( creep.memory.keeperLair[creep.memory.goTo].id );
     let inRange = creep.pos.getRangeTo(gota);
     if(inRange < 4 && gota.ticksToSpawn > 200 ) {
         creep.say('dif',true);
@@ -182,8 +182,8 @@ if(!creep.pos.isNearTo (gota))
     fill: 'transparent',
     stroke: '#bf0',
     lineStyle: 'dashed',
-    strokeWidth: .15,
-    opacity: .5}});
+    strokeWidth: 0.15,
+    opacity: 0.5}});
 
 }
 
@@ -206,7 +206,7 @@ class roleGuard extends roleParent{
     	//if(!super.run(creep)) return;
 //    	creep.say('guard');
 // if less than 300 and doesn't see invader then set to false. 
-if(creep.ticksToLive < 300 && creep.memory.invaderStatus == undefined) {
+if(creep.ticksToLive < 300 && creep.memory.invaderStatus === undefined) {
     creep.memory.invaderStatus = true;
     creep.memory.seeInvader = false;
 }
@@ -218,7 +218,7 @@ if(creep.ticksToLive < 300 && creep.memory.invaderStatus == undefined) {
 //        }
 
 
-        if(creep.memory.goalPos == undefined) {
+        if(creep.memory.goalPos === undefined) {
             for(var e in Game.flags) {
                 if(Game.flags[e].color == COLOR_BLUE && Game.flags[e].name == creep.memory.party) {
                  creep.memory.goalPos = Game.flags[e].pos;
@@ -245,7 +245,7 @@ creep.selfHeal();
                  if(!movement.moveToDefendFlag(creep))                 {
         	           moveCreep(creep);
                  } else { // So if it has to move to a defend flag - it's seen an invader in the room.
-                    if(creep.memory.goTo != undefined)
+                    if(creep.memory.goTo !== undefined)
                         creep.memory.goTo = undefined;
                  }
         	}
@@ -258,13 +258,13 @@ creep.selfHeal();
                 creep.selfHeal();
                 movement.guardFlagMove(creep);
             }
-            if(creep.memory.distance == undefined) {
+            if(creep.memory.distance === undefined) {
                 creep.memory.distance = 0;
             }
             creep.memory.distance++;
 
         } else {
-            if(creep.memory.keeperLair == undefined) {
+            if(creep.memory.keeperLair === undefined) {
                 
                     creep.memory.keeperLair = creep.room.find(FIND_STRUCTURES, {filter: {structureType: STRUCTURE_KEEPER_LAIR}});
                     creep.memory.goTo =  analyzeSourceKeeper(creep);

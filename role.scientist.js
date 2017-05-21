@@ -50,7 +50,7 @@ var groupOne = [
 '58dc1eb90c1c7697092ce5c2',  // E35S73
 '59090e6f771e5d03793d20b4' // W4S93
 //,'58c074ead62936ed5e2bce0b' // E27S75
-]
+];
 
 var groupTwo = [
 ];
@@ -100,7 +100,7 @@ function mineMineralsToTerminal(creep) {
 function mineralContainerEmpty(creep){
 if(creep.memory.containsGood) return false;
     let contains = creep.room.find(FIND_STRUCTURES);
-    contains = _.filter(contains,function(o){return o.structureType == STRUCTURE_CONTAINER});
+    contains = _.filter(contains,function(o){return o.structureType == STRUCTURE_CONTAINER;});
     for(var e in contains){
         for(var a in contains[e].store) {
             if(a != RESOURCE_ENERGY && contains[e].store[a] > creep.stats.carry) {
@@ -140,7 +140,7 @@ function changeParent(creep) {
         if(creep.ticksToLive < 50){
             creep.suicide();
             return;
-        } else if(_.sum(creep.carry) == 0) {
+        } else if(_.sum(creep.carry) === 0) {
             creep.suicide();
         	return;
         } else {
@@ -150,17 +150,17 @@ function changeParent(creep) {
 
     let spawnGroup = getGroup(creep);
 
-    if(creep.memory.scientistID == undefined ) {         creep.memory.scientistID = 2;    }
+    if(creep.memory.scientistID === undefined ) {         creep.memory.scientistID = 2;    }
 	if (creep.ticksToLive > (3*creep.body.length)+creep.memory.distance ) return false;
 
     creep.memory.scientistID++;
 
 let zz = Game.getObjectById( spawnGroup[creep.memory.scientistID] );
 //console.log(zz)
-if(zz != undefined && zz.room.name == 'E27S75') {
-    if(zz == undefined || zz.room.controller.level == undefined || zz.room.controller.level < 7 ) creep.memory.scientistID++;
+if(zz !== null && zz.room.name == 'E27S75') {
+    if(zz === null || zz.room.controller.level === null || zz.room.controller.level < 7 ) creep.memory.scientistID++;
 }else {
-    if(zz == undefined || zz.room.controller.level == undefined || zz.room.controller.level < 6 ) creep.memory.scientistID++;
+    if(zz === null || zz.room.controller.level === null || zz.room.controller.level < 6 ) creep.memory.scientistID++;
 }
 
     if(creep.memory.scientistID > spawnGroup.length-1) creep.memory.scientistID = 0;
@@ -171,7 +171,7 @@ if(zz != undefined && zz.room.name == 'E27S75') {
     let spawnsDo = require('build.spawn');
     spawnsDo.reportDeath(creep);
     creep.memory.changedParent = true;
-    if(_.sum(creep.carry) == 0) {
+    if(_.sum(creep.carry) === 0) {
             creep.suicide();
         }
 }
@@ -211,7 +211,7 @@ class scientistRole extends roleParent {
             return;
         }
 
-if(creep.memory.distance == undefined)        creep.memory.distance = 0;
+if(creep.memory.distance === undefined)        creep.memory.distance = 0;
 //        super.rebirth(creep);
 //        if(Game.cpu.bucket < 3000 && creep.room.name !='E26S73') return;
         
@@ -233,7 +233,7 @@ if(creep.memory.distance == undefined)        creep.memory.distance = 0;
         creep.say('sci');
 
         var total = _.sum(creep.carry);
-        if (total == 0) {
+        if (total === 0) {
             creep.memory.putaway = false;
         }
         if(total > 0 ) {
@@ -247,7 +247,7 @@ if(creep.memory.distance == undefined)        creep.memory.distance = 0;
         } else  {
         var _labs = labsBuild.getLabs(creep);
 
-            if(_labs.length > 0 && _.sum(creep.carry) == 0  ) { // If there are labs. 
+            if(_labs.length > 0 && _.sum(creep.carry) === 0  ) { // If there are labs. 
             for (var i in _labs) { // go through them
                  var plan = getPlan(_labs[i]); // get the plans
 

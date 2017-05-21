@@ -210,8 +210,8 @@ static  moveToTransfer(creep) {
                 
                    return (structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) != structure.storeCapacity );
             }
-        })
-    if(containers == undefined) return false;
+        });
+    if(containers === undefined||containers === null) return false;
 
     if(creep.pos.isNearTo(containers) ) {
         creep.transfer(containers, RESOURCE_ENERGY);
@@ -280,13 +280,13 @@ static toWithdraw(creep) {
     }
 
     static moveToNuke(creep) {
-        if(creep.room.memory.nukeID == undefined) {
+        if(creep.room.memory.nukeID === undefined) {
             let zz = creep.room.find(FIND_STRUCTURES,{filter:o => o.structureType == STRUCTURE_NUKE});
-            if(zz.length != 0) {
+            if(zz.length !== 0) {
                 creep.room.memory.nukeID = zz[0].id;
             }
         }
-        if(creep.room.memory.nukeID == undefined) return false;
+        if(creep.room.memory.nukeID === undefined) return false;
         let nuke = Game.getObjectById(creep.room.memory.nukeID);
         if(creep.pos.isNearTo(nuke)) {
             creep.transfer(nuke,RESOURCE_ENERGY);
@@ -299,7 +299,7 @@ static toWithdraw(creep) {
     static moveToStorage(creep) {
 //        creep.say('2Storage');
         var storage = creep.room.storage; 
-        if(storage == undefined ) return false;
+        if(storage === undefined ) return false;
         if(_.sum(storage.store) == storage.storeCapacity) return false;
         if(creep.pos.isNearTo(storage)) {
             for (var e in creep.carry) {
@@ -315,9 +315,9 @@ static toWithdraw(creep) {
     static withdrawFromTerminal(creep) {
          var storage = creep.room.terminal; 
 
-         if(storage == undefined ) return false;
+         if(storage === undefined ) return false;
          creep.say(storage.store[RESOURCE_ENERGY] );
-         if(storage.store[RESOURCE_ENERGY] == 0)  return false;
+         if(storage.store[RESOURCE_ENERGY] === 0)  return false;
          if(creep.pos.isNearTo (storage) ) {
             for(var e in creep.carry) {
                 creep.withdraw(storage, RESOURCE_ENERGY);
@@ -332,10 +332,10 @@ static toWithdraw(creep) {
     static withdrawFromStorage(creep) {
          var storage = creep.room.storage; 
 
-         if(storage == undefined ) return false;
+         if(storage === undefined ) return false;
          creep.say(storage.store[RESOURCE_ENERGY] );
 
-         if(storage.store[RESOURCE_ENERGY] == 0)  {
+         if(storage.store[RESOURCE_ENERGY] === 0)  {
             return false;
         }
          if(creep.pos.isNearTo (storage) ) {
@@ -376,7 +376,7 @@ static toWithdraw(creep) {
    static  moveToWithdraw(creep) {
 
 
-        if(creep.memory.containerID == undefined || creep.memory.containerID.length == 0) {
+        if(creep.memory.containerID === undefined || creep.memory.containerID.length === 0) {
         var containers = getNonEmptyContain(creep);
             // = [];
             let contains = [];
@@ -395,15 +395,15 @@ static toWithdraw(creep) {
             goTo = goTo - creep.memory.containerID.length;
         }
 
-        if(creep.memory.containerID[goTo] != undefined) {
+        if(creep.memory.containerID[goTo] !== undefined) {
         let contain = Game.getObjectById( creep.memory.containerID[goTo] );
-		if(contain == undefined) return false;
-        if( _.sum( contain.store ) == 0) {
+		if(contain === undefined) return false;
+        if( _.sum( contain.store ) === 0) {
             return false;
         } 
 
         if(creep.pos.isNearTo(contain)) {
-            creep.withdraw(contain, RESOURCE_ENERGY)
+            creep.withdraw(contain, RESOURCE_ENERGY);
         return true;
         } else {
             creep.moveTo(contain,{maxRooms:1});

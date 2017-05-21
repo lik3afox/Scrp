@@ -49,7 +49,7 @@ class roadbuilder extends roleParent {
         if (_.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.mining = false;
         }
-        if (_.sum(creep.carry) == 0 && creep.memory.goHome) {
+        if (_.sum(creep.carry) === 0 && creep.memory.goHome) {
             creep.memory.mining = true;
 //            creep.memory.goHome = false;
         }
@@ -65,10 +65,10 @@ class roadbuilder extends roleParent {
             if(!creep.memory.mining) {
                 // Head back home, but build roads on the way home.
                 let constr = Game.getObjectById(creep.memory.construction);
-                if(constr == undefined || creep.memory.construction == undefined) {
+                if(constr === null || creep.memory.construction === undefined) {
                     let road = creep.pos.findClosestByRange (FIND_CONSTRUCTION_SITES, {
-                filter: object => ( object.structureType == STRUCTURE_ROAD ||object.structureType == STRUCTURE_WALL)})
-                    if(road != undefined) {
+                filter: object => ( object.structureType == STRUCTURE_ROAD ||object.structureType == STRUCTURE_WALL)});
+                    if(road !== null) {
                     creep.memory.construction = road.id;
                     constr = road;
                 	}
@@ -77,7 +77,7 @@ class roadbuilder extends roleParent {
                 let road = constr;/*creep.pos.findClosestByRange (FIND_CONSTRUCTION_SITES, {
                 filter: object => ( object.structureType == STRUCTURE_ROAD ||object.structureType == STRUCTURE_WALL)})*/
 
-                if(road != undefined) {
+                if(road !== null) {
                     if (creep.build(road) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(road, {reusePath: 30});
                     }
@@ -117,10 +117,10 @@ class roadbuilder extends roleParent {
 
         } else {
 
-            if(Game.getObjectById(creep.memory.goal) == undefined) {
-                    var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+            if(Game.getObjectById(creep.memory.goal) === null) {
+                    var goingTo2 = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                     if (!super.guardRoom(creep)) {
-                creep.moveTo(goingTo, {reusePath: 30});
+                creep.moveTo(goingTo2, {reusePath: 30});
                     }
                 } else {
                     if (!super.guardRoom(creep)) {

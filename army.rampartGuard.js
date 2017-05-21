@@ -55,7 +55,7 @@ class fighterClass extends roleParent{
     		}	
 		} 
 		movement.flagMovement(creep);
-  	if(creep.memory.formationPos != 0){
+  	if(creep.memory.formationPos !== 0){
   		creep.memory.formationPos = 0;
   	}
 	}

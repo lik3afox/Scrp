@@ -12,17 +12,17 @@ function getRoomFlag(creep) {
 }
 
 function doDefendThings(flag) {
-    if(flag.room == undefined) return;
+    if(flag.room === undefined) return;
 
         // = _.filter(flag.room.hostileInRoom(),function(o){return o.owner.username == 'Invader'} ) ;
 // FIND_HOSTILE_CREEPS //flag.room.hostileInRoom()
 var hostiles = flag.room.find(FIND_HOSTILE_CREEPS);
 
-hostiles = _.filter(hostiles,function(o) {return o.owner.username == 'Invader' });
+hostiles = _.filter(hostiles,function(o) {return o.owner.username == 'Invader'; });
         
-        flag.room.visual.circle(flag.pos.x,flag.pos.y,{radius:15,opacity:.15,fill: 'ff0000' });
+        flag.room.visual.circle(flag.pos.x,flag.pos.y,{radius:15,opacity:0.15,fill: 'ff0000' });
 
-            if(hostiles.length == 0) {
+            if(hostiles.length === 0) {
                 flag.remove();
             } else {
                flag.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);   
@@ -46,10 +46,10 @@ if(creeps.length > 0 ){
 }
 
 function rampartThings(flag) {
-    if( flag.memory.invaderTimed == undefined) flag.memory.invaderTimed = 0;
-    if(flag.memory.alert == undefined || !flag.memory.alert  ) {
+    if( flag.memory.invaderTimed === undefined) flag.memory.invaderTimed = 0;
+    if(flag.memory.alert === undefined || !flag.memory.alert  ) {
 //        let roomCreeps = _.filter(Game.creeps,function(z){z.room.name == flag.room.name});
-            let roomCreeps = _.filter(Game.creeps,function(n) {return n.room.name == flag.room.name});
+            let roomCreeps = _.filter(Game.creeps,function(n) {return n.room.name == flag.room.name;});
         console.log(roomCreeps.length,'trea');
         for(var a in roomCreeps) {
             roomCreeps[a].memory.rampartDefense = true;
@@ -60,12 +60,12 @@ function rampartThings(flag) {
     if(flag.memory.alert) {
         // Look for creeps
         let bads = flag.room.find(FIND_HOSTILE_CREEPS);
-        if(bads.length == 0) {
+        if(bads.length === 0) {
             flag.memory.invaderTimed = undefined;
             flag.memory.alert = undefined;
             let roomCreeps = _.filter(Game.creeps,{filter:z => z.room.name == flag.room.name});
-            for(var a in roomCreeps) {
-                roomCreeps[a].memory.rampartDefense = false;
+            for(var o in roomCreeps) {
+                roomCreeps[o].memory.rampartDefense = false;
             }
             flag.room.memory.towerRepairID = undefined;
             flag.remove();
@@ -81,13 +81,13 @@ function findParty(){
 let ztotal = [];
 for (var z in Game.flags) {
     if(Game.flags[z].color == FLAG.GUARD) {
-        let temp = {party:z,total:0}
+        let temp = {party:z,total:0};
         ztotal.push(temp);
     }
 }
 // z = flag name. which equals flag party name. 
     for(var e in Game.creeps) {
-            if(Game.creeps[e].memory.party != undefined) {
+            if(Game.creeps[e].memory.party !== undefined) {
                     for(var a in ztotal) {
                         if(ztotal[a].party == Game.creeps[e].memory.party) {
                             ztotal[a].total++;
@@ -96,8 +96,8 @@ for (var z in Game.flags) {
             }      
     }
 
-for(var e in ztotal){
-    console.log(ztotal[e].party,ztotal[e].total,e);
+for(var o in ztotal){
+    console.log(ztotal[o].party,ztotal[o].total,o);
 }
 
   return ztotal;
@@ -105,10 +105,10 @@ for(var e in ztotal){
 
 function clearFlagMemory() {
             for (var a in Memory.flags) {
-            if(Game.flags[a] == undefined) delete Memory.flags[a];
+            if(Game.flags[a] === undefined) delete Memory.flags[a];
         }
         for(var e in Memory.rooms) {
-            if(Game.rooms[e] == undefined) delete Memory.rooms[e];
+            if(Game.rooms[e] === undefined) delete Memory.rooms[e];
         }
 }
 
@@ -116,7 +116,7 @@ class buildFlags {
 
     static getBads(flag) {
         // This is used after it finds a flag.
-        if(flag.memory.hostilesID == undefined) return false;
+        if(flag.memory.hostilesID === undefined) return false;
         let tmp = [];
         for(var e in flag.memory.hostilesID){
             tmp.push (Game.getObjectById(flag.memory.hostilesID[e]) );
@@ -137,11 +137,11 @@ class buildFlags {
     static clearAllFlags() {
         let total = 0;
         for (var z in Game.flags) {
-            if (Game.flags[z].memory.scanned != undefined) {
+            if (Game.flags[z].memory.scanned !== undefined) {
                 Game.flags[z].memory.scanned = undefined;
                 total++;
             }
-            if(Game.flags[z].room != undefined) {
+            if(Game.flags[z].room !== undefined) {
                 Game.flags[z].memory.room = Game.flags[z].room.name;
             }
         }
@@ -161,20 +161,20 @@ class buildFlags {
                 break;
             }
         }
-        if(roomFlag == undefined) {
+        if(roomFlag === undefined) {
             console.log('NEEDS FLAG',creep.room.name);
             return;
         }
-        if (roomFlag.memory.goldMined == undefined) {
+        if (roomFlag.memory.goldMined === undefined) {
             roomFlag.memory.goldMined = 0;
         }
-        if (roomFlag.memory.totalMined == undefined) {
+        if (roomFlag.memory.totalMined === undefined) {
             roomFlag.memory.totalMined = 0;
         }
 
         let workMod = 0;
-        for (var e in creep.body) {
-            if (creep.body[e].type == 'work') {
+        for (var o in creep.body) {
+            if (creep.body[o].type == 'work') {
                 workMod++;
             }
         }
@@ -197,7 +197,7 @@ class buildFlags {
 } */
     static run() {
 
-if(Memory.clearFlag == undefined) Memory.clearFlag = 500;
+if(Memory.clearFlag === undefined) Memory.clearFlag = 500;
 Memory.clearFlag--;
 if(Memory.clearFlag < 0) {
     Memory.clearFlag = 250;
@@ -205,7 +205,7 @@ if(Memory.clearFlag < 0) {
 }
 //    var    start  = Game.cpu.getUsed(); // start counting. 
 
-let zFlags = _.filter(Game.flags,function(o){return o.color != COLOR_WHITE && o.color != COLOR_GREY&& o.color != COLOR_CYAN });
+let zFlags = _.filter(Game.flags,function(o){return o.color != COLOR_WHITE && o.color != COLOR_GREY&& o.color != COLOR_CYAN; });
 //console.log(  (Game.cpu.getUsed() - start ), ' afterfilter',zFlags.length); start = Game.cpu.getUsed();
 
         for (var e in zFlags) {
@@ -221,7 +221,7 @@ let zFlags = _.filter(Game.flags,function(o){return o.color != COLOR_WHITE && o.
                 case FLAG.GUARD:
 
                 let guard = flag;
-                if(guard.memory.createCount == undefined) {
+                if(guard.memory.createCount === undefined) {
                     guard.memory.createCount = delayBetweenScan;
                 }
                 guard.memory.createCount--;
@@ -243,7 +243,7 @@ let zFlags = _.filter(Game.flags,function(o){return o.color != COLOR_WHITE && o.
                     rampartThings(flag);
                 }
 
-                if(rally.memory.createCount == undefined) {
+                if(rally.memory.createCount === undefined) {
                     rally.memory.createCount = delayBetweenScan;
                 }
                 rally.memory.createCount--;
@@ -262,7 +262,7 @@ let zFlags = _.filter(Game.flags,function(o){return o.color != COLOR_WHITE && o.
         }
 
     }
-};
+}
 
 module.exports = buildFlags;
 

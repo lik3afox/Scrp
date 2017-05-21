@@ -37,13 +37,13 @@ class constructionBoss extends roleParent {
             var sources = croom.find(FIND_SOURCES);
         } */
 
-        if(creep.memory.goal != undefined)  {
+        if(creep.memory.goal !== undefined)  {
           // Go to goal. 
             var constr = require('commands.toStructure');
             let lastMovement = {x:creep.pos.x,y:creep.pos.y};
 //            console.log(lastMovement,'rayray',Game.getObjectById(creep.memory.goal));
 
-                if(Game.getObjectById(creep.memory.goal) == undefined) {
+                if(Game.getObjectById(creep.memory.goal) === null) {
 /*                    var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
 
                 console.log(goingTo);
@@ -59,7 +59,7 @@ class constructionBoss extends roleParent {
 
         var target = Game.getObjectById(creep.memory.goal);
 //        console.log(target, creep.memory.goal,Game.getObjectById(creep.memory.goal));
-        if(target != null && creep.pos.inRangeTo(target, 1)) {
+        if(target !== null && creep.pos.inRangeTo(target, 1)) {
             creep.say('Reporting');
             var parent = Game.getObjectById(creep.memory.parent);
             var spawn = require('build.spawn');

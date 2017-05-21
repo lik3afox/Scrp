@@ -8,22 +8,22 @@
 // Level 6 = 2300 / 40  Not added yet, not certain if needed.
 
 var classLevels = [
-//1
-    [WORK,CARRY, MOVE],
-//2
+    //1
+    [WORK, CARRY, MOVE],
+    //2
 
-    [WORK,MOVE,WORK,MOVE,CARRY,CARRY,MOVE],
-//3
-    [MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY],
-//4
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY],
-//5
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY],
-//6
+    [WORK, MOVE, WORK, MOVE, CARRY, CARRY, MOVE],
+    //3
+    [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY],
+    //4
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
+    //5
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
+    //6
 
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY]
 ];
 
 var boost = ['LH'];
@@ -35,24 +35,25 @@ var contain = require('commands.toContainer');
 var sources = require('commands.toSource');
 var labs = require('build.labs');
 
-class roleWallWorker extends roleParent{
-    static levels(level,room) { // goalInfo is roadsTo in Spawn.memory;
-        if (level > classLevels.length-1 )       level = classLevels.length-1;
+class roleWallWorker extends roleParent {
+    static levels(level, room) { // goalInfo is roadsTo in Spawn.memory;
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
         return classLevels[level];
     }
 
     static run(creep) {
-if(super.depositNonEnergy(creep)) return;        
-if(super.boosted(creep,boost)) { return;}
+        if (super.depositNonEnergy(creep)) return;
+        if (super.boosted(creep, boost)) {
+            return; }
 
 
-        if(creep.memory.repair) {
-            if(creep.memory.constructionID !== undefined){
+        if (creep.memory.repair) {
+            if (creep.memory.constructionID !== undefined) {
                 var strucs = Game.getObjectById(creep.memory.constructionID);
-                if(strucs !== null) {
-                  if( creep.build(strucs) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(strucs,{reusePath:15});
-                  }
+                if (strucs !== null) {
+                    if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(strucs, { reusePath: 15 });
+                    }
                 } else {
                     creep.memory.constructionID = undefined;
                 }
@@ -64,25 +65,24 @@ if(super.boosted(creep,boost)) { return;}
                 creep.memory.repair = false;
             }
         } else {
-            
+
             constr.pickUpEnergy(creep);
-                if(!contain.withdrawFromStorage(creep)) {
-                    if(!contain.moveToWithdraw(creep) ){
-                        sources.moveToWithdraw(creep);
-  //           }
-            }
-        } else {
-        }
-              
-              if (creep.carry.energy > creep.carryCapacity-50) {
+            if (!contain.withdrawFromStorage(creep)) {
+                if (!contain.moveToWithdraw(creep)) {
+                    sources.moveToWithdraw(creep);
+                    //           }
+                }
+            } else {}
+
+            if (creep.carry.energy > creep.carryCapacity - 50) {
                 creep.memory.repair = true;
-            let strucs = creep.pos.findClosestByRange( FIND_CONSTRUCTION_SITES );
-            if(strucs !== null ) creep.memory.constructionID = strucs.id;
+                let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+                if (strucs !== null) creep.memory.constructionID = strucs.id;
                 creep.memory.wallTargetID = undefined;
-              }
+            }
 
         }
-//        creep.say('ww');
+        //        creep.say('ww');
     }
 
 }

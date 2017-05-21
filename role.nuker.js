@@ -41,7 +41,7 @@ class roleNuker extends roleParent {
         let nuke = creep.room.nuke;
         let total = _.sum(  creep.carry );
 
-        if( total == 0) {
+        if( total === 0) {
             creep.memory.filled = false;
         } else  {
             creep.memory.filled = true;
@@ -54,7 +54,7 @@ class roleNuker extends roleParent {
             if( creep.pos.isNearTo(creep.room.terminal) ) {
                 creep.withdraw(creep.room.terminal,'G');
             } else {
-                creep.moveTo(creep.room.terminal)
+                creep.moveTo(creep.room.terminal);
             }
 
         }
@@ -64,7 +64,7 @@ class roleNuker extends roleParent {
             if( creep.pos.isNearTo(creep.room.storage) ) {
                 creep.withdraw(creep.room.storage,RESOURCE_ENERGY);
             } else {
-                creep.moveTo(creep.room.storage)
+                creep.moveTo(creep.room.storage);
             }
         }
 

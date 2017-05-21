@@ -50,8 +50,8 @@ class engineerClass extends roleParent {
         if (super.depositNonEnergy(creep)) return;
 
         let isThere = false;
-        if (creep.memory.renewSpawnID == undefined) {
-            if (Game.flags[creep.memory.party] != undefined && Game.flags[creep.memory.party].pos.roomName == creep.room.name)
+        if (creep.memory.renewSpawnID === undefined) {
+            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].pos.roomName == creep.room.name)
                 isThere = true;
         } else {
             isThere = true;
@@ -64,12 +64,12 @@ class engineerClass extends roleParent {
         } else {
 
             creep.say('eng!');
-            if (creep.memory.renewSpawnID == undefined) {
+            if (creep.memory.renewSpawnID === undefined) {
                 let finded = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_SPAWN);
                     }
-                })
+                });
                 if (finded.length > 0) {
                     creep.memory.renewSpawnID = finded[0].id;
                 }

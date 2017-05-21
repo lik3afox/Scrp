@@ -58,7 +58,7 @@ var allLabs = [
 resource: 'XGH2O',
 amount : 2700
 }
-]
+];
 
 var maxMinerals = {
 //    'U':300000,
@@ -84,7 +84,7 @@ var maxMinerals = {
     'KO':30000,
     'KH':30000
 
-}
+};
 
 
 function whatDoIget(creep) {
@@ -95,11 +95,11 @@ for(var i in labs) {
     if( labs[i].resource != 'none' ) {
         let currentLab = Game.getObjectById(labs[i].id);
 //        console.log('lab works ',currentLab.energy , currentLab.energyCapacity,i)
-            if(currentLab != undefined && currentLab.energy < currentLab.energyCapacity&& currentLab.room.name == creep.room.name ) {
+            if(currentLab !== null && currentLab.energy < currentLab.energyCapacity&& currentLab.room.name == creep.room.name ) {
 //                creep.say('yo');
                 return RESOURCE_ENERGY;
             }
-        if(currentLab != undefined && currentLab.mineralAmount < labs[i].amount && currentLab.room.name == creep.room.name &&
+        if(currentLab !== null && currentLab.mineralAmount < labs[i].amount && currentLab.room.name == creep.room.name &&
             creep.room.terminal.store[labs[i].resource] > 0) {
             return labs[i].resource; 
         } 
@@ -123,8 +123,7 @@ function whereDoIPut(creep,have) {
     let labs = returnLabs(creep.room.name);  
     for(var i in labs) {
         let real =Game.getObjectById( labs[i].id);
-        if(real != undefined && labs[i].resource == have && real.pos.roomName == creep.room.name 
-            && real.mineralAmount < labs[i].amount) {
+        if(real !== null && labs[i].resource == have && real.pos.roomName == creep.room.name && real.mineralAmount < labs[i].amount) {
             return labs[i].id;
         }
 /*        if(real != undefined && labs[i].resource == have && real.pos.roomName == creep.room.name 
@@ -132,7 +131,7 @@ function whereDoIPut(creep,have) {
             return labs[i].id;
         } */
 
-        if(real != undefined && have == RESOURCE_ENERGY  && real.pos.roomName == creep.room.name) {
+        if(real !== null && have == RESOURCE_ENERGY  && real.pos.roomName == creep.room.name) {
             if(real.energy < real.energyCapacity){
                 return labs[i].id;
             }
@@ -151,7 +150,7 @@ function whatDoIHave(creep) {
 
 function labDo(roomName,created,labz,laby) {
     let labs = returnLabs(roomName);
-    if(created == 0) return false;
+    if(created === 0) return false;
 //    console.log(( Memory.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
 if( Memory.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ) return false;    
     let lab1 = Game.getObjectById  (  labs[created-1].id );
@@ -162,14 +161,14 @@ lab1.room.visual.line(lab1.pos,lab3.pos, {color: 'red'});
 
 
 
-    if( lab1 == undefined || lab1.mineralAmount >= 2990 || lab1.cooldown != 0 ) return false;
+    if( lab1 === null || lab1.mineralAmount >= 2990 || lab1.cooldown !== 0 ) return false;
     if(lab2.mineralType != labs[labz-1].resource) return false;
     if(lab3.mineralType != labs[laby-1].resource) return false;
 
 
-    if( lab2 == undefined || lab2.mineralAmount < 5) return false;
+    if( lab2 === null || lab2.mineralAmount < 5) return false;
 
-    if(  lab3 == undefined  || lab3.mineralAmount < 5 ) return false;
+    if(  lab3 === null  || lab3.mineralAmount < 5 ) return false;
 
     let zz = lab1.runReaction(lab2,lab3);
 
@@ -180,23 +179,23 @@ lab1.room.visual.line(lab1.pos,lab3.pos, {color: 'red'});
 function labReady(roomName,labz) {
     let labs = returnLabs(roomName);
     let lab1 = Game.getObjectById  (  labs[labz-1].id );
-    if(lab1.cooldown == 0 ) return true;
+    if(lab1.cooldown === 0 ) return true;
     return false;
 }
 
 function returnLabs(roomName) {
-if( Game.rooms[roomName].memory.labs == undefined) {
+if( Game.rooms[roomName].memory.labs === undefined) {
     console.log('anything here? trying to get roomlabs');
     switch(roomName) {
         case "W4S93":
         return allLabs;
-        break;
+
         default:
         console.log('Room not available, will grab all labs',roomName);
         console.log('Room not available, will grab all labs');
         console.log('Room not available, will grab all labs');
         return [];
-        break;
+
     }
 } else {    return Game.rooms[roomName].memory.labs;}
 
@@ -205,17 +204,17 @@ function updateRoomMember(roomName) {
 // Game.rooms[roomName].memory.labMinerals - this hold what the room has
 // Game.rooms[roomName].memory.calledMinerals - this holds what creep in production have called.
 // Game.rooms[roomName].memory.availableMinerals - this hold what is available for creeps to call.
-if(Game.rooms[roomName].memory.calledMinerals== undefined) {
+if(Game.rooms[roomName].memory.calledMinerals=== undefined) {
     Game.rooms[roomName].memory.calledMinerals = {};
 }
-if( Game.rooms[roomName].memory.availableMinerals == undefined)  Game.rooms[roomName].memory.availableMinerals = [];
+if( Game.rooms[roomName].memory.availableMinerals === undefined)  Game.rooms[roomName].memory.availableMinerals = [];
 
 let roomLabs = Game.rooms[roomName].memory.labs;
 let minerals = {};
 let bb = Math.ceil(Math.random()*2);
     for(var e in roomLabs) {
         let lab = Game.getObjectById(roomLabs[e].id);
-if(lab != undefined) {
+if(lab !== null) {
 
 if(bb == 1) {
 lab.room.visual.text(parseInt(e)+1 , lab.pos.x,lab.pos.y,{
@@ -226,7 +225,7 @@ lab.room.visual.text(parseInt(e)+1 , lab.pos.x,lab.pos.y,{
                     });
 }else {
   let color = '#97c39a ';
-if(roomLabs[e].emptied) color = '#660033'
+if(roomLabs[e].emptied) color = '#660033';
 lab.room.visual.text(roomLabs[e].resource , lab.pos.x,lab.pos.y, {
                         color: color,
                         stroke: '#000000 ',
@@ -236,9 +235,9 @@ lab.room.visual.text(roomLabs[e].resource , lab.pos.x,lab.pos.y, {
 }
 
 
-        if(  minerals[lab.mineralType] == undefined) {
+        if(  minerals[lab.mineralType] === undefined) {
             minerals[lab.mineralType] = lab.mineralAmount;
-            if(Game.rooms[roomName].memory.calledMinerals[lab.mineralType] == undefined ) {
+            if(Game.rooms[roomName].memory.calledMinerals[lab.mineralType] === undefined ) {
                 Game.rooms[roomName].memory.calledMinerals[lab.mineralType] = 0;
             }
         }  else {
@@ -271,14 +270,14 @@ class buildLab {
         for (var i in labs) {
             if(labs[i].id != ' ')  {
             let test = Game.getObjectById( labs[i].id );
-            if(test != undefined && test.room.name == creep.room.name) {
+            if(test !== null && test.room.name == creep.room.name) {
                 returned.push(test);
             }
             }
         }
 //        let vs = creep.room.find(FIND_STRUCTURES,{filter: {structureType: STRUCTURE_LAB}});
 //        console.log( returned.length, returned[0],vs.length,vs[0] );
-        return returned;;
+        return returned;
     }
 
 
@@ -312,7 +311,7 @@ for(var a in mem.labMinerals) {
         if(mineral == 'ZO') {
              minNeeded = (moveparts*30);
         }
-    if(mem.calledMinerals != undefined){
+    if(mem.calledMinerals !== undefined){
         mem.calledMinerals[mineral] -= minNeeded;
         if(mem.calledMinerals[mineral] < 0 ) mem.calledMinerals[mineral]= 0;
     }
@@ -379,13 +378,13 @@ console.log(workparts);
 
 for(var e in labRooms) {
 let roomName = labRooms[e];
-if(Game.rooms[roomName].memory.labs == undefined){
+if(Game.rooms[roomName].memory.labs === undefined){
     Game.rooms[roomName].memory.labs = returnLabs(roomName);
 }
 updateRoomMember(roomName);
 
 
-if(Game.rooms[roomName].memory.labMix == undefined) {
+if(Game.rooms[roomName].memory.labMix === undefined) {
     Game.rooms[roomName].memory.labMix = [];
 /*    Game.rooms[roomName].memory.labMix.push([3,2,6])
     Game.rooms[roomName].memory.labMix.push([7,2,6])
@@ -421,7 +420,7 @@ for(var a in Game.rooms[roomName].memory.labMix) {
 
     for(var e in labs) {
         let lab = Game.getObjectById( labs[e].id );
-        if(lab != undefined){
+        if(lab !== null){
             //        } && lab.mineralAmount < labs[e].amount) {
             let temp =  labs[e].resource ;
             mins.push(temp);
@@ -453,18 +452,18 @@ static moveToTransfer(creep) {
     let Where = whereDoIPut(creep,What); 
     creep.say('m');
 //    console.log(Where,'58b231304f9ae14589af186d');
-    if(Where == undefined) return false;
+    if(Where === undefined) return false;
     let itgoes = Game.getObjectById( Where );
 //    console.log(Where,itgoes,itgoes.mineralType, What)
     if(What != RESOURCE_ENERGY) {
-        if(itgoes.mineralType != undefined) {
+        if(itgoes.mineralType !== null) {
             if( itgoes.mineralType != What ) return false;
         }
     }
    // if(itgoes.mineralType != undefined && itgoes.mineralType != What ) return false;
 
     if(creep.pos.isNearTo(itgoes) ) {
-       creep.transfer(itgoes,What) 
+       creep.transfer(itgoes,What);
    } else {
         creep.moveMe(itgoes);    
    }
@@ -475,7 +474,7 @@ static moveToTransfer(creep) {
 static getFromTerminal(creep) { // gets the resource wanted from the terminal.
     creep.say('g');
     let wanted = whatDoIget(creep);
-    if(wanted == undefined) return false;
+    if(wanted === undefined) return false;
     let howMuch = howMuchDoIget(creep,wanted);
 
     if( creep.withdraw(creep.room.terminal, wanted) == ERR_NOT_IN_RANGE ) {
@@ -485,7 +484,7 @@ static getFromTerminal(creep) { // gets the resource wanted from the terminal.
 }
 
 static transferToTerminal(creep) {
-    if(creep.room.terminal == undefined) return false;
+    if(creep.room.terminal === undefined) return false;
     let term = creep.room.terminal;
     if(creep.pos.isNearTo(term)) {
     for(var i in creep.carry) {
@@ -497,6 +496,6 @@ static transferToTerminal(creep) {
     return true;
 }
 
-};
+}
 
 module.exports = buildLab;

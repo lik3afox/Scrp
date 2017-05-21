@@ -1,5 +1,5 @@
 function getEnemy(creep) {
-  return creep.room.find(FIND_HOSTILE_CREEPS);
+    return creep.room.find(FIND_HOSTILE_CREEPS);
 }
 
 class AttackInteract {
@@ -7,28 +7,30 @@ class AttackInteract {
 
     }
 
-   static getHostiles(creep) {
-      return getEnemy(creep);
+    static getHostiles(creep) {
+        return getEnemy(creep);
     }
 
-   static  isThere(creep) {
-      var enemies = getEnemy(creep);
-      if (enemies.length > 0)
-      return true
-      else return false;
+    static isThere(creep) {
+        var enemies = getEnemy(creep);
+        if (enemies.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     static attackClosest(creep) {
-      var enemies = getEnemy(creep);
-      if(enemies.length > 0 ) {
-        if(creep.attack(enemies[0]) == ERR_NOT_IN_RANGE ) {
-          creep.say('go');
-          creep.moveTo(enemies[0]);
+        var enemies = getEnemy(creep);
+        if (enemies.length > 0) {
+            if (creep.attack(enemies[0]) == ERR_NOT_IN_RANGE) {
+                creep.say('go');
+                creep.moveTo(enemies[0]);
+            }
+            return true;
+        } else {
+            return false;
         }
-        return true;
-      } else {
-        return false;
-      }
 
     }
 

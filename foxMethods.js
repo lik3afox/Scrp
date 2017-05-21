@@ -11,6 +11,6 @@ class foxyTime  {
     return false;
   }
 
-};
+}
 
 module.exports =  foxyTime;

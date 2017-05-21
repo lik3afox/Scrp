@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/lik3afox/Scrp#readme",
   "devDependencies": {
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-screeps": "^1.2.1"
   }
 }

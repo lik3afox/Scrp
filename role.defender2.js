@@ -25,13 +25,13 @@ var classLevels = [
         CARRY, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
         RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL
     ]
-]
+];
 
 function attackCreep(creep, bads) {
     //      creep.say('attk');
     //      let bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS,4);
     //    let bads = creep.pos.findClosestByRange(bads);
-    if (bads.length == 0) return true;
+    if (bads.length === 0) return true;
     let enemy = creep.pos.findClosestByRange(bads);
     let distance = creep.pos.getRangeTo(enemy);
 
@@ -47,7 +47,7 @@ function attackCreep(creep, bads) {
 
     } else if (distance < 4) {
 
-        var targets = creep.pos.findInRange(creep.room.hostilesHere(), 3)
+        var targets = creep.pos.findInRange(creep.room.hostilesHere(), 3);
 
         // Ranged attack.
         if (targets.length > 2) {
@@ -89,7 +89,6 @@ function restingSpot(creep) {
 
         default:
             return false;
-        break;
     }
 }
 
@@ -112,10 +111,10 @@ function lootRun(creep) {
 
 
 
-    if (_.sum(creep.carry) == 0) return false;
+    if (_.sum(creep.carry) === 0) return false;
 
     let target = creep.room.terminal;
-    if (target == undefined) target = creep.room.storage;
+    if (target === undefined) target = creep.room.storage;
 
     // go home and deposit.
     if (creep.pos.isNearTo(target)) {
@@ -135,8 +134,8 @@ function rampartDefense(creep) {
     creep.say('RAMP');
     var named = 'rampartD'+creep.room.name;
 
-  if (Game.flags[named] != undefined) {
-    if(creep.memory.party == undefined) {
+  if (Game.flags[named] !== undefined) {
+    if(creep.memory.party === undefined) {
          creep.memory.party = named;
     }
     if(!creep.pos.isEqualTo(Game.flags[named])) {
@@ -157,9 +156,9 @@ function rampartDefense(creep) {
   let zz = creep.room.lookForAtArea(LOOK_CREEPS, creep.y-1,creep.x-1,creep.y+1,creep.x+1);
 console.log(zz.length,'looking for other creeps,');
 // so if it finds zz it will back up and just range shoot, other wise it will stay up front.
-        var badzs = getHostiles(creep);
-        if (badzs.length > 0) {
-        let enemy = creep.pos.findClosestByRange(badzs);
+        var bads2 = getHostiles(creep);
+        if (bads2.length > 0) {
+        let enemy = creep.pos.findClosestByRange(bads2);
             if (creep.pos.isNearTo(enemy)) {
                         creep.say('FU',true);
                         creep.attack(enemy);
@@ -197,10 +196,10 @@ class roleNewDefender extends roleParent {
         // above 1400 life.
         // not spawning
 
-        if (creep.memory.birthTime == undefined) creep.memory.birthTime = Game.time;
+        if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
 
         // So this guy will stay by his spawn
-        if (creep.memory.renewSpawnID == undefined) {
+        if (creep.memory.renewSpawnID === undefined) {
             let _struct = creep.room.find(FIND_MY_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_SPAWN);

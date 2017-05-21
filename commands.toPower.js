@@ -5,7 +5,7 @@ function makeBody(carryNeeded){
         body.push(MOVE);
         body.push(CARRY);
         carryNeeded--;
-    }while(carryNeeded > 0)
+    }while(carryNeeded > 0);
     return body;
 }
 
@@ -29,16 +29,16 @@ class PowerInteract {
         let report = '';
         let total = 0;
         for(var e in Game.rooms) {
-            if(Game.rooms[e].memory.powerSpawnID != undefined) {
+            if(Game.rooms[e].memory.powerSpawnID !== undefined) {
                 let powerS = Game.getObjectById(Game.rooms[e].memory.powerSpawnID);
-                if(powerS != undefined) {
+                if(powerS !== null) {
                 	let room =  Game.rooms[e];
 //                	console.log(powerS, powerS.power,powerS.energy);
 //                	console.log(room.terminal.store[RESOURCE_ENERGY] > 19000 ,room.storage.store[RESOURCE_ENERGY]>899000 );
 
-if(room.memory.powerCount == undefined) room.memory.powerCount = 0;
+if(room.memory.powerCount === undefined) room.memory.powerCount = 0;
 
-                    if(room.controller.level == 8 &&  powerS != undefined && powerS.power != 0 && powerS.energy >= 50 && 
+                    if(room.controller.level == 8 &&  powerS !== null && powerS.power !== 0 && powerS.energy >= 50 && 
 room.terminal.store[RESOURCE_ENERGY] > 19000 &&room.storage.store[RESOURCE_ENERGY]>890000                     	
                     	) {
                    report = report + " "+room+"("+room.memory.powerCount+")";
@@ -53,7 +53,7 @@ room.terminal.store[RESOURCE_ENERGY] > 19000 &&room.storage.store[RESOURCE_ENERG
                 }
             }
         }
-        if(total != 0 ){
+        if(total !== 0 ){
             //console.log(total+ " Power processed:"+report);
             Memory.totalPowerProcessed = total;
         }
@@ -68,7 +68,7 @@ room.terminal.store[RESOURCE_ENERGY] > 19000 &&room.storage.store[RESOURCE_ENERG
 
 static findNewPowerParty(creep){
   // first we will look at Game.falgs
-  let pbFlags = _.filter(Game.flags,function(o){return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED });
+  let pbFlags = _.filter(Game.flags,function(o){return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED; });
 
 var closeFlag;
 var distance = 10;
@@ -81,9 +81,9 @@ var distance = 10;
     }
   }
 
-if(closeFlag == undefined) return false;
+if(closeFlag === undefined) return false;
 
-      console.log(creep,"Has switched to new party",closeFlag.name, 'from',creep.memory.party)
+      console.log(creep,"Has switched to new party",closeFlag.name, 'from',creep.memory.party);
       creep.memory.party = closeFlag.name;
       creep.memory.reportDeath = true;
       creep.memory.powerbankID = undefined;
@@ -93,35 +93,35 @@ if(closeFlag == undefined) return false;
 
     static getPowerToSpawn(creep){
 
-        if(creep.memory.powerSpawnID == undefined) {
+        if(creep.memory.powerSpawnID === undefined) {
             let zz = creep.room.find(FIND_STRUCTURES, {filter: s => s.structureType == STRUCTURE_POWER_SPAWN});
-            if(zz.length != 0 ) {
+            if(zz.length !== 0 ) {
                 creep.memory.powerSpawnID = zz[0].id;
             } else {
                 creep.memory.powerSpawnID = 'none';
             }
         }
-        if(creep.memory.powerSpawnID == undefined || creep.memory.powerSpawnID == 'none') return false;
+        if(creep.memory.powerSpawnID === undefined || creep.memory.powerSpawnID == 'none') return false;
 
         let powerSpawn = Game.getObjectById(creep.memory.powerSpawnID);
-        if(powerSpawn == undefined) return false;
+        if(powerSpawn === null) return false;
         if(powerSpawn.power > 10)  return false;
 
         var target;
         var noPower = true;
-        if(creep.room.terminal != undefined && creep.room.terminal.store[RESOURCE_POWER] > 0){
+        if(creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_POWER] > 0){
             target = creep.room.terminal;
-            noPower = false
-        } else if(creep.room.storage != undefined && creep.room.storage.store[RESOURCE_POWER] != undefined &&creep.room.storage.store[RESOURCE_POWER] > 0){
+            noPower = false;
+        } else if(creep.room.storage !== undefined && creep.room.storage.store[RESOURCE_POWER] !== undefined &&creep.room.storage.store[RESOURCE_POWER] > 0){
             target = creep.room.storage;
-            noPower = false
+            noPower = false;
         } else if ( creep.carry[RESOURCE_POWER]  > 0 ) {
-            noPower = false
+            noPower = false;
         }
  if(noPower) return false;
-        if(creep.carry[RESOURCE_POWER] == 0) return false;
+        if(creep.carry[RESOURCE_POWER] === 0) return false;
         // First find the powerspawn
-        if(_.sum(creep.carry) == 0) {
+        if(_.sum(creep.carry) === 0) {
             if(creep.pos.isNearTo(target)) {
                 let take = target.store[RESOURCE_POWER];
                 if(take > 100) take = 100;
@@ -155,7 +155,7 @@ if(closeFlag == undefined) return false;
         var roomName = flag.pos.roomName;
         // What we need is how much it's at each tick and is done between each check
 // then using that info we try to determine how long it'll take.
-if(Game.rooms[roomName] == undefined) {
+if(Game.rooms[roomName] === undefined) {
     let ob = require("build.observer");
     ob.reqestRoom(roomName,3);
     return; 
@@ -163,7 +163,7 @@ if(Game.rooms[roomName] == undefined) {
 
  let theRoom = Game.rooms[roomName];
 
-        if(theRoom.memory.powerbankID == undefined)   {
+        if(theRoom.memory.powerbankID === undefined)   {
              let find = theRoom.find(FIND_STRUCTURES,{filter: s => s.structureType == STRUCTURE_POWER_BANK});
              if( find.length > 0)
             theRoom.memory.powerbankID = find[0].id;
@@ -171,26 +171,26 @@ if(Game.rooms[roomName] == undefined) {
         }
 
 let powerB = Game.getObjectById(theRoom.memory.powerbankID);
-if(powerB == undefined) {
+if(powerB === null) {
     theRoom.memory.powerbankID  = undefined;
     flag.memory.spawn = false;
     theRoom.memory.transSent = false;
     let zz = flag.pos.findInRange(FIND_DROPPED_RESOURCES,1);
 //    console.log(zz.length,zz[0].resourceType,zz[1].resourceType);
-    if(zz.length == 0)
+    if(zz.length === 0)
         flag.remove();
     return;
 }
 let damageDone = theRoom.memory.powerHits - powerB.hits;
-if(damageDone == 0){
+if(damageDone === 0){
 //console.log('PowerBank targeted:',powerB.pos,"Est: none"+"/D:"+powerB.ticksToDecay," hp:",powerB.hits,'0');
 let msg = powerB.hits+"/"+powerB.ticksToDecay;
-theRoom.visual.text(msg,powerB.pos.x,powerB.pos.y-1,{color: 'white', font: 0.6,strokeWidth:.35});
+theRoom.visual.text(msg,powerB.pos.x,powerB.pos.y-1,{color: 'white', font: 0.6,strokeWidth:0.35});
 } else {
 //    Math.ceil(powerB.hits/damageDone)
 //console.log('PowerBank targeted:',powerB.pos,"Est:nan"+"/"+powerB.ticksToDecay," hp:",powerB.hits,damageDone);
 let msg = powerB.hits+"/"+powerB.ticksToDecay;
-theRoom.visual.text(msg,powerB.pos.x,powerB.pos.y-1,{color: 'white', font: 0.6,strokeWidth:.35});
+theRoom.visual.text(msg,powerB.pos.x,powerB.pos.y-1,{color: 'white', font: 0.6,strokeWidth:0.35});
 }
 /*
                 let damageNeed = powerB.hits/powerB.ticksToDecay;
@@ -240,10 +240,10 @@ theRoom.visual.text(msg,powerB.pos.x,powerB.pos.y-1,{color: 'white', font: 0.6,s
                                 goal: powerB.id,
                                 party: flag.name
                             }
-                        }
+                        };
                         spawn.requestCreep(transport,spawnID);
                         count--;
-                    }while(count > 0) 
+                    }while(count > 0);
                         console.log(theRoom.memory.transSent);
                             theRoom.memory.transSent = true;
                         console.log(theRoom.memory.transSent);
@@ -272,7 +272,7 @@ theRoom.memory.powerHits = powerB.hits;
         let rando = Math.floor(Math.random()*100)+1;
         var name = 'powerbankX'+rando;
 console.log('Analyzing Powerbank:'+powerBank+" "+powerBank.ticksToDecay+"/"+powerBank.ticksToDecay < 2700+"  : "+Game.flags[name]);
-if(room.memory.powerbankID == undefined||Game.getObjectById(room.memory.powerbankID) == undefined )  {
+if(room.memory.powerbankID === undefined||Game.getObjectById(room.memory.powerbankID) === undefined )  {
     Memory.flagName = name;
     Memory.flagPos = new RoomPosition(powerBank.pos.x,powerBank.pos.y,powerBank.pos.roomName);
     Memory.flagCol = COLOR_YELLOW;
@@ -289,7 +289,7 @@ console.log('We place a flag we have it',Memory.flagPos,Memory.flagName,Memory.f
         }
 
     static attackPowerbank(creep) {
-        if(creep.memory.powerbankID == undefined)   {
+        if(creep.memory.powerbankID === undefined)   {
              let find = creep.room.find(FIND_STRUCTURES,{filter: s => s.structureType == STRUCTURE_POWER_BANK});
 
             creep.memory.powerbankID = find[0].id;
@@ -297,7 +297,7 @@ console.log('We place a flag we have it',Memory.flagPos,Memory.flagName,Memory.f
 
         let powerbank = Game.getObjectById(creep.memory.powerbankID);
 
-        if(powerbank != undefined) {
+        if(powerbank !== null) {
             if(creep.pos.isNearTo(powerbank)) {
                 if( creep.attack(powerbank) == OK) {
                     creep.countStop();

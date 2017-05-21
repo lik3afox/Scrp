@@ -5,12 +5,12 @@ var spawns = require('commands.toSpawn');
 var movement = require('commands.toMove');
 //var ccSpawn = require('build.spawn');
 var visPath = {
-                                fill: 'transparent',
-                                stroke: '#fff',
-                                lineStyle: 'dashed',
-                                strokeWidth: .15,
-                                opacity: .5
-                            }
+    fill: 'transparent',
+    stroke: '#fff',
+    lineStyle: 'dashed',
+    strokeWidth: 0.15,
+    opacity: 0.5
+};
 // Main 300
 // level 0 = 200
 // level 1 = 300 / 0
@@ -48,11 +48,12 @@ var classLevels = [
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, WORK, CARRY
     ],
     // MAX level 6 
-        // MAX level 6 
-    [   CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,
-        CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
-        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,CARRY, MOVE, CARRY,
-        MOVE, WORK    ]
+    // MAX level 6 
+    [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
+        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
+        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
+        MOVE, WORK
+    ]
 
 ];
 var _ignoreRoad = true;
@@ -78,10 +79,10 @@ function shouldDie(creep) {
 }
 
 function getBads(creep) {
-     var  bads = creep.pos.findInRange(creep.room.hostilesHere,3,{
-            filter: object => (object.owner.username != 'zolox'&& object.owner.username != 'admon' )
-        });
-     return bads;
+    var bads = creep.pos.findInRange(creep.room.hostilesHere, 3, {
+        filter: object => (object.owner.username != 'zolox' && object.owner.username != 'admon')
+    });
+    return bads;
 }
 
 class transport extends roleParent {
@@ -90,71 +91,75 @@ class transport extends roleParent {
     }
 
     static levels(level) {
-         if (level > classLevels.length-1 )       level = classLevels.length-1;
+            if (level > classLevels.length - 1) level = classLevels.length - 1;
             return classLevels[level];
         }
         // FIND_DROPPED_ENERGY
     static run(creep) {
-       if(creep.saying == 'zZzZ') {
+        if (creep.saying == 'zZzZ') {
             creep.say('zZz');
             return;
-       }
-       if(creep.saying == 'zZz') {
+        }
+        if (creep.saying == 'zZz') {
             return;
-       }
+        }
 
 
         super.rebirth(creep);
         super.calcuateStats(creep);
-        if(super.doTask(creep)) {return;}
+        if (super.doTask(creep)) {
+            return; }
 
         var link = require('build.link');
-        let total = _.sum(creep.carry)
-        
+        let total = _.sum(creep.carry);
+
         if (link.stayDeposit(creep)) {
-            constr.pickUpEnergy(creep); 
-        let zparent = require('build.spawn');
+            constr.pickUpEnergy(creep);
+            let zparent = require('build.spawn');
             zparent.reportFrom(creep);
             creep.countReset();
-           return;        
-       }
+            return;
+        }
 
 
 
 
         if (super.depositNonEnergy(creep)) return;
-//        movement.checkForBadsPlaceFlag(creep);
+        //        movement.checkForBadsPlaceFlag(creep);
         shouldDie(creep);
 
-        if (super.returnEnergy(creep)) {            return;        }
-        if (movement.runAway(creep)) {            return;        }
-        if (super.keeperWatch(creep)) {             return;        }
+        if (super.returnEnergy(creep)) {
+            return; }
+        if (movement.runAway(creep)) {
+            return; }
+        if (super.keeperWatch(creep)) {
+            return; }
 
         let _goal = Game.getObjectById(creep.memory.goal);
-        super.deathWatch(creep)
+        super.deathWatch(creep);
 
-        if (creep.memory.gohome == undefined) {
+        if (creep.memory.gohome === undefined) {
             creep.memory.gohome = false;
         }
         if (creep.memory.keeperLairID == 'none') {
             creep.memory.keeperLairID = undefined;
         }
 
-        if (creep.room.name == 'E29S73'|| creep.room.name =='E25S76') {
-//            _ignoreRoad = false;
+        if (creep.room.name == 'E29S73' || creep.room.name == 'E25S76') {
+            //            _ignoreRoad = false;
         }
-        if ((!creep.memory.gohome && total > creep.carryCapacity-45) ) {
+        if ((!creep.memory.gohome && total > creep.carryCapacity - 45)) {
             creep.memory.gohome = true;
             creep.memory.empty = false;
         } else if (total < 20) {
-//            _ignoreRoad = true;
+            //            _ignoreRoad = true;
             creep.memory.gohome = false;
             creep.memory.empty = true;
         }
- 
+
         movement.checkForBadsPlaceFlag(creep);
 
-        if (creep.room.name != 'E28S77' && creep.room.name != 'E27S74' && creep.room.storage == undefined)
+        if (creep.room.name != 'E28S77' && creep.room.name != 'E27S74' && creep.room.storage === null)
             constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
 
         if (creep.memory.gohome) {
@@ -175,12 +180,12 @@ class transport extends roleParent {
 
             } else {
 
-               if(!constr.doCloseRoadRepair(creep)) {
+                if (!constr.doCloseRoadRepair(creep)) {
                     constr.doCloseRoadBuild(creep);
-               }
+                }
 
-        var      bads =getBads(creep);
-                if(bads.length == 0) {
+                var bads = getBads(creep);
+                if (bads.length === 0) {
                     creep.moveMe(Game.getObjectById(creep.memory.parent), {
                         reusePath: 49
                     });
@@ -194,74 +199,74 @@ class transport extends roleParent {
         } else { // IF not going home.  5873bd6d11e3e4361b4d92ef 37,34
 
             if (!super._constr.moveToPickUpEnergyIn(creep, 7))
-            if (_goal == undefined ) {
-                var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
-                creep.moveMe(goingTo, {
-                    ignoreRoads: _ignoreRoad,
-                    reusePath: 49,
-                    visualizePathStyle: visPath
-                });
-            } else if(_goal.room != undefined && creep.room.name == _goal.room.name){
+                if (_goal === null) {
+                    var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+                    creep.moveMe(goingTo, {
+                        ignoreRoads: _ignoreRoad,
+                        reusePath: 49,
+                        visualizePathStyle: visPath
+                    });
+                } else if (_goal.room !== null && creep.room.name == _goal.room.name) {
                 let rng = 4;
-                if(creep.room.name == 'E27S74' ) rng = 3;
+                if (creep.room.name == 'E27S74') rng = 3;
 
-                if(!super.guardRoom(creep))
-                if (creep.pos.inRangeTo(_goal,rng)) {
-                    if (creep.memory.workContain == undefined) {
+                if (!super.guardRoom(creep))
+                    if (creep.pos.inRangeTo(_goal, rng)) {
+                        if (creep.memory.workContain === undefined) {
 
-                        let contain = _goal.room.find(FIND_STRUCTURES, {
-                            filter: {
-                                structureType: STRUCTURE_CONTAINER
-                            }
-                        });
-                        contain = _goal.pos.findInRange(contain,10);
-                        contain = _goal.pos.findClosestByRange(contain);
-                        if (contain != undefined) {
-                            creep.memory.workContain = contain.id;
-                        }
-                    }
-
-                    let contain = Game.getObjectById(creep.memory.workContain);
-                    if (contain != undefined ) {
-                            if( _.sum(contain.store) > 100){
-                        if (creep.pos.isNearTo(contain)) {
-                            for (var e in contain.store) {
-                                if (creep.withdraw(contain, e) == OK) {
-                                    super.keeperFind(creep);
+                            let contain = _goal.room.find(FIND_STRUCTURES, {
+                                filter: {
+                                    structureType: STRUCTURE_CONTAINER
                                 }
+                            });
+                            contain = _goal.pos.findInRange(contain, 10);
+                            contain = _goal.pos.findClosestByRange(contain);
+                            if (contain !== null) {
+                                creep.memory.workContain = contain.id;
                             }
-                        } else {
-                                creep.moveMe(contain);
-                        }        
-                    } else  if(creep.pos.isNearTo(_goal)) {
-                            creep.moveTo(Game.getObjectById(creep.memory.parent));
                         }
 
+                        let contain = Game.getObjectById(creep.memory.workContain);
+                        if (contain !== null) {
+                            if (_.sum(contain.store) > 100) {
+                                if (creep.pos.isNearTo(contain)) {
+                                    for (var e in contain.store) {
+                                        if (creep.withdraw(contain, e) == OK) {
+                                            super.keeperFind(creep);
+                                        }
+                                    }
+                                } else {
+                                    creep.moveMe(contain);
+                                }
+                            } else if (creep.pos.isNearTo(_goal)) {
+                                creep.moveTo(Game.getObjectById(creep.memory.parent));
+                            }
+
+                        } else {
+                            let contain = Game.getObjectById(creep.memory.workContain);
+                            if (contain !== null && _goal.energy === 0 && total > 0 && contain.store[RESOURCE_ENERGY] === 0) {
+                                creep.memory.gohome = true;
+                                creep.memory.empty = false;
+                            } else {
+                                creep.say('zZzZ');
+                            }
+
+
+                        }
                     } else {
-            let contain = Game.getObjectById(creep.memory.workContain)
-        if(contain!= undefined && _goal.energy == 0 && total > 0&& contain.store[RESOURCE_ENERGY] == 0) {
-                creep.memory.gohome = true;
-                creep.memory.empty = false;
-        } else {
-                        creep.say('zZzZ');
-        }
-
-
+                        //      if (!super.guardRoom(creep)) {
+                        if (!creep.pos.isNearTo(_goal))
+                            creep.moveMe(_goal, { ignoreRoads: _ignoreRoad, reusePath: 35, visualizePathStyle: visPath });
+                        //       }
                     }
-                } else {
-              //      if (!super.guardRoom(creep)) {
-                        if(!creep.pos.isNearTo(_goal))
-                            creep.moveMe(_goal, {ignoreRoads: _ignoreRoad,reusePath: 35,visualizePathStyle:visPath});
-             //       }
-                }
 
-            }else if (_goal != undefined) {
+            } else if (_goal !== null) {
                 creep.moveMe(_goal, {
                     ignoreRoads: _ignoreRoad,
                     reusePath: 49,
                     visualizePathStyle: visPath
                 });
-            } 
+            }
 
 
         }

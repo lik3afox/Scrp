@@ -19,13 +19,13 @@ function  doAttack(creep) {
     switch(creep.room.name) {
         case "E37S79":
             target = Game.getObjectById('58a84f9cff111d524e669e8f');
-            if(target != undefined) {
+            if(target !== null) {
                 if(creep.pos.isNearTo(target)) {
                     creep.dismantle(target);
                 }
             } else {
             target =  Game.getObjectById('58a56eba4d5d993ffadd2496');
-            if(target != undefined) {
+            if(target !== null) {
 
             if(creep.pos.isNearTo(target)) {
                 creep.dismantle(target);
@@ -36,19 +36,19 @@ function  doAttack(creep) {
         break;
         case "E17S76":
             target =  Game.getObjectById('58677af00d89403c0f3cea15');
-            if(target != undefined) {
+            if(target !== null) {
                 if(creep.pos.isNearTo(target)) {
                     creep.dismantle(target);
                 }
             } else {
             target =  Game.getObjectById('588893b8dc89f23ad43c3d52');
-                if(target != undefined) {
+                if(target !== null) {
                     if(creep.pos.isNearTo(target)) {
                         creep.dismantle(target);
                     }
                 }
             }
-            creep.say('yoyo')
+            creep.say('yoyo');
 //            return true;
         break;
 

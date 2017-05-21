@@ -49,10 +49,10 @@ class roleBuilder extends roleParent{
 
         if (creep.carry.energy < 51) {
 
-if(creep.room.name == 'E28S73'&& creep.memory.roleID == 0){
+if(creep.room.name == 'E28S73'&& creep.memory.roleID === 0){
     creep.moveTo(21,43);
 }
-constr.pickUpEnergy(creep)
+constr.pickUpEnergy(creep);
 
 if(creep.room.name == "E27S74"&&creep.room.terminal.store[RESOURCE_ENERGY] > 0 ) {
                      containers.withdrawFromTerminal(creep);
@@ -94,6 +94,6 @@ if(creep.room.name == "E27S74"&&creep.room.terminal.store[RESOURCE_ENERGY] > 0 )
         }
 
     }
-};
+}
 
 module.exports = roleBuilder;

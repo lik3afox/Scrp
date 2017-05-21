@@ -40,16 +40,16 @@ function buildContainer(creep) {
 
 function doWork(creep) {
     //    if(!super.guardRoom(creep)) false;
-    if (creep.memory.keeperLairID != undefined && creep.memory.keeperLairID != 'none') { // THis is obtained when 
+    if (creep.memory.keeperLairID !== undefined && creep.memory.keeperLairID != 'none') { // THis is obtained when 
         let keeper = Game.getObjectById(creep.memory.keeperLairID);
 
-        if (keeper != undefined)
-            if (keeper.ticksToSpawn == undefined || keeper.ticksToSpawn < 20)
+        if (keeper !== null)
+            if (keeper.ticksToSpawn === undefined || keeper.ticksToSpawn < 20)
                 return false;
     }
 
     let contain = Game.getObjectById(creep.memory.workContainer);
-    if (contain == undefined) return;
+    if (contain === null) return;
     if ((
         //(      creep.room.name != 'E35S74'&& creep.room.name !='E35S75'&& creep.room.name !='E36S75'
     	//&&        creep.room.name != 'E35S84'&& creep.room.name !='E35S85'&& creep.room.name !='E34S84'
@@ -73,8 +73,8 @@ function doWork(creep) {
         if (creep.pos.isNearTo(contain)) {
             if (contain.store != contain.storeCapacity) {
                 //            creep.say('t');
-                creep.transfer(contain, RESOURCE_ENERGY)
-            };
+                creep.transfer(contain, RESOURCE_ENERGY);
+            }
         } else {
             //          creep.say('m');
             creep.say('m2w!!');
@@ -130,14 +130,14 @@ class settler extends roleParent {
             return;
         }
 //constr.pickUpEnergy(creep);
-        if (creep.memory.needBoost != undefined && creep.memory.needBoost.length > 0) {
+        if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
             if (super.boosted(creep, creep.memory.needBoost)) {
                 return;
             }
         }
             shouldDie(creep);
-        if (creep.memory.distance == undefined) {creep.memory.distance = 0;}
-        if (creep.memory.isThere == undefined) {creep.memory.isThere = false;}
+        if (creep.memory.distance === undefined) {creep.memory.distance = 0;}
+        if (creep.memory.isThere === undefined) {creep.memory.isThere = false;}
         if (creep.memory.level > 2) super.rebirth(creep);
         if (super.returnEnergy(creep)) return;
         if (movement.runAway(creep)) return;
@@ -147,12 +147,12 @@ class settler extends roleParent {
 
         var _source = Game.getObjectById(creep.memory.goal);
 
-        if (_source != undefined && !_source.pos.roomName == creep.room.name) creep.memory.distance++;
+        if (_source !== null && (_source.pos.roomName != creep.room.name)) creep.memory.distance++;
 
 
         if (creep.pos.isNearTo(_source)) {
         if (_.sum(creep.carry) >= creep.carryCapacity - 15) {
-            if (creep.memory.workContainer == undefined) {
+            if (creep.memory.workContainer === undefined) {
                 let range = 7;
                 if (creep.room.name == 'E27S74') range = 2;
 
@@ -160,7 +160,7 @@ class settler extends roleParent {
                     filter: object => (object.structureType == STRUCTURE_CONTAINER)
                 });
                 // Checks for container 
-                if (isContainer.length == 0) {
+                if (isContainer.length === 0) {
                     buildContainer(creep);
                 } else {
                     creep.memory.workContainer = isContainer[0].id;
@@ -177,12 +177,12 @@ class settler extends roleParent {
         }
 
             let contain = Game.getObjectById(creep.memory.workContainer);
-            if (contain != undefined && _source.energy != 0 && _.sum(contain.store) < contain.storeCapacity) {
+            if (contain !== null && _source.energy !== 0 && _.sum(contain.store) < contain.storeCapacity) {
     //            if(!creep.pos.isEqualTo(contain.pos)) {
   //                  creep.moveTo(contain.pos);
 //                } else {
                     if (creep.harvest(_source) == OK) {
-                        if (_source.energyCapacity == 4000 && creep.memory.keeperLairID == undefined) {
+                        if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {
                             super.keeperFind(creep);
                         }
                         //                                flags.reportMining(creep);
@@ -191,21 +191,21 @@ class settler extends roleParent {
                             color: 'white',
                             align: RIGHT,
                             font: 0.6,
-                            strokeWidth: .75
+                            strokeWidth: 0.75
                         });
                     }
       //          }
 
-            } else if (_source.energy != 0 && contain == undefined) {
+            } else if (_source.energy !== 0 && contain === undefined) {
                 if (creep.harvest(_source) == OK) {
-                    if (_source.energyCapacity == 4000 && creep.memory.keeperLairID == undefined) {
+                    if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {
                         super.keeperFind(creep);
                     }
                     //                              flags.reportMining(creep);
                     creep.memory.isThere = true;
                 }
 
-            } else if (_source.energy == undefined || _source.energy == 0) {
+            } else if (_source.energy === undefined || _source.energy === 0) {
                 creep.say('zZzZ');
             }
 
@@ -213,9 +213,9 @@ class settler extends roleParent {
 
             if (!super.guardRoom(creep)) {
 
-            if (!creep.memory.isThere && _source != undefined && !_source.pos.roomName == creep.room.name) creep.memory.distance++;
+            if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.memory.distance++;
 //if(_source != undefined) console.log( creep.room.name,  _source.room.name)
-if(_source != undefined && creep.room.name == _source.room.name) {
+if(_source !== null && creep.room.name == _source.room.name) {
                 creep.moveMe(_source, {                    reusePath: 10                });
 }else {
                 creep.moveMe(_source, {                    reusePath: 49                });

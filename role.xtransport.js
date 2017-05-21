@@ -13,7 +13,7 @@ var roleParent = require('role.parent');
 // Level 5 = 1800 / 30
 // Level 6 = 2300 / 40  Not added yet, not certain if needed.
 
-var classLevels = 
+var classLevels =
     // MAX level 6 
     [
         CARRY, MOVE, CARRY,
@@ -63,15 +63,19 @@ function shouldDie(creep) {
 function buildConstructionRoad(creep) {
     // First make sure there are no roads or constructionsites in 4 spaces
     let radius = 4;
-    let strcts = creep.pos.findInRange(FIND_STRUCTURES,radius, {filter: (structure) => {
-                        return (structure.structureType === STRUCTURE_ROAD);
-                    } });
-    let sites = creep.pos.findInRange(FIND_CONSTRUCTION_SITES,radius, {filter: (structure) => {
-                        return (structure.structureType === STRUCTURE_ROAD);
-                    } });
-    console.log(strcts.length,sites.length,creep.name,creep.pos);
-    if(strcts.length === 0 &&  sites.length === 0) {
-        creep.room.createConstructionSite(creep.pos,STRUCTURE_ROAD);
+    let strcts = creep.pos.findInRange(FIND_STRUCTURES, radius, {
+        filter: (structure) => {
+            return (structure.structureType === STRUCTURE_ROAD);
+        }
+    });
+    let sites = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, radius, {
+        filter: (structure) => {
+            return (structure.structureType === STRUCTURE_ROAD);
+        }
+    });
+    console.log(strcts.length, sites.length, creep.name, creep.pos);
+    if (strcts.length === 0 && sites.length === 0) {
+        creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
     }
 }
 
@@ -82,23 +86,24 @@ class transport extends roleParent {
     }
 
     static levels(level) {
-//            if (level > classLevels.length) level = classLevels.length;
+            //            if (level > classLevels.length) level = classLevels.length;
             return classLevels;
         }
         // FIND_DROPPED_ENERGY
     static run(creep) {
         super.calcuateStats(creep);
-        if(super.doTask(creep)) {return;}      
-       if(creep.saying === 'zZzZ') {
+        if (super.doTask(creep)) {
+            return; }
+        if (creep.saying === 'zZzZ') {
             creep.say('zZz');
             return;
-       }
-       if(creep.saying === 'zZz') {
+        }
+        if (creep.saying === 'zZz') {
             return;
-       }
-        
+        }
+
         var start;
-  //      super._movement.checkForBadsPlaceFlag(creep);
+        //      super._movement.checkForBadsPlaceFlag(creep);
         shouldDie(creep);
         if (creep.memory.keeperLairID === 'none') {
             creep.memory.keeperLairID = undefined;
@@ -107,12 +112,12 @@ class transport extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
-        if(creep.memory.roadConstruct === undefined) {
+        if (creep.memory.roadConstruct === undefined) {
             creep.memory.roadConstruct = 10;
         }
 
 
-//        if(creep.fatigue > 0&&creep.memory.gohome ) buildConstructionRoad(creep);
+        //        if(creep.fatigue > 0&&creep.memory.gohome ) buildConstructionRoad(creep);
 
         // First it needs to go to the room
         // if not in the room that it needs to be
@@ -138,7 +143,7 @@ class transport extends roleParent {
             creep.memory.gohome = false;
         }
 
-let carry = _.sum(creep.carry);
+        let carry = _.sum(creep.carry);
 
         if (!creep.memory.gohome && carry > creep.carryCapacity - 45) {
             creep.memory.gohome = true;
@@ -157,9 +162,9 @@ let carry = _.sum(creep.carry);
 
         if (creep.memory.gohome) {
 
-            super.goToFocusFlag(creep,Game.flags[creep.memory.focusFlagName]);
+            super.goToFocusFlag(creep, Game.flags[creep.memory.focusFlagName]);
 
-           if(!super._constr.doCloseRoadRepair(creep))
+            if (!super._constr.doCloseRoadRepair(creep))
                 super._constr.doCloseRoadBuild(creep);
 
         } else { // IF not going home. 
@@ -178,11 +183,11 @@ let carry = _.sum(creep.carry);
                     }
                 });
             } else if (_goal !== null && _goal.room.name != creep.room.name) {
-      //          if(creep.room.name == 'E26S77'||creep.room.name == 'E35S74' ) {
-                    _ignoreRoad = false;
-    //            } else {
-  //                  _ignoreRoad = true;
-//                }
+                //          if(creep.room.name == 'E26S77'||creep.room.name == 'E35S74' ) {
+                _ignoreRoad = false;
+                //            } else {
+                //                  _ignoreRoad = true;
+                //                }
                 if (!super.guardRoom(creep)) {
                     creep.moveTo(_goal, {
                         ignoreRoads: _ignoreRoad,
@@ -200,69 +205,69 @@ let carry = _.sum(creep.carry);
 
                 let foxy = require('foxMethods');
                 // If in the same room and with in a square of 5 away from goal. 
-if (!super._constr.moveToPickUpEnergyIn(creep, 5)) 
-                if (_goal.room.name === creep.room.name && foxy.isInRange(creep, _goal.pos.x, _goal.pos.y, 5)) {
-                    //                    if (!constr.pickUpEnergy(creep)) {
-                    if (creep.memory.workContain === undefined) {
-                        let contain = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                            filter: {
-                                structureType: STRUCTURE_CONTAINER
-                            }
-                        });
-                        if (contain !== null) {
-                            creep.memory.workContain = contain.id;
-                        }
-
-                    }
-
-
-
-                    let contain = Game.getObjectById(creep.memory.workContain);
-                    if (contain !== null) {
-                        if (creep.pos.isNearTo(contain)) {
-                            if (_.sum(contain.store) > 0) {
-                                for (var e in contain.store) {
-                                    if (creep.withdraw(contain, e) === OK) {
-                                        super.keeperFind(creep);
-                                    }
+                if (!super._constr.moveToPickUpEnergyIn(creep, 5))
+                    if (_goal.room.name === creep.room.name && foxy.isInRange(creep, _goal.pos.x, _goal.pos.y, 5)) {
+                        //                    if (!constr.pickUpEnergy(creep)) {
+                        if (creep.memory.workContain === undefined) {
+                            let contain = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                                filter: {
+                                    structureType: STRUCTURE_CONTAINER
                                 }
+                            });
+                            if (contain !== null) {
+                                creep.memory.workContain = contain.id;
+                            }
 
+                        }
+
+
+
+                        let contain = Game.getObjectById(creep.memory.workContain);
+                        if (contain !== null) {
+                            if (creep.pos.isNearTo(contain)) {
+                                if (_.sum(contain.store) > 0) {
+                                    for (var e in contain.store) {
+                                        if (creep.withdraw(contain, e) === OK) {
+                                            super.keeperFind(creep);
+                                        }
+                                    }
+
+                                } else {
+                                    creep.say('zZzZ');
+                                }
                             } else {
-                                creep.say('zZzZ');
+                                creep.moveTo(contain);
                             }
+
                         } else {
-                            creep.moveTo(contain);
+                            creep.say('zZzZ');
                         }
 
+                        //                  }
                     } else {
-                        creep.say('zZzZ');
-                    }
-                    
-                    //                  }
-                } else {
 
-                    // This here is to prevent moving back and forth.
-                    if (creep.memory.keeperLairID !== undefined) {
-                        let sKep = Game.getObjectById(creep.memory.keeperLairID);
-                        if (sKep.ticksToSpawn === null || sKep.ticksToSpawn < 25 || sKep.ticksToSpawn > 295) {
-                            return;
+                        // This here is to prevent moving back and forth.
+                        if (creep.memory.keeperLairID !== undefined) {
+                            let sKep = Game.getObjectById(creep.memory.keeperLairID);
+                            if (sKep.ticksToSpawn === null || sKep.ticksToSpawn < 25 || sKep.ticksToSpawn > 295) {
+                                return;
+                            }
+                        }
+
+                        if (!super.guardRoom(creep)) {
+                            creep.moveTo(_goal, {
+                                ignoreRoads: _ignoreRoad,
+                                reusePath: 49,
+                                visualizePathStyle: {
+                                    fill: 'transparent',
+                                    stroke: '#fff',
+                                    lineStyle: 'dashed',
+                                    strokeWidth: 0.15,
+                                    opacity: 0.5
+                                }
+                            });
                         }
                     }
-
-                    if (!super.guardRoom(creep)) {
-                        creep.moveTo(_goal, {
-                            ignoreRoads: _ignoreRoad,
-                            reusePath: 49,
-                            visualizePathStyle: {
-                                fill: 'transparent',
-                                stroke: '#fff',
-                                lineStyle: 'dashed',
-                                strokeWidth: 0.15,
-                                opacity: 0.5
-                            }
-                        });
-                    }
-                }
             }
 
 

@@ -12,7 +12,7 @@ var roomsObserve = ['E30S80','E30S70','E31S70','E29S70','E30S71','E30S69',
 
 function doTask(tasks) {
     var target;
-    if(tasks.length == 0) return false;
+    if(tasks.length === 0) return false;
     let task = tasks[0];
     switch(task.order) {
         case "observer":
@@ -27,14 +27,14 @@ function doTask(tasks) {
 	        if(distance <= 10) {
     	        if( ob.observeRoom(target) == OK) {
         	        task.options.timed--;
-            	    if(task.options.timed == 0) {
+            	    if(task.options.timed === 0) {
                 	    tasks.shift();
 	                }
     	            return;
         	    }
         	} else {
         		    task.options.timed--;
-            	    if(task.options.timed == 0) {
+            	    if(task.options.timed === 0) {
                 	    tasks.shift();
 	                }
         	}
@@ -47,7 +47,7 @@ function doTask(tasks) {
 class buildObserver {
 
     static reqestRoom(theroom,thetimed) {
-        var request = {order:"observer", options:{room: theroom, timed:thetimed}}
+        var request = {order:"observer", options:{room: theroom, timed:thetimed}};
         if( _.find(Memory.observerTask, function(o) { return o.options.room == theroom; }) ) {
             return false;
         }
@@ -62,10 +62,10 @@ class buildObserver {
         } 
 
     static run() {
-    	if(Memory.observerNum == undefined) {
+    	if(Memory.observerNum === undefined) {
     		Memory.observerNum = 0;
     	}
-        if(Memory.observerTask == undefined) {
+        if(Memory.observerTask === undefined) {
             Memory.observerTask = [];
         }        
         if(Memory.observerTask.length > 0) {
@@ -73,12 +73,12 @@ class buildObserver {
             return;
         }
 //        console.log(Memory.observerNum, roomsObserve[Memory.observerNum], Game.rooms[roomsObserve[Memory.observerNum]]);
-        if( Memory.observerNum > roomsObserve.length -1) Memory.observerNum = 0
+        if( Memory.observerNum > roomsObserve.length -1) Memory.observerNum = 0;
         let target =  roomsObserve[Memory.observerNum];
 
 //        console.log(Memory.observerNum,roomsObserve.length,"Observering room:",target,"seeing:",Game.rooms[target],'|Tasks:'+Memory.observerTask.length);
 
-        if(Game.rooms[target] == undefined) {
+        if(Game.rooms[target] === undefined) {
             // Then we observer
             for(var e in observers) {
                 let stru = Game.getObjectById(  observers[e] );
@@ -88,13 +88,13 @@ class buildObserver {
                 }
             }
         } else {
-            let powerBank = Game.rooms[target].find(FIND_STRUCTURES,{filter: s => s.structureType == STRUCTURE_POWER_BANK} )
+            let powerBank = Game.rooms[target].find(FIND_STRUCTURES,{filter: s => s.structureType == STRUCTURE_POWER_BANK} );
             if(powerBank.length > 0 ) {
                 let power = require('commands.toPower');
                 power.analyzePowerBank(powerBank[0],Game.rooms[target]);
 
-            for(var e in observers) {
-                let stru = Game.getObjectById(  observers[e] );
+            for(var o in observers) {
+                let stru = Game.getObjectById(  observers[o] );
                     stru.observeRoom(target);
             }
 
@@ -109,7 +109,7 @@ class buildObserver {
     	}
         
     
-};
+}
 
 module.exports = buildObserver;
 

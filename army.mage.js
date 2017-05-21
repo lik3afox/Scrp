@@ -19,7 +19,7 @@ ATTACK,
 HEAL];
 // These need to be in the lab or else this creep isn't good enough :/
 //var boost = ['ZO',RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE,RESOURCE_CATALYZED_GHODIUM_ALKALIDE,RESOURCE_UTRIUM_ACID];
-var boost = ['XLHO2','XUH2O','XZHO2','XGHO2']
+var boost = ['XLHO2','XUH2O','XZHO2','XGHO2'];
 /*
 warinternal [4:18 PM] 
 @likeafox they can't attack and heal, but they can ranged, heal, and move at the same time
@@ -63,13 +63,13 @@ var E26S83 = ['58ae0750941231640dfdc503','58b98340caf98c611b7ee2b8','58ac35a404c
               creep.heal(creep);  
               }  
 
-       if(creep.room.name == 'E27S81' && creep.room.controller.safemode == undefined) {
+       if(creep.room.name == 'E27S81' && creep.room.controller.safemode === undefined) {
         	creep.say('here I am');
 
         let target;
         for(var e in E27S71) {
            target = Game.getObjectById(E27S71[e]);
-            if(target != undefined ) {
+            if(target !== undefined ) {
                 if(creep.dismantle(target) == ERR_NOT_IN_RANGE ) {
                 } 
                 creep.moveTo(target);

@@ -48,11 +48,11 @@ class rebuilder extends roleParent {
                     console.log('last',creep.memory.lastPos.x,creep.memory.lastPos.y);
                     console.log('current',creep.pos.x,creep.pos.y); */
 
-        if (creep.memory.build == undefined) {
+        if (creep.memory.build === undefined) {
             creep.memory.build = false;
         }
 
-        if (creep.memory.repair == undefined) {
+        if (creep.memory.repair === undefined) {
             creep.memory.repair = false;
         }
 
@@ -67,7 +67,7 @@ class rebuilder extends roleParent {
             }
         }
 
-        if (_.sum(creep.carry) == 0) {
+        if (_.sum(creep.carry) === 0) {
             creep.memory.build = false;
         }
 
@@ -78,10 +78,10 @@ class rebuilder extends roleParent {
                 return;
             }
 
-            var temz = creep.memory.roleID%2
+            var temz = creep.memory.roleID%2;
 
             if (creep.memory.build) {
-                if(temz == 0) {
+                if(temz === 0) {
                     if(!constr.doBuild(creep)) {
                         if (!constr.moveToBuild(creep)) {
                             constr.moveToRepair(creep);
@@ -103,11 +103,11 @@ class rebuilder extends roleParent {
 
             else {
 
-                if(Game.getObjectById(creep.memory.goal) == undefined) {
+                if(Game.getObjectById(creep.memory.goal) === null) {
                     
                     var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveTo(goingTo);
-                } else if (Game.getObjectById(creep.memory.goal) != undefined &&
+                } else if (Game.getObjectById(creep.memory.goal) !== null &&
                     (!creep.memory.build) &&
                     Game.getObjectById(creep.memory.goal).room.name != creep.room.name) {
                     creep.moveTo(Game.getObjectById(creep.memory.goal));
@@ -128,7 +128,7 @@ class rebuilder extends roleParent {
 
         } else {
 
-            if ((Game.getObjectById(creep.memory.goal) != null) && (!creep.memory.build)) {
+            if ((Game.getObjectById(creep.memory.goal) !== null) && (!creep.memory.build)) {
                 creep.moveTo(Game.getObjectById(creep.memory.goal));
             } else {
                     if(!constr.doBuild(creep)) {

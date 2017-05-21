@@ -36,11 +36,11 @@ var roleParent = require('role.parent');
 //STRUCTURE_POWER_BANK:
 function findNewParty(creep){
   // first we will look at Game.falgs
-  let pbFlags = _.filter(Game.flags,function(o){return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED });
+  let pbFlags = _.filter(Game.flags,function(o){return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED; });
   for(var a in pbFlags) {
     let dis = Game.map.getRoomLinearDistance(creep.room.name,pbFlags[a].pos.roomName);
     if(dis <= 5 && pbFlags[a].name != creep.memory.party) {
-      console.log(creep,"Has switched to new party",pbFlags[a].name, 'from',creep.memory.party)
+      console.log(creep,"Has switched to new party",pbFlags[a].name, 'from',creep.memory.party);
       creep.memory.party = pbFlags[a].name;
       creep.memory.reportDeath = true;
       creep.memory.powerbankID = undefined;
@@ -51,17 +51,17 @@ function findNewParty(creep){
 }
 
 function  doAttack(creep) {
-          let target 
+          let target;
     switch(creep.room.name) {
         case "E38S82":
             target = Game.getObjectById('58ba75aa041adbe4312ca6ac');
-            if(target != undefined) {
+            if(target !== null) {
                 if(creep.pos.isNearTo(target)) {
                     creep.attack(target);
                 }
             } else {
           target = Game.getObjectById('58a56eba4d5d993ffadd2496');
-            if(target != undefined) {
+            if(target !== null) {
               if(creep.pos.isNearTo(target)) {
                   creep.attack(target);
                 }
@@ -70,13 +70,13 @@ function  doAttack(creep) {
         break;
         case "E17S76":
             target = Game.getObjectById('58677af00d89403c0f3cea15');
-            if(target != undefined) {
+            if(target !== null) {
                 if(creep.pos.isNearTo(target)) {
                     creep.attack(target);
                 }
             } else {
             target = Game.getObjectById('588893b8dc89f23ad43c3d52');
-              if(target != undefined) {
+              if(target !== null) {
                 if(creep.pos.isNearTo(target)) {
                   creep.attack(target);
                 }            
@@ -117,9 +117,9 @@ function powerAction(creep) {
 //      creep.attack(enemy);
   //   } else {
 
-    if (Game.flags[creep.memory.party] != undefined) {
+    if (Game.flags[creep.memory.party] !== undefined) {
       if( creep.room.name == Game.flags[creep.memory.party].pos.roomName){
-        if(creep.memory.powerbankID == undefined) {
+        if(creep.memory.powerbankID === undefined) {
           let zz = creep.room.find(FIND_STRUCTURES,{filter: o => o.structureType == STRUCTURE_POWER_BANK });
           if (zz.length > 0 ) {
             creep.memory.powerbankID = zz[0].id;
@@ -127,7 +127,7 @@ function powerAction(creep) {
         }
 
       let pBank = Game.getObjectById( creep.memory.powerbankID);
-      if(pBank == undefined) {
+      if(pBank === null) {
 
   if(! power.findNewPowerParty(creep) ) 
         creep.memory.death = true;        

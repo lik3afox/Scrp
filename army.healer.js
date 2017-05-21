@@ -19,11 +19,11 @@ var roleParent = require('role.parent');
 var attack = require('commands.toAttack');
 function findNewParty(creep){
   // first we will look at Game.falgs
-  let pbFlags = _.filter(Game.flags,function(o){return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED });
+  let pbFlags = _.filter(Game.flags,function(o){return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED; });
   for(var a in pbFlags) {
     let dis = Game.map.getRoomLinearDistance(creep.room.name,pbFlags[a].pos.roomName);
     if(dis <= 5 && pbFlags[a].name != creep.memory.party) {
-      console.log(creep,"Has switched to new party",pbFlags[a].name, 'from',creep.memory.party)
+      console.log(creep,"Has switched to new party",pbFlags[a].name, 'from',creep.memory.party);
       creep.memory.party = pbFlags[a].name;
       creep.memory.reportDeath = true;
       creep.memory.powerbankID = undefined;
@@ -36,19 +36,19 @@ function findNewParty(creep){
 function powerAction(creep) {
     var power = require('commands.toPower');
 
-if(Game.flags[creep.memory.party]!= undefined) {
-  if(Game.flags[creep.memory.party].room != undefined && creep.room.name == Game.flags[creep.memory.party].room.name) {
-    if(creep.memory.powerbankID == undefined) {
+if(Game.flags[creep.memory.party]!== undefined) {
+  if(Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].room.name) {
+    if(creep.memory.powerbankID === undefined) {
         let vv = creep.room.find(FIND_STRUCTURES, {filter: s => s.structureType == STRUCTURE_POWER_BANK });
-        if(vv[0]!= undefined) {
+        if(vv[0] !== undefined&&vv[0] !== null) {
           creep.memory.powerbankID = vv[0].id;
         }
         creep.memory.parent = returnClosestSpawn(creep.room.name).id;
     }
     
     let pBank = Game.getObjectById( creep.memory.powerbankID);
-      if(pBank == undefined) {
-        creep.memory.powerbankID = undefined
+      if(pBank === null) {
+        creep.memory.powerbankID = undefined;
         creep.memory.notThere = true;
         creep.memory.distance = 0;
 
@@ -140,7 +140,7 @@ if(creep.memory.level == 6) {
     
 creep.say(hurtz.length);
 //return;
-		if(hurtz[0] != undefined) {
+		if(hurtz[0] !== undefined) {
 			if(creep.heal(hurtz[0]) == ERR_NOT_IN_RANGE) {
 		        creep.rangedHeal(hurtz[0]);
     		}	

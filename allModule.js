@@ -10,7 +10,7 @@ Creep.prototype.moveMe = function(target) {
 	var samePath = 50;
 	var stuck = false;
 
-	if (this.memory.position != undefined) {
+	if (this.memory.position !== undefined) {
 		stuck = this.pos.isEqualTo(this.memory.position.x, this.memory.position.y);
 	}
 	this.memory.position = this.pos;

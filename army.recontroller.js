@@ -22,10 +22,10 @@ class hacker2Class extends roleParent{
 
 	static run(creep) {
 
-            if(Game.flags.recontrol != undefined && creep.pos.roomName == Game.flags.recontrol.pos.roomName) {
+            if(Game.flags.recontrol !== undefined && creep.pos.roomName == Game.flags.recontrol.pos.roomName) {
                     creep.say('there?');
 
-                if(creep.pos.isNearTo(creep.room.controller)&&creep.room.controller.level != undefined && creep.room.controller.level > 6 ) {
+                if(creep.pos.isNearTo(creep.room.controller)&&creep.room.controller.level !== undefined && creep.room.controller.level > 6 ) {
                     creep.room.controller.unclaim();
                     creep.say('here?');
                     return;

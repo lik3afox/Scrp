@@ -16,13 +16,13 @@ var roleParent = require('role.parent');
 var labsBuild = require('build.labs');
 
 function memoryCheck(creep) {
-    if (creep.memory.mineralID == undefined) {
+    if (creep.memory.mineralID === undefined) {
         let vr = creep.room.find(FIND_MINERALS);
         creep.room.memory.mineralID = vr[0].id;
         creep.memory.mineralID = vr[0].id;
     }
 
-    if (creep.memory.extractID == undefined) {
+    if (creep.memory.extractID === undefined) {
         let vr = creep.room.find(FIND_STRUCTURES, {
             filter: s => s.structureType == STRUCTURE_EXTRACTOR
         });
@@ -44,7 +44,7 @@ class mineralRole extends roleParent {
 
         if (super.returnEnergy(creep)) {            return;        }
         let minz = Game.getObjectById(creep.memory.mineralID);
-        if (minz == undefined) return;
+        if (minz === null) return;
         let carry = _.sum(creep.carry);
 
         let cdNeed;
@@ -67,12 +67,12 @@ class mineralRole extends roleParent {
         if (isNear && carry < creep.carryCapacity - 49) {
             let extract = Game.getObjectById(creep.memory.extractID);
                 cdNeed = extract.cooldown;
-            if (cdNeed == 0) 
+            if (cdNeed === 0) 
                 if(creep.harvest(minz) == OK) {
-                    if(creep.memory.mineralContainID == undefined) {
+                    if(creep.memory.mineralContainID === undefined) {
                         let stru = creep.pos.findInRange(FIND_STRUCTURES,5);
-                        stru = _.filter(stru,function(o){return o.structureType == STRUCTURE_CONTAINER});
-                        if(stru.length != 0) {
+                        stru = _.filter(stru,function(o){return o.structureType == STRUCTURE_CONTAINER;});
+                        if(stru.length !== 0) {
                             creep.memory.mineralContainID = stru[0].id;
                         }else {
                             creep.memory.mineralContainID = 'none';
@@ -80,7 +80,7 @@ class mineralRole extends roleParent {
                     } 
                 }
 
-            if (minz.mineralAmount == undefined||minz.mineralAmount == 0 ) {
+            if (minz.mineralAmount === undefined||minz.mineralAmount === 0 ) {
                 creep.memory.death = true;
             }
             return;
@@ -90,7 +90,7 @@ class mineralRole extends roleParent {
             //let contain;
             //if(creep.memory.mineralContainID != undefined && creep.memory.mineralContainID != 'none') 
         let contain = Game.getObjectById(creep.memory.mineralContainID);
-            if (contain == undefined) {
+            if (contain === null ||contain === undefined) {
                 if (!labsBuild.transferToTerminal(creep)) {
                     super._containers.moveToStorage(creep);
                 }

@@ -187,7 +187,7 @@ class StructureInteract {
 //        stuff = _.filter(stuff,{filter:o => o.resourceType != RESOURCE_ENERGY});
   //     let workparts = _.filter(stuff,function(n) {return n.resourceType != RESOURCE_ENERGY});
   //     console.log(stuff.length,workparts.length);
-        if(stuff.length == 0) return false;
+        if(stuff.length === 0) return false;
         if(creep.pos.isNearTo(stuff[0])) {
             for(var e in stuff) {
                 creep.pickup(stuff[e]);
@@ -206,7 +206,7 @@ class StructureInteract {
 //       let workparts = _.filter(stuff,function(n) {return n.resourceType != RESOURCE_ENERGY});
 		//stuff = _.filter(stuff,function(n){ })
 //		console.log('doing cllose enrgy test,',stuff.length,workparts.length);
-        if(stuff.length == 0) {
+        if(stuff.length === 0) {
             return false;
         }
         creep.say('stuff');
@@ -219,31 +219,31 @@ class StructureInteract {
     }
 
     static pickUpEnergy(creep) {
-        if(creep.room.controller != undefined) {
-        	if(creep.room.controller.owner == undefined) {
+        if(creep.room.controller !== undefined) {
+        	if(creep.room.controller.owner === undefined) {
         		return false;
         	} 
         } 
 
         var dEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY,1);
-        if(dEnergy.length == 0) return false;
+        if(dEnergy.length === 0) return false;
            creep.pickup(dEnergy[0]); 
             return true;
     }
 
     static moveToPickUpEnergyIn(creep,range) {
-        if(creep.memory.nextEnergyScan == undefined) {            creep.memory.nextEnergyScan = 0;        }
+        if(creep.memory.nextEnergyScan === undefined) {            creep.memory.nextEnergyScan = 0;        }
         creep.memory.nextEnergyScan--;
         if(creep.memory.nextEnergyScan < 0) {
             var dEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY,range);
-            if(dEnergy.length == 0 ){
+            if(dEnergy.length === 0 ){
                 creep.memory.nextEnergyScan = range;
                 return false;  
             } 
             let close = dEnergy[0];//= creep.pos.findClosestByRange(dEnergy);
 
             if(creep.pos.isNearTo(close)) {
-                creep.pickup(close)
+                creep.pickup(close);
             }else {
                 creep.moveTo(close,{maxRooms:1});
             }
@@ -256,7 +256,7 @@ class StructureInteract {
 
     static dismantleTarget(creep,targetID) {
          let zz= Game.getObjectById(targetID);
-         if(zz == undefined) return false;
+         if(zz === null) return false;
          if(creep.pos.isNearTo(zz)) {
                 creep.dismantle(zz);
          } else {
@@ -270,7 +270,7 @@ class StructureInteract {
         let finded = creep.pos.findClosestByRange (FIND_HOSTILE_STRUCTURES, {
         filter: (structure) => {
         return (structure.structureType == type); }
-        }) 
+        }) ;
 
 if(creep.pos.isNearTo(finded)) {
     creep.dismantle(finded);
@@ -284,16 +284,16 @@ return false;
     }
 
     static moveToPickUpEnergy(creep,min) {
-        if(min == undefined) min = 0;
+        if(min === undefined) min = 0;
         var close = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY,{
     filter: function(object) {
         return object.amount > min;
     }
 });//.sort((a, b) => a.amount - b.amount); ;
-        if(close == undefined) return false;
+        if(close === undefined) return false;
 creep.say(close.amount);
 if(creep.pos.isNearTo(close)) {
-    creep.pickup(close)
+    creep.pickup(close);
 }else {
     creep.moveTo(close, {
   //                  ignoreRoads: _ignoreRoad,
@@ -303,15 +303,15 @@ if(creep.pos.isNearTo(close)) {
                         fill: 'transparent',
                         stroke: '#f0f',
                         lineStyle: 'dashed',
-                        strokeWidth: .15,
-                        opacity: .5
+                        strokeWidth: 0.15,
+                        opacity: 0.5
                     }
                 });
 }
 return true;
+/*
 
-
-if(min == undefined) min = 0;
+if(min === undefined) min = 0;
 //        var dEnergy = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
         var tmp = creep.room.find(FIND_DROPPED_ENERGY);//.sort((a, b) => a.amount - b.amount); ;
         let vv = tmp.length-(1+creep.memory.roleID);
@@ -319,14 +319,14 @@ if(min == undefined) min = 0;
      var   dEnergy = tmp[vv];
      
 //        console.log(creep.pickup(dEnergy),dEnergy.length);
-if(dEnergy == undefined ) return false;
+if(dEnergy === undefined ) return false;
 creep.say(dEnergy.amount);
 if(creep.pos.isNearTo(dEnergy)) {
     creep.pickup(dEnergy)
 }else {
     creep.moveTo(dEnergy);
 }
-return true;
+return true; */
     }
 
 /*
@@ -356,13 +356,11 @@ return true;
 
     static doCloseRepair(creep) {
         let close = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-            filter: object => ( ((object.structureType != STRUCTURE_WALL)
-                                && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax) )
+            filter: object => ( ((object.structureType != STRUCTURE_WALL) && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax) )
         });
 
         let zlose = creep.pos.findInRange(FIND_STRUCTURES, 3 );
-        zclose = _.filter(zlose,function(object) {return ( ((object.structureType != STRUCTURE_WALL)
-                                && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax) )})
+        zclose = _.filter(zlose,function(object) {return ( ((object.structureType != STRUCTURE_WALL) && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax) );});
         console.log(close.length,zlose.length);
         if (close.length > 0) {
             creep.say('cre');
@@ -399,13 +397,13 @@ return true;
         return false;
     }
     static doCloseRoadBuild(creep) {
-if(creep.memory.closeRoadBuildTimer == undefined){
+if(creep.memory.closeRoadBuildTimer === undefined){
     creep.memory.closeRoadBuildTimer = 0;
 }
 creep.memory.closeRoadBuildTimer--;
 if(creep.memory.closeRoadBuildTimer < 0) {
         let zbuild = creep.pos.findInRange(FIND_CONSTRUCTION_SITES,1);
-        if(zbuild.length == 0 ) {
+        if(zbuild.length === 0 ) {
             creep.memory.closeRoadBuildTimer = 4;
             return false;
         }
@@ -415,7 +413,7 @@ return false;
     }
 
     static attackPowerbank(creep) {
-        if(creep.memory.powerbankID == undefined)   {
+        if(creep.memory.powerbankID === undefined)   {
              let find = creep.room.find(FIND_STRUCTURES,{filter: s => s.structureType == STRUCTURE_POWER_BANK});
 
             creep.memory.powerbankID = find[0].id;
@@ -423,7 +421,7 @@ return false;
 
         let powerbank = Game.getObjectById(creep.memory.powerbankID);
 
-        if(powerbank != undefined) {
+        if(powerbank !== null) {
     //        if(creep.pos.isNearTo(powerbank)) {
   //              creep.attack(powerbank);
 //            } else {
@@ -432,7 +430,7 @@ return false;
         }
     }
     static dismantlePowerbank(creep) {
-        if(creep.memory.powerbankID == undefined)   {
+        if(creep.memory.powerbankID === undefined)   {
              let find = creep.room.find(FIND_STRUCTURES,{filter: s => s.structureType == STRUCTURE_POWER_BANK});
 
             creep.memory.powerbankID = find[0].id;
@@ -440,7 +438,7 @@ return false;
 
         let powerbank = Game.getObjectById(creep.memory.powerbankID);
 
-        if(powerbank != undefined) {
+        if(powerbank !== null) {
             if(creep.pos.isNearTo(powerbank)) {
         creep.say(               creep.dismantle(powerbank));
             } else {
@@ -452,7 +450,7 @@ return false;
     static doCloseBuild(creep) {
 
         let zbuild = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-        if(zbuild == undefined) return false;
+        if(zbuild === null) return false;
             creep.say('cbu');
         if(creep.build(zbuild) == ERR_NOT_IN_RANGE) {
             creep.moveTo(zbuild);
@@ -462,8 +460,7 @@ return false;
     }
     static doRepair(creep) {
         let close = creep.pos.findInRange(FIND_STRUCTURES, 3, {
-            filter: object => ( ((object.structureType != STRUCTURE_WALL)
-                                && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax) )
+            filter: object => ( ((object.structureType != STRUCTURE_WALL) && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax) )
         });
         if (close.length > 0) {
             creep.repair(close[0]);
@@ -475,7 +472,7 @@ return false;
     static doBuild(creep) {
         let temp = creep.pos.findInRange(FIND_CONSTRUCTION_SITES,3);
         
-        if(temp.length == 0) return false;
+        if(temp.length === 0) return false;
 
         creep.build(temp[0]);
         creep.say('doB');
@@ -484,23 +481,23 @@ return false;
 
 
     static moveToBuild(creep) {
-        if(creep.memory.constructionID == undefined) {
+        if(creep.memory.constructionID === undefined) {
             var contargets = getConstruction(creep);
-            if(contargets.length == 0) {
+            if(contargets.length === 0) {
                 return false;
             }
             let bb = creep.pos.findClosestByRange(contargets);
             creep.memory.constructionID = bb.id;
         }
-        creep.say('bui')
+        creep.say('bui');
         let ztarget = Game.getObjectById(creep.memory.constructionID);
-        if(ztarget == undefined){
-            var contargets = getConstruction(creep);
-            if(contargets.length == 0) {
-                creep.memory.constructionID = undefined 
+        if(ztarget === null){
+            var contargetz = getConstruction(creep);
+            if(contargetz.length === 0) {
+                creep.memory.constructionID = undefined ;
                 return false;
             }
-            creep.memory.constructionID = contargets[0].id;
+            creep.memory.constructionID = contargetz[0].id;
            return false;
         } 
 
@@ -531,14 +528,14 @@ return false;
             filter: object => (object.structureType == STRUCTURE_WALL)
         }).sort((a, b) => a.hits - b.hits); */
 
-        if(creep.memory.wallTargetID == undefined) {
+        if(creep.memory.wallTargetID === undefined) {
         let targets = creep.room.find(FIND_STRUCTURES, {
             filter: object => (object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART)
         }).sort((a, b) => a.hits - b.hits);
         if(targets.length > 0) {
     //    for(var e in targets) {
 //            if(targets[e].pos.y != 2 && targets[e].pos.roomName != 'E26S77') {
-                creep.memory.wallTargetID = targets[0].id
+                creep.memory.wallTargetID = targets[0].id;
 //                break;                
   //          }
   //          }
@@ -548,7 +545,7 @@ return false;
 
         let target = Game.getObjectById(creep.memory.wallTargetID);
 
-            if(target != undefined) {
+            if(target !== undefined) {
             creep.repair(target);
             if(!creep.pos.inRangeTo(target,2))            creep.moveTo(target);
         } else {

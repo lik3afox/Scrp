@@ -49,26 +49,25 @@ function clearLabs(creep) {
 
 function powerAction(creep) {
     var constr = require('commands.toStructure');
-   if(_.sum(creep.carry) == 0 ) {
-    if(Game.flags[creep.memory.party] != undefined && creep.pos.inRangeTo( Game.flags[creep.memory.party],4)) {
+   if(_.sum(creep.carry) === 0 ) {
+    if(Game.flags[creep.memory.party] !== undefined && creep.pos.inRangeTo( Game.flags[creep.memory.party],4)) {
 if(!constr.pickUpCloseNonEnergy(creep)) {
         creep.say('here');
 }
 
     } else{
-        if(Game.flags[creep.memory.party] != undefined) {
+        if(Game.flags[creep.memory.party] !== undefined) {
         creep.say(creep.moveMe( Game.flags[creep.memory.party] ));
         } else {
             creep.memory.death = true;
 
         }
     }
-      if(Game.flags[creep.memory.party] == undefined && creep.room.name == creep.memory.home 
-        && creep.pos.isNearTo(creep.room.terminal)) {
+      if(Game.flags[creep.memory.party] === undefined && creep.room.name == creep.memory.home && creep.pos.isNearTo(creep.room.terminal)) {
             creep.memory.death = true;
           }
     } else {
-        if(creep.room.terminal != undefined && creep.room.controller != undefined && creep.room.controller.owner != undefined ) {
+        if(creep.room.terminal !== undefined && creep.room.controller !== undefined && creep.room.controller.owner !== undefined ) {
             if(creep.pos.isNearTo(creep.room.terminal)) {
                 for(var e in creep.carry) {
                 creep.transfer(creep.room.terminal,e);
@@ -107,18 +106,18 @@ class thiefClass extends roleParent {
             if(powerAction(creep)) return;
             }
 
-if(super._constr.pickUpNonEnergy(creep)) return
+if(super._constr.pickUpNonEnergy(creep)) return;
 
         let creepCarry = _.sum(creep.carry);
 
-        if (creep.memory.home == creep.room.name && creep.ticksToLive < 500 && creepCarry == 0) {
+        if (creep.memory.home == creep.room.name && creep.ticksToLive < 500 && creepCarry === 0) {
             creep.memory.death = true;
         }
         if (creep.memory.home == creep.room.name && _.sum(creep.carry) > 0) {
             // Find Minearls.
-            if (creep.room.terminal != undefined) {
+            if (creep.room.terminal !== undefined) {
                 contain.moveToTerminal(creep);
-            } else if (creep.room.storage != undefined){
+            } else if (creep.room.storage !== undefined){
                 contain.moveToStorage(creep);
             } else {
                 let par = Game.getObjectById(creep.memory.parent);
@@ -133,8 +132,8 @@ if(super._constr.pickUpNonEnergy(creep)) return
         }
 
         let isThere = false;
-        if (Game.flags[creep.memory.party] != undefined &&
-            Game.flags[creep.memory.party].room != undefined &&
+        if (Game.flags[creep.memory.party] !== undefined &&
+            Game.flags[creep.memory.party].room !== undefined &&
             creep.room.name == Game.flags[creep.memory.party].room.name) {
             isThere = true;
         }
@@ -144,7 +143,7 @@ if(super._constr.pickUpNonEnergy(creep)) return
             if (creepCarry== creep.carryCapacity && creep.memory.home != creep.room.name) {
                 var parent = Game.getObjectById(creep.memory.parent);
                 if (!super.avoidArea(creep)) {
-                    creep.moveTo(parent)
+                    creep.moveTo(parent);
                 }
             } else {
                 if(!super.avoidArea(creep)) { 
@@ -161,12 +160,12 @@ creep.memory.waypoint = true;
 //            if(!){
             if (creep.room.name == 'E37S79z') {
                 creep.say('E38');
-                super._constr.moveToPickUpEnergy(creep)
+                super._constr.moveToPickUpEnergy(creep);
                 return;
             } else {
                     target = creep.room.storage;
              //   getting;
-                if (target != undefined) {
+                if (target !== undefined) {
                     for (var e in target.store) {
                         if(e != RESOURCE_ENERGY)
                             if (target.store[e] > 0) {
@@ -176,12 +175,12 @@ creep.memory.waypoint = true;
                     }
                 }
 
-                if (getting == undefined) {
+                if (getting === undefined) {
                 target = creep.room.terminal;
-                    if (target != undefined) {
-                        for (var e in target.store) {
-                            if (target.store[e] > 0) {
-                                getting = e;
+                    if (target !== undefined) {
+                        for (var o in target.store) {
+                            if (target.store[o] > 0) {
+                                getting = o;
                                 break;
                             }
                         }
@@ -218,13 +217,13 @@ creep.memory.waypoint = true;
         }
         if (_.sum(creep.carry) == creep.carryCapacity && creep.memory.home != creep.room.name) {
 
-            var parent = Game.getObjectById(creep.memory.parent);
+            var parentz = Game.getObjectById(creep.memory.parent);
 //            parent = new RoomPosition(35,35,"E38S72");
-            if(creep.pos.isNearTo(parent)){
+            if(creep.pos.isNearTo(parentz)){
                 creep.drop(RESOURCE_ENERGY);
             } else {
                 if (!super.avoidArea(creep)) {
-                    creep.moveMe(parent,{reusePath:20})
+                    creep.moveMe(parentz,{reusePath:20});
                 }
             }
 

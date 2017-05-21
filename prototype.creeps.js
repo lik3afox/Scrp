@@ -9,7 +9,7 @@ Object.defineProperty(Creep.prototype, "stats", {
 Object.defineProperty(Creep.prototype, "carryTotal", {
   configurable: true,
   get: function () {
-if(this.memory.carryTotal == undefined || this.memory.carryTotalTimer != Game.time) {
+if(this.memory.carryTotal === undefined || this.memory.carryTotalTimer != Game.time) {
   	this.memory.carryTotal = _.sum(this.carry);
   	this.memory.carryTotalTimer = Game.time;  	
   }
@@ -25,7 +25,8 @@ Object.defineProperty(Structure.prototype, "total", {
     if (this._storage_sum !== undefined) {
       return this._storage_sum;
     } else {
-      return this._storage_sum = _.sum(this.store);
+   	  this._storage_sum = _.sum(this.store);
+      return this._storage_sum;
     }
   },
 });
@@ -33,34 +34,34 @@ Object.defineProperty(Structure.prototype, "total", {
 Object.defineProperty(Room.prototype, 'powerspawn', {
  configurable: true,
  get: function() {
- if(this.memory.powerspawnID == undefined) {
+ if(this.memory.powerspawnID === undefined) {
  	let bb = this.find(FIND_STRUCTURES,{filter:o => o.structureType == STRUCTURE_POWER_SPAWN});
  	if(bb.length > 0 )
  		this.memory.powerspawnID = bb[0].id;
 	}
  	let zz = Game.getObjectById(this.memory.powerspawnID);
- 	if(zz == undefined) this.memory.powerspawnID = undefined;
+ 	if(zz === null) this.memory.powerspawnID = undefined;
    return zz;
  }
-}) 
+});
 
 Object.defineProperty(Room.prototype, 'nuke', {
  configurable: true,
  get: function() {
- if(this.memory.nukeID == undefined) {
+ if(this.memory.nukeID === undefined) {
  	let bb = this.find(FIND_STRUCTURES,{filter:o => o.structureType == STRUCTURE_NUKER});
  	if(bb.length > 0 )
  		this.memory.nukeID = bb[0].id;
 	}
  	let zz = Game.getObjectById(this.memory.nukeID);
- 	if(zz == undefined) this.memory.nukeID = undefined;
+ 	if(zz === null) this.memory.nukeID = undefined;
    return zz;
  }
-}) 
+});
 
 Room.prototype.dropped = function() {
  var dEnergy;
-  if(this.memory.hostileID == undefined || this.memory.droppedScanTimer != Game.time) {
+  if(this.memory.hostileID === undefined || this.memory.droppedScanTimer != Game.time) {
     dEnergy = this.find(FIND_DROPPED_ENERGY);
     let badArray = [];
     for(var e in dEnergy) {
@@ -72,15 +73,15 @@ Room.prototype.dropped = function() {
     return dEnergy;
   } 
   dEnergy = [];
-  for(var e in this.memory.droppedID){
-    dEnergy.push(Game.getObjectById(this.memory.droppedID[e]));
+  for(var v in this.memory.droppedID){
+    dEnergy.push(Game.getObjectById(this.memory.droppedID[v]));
   }
  	return dEnergy;
-}
+};
 
 Room.prototype.hostilesHere = function(){
   var bads;
-  if(this.memory.hostileID == undefined || this.memory.hostileScanTimer != Game.time) {
+  if(this.memory.hostileID === undefined || this.memory.hostileScanTimer != Game.time) {
     bads = this.find(FIND_HOSTILE_CREEPS);
     let badArray = [];
     for(var e in bads) {
@@ -92,11 +93,11 @@ Room.prototype.hostilesHere = function(){
     return bads;
   } 
   bads = [];
-  for(var e in this.memory.hostileID){
-    bads.push(Game.getObjectById(this.memory.hostileID[e]));
+  for(var z in this.memory.hostileID){
+    bads.push(Game.getObjectById(this.memory.hostileID[z]));
   }
   return bads;
-}
+};
 
 	Creep.prototype.totalCarry = function() {
 		if(this.memory.totalCarryTimer != Game.time){
@@ -104,7 +105,7 @@ Room.prototype.hostilesHere = function(){
 			this.memory.totalCarry = _.sum(total.carry);
 		}
 		return this.memory.totalCarry;
-	}
+	};
 
 	Creep.prototype.pickUpEnergy = function() {
 		let zz = this.room.lookAtArea( (this.pos.y-1 < 0 ? 0:this.pos.y-1)
@@ -119,44 +120,44 @@ Room.prototype.hostilesHere = function(){
         		}
     		}
 		}
-	}
+	};
 
 	Creep.prototype.countDistance = function() {
-    if (this.memory.distance == undefined) {
+    if (this.memory.distance === undefined) {
         this.memory.distance = 0;
     }
-    if (this.memory.notThere == undefined) {
+    if (this.memory.notThere === undefined) {
         this.memory.notThere = false;
     }
     if(this.memory.notThere) return;
 	    this.memory.distance++;
         this.room.visual.text("🐨"+this.memory.distance, this.pos.x,this.pos.y,
-                {color: 'white', font: 0.5,align:LEFT,strokeWidth:.35}
+                {color: 'white', font: 0.5,align:LEFT,strokeWidth:0.35}
                 );
 	return false;
-	}
+	};
 
 	Creep.prototype.dropEverything = function() {
 		for(var e in this.carry) {
 			this.drop(e);
 			return;
 		}
-	}
+	};
 
 	Creep.prototype.countStop = function() {
 		this.memory.notThere = true;
-	}
+	};
 	Creep.prototype.countReset = function() {
 		this.memory.notThere = false;
 		this.memory.distance = 0;
-	}
+	};
 
 	Creep.prototype.healOther = function(range) {
 		var hurtz = this.pos.findInRange(FIND_MY_CREEPS,range);
 		hurtz = _.filter(hurtz, function(object) {
-                return object.hits < object.hitsMax;})
+                return object.hits < object.hitsMax;});
 		hurtz.sort((a, b) => a.hits - b.hits);
-        if(hurtz[0] != undefined) {
+        if(hurtz[0] !== undefined) {
             if(!this.pos.isNearTo(hurtz[0]) ) {
                 this.rangedHeal(hurtz[0]);
     	        this.moveTo(hurtz[0]);
@@ -166,11 +167,11 @@ Room.prototype.hostilesHere = function(){
             return true;
             }
         return false;
-	}
+	};
 
 	Creep.prototype.selfHeal = function() {
 		if(this.hits == this.hitsMax) return false;
-		if(this.memory.hasHeal == undefined) {
+		if(this.memory.hasHeal === undefined) {
 			this.memory.hasHeal = false;
 			for(var e in this.body) {
 				if(this.body[e].type == HEAL) {
@@ -181,7 +182,7 @@ Room.prototype.hostilesHere = function(){
 		}
 		if(!this.memory.hasHeal) return false;
 		this.heal(this);
-	}
+	};
 
 Creep.prototype.runFrom = function(badguy,options) {
 	if(_.isArray(badguy)) {
@@ -194,13 +195,13 @@ Creep.prototype.runFrom = function(badguy,options) {
 		direction = direction -8;
 	var	moveStatus = this.move(direction,options);
 	this.say('><',true);
-}
+};
 
 Spawn.prototype.deadCheck = function() {
 	// first off a spawn needs to have a memory check too make sure
 	// it wants to do this deadCheck
 	// Leveling rooms do not want this.
-	if( this.memory.deadCheck == undefined) {
+	if( this.memory.deadCheck === undefined) {
 		if(this.room.name != 'E27S75'){
 			this.memory.deadCheck = true;
 		} else {
@@ -208,10 +209,10 @@ Spawn.prototype.deadCheck = function() {
 		}
 	}
 	if(!this.memory.deadCheck) return;
-	if(this.spawning != undefined) return;
+	if(this.spawning !== undefined) return;
 
 	if( this.room.energyAvailable < 300 && this.memory.totalCreep < 5 && this.room.controller.level >= 4){
-			if(this.room.memory.roomFailure == undefined) 
+			if(this.room.memory.roomFailure === undefined) 
 				this.room.memory.roomFailure = 0; 
 			this.room.memory.roomFailure++;
 	} else {
@@ -227,9 +228,9 @@ if(this.room.memory.roomFailure > 10000) {
                         home: this.room.name,
                         parent: this.id,
                         level: 1
-                }
+                };
 	let zz = this.createCreep(body, name, mem);
-	if(zz == 0) this.room.memory.roomFailure = -1500
+	if(zz === 0) this.room.memory.roomFailure = -1500;
 	console.log('Emergency creation, trying to create simple RESULT:');
 }
 
@@ -239,12 +240,12 @@ if(this.room.memory.roomFailure > 10000) {
 // spawn.memory.totalCreep
 
 
-}
+};
 
 
 Creep.prototype.moveMe = function(target,options,xxx) {
 
-	if(this.memory.standSpot != undefined) {
+	if(this.memory.standSpot !== undefined) {
 		if(this.pos.isEqualTo(this.memory.standSpot)) {
 			return OK;
 		} else {
@@ -262,7 +263,7 @@ Creep.prototype.moveMe = function(target,options,xxx) {
 //	if(targets)
 
 
-	if(xxx != undefined) {
+	if(xxx !== undefined) {
 		target = new RoomPosition(target,options,this.room.name);
 		options = xxx;
 	}
@@ -270,11 +271,11 @@ Creep.prototype.moveMe = function(target,options,xxx) {
 	if (_.isUndefined(this.memory.stuckCount)) this.memory.stuckCount = 0;
 
 	var moveStatus;
-	if(options == undefined) options = {};
+	if(options === undefined) options = {};
 	var samePath = 50;
 	var stuck = false;
 
-	if (this.memory.position != undefined) {
+	if (this.memory.position !== undefined) {
 		stuck = this.pos.isEqualTo(this.memory.position.x, this.memory.position.y);
 	}
 	this.memory.position = this.pos;
@@ -297,10 +298,10 @@ Creep.prototype.moveMe = function(target,options,xxx) {
 	}
 
 		if(this.memory.stuckCount > 5)
-				this.memory.stuckCount = 5
+				this.memory.stuckCount = 5;
 
 //	options.reusePath = samePath;
-	if(options.visualizePathStyle == undefined) {
+	if(options.visualizePathStyle === undefined) {
 	options.visualizePathStyle = {
 		stroke: '#faF',
 		lineStyle: 'dotted',

@@ -41,7 +41,7 @@ class roleRepairer extends roleParent{
         }
         if (super.depositNonEnergy(creep)) return;        
           // If energy = 0 then go harvest.
-        if (creep.carry.energy == 0) {
+        if (creep.carry.energy === 0) {
             creep.memory.repairing = false;
         }
 
@@ -61,8 +61,7 @@ class roleRepairer extends roleParent{
 //constr.getCloseRepair(creep);
 //          if(!) {
   let zbuild = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: object => ( ((object.structureType != STRUCTURE_WALL)
-                                && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax-1000) )
+            filter: object => ( ((object.structureType != STRUCTURE_WALL)&& (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax-1000) )
         });
             if ( creep.repair(zbuild) == ERR_NOT_IN_RANGE ) {
               creep.moveTo(zbuild);
@@ -80,6 +79,6 @@ if(!containers.withdrawFromStorage(creep)) {
         }
         }
     }
-};
+}
 
 module.exports =  roleRepairer;

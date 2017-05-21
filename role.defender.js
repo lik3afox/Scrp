@@ -34,12 +34,12 @@ HEAL,HEAL,HEAL,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,
 RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,HEAL,HEAL,HEAL]
 
     
-]
+];
 function attackCreep(creep,bads){
 //      creep.say('attk');
 //      let bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS,4);
 //    let bads = creep.pos.findClosestByRange(bads);
-      if(bads.length == 0) return true;
+      if(bads.length === 0) return true;
             let enemy = creep.pos.findClosestByRange(bads);
             let distance = creep.pos.getRangeTo(enemy);
 
@@ -50,7 +50,7 @@ function attackCreep(creep,bads){
 
             } else if ( distance < 4){
 
-                var targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3)
+                var targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
 
                 // Ranged attack.
                 if(targets.length > 2) {
@@ -85,7 +85,7 @@ function specialrun(creep) {
             creep.memory.grouped = true;
         var totalFlag = movement.totalFlag();
             constr.pickUpNonEnergy(creep);
-       if (creep.memory.goal == undefined) {
+       if (creep.memory.goal === undefined) {
             movement.getRandomGoal(creep);
         }
         var badzs = getHostiles(creep);
@@ -94,9 +94,9 @@ function specialrun(creep) {
         } else {
             if(creep.hits < creep.hitsMax) creep.heal(creep);
 
-            if(_.sum(creep.carry) > 0 && creep.room.terminal != undefined) {
+            if(_.sum(creep.carry) > 0 && creep.room.terminal !== undefined) {
             // go home and deposit.
-                    if(creep.room.terminal != undefined) { 
+                    if(creep.room.terminal !== undefined) { 
                     container.moveToTerminal(creep);
                     } else {
                         creep.moveTo(Game.getObjectById(creep.memory.parent));
@@ -147,13 +147,13 @@ class roleAttacker extends roleParent{
 
             constr.pickUpNonEnergy(creep);
             //if(constr.pickUpCloseNonEnergy(creep)) 
-        if (creep.memory.goal == undefined) {
+        if (creep.memory.goal === undefined) {
             movement.getRandomGoal(creep);
         }
         if(creep.room.find(FIND_HOSTILE_CREEPS).length > 0) {
 //            console.log("here???");
-            if(Game.flags['retreat'] == undefined) {
-                creep.room.createFlag(creep.pos.x, creep.pos.y, 'retreat', COLOR_BROWN, COLOR_BROWN)
+            if(Game.flags.retreat === undefined) {
+                creep.room.createFlag(creep.pos.x, creep.pos.y, 'retreat', COLOR_BROWN, COLOR_BROWN);
             }
         }  
 
@@ -166,7 +166,7 @@ class roleAttacker extends roleParent{
         // If no defense flag.
         if(targets.length > 0) {
             if(melee.length > 0 ) {
-                creep.moveTo(Game.flags['retreat']);
+                creep.moveTo(Game.flags.retreat);
             }else {
                 if(targets.length > 2) {
                     creep.rangedMassAttack();
@@ -178,9 +178,9 @@ class roleAttacker extends roleParent{
                 if(creep.hits < creep.hitsMax) creep.heal(creep);
             }
         } else { 
-                if(_.sum(creep.carry) > 0 && creep.room.terminal != undefined) {
+                if(_.sum(creep.carry) > 0 && creep.room.terminal !== undefined) {
             // go home and deposit.
-                    if(creep.room.terminal != undefined) { 
+                    if(creep.room.terminal !== undefined) { 
                     container.moveToTerminal(creep);
                     } else {
                         creep.moveTo(Game.getObjectById(creep.memory.parent));

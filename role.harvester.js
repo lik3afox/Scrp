@@ -43,8 +43,8 @@ class roleHarvester extends roleParent {
 //        }
 creep.pickUpEnergy();
         
-        if (creep.memory.distance == undefined) {            creep.memory.distance = 0;        }
-        if(creep.memory.isThere == undefined) {            creep.memory.isThere = false;        }
+        if (creep.memory.distance === undefined) {            creep.memory.distance = 0;        }
+        if(creep.memory.isThere === undefined) {            creep.memory.isThere = false;        }
         super.rebirth(creep);
         if (super.returnEnergy(creep)) { return; }
 //        if (super.depositNonEnergy(creep)) return;
@@ -56,7 +56,7 @@ creep.pickUpEnergy();
 
         if (creep.carry.energy == creep.carryCapacity) {
                 let spawnz = Game.getObjectById(creep.memory.renewSpawnID);
-                if (spawnz != undefined && spawnz.energy < spawnz.energyCapacity) {
+                if (spawnz !== null && spawnz.energy < spawnz.energyCapacity) {
                     creep.transfer(spawnz, RESOURCE_ENERGY);
                 } else {
                     if (!link.deposit(creep)) {
@@ -68,6 +68,6 @@ creep.pickUpEnergy();
         }
         sources.moveToWithdraw(creep);
     }
-};
+}
 
 module.exports = roleHarvester;

@@ -17,9 +17,9 @@ var classLevels = [
     [MOVE ,CLAIM ], //  700/800
     [CLAIM,MOVE, CLAIM,MOVE], // 800/1300
     [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE], //  1300/1800
-    [CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE] //  1300/1800 // 5 claim 3300
+    [CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE], //  1300/1800 // 5 claim 3300
     [CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE,CLAIM, MOVE] // 6600
-]
+];
 
 var roleParent = require('role.parent');
 var structure = require('commands.toStructure');
@@ -37,7 +37,7 @@ class controllerRole extends roleParent {
         var temp = Game.getObjectById(creep.memory.goal);
         if( movement.runAway(creep) ) {    return;     }
 
-        if ((temp != undefined )&&( creep.room.name == temp.room.name && creep.room.controller)) {
+        if ((temp !== null )&&( creep.room.name == temp.room.name && creep.room.controller)) {
                 if (creep.pos.isNearTo(creep.room.controller)) {
                     creep.reserveController(creep.room.controller);
                     super.signControl(creep);
@@ -46,7 +46,7 @@ class controllerRole extends roleParent {
                 }
 
         } else {
-            if((temp != undefined ))
+            if((temp !== null ))
     	        creep.moveMe(temp.pos,{reusePath:50});
         }
     }

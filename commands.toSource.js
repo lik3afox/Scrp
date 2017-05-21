@@ -3,7 +3,7 @@ class SourceInteract {
     static moveToWithdraw(creep) {
 
         let source = Game.getObjectById(creep.memory.sourceID);
-        if (creep.memory.sourceID == undefined || source.energy == 0 || source.energy == undefined) {
+        if (creep.memory.sourceID === null || source.energy === 0 || source.energy === undefined) {
             var total = creep.room.find(FIND_SOURCES);
             for (var z in total) {
                 let otherHasIt = false;
@@ -18,7 +18,7 @@ class SourceInteract {
                 }
             }
             // if none has been assigned that means that it's all full so give it an random one!
-            if (creep.memory.sourceID == undefined) {
+            if (creep.memory.sourceID === undefined) {
                 let rando = Math.floor(Math.random() * total.length);
                 creep.memory.sourceID = total[rando].id;
             }
@@ -35,7 +35,7 @@ class SourceInteract {
                     color: 'white',
                     align: LEFT,
                     font: 0.6,
-                    strokeWidth: .75
+                    strokeWidth: 0.75
                 });
             }
         } else {

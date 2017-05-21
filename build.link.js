@@ -31,17 +31,17 @@ function linkTransfer() {
             let targets = LINK.pos.findInRange(FIND_MY_CREEPS, 1, {
                 filter: s => s.carry[RESOURCE_ENERGY] > 0 && s.memory.linkID == _links[e]
             });
-            if (targets.length != 0) {
+            if (targets.length !== 0) {
                 ttarget = undefined;
                 let amount = 3000;
-                for (var e in targets) {
-                    if (targets[e].carry[RESOURCE_ENERGY] < amount) {
-                        ttarget = targets[e];
-                        amount = targets[e].carry[RESOURCE_ENERGY];
+                for (var o in targets) {
+                    if (targets[o].carry[RESOURCE_ENERGY] < amount) {
+                        ttarget = targets[o];
+                        amount = targets[o].carry[RESOURCE_ENERGY];
                     }
                 }
 
-                if (ttarget != undefined) {
+                if (ttarget !== undefined) {
                     //                    let amountSent = ttarget.carry[RESOURCE_ENERGY];
                     let vv = ttarget.transfer(LINK, RESOURCE_ENERGY);
                     //                    console.log(ttarget,"in",ttarget.pos,vv, 'tried to linkransfer', LINK.pos.isNearTo(ttarget));
@@ -52,15 +52,17 @@ function linkTransfer() {
 }
 
 function sendEnergy(from, to, amount) {
-    if (amount == undefined) amount = 0;
+    if (amount === undefined) amount = 0;
+        var linkFrom;
+        var linkTo;
 
     if (_.isArray(from)) {
-        var linkTo = Game.getObjectById(to);
+         linkTo = Game.getObjectById(to);
         for (var e in from) {
-            var linkFrom = Game.getObjectById(from[e]);
-            if (linkFrom != undefined && linkTo != undefined) {
-                linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' })
-                if (linkTo.energy < linkFrom.energy && linkFrom.cooldown == 0 && linkFrom.energy >= amount) {
+             linkFrom = Game.getObjectById(from[e]);
+            if (linkFrom !== null && linkTo !== null) {
+                linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' });
+                if (linkTo.energy < linkFrom.energy && linkFrom.cooldown === 0 && linkFrom.energy >= amount) {
                     if (linkFrom.transferEnergy(linkTo) == OK) {
                         total++;
                         return true;
@@ -70,12 +72,12 @@ function sendEnergy(from, to, amount) {
         }
 
     } else {
-        var linkFrom = Game.getObjectById(from);
-        var linkTo = Game.getObjectById(to);
+         linkFrom = Game.getObjectById(from);
+         linkTo = Game.getObjectById(to);
 
-        if (linkFrom == undefined || linkTo == undefined) return false;
-        linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' })
-        if (linkFrom.cooldown != 0 || linkFrom.energy <= amount) return false;
+        if (linkFrom === null || linkTo === null) return false;
+        linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' });
+        if (linkFrom.cooldown !== 0 || linkFrom.energy <= amount) return false;
 
         if (linkTo.energy > 400) return false;
         if (linkFrom.transferEnergy(linkTo) == OK) total++;
@@ -170,7 +172,7 @@ class buildLink {
         if (creep.carry[RESOURCE_ENERGY] > 0) hasEnergy = true;
         if (!hasEnergy) return false;
 
-        if (creep.memory.linkID == undefined) {
+        if (creep.memory.linkID === undefined) {
             let yy = creep.pos.y - 1;
             if (yy < 0) yy = 0;
             let yy2 = creep.pos.y + 1;
@@ -182,7 +184,7 @@ class buildLink {
             var nlinkz = creep.room.lookForAtArea(LOOK_STRUCTURES, yy, xx, yy2, xx2, true);
 
             for (var i in nlinkz) {
-                if (nlinkz[i].structure != undefined && nlinkz[i].structure.structureType == 'link') {
+                if (nlinkz[i].structure !== undefined && nlinkz[i].structure.structureType == 'link') {
                     creep.memory.linkID = nlinkz[i].id;
 
                     creep.transfer(nlinkz[i].structure, RESOURCE_ENERGY);
@@ -200,27 +202,27 @@ class buildLink {
 
     static stayDeposit(creep) {
 
-        if (creep.carry[RESOURCE_ENERGY] == 0) return false;
+        if (creep.carry[RESOURCE_ENERGY] === 0) return false;
         if (creep.room.name != creep.memory.home) return false;
 
         let LINK;
 
-        if (creep.memory.linkID == undefined) {
+        if (creep.memory.linkID === undefined) {
             for (var e in _links) {
                 LINK = Game.getObjectById(_links[e]);
-                if (LINK != undefined && creep.pos.isNearTo(LINK)) {
+                if (LINK !== null && creep.pos.isNearTo(LINK)) {
                     creep.memory.linkID = _links[e];
                     return true;
                 }
             }
         } else {
             LINK = Game.getObjectById(creep.memory.linkID);
-            if (LINK != undefined && creep.pos.isNearTo(LINK)) {
+            if (LINK !== null && creep.pos.isNearTo(LINK)) {
                 return true;
             }
         }
     }
 
-};
+}
 
 module.exports = buildLink;

@@ -42,18 +42,18 @@ class roleGuard extends roleParent{
     	if(!super.run(creep)) return;
     	creep.say('fol');
 
-        if(creep.memory.leaderID == undefined) {
+        if(creep.memory.leaderID === undefined) {
             creep.memory.leaderID = getLeader(creep);
-            if( creep.memory.leaderID == undefined) {
+            if( creep.memory.leaderID === undefined) {
                 creep.say('NO');
                 return;
             }
         }
 
-        if(_.sum(creep.carry) == creep.carryCapacity) {
+        if(_.sum(creep.carry) === creep.carryCapacity) {
             creep.memory.full = true;
         }
-        if(_.sum(creep.carry) == 0 ) {
+        if(_.sum(creep.carry) === 0 ) {
             creep.memory.full = false;
         }
         
@@ -71,7 +71,7 @@ class roleGuard extends roleParent{
 
             if( creep.hits < creep.hitsMax) {
                 creep.heal(creep);
-            }else if( ldr != undefined && ldr.hits < ldr.hitsMax) {
+            }else if( ldr !== null && ldr.hits < ldr.hitsMax) {
                 if(creep.pos.isNearTo(ldr)) {
                     creep.heal(ldr);
                 }
