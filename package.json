@@ -1,18 +1,22 @@
 {
   "name": "screeps",
   "version": "1.0.0",
-  "description": "",
+  "description": "scr",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://www.github.com/lik3afox/Scrp.git"
+    "url": "git+https://github.com/lik3afox/Scrp.git"
   },
-  "keywords": [
-    "scrp"
-  ],
-  "author": "fox",
-  "license": "ISC"
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lik3afox/Scrp/issues"
+  },
+  "homepage": "https://github.com/lik3afox/Scrp#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1"
+  }
 }
