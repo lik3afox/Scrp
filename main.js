@@ -382,66 +382,6 @@ module.exports.loop = function() {
     power.run();
     globalCreep();
     doUpgradeRooms();
-    //zz = Game.getObjectById('59024ff4b8400157a89165f7');
-    //console.log(zz.room.powerspawn);
-    /*
-    console.log(zz.hits,zz.pos);
-    zz = Game.getObjectById('58ba75aa041adbe4312ca6ac');
-    console.log(zz.hits,zz.pos);
-    zz = Game.getObjectById('58ba7da1f942eb2e281e3639');
-    console.log(zz.hits,zz.pos);
-    zz = Game.getObjectById('58c620e7ac1eea7e06bc317e');
-    console.log(zz.hits,zz.pos);
-     */
-    //
-    //    if( Game.cpu.bucket > 4000)
-    // 900
-    // 1500
-    //RawMemory.setActiveSegments([0,3,]);
-    // on the next tick
-    //RawMemory.segments[5] = 'hf';
-    /*RawMemory.segments[0] = 'hf';*/
-    //RawMemory.segments[3] = '{"foo": "bar", "counter": 15}';
-    //    testFunction();
-
-    // currentModule[type][_require].levels(currentModule[type][_level])
-    // let miner = require('role.miner');
-    // console.log(miner.levels(1,'5836b82b8b8b9619519f1967' ) )
-    /*
-        let array = ['5836b82b8b8b9619519f1972','5836b82b8b8b9619519f1976','5836b8288b8b9619519f1915','5836b8288b8b9619519f1913'];
-
-        if(array.length != 0){
-        for(var e in array) {
-            whoWorksFor(array[e]);
-        }
-        } 
-
-5836b8288b8b9619519f1915 5836b8288b8b9619519f1913
-        let target = 29;
-        for(var e in Game.spawns) {
-            let spawn = Game.spawns[e];
-            if(spawn.memory.roadsTo != undefined) {
-            console.log(e,":",target)
-                for(var a in spawn.memory.roadsTo) {
-        //            console.log(target,spawn.memory.roadsTo[a].expLevel )
-        if(spawn.memory.roadsTo[a].expLevel == 29) {
-            spawn.memory.roadsTo[a].expLevel = 20;
-        }
-                    if(target == spawn.memory.roadsTo[a].expLevel) {
-                        console.log("   ",spawn,":", spawn.memory.roadsTo[a].sourcePos.roomName);
-                        let ext = spawn.memory.roadsTo[a];
-                            for(var e in ext){
-                                console.log(e,ext[e]);
-                            }
-        //for(var e in array) {
-            whoWorksFor(spawn.memory.roadsTo[a].source);room E25S74 pos 38,34]
-        //}
-
-                    }
-                }
-            }
-        }
-        */
 
     if (Game.spawns.Spawn1 !== undefined) {
         let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
