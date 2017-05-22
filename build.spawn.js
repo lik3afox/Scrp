@@ -214,7 +214,7 @@ var W4S93Module = [
     ['first', require('role.first'), 2, 2],
     ['linker', require('role.linker'), 1, 3],
     ['homeDefender', require('role.defender2'), 1, 6],
-    ['upbuilder', require('role.upbuilder'), 0, 5],
+    ['upbuilder', require('role.upbuilder'), 1, 7],
     ['wallwork', require('role.wallworker'), 1, 3],
     ['scientist', require('role.wallworker'), 0, 2],
     ['minHarvest', require('role.mineral'), 1, 3],

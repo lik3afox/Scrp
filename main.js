@@ -31,10 +31,6 @@ function whoWorksFor(goal) {
     }
 }
 
-function determineHomeEmpire() {
-    Game.spawns.Spawn1.memory.homeEmpire = true;
-}
-
 
 function DoRenew(spawn) {
     /*    let zz = spawn.pos.findInRange(FIND_CREEPS, 1, {
@@ -143,29 +139,6 @@ function globalCreep() {
     }
 }
 
-function testFunction() {
-    let nextBlue;
-    let flags = Game.flags;
-    let wanted = [];
-    let highest = 0;
-    let highFlag;
-    let report = "Flag:";
-    for (var e in flags) {
-        if (flags[e].color == COLOR_BLUE) {
-            report = report + " " + flags[e] + ":" + flags[e].memory.goldMined;
-
-            wanted.push(flags[e]);
-            if (flags[e].memory.goldMined > highest) {
-                highest = flags[e].memory.goldMined;
-                highFlag = flags[e];
-            }
-        }
-    }
-
-    console.log(report);
-    console.log(highFlag, highFlag.pos);
-}
-
 function safemodeCheck(spawn) {
     var targets = spawn.pos.findInRange(FIND_HOSTILE_CREEPS, 1, {
         filter: object => (object.owner.username != 'Invader' && object.owner.username != 'zolox')
@@ -242,29 +215,16 @@ module.exports.loop = function() {
 
     for (var title in Game.spawns) { // Start of spawn Loo
         if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
-            // report = '';
-            //                    if (Game.spawns[title].memory.alphaSpawn)
-            //console.log(  (Game.cpu.getUsed() - start ), ' Start of spawn'); start = Game.cpu.getUsed();
+
             rampartCheck(Game.spawns[title]);
             //        safemodeCheck(Game.spawns[title]);
 
             ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
             determineAlphaSpawn(Game.spawns[title]);
-            // Don't always need to do this. but keep this in mind that it should be checked... mmm
-            if (Game.spawns[title].room.controller.level == 1) {
-                determineHomeEmpire(Game.spawns);
-            }
 
             if (Game.spawns[title].memory.newSpawn === undefined) {
                 spawnsDo.checkNewSpawn(Game.spawns[title]);
             }
-
-            /*        if(Game.spawns[title].memory.alphaSpawn){
-                        let zz= Math.ceil(Game.cpu.getUsed() - start );
-                        let tt = Math.ceil(zz/Game.spawns[title].memory.totalCreep*100)
-                        total = total + zz;
-                console.log( Game.spawns[title].memory.totalCreep,"/",zz,"(",tt,")", ' after',Game.spawns[title].name,total); 
-                    }*/
 
             if (Game.spawns[title].memory.alphaSpawn) {
 
@@ -351,19 +311,9 @@ module.exports.loop = function() {
             }
             if (Game.spawns[title].memory.alphaSpawn) {
                 ccSpawn.report(Game.spawns[title], report);
-                //            if (Game.spawns[title].memory.alphaSpawn) console.log('---------------------------------------------------------------------------');
             }
         }
-        //           if (Game.spawns[title].memory.alphaSpawn)
-        //            console.log(  (Game.cpu.getUsed() - start ), ' End Spawn loop'); start = Game.cpu.getUsed();
-
     } // End of Spawns Loops
-
-    //        var total = 0;
-    //    for (var e in Game.constructionSites) {
-    //        Game.constructionSites[e].remove();
-    //       total++;
-    //    }
 
     if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
     Memory.labsRunCounter--;
@@ -388,7 +338,5 @@ module.exports.loop = function() {
         console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '****************************' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
         Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
     }
-
-
 
 };
