@@ -100,11 +100,9 @@ class transport extends roleParent {
         }
 
         var start;
-        //      super._movement.checkForBadsPlaceFlag(creep);
         shouldDie(creep);
         if (creep.memory.keeperLairID === 'none') {
             creep.memory.keeperLairID = undefined;
-            //            console.log('heya, here we set up a different parent so it goes back there');
         }
         if (super.returnEnergy(creep)) {
             return;
@@ -113,13 +111,6 @@ class transport extends roleParent {
             creep.memory.roadConstruct = 10;
         }
 
-
-        //        if(creep.fatigue > 0&&creep.memory.gohome ) buildConstructionRoad(creep);
-
-        // First it needs to go to the room
-        // if not in the room that it needs to be
-        //      console.log();
-        //        creep.say('tn'+creep.memory.roleID);
         if (super.depositNonEnergy(creep)) return;
 
         let _goal = Game.getObjectById(creep.memory.goal);
@@ -303,16 +294,7 @@ class transport extends roleParent {
                         }
                     }
             }
-
-
         }
-
-        // after it goes into the room it looks for energy from containers or the ground.
-
-        // then it builds with it.
-
-
-
     }
 }
 module.exports = transport;

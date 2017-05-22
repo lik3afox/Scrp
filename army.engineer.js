@@ -130,7 +130,7 @@ class engineerClass extends roleParent {
             } else {
                 if (creep.room.name == 'E33S76') {
                     if (creep.memory.roleID == 1) {
-                        let zz = Game.getObjectById('58837172791cf49f2f39b58e');
+                        let zz = Game.getObjectById('588371768b6b60986f18d1d8');
                         if (creep.pos.isNearTo(zz)) {
                             creep.dismantle(zz);
                         } else {

@@ -368,7 +368,7 @@ module.exports.loop = function() {
     if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
     Memory.labsRunCounter--;
     if (Memory.labsRunCounter <= 0) {
-        Memory.labsRunCounter = 5;
+        Memory.labsRunCounter = 10;
         labs.run();
     }
     link.run();
