@@ -389,6 +389,4 @@ module.exports.loop = function() {
         Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
     }
 
-
-    //  });
 };
