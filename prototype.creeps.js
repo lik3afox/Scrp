@@ -313,18 +313,18 @@ module.exports = function() {
                 options.ignoreRoads = false;
         }
 
+        if (this.room.name == 'W4S93') {
+            options.ignoreCreeps = true;
+        }
+
         if (options.ignoreCreeps) {
             if (this.memory.stuckCount > 2) {
                 options.reusePath = 5;
                 options.ignoreCreeps = false;
-                //          options.maxOps = 200;
             }
         }
 
         moveStatus = this.moveTo(target, options);
-        if (moveStatus == ERR_NO_PATH) {
-            //      this.moveFromExit();
-        }
 
         return moveStatus;
     };

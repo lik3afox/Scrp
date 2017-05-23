@@ -110,6 +110,7 @@ class engineerClass extends roleParent {
                                             creep.transfer(zz,RESOURCE_ENERGY)
                                         } else {*/
                 //                            if(!spawn.moveToTransfer(creep)){
+
                 if (!spawn.moveToTransfer(creep)) {
                     if (!constr.moveToBuild(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -129,6 +130,18 @@ class engineerClass extends roleParent {
 
             } else {
                 if (creep.room.name == 'E33S76') {
+                    let yy = Game.getObjectById('5923a335168bf48f698394eb');
+
+                    if (yy !== null) {
+                        let xx = creep.room.storage;
+                        if (creep.pos.isNearTo(xx)) {
+                            creep.withdraw(xx, RESOURCE_ENERGY);
+                        } else {
+                            creep.moveMe(xx);
+                        }
+                        return;
+                    }
+
                     if (creep.memory.roleID == 1) {
                         let zz = Game.getObjectById('588371768b6b60986f18d1d8');
                         if (creep.pos.isNearTo(zz)) {

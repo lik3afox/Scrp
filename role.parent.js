@@ -545,6 +545,7 @@ class baseParent {
                 keeper.room.visual.text(keeper.ticksToSpawn, keeper.pos.x, keeper.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
             let _goal = Game.getObjectById(creep.memory.goal);
             let newPos = new RoomPosition(_goal.pos.x, _goal.pos.y, _goal.pos.roomName);
+            if (creep.room.name != _goal.pos.roomName) return;
             let dis = creep.pos.getRangeTo(newPos);
             if (dis > 8) return false;
 
