@@ -44,6 +44,7 @@ var spawn8 = '58d97b7b8c94aa185ccaf659';
 var spawn9 = '58dc1eb90c1c7697092ce5c2';
 var E38S72 = '58fae20240468f2a39d50830';
 var W4S93 = '59090e6f771e5d03793d20b4';
+var E33S76 = '5923a6cbf9f4ceb75afbc831';
 var upgradeSpawn = '58c074ead62936ed5e2bce0b';
 
 
@@ -117,6 +118,68 @@ function eitherOr(creep, containz1, containz2) {
     }
 
 }
+
+function E33S76Room(creep) {
+    let goto;
+    switch (creep.memory.roleID) {
+        case 0:
+            goto = creep.room.storage;
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+        case 2:
+            goto = Game.getObjectById('5924a3500a32dfe841c629e1');
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+        case 1:
+
+            goto = Game.getObjectById('5924991d4048d6d526242979');
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+
+    }
+
+}
+
+
+
+
+function E33S76Transfer(creep) {
+    switch (creep.memory.roleID) {
+        case 0:
+            goto = Game.getObjectById('5924524129c65d152e19c40c');
+            if (goto !== null && creep.transfer(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+
+        default:
+            if (creep.room.storage === undefined) {
+                moveToAndDrop(creep, new RoomPosition(32, 10, 'E33S76'));
+            } else {
+                containers.moveToStorage(creep);
+            }
+
+            break;
+    }
+}
+
 
 function W4S93Room(creep) {
     let goto;
@@ -962,7 +1025,7 @@ class roleLinker extends roleParent {
         }
 
 
-        if (creep.room.name != "W4S93z" && creep.room.name != "E38S72")
+        if (creep.room.name != "W4S93z" && creep.room.name != "E38S72" && creep.room.name != 'E33S76' )
             constr.pickUpEnergy(creep);
         //if(Game.cpu.tickLimit > Game.cpu.tick) return;
         if (super.returnEnergy(creep)) return;
@@ -1014,6 +1077,9 @@ class roleLinker extends roleParent {
                     break;
                 case W4S93:
                     W4S93Room(creep);
+                    break;
+                case E33S76:
+                    E33S76Room(creep);
                     break;
                 case spawn2:
                     spawn2Room(creep);
@@ -1074,6 +1140,9 @@ class roleLinker extends roleParent {
                     break;
                 case W4S93:
                     W4S93Transfer(creep);
+                    break;
+                case E33S76:
+                    E33S76Transfer(creep);
                     break;
                 default:
                     containers.moveToStorage(creep);

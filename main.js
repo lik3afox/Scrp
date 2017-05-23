@@ -332,6 +332,8 @@ module.exports.loop = function() {
     globalCreep();
     doUpgradeRooms();
 
+
+
     if (Game.spawns.Spawn1 !== undefined) {
         let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
         console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '****************************' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);

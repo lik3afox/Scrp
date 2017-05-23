@@ -130,34 +130,16 @@ class engineerClass extends roleParent {
 
             } else {
                 if (creep.room.name == 'E33S76') {
-                /*    let yy = Game.getObjectById('59245d7c5feea00129f642e3');
-
-                    if (yy !== null) {*/
-                        let xx = creep.room.storage;
-                        if (creep.pos.isNearTo(xx)) {
-                            creep.withdraw(xx, RESOURCE_ENERGY);
-                        } else {
-                            creep.moveMe(xx);
-                        }
-                        return;
-/*                    }
-
-                    if (creep.memory.roleID == 1) {
+                    if (!super._constr.moveToPickUpEnergy(creep, 300)) {
+                                                  if (!super._containers.moveToWithdraw(creep)) {
                         let zz = Game.getObjectById('588371768b6b60986f18d1d8');
                         if (creep.pos.isNearTo(zz)) {
                             creep.dismantle(zz);
                         } else {
                             creep.moveMe(zz);
                         }
-                    } else {
-                        let zz = Game.getObjectById('5836b8248b8b9619519f1865');
-                        if (creep.pos.isNearTo(zz)) {
-                            creep.harvest(zz);
-                        } else {
-                            creep.moveMe(zz);
-                        }
-                    } */
-
+                      }
+                      }
                 } else {
                     if (!super._constr.moveToPickUpEnergy(creep, 300)) {
                         if (!super._containers.withdrawFromStorage(creep)) {

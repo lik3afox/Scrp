@@ -169,6 +169,7 @@ class buildLink {
 
         //if(total > 0)console.log('Links transfered:'+total);
         //return total;
+        sendEnergy('5924524129c65d152e19c40c', '59243d3f403da5a97dea664a');
 
     }
 

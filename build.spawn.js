@@ -213,17 +213,17 @@ var E38S74Module = [
 
 
 var E33S76Module = [
-    ['first', require('role.first'), 1, 0]
-//    ['linker', require('role.linker'), 3, 0],
-//    ['harvester', require('role.harvester'), 2, 2]
-
-
+    ['first', require('role.first'), 1, 1],
+    ['linker', require('role.linker'), 3, 3],
+    ['upbuilder', require('role.upbuilder'), 1, 3],
+    ['harvester', require('role.harvester'), 2, 2]
 ];
+
 var W4S93Module = [
     ['first', require('role.first'), 2, 2],
     ['linker', require('role.linker'), 1, 3],
     ['homeDefender', require('role.defender2'), 1, 6],
-    ['upbuilder', require('role.upbuilder'), 1, 7],
+    ['upbuilder', require('role.upbuilder'), 1, 3],
     ['wallwork', require('role.wallworker'), 1, 3],
     ['scientist', require('role.wallworker'), 0, 2],
     ['minHarvest', require('role.mineral'), 1, 3],
@@ -1001,7 +1001,7 @@ class theSpawn {
                     var start;
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'transport') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 't') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning)

@@ -300,7 +300,7 @@ class StructureInteract {
             }
         }); //.sort((a, b) => a.amount - b.amount); ;
         if (close === undefined) return false;
-        creep.say(close.amount);
+//        creep.say(close.amount);
         if (creep.pos.isNearTo(close)) {
             creep.pickup(close);
         } else {
