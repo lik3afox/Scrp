@@ -111,13 +111,13 @@ class engineerClass extends roleParent {
                                         } else {*/
                 //                            if(!spawn.moveToTransfer(creep)){
 
-                if (!spawn.moveToTransfer(creep)) {
-                    if (!constr.moveToBuild(creep)) {
-                        if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(creep.room.controller);
-                        }
+                //if (!spawn.moveToTransfer(creep)) {
+                if (!constr.moveToBuild(creep)) {
+                    if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(creep.room.controller);
                     }
                 }
+                // }
                 //                      }
                 /*              } else {
                     if (!constr.moveToBuild(creep)) {

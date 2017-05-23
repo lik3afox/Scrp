@@ -24,6 +24,50 @@ var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
 var link = require('build.link');
 
+function moveToWithdraw(creep) {
+
+    let source = Game.getObjectById(creep.memory.sourceID);
+    if (source === null) {
+        var total = creep.room.find(FIND_SOURCES);
+        for (var z in total) {
+            let otherHasIt = false;
+            for (var e in Game.creeps) {
+                if (Game.creeps[e].memory.role == creep.memory.role && Game.creeps[e].memory.sourceID == total[z].id) {
+                    otherHasIt = true;
+                }
+            }
+            if (!otherHasIt) {
+                creep.memory.sourceID = total[z].id;
+                break;
+            }
+        }
+        // if none has been assigned that means that it's all full so give it an random one!
+        if (creep.memory.sourceID === undefined) {
+            let rando = Math.floor(Math.random() * total.length);
+            creep.memory.sourceID = total[rando].id;
+        }
+        source = Game.getObjectById(creep.memory.sourceID);
+    }
+
+    if (creep.pos.isNearTo(source)) {
+        if (creep.harvest(source) == OK) {
+            creep.memory.isThere = true;
+            creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
+                color: 'white',
+                align: LEFT,
+                font: 0.6,
+                strokeWidth: 0.75
+            });
+        }
+    } else {
+        creep.moveMe(source);
+        creep.memory.distance++;
+    }
+
+    return true;
+}
+
+
 class roleHarvester extends roleParent {
 
     static rebuildMe(creep) {
@@ -47,12 +91,13 @@ class roleHarvester extends roleParent {
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
         super.rebirth(creep);
         if (super.returnEnergy(creep)) {
-            return; }
+            return;
+        }
         //        if (super.depositNonEnergy(creep)) return;
         if (creep.memory.level > 1) super.renew(creep);
         if (creep.room.name == 'E38S72') constr.pickUpEnergy(creep);
         // Logic paths
-        if (!creep.memory.isThere) creep.memory.distance++;
+        //        if (!creep.memory.isThere) creep.memory.distance++;
 
 
         if (creep.carry.energy == creep.carryCapacity) {
@@ -66,7 +111,7 @@ class roleHarvester extends roleParent {
             }
 
         }
-        sources.moveToWithdraw(creep);
+        moveToWithdraw(creep);
     }
 }
 
