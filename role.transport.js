@@ -183,16 +183,13 @@ class transport extends roleParent {
                     creep.runFrom(bads);
                 }
             }
-
-
-
         } else { // IF not going home. 
             let rng = 4;
             let _goal = Game.getObjectById(creep.memory.goal);
             if (creep.room.name == 'E27S74') rng = 3;
 
             if (!super._constr.moveToPickUpEnergyIn(creep, 7))
-                if (creep.pos.inRangeTo(_goal, rng)) {
+                if (_goal !== null && creep.pos.inRangeTo(_goal, rng)) {
 
                     if (creep.memory.workContain === undefined) {
 
