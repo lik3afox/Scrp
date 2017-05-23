@@ -268,6 +268,34 @@ class baseParent {
                 // Game.Order.creep('58e987f98dd21b4f7aa198a7',{sing:['never','let','me']});          
                 break;
 
+            case "roadMoveTo":
+                creep.say('T:rMove');
+                if (!constr.doCloseRoadRepair(creep))
+                    constr.doCloseRoadBuild(creep);
+                let tmp3 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
+                if (creep.pos.isNearTo(tmp3)) {
+                    orderComplete = true;
+                } else {
+                    if (task.enemyWatch) {
+
+                        var bads = creep.pos.findInRange(creep.room.hostilesHere, 3);
+                        bads = _.filter(bads, function(object) {
+                            return (object.owner.username != 'zolox' && object.owner.username != 'admon');
+                        });
+                        if (bads.length === 0) {
+                            creep.moveTo(tmp3, task.options);
+                        }
+                    } else {
+                        creep.moveTo(tmp3, task.options);
+                    }
+
+                }
+
+                if (creep.room.name == task.pos.roomName) {
+                    orderComplete = true;
+                }
+                break;
+
             case "focusMoveTo":
                 this.goToFocusFlag(creep, Game.flags[creep.memory.focusFlagName]);
                 if (!constr.doCloseRoadRepair(creep))
@@ -307,14 +335,31 @@ class baseParent {
                 creep.say('T:move');
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
                 if (creep.pos.isNearTo(tmp2)) {
-                    orderComplete = true;
+                    //                    orderComplete = true;
                 } else {
-                    creep.moveTo(tmp2, task.options);
+                    if (task.enemyWatch) {
+                        let badz = creep.pos.findInRange(creep.room.hostilesHere, 3);
+                        badz = _.filter(badz, function(object) {
+                            return (object.owner.username != 'zolox' && object.owner.username != 'admon');
+                        });
+                        if (badz.length === 0) {
+                            creep.moveTo(tmp2, task.options);
+                        }
+                    } else {
+                        creep.moveTo(tmp2, task.options);
+                    }
                 }
 
-                if (creep.room.name == task.pos.roomName) {
-                    orderComplete = true;
+                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
+                    if (creep.room.name == task.pos.roomName) {
+                        orderComplete = true;
+                    }
+                } else {
+                    if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
+                        orderComplete = true;
+                    }
                 }
+
                 break;
 
             case "attack":

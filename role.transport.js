@@ -108,13 +108,17 @@ class transport extends roleParent {
 
         if (super.depositNonEnergy(creep)) return;
         if (super.returnEnergy(creep)) {
-            return; }
+            return;
+        }
         if (super.keeperWatch(creep)) {
-            return; }
+            return;
+        }
         if (movement.runAway(creep)) {
-            return; }
+            return;
+        }
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         shouldDie(creep);
         super.deathWatch(creep);
@@ -135,18 +139,29 @@ class transport extends roleParent {
         if (creep.memory.gohome) {
             creep.countDistance();
             if (creep.memory.linkID !== undefined) {
-                if (!constr.doCloseRoadRepair(creep)) {
-                    constr.doCloseRoadBuild(creep);
-                }
 
-                let bads = getBads(creep);
-                if (bads.length === 0) {
-                    creep.moveMe(Game.getObjectById(creep.memory.linkID), {
-                        reusePath: 49
-                    });
+                let goal = Game.getObjectById(creep.memory.linkID);
+                let task = {};
+                task.options = {
+                    reusePath: 49,
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#ff0',
+                        lineStyle: 'dashed',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                };
+                task.pos = goal.pos;
+                task.order = "roadMoveTo";
+                if (goal.energyCapacity === 3000) {
+                    task.enemyWatch = false;
                 } else {
-                    creep.runFrom(bads);
+                    task.enemyWatch = true;
                 }
+                task.happyRange = 1;
+                creep.memory.task.push(task);
+
 
             } else if (creep.memory.home == creep.room.name) {
                 var containers = require('commands.toContainer');
@@ -223,13 +238,40 @@ class transport extends roleParent {
 
 
                 } else if (_goal !== null) {
-                if (!super.guardRoom(creep)) {
-                    creep.moveMe(_goal, {
-                        ignoreRoads: _ignoreRoad,
-                        reusePath: 49,
-                        visualizePathStyle: visPath
-                    });
-                }
+                /*                if (!super.guardRoom(creep)) {
+                                    creep.moveMe(_goal, {
+                                        ignoreRoads: _ignoreRoad,
+                                        reusePath: 49,
+                                        visualizePathStyle: visPath
+                                    });
+                                } */
+
+                //                let goal = Game.getObjectById(creep.memory.linkID);
+                let task = {};
+                task.options = {
+                    reusePath: 49,
+                    ignoreRoads: true,
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#ff0',
+                        lineStyle: 'dashed',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                };
+                task.pos = _goal.pos;
+                task.order = "moveTo";
+                /*                if (goal.energyCapacity === 3000) {
+                                    task.enemyWatch = false;
+                                } else {
+                                    task.enemyWatch = true;
+                                } */
+
+                task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+                task.happyRange = 1;
+                creep.memory.task.push(task);
+
+
             } else if (_goal === null) {
                 var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveMe(goingTo, {

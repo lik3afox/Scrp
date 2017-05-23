@@ -21,6 +21,9 @@ var demoParty = [
 var engineerParty = [
     ['engineer', require('army.engineer'), 2, 5],
 ];
+var engineer2Party = [
+    ['engineer', require('army.engineer'), 1, 5],
+];
 var thiefParty = [
     ['thief', require('army.thief'), 2, 3],
 ];
@@ -150,7 +153,8 @@ function getCurrentParty(flag) {
 
         case 'mage':
             return mageParty;
-
+        case 'engineer2':
+            return engineer2Party;
 
         case 'rampartDefender':
             return rampartParty;
@@ -232,6 +236,7 @@ function getSpawnCreating(flag) {
 
         case 'recontrol':
         case 'test':
+        case 'engineer2':
             return returnClosestRoom(flag.pos.roomName);
         case 'thief2':
             return 'E37S75';
