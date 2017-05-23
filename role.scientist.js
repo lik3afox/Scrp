@@ -50,8 +50,8 @@ var groupOne = [
     '58fae20240468f2a39d50830', // E38S72
     '58d97b7b8c94aa185ccaf659', //E35S83
     '58f793ad1f64b8d842dc0c16', // E37S75
-    '58dc1eb90c1c7697092ce5c2', // E35S73
-    '59090e6f771e5d03793d20b4' // W4S93
+    '58dc1eb90c1c7697092ce5c2' // E35S73
+    //'59090e6f771e5d03793d20b4' // W4S93
     //,'58c074ead62936ed5e2bce0b' // E27S75
 ];
 
@@ -103,7 +103,8 @@ function mineralContainerEmpty(creep) {
     if (creep.memory.containsGood) return false;
     let contains = creep.room.find(FIND_STRUCTURES);
     contains = _.filter(contains, function(o) {
-        return o.structureType == STRUCTURE_CONTAINER; });
+        return o.structureType == STRUCTURE_CONTAINER;
+    });
     for (var e in contains) {
         for (var a in contains[e].store) {
             if (a != RESOURCE_ENERGY && contains[e].store[a] > creep.stats.carry) {
@@ -210,7 +211,8 @@ class scientistRole extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         if (super.returnEnergy(creep)) {
             return;
