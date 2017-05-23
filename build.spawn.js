@@ -212,7 +212,13 @@ var E38S74Module = [
 ];
 
 
-var E33S76Module = [];
+var E33S76Module = [
+    ['first', require('role.first'), 1, 0]
+//    ['linker', require('role.linker'), 3, 0],
+//    ['harvester', require('role.harvester'), 2, 2]
+
+
+];
 var W4S93Module = [
     ['first', require('role.first'), 2, 2],
     ['linker', require('role.linker'), 1, 3],

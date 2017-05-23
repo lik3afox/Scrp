@@ -231,8 +231,8 @@ module.exports.loop = function() {
                 totalSpawn++;
                 Game.spawns[title].memory.segmentID = totalSpawn;
                 tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
-                /*
-                                if(Game.spawns[title].memory.roomCheck == undefined) { 
+                
+                                if(Game.spawns[title].memory.roomCheck === undefined) { 
                                     Game.spawns[title].memory.roomCheck = roomCheck;
                                 }
                                Game.spawns[title].memory.roomCheck--;
@@ -254,7 +254,7 @@ module.exports.loop = function() {
                                 }
                             } // End of room loop. 
                         }
-                 */
+                 
             }
 
             let anySpawn = false;
@@ -263,11 +263,10 @@ module.exports.loop = function() {
             }
             if ((Game.spawns[title].spawning === null)) {
                 if (Game.spawns[title].memory.alphaSpawn) {
-
                     let zz = _.filter(Game.spawns, function(o) {
                         return (o.spawning === null || o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
                     });
-                    if (zz.length > 0) anySpawn = true;
+                    if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
                     if (anySpawn) {
                         if (Game.spawns[title].memory.checkCount === undefined) {
                             Game.spawns[title].memory.checkCount = countCheck;

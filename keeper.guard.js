@@ -181,7 +181,7 @@ function moveCreep(creep) {
     if (!creep.pos.isNearTo(gota))
         creep.moveMe(rmPos, {
             reusePath: 7,
-            ignoreRoads: true,
+            ignoreRoads: (creep.room.name == 'W4S94'),
             visualizePathStyle: {
                 fill: 'transparent',
                 stroke: '#bf0',
