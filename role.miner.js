@@ -143,8 +143,7 @@ class settler extends roleParent {
         if (super.returnEnergy(creep)) return;
         if (movement.runAway(creep)) return;
         if (super.keeperWatch(creep)) {
-            return;
-        }
+            return; }
 
 
         var _source = Game.getObjectById(creep.memory.goal);

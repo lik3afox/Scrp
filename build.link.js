@@ -17,7 +17,7 @@ var _links = [
     // Spawn room E38S72
     '58ffa4eaff28ce410959868a', '5908d7b565640df9183ab7cb', '5908fc066303cfc31b28f48a',
     // Spawn room W4S93
-    '590f55b87ed675bb51e96132', '59217cc320243b65e83790bf','592359e482194ec1286bee27'
+    '590f55b87ed675bb51e96132', '59217cc320243b65e83790bf', '592359e482194ec1286bee27'
 ];
 
 function linkTransfer() {
@@ -78,6 +78,8 @@ function sendEnergy(from, to, amount) {
 
         if (linkFrom === null || linkTo === null) return false;
         linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' });
+        if (linkFrom.cooldown !== undefined && linkFrom.cooldown !== 0)
+            linkFrom.room.visual.text(linkFrom.cooldown, linkFrom.pos.x, linkFrom.pos.y + 1, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
         if (linkFrom.cooldown !== 0 || linkFrom.energy <= amount) return false;
 
         if (linkTo.energy > 400) return false;

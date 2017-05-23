@@ -543,18 +543,19 @@ class baseParent {
             if (keeper === null) return false;
             if (keeper.ticksToSpawn !== undefined)
                 keeper.room.visual.text(keeper.ticksToSpawn, keeper.pos.x, keeper.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+            let _goal = Game.getObjectById(creep.memory.goal);
+            let newPos = new RoomPosition(_goal.pos.x, _goal.pos.y, _goal.pos.roomName);
+            let dis = creep.pos.getRangeTo(newPos);
+            if (dis > 8) return false;
 
-            if (creep.room.name == keeper.room.name && (keeper.ticksToSpawn === undefined || keeper.ticksToSpawn < 15 || keeper.ticksToSpawn > 285)) {
-                let _goal = Game.getObjectById(creep.memory.goal);
-                //if(creep.memory.role == 'miner')              creep.dropEverything();
-                let newPos = new RoomPosition(_goal.pos.x, _goal.pos.y, _goal.pos.roomName);
-                let dis = creep.pos.getRangeTo(newPos);
+            if (keeper.ticksToSpawn === undefined || keeper.ticksToSpawn < 15 || keeper.ticksToSpawn > 285) {
+
                 if (dis == 7) {
+                    creep.say('zZzZ');
                     return true;
                 }
-                if (dis < 8) {
+                if (dis < 7) {
                     creep.say('inc!' + dis);
-                    //ID: 
                     if (creep.memory.role == 'miner' && creep.carry[RESOURCE_ENERGY] > 0) {
                         let zz = Game.getObjectById(creep.memory.workContainer);
                         if (zz !== null) {
@@ -565,16 +566,16 @@ class baseParent {
                     if (creep.memory.goal == '5836b8118b8b9619519f1659' ||
                         creep.memory.goal == '5873bd6f11e3e4361b4d934b' || creep.memory.goal == '5836b82b8b8b9619519f1967' ||
                         creep.memory.goal == '5873bd6f11e3e4361b4d9351' || creep.memory.goal == '5836b82b8b8b9619519f196c') {
-                        creep.moveMe(Game.getObjectById(creep.memory.parent));
+                        creep.moveMe(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     } else {
                         for (var e in Game.flags) {
                             if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
-                                let contain = Game.getObjectById(creep.memory.workContainer);
+                                /*let contain = Game.getObjectById(creep.memory.workContainer);
                                 if (contain !== null && creep.pos.isNearTo(contain)) {
                                     creep.transfer(contain, RESOURCE_ENERGY);
-                                }
-                                creep.moveMe(Game.flags[e], { ignoreRoads: true });
-                                break;
+                                } */
+                                creep.moveMe(Game.flags[e], { ignoreRoads: true, maxOpts: 50 });
+                                return true;
                             }
                         }
                     }
@@ -588,27 +589,25 @@ class baseParent {
                 return false;
             }
         }
+        return false;
     }
     static guardRoom(creep) {
         // IF this returns false - means that it's safe to move.
         // If this returns true - means that it's not safe to move.
-        let sKep = Game.getObjectById(creep.memory.keeperLairID);
-        if (sKep !== null && sKep.pos.roomName == creep.pos.roomName) {
-            if (sKep.ticksToSpawn === undefined || sKep.ticksToSpawn < 15 || sKep.ticksToSpawn > 295) {
-                return true;
-            }
-        }
+        /*        let sKep = Game.getObjectById(creep.memory.keeperLairID);
+                if (sKep !== null && sKep.pos.roomName == creep.pos.roomName) {
+                    if (sKep.ticksToSpawn === undefined || sKep.ticksToSpawn < 15 || sKep.ticksToSpawn > 295) {
+                        return true;
+                    }
+                } */
         var stay = creep.pos.findInRange(creep.room.hostilesHere(), 5);
         //if(stay == undefined) {
         //    stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS,4);  
         //}
 
         if (stay.length === 0) return false;
-
         var close = creep.pos.findInRange(stay, 4);
-        //if(creep.room.name == 'E35S84')console.log(stay.length , close.length  )
         if (stay.length - close.length != stay.length) {
-            //creep.runFrom(close);
             return true;
         } else {
             return false;

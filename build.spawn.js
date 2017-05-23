@@ -427,8 +427,8 @@ function cpuCount(creep, time) {
     let avg = _.sum(creep.memory.cpu) / creep.memory.cpu.length;
     if (showEveryone) console.log('CPU used by ' + creep + ' is a ' + creep.memory.role +
         ' Time : ' + 'avg:' + Math.floor(_.sum(creep.memory.cpu) / creep.memory.cpu.length), '/lst:', time, creep.pos);
-
-    creep.memory.cpu.push(time);
+    if ((creep.memory.cpu.length === 0 && time === 0) || (time !== 0))
+        creep.memory.cpu.push(time);
     if (creep.memory.cpu.length > 30) creep.memory.cpu.shift();
 }
 
@@ -988,7 +988,7 @@ class theSpawn {
                     var start;
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'xtransport') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 'transport') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning)

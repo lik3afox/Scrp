@@ -128,4 +128,5 @@ module.exports = function(grunt) {
     });
     grunt.task.registerTask('default', ['jshint']);
     grunt.task.registerTask('deploy', ['jshint', 'screeps']);
+    grunt.task.registerTask('push', ['jshint', 'screeps']);
 };
