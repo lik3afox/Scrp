@@ -111,6 +111,7 @@ class transport extends roleParent {
             return;
         }
         if (super.keeperWatch(creep)) {
+        //	if(creep.carry[RESOURCE_ENERGY] > creep.carryCapacity *.5)
             return;
         }
         if (movement.runAway(creep)) {
@@ -159,7 +160,7 @@ class transport extends roleParent {
                 } else {
                     task.enemyWatch = true;
                 }
-                task.happyRange = 1;
+                task.rangeHappy = 1;
                 creep.memory.task.push(task);
 
 
@@ -226,7 +227,7 @@ class transport extends roleParent {
                                     }
                                 }
                             } else {
-                                creep.moveMe(contain);
+                                creep.moveTo(contain);
                             }
                         } else if (creep.pos.isNearTo(_goal)) {
                             creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
@@ -238,15 +239,7 @@ class transport extends roleParent {
 
 
                 } else if (_goal !== null) {
-                /*                if (!super.guardRoom(creep)) {
-                                    creep.moveMe(_goal, {
-                                        ignoreRoads: _ignoreRoad,
-                                        reusePath: 49,
-                                        visualizePathStyle: visPath
-                                    });
-                                } */
 
-                //                let goal = Game.getObjectById(creep.memory.linkID);
                 let task = {};
                 task.options = {
                     reusePath: 49,
@@ -261,17 +254,17 @@ class transport extends roleParent {
                 };
                 task.pos = _goal.pos;
                 task.order = "moveTo";
-                /*                if (goal.energyCapacity === 3000) {
-                                    task.enemyWatch = false;
-                                } else {
-                                    task.enemyWatch = true;
-                                } */
 
                 task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
-                task.happyRange = 1;
-                creep.memory.task.push(task);
+                task.rangeHappy = rng;
+                creep.memory.task.push(task); 
 
 
+/*creep.moveMe(_goal, {
+                    ignoreRoads: _ignoreRoad,
+                    reusePath: 49,
+                    visualizePathStyle: visPath
+                }); */
             } else if (_goal === null) {
                 var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveMe(goingTo, {

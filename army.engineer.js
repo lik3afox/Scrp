@@ -130,9 +130,9 @@ class engineerClass extends roleParent {
 
             } else {
                 if (creep.room.name == 'E33S76') {
-                    let yy = Game.getObjectById('592448845feea00129f631c3');
+                /*    let yy = Game.getObjectById('59245d7c5feea00129f642e3');
 
-                    if (yy !== null) {
+                    if (yy !== null) {*/
                         let xx = creep.room.storage;
                         if (creep.pos.isNearTo(xx)) {
                             creep.withdraw(xx, RESOURCE_ENERGY);
@@ -140,7 +140,7 @@ class engineerClass extends roleParent {
                             creep.moveMe(xx);
                         }
                         return;
-                    }
+/*                    }
 
                     if (creep.memory.roleID == 1) {
                         let zz = Game.getObjectById('588371768b6b60986f18d1d8');
@@ -156,7 +156,8 @@ class engineerClass extends roleParent {
                         } else {
                             creep.moveMe(zz);
                         }
-                    }
+                    } */
+
                 } else {
                     if (!super._constr.moveToPickUpEnergy(creep, 300)) {
                         if (!super._containers.withdrawFromStorage(creep)) {

@@ -291,8 +291,14 @@ class baseParent {
 
                 }
 
-                if (creep.room.name == task.pos.roomName) {
-                    orderComplete = true;
+                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
+                    if (creep.room.name == task.pos.roomName) {
+                        orderComplete = true;
+                    }
+                } else {
+                    if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
+                        orderComplete = true;
+                    }
                 }
                 break;
 
