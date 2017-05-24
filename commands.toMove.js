@@ -161,10 +161,11 @@ function getRetreatFlag(creep) {
                     return zz;
                 }
             }
-            break;
+        break;
+
     }
 
-    if (flag !== undefined) {
+    if (flag !== undefined && flag.pos.roomName != creep.pos.roomName) {
         zz = new RoomPosition(flag.pos.x, flag.pos.y, flag.pos.roomName);
         creep.memory.runTarget = zz;
         return zz;
@@ -177,8 +178,9 @@ function getRetreatFlag(creep) {
                 return zz;
             }
         }
-
     }
+
+
 
 }
 
@@ -717,16 +719,7 @@ class MoveInteract {
             }
 
         }
-        //else {
-        // Look for red flag, 
-        /*if(creep.room.memory.invasionFlag != undefined) {
-          let flag = Game.flags[creep.room.memory.invasionFlag];
-          if(flag != undefined && creep.pos.inRangeTo(flag,8)) {
-              creep.memory.runAway = true;
-              creep.memory.runFrom = flag.name;
-          }  
-        }  */
-        //}
+
         return creep.memory.runAway;
     }
 

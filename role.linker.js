@@ -125,7 +125,7 @@ function E33S76Room(creep) {
         case 0:
             goto = creep.room.storage;
             //             require('commands.toStructure').pickUpEnergy(creep);
-            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            if (goto !== undefined && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(goto, {
                     reusePath: 20 //,ignoreCreeps:true
                 });

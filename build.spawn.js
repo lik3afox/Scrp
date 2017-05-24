@@ -131,7 +131,7 @@ var spawn3Module = [
     ['first', require('role.first'), 2, 2],
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['minHarvest', require('role.mineral'), 1, 4],
+    ['minHarvest', require('role.mineral'), 2, 4],
     ['nuker', require('role.nuker'), 1, 4],
     ['wallwork', require('role.wallworker'), 1, 5]
 ];
@@ -213,9 +213,9 @@ var E38S74Module = [
 
 
 var E33S76Module = [
-    ['first', require('role.first'), 1, 1],
-    ['linker', require('role.linker'), 3, 3],
-    ['upbuilder', require('role.upbuilder'), 1, 3],
+    ['first', require('role.first'), 2, 1],
+    ['linker', require('role.linker'), 3, 4],
+    ['upbuilder', require('role.upbuilder'), 2, 4],
     ['harvester', require('role.harvester'), 2, 2]
 ];
 

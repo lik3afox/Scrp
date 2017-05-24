@@ -340,21 +340,18 @@ class baseParent {
             case "moveTo":
                 creep.say('T:move');
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
-                if (creep.pos.isNearTo(tmp2)) {
-                    //                    orderComplete = true;
-                } else {
                     if (task.enemyWatch) {
-                        let badz = creep.pos.findInRange(creep.room.hostilesHere, 3);
+                        let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
                         badz = _.filter(badz, function(object) {
                             return (object.owner.username != 'zolox' && object.owner.username != 'admon');
-                        });
+                        }); 
+                        creep.say(badz.length+"b");
                         if (badz.length === 0) {
                             creep.moveTo(tmp2, task.options);
                         }
                     } else {
                         creep.moveTo(tmp2, task.options);
                     }
-                }
 
                 if (task.rangeHappy === undefined || task.rangeHappy === 0) {
                     if (creep.room.name == task.pos.roomName) {
