@@ -237,7 +237,9 @@ function W4S93Room(creep) {
 function W4S93Transfer(creep) {
     switch (creep.memory.roleID) {
         case 0:
-            containers.moveToStorage(creep);
+            toStorageOrTerminal(creep);
+
+            //            containers.moveToStorage(creep);
             break;
 
         default:
@@ -1025,7 +1027,7 @@ class roleLinker extends roleParent {
         }
 
 
-        if (creep.room.name != "W4S93z" && creep.room.name != "E38S72" && creep.room.name != 'E33S76' )
+        if (creep.room.name != "W4S93z" && creep.room.name != "E38S72" && creep.room.name != 'E33S76')
             constr.pickUpEnergy(creep);
         //if(Game.cpu.tickLimit > Game.cpu.tick) return;
         if (super.returnEnergy(creep)) return;

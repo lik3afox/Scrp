@@ -238,7 +238,7 @@ class baseParent {
         }
 
         let task = Thetasks[0];
-        console.log(creep, 'Doing task', task.order, task.options, creep.pos);
+        //        console.log(creep, 'Doing task', task.order, task.options, creep.pos);
         // Task should be an object
         // That does it things
         // It checks first to see if the task is done
@@ -340,18 +340,18 @@ class baseParent {
             case "moveTo":
                 creep.say('T:move');
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
-                    if (task.enemyWatch) {
-                        let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
-                        badz = _.filter(badz, function(object) {
-                            return (object.owner.username != 'zolox' && object.owner.username != 'admon');
-                        }); 
-                        creep.say(badz.length+"b");
-                        if (badz.length === 0) {
-                            creep.moveTo(tmp2, task.options);
-                        }
-                    } else {
+                if (task.enemyWatch) {
+                    let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+                    badz = _.filter(badz, function(object) {
+                        return (object.owner.username != 'zolox' && object.owner.username != 'admon');
+                    });
+                    creep.say(badz.length + "b");
+                    if (badz.length === 0) {
                         creep.moveTo(tmp2, task.options);
                     }
+                } else {
+                    creep.moveTo(tmp2, task.options);
+                }
 
                 if (task.rangeHappy === undefined || task.rangeHappy === 0) {
                     if (creep.room.name == task.pos.roomName) {
@@ -479,7 +479,7 @@ class baseParent {
 
         }
         if (orderComplete) {
-            console.log('task completed');
+            console.log(creep, 'task completed', task.order, task.options, creep.pos);
             let zz = creep.memory.task.shift();
             if (task.repeat) {
                 creep.memory.task.push(zz);

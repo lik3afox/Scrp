@@ -45,6 +45,12 @@ class PowerInteract {
                         if (powerS.processPower() == OK) {
                             room.memory.powerCount++;
                             total++;
+                            powerS.room.visual.text("!", powerS.pos, {
+                                color: '#e42f43 ',
+                                stroke: '#000000 ',
+                                strokeWidth: 0.123,
+                                font: 0.5
+                            });
                         }
                     }
 
@@ -69,7 +75,8 @@ class PowerInteract {
     static findNewPowerParty(creep) {
         // first we will look at Game.falgs
         let pbFlags = _.filter(Game.flags, function(o) {
-            return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED; });
+            return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED;
+        });
 
         var closeFlag;
         var distance = 10;

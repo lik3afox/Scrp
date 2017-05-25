@@ -83,6 +83,7 @@ function buyGH2O() {
 
 function shareEnergy(terminal) {
     // Lets check here in all the storages to see if that room's storage level is at.
+
     var lowestStore;
     var currentLow = 1000000;
     for (var e in terminals) {
@@ -102,6 +103,30 @@ function shareEnergy(terminal) {
     console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
     return true;
 
+
+}
+
+function needEnergy(terminal) {
+    //   console(terminal.room.storage.store[RESOURCE_ENERGY]);
+    if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
+
+
+        var highestEnergy;
+        var currentHigh = 0;
+        for (var e in terminals) {
+            let storage = Game.getObjectById(terminals[e]);
+            if (storage.store[RESOURCE_ENERGY] > currentHigh) {
+                highestEnergy = Game.getObjectById(terminals[e]);
+                currentHigh = storage.store[RESOURCE_ENERGY];
+            }
+        }
+        let amount = currentHigh * 0.25;
+        //        console.log(highestEnergy, currentHigh, RESOURCE_ENERGY, amount, terminal.room.name);
+        let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
+
+        console.log('This terminal', terminal.room, 'gets energy', highestEnergy.room, 'result:', zz);
+
+    }
 }
 
 function tradeEnergy(terminal) {
@@ -463,6 +488,7 @@ class roleTerminal {
                 RawMemory.segments[1] = RawMemory.segments[1] + JSON.stringify("   Storage:" + engy + "/" + terminal.room.storage.storeCapacity) + '\n';
 
             }
+            needEnergy(terminal);
 
             if (zz > 299000) {
                 if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
