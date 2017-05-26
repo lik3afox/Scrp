@@ -233,7 +233,7 @@ class StructureInteract {
             }
         }
 
-        var dEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, 1);
+        var dEnergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
         if (dEnergy.length === 0) return false;
         creep.pickup(dEnergy[0]);
         return true;
@@ -243,7 +243,7 @@ class StructureInteract {
         if (creep.memory.nextEnergyScan === undefined) { creep.memory.nextEnergyScan = 0; }
         creep.memory.nextEnergyScan--;
         if (creep.memory.nextEnergyScan < 0) {
-            var dEnergy = creep.pos.findInRange(FIND_DROPPED_ENERGY, range);
+            var dEnergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, range);
             if (dEnergy.length === 0) {
                 creep.memory.nextEnergyScan = range;
                 return false;
@@ -294,7 +294,7 @@ class StructureInteract {
 
     static moveToPickUpEnergy(creep, min) {
         if (min === undefined) min = 0;
-        var close = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY, {
+        var close = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
             filter: function(object) {
                 return object.amount > min;
             }
@@ -321,8 +321,8 @@ class StructureInteract {
         /*
 
         if(min === undefined) min = 0;
-        //        var dEnergy = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
-                var tmp = creep.room.find(FIND_DROPPED_ENERGY);//.sort((a, b) => a.amount - b.amount); ;
+        //        var dEnergy = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCE);
+                var tmp = creep.room.find(FIND_DROPPED_RESOURCE);//.sort((a, b) => a.amount - b.amount); ;
                 let vv = tmp.length-(1+creep.memory.roleID);
                 if (vv < 0 ) vv= 0;
              var   dEnergy = tmp[vv];

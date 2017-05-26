@@ -30,7 +30,7 @@ class rebuilder extends roleParent {
             if (level > classLevels.length - 1) level = classLevels.length - 1;
             return classLevels[level];
         }
-        // FIND_DROPPED_ENERGY
+        
     static run(creep) {
         if (super.returnEnergy(creep)) {
             return;

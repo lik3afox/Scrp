@@ -349,6 +349,11 @@ class baseParent {
                     if (badz.length === 0) {
                         creep.moveTo(tmp2, task.options);
                     }
+                } else if (task.energyPickup) {
+                	if(!constr.moveToPickUpEnergyIn(creep, 7)) {
+	                    creep.moveTo(tmp2, task.options);
+                	}
+                	break;
                 } else {
                     creep.moveTo(tmp2, task.options);
                 }

@@ -31,6 +31,10 @@ var thief2Party = [
     ['thief', require('army.thief'), 1, 3],
 ];
 
+var muleParty = [
+    ['mule', require('army.mule'), 1, 1]
+];
+
 // Has 
 /*
 var defendParty = [
@@ -132,6 +136,9 @@ function getCurrentParty(flag) {
         case 'demo':
             return demoParty;
 
+        case 'mule':
+            return muleParty;
+
         case 'kill':
         case 'kill2':
             return killParty;
@@ -225,6 +232,7 @@ function getSpawnCreating(flag) {
         case '3upgrade':
         case 'thief5':
             return 'E35S73';
+        case 'mule':
         case 'thief':
             return 'E35S73';
 

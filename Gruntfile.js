@@ -109,7 +109,6 @@ module.exports = function(grunt) {
                     FIND_HOSTILE_CREEPS: true,
                     FIND_SOURCES_ACTIVE: true,
                     FIND_SOURCES: true,
-                    FIND_DROPPED_ENERGY: true,
                     FIND_DROPPED_RESOURCES: true,
                     FIND_STRUCTURES: true,
                     FIND_MY_STRUCTURES: true,

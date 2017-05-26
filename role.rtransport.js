@@ -118,7 +118,6 @@ class reTransport extends roleParent {
             if (level > classLevels.length - 1) level = classLevels.length - 1;
             return classLevels[level];
         }
-        // FIND_DROPPED_ENERGY
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
@@ -241,7 +240,7 @@ class reTransport extends roleParent {
                     let target; // This is where you want to go. 
                     let targetAmount = 0;
                     let isDropped = true;
-                    var tmp = creep.room.find(FIND_DROPPED_ENERGY);
+                    var tmp = creep.room.find(FIND_DROPPED_RESOURCES);
 
                     if (tmp.length === 0) {
                         isDropped = false;

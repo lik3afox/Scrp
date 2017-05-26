@@ -1,10 +1,11 @@
-// Front line - 
-// Tank - but also desgned to carry.
+// Difference between mule and thief.
+// Thief gets things and brings them
+// mule takes thing and send them
 
 var classLevels = [
-    [CARRY, MOVE],
-    [TOUGH, TOUGH, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], // 200
-    [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
+    [CARRY,
+        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE
+    ]
 ];
 
 var movement = require('commands.toMove');
@@ -13,25 +14,51 @@ var attack = require('commands.toAttack');
 //STRUCTURE_POWER_BANK:
 class muleClass extends roleParent {
     static levels(level) {
-        if (level > classLevels.length) level = classLevels.length;
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
         return classLevels[level];
     }
 
     static run(creep) {
-        creep.say('mule');
-
-        //		if(creep.pos.inRange( ))
-
-        var enemy = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
-        if (enemy.length > 0) {
-            enemy = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-            if (creep.attack(enemy) == ERR_NOT_IN_RANGE) {
-                creep.say('ahh');
-                creep.moveTo(enemy);
-            }
-        } else {
-            movement.flagMovement(creep);
+        // First if it's home it will go to storage.
+        if (creep.memory.goHome === undefined) {
+            creep.memory.goHome = false;
         }
+        let total = _.sum(creep.carry);
+        if (!creep.memory.goHome) {
+            if (total === 0) {
+                let stor = creep.room.storage;
+                if (creep.pos.isNearTo(stor)) {
+                    creep.withdraw(stor, RESOURCE_ENERGY);
+                } else {
+                    creep.moveTo(stor);
+                }
+            } else {
+
+                let isThere = false;
+                if (Game.flags[creep.memory.party] !== undefined &&
+                    Game.flags[creep.memory.party].room !== undefined &&
+                    creep.room.name == Game.flags[creep.memory.party].room.name) {
+                    isThere = true;
+                }
+
+                if (!isThere) {
+                    if (!super.avoidArea(creep)) {
+                        movement.flagMovement(creep);
+                    }
+                } else {
+                    if (creep.room.storage !== undefined) {
+                        if (creep.pos.isNearTo(creep.room.storage)) {
+                            creep.transfer(creep.room.storage, RESOURCE_ENERGY);
+                        } else {
+                            creep.moveTo(creep.room.storage);
+                        }
+                    }
+                }
+
+
+            }
+        }
+
     }
 }
 

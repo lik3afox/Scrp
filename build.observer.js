@@ -1,4 +1,4 @@
-var observers = ['58b720b29b2a356930fd3438', '58ecd1142353c5da3b415c92', '58e886be32d51ba206139da7'];
+var observers = ['58b720b29b2a356930fd3438', '58ecd1142353c5da3b415c92', '58e886be32d51ba206139da7','5923cf17001830320d3e99c0'];
 //'E32S70',
 var roomsObserve = ['E30S80', 'E30S70', 'E31S70', 'E29S70', 'E30S71', 'E30S69',
      'E28S70', 'E30S72', 'E30S68', 'E27S70', 'E26S70', 'E25S70',

@@ -33,6 +33,7 @@ var allModule = [
     ['demolisher', require('army.demolisher')],
     ['Aupgrader', require('army.upgrader')],
     ['thief', require('army.thief')],
+    ['mule', require('army.mule')],
     ['Acontroller', require('army.controller')],
     ['transport', require('role.transport')], // Gather and move - just carry 
     ['healer', require('army.healer')], // Gather and move - just carry 
@@ -215,7 +216,7 @@ var E38S74Module = [
 var E33S76Module = [
     ['first', require('role.first'), 2, 1],
     ['linker', require('role.linker'), 3, 4],
-    ['upbuilder', require('role.upbuilder'), 0, 4],
+    ['upbuilder', require('role.upbuilder'), 1, 4],
     ['harvester', require('role.harvester'), 2, 2]
 ];
 

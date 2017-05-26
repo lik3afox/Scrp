@@ -256,7 +256,9 @@ class transport extends roleParent {
                 task.pos = _goal.pos;
                 task.order = "moveTo";
 
+
                 task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+                task.energyPickup = true;
                 task.rangeHappy = rng;
                 creep.memory.task.push(task); 
 

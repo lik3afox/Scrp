@@ -332,6 +332,12 @@ module.exports.loop = function() {
     globalCreep();
     doUpgradeRooms();
 
+/*
+for(var e in Game.constructionSites) {
+	if(Game.constructionSites[e].pos.roomName == 'W4S95'){
+		Game.constructionSites[e].remove();
+	}
+} */
 
 
     if (Game.spawns.Spawn1 !== undefined) {
