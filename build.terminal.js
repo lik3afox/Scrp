@@ -122,9 +122,9 @@ function needEnergy(terminal) {
         }
         let amount = currentHigh * 0.25;
         //        console.log(highestEnergy, currentHigh, RESOURCE_ENERGY, amount, terminal.room.name);
-        let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
+        //        let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
 
-        console.log('This terminal', terminal.room, 'gets energy', highestEnergy.room, 'result:', zz);
+        console.log('This terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:');
 
     }
 }

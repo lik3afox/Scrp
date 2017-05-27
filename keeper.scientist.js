@@ -35,7 +35,8 @@ class mineralRole extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         memoryCheck(creep);
 
@@ -62,7 +63,8 @@ class mineralRole extends roleParent {
         // needs keeperlairID, need mineralID, need ExtractID, 
 
         if (super.boosted(creep, boost)) {
-            return; }
+            return;
+        }
         if (super.returnEnergy(creep)) return;
         if (movement.runAway(creep)) return;
 
@@ -128,8 +130,14 @@ class mineralRole extends roleParent {
             }
 
         }
-
-        if (!(_goal.roomName == creep.room.name && foxy.isInRange(creep, _goal.x, _goal.y, 4))) {
+        if (_goal === null) {
+            var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+            creep.moveMe(goingTo, {
+                ignoreRoads: _ignoreRoad,
+                reusePath: 49,
+                visualizePathStyle: visPath
+            });
+        } else if (!(_goal.roomName == creep.room.name && foxy.isInRange(creep, _goal.x, _goal.y, 4))) {
             if (creep.memory.keeperLairID !== undefined) {
                 let sKep = Game.getObjectById(creep.memory.keeperLairID);
                 if (sKep !== null) {

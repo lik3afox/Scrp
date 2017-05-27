@@ -220,7 +220,7 @@ function getSpawnCreating(flag) {
 
         case 'warparty3':
         case 'demo':
-            return 'E35S83';
+            return 'E33S76';
 
 
         case '2upgrade':

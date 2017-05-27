@@ -48,7 +48,8 @@ function getSpawnCreating(flag) {
             return 'W4S93';
         case 'Flag40':
             return 'E35S73';
-
+        case 'Flag57':
+            return 'E37S75';
         default:
             return 'E28S73';
     }
@@ -60,6 +61,7 @@ function getCurrentParty(flag) {
         case 'Flag39':
         case 'E36S75':
         case 'Flag56':
+        case 'Flag57':
         case 'Flag55':
             return guardParty;
         case 'Flag41':

@@ -350,10 +350,9 @@ class baseParent {
                         creep.moveTo(tmp2, task.options);
                     }
                 } else if (task.energyPickup) {
-                	if(!constr.moveToPickUpEnergyIn(creep, 7)) {
-	                    creep.moveTo(tmp2, task.options);
-                	}
-                	break;
+                    if (!constr.moveToPickUpEnergyIn(creep, 7)) {
+                        creep.moveTo(tmp2, task.options);
+                    }
                 } else {
                     creep.moveTo(tmp2, task.options);
                 }
@@ -362,12 +361,9 @@ class baseParent {
                     if (creep.room.name == task.pos.roomName) {
                         orderComplete = true;
                     }
-                } else {
-                    if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
-                        orderComplete = true;
-                    }
+                } else if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
+                    orderComplete = true;
                 }
-
                 break;
 
             case "attack":

@@ -49,6 +49,8 @@ class muleClass extends roleParent {
                     if (creep.room.storage !== undefined) {
                         if (creep.pos.isNearTo(creep.room.storage)) {
                             creep.transfer(creep.room.storage, RESOURCE_ENERGY);
+                            creep.memory.goHome = true;
+
                         } else {
                             creep.moveTo(creep.room.storage);
                         }
@@ -56,6 +58,13 @@ class muleClass extends roleParent {
                 }
 
 
+            }
+        } else {
+            if (creep.room.name == creep.memory.home) {
+                creep.memory.goHome = false;
+            } else {
+                let zz = Game.getObjectById(creep.memory.parent);
+                creep.moveTo(zz, { reusePath: 50 });
             }
         }
 
