@@ -132,7 +132,7 @@ var spawn3Module = [
     ['first', require('role.first'), 2, 2],
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['minHarvest', require('role.mineral'), 2, 4],
+    ['minHarvest', require('role.mineral'), 2, 5],
     ['nuker', require('role.nuker'), 1, 4],
     ['wallwork', require('role.wallworker'), 1, 5]
 ];
@@ -400,6 +400,10 @@ var expansionModule = [
         ['ztransport', require('role.ztransport'), 1, 0]
     ], // 
     [ // LEVEL 25 
+        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
+        ['xtransport', require('role.transport'), 1, 3], // 800 carry transport.
+        ['transport', require('role.transport'), 1, 3] // 800 carry transport.
+
     ], // 
     [ // LEVEL 26 
     ], // 
@@ -993,20 +997,28 @@ class theSpawn {
     static runCreeps() {
 
         var spawnCreeps = Memory.creeps;
+        var start;
+        Memory.creepTotal = 0;
 
         for (var name in spawnCreeps) { // Start of Creep Loop
             if (!Game.creeps[name]) { // Check to see if this needs deletion
                 delete spawnCreeps[name]; // If it does then it does.
+            } else if (Game.creeps[name].memory.goal == '5873bd6xxd11e3e4361b4d92ef' && Game.creeps[name].memory.task.length > 0) {
+                if (Game.creeps[name].memory.role == 'transport') { countCPU = true; } else { countCPU = false; }
+                console.log('transportxxxXXX', name, Game.creeps[name].memory.task[0].order);
+                parent.doTask(Game.creeps[name]);
+                if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
             } else {
+                Memory.creepTotal++;
                 for (var type in allModule) {
-                    var start;
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 't') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 'xxtransport') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
 
-                        if (!Game.creeps[name].spawning)
+                        if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
+                        }
                         if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
 
                         break;
@@ -1425,8 +1437,12 @@ class theSpawn {
                             if (expand.allDistance === undefined) {
                                 expand.allDistance = [];
                             }
-                            expand.allDistance.push(creep.memory.distance);
+                            if (creep.memory.distance !== 1)
+                                expand.allDistance.push(creep.memory.distance);
                             //                      console.log("Creep Reporting distance :",creep.memory.distance,creep.memory.goal)
+                            if (expand.allDistance.length > 100) {
+                                expand.allDistance = undefined;
+                            }
 
                         }
                     }

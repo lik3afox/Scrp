@@ -111,7 +111,7 @@ class transport extends roleParent {
             return;
         }
         if (super.keeperWatch(creep)) {
-        //	if(creep.carry[RESOURCE_ENERGY] > creep.carryCapacity *.5)
+            //  if(creep.carry[RESOURCE_ENERGY] > creep.carryCapacity *.5)
             return;
         }
         if (movement.runAway(creep)) {
@@ -142,27 +142,32 @@ class transport extends roleParent {
             if (creep.memory.linkID !== undefined) {
 
                 let goal = Game.getObjectById(creep.memory.linkID);
-                let task = {};
-                task.options = {
-                    reusePath: 49,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#ff0',
-                        lineStyle: 'dashed',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
+                if (goal !== null) {
+                    let task = {};
+                    task.options = {
+                        reusePath: 49,
+                        visualizePathStyle: {
+                            fill: 'transparent',
+                            stroke: '#ff0',
+                            lineStyle: 'dashed',
+                            strokeWidth: 0.15,
+                            opacity: 0.5
+                        }
+                    };
+                    task.pos = goal.pos;
+                    task.order = "roadMoveTo";
+                    let zzz = Game.getObjectById(creep.memory.goal);
+                    if (zzz.energyCapacity === 3000) {
+                        task.enemyWatch = false;
+                    } else {
+                        task.enemyWatch = true;
                     }
-                };
-                task.pos = goal.pos;
-                task.order = "roadMoveTo";
-                let zzz = Game.getObjectById(creep.memory.goal);
-                if (zzz.energyCapacity === 3000) {
-                    task.enemyWatch = false;
+                    task.rangeHappy = 1;
+                    creep.memory.task.push(task);
                 } else {
-                    task.enemyWatch = true;
+                    creep.memory.linkID = undefined;
                 }
-                task.rangeHappy = 1;
-                creep.memory.task.push(task);
+
 
 
             } else if (creep.memory.home == creep.room.name) {
@@ -260,14 +265,14 @@ class transport extends roleParent {
                 task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
                 task.energyPickup = true;
                 task.rangeHappy = rng;
-                creep.memory.task.push(task); 
+                creep.memory.task.push(task);
 
 
-/*creep.moveMe(_goal, {
-                    ignoreRoads: _ignoreRoad,
-                    reusePath: 49,
-                    visualizePathStyle: visPath
-                }); */
+                /*creep.moveMe(_goal, {
+                                    ignoreRoads: _ignoreRoad,
+                                    reusePath: 49,
+                                    visualizePathStyle: visPath
+                                }); */
             } else if (_goal === null) {
                 var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveMe(goingTo, {

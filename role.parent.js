@@ -347,7 +347,13 @@ class baseParent {
                     });
                     creep.say(badz.length + "b");
                     if (badz.length === 0) {
-                        creep.moveTo(tmp2, task.options);
+                        if (task.energyPickup) {
+                            if (!constr.moveToPickUpEnergyIn(creep, 7)) {
+                                creep.moveTo(tmp2, task.options);
+                            }
+                        } else {
+                            creep.moveTo(tmp2, task.options);
+                        }
                     }
                 } else if (task.energyPickup) {
                     if (!constr.moveToPickUpEnergyIn(creep, 7)) {

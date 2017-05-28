@@ -17,7 +17,7 @@ var _links = [
     // Spawn room E38S72
     '58ffa4eaff28ce410959868a', '5908d7b565640df9183ab7cb', '5908fc066303cfc31b28f48a',
     // Spawn room W4S93
-    '590f55b87ed675bb51e96132', '59217cc320243b65e83790bf', '592359e482194ec1286bee27'
+    '590f55b87ed675bb51e96132', '59217cc320243b65e83790bf', '592a46de7618175a3092fdae'
 ];
 
 function linkTransfer() {
@@ -164,7 +164,7 @@ class buildLink {
         sendEnergy('590f55b87ed675bb51e96132', '590f2337820b9efc44a15794');
         sendEnergy(['59134206c9fe82b849c2c92e', '59217cc320243b65e83790bf'], '590f2337820b9efc44a15794', 700);
 
-        sendEnergy('592359e482194ec1286bee27', '59233b3584aa3b2902f2543e');
+        sendEnergy('592a46de7618175a3092fdae', '59233b3584aa3b2902f2543e');
         sendEnergy('59233b3584aa3b2902f2543e', '590f2337820b9efc44a15794');
 
         //if(total > 0)console.log('Links transfered:'+total);

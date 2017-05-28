@@ -176,8 +176,33 @@ var loaded = Game.time;
 
 //const profiler = require('screeps-profiler');
 //profiler.enable();
+function wrapLoop(fn) {
+    let memory;
+    let tick;
 
-var Console = require('console-commands');
+    return () => {
+        start = Game.cpu.getUsed();
+        if (tick && tick + 1 === Game.time && memory) {
+            delete global.Memory;
+            Memory = memory;
+            console.log('Tick has same GID!');
+        }
+
+        memory = Memory;
+        tick = Game.time;
+        console.log((Game.cpu.getUsed() - start), ' Tick Memory stuff');
+
+        fn();
+
+        // alternatively you can avoid Memory stringify cost with an undocumented functionality
+        // RawMemory._parsed = Memory
+        start = Game.cpu.getUsed();
+        RawMemory.set(JSON.stringify(Memory));
+        console.log((Game.cpu.getUsed() - start), ' zzTick Memory stuff');
+    };
+}
+
+//r Console = require('console-commands');
 
 module.exports.loop = function() {
     //    Console.wrap(function() {
@@ -231,30 +256,30 @@ module.exports.loop = function() {
                 totalSpawn++;
                 Game.spawns[title].memory.segmentID = totalSpawn;
                 tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
-                
-                                if(Game.spawns[title].memory.roomCheck === undefined) { 
-                                    Game.spawns[title].memory.roomCheck = roomCheck;
-                                }
-                               Game.spawns[title].memory.roomCheck--;
 
-                                if(Game.spawns[title].memory.roomCheck < 0){
-                                Game.spawns[title].memory.roomCheck = roomCheck;
+                if (Game.spawns[title].memory.roomCheck === undefined) {
+                    Game.spawns[title].memory.roomCheck = roomCheck;
+                }
+                Game.spawns[title].memory.roomCheck--;
 
-                                for (var name in Game.rooms) { // Start of Room loop w/ spawn
-                                    if (Game.spawns[title].pos.roomName == Game.rooms[name].name) {
-                                        if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
-                                            ccSpawn.homeAnalyzed(Game.rooms[name], Game.spawns[title]);
-                                        }
-                                    } else {
-                                    // See if this room has been analyzed by this spawn. 
-                                    // Analyze Room for this spawn
-                                    if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
-                                        ccSpawn.analyzeRoom(Game.spawns[title], Game.rooms[name]);
-                                    }
-                                }
-                            } // End of room loop. 
+                if (Game.spawns[title].memory.roomCheck < 0) {
+                    Game.spawns[title].memory.roomCheck = roomCheck;
+
+                    for (var name in Game.rooms) { // Start of Room loop w/ spawn
+                        if (Game.spawns[title].pos.roomName == Game.rooms[name].name) {
+                            if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
+                                ccSpawn.homeAnalyzed(Game.rooms[name], Game.spawns[title]);
+                            }
+                        } else {
+                            // See if this room has been analyzed by this spawn. 
+                            // Analyze Room for this spawn
+                            if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
+                                ccSpawn.analyzeRoom(Game.spawns[title], Game.rooms[name]);
+                            }
                         }
-                 
+                    } // End of room loop. 
+                }
+
             }
 
             let anySpawn = false;
@@ -332,17 +357,17 @@ module.exports.loop = function() {
     globalCreep();
     doUpgradeRooms();
 
-/*
-for(var e in Game.constructionSites) {
-	if(Game.constructionSites[e].pos.roomName == 'W4S95'){
-		Game.constructionSites[e].remove();
-	}
-} */
+    /*
+    for(var e in Game.constructionSites) {
+        if(Game.constructionSites[e].pos.roomName == 'W4S95'){
+            Game.constructionSites[e].remove();
+        }
+    } */
 
 
     if (Game.spawns.Spawn1 !== undefined) {
         let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-        console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '****************************' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+        console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
         Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
     }
 

@@ -945,21 +945,30 @@ function spawn1Room(creep) {
         case 0:
 
             let goto = Game.getObjectById('58b4aadfd7bddc4460e23ff7');
-
+            let goto2 = Game.getObjectById('58afd5afe6b54f9d2738d242');
             if (goto !== null && _.sum(goto.store) > 1000) {
                 if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto, {
                         reusePath: 20
                     });
                 }
-            } else {
-                goto = Game.getObjectById('58afd5afe6b54f9d2738d242');
-                if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(goto, {
+            } else if (goto2.energy > 0) {
+
+                if (goto2 !== null && creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(goto2, {
                         reusePath: 20
                     });
                 }
 
+            } else {
+                goto = creep.room.terminal;
+                if (goto !== null && goto.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
+                    if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto, {
+                            reusePath: 20
+                        });
+                    }
+                }
             }
 
             break;

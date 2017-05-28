@@ -87,7 +87,12 @@ class transport extends roleParent {
 
     static levels(level) {
             //            if (level > classLevels.length) level = classLevels.length;
-            return classLevels;
+            if (level === 3) {
+                return [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE, WORK, CARRY, CARRY, MOVE];
+            } else {
+                return classLevels;
+
+            }
         }
         // FIND_DROPPED_ENERGY
     static run(creep) {

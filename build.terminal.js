@@ -111,21 +111,37 @@ function needEnergy(terminal) {
     if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
 
 
-        var highestEnergy;
-        var currentHigh = 0;
-        for (var e in terminals) {
-            let storage = Game.getObjectById(terminals[e]);
-            if (storage.store[RESOURCE_ENERGY] > currentHigh) {
-                highestEnergy = Game.getObjectById(terminals[e]);
-                currentHigh = storage.store[RESOURCE_ENERGY];
-            }
-        }
-        let amount = currentHigh * 0.25;
+        //        var highestEnergy;
+        //        var currentHigh = 0;
+        /*        for (var e in terminals) {
+                    let storage = Game.getObjectById(terminals[e]);
+                    if (storage.store[RESOURCE_ENERGY] > currentHigh) {
+                        highestEnergy = Game.getObjectById(terminals[e]);
+                        currentHigh = storage.store[RESOURCE_ENERGY];
+                    }
+                } */
+        //        let amount = currentHigh * 0.25;
         //        console.log(highestEnergy, currentHigh, RESOURCE_ENERGY, amount, terminal.room.name);
         //        let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
+        if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
+            //                let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01 , 1000000, terminal.room.name);
+            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
+        } else {
+            console.log('this room has Order for it');
+        }
+        //      console.log('This terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:');
 
-        console.log('This terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:');
+    }
 
+    if (terminal.room.terminal.store[RESOURCE_POWER] > 45000) {
+
+        let amount = getAverageMineralPrice(RESOURCE_POWER, false);
+        if (amount !== undefined) {
+            if (!anyLikeOrder(RESOURCE_POWER, terminal.room.name)) {
+                let qq = Game.market.createOrder(ORDER_SELL, RESOURCE_POWER, amount, 40000, terminal.room.name);
+                console.log(ORDER_SELL, RESOURCE_POWER, amount, 45000, terminal.room.name, 'current average price for power', qq);
+            }
+        }
     }
 }
 
@@ -203,6 +219,7 @@ function orderExist(resource, room, sellingPoint) {
             return true;
         }
     }
+
     for (var e in Game.market.orders) {
         let order = Game.market.orders[e];
         if (Memory.termReport) console.log(order.resourceType, resource, order.roomName, room, sellingPoint, order.price);
@@ -216,6 +233,10 @@ function anyLikeOrder(resource, room) {
         let order = Game.market.orders[e];
         if (order.resourceType == resource && order.roomName == room) return true;
     }
+    /*let zz = _.filter(Game.market.orders,function(order){return(order.resourceType == resource && order.roomName == room);});
+    if(zz.length > 0) {
+        return true;
+    }*/
     return false;
 
 }
@@ -363,6 +384,36 @@ function getMinerals(terminal, needed) {
     }
 }
 
+function getAverageMineralPrice(resource, buy) {
+    if (buy === undefined) buy = true;
+    console.log((buy ? "buy" : "sell"), buy, (false ? "buy" : "sell"));
+    /*    let zz = _.filter(Game.market.orders, function(o) {
+            return o.type == (buy ? ORDER_BUY : ORDER_SELL) && o.resourceType == resource && o.active === true;
+        }); */
+    //    console.log(e,'less than 25000',Memory.totalMinerals[e],zz.length);
+    //    if (zz.length === 0) {
+    var amount;
+    let zz = Game.market.getAllOrders({ type: (buy ? ORDER_BUY : ORDER_SELL), resourceType: resource });
+    zz.sort((a, b) => a.price - b.price);
+    let bb = 0;
+    if (buy) {
+        bb += zz[zz.length - 1].price;
+        bb += zz[zz.length - 2].price;
+        bb += zz[zz.length - 3].price;
+        bb += zz[zz.length - 4].price;
+    } else {
+        bb += zz[1].price;
+        bb += zz[2].price;
+        bb += zz[3].price;
+        bb += zz[0].price;
+    }
+
+    amount = (bb / 4);
+    return amount;
+    //  }
+
+}
+
 function makeMineralOrder() {
     var minMinerals = {
         'U': 25000,
@@ -375,21 +426,8 @@ function makeMineralOrder() {
     };
     for (var e in minMinerals) {
         if (Memory.totalMinerals[e] < 25000) {
-            let zz = _.filter(Game.market.orders, function(o) {
-                return o.type == "buy" && o.resourceType == e && o.active === true;
-            });
-            //    console.log(e,'less than 25000',Memory.totalMinerals[e],zz.length);
-            if (zz.length === 0) {
-                var amount;
-                let zz = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: e });
-                zz.sort((a, b) => a.price - b.price);
-                let bb = 0;
-                bb += zz[zz.length - 1].price;
-                bb += zz[zz.length - 2].price;
-                bb += zz[zz.length - 3].price;
-                bb += zz[zz.length - 4].price;
-                amount = (bb / 4);
-                //bb = Math.floor( bb / 5 );
+            amount = getAverageMineralPrice(e, true);
+            if (amount !== undefined) {
                 let qq = Game.market.createOrder(ORDER_BUY, e, amount, 50000, "E28S71");
                 console.log('Created Buy Order for ', e, 'amount:', amount, qq);
             }

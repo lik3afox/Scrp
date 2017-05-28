@@ -143,7 +143,8 @@ class settler extends roleParent {
         if (super.returnEnergy(creep)) return;
         if (movement.runAway(creep)) return;
         if (super.keeperWatch(creep)) {
-            return; }
+            return;
+        }
 
 
         var _source = Game.getObjectById(creep.memory.goal);
@@ -177,7 +178,7 @@ class settler extends roleParent {
             }
 
             let contain = Game.getObjectById(creep.memory.workContainer);
-            if (contain === null || (contain !== null && _source.energy !== 0 && _.sum(contain.store) < contain.storeCapacity)) {
+            if (contain === null || (contain !== null && _source.energy !== 0 && contain.total < contain.storeCapacity)) {
                 //            if(!creep.pos.isEqualTo(contain.pos)) {
                 //                  creep.moveTo(contain.pos);
                 //                } else {
@@ -197,6 +198,13 @@ class settler extends roleParent {
                 }
                 //          }
 
+            } else if (contain !== null && contain.total === contain.storeCapacity && contain.hits < contain.hitsMax) {
+                if (creep.carry[RESOURCE_ENERGY] < 20) {
+                    creep.harvest(_source);
+                } else {
+                    creep.repair(contain);
+                }
+                creep.say('rp');
             } else if (_source.energy !== 0 && contain === undefined) {
                 if (creep.harvest(_source) == OK) {
                     if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {
@@ -207,6 +215,16 @@ class settler extends roleParent {
                 }
 
             } else if (_source.energy === undefined || _source.energy === 0) {
+
+                if (contain.hits < contain.hitsMax) {
+                    creep.repair(contain);
+                    if (creep.carry[RESOURCE_ENERGY] < 20 && contain.store[RESOURCE_ENERGY] > 20) {
+                        creep.withdraw(contain, RESOURCE_ENERGY);
+                    }
+                } else {
+                    creep.say('zZzZ');
+                }
+            } else {
                 creep.say('zZzZ');
             }
 
