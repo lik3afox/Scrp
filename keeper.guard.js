@@ -175,7 +175,10 @@ function moveCreep(creep) {
     if (creep.memory.goTo === undefined) {
         creep.memory.goTo = analyzeSourceKeeper(creep);
     }
-
+    if (creep.memory.keeperLair[creep.memory.goTo] === undefined) {
+        //        creep.memory.goTo = undefined;
+        return false;
+    }
     let gota = Game.getObjectById(creep.memory.keeperLair[creep.memory.goTo].id);
     let inRange = creep.pos.getRangeTo(gota);
     if (inRange < 4 && gota.ticksToSpawn > 200) {

@@ -174,38 +174,22 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
 }
 var loaded = Game.time;
 
-//const profiler = require('screeps-profiler');
-//profiler.enable();
-function wrapLoop(fn) {
+function blackMagic(fn) {
     let memory;
     let tick;
-
     return () => {
-        start = Game.cpu.getUsed();
         if (tick && tick + 1 === Game.time && memory) {
             delete global.Memory;
             Memory = memory;
-            console.log('Tick has same GID!');
         }
-
         memory = Memory;
         tick = Game.time;
-        console.log((Game.cpu.getUsed() - start), ' Tick Memory stuff');
-
         fn();
-
-        // alternatively you can avoid Memory stringify cost with an undocumented functionality
-        // RawMemory._parsed = Memory
-        start = Game.cpu.getUsed();
-        RawMemory.set(JSON.stringify(Memory));
-        console.log((Game.cpu.getUsed() - start), ' zzTick Memory stuff');
+        RawMemory._parsed = Memory;
     };
 }
 
-//r Console = require('console-commands');
-
-module.exports.loop = function() {
-    //    Console.wrap(function() {
+module.exports.loop = blackMagic(function() {
     var start = Game.cpu.getUsed();
 
     //profiler.wrap(function() {
@@ -371,4 +355,4 @@ module.exports.loop = function() {
         Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
     }
 
-};
+});

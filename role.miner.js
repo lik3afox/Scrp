@@ -152,7 +152,7 @@ class settler extends roleParent {
         if (_source !== null && (_source.pos.roomName != creep.room.name)) creep.memory.distance++;
 
         if (creep.pos.isNearTo(_source)) {
-            if (_.sum(creep.carry) >= creep.carryCapacity - 15) {
+            if (_.sum(creep.carry) >= creep.carryCapacity - 15 && _source.energy !== 0) {
                 if (creep.memory.workContainer === undefined) {
                     let range = 7;
                     if (creep.room.name == 'E27S74') range = 2;

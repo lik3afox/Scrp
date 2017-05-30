@@ -19,7 +19,7 @@ let basic = [
 ];
 var terminals = ['58b0bd65ad252479508f2eab', '58b31b469e8b37461c88d6f3', '58e174a1be34d67531319d7f', '58e2633bd12e106302dce492',
     '58b1cbbd08b3b7bd61139e14', '58bb4e55942e459e3151f9b6', '58bf37b77dfb1e2f42591b87', '58bfb95f87bda510020bb080', '58c48f1b119a7dfa3b53525d',
-    '58f81a437684166367608336', '5902420f523e1c2d5ca6114a', '591365a95128141e7200c235'
+    '58f81a437684166367608336', '5902420f523e1c2d5ca6114a', '591365a95128141e7200c235', '592c8d47cc8d322372c51e45'
 ];
 
 // If you need to focus all minerals somewhere change it here.
@@ -108,28 +108,28 @@ function shareEnergy(terminal) {
 
 function needEnergy(terminal) {
     //   console(terminal.room.storage.store[RESOURCE_ENERGY]);
+    if (terminal.room.name == 'E33S76') return;
     if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
-
-
-        //        var highestEnergy;
-        //        var currentHigh = 0;
-        /*        for (var e in terminals) {
-                    let storage = Game.getObjectById(terminals[e]);
-                    if (storage.store[RESOURCE_ENERGY] > currentHigh) {
-                        highestEnergy = Game.getObjectById(terminals[e]);
-                        currentHigh = storage.store[RESOURCE_ENERGY];
-                    }
-                } */
-        //        let amount = currentHigh * 0.25;
-        //        console.log(highestEnergy, currentHigh, RESOURCE_ENERGY, amount, terminal.room.name);
-        //        let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
         if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
-            //                let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01 , 1000000, terminal.room.name);
+            let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
             console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
         } else {
-            console.log('this room has Order for it');
+
+            var highestEnergy;
+            var currentHigh = 0;
+            for (var e in terminals) {
+                let storage = Game.getObjectById(terminals[e]);
+                if (storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name) {
+                    highestEnergy = Game.getObjectById(terminals[e]);
+                    currentHigh = storage.store[RESOURCE_ENERGY];
+                }
+            }
+            let amount = currentHigh * 0.25;
+            console.log(highestEnergy, currentHigh, RESOURCE_ENERGY, amount, terminal.room.name);
+            let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
+            console.log('This terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:', zz);
+            //    console.log('this room has Order for it');
         }
-        //      console.log('This terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:');
 
     }
 
@@ -179,8 +179,8 @@ function tradeEnergy(terminal) {
         trans = trans * 0.5;
     }
 
-    console.log('profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost));
     let whatHappened = Game.market.deal(target.id, trans, targetRoom);
+    console.log(whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost));
 
     if (Memory.sellingHistory === undefined) { Memory.sellingHistory = []; }
 

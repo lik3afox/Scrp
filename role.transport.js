@@ -72,6 +72,7 @@ function getBads(creep) {
     });
     return bads;
 }
+var link = require('build.link');
 
 class transport extends roleParent {
     static rebuildMe(creep) {
@@ -95,7 +96,6 @@ class transport extends roleParent {
         super.rebirth(creep);
         super.calcuateStats(creep);
 
-        var link = require('build.link');
         let total = _.sum(creep.carry);
 
         if (link.stayDeposit(creep)) {
@@ -263,6 +263,7 @@ class transport extends roleParent {
 
 
                 task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+                if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
                 task.energyPickup = true;
                 task.rangeHappy = rng;
                 creep.memory.task.push(task);

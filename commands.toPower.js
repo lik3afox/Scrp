@@ -214,7 +214,8 @@ class PowerInteract {
             let numOfcreep = Math.ceil(carryNeeded / 25);
             //     console.log (numOfcreep,"creeps with ",carryNeeded*.5 , "# of parts needed");
             //get spawnID - find the creeps around powerB
-            let creep = powerB.pos.findInRange(FIND_MY_CREEPS, 1);
+            let creep = powerB.pos.findInRange(FIND_MY_CREEPS, 2);
+            if (creep.length === 0) return;
             let spawnID = creep[0].memory.parent;
             let dist = Game.map.getRoomLinearDistance(powerB.room.name, creep[0].memory.home);
             let spawn = require('commands.toSpawn');

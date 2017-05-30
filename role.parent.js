@@ -154,6 +154,7 @@ class baseParent {
 
     static calcuateStats(creep) {
         if (creep.memory.stats !== undefined) return;
+
         let wParts = _.filter(creep.body, { type: WORK }).length;
         let mParts = _.filter(creep.body, { type: MOVE }).length;
         let hParts = _.filter(creep.body, { type: HEAL }).length;
@@ -162,6 +163,7 @@ class baseParent {
         let cParts = _.filter(creep.body, { type: CARRY }).length;
         let cost = getCost(creep.body);
         let stats = {
+            //            birthTime: Game.time
             work: wParts,
             heal: hParts,
             carry: cParts,
@@ -345,7 +347,6 @@ class baseParent {
                     badz = _.filter(badz, function(object) {
                         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
                     });
-                    creep.say(badz.length + "b");
                     if (badz.length === 0) {
                         if (task.energyPickup) {
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
@@ -368,6 +369,8 @@ class baseParent {
                         orderComplete = true;
                     }
                 } else if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
+                    orderComplete = true;
+                } else if (task.energyPickup && creep.carryTotal == creep.carryCapacity) {
                     orderComplete = true;
                 }
                 break;
@@ -486,7 +489,7 @@ class baseParent {
 
         }
         if (orderComplete) {
-            console.log(creep, 'task completed', task.order, task.options, creep.pos);
+            //            console.log(creep, 'task completed', task.order, task.options, creep.pos);
             let zz = creep.memory.task.shift();
             if (task.repeat) {
                 creep.memory.task.push(zz);

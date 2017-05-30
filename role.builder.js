@@ -40,7 +40,8 @@ class roleBuilder extends roleParent {
         }
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         //if(creep.room.name == 'E35S83')
         //          if(super.boosted(creep,['XLH2O'])) { return;}
@@ -62,16 +63,16 @@ class roleBuilder extends roleParent {
                 containers.withdrawFromTerminal(creep);
             } else {
                 //            containers.fromContainer(creep)
-                if (!constr.moveToPickUpEnergy(creep, 100)) {
-                    if (!containers.withdrawFromStorage(creep)) {
-                        //                if(!containers.withdrawFromStorage(creep)) {
+                //                if (!constr.moveToPickUpEnergy(creep, 100)) {
+                if (!containers.withdrawFromStorage(creep)) {
+                    //                if(!containers.withdrawFromStorage(creep)) {
 
 
-                        if (!containers.moveToWithdraw(creep)) {
-                            sources.moveToWithdraw(creep);
-                        }
+                    if (!containers.moveToWithdraw(creep)) {
+                        sources.moveToWithdraw(creep);
                     }
                 }
+                //              }
 
             }
         }

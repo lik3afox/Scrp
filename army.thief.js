@@ -123,10 +123,10 @@ class thiefClass extends roleParent {
         }
         if (creep.memory.home == creep.room.name && _.sum(creep.carry) > 0) {
             // Find Minearls.
-            if (creep.room.terminal !== undefined) {
-                contain.moveToTerminal(creep);
-            } else if (creep.room.storage !== undefined) {
+            if (creep.room.storage !== undefined) {
                 contain.moveToStorage(creep);
+            } else if (creep.room.terminal !== undefined) {
+                contain.moveToTerminal(creep);
             } else {
                 let par = Game.getObjectById(creep.memory.parent);
                 if (creep.pos.isNearTo(par)) {

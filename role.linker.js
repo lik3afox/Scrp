@@ -123,6 +123,21 @@ function E33S76Room(creep) {
     let goto;
     switch (creep.memory.roleID) {
         case 0:
+            /*
+                        let zz = creep.room.find(FIND_STRUCTURES);
+                        zz = _.filter(zz, o => o.structureType == STRUCTURE_LAB && o.energy > 0 && o.mineralAmount > 0);
+                        creep.say(zz.length);
+                        if (zz.length > 0) {
+                            if (creep.pos.isNearTo(zz[0])) {
+                                if (zz[0].energy > 0) {
+                                    creep.withdraw(zz[0], RESOURCE_ENERGY);
+                                } else {
+                                    creep.withdraw(zz[0], zz[0].mineralType);
+                                }
+                            } else {
+                                creep.moveTo(zz[0]);
+                            }
+                        } */
             goto = creep.room.storage;
             //             require('commands.toStructure').pickUpEnergy(creep);
             if (goto !== undefined && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -162,6 +177,14 @@ function E33S76Transfer(creep) {
     switch (creep.memory.roleID) {
         case 0:
             goto = Game.getObjectById('5924524129c65d152e19c40c');
+            if (goto !== null && creep.transfer(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+        case 2:
+            goto = Game.getObjectById('59243d3f403da5a97dea664a');
             if (goto !== null && creep.transfer(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(goto, {
                     reusePath: 20 //,ignoreCreeps:true

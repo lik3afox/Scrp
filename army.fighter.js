@@ -187,8 +187,18 @@ class fighterClass extends roleParent {
         }
 
         //   if(super.boosted(creep,boost)) { return;}
-
+        var enemy;
         if (super.isPowerParty(creep)) {
+            if (creep.room.name == 'E34S80') {
+                enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3, {
+                    filter: object => (object.owner.username != 'NobodysNightmare' && object.owner.username != 'admon' && object.owner.username != 'lolzor')
+                });
+                if (enemy.length > 0) {
+                    enemy = creep.pos.findClosestByRange(enemy);
+                    creep.attack(enemy);
+                }
+            }
+
             creep.memory.waypoint = true;
             if (creep.ticksToLive == 500) {
                 creep.memory.parent = returnClosestSpawn(creep.room.name).id;
@@ -204,7 +214,7 @@ class fighterClass extends roleParent {
             }
         }
 
-        var enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3, {
+        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3, {
             filter: object => (object.owner.username != 'NobodysNightmare' && object.owner.username != 'admon' && object.owner.username != 'lolzor')
         });
 

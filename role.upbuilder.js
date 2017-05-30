@@ -139,11 +139,13 @@ class roleUpbuilder extends roleParent {
             creep.memory.wallTargetID = undefined;
             if (creep.room.name == 'E35S83' || creep.room.name == 'E28S73') {
                 super._containers.withdrawFromTerminal(creep);
-            }else if(creep.room.name == 'E33S76') {
+            } else if (creep.room.name == 'E33S76') {
                 let link = Game.getObjectById('59243d3f403da5a97dea664a');
                 if (link !== null && link.energy !== 0) {
                     if (creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         creep.moveTo(link);
+                } else {
+                    creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
                 }
             } else if (creep.room.name == 'E29S79') {
                 let link = Game.getObjectById('58d5773ea599843615337062');
