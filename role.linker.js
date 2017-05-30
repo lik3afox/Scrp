@@ -166,7 +166,7 @@ function E33S76Room(creep) {
 
 function E33S76Transfer(creep) {
     switch (creep.memory.roleID) {
-        case 0:
+        case 3:
             goto = Game.getObjectById('5924524129c65d152e19c40c');
             if (goto !== null && creep.transfer(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(goto, {
