@@ -40,11 +40,13 @@ class mineralRole extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
         memoryCheck(creep);
 
         if (super.returnEnergy(creep)) {
-            return; }
+            return;
+        }
         let minz = Game.getObjectById(creep.memory.mineralID);
         if (minz === null) return;
         let carry = _.sum(creep.carry);
@@ -74,7 +76,8 @@ class mineralRole extends roleParent {
                     if (creep.memory.mineralContainID === undefined) {
                         let stru = creep.pos.findInRange(FIND_STRUCTURES, 5);
                         stru = _.filter(stru, function(o) {
-                            return o.structureType == STRUCTURE_CONTAINER; });
+                            return o.structureType == STRUCTURE_CONTAINER;
+                        });
                         if (stru.length !== 0) {
                             creep.memory.mineralContainID = stru[0].id;
                         } else {
@@ -94,8 +97,12 @@ class mineralRole extends roleParent {
             //if(creep.memory.mineralContainID != undefined && creep.memory.mineralContainID != 'none') 
             let contain = Game.getObjectById(creep.memory.mineralContainID);
             if (contain === null || contain === undefined) {
-                if (!labsBuild.transferToTerminal(creep)) {
+                if (creep.room.name == 'E33S76') {
                     super._containers.moveToStorage(creep);
+                } else {
+                    if (!labsBuild.transferToTerminal(creep)) {
+                        super._containers.moveToStorage(creep);
+                    }
                 }
             } else {
                 let containTotal = _.sum(contain.store);
