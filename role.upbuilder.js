@@ -87,6 +87,16 @@ function rampartDefense(creep) {
     return true;
 }
 
+function getSpot(roomName) {
+    switch (roomName) {
+        case "E38S72":
+            return new RoomPosition(36, 34, roomName);
+        default:
+            return;
+    }
+
+}
+
 //var boost =['XGH2O'];
 class roleUpbuilder extends roleParent {
 
@@ -96,12 +106,15 @@ class roleUpbuilder extends roleParent {
         return classLevels[level];
     }
 
-
     /** @param {Creep} creep **/
     static run(creep) {
         if (creep.saying == '⚡' && creep.carry.energy > 51) {
             creep.upgradeController(creep.room.controller);
             creep.say('⚡', true);
+            let spot = getSpot(creep.room.name);
+            if (spot !== undefined && !creep.pos.isEqualTo(spot)) {
+                creep.moveTo(spot);
+            }
             return;
         }
         if (super.returnEnergy(creep)) {

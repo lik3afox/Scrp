@@ -528,7 +528,7 @@ class roleTerminal {
             }
             needEnergy(terminal);
 
-            if (zz > 299000) {
+            if (zz > 299000 && terminal.room.name != 'E33S76') {
                 if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
                     if (!shareEnergy(terminal)) { // Moves energy around
                         if (Memory.terminalTarget !== undefined && Memory.terminalTarget != 'none') {

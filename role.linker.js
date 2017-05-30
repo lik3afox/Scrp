@@ -122,7 +122,7 @@ function eitherOr(creep, containz1, containz2) {
 function E33S76Room(creep) {
     let goto;
     switch (creep.memory.roleID) {
-        case 0:
+        case 1:
             /*
                         let zz = creep.room.find(FIND_STRUCTURES);
                         zz = _.filter(zz, o => o.structureType == STRUCTURE_LAB && o.energy > 0 && o.mineralAmount > 0);
@@ -146,17 +146,8 @@ function E33S76Room(creep) {
                 });
             }
             break;
-        case 2:
-            goto = Game.getObjectById('5924a3500a32dfe841c629e1');
-            //             require('commands.toStructure').pickUpEnergy(creep);
-            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(goto, {
-                    reusePath: 20 //,ignoreCreeps:true
-                });
-            }
-            break;
-        case 1:
 
+        case 0:
             goto = Game.getObjectById('5924991d4048d6d526242979');
             //             require('commands.toStructure').pickUpEnergy(creep);
             if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
