@@ -40,7 +40,7 @@ function powerAction(creep) {
     var power = require('commands.toPower');
 
     if (Game.flags[creep.memory.party] !== undefined) {
-        if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].room.name) {
+        if (Game.flags[creep.memory.party].room !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party].room.name, 5)) {
             if (creep.memory.powerbankID === undefined) {
                 let vv = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
                 if (vv.length > 0) {
@@ -77,7 +77,7 @@ function powerAction(creep) {
 
             let task = {};
             task.options = {
-                reusePath: 49
+                reusePath: 100
             };
             task.pos = Game.flags[creep.memory.party].pos;
             task.order = "moveTo";

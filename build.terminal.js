@@ -427,7 +427,7 @@ function makeMineralOrder() {
     for (var e in minMinerals) {
         if (Memory.totalMinerals[e] < 25000) {
             amount = getAverageMineralPrice(e, true);
-            if (amount !== undefined) {
+            if (amount !== undefined && !anyLikeOrder(e, "E28S71")) {
                 let qq = Game.market.createOrder(ORDER_BUY, e, amount, 50000, "E28S71");
                 console.log('Created Buy Order for ', e, 'amount:', amount, qq);
             }

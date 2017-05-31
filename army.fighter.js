@@ -152,7 +152,7 @@ function powerAction(creep) {
             movement.flagMovement(creep);
             let task = {};
             task.options = {
-                reusePath: 49
+                reusePath: 100
             };
             task.pos = Game.flags[creep.memory.party].pos;
             task.order = "moveTo";

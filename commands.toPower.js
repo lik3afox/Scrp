@@ -89,13 +89,18 @@ class PowerInteract {
             }
         }
 
-        if (closeFlag === undefined) return false;
+        if (closeFlag === undefined || closeFlag.room === undefined) return false;
 
-        console.log(creep, "Has switched to new party", closeFlag.name, 'from', creep.memory.party);
-        creep.memory.party = closeFlag.name;
-        creep.memory.reportDeath = true;
-        creep.memory.powerbankID = undefined;
-        return true;
+        let find = closeFlag.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
+
+        if (find.length > 0) {
+            console.log(creep, "Has switched to new party", closeFlag.name, 'from', creep.memory.party);
+            creep.memory.party = closeFlag.name;
+            creep.memory.reportDeath = true;
+            creep.memory.powerbankID = undefined;
+            return true;
+        }
+
 
     }
 

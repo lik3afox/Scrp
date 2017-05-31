@@ -90,7 +90,7 @@ class mineralRole extends roleParent {
 
         // He's not in 5 spaces of his goal. so he needs to move there. 
         if (creep.memory.goHome) {
-            if (cree.room.name == 'E33S76') {
+            if (creep.room.name == 'E33S76') {
                 if (creep.pos.isNearTo(creep.room.storage)) {
                     for (var e in creep.carry) {
                         creep.transfer(creep.room.storage, e);

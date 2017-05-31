@@ -57,7 +57,7 @@ function powerAction(creep) {
 
         } else {
             if (Game.flags[creep.memory.party] !== undefined) {
-                creep.say(creep.moveMe(Game.flags[creep.memory.party]));
+                creep.moveMe(Game.flags[creep.memory.party], { reusePath: 100 });
             } else {
                 creep.memory.death = true;
 
@@ -76,7 +76,7 @@ function powerAction(creep) {
                 creep.moveTo(creep.room.terminal, { reusePath: 20 });
             }
         } else {
-            creep.moveMe(Game.getObjectById(creep.memory.parent), { reusePath: 30 });
+            creep.moveMe(Game.getObjectById(creep.memory.parent).room.terminal, { reusePath: 100 });
         }
     }
     return true;

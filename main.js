@@ -15,6 +15,7 @@ var power = require('commands.toPower');
 var labs = require('build.labs');
 var market = require('build.terminal');
 var allModule = require('allModule');
+var stats = require('stats.screepsplus');
 
 var prototypes = [
     require('prototype.creeps')
@@ -340,7 +341,9 @@ module.exports.loop = blackMagic(function() {
     power.run();
     globalCreep();
     doUpgradeRooms();
-
+    //    start = Game.cpu.getUsed();
+    //    stats.collect_stats();
+    //    console.log(start - Game.cpu.getUsed());
     /*
     for(var e in Game.constructionSites) {
         if(Game.constructionSites[e].pos.roomName == 'W4S95'){
