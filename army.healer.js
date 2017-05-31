@@ -40,7 +40,7 @@ function powerAction(creep) {
     var power = require('commands.toPower');
 
     if (Game.flags[creep.memory.party] !== undefined) {
-        if (Game.flags[creep.memory.party].room !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party].room.name, 5)) {
+        if (Game.flags[creep.memory.party].room !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party], 5)) {
             if (creep.memory.powerbankID === undefined) {
                 let vv = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
                 if (vv.length > 0) {
@@ -65,10 +65,6 @@ function powerAction(creep) {
             if (creep.pos.inRangeTo(pBank, 6)) {
                 creep.memory.notThere = true;
                 creep.healOther(7);
-                return true;
-            } else {
-                creep.healOther(7);
-                movement.flagMovement(creep);
             }
         } else {
             creep.healOther(7);
