@@ -15,7 +15,6 @@ var power = require('commands.toPower');
 var labs = require('build.labs');
 var market = require('build.terminal');
 var allModule = require('allModule');
-var stats = require('stats.screepsplus');
 
 var prototypes = [
     require('prototype.creeps')
@@ -347,7 +346,34 @@ module.exports.loop = blackMagic(function() {
         if (Memory.statsCounter <= 0) {
             Memory.statsCounter = 3;
         }*/
-    stats.collect_stats();
+    // Don't overwrite things if other modules are putting stuff into Memory.stats
+    if (Memory.stats === undefined) {
+        Memory.stats = { tick: Game.time };
+    }
+
+    // Note: This is fragile and will change if the Game.cpu API changes
+    Memory.stats.cpu = Game.cpu;
+    Memory.stats.cpu.used = Game.cpu.getUsed(); // AT END OF MAIN LOOP
+
+    Memory.stats.powerProcssed = Memory.totalPowerProcessed;
+    Memory.stats.creepTotal = Memory.creepTotal;
+
+    // Note: This is fragile and will change if the Game.gcl API changes
+    Memory.stats.gcl = Game.gcl;
+
+    const memory_used = RawMemory.get().length;
+    // console.log('Memory used: ' + memory_used);
+    Memory.stats.memory = {
+        used: memory_used,
+        // Other memory stats here?
+    };
+
+    Memory.stats.market = {
+        credits: Game.market.credits
+            //        num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
+    };
+
+    //    stats.collect_stats();
     console.log(start - Game.cpu.getUsed());
     /*
     for(var e in Game.constructionSites) {
@@ -355,7 +381,6 @@ module.exports.loop = blackMagic(function() {
             Game.constructionSites[e].remove();
         }
     } */
-
 
     if (Game.spawns.Spawn1 !== undefined) {
         let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
