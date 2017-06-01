@@ -341,9 +341,14 @@ module.exports.loop = blackMagic(function() {
     power.run();
     globalCreep();
     doUpgradeRooms();
-    //    start = Game.cpu.getUsed();
-    //    stats.collect_stats();
-    //    console.log(start - Game.cpu.getUsed());
+    start = Game.cpu.getUsed();
+    /*    if (Memory.statsCounter === undefined) Memory.marketRunCounter = 10;
+        Memory.marketRunCounter--;
+        if (Memory.statsCounter <= 0) {
+            Memory.statsCounter = 3;
+        }*/
+    stats.collect_stats();
+    console.log(start - Game.cpu.getUsed());
     /*
     for(var e in Game.constructionSites) {
         if(Game.constructionSites[e].pos.roomName == 'W4S95'){

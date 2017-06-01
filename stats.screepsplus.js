@@ -21,15 +21,6 @@
 // for every room you can see.
 
 const resources = require('stats.resources');
-const cb = require('stats.callback');
-
-global.stats_callbacks = new cb.Callback();
-
-// Tell us that you want a callback when we're collecting the stats.
-// We will send you in the partially completed stats object.
-function add_stats_callback(cbfunc) {
-    global.stats_callbacks.subscribe(cbfunc);
-}
 
 
 // Update the Memory.stats with useful information for trend analysis and graphing.
@@ -60,14 +51,9 @@ function collect_stats() {
         num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
     };
 
-    Memory.stats.roomSummary = resources.summarize_rooms();
-
-    // Add callback functions which we can call to add additional
-    // statistics to here, and have a way to register them.
-    global.stats_callbacks.fire(Memory.stats);
+    //    Memory.stats.roomSummary = resources.summarize_rooms();
 }
 
 module.exports = {
     collect_stats,
-    add_stats_callback,
 };
