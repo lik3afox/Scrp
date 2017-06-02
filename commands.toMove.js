@@ -646,7 +646,7 @@ class MoveInteract {
             creep.say(maxDistance);
             if (distance <= maxDistance) {
                 let zz = new RoomPosition(flagz[e].pos.x, flagz[e].pos.y, flagz[e].pos.roomName);
-                let xx = creep.moveTo(zz, { reusePath: 20 });
+                let xx = creep.moveTo(zz, { reusePath: 40 });
                 //console.log(xx,flagz[e].pos.x,flagz[e].pos.y,flagz[e].pos.roomName ,maxDistance);
                 creep.say(maxDistance + '/D!' + flagz[e].pos.roomName);
                 //        targetFlag;
@@ -713,7 +713,7 @@ class MoveInteract {
                 creep.say('🏃');
                 let zz = new RoomPosition(creep.memory.runTarget.x, creep.memory.runTarget.y, creep.memory.runTarget.roomName);
                 if( creep.moveTo(zz,{reusePath:50}) == OK){
-                    if(creep.pos.isRangeTo(zz,3) ) {
+                    if(creep.pos.inRangeTo(zz,3) ) {
                         creep.say('zZzZ');
                     }
                 }
