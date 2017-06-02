@@ -708,10 +708,15 @@ class MoveInteract {
             if (creep.memory.role == 'miner') creep.dropEverything();
             if (creep.memory.runTarget === undefined) {
                 getRetreatFlag(creep);
-                creep.moveTo(creep.memory.runTarget);
+                creep.moveTo(creep.memory.runTarget,{reusePath:50});
             } else {
                 creep.say('🏃');
-                creep.moveTo(new RoomPosition(creep.memory.runTarget.x, creep.memory.runTarget.y, creep.memory.runTarget.roomName));
+                let zz = new RoomPosition(creep.memory.runTarget.x, creep.memory.runTarget.y, creep.memory.runTarget.roomName);
+                if( creep.moveTo(zz,{reusePath:50}) == OK){
+                    if(creep.pos.isRangeTo(zz,3) ) {
+                        creep.say('zZzZ');
+                    }
+                }
             }
 
             if (Game.flags[creep.memory.runFrom] === undefined) {

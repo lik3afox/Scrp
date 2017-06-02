@@ -62,7 +62,7 @@ module.exports = function() {
     Room.prototype.dropped = function() {
         var dEnergy;
         if (this.memory.hostileID === undefined || this.memory.droppedScanTimer != Game.time) {
-            dEnergy = this.find(FIND_DROPPED_ENERGY);
+            dEnergy = this.find(FIND_DROPPED_RESOURCES);
             let badArray = [];
             for (var e in dEnergy) {
                 let zz = dEnergy[e];
