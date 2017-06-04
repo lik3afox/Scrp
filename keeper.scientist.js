@@ -81,6 +81,13 @@ class mineralRole extends roleParent {
         }
 
         var _goal = movement.getRoomPos(creep.memory.goal);
+        let min = Game.getObjectById(creep.memory.goal);
+        if (creep.room.name == 'W5S94') {
+            console.log(min, min !== null ? min.mineralAmount : 0, carry);
+        }
+        if (min !== null && min.mineralAmount === 0 && carry === 0) {
+            creep.memory.death = true;
+        }
 
         if (creep.room.name == _goal.roomName && super.keeperWatch(creep)) { // two parter - keeperFind happens when
             return;

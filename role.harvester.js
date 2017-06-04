@@ -46,7 +46,7 @@ function moveToWithdraw(creep) {
             let rando = Math.floor(Math.random() * total.length);
             creep.memory.sourceID = total[rando].id;
         }
-        source = Game.getObjectById(creep.memory.sourceID);
+        source = total[rando];
     }
 
     if (creep.pos.isNearTo(source)) {
@@ -62,11 +62,46 @@ function moveToWithdraw(creep) {
     } else {
         creep.moveMe(source);
         creep.memory.distance++;
+        return false;
     }
 
     return true;
 }
 
+function depositSpawn(creep) {
+    if (creep.memory.renewSpawnID !== undefined) {
+        let spawnz = Game.getObjectById(creep.memory.renewSpawnID);
+        if (spawnz !== null && spawnz.energy < spawnz.energyCapacity - creep.stats.carry) {
+            creep.transfer(spawnz, RESOURCE_ENERGY);
+            return true;
+        }
+    }
+    return false;
+}
+
+function depositContain(creep) {
+    var conta;
+    if (creep.room.name == 'E29S79') console.log(creep.memory.containerID);
+    if (creep.memory.containerID === undefined) {
+        let contain = creep.pos.findInRange(FIND_STRUCTURES, 1, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_CONTAINER);
+            }
+        });
+        if (contain.length !== 0) {
+            creep.memory.containerID = contain[0].id;
+            conta = contain[0];
+        }
+    }
+    if (conta === undefined) conta = Game.getObjectById(creep.memory.containerID);
+    if (conta !== null) {
+        creep.transfer(conta, RESOURCE_ENERGY);
+        return true;
+    } else {
+        return false;
+    }
+
+}
 
 class roleHarvester extends roleParent {
 
@@ -81,11 +116,9 @@ class roleHarvester extends roleParent {
 
     static run(creep) {
         super.calcuateStats(creep);
-        //        if(creep.memory.needBoost!= undefined && creep.memory.needBoost.length > 0) {
-        //            creep.say('mod');
-        //            if(super.boosted(creep,creep.memory.needBoost)) { return;}
-        //        }
-        creep.pickUpEnergy();
+
+        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
+            creep.pickUpEnergy();
 
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
@@ -93,23 +126,15 @@ class roleHarvester extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
-        //        if (super.depositNonEnergy(creep)) return;
         if (creep.memory.level > 1) super.renew(creep);
-        if (creep.room.name == 'E38S72') constr.pickUpEnergy(creep);
-        // Logic paths
-        //        if (!creep.memory.isThere) creep.memory.distance++;
-
 
         if (creep.carry.energy == creep.carryCapacity) {
-            let spawnz = Game.getObjectById(creep.memory.renewSpawnID);
-            if (spawnz !== null && spawnz.energy < spawnz.energyCapacity) {
-                creep.transfer(spawnz, RESOURCE_ENERGY);
-            } else {
-                if (!link.deposit(creep)) {
-                    if (!containers.toContainer(creep)) {}
+            if (super.depositNonEnergy(creep)) return;
+            if (!link.deposit(creep)) {
+                if (!depositSpawn(creep)) {
+                    depositContain(creep);
                 }
             }
-
         }
         moveToWithdraw(creep);
     }

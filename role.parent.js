@@ -285,10 +285,10 @@ class baseParent {
                             return (object.owner.username != 'zolox' && object.owner.username != 'admon');
                         });
                         if (bads.length === 0) {
-                            creep.moveTo(tmp3, task.options);
+                            creep.moveMe(tmp3, task.options);
                         }
                     } else {
-                        creep.moveTo(tmp3, task.options);
+                        creep.moveMe(tmp3, task.options);
                     }
 
                 }
@@ -323,7 +323,7 @@ class baseParent {
                 var tmp = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
 
                 if (!this.guardRoom(creep)) {
-                    creep.moveTo(tmp, task.options);
+                    creep.moveMe(tmp, task.options);
                 } else {
                     creep.say('failG');
                 }
@@ -350,18 +350,18 @@ class baseParent {
                     if (badz.length === 0) {
                         if (task.energyPickup) {
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
-                                creep.moveTo(tmp2, task.options);
+                                creep.moveMe(tmp2, task.options);
                             }
                         } else {
-                            creep.moveTo(tmp2, task.options);
+                            creep.moveMe(tmp2, task.options);
                         }
                     }
                 } else if (task.energyPickup) {
                     if (!constr.moveToPickUpEnergyIn(creep, 7)) {
-                        creep.moveTo(tmp2, task.options);
+                        creep.moveMe(tmp2, task.options);
                     }
                 } else {
-                    creep.moveTo(tmp2, task.options);
+                    creep.moveMe(tmp2, task.options);
                 }
 
                 if (task.rangeHappy === undefined || task.rangeHappy === 0) {
@@ -623,9 +623,11 @@ class baseParent {
                     }
 
                     if (creep.memory.goal == '5836b8118b8b9619519f1659' ||
-                        creep.memory.goal == '5873bd6f11e3e4361b4d934b' || creep.memory.goal == '5836b82b8b8b9619519f1967' ||
+                        creep.memory.goal == '5836b82b8b8b9619519f1967' ||
                         creep.memory.goal == '5873bd6f11e3e4361b4d9351' || creep.memory.goal == '5836b82b8b8b9619519f196c') {
                         creep.moveMe(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
+                    } else if (creep.memory.goal == '5873bd6f11e3e4361b4d934b') {
+                        creep.moveTo(2, 2);
                     } else {
                         for (var e in Game.flags) {
                             if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {

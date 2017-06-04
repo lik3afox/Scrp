@@ -59,45 +59,6 @@ var groupTwo = [];
 
 var roleParent = require('role.parent');
 var labsBuild = require('build.labs');
-/*
-function mineMineralsToTerminal(creep) {
-
-        if(creep.memory.mineralID == undefined) {
-            let vr = creep.room.find(FIND_MINERALS);
-            creep.memory.mineralID  = vr[0].id;
-
-        } 
-        let min = Game.getObjectById(creep.memory.mineralID);
-        if(min.mineralAmount == 0) return false;
-
-        if(min.mineralAmount > 0 ) {
-                var minz = creep.room.lookAt(min);
-                let cdNeed;
-                for(var i in minz) {
-                    if(minz[i].type == 'structure') {
-                        cdNeed = minz[i].structure.cooldown;
-                        break;
-                    }
-                }
-
-//console.log('sci',cdNeed,creep.pos);
-//
-            if(cdNeed == 0 && creep.pos.isNearTo(min)) {
-                if(creep.memory.extractID == undefined) {
-//                    let extract = creep.room.find(FIND_STRUCTURES,{filter: {structureType: STRUCTURE_EXTRACTOR}});
-                }
-                creep.harvest(min)
-            } else {
-
-                creep.moveTo(min);
-
-            }
-            return true;
-
-    } 
-    return false;
-}
-*/
 
 function mineralContainerEmpty(creep) {
     if (creep.memory.containsGood) return false;
@@ -131,13 +92,7 @@ function getPlan(lab) {
 
 function getGroup(creep) {
     let id = creep.id;
-    //console.log( _.includes(groupOne,id),groupOne ,id);
-    //    if(_.includes(groupOne,id) )
     return groupOne;
-    //    if(_.includes(groupTwo,id) )
-    //        return groupTwo;
-
-    //    return groupOne;
 }
 
 function changeParent(creep) {
@@ -249,7 +204,7 @@ class scientistRole extends roleParent {
 
         if (creep.memory.putaway) {
             if (!labsBuild.moveToTransfer(creep)) {
-                labsBuild.transferToTerminal(creep);
+                super._containers.moveToTerminal(creep);
             }
         } else {
             var _labs = labsBuild.getLabs(creep);

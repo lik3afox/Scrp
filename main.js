@@ -221,6 +221,7 @@ module.exports.loop = blackMagic(function() {
 
     var total = 0;
     spawnsDo.runCreeps();
+    var spawnReport = {};
 
     for (var title in Game.spawns) { // Start of spawn Loo
         if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
@@ -291,7 +292,6 @@ module.exports.loop = blackMagic(function() {
                 }
                 if (Game.spawns[title].memory.autoRenew)
                     DoRenew(Game.spawns[title]);
-
                 ccSpawn.createFromStack(Game.spawns[title]);
 
                 if (Game.spawns[title].memory.lastSpawn === undefined)
@@ -318,10 +318,27 @@ module.exports.loop = blackMagic(function() {
                 });
             }
             if (Game.spawns[title].memory.alphaSpawn) {
-                ccSpawn.report(Game.spawns[title], report);
+                let spawn = Game.spawns[title];
+                let spawnStats = {
+                    storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
+                    terminalEnergy: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.store[RESOURCE_ENERGY],
+                    terminalTotal: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.total,
+                    parts: spawn.memory.TotalBuild,
+                    creepNumber: spawn.memory.totalCreep,
+                    energy: spawn.room.energyAvailable,
+                    maxEnergy: spawn.room.energyCapacityAvailable,
+                    controllerLevel: spawn.room.controller.level,
+                    createQ: spawn.memory.create.length,
+                    warQ: spawn.memory.warCreate.length,
+                    expandQ: spawn.memory.expandCreate.length
+                };
+                spawnReport[Game.spawns[title].room.name] = spawnStats;
+
             }
         }
     } // End of Spawns Loops
+
+    Memory.stats.rooms = spawnReport;
 
     if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
     Memory.labsRunCounter--;
@@ -340,12 +357,7 @@ module.exports.loop = blackMagic(function() {
     power.run();
     globalCreep();
     doUpgradeRooms();
-    start = Game.cpu.getUsed();
-    /*    if (Memory.statsCounter === undefined) Memory.marketRunCounter = 10;
-        Memory.marketRunCounter--;
-        if (Memory.statsCounter <= 0) {
-            Memory.statsCounter = 3;
-        }*/
+
     // Don't overwrite things if other modules are putting stuff into Memory.stats
     if (Memory.stats === undefined) {
         Memory.stats = { tick: Game.time };
@@ -373,8 +385,6 @@ module.exports.loop = blackMagic(function() {
             //        num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
     };
 
-    //    stats.collect_stats();
-    console.log(start - Game.cpu.getUsed());
     /*
     for(var e in Game.constructionSites) {
         if(Game.constructionSites[e].pos.roomName == 'W4S95'){

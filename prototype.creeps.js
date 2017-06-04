@@ -19,6 +19,7 @@ module.exports = function() {
     });
 
 
+
     Object.defineProperty(Structure.prototype, "total", {
         configurable: true,
         get: function() {
@@ -58,6 +59,16 @@ module.exports = function() {
             return zz;
         }
     });
+
+    Creep.prototype.defendFlags = function() {
+        if (this._defendFlags === undefined) {
+            this._defendFlags = _.filter(Game.flags, function(f) {
+                return f.color == COLOR_RED;
+            });
+
+        }
+        return this._defendFlags;
+    };
 
     Room.prototype.dropped = function() {
         var dEnergy;

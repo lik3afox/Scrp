@@ -24,15 +24,16 @@ function getModule(spawn) {
 
 
 function getTargets(creep) {
-    if (creep.room.name == 'E27S75') {
-        return creep.room.find(FIND_MY_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_TOWER ||
-                    structure.structureType == STRUCTURE_EXTENSION ||
-                    structure.structureType == STRUCTURE_POWER_SPAWN ||
-                    structure.structureType == STRUCTURE_LAB) && structure.energy < structure.energyCapacity;
-            }
+    if (creep.room.name == 'E27S75' || creep.room.name == 'E37S75') {
+        let zzz = creep.room.find(FIND_MY_STRUCTURES);
+        zzz = _.filter(zzz, function(structure) {
+            return (structure.structureType == STRUCTURE_TOWER ||
+                structure.structureType == STRUCTURE_EXTENSION
+                //                structure.structureType == STRUCTURE_POWER_SPAWN ||
+                //structure.structureType == STRUCTURE_LAB
+            ) && structure.energy < structure.energyCapacity;
         });
+        return zzz;
     }
 
     if (creep.room.name == 'E38S72zz')
@@ -45,16 +46,16 @@ function getTargets(creep) {
             }
         });
 
-    return creep.room.find(FIND_MY_STRUCTURES, {
-        filter: (structure) => {
-            return (structure.structureType == STRUCTURE_EXTENSION ||
-                structure.structureType == STRUCTURE_SPAWN ||
-                structure.structureType == STRUCTURE_TOWER ||
-                structure.structureType == STRUCTURE_LAB ||
-                structure.structureType == STRUCTURE_POWER_SPAWN
-            ) && structure.energy < structure.energyCapacity;
-        }
+    let zzz = creep.room.find(FIND_MY_STRUCTURES);
+    zzz = _.filter(zzz, function(structure) {
+        return (structure.structureType == STRUCTURE_EXTENSION ||
+            structure.structureType == STRUCTURE_SPAWN ||
+            structure.structureType == STRUCTURE_TOWER ||
+            structure.structureType == STRUCTURE_LAB ||
+            structure.structureType == STRUCTURE_POWER_SPAWN
+        ) && structure.energy < structure.energyCapacity;
     });
+    return zzz;
 }
 
 function getModuleLevel(spawn) {
@@ -89,7 +90,7 @@ function getStack(spawn) {
             spawn.memory.currentStack = 'expand';
         }
 
-
+        //        console.log(spawn.memory.currentStack);
         switch (spawn.memory.currentStack) {
             case 'create':
                 return spawn.memory.create;
@@ -100,9 +101,21 @@ function getStack(spawn) {
         }
     } else {
         for (var i in Game.spawns) {
-            //            console.log(Game.spawns[i].room.name , spawn.room.name , Game.spawns[i].memory.alphaSpawn ) 
             if (Game.spawns[i].room.name == spawn.room.name && Game.spawns[i].memory.alphaSpawn) {
                 alpha = Game.spawns[i];
+                //                console.log(Game.spawns[i].room.name, spawn.room.name, Game.spawns[i].memory.alphaSpawn, alpha.memory.currentStack);
+
+
+                alpha.memory.currentStack = 'create';
+                if (alpha.memory.create.length === 0 && alpha.memory.warCreate.length > 0) {
+                    alpha.memory.currentStack = 'war';
+                }
+
+                if (alpha.memory.create.length === 0 && alpha.memory.expandCreate.length > 0 && alpha.memory.warCreate.length === 0) {
+                    alpha.memory.currentStack = 'expand';
+                }
+
+
                 switch (alpha.memory.currentStack) {
                     case 'create':
                         return alpha.memory.create;
@@ -273,9 +286,7 @@ class SpawnInteract {
         for (var e in around) {
             if (around[e].type == 'structure') {
                 //          console.log(around[e].structure.energy , around[e].structure.energyCapacity);
-                if ((around[e].structure.structureType != STRUCTURE_LINK
-                        //&& around[e].structure.structureType != STRUCTURE_NUKER
-                    ) && around[e].structure.energy < around[e].structure.energyCapacity) {
+                if ((around[e].structure.structureType != STRUCTURE_LINK && around[e].structure.structureType != STRUCTURE_NUKER) && around[e].structure.energy < around[e].structure.energyCapacity) {
                     if (creep.transfer(around[e].structure, RESOURCE_ENERGY) == OK) {
                         return true;
                     }
@@ -506,6 +517,7 @@ class SpawnInteract {
         }
         if (temp < renewLimit) {
             let rst = spawn.renewCreep(renewTarget);
+
             //console.log('********* ',spawn,' am Renewing:',renewTarget.name,rst,'********* ');
             return true;
         } else {
@@ -554,7 +566,6 @@ class SpawnInteract {
     static createFromStack(spawn) {
         var STACK = getStack(spawn);
         if (spawn.memory.notSpawner === true) return;
-        //        console.log(spawn,'create stack');
         if (STACK.length > 0) {
             // Creation here.
 
@@ -585,154 +596,6 @@ class SpawnInteract {
                 //STACK.shift();
 
             }
-
-        }
-    }
-
-
-
-    static report(spawn, report) {
-        if (spawn.memory.alphaSpawn) {
-            var STACK = getStack(spawn);
-
-
-            // Reporting Section here
-            //   var total = 0;
-            //    for (var e in Game.constructionSites) {
-            //        console.log(  Game.constructionSites[e], 'rayray',Game.constructionSites.length);
-            //          total++;
-
-            //        }
-
-            /*        let storage = _.sum(spawn.room.storage);
-                    let terminal = _.sum(spawn.room.terminal);
-                    let stoMsg = "A+";
-                    let terMsg = "A+";
-
-                    if(terminal < 100000) {
-                        terMsg = "FFF";            
-                    }
-                    if(terminal < 500000) {
-                        terMsg = "CC";            
-                    }
-                    if(storage < 100000) {
-                        stoMsg = "FFF";            
-                    }
-                    if(storage < 500000) {
-                        stoMsg = "CC";            
-                    }*/
-
-            // RawMemory.segments[memory.segmentID]
-
-            let report = '>>' + spawn.memory.TotalBuild + '/1500' + '(' + spawn.memory.totalCreep + ')' + '<<' + spawn.name + ' RM: ' + spawn.room.name + '(E:' + spawn.room.energyAvailable + "/" + spawn.room.energyCapacityAvailable + ")" + '>MD:' + spawn.memory.mode + ' Bld:' + getModuleLevel(spawn) + '|MD:' + spawn.memory.currentStack + 'C:' + spawn.memory.create.length + 'W:' + spawn.memory.warCreate.length + 'E:' + spawn.memory.expandCreate.length;
-            //        let zotal = spawn.memory.expandCreate.length+spawn.memory.create.length+spawn.memory.warCreate.length;
-            //if(spawn.memory.create.length != 0|| spawn.memory.warCreate.length != 0|| spawn.memory.expandCreate.length != 0)
-
-            //RawMemory.segments[spawn.memory.segmentID] = report;
-            var report2;
-            if (RawMemory.segments[2] === undefined) { RawMemory.segments[2] = ' '; } else {
-                RawMemory.segments[2] += ' \n ';
-            }
-            RawMemory.segments[2] = RawMemory.segments[2] + JSON.stringify(report);
-            /*
-                    if (STACK[2] != undefined) {
-                        console.log('3:   ' + STACK[2].memory.role+"<"+getCost(STACK[2].build)+">"+ "PARTS:"+ STACK[2].build);
-                    }
-                    if (STACK[1] != undefined) {
-                        console.log('2: ' + STACK[1].memory.role+"<"+getCost(STACK[1].build)+">"+ "PARTS:"+ STACK[1].build);
-                    }
-                    if (STACK[0] != undefined) {
-                        console.log('1: ' + STACK[0].memory.role+"<"+getCost(STACK[0].build)+">"+ "PARTS:"+ STACK[0].build);
-                    } */
-            if (spawn.spawning !== undefined) {
-                if (spawn.memory.CreatedMsg !== undefined && spawn.spawning !== undefined) {
-                    //                    report2 = spawn.name + " " + "/" + spawn.spawning.needTime + " " + spawn.memory.CreatedMsg;
-                    RawMemory.segments[2] = RawMemory.segments[2] + JSON.stringify(report2);
-                    //            RawMemory.segments[spawn.memory.segmentID] += report2;
-                }
-            }
-
-            if (spawn.memory.segmentUpdate === undefined) {
-                spawn.memory.segmentUpdate = Math.floor(Math.random() * 10) + 10;
-            } else {
-                spawn.memory.segmentUpdate--;
-            }
-
-            if (spawn.memory.segmentUpdate < 0) {
-                //    console.log('des segment update',spawn.memory.segmentID );
-                spawn.memory.segmentUpdate = Math.floor(Math.random() * 10) + 10;
-
-                var terminReport = "Terminal:  " + '\n';
-                let total = 0;
-                if (spawn.room.terminal !== undefined)
-                    for (var e in spawn.room.terminal.store) {
-                        terminReport = terminReport + "   " + e + ":" + spawn.room.terminal.store[e];
-                        total = total + spawn.room.terminal.store[e];
-                    }
-                terminReport += "         Total:" + total;
-
-                terminReport += '\n' + "Expand";
-                for (var a in spawn.memory.roadsTo) {
-                    let exp = spawn.memory.roadsTo[a];
-                    for (var v in exp) {
-                        terminReport += "   " + v + " " + exp[v] + '\n';
-                    }
-                }
-
-                RawMemory.segments[spawn.memory.segmentID] = JSON.stringify(
-                    " Room: " + spawn.room.name + "\n" + "Parts Used:");
-                //+spawn.memory.TotalBuild +"   Create:"+spawn.memory.create.length+"  War:"+spawn.memory.warCreate.length+"   Expand:"+spawn.memory.expandCreate.length 
-                //        + '\n' + report + report2 + '\n' +terminReport);
-
-            }
-
-
-            /*let _struct = spawn.room.find(FIND_MY_STRUCTURES, {
-        filter: (structure) => {
-        return (structure.structureType == STRUCTURE_TOWER ||
-        structure.structureType == STRUCTURE_CONTAINER ||
-        structure.structureType == STRUCTURE_STORAGE ||
-        structure.structureType == STRUCTURE_EXTENSION ||
-        structure.structureType == STRUCTURE_SPAWN); }
-        });
-            for(var i in _struct) {
-            switch(_struct[i].structureType) {
-                case  STRUCTURE_TOWER :
-                _total = _total + _struct[i].energy
-                _tower = _tower + _struct[i].energy
-
-                break;
-                case  STRUCTURE_CONTAINER :
-                _total = _total + _.sum(_struct[i].store);
-                _containers = _containers + _.sum(_struct[i].store);
-                break;
-                case  STRUCTURE_STORAGE :
-                _total = _total + _.sum(_struct[i].store);
-                _storage = _storage + _.sum(_struct[i].store);
-                break;
-                case  STRUCTURE_EXTENSION :
-                _total = _total + _struct[i].energy;
-                _expansions = _expansions + _struct[i].energy;
-                break;
-                case  STRUCTURE_SPAWN :
-                _total = _total + _struct[i].energy;
-                _spawn = _spawn + _struct[i].energy;
-                break;
-            }
-        }*/
-
-
-
-            //finding other spawn in the room.
-            /*            if(showSpawning) {
-                        for(var e in Game.spawns) {
-                            if(Game.spawns[e].room.name == spawn.room.name && !Game.spawns[e].memory.alphaSpawn) {
-                    if ( Game.spawns[e].memory.CreatedMsg != undefined && Game.spawns[e].spawning != undefined) {
-                        console.log( Game.spawns[e].name+" "+Game.spawns[e].spawning.remainingTime+"/"+Game.spawns[e].spawning.needTime+" "+  Game.spawns[e].memory.CreatedMsg );
-                    }
-                            }
-                        }
-                        }*/
 
         }
     }

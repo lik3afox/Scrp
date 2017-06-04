@@ -74,10 +74,19 @@ class roleNuker extends roleParent {
 
             if (nuke.energy < nuke.energyCapacity) {
 
-                if (creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+                if (creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
+                    if (creep.pos.isNearTo(creep.room.storage)) {
+                        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                    } else {
+                        creep.moveTo(creep.room.storage);
+                    }
+
                 } else {
-                    creep.moveTo(creep.room.terminal);
+                    if (creep.pos.isNearTo(creep.room.terminal)) {
+                        creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+                    } else {
+                        creep.moveTo(creep.room.terminal);
+                    }
                 }
             }
 

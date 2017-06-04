@@ -239,11 +239,11 @@ function getSpawnCreating(flag) {
         case 'upgradeRoom':
             return 'E27S75';
         case 'engineer':
-        case 'control':
-            return 'E28S77';
+            return 'E26S73';
 
         case 'recontrol':
         case 'test':
+        case 'control':
         case 'engineer2':
             return returnClosestRoom(flag.pos.roomName);
         case 'thief2':

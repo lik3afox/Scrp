@@ -237,6 +237,8 @@ class transport extends roleParent {
                             }
                         } else if (creep.pos.isNearTo(_goal)) {
                             creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
+                        } else {
+                            creep.say('zZzZ');
                         }
 
                     } else {

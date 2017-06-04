@@ -184,20 +184,17 @@ function labReady(roomName, labz) {
 
 function returnLabs(roomName) {
     if (Game.rooms[roomName].memory.labs === undefined) {
-        console.log('anything here? trying to get roomlabs');
         switch (roomName) {
             case "W4S93":
                 return allLabs;
 
             default:
-                console.log('Room not available, will grab all labs', roomName);
-                console.log('Room not available, will grab all labs');
-                console.log('Room not available, will grab all labs');
+                console.log('Room not available,return empty room', roomName);
                 return [];
-
         }
     } else {
-        return Game.rooms[roomName].memory.labs; }
+        return Game.rooms[roomName].memory.labs;
+    }
 
 }
 
@@ -288,13 +285,17 @@ class buildLab {
         // this function is called when a creep has boosted
 
         let workparts = _.filter(body, function(n) {
-            return n.type == WORK; }).length;
+            return n.type == WORK;
+        }).length;
         let moveparts = _.filter(body, function(n) {
-            return n.type == MOVE; }).length;
+            return n.type == MOVE;
+        }).length;
         let attkparts = _.filter(body, function(n) {
-            return n.type == ATTACK; }).length;
+            return n.type == ATTACK;
+        }).length;
         let healparts = _.filter(body, function(n) {
-            return n.type == HEAL; }).length;
+            return n.type == HEAL;
+        }).length;
         let mem = Game.rooms[roomName].memory;
         // first update the availableMinearls;
         for (var a in mem.labMinerals) {
@@ -333,13 +334,17 @@ class buildLab {
             // Game.rooms[roomName].memory.calledMinearls - this holds what creep in production have called.
             // Game.rooms[roomName].memory.availableMinerals - this hold what is available for creeps to call.
             let workparts = _.filter(body, function(n) {
-                return n == WORK; }).length;
+                return n == WORK;
+            }).length;
             let moveparts = _.filter(body, function(n) {
-                return n == MOVE; }).length;
+                return n == MOVE;
+            }).length;
             let attkparts = _.filter(body, function(n) {
-                return n == ATTACK; }).length;
+                return n == ATTACK;
+            }).length;
             let healparts = _.filter(body, function(n) {
-                return n == HEAL; }).length;
+                return n == HEAL;
+            }).length;
             let mem = Game.rooms[roomName].memory;
             // first update the availableMinearls;
             for (var a in mem.labMinerals) {
@@ -491,20 +496,6 @@ class buildLab {
         }
         return true;
     }
-
-    static transferToTerminal(creep) {
-        if (creep.room.terminal === undefined) return false;
-        let term = creep.room.terminal;
-        if (creep.pos.isNearTo(term)) {
-            for (var i in creep.carry) {
-                creep.transfer(term, i);
-            }
-        } else {
-            creep.moveMe(term, { reusePath: 20 });
-        }
-        return true;
-    }
-
 }
 
 module.exports = buildLab;

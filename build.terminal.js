@@ -3,7 +3,7 @@ var labs = require('build.labs');
 //var Target;
 var report = false;
 let basic = [
-    RESOURCE_ENERGY, RESOURCE_POWER,
+    RESOURCE_POWER,
     'H', 'O', 'L', 'U', 'Z', 'K', 'X',
     'ZK', 'UL', 'OH',
     'G', 'GH', 'GH2O', 'XGH2O',
@@ -30,7 +30,7 @@ var focusMin; // = 'XGH2O'
 var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amount: 500 }];
 
 // This is when you cannot change.
-var prohibited = ['KO', 'GH', 'LO', 'UO', 'LH', 'H', 'O', 'G', 'OH', 'GO', 'GH2O', 'GHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGH2O', 'XGHO2', 'XZH2O', 'XLHO2', 'XKHO2', 'XKH2O', 'XZHO2'];
+var prohibited = ['KO', 'GH', 'LO', 'UO', 'LH', 'H', 'G', 'OH', 'GO', 'GH2O', 'GHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGH2O', 'XGHO2', 'XZH2O', 'XLHO2', 'XKHO2', 'XKH2O', 'XZHO2'];
 
 var maxEnergyTrans = 5000;
 
@@ -44,6 +44,26 @@ function focusMinerals(targetID, mineral) {
             term.send(mineral, term.store[mineral] - 1, target.room.name, 'focus Trade');
         }
     }
+}
+
+function focusEnergy(terminal) {
+    if (terminal.room.controller.level === 8 || terminal.room.name == 'E27S75') return false;
+    if (terminal.store[RESOURCE_ENERGY] > 10000) return false;
+
+    var highestEnergy;
+    var currentHigh = 0;
+    for (var e in terminals) {
+        let storage = Game.getObjectById(terminals[e]);
+        if (storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name) {
+            highestEnergy = Game.getObjectById(terminals[e]);
+            currentHigh = storage.store[RESOURCE_ENERGY];
+        }
+    }
+    let amount = currentHigh * 0.25;
+    console.log(highestEnergy, currentHigh, RESOURCE_ENERGY, amount, terminal.room.name);
+    let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
+    console.log('FOCUS terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:', zz);
+
 }
 
 function countTerminals() {
@@ -427,6 +447,7 @@ function makeMineralOrder() {
     for (var e in minMinerals) {
         if (Memory.totalMinerals[e] < 25000) {
             amount = getAverageMineralPrice(e, true);
+            console.log(amount, anyLikeOrder(e, "E28S71"), e);
             if (amount !== undefined && !anyLikeOrder(e, "E28S71")) {
                 let qq = Game.market.createOrder(ORDER_BUY, e, amount, 50000, "E28S71");
                 console.log('Created Buy Order for ', e, 'amount:', amount, qq);
@@ -438,16 +459,17 @@ function makeMineralOrder() {
 
 function reportTerminals() {
     let zz = countTerminals();
-    let reportz = "";
-    for (var e in zz) {
-        if (zz[e].type == 'sk') {
-            reportz = reportz + '\n';
-        } else {
-            reportz = reportz + e + " " + zz[e] + "|";
-        }
-    }
-    RawMemory.segments[0] = reportz;
-    Memory.totalMinerals = zz;
+    /*    let reportz = "";
+        for (var e in zz) {
+            if (zz[e].type == 'sk') {
+                reportz = reportz + '\n';
+            } else {
+                reportz = reportz + e + " " + zz[e] + "|";
+            }
+        } */
+    //    RawMemory.segments[0] = reportz;
+    Memory.stats.totalMinerals = zz;
+    //    Memory.totalMinerals = zz;
 
 }
 
@@ -489,11 +511,7 @@ class roleTerminal {
 
         //console.log( checkEnergyProfit(10,.02,1000) );
 
-        //     if (Memory.termReport == undefined) Memory.termReport = true;
-        //     if (Memory.termRun == undefined) { Memory.termRun = 4;}
         focusMinerals(focusID, focusMin);
-        //      Memory.termRun--;
-        //       if (Memory.termRun >= 0) return false;
 
         makeMineralOrder();
         cleanUpOrders();
@@ -501,6 +519,7 @@ class roleTerminal {
         //            Memory.termRun = 10;
         for (var e in terminals) {
             let terminal = Game.getObjectById(terminals[e]);
+            focusEnergy(terminal);
             forEveryTerminal(terminal);
             terminal.room.memory.didOrder = false;
             let needed = labs.neededMinerals(terminal.pos.roomName);
@@ -518,14 +537,7 @@ class roleTerminal {
 
 
             let zz = _.sum(terminal.store);
-            if (RawMemory.segments[1] === undefined) RawMemory.segments[1] = 'Terminals:' + '\n';
-            //          RawMemory.segments[1] = '';
-            if (Memory.termReport) {
-                RawMemory.segments[1] = RawMemory.segments[1] + JSON.stringify(terminal.room.name + ">> Terminal:" + zz + "/" + terminal.storeCapacity + " ");
-                let engy = terminal.room.storage.store[RESOURCE_ENERGY];
-                RawMemory.segments[1] = RawMemory.segments[1] + JSON.stringify("   Storage:" + engy + "/" + terminal.room.storage.storeCapacity) + '\n';
 
-            }
             needEnergy(terminal);
 
             if (zz > 299000 && terminal.room.name != 'E33S76') {

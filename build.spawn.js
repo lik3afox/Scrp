@@ -194,7 +194,7 @@ var E35S83Module = [ // Spawn11 Room E28S77
 
 var E35S73Module = [ // Spawn11 Room E28S77
 
-    ['first', require('role.first'), 2, 2],
+    ['first', require('role.first'), 2, 5],
     ['linker', require('role.linker'), 1, 4],
     //        ['builder',    require('role.builder'),1, 5],
     ['scientist', require('role.scientist'), 0, 3],
@@ -234,8 +234,9 @@ var W4S93Module = [
 ];
 
 var E38W75Module = [
-    ['first', require('role.first'), 1, 3],
+    ['first', require('role.first'), 1, 5],
     ['scientist', require('role.scientist'), 0, 3],
+    ['nuker', require('role.nuker'), 1, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7]
 
@@ -442,7 +443,7 @@ function cpuCount(creep, time) {
     }
     let avg = _.sum(creep.memory.cpu) / creep.memory.cpu.length;
     if (showEveryone) console.log('CPU used by ' + creep + ' is a ' + creep.memory.role +
-        ' Time : ' + 'avg:' + Math.floor(_.sum(creep.memory.cpu) / creep.memory.cpu.length), '/lst:', time, creep.pos);
+        ' Time : ' + 'avg:' + Math.floor(_.sum(creep.memory.cpu) / creep.memory.cpu.length), '/lst:', time, creep.pos, creep.carryTotal);
     if ((creep.memory.cpu.length === 0 && time === 0) || (time !== 0))
         creep.memory.cpu.push(time);
     if (creep.memory.cpu.length > 30) creep.memory.cpu.shift();
@@ -608,7 +609,7 @@ function rebuildCreep(creep) {
     var needBoost;
     var isModded = false;
     if (creep.memory.needBoost === undefined || creep.memory.needBoost.length === 0) { // this pretty much says if it's gotten a boost before.
-        if ((creep.memory.home == 'E35S73' || creep.memory.home == 'E35S83x' || creep.memory.home == 'E26S77x') &&
+        if ((creep.memory.home == 'E35S73' || creep.memory.home == 'E35S83' || creep.memory.home == 'E26S77x') &&
             (creep.memory.role == 'miner') && _body.length > 6) {
             var cBuild = [];
             //                console.log(_body,'ray');
@@ -878,6 +879,37 @@ function getModuleRole(role) {
     }
 }
 
+function calculateCPU(cpu, creep) {
+    if (creep === undefined) return;
+    if (creep.memory.cpuCount === undefined)
+        creep.memory.cpuCount = 1500;
+
+    if (creep.memory.cpuCost === undefined || creep.memory.cpuCount < 0) {
+        creep.memory.cpuCount = 1500;
+        creep.memory.cpuCost = 0;
+    }
+    creep.memory.cpuCount--;
+
+    if (cpu < 1) {
+        return creep.memory.cpuCost;
+    } else if (cpu < 2) {
+        creep.memory.cpuCost += 1;
+    } else if (cpu < 3) {
+        creep.memory.cpuCost += 2;
+    } else if (cpu < 4) {
+        creep.memory.cpuCost += 3;
+    } else if (cpu < 5) {
+        creep.memory.cpuCost += 5;
+    } else if (cpu < 6) {
+        creep.memory.cpuCost += 8;
+    } else if (cpu < 7) {
+        creep.memory.cpuCost += 13;
+    } else {
+        creep.memory.cpuCost += 21;
+    }
+    return creep.memory.cpuCost;
+}
+
 class theSpawn {
 
     static getMaxCount() {
@@ -1001,21 +1033,22 @@ class theSpawn {
         var spawnCreeps = Memory.creeps;
         var start;
         Memory.creepTotal = 0;
+        var totalRoles = {};
+        var cpuUsed = {};
 
         for (var name in spawnCreeps) { // Start of Creep Loop
+            start = Game.cpu.getUsed();
             if (!Game.creeps[name]) { // Check to see if this needs deletion
                 delete spawnCreeps[name]; // If it does then it does.
-            } else if (Game.creeps[name].memory.goal == '5873bd6xxd11e3e4361b4d92ef' && Game.creeps[name].memory.task.length > 0) {
-                if (Game.creeps[name].memory.role == 'transport') { countCPU = true; } else { countCPU = false; }
-                console.log('transportxxxXXX', name, Game.creeps[name].memory.task[0].order);
-                parent.doTask(Game.creeps[name]);
-                if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
             } else {
+                if (totalRoles[Game.creeps[name].memory.role] === undefined) totalRoles[Game.creeps[name].memory.role] = 0;
+                totalRoles[Game.creeps[name].memory.role]++;
+                //                console.log(Game.creeps[name].memory.role, totalRoles[Game.creeps[name].memory.role]);
                 Memory.creepTotal++;
                 for (var type in allModule) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'xxtransport') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].id == '58fe9f1e85bda25ced169d57') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning) {
@@ -1027,8 +1060,17 @@ class theSpawn {
                     }
                 }
             }
-        }
+            if (Game.creeps[name] !== undefined) {
+                let zzz = name; //[0] + name[1] + name[2] + "@" + Game.creeps[name].pos.roomName + ',' + Game.creeps[name].pos.x + "," + Game.creeps[name].pos.y;
+                let cpuUsedz = calculateCPU((Game.cpu.getUsed() - start), Game.creeps[name]);
+                if (cpuUsedz > 100)
+                    cpuUsed[zzz] = cpuUsedz;
+            }
 
+        }
+        Memory.stats.roles = totalRoles;
+        Memory.stats.newCpuCount = cpuUsed;
+        //        console.log(totalRoles);
     }
 
     static getNumber(roomName) {
@@ -1226,74 +1268,19 @@ class theSpawn {
                     }
                 }
 
-                /*
-
-                let goldMined;
-                let totalAttack;
-                for (var e in Game.flags) {
-                    if (Game.flags[e].pos.roomName == source.room.name) {
-                        goldMined = Game.flags[e].memory.goldMined;
-                        if (Game.flags[e].memory.attack == undefined) {
-                            Game.flags[e].memory.attack = 0;
-                        }
-                        totalAttack = Game.flags[e].memory.attack;
-                        break;
-                    }
-                } 
-
-                report = report + "|XTran:"+ (xtransport + xtransportBuild) + "/" + maxxTrans    + "|"              ;
-
-                report = report + (roadbuilder+roadbuilderBuild)+"/"+maxRoad+"|"+(mineral+mineralBuild)+"/"+maxMin+" ::";
-                report = report + spawn.name + ":" + exp + ":" + "Room:" + source.room.name + "/" + "Id:" + xp +
-                    "|Mine:" + (Niners + minersBuild) + "/" + maxMiners + "/" + minersBuild +
-                    "|totalMined:" + goldMined + "<" + totalAttack + ">" + "|Tran:" + (transport + transportBuild) + "/" + maxTrans +
-                    "/" + transportBuild +
-                    "|Con:" + (controller + controllerBuild) + "/" + maxCon + "/" + controllerBuild;
-
-                let controlLeft = Game.getObjectById(spawn.memory.roadsTo[ie].source);
-                if (controlLeft.room.controller != undefined && controlLeft.room.controller.reservation != undefined) {
-                    let timeLeft = controlLeft.room.controller.reservation.ticksToEnd;
-                    report = report + "(" + timeLeft + "/" + controllerLevel + ")";
-                }
-
-                report = report + " ";
-
-                report = report + "\n";  
-
-*/
-                // This part makes sure there's always the minimum. 
-                //            if ((spawn.memory.roadsTo[ie].controller != undefined) ) {
-
-                // search for another source in that room.
-                //                spawn.memory.roadsTo[ie].controller = false;
-                /*
-                                for (var nn in spawn.memory.roadTo) {
-                                    let newz = spawn.memory.roadTo[nn];
-                                    if(newz.source !=  spawn.memory.roadsTo[ie].source &&
-                                        newz.sourcePos.roomName == spawn.memory.roadsTo[ie].sourcePos.roomName)  {
-                                            spawn.memory.roadsTo[ie].controller = true; 
-                                        }
-                                } */
-                //            }
-
 
             }
 
 
 
 
-            //                    console.log(_module[0][_name],_module2[0][_name]);
             for (var type in spawn.memory.roadsTo[ie]) {
                 for (var uo in _module) {
 
-                    //                console.log(type,spawn.memory.roadsTo[ie][type]);
                     // Find the expansions
-                    //                    console.log(_module[uo][_name],_module2[uo][_name]);
                     if (type == _module[uo][_name]) {
                         // Instead of checking roadsTo - you can check the expansion #
-                        //               console.log(spawn.memory.roadsTo[ie][type] , type );
                         if (!spawn.memory.roadsTo[ie][type]) {
-                            //                        console.log('adding too, then set this to true');
                             if (spawn.memory.created === undefined) {
                                 spawn.memory.created = 0;
                             }

@@ -168,8 +168,10 @@ class buildLink {
         sendEnergy('59233b3584aa3b2902f2543e', '590f2337820b9efc44a15794');
 
         //if(total > 0)console.log('Links transfered:'+total);
-        //return total;
-        sendEnergy(['5924524129c65d152e19c40c', '592c9b9dbc84a408e80d9aee'], '59243d3f403da5a97dea664a');
+        //return total;'5924524129c65d152e19c40c', 
+        sendEnergy(['592c9b9dbc84a408e80d9aee'], '59243d3f403da5a97dea664a');
+
+        sendEnergy('59346fe0b9ec62526a4218dc', '5924524129c65d152e19c40c', 700);
 
     }
 

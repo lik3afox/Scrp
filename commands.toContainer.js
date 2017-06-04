@@ -142,18 +142,9 @@ class ContainerInteract {
         }
 
         */
-    static toContainer(creep) {
-        let contain = creep.pos.findInRange(FIND_STRUCTURES, 1, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER);
-            }
-        });
+        //    static toContainer(creep) {
+        //    }
 
-        if (creep.transfer(contain[0], RESOURCE_ENERGY) == OK) {
-            return true;
-        }
-        return false;
-    }
     static fromContainer(creep) {
         var containers = creep.pos.findInRange(FIND_STRUCTURES, 1, {
             filter: (structure) => {
@@ -275,7 +266,7 @@ class ContainerInteract {
                 creep.transfer(terminal, e);
             }
         } else {
-            creep.moveTo(terminal);
+            creep.moveTo(terminal, { reusePath: 20 });
         }
     }
 
@@ -308,7 +299,9 @@ class ContainerInteract {
                 //                break;
             }
         } else {
-            creep.moveTo(storage);
+            creep.moveTo(storage, {
+                reusePath: 25
+            });
         }
         return true;
     }
@@ -397,8 +390,8 @@ class ContainerInteract {
 
             if (creep.memory.containerID[goTo] !== undefined) {
                 let contain = Game.getObjectById(creep.memory.containerID[goTo]);
-                if (contain === undefined) return false;
-                if (_.sum(contain.store) === 0) {
+                if (contain === null) return false;
+                if (contain.total === 0) {
                     return false;
                 }
 

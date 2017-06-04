@@ -93,25 +93,12 @@ function restingSpot(creep) {
 }
 
 function getHostiles(creep) {
-    //    flag.isAreaSafe(creep,4) // looking for bad hostiles.
-    //    flag.getBadInArea(creep,4)
-    //    flag.getClosestBad(creep);
-    /*    let zz = creep.room.find(FIND_FLAGS, {filter: s => s.color == COLOR_BLUE});
-        if(zz.length > 0){
-                return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
-                    filter: object => (object.owner.username != 'zolox')
-                });
-        } */
-    return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
-        //                filter: object => (object.owner.username != 'admon')
-    });
+    return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
 }
 
 function lootRun(creep) {
 
-
-
-    if (_.sum(creep.carry) === 0) return false;
+    if (creep.carryTotal === 0) return false;
 
     let target = creep.room.terminal;
     if (target === undefined) target = creep.room.storage;
@@ -181,7 +168,8 @@ class roleNewDefender extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         if (creep.saying == 'ZzZz') {
             creep.say('zZz');
@@ -189,14 +177,6 @@ class roleNewDefender extends roleParent {
         }
         if (rampartDefense(creep)) {
             return; }
-
-        creep.say('nDef');
-
-        // Conditions to skip everything else
-        // 1 no red flag
-        // 2 near spawn
-        // above 1400 life.
-        // not spawning
 
         if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
 
@@ -211,26 +191,18 @@ class roleNewDefender extends roleParent {
             var ccSpawn = require('commands.toSpawn');
             ccSpawn.wantRenew(creep);
         }
+        super._constr.pickUpNonEnergy(creep);
 
-        let mom = Game.getObjectById(creep.memory.renewSpawnID);
         // If no defend flag then
-        //        console.log(Game.flags['rampartDefender'],'rayrayray');
 
-
-        //let movement = require('commands.toMove');
         if (super._movement.moveToDefendFlag(creep)) {
 
-            super._constr.pickUpNonEnergy(creep);
             var badzs = getHostiles(creep);
             creep.say('nDef' + badzs.length + creep.memory.active);
             if (badzs.length > 0) {
                 attackCreep(creep, badzs);
-                super._constr.pickUpNonEnergy(creep);
-                //              return;
-            } else {
-                super._constr.pickUpNonEnergy(creep);
-                //     return;
             }
+
             creep.memory.active = true;
         } else { // go to mom and renew
             creep.memory.active = false;
@@ -239,23 +211,18 @@ class roleNewDefender extends roleParent {
             if (creep.room.name == creep.memory.home)
                 if (lootRun(creep)) return;
 
-            let rest = restingSpot(creep);
+            let rest = restingSpot(creep); // If this has an assign spot in a room.
             if (!rest) {
+                let mom = Game.getObjectById(creep.memory.renewSpawnID);
                 if (creep.pos.isNearTo(mom)) {
                     creep.say('ZzZz', true);
-
-                    // if (!mom.spawning && creep.ticksToLive < 1400)  mom.renewCreep(creep);
                 } else {
-                    super._constr.pickUpNonEnergy(creep);
                     creep.moveTo(mom);
                 }
             } else {
                 if (creep.pos.isEqualTo(rest)) {
                     creep.say('ZzZz', true);
-                    // if (!mom.spawning && creep.ticksToLive < 1400)  mom.renewCreep(creep);
                 } else {
-
-                    super._constr.pickUpNonEnergy(creep);
                     creep.moveTo(rest);
                 }
 

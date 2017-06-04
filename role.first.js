@@ -210,7 +210,7 @@ function moveOnPath(creep) {
                 [11, 26]
             ]);
             return true;
-        case "E37S75zz":
+        case "E37S75":
             goToMovePath(creep, [
                 [11, 31],
                 [25, 17],
@@ -353,19 +353,20 @@ class roleFirst extends roleParent {
             getEnergy(creep);
 
         } else {
-            if (creep.room.energyAvailable == creep.room.energyCapacityAvailable) {
+            if (creep.room.energyAvailable == creep.room.energyCapacityAvailable || (creep.room.name == 'E37S75' && creep.room.energyAvailable == (creep.room.energyCapacityAvailable - 900))) {
                 if (creep.room.powerspawn !== undefined && creep.room.powerspawn !== null) {
                     if (creep.room.powerspawn.energy > creep.room.powerspawn.energyCapacity - 1000) {
                         //                        if(!mineralContainerEmpty(creep))
                         creep.say('noWork');
-
                     } else {
                         if (creep.pos.isNearTo(creep.room.powerspawn)) {
                             creep.transfer(creep.room.powerspawn, RESOURCE_ENERGY);
+                        } else {
+                            creep.say('noWork');
                         }
                     }
                 } else {
-                    // creep.say('noWork');  
+                    creep.say('noWork');
                 }
             } else {
                 if (!moveOnPath(creep)) {

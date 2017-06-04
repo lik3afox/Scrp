@@ -161,7 +161,7 @@ function getRetreatFlag(creep) {
                     return zz;
                 }
             }
-        break;
+            break;
 
     }
 
@@ -513,7 +513,7 @@ class MoveInteract {
 
         var guardRooms = ['E26S75', 'E25S74', 'E25S75', 'E25S76', 'E26S74', 'E26S76', 'E35S84', 'E35S74'];
         var E26S76 = ['E26S75', 'E26S76', 'E25S76'];
-        var E26S75 = ['E25S75', 'E26S74'];
+        var E26S75 = ['E25S75', 'E26S74', 'E26S76'];
         var E26S74 = ['E26S75', 'E25S74'];
         var E25S74 = ['E25S75', 'E26S74'];
         var E25S76 = ['E25S75', 'E26S76'];
@@ -523,9 +523,14 @@ class MoveInteract {
         var E34S74 = ['E35S74', 'E35S75', 'E34S74'];
         var E36S74 = ['E35S74', 'E35S75', 'E36S74', 'E36S75'];
         var E36S75 = ['E35S74', 'E35S75', 'E36S74', 'E36S75'];
+
         let flagz = _.filter(Game.flags, function(f) {
             return f.color == FLAG.DEFEND;
         });
+
+        if (creep.room.name == 'E28S73') {
+            //            console.log(flagz.length, creep.defendFlags().length);
+        }
 
         let targetFlag;
 
@@ -708,12 +713,12 @@ class MoveInteract {
             if (creep.memory.role == 'miner') creep.dropEverything();
             if (creep.memory.runTarget === undefined) {
                 getRetreatFlag(creep);
-                creep.moveTo(creep.memory.runTarget,{reusePath:50});
+                creep.moveTo(creep.memory.runTarget, { reusePath: 50 });
             } else {
                 creep.say('🏃');
                 let zz = new RoomPosition(creep.memory.runTarget.x, creep.memory.runTarget.y, creep.memory.runTarget.roomName);
-                if( creep.moveTo(zz,{reusePath:50}) == OK){
-                    if(creep.pos.inRangeTo(zz,3) ) {
+                if (creep.moveTo(zz, { reusePath: 50 }) == OK) {
+                    if (creep.pos.inRangeTo(zz, 3)) {
                         creep.say('zZzZ');
                     }
                 }

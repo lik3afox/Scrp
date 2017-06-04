@@ -54,21 +54,11 @@ class mineralRole extends roleParent {
         let cdNeed;
         let isNear = creep.pos.isNearTo(minz);
 
+        if (minz.mineralAmount === 0 && carry === 0) {
+            creep.memory.death = true;
+        }
 
-        /*if(minz.mineralType != 'L'){
-                if (creep.ticksToLive > 1400 && minz.mineralAmount > 25000) {
-                    if (super.boosted(creep, ['XUHO2','UO'])) {
-                        return;
-                    }
-                } else if (minz.mineralAmount > 1000) {
-                    if (super.boosted(creep, ['UO'])) {
-                        return;
-                    }
-                }
-        }*/
-
-
-        if (isNear && carry < creep.carryCapacity - 49) {
+        if (isNear && carry < creep.carryCapacity - 49 && minz.mineralAmount !== 0) {
             let extract = Game.getObjectById(creep.memory.extractID);
             cdNeed = extract.cooldown;
             if (cdNeed === 0)
@@ -85,11 +75,6 @@ class mineralRole extends roleParent {
                         }
                     }
                 }
-
-            if (minz.mineralAmount === undefined || minz.mineralAmount === 0) {
-                creep.memory.death = true;
-            }
-            return;
         } else if (!isNear && carry < creep.carryCapacity - 49) {
             creep.moveMe(minz, { reusePath: 15 });
         } else {
@@ -100,20 +85,19 @@ class mineralRole extends roleParent {
                 if (creep.room.name == 'E33S76') {
                     super._containers.moveToStorage(creep);
                 } else {
-                    if (!labsBuild.transferToTerminal(creep)) {
+                    if (!super._containers.moveToTerminal(creep)) {
                         super._containers.moveToStorage(creep);
                     }
                 }
             } else {
                 let containTotal = _.sum(contain.store);
                 if (containTotal > contain.storeCapacity - 50) {
-                    if (!labsBuild.transferToTerminal(creep)) {
+                    if (!super._containers.moveToTerminal(creep)) {
                         super._containers.moveToStorage(creep);
                     }
 
                 } else {
                     for (var e in creep.carry) {
-                        //                        console.log(contain,e,creep.carry[e]);
                         if (creep.carry[e] > 0) {
                             creep.say(creep.transfer(contain, e));
                             return;
