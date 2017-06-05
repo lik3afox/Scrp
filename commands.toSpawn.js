@@ -24,6 +24,25 @@ function getModule(spawn) {
 
 
 function getTargets(creep) {
+
+    if (creep.memory.spawnTargets !== undefined) {
+        let zzz = [];
+        for (var e in creep.memory.spawnTargets) {
+            let target = Game.getObjectById(creep.memory.spawnTargets[e]);
+            //            console.log(target.energy);
+            if (target.energy < target.energyCapacity) {
+                if (creep.pos.isNearTo(target)) {
+                    return [target];
+                } else {
+                    zzz.push(target);
+                }
+
+            }
+        }
+        console.log(zzz.length, '/', creep.memory.spawnTargets.length, creep.pos);
+        creep.say('bizzches', true);
+        return zzz;
+    }
     if (creep.room.name == 'E27S75' || creep.room.name == 'E37S75') {
         let zzz = creep.room.find(FIND_MY_STRUCTURES);
         zzz = _.filter(zzz, function(structure) {
@@ -33,29 +52,45 @@ function getTargets(creep) {
                 //structure.structureType == STRUCTURE_LAB
             ) && structure.energy < structure.energyCapacity;
         });
-        return zzz;
+        /*        if (creep.memory.spawnTargets === undefined) {
+                    creep.memory.spawnTargets = [];
+                    for (var z in zzz) {
+                        creep.memory.spawnTargets.push(zzz[z].id);
+                    }
+                }
+                return zzz; */
     }
 
-    if (creep.room.name == 'E38S72zz')
-        return creep.room.find(FIND_MY_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_EXTENSION ||
-                    structure.structureType == STRUCTURE_SPAWN ||
-                    structure.structureType == STRUCTURE_POWER_SPAWN
-                ) && structure.energy < structure.energyCapacity;
-            }
-        });
-
-    let zzz = creep.room.find(FIND_MY_STRUCTURES);
+    let zzz;
+    //    if (creep.room.name == 'E35S83') {
+    zzz = creep.room.find(FIND_MY_STRUCTURES);
     zzz = _.filter(zzz, function(structure) {
         return (structure.structureType == STRUCTURE_EXTENSION ||
             structure.structureType == STRUCTURE_SPAWN ||
             structure.structureType == STRUCTURE_TOWER ||
             structure.structureType == STRUCTURE_LAB ||
             structure.structureType == STRUCTURE_POWER_SPAWN
-        ) && structure.energy < structure.energyCapacity;
+        );
     });
+
+    creep.memory.spawnTargets = [];
+    for (var a in zzz) {
+        creep.memory.spawnTargets.push(zzz[a].id);
+    }
     return zzz;
+    /*  } else {
+          zzz = creep.room.find(FIND_MY_STRUCTURES);
+          zzz = _.filter(zzz, function(structure) {
+              return (structure.structureType == STRUCTURE_EXTENSION ||
+                  structure.structureType == STRUCTURE_SPAWN ||
+                  structure.structureType == STRUCTURE_TOWER ||
+                  structure.structureType == STRUCTURE_LAB ||
+                  structure.structureType == STRUCTURE_POWER_SPAWN
+              ) && structure.energy < structure.energyCapacity;
+          });
+
+          return zzz;
+      }*/
 }
 
 function getModuleLevel(spawn) {
@@ -498,13 +533,13 @@ class SpawnInteract {
         for (var e in spawn.memory.wantRenew) {
             let creepID = spawn.memory.wantRenew[e];
             let creepTarget = Game.getObjectById(creepID);
-            let dif = 0;
-            if (creepTarget !== null)
+            //          let dif = 0;
+            //           if (creepTarget !== null)
+            //                if (creepTarget.memory.role == 'linker') dif = 200;
 
-                if (creepTarget.memory.role == 'linker') dif = 200;
             if (creepTarget === null) {
                 spawn.memory.wantRenew.splice(e, 1);
-            } else if (creepTarget.ticksToLive + dif < temp && creepTarget.pos.isNearTo(spawn)) {
+            } else if (creepTarget.ticksToLive < temp && creepTarget.pos.isNearTo(spawn)) {
                 renewTarget = creepTarget;
                 temp = creepTarget.ticksToLive;
             }

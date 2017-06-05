@@ -169,17 +169,15 @@ class buildLink {
 
         //if(total > 0)console.log('Links transfered:'+total);
         //return total;'5924524129c65d152e19c40c', 
-        sendEnergy(['592c9b9dbc84a408e80d9aee'], '59243d3f403da5a97dea664a');
+        //        sendEnergy([''], '59243d3f403da5a97dea664a');
 
-        sendEnergy('59346fe0b9ec62526a4218dc', '5924524129c65d152e19c40c', 700);
+        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc', '59243d3f403da5a97dea664a'], '5924524129c65d152e19c40c', 700);
 
     }
 
     static deposit(creep) { // Used by harvesters
-        let hasEnergy = false;
 
-        if (creep.carry[RESOURCE_ENERGY] > 0) hasEnergy = true;
-        if (!hasEnergy) return false;
+        if (creep.carry[RESOURCE_ENERGY] === 0) return false;
 
         if (creep.memory.linkID === undefined) {
             let yy = creep.pos.y - 1;

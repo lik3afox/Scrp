@@ -144,6 +144,7 @@ class transport extends roleParent {
                 let goal = Game.getObjectById(creep.memory.linkID);
                 if (goal !== null) {
                     let task = {};
+
                     task.options = {
                         reusePath: 49,
                         visualizePathStyle: {

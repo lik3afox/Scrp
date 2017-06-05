@@ -45,8 +45,8 @@ function moveToWithdraw(creep) {
         if (creep.memory.sourceID === undefined) {
             let rando = Math.floor(Math.random() * total.length);
             creep.memory.sourceID = total[rando].id;
+            source = total[rando];
         }
-        source = total[rando];
     }
 
     if (creep.pos.isNearTo(source)) {
@@ -128,7 +128,7 @@ class roleHarvester extends roleParent {
         }
         if (creep.memory.level > 1) super.renew(creep);
 
-        if (creep.carry.energy == creep.carryCapacity) {
+        if (creep.carry.energy > creep.carryCapacity - creep.stats.mining) {
             if (super.depositNonEnergy(creep)) return;
             if (!link.deposit(creep)) {
                 if (!depositSpawn(creep)) {

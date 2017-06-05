@@ -131,25 +131,25 @@ class engineerClass extends roleParent {
             } else {
                 if (creep.room.name == 'E33S76') {
                     if (!super._constr.moveToPickUpEnergy(creep, 300)) {
-                                                  if (!super._containers.moveToWithdraw(creep)) {
-                        let zz = Game.getObjectById('588371768b6b60986f18d1d8');
-                        if (creep.pos.isNearTo(zz)) {
-                            creep.dismantle(zz);
-                        } else {
-                            creep.moveMe(zz);
-                        }
-                      }
-                      }
-                } else {
-                    if (!super._constr.moveToPickUpEnergy(creep, 300)) {
-                        if (!super._containers.withdrawFromStorage(creep)) {
-                            //                      if (!super._containers.moveToWithdraw(creep)) {
-                            //           if (!super._containers.moveToWithdraw(creep))
-                            super._sources.moveToWithdraw(creep);
-                            //                  }
-                            //                        creep.say('zZzZ')
+                        if (!super._containers.moveToWithdraw(creep)) {
+                            let zz = Game.getObjectById('588371768b6b60986f18d1d8');
+                            if (creep.pos.isNearTo(zz)) {
+                                creep.dismantle(zz);
+                            } else {
+                                creep.moveMe(zz);
+                            }
                         }
                     }
+                } else {
+                    //if (!super._constr.moveToPickUpEnergy(creep, 300)) {
+                    //if (!super._containers.withdrawFromStorage(creep)) {
+                    //                      if (!super._containers.moveToWithdraw(creep)) {
+                    //           if (!super._containers.moveToWithdraw(creep))
+                    super._sources.moveToWithdraw(creep);
+                    //                  }
+                    //                        creep.say('zZzZ')
+                    //  }
+                    //}
 
                 }
             }

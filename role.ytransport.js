@@ -46,10 +46,10 @@ class transport extends roleParent {
     }
 
     static levels(level) {
-            if (level > classLevels.length - 1) level = classLevels.length - 1;
-            return classLevels[level];
-        }
-        
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        return classLevels[level];
+    }
+
     static run(creep) {
         creep.say('y');
         var start;
@@ -195,8 +195,11 @@ class transport extends roleParent {
 
                     }
 
-                    var bads = creep.pos.findInRange(creep.room.hostilesHere(), 5);
-                    if (bads.length === 0) {
+                    var runbads = creep.pos.findInRange(creep.room.hostilesHere(), 3);
+                    var staybads = creep.pos.findInRange(creep.room.hostilesHere(), 4);
+                    if (staybads.length > 0) {
+                        // Do nothing
+                    } else if (runbads.length === 0) {
 
                         if (!super._constr.moveToPickUpEnergyIn(creep, 5)) {
                             let target = Game.getObjectById(creep.memory.gotoID);

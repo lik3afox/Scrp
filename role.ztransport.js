@@ -53,9 +53,9 @@ class transportz extends roleParent {
     }
 
     static levels(level) {
-            if (level > classLevels.length - 1) level = classLevels.length - 1;
-            return classLevels[level];
-        }
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        return classLevels[level];
+    }
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
@@ -113,15 +113,11 @@ class transportz extends roleParent {
             creep.memory.empty = true;
         }
 
-        //        if (creep.room.name != 'E28S77' && creep.room.storage === undefined && creep.room.name != 'E27S75' )
-        //            super._constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
-
         if (creep.memory.gohome) {
             if (creep.room.name === creep.memory.home) {
                 if (!super._containers.moveToStorage(creep))
                     var zz = super._containers.moveToTerminal(creep);
             } else {
-                super._movement.moveHome(creep);
 
                 let task = {};
                 task.options = {
@@ -138,127 +134,121 @@ class transportz extends roleParent {
 
         } else { // IF not going home. 
 
-
-            if (_goal === null) {
-                var goingTo = super._movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
-                creep.moveTo(goingTo, {
-                    ignoreRoads: _ignoreRoad,
-                    reusePath: 49,
-                    visualizePathStyle: pathVis
-                });
-            } else if (_goal !== null && _goal.room.name != creep.room.name) {
+            if (creep.memory.gotoID === undefined || (creep.carryTotal === 0 && creep.memory.home == creep.room.name)) {
+                var goingTo;
+                if (_goal === null) {
+                    goingTo = super._movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+                } else {
+                    goingTo = _goal.pos;
+                }
 
                 let task = {};
                 task.options = {
-                    //                    ignoreRoads: _ignoreRoad,
+                    ignoreRoads: _ignoreRoad,
                     reusePath: 49,
                     visualizePathStyle: pathVis
                 };
-                task.pos = _goal.pos;
+                task.pos = goingTo;
                 task.order = "keeperMoveTo";
                 task.happyRange = 0;
                 creep.memory.task.push(task);
+            }
 
-            } else {
-                creep.say("Bitches and weed");
-                let foxy = require('foxMethods');
-                // If in the same room and with in a square of 5 away from goal. 
-                if (_goal.room.name === creep.room.name) {
-                    // First look for containers and picking up stuff.
-                    // Then assigns it to memory.
-                    if (creep.memory.gotoID === undefined) {
+            // If in the same room and with in a square of 5 away from goal. 
+            if (_goal.room.name === creep.room.name) {
+                // First look for containers and picking up stuff.
+                // Then assigns it to memory.
+                if (creep.memory.gotoID === undefined) {
 
 
-                        let target; // This is where you want to go. 
-                        let targetAmount = 0;
-                        let isDropped = true;
-                        var tmp = creep.room.find(FIND_DROPPED_RESOURCES);
+                    let target; // This is where you want to go. 
+                    let targetAmount = 0;
+                    let isDropped = true;
+                    var tmp = creep.room.find(FIND_DROPPED_RESOURCES);
 
-                        if (tmp.length === 0) {
-                            isDropped = false;
-                        } else {
-                            for (var e in tmp) {
-                                if (tmp[e].amount > targetAmount && tmp[e].amount >= 100) {
-                                    targetAmount = tmp[e].amount;
-                                    target = tmp[e].id;
-                                }
+                    if (tmp.length === 0) {
+                        isDropped = false;
+                    } else {
+                        for (var e in tmp) {
+                            if (tmp[e].amount > targetAmount && tmp[e].amount >= 100) {
+                                targetAmount = tmp[e].amount;
+                                target = tmp[e].id;
                             }
                         }
-
-                        if (targetAmount < 200) { // If the energy on the gound is now. then
-                            var containerz = creep.room.find(FIND_STRUCTURES, {
-                                filter: (structure) => {
-                                    return (structure.structureType === STRUCTURE_CONTAINER);
-                                }
-                            });
-
-                            if (containerz.length > 0) {
-                                for (let a in containerz) {
-                                    if ((containerz[a].store[RESOURCE_ENERGY] * 0.75) > targetAmount) {
-                                        target = containerz[a].id;
-                                        targetAmount = containerz[a].store[RESOURCE_ENERGY];
-                                        //            isDropped = true;
-                                    }
-                                }
-                            }
-                        }
-
-                        creep.memory.gotoID = target;
-
                     }
 
+                    if (targetAmount < 200) { // If the energy on the gound is now. then
+                        var containerz = creep.room.find(FIND_STRUCTURES, {
+                            filter: (structure) => {
+                                return (structure.structureType === STRUCTURE_CONTAINER);
+                            }
+                        });
 
-                    if (!super._constr.moveToPickUpEnergyIn(creep, 5)) {
-                        let target = Game.getObjectById(creep.memory.gotoID);
-                        if (target !== null) {
-
-                            // Then it goes to it.
-
-                            // Once picked up, clears memory so it can pick up something new.
-                            if (creep.pos.isNearTo(target)) {
-
-                                if (target.structureType === STRUCTURE_CONTAINER) {
-                                    creep.withdraw(target, RESOURCE_ENERGY);
-                                    creep.memory.gotoID = undefined;
-                                } else {
-                                    creep.pickup(target);
-                                    creep.memory.gotoID = undefined;
-                                }
-                            } else {
-                                var bads = creep.pos.findInRange(creep.room.hostilesHere(), 4);
-                                if (bads.length === 0) {
-                                    //if(!super.avoidArea(creep)) { 
-
-                                    creep.moveTo(target, {
-                                        ignoreRoads: _ignoreRoad,
-                                        maxRooms: 1,
-                                        reusePath: 49,
-                                        visualizePathStyle: {
-                                            fill: 'transparent',
-                                            stroke: '#ff0',
-                                            lineStyle: 'dashed',
-                                            strokeWidth: 0.15,
-                                            opacity: 0.5
-                                        }
-                                    });
-                                    //                  }
+                        if (containerz.length > 0) {
+                            for (let a in containerz) {
+                                if ((containerz[a].store[RESOURCE_ENERGY] * 0.75) > targetAmount) {
+                                    target = containerz[a].id;
+                                    targetAmount = containerz[a].store[RESOURCE_ENERGY];
+                                    //            isDropped = true;
                                 }
                             }
-                            if (target.structureType === STRUCTURE_CONTAINER && _.sum(target.store) === 0) {
+                        }
+                    }
+
+                    creep.memory.gotoID = target;
+
+                }
+
+
+                if (!super._constr.moveToPickUpEnergyIn(creep, 5)) {
+                    let target = Game.getObjectById(creep.memory.gotoID);
+                    if (target !== null) {
+
+                        // Then it goes to it.
+
+                        // Once picked up, clears memory so it can pick up something new.
+                        if (creep.pos.isNearTo(target)) {
+
+                            if (target.structureType === STRUCTURE_CONTAINER) {
+                                creep.withdraw(target, RESOURCE_ENERGY);
+                                creep.memory.gotoID = undefined;
+                            } else {
+                                creep.pickup(target);
                                 creep.memory.gotoID = undefined;
                             }
-
                         } else {
+                            var bads = creep.pos.findInRange(creep.room.hostilesHere(), 4);
+                            if (bads.length === 0) {
+                                //if(!super.avoidArea(creep)) { 
+
+                                creep.moveTo(target, {
+                                    ignoreRoads: _ignoreRoad,
+                                    maxRooms: 1,
+                                    reusePath: 49,
+                                    visualizePathStyle: {
+                                        fill: 'transparent',
+                                        stroke: '#ff0',
+                                        lineStyle: 'dashed',
+                                        strokeWidth: 0.15,
+                                        opacity: 0.5
+                                    }
+                                });
+                                //                  }
+                            }
+                        }
+                        if (target.structureType === STRUCTURE_CONTAINER && _.sum(target.store) === 0) {
                             creep.memory.gotoID = undefined;
                         }
-                    }
 
+                    } else {
+                        creep.memory.gotoID = undefined;
+                    }
                 }
 
             }
 
-
         }
+
         creep.say('z');
 
     }

@@ -131,7 +131,8 @@ class roleAttacker extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
         //            creep.heal(creep);
         if (super.returnEnergy(creep)) {
             return;
@@ -140,15 +141,6 @@ class roleAttacker extends roleParent {
             specialrun(creep);
             return;
         }
-
-
-        /*        let parent = Game.getObjectById( creep.memory.parent)
-                if(creep.pos.findInRange(parent,50) ) {
-                    creep.moveTo(parent);
-                    if(creep.pos.isNearTo(parent)) {
-                        parent.renewCreep(creep);
-                    }
-                } */
 
         //      console.log('enemies :' + enemies.length);
         creep.memory.grouped = true;

@@ -153,7 +153,7 @@ class roleUpbuilder extends roleParent {
             if (creep.room.name == 'E35S83' || creep.room.name == 'E28S73') {
                 super._containers.withdrawFromTerminal(creep);
             } else if (creep.room.name == 'E33S76') {
-                let link = Game.getObjectById('59243d3f403da5a97dea664a');
+                let link = Game.getObjectById('59243d3f403da5a97dea664a x');
                 if (link !== null && link.energy !== 0) {
                     if (creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         creep.moveTo(link);

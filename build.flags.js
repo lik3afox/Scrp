@@ -19,7 +19,8 @@ function doDefendThings(flag) {
     var hostiles = flag.room.find(FIND_HOSTILE_CREEPS);
 
     hostiles = _.filter(hostiles, function(o) {
-        return o.owner.username == 'Invader'; });
+        return o.owner.username == 'Invader';
+    });
 
     flag.room.visual.circle(flag.pos.x, flag.pos.y, { radius: 15, opacity: 0.15, fill: 'ff0000' });
 
@@ -51,7 +52,8 @@ function rampartThings(flag) {
     if (flag.memory.alert === undefined || !flag.memory.alert) {
         //        let roomCreeps = _.filter(Game.creeps,function(z){z.room.name == flag.room.name});
         let roomCreeps = _.filter(Game.creeps, function(n) {
-            return n.room.name == flag.room.name; });
+            return n.room.name == flag.room.name;
+        });
         console.log(roomCreeps.length, 'trea');
         for (var a in roomCreeps) {
             roomCreeps[a].memory.rampartDefense = true;
@@ -199,6 +201,8 @@ class buildFlags {
     } */
     static run() {
 
+        let powerTotal = 0;
+        let defendTotal = 0;
         if (Memory.clearFlag === undefined) Memory.clearFlag = 500;
         Memory.clearFlag--;
         if (Memory.clearFlag < 0) {
@@ -208,7 +212,8 @@ class buildFlags {
         //    var    start  = Game.cpu.getUsed(); // start counting. 
 
         let zFlags = _.filter(Game.flags, function(o) {
-            return o.color != COLOR_WHITE && o.color != COLOR_GREY && o.color != COLOR_CYAN; });
+            return o.color != COLOR_WHITE && o.color != COLOR_GREY && o.color != COLOR_CYAN;
+        });
         //console.log(  (Game.cpu.getUsed() - start ), ' afterfilter',zFlags.length); start = Game.cpu.getUsed();
 
         for (var e in zFlags) {
@@ -219,6 +224,8 @@ class buildFlags {
 
                 case COLOR_RED:
                     doDefendThings(flag);
+                    console.log('defend flag @', flag.pos);
+                    defendTotal++;
                     break;
 
                 case FLAG.GUARD:
@@ -239,6 +246,7 @@ class buildFlags {
                     let rally = flag;
                     if (flag.secondaryColor == COLOR_RED) {
                         var power = require('commands.toPower');
+                        powerTotal++;
                         power.calcuate(flag);
                     }
 
@@ -261,8 +269,9 @@ class buildFlags {
             }
             //            if(flag.color == 10 )
             //        console.log(  (Game.cpu.getUsed() - start ), ' after', flag.color,flag.secondaryColor); start = Game.cpu.getUsed();
-
         }
+        Memory.stats.powerPartyNum = powerTotal;
+        Memory.stats.defendFlagNum = defendTotal;
 
     }
 }

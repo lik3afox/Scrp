@@ -166,17 +166,15 @@ function moveOnPath(creep) {
             ];
             goToMovePath(creep, patrol);
             return true;
-        case "E35S83zz":
+        case "E38S72":
             patrol = [
-                [3, 25],
-                [11, 17],
-                [14, 19],
-                [14, 21],
-                [8, 27],
-                [6, 28],
-                [12, 34],
-                [8, 36],
-                [3, 31]
+                [23, 20],
+                [26, 18],
+                [37, 29],
+                [37, 32],
+                [35, 34],
+                [35, 33],
+                [30, 27]
             ];
 
             goToMovePath(creep, patrol);
@@ -218,7 +216,29 @@ function moveOnPath(creep) {
                 [13, 34]
             ]);
             return true;
-
+        case "E35S73":
+            goToMovePath(creep, [
+                [36, 37],
+                [34, 39],
+                [31, 43],
+                [35, 46],
+                [39, 42],
+                [43, 46],
+                [46, 43],
+                [44, 41],
+                [46, 39],
+                [44, 37],
+                [45, 36],
+                [43, 34],
+                [44, 33],
+                [43, 32],
+                [42, 33],
+                [41, 32],
+                [40, 33],
+                [37, 31],
+                [35, 33]
+            ]);
+            return true;
         default:
             creep.memory.patrolpath = undefined;
             return false;

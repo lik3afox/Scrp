@@ -1031,25 +1031,17 @@ class baseParent {
             }
 
             creep.memory.renewSpawnID = Fspawn[0].id;
+            var ccSpawn = require('commands.toSpawn');
+            ccSpawn.wantRenew(creep);
+            creep.memory.reportDeath = true;
         }
 
 
-        let spawn = Game.getObjectById(creep.memory.renewSpawnID);
-        if (creep.carry[RESOURCE_ENERGY] > 0) {
-            creep.transfer(spawn, RESOURCE_ENERGY);
-        }
+        /*        let spawn = Game.getObjectById(creep.memory.renewSpawnID);
+                if (creep.carry[RESOURCE_ENERGY] > 0) {
+                    creep.transfer(spawn, RESOURCE_ENERGY);
+                } */
 
-        var ccSpawn = require('commands.toSpawn');
-        ccSpawn.wantRenew(creep);
-        creep.memory.reportDeath = true;
-        //  if(spawn.spawning) { return false;}
-        //  let renewed = spawn.renewCreep(creep);
-
-
-
-        //  if(creep.memory.renewCount == undefined )creep.memory.renewCount = 0;
-        //  creep.memory.renewCount++;
-        //creep.say('Q:Rnw-'+ renewed+"/"+creep.memory.renewCount,true);
 
         return true;
     }

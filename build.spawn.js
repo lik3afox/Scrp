@@ -215,7 +215,7 @@ var E38S74Module = [
 
 var E33S76Module = [
     ['first', require('role.first'), 2, 1],
-    ['linker', require('role.linker'), 1, 2],
+    ['linker', require('role.linker'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 3, 5],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['wallwork', require('role.wallworker'), 1, 3],
@@ -1048,7 +1048,7 @@ class theSpawn {
                 for (var type in allModule) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].id == '58fe9f1e85bda25ced169d57') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].id == '5934a2d9853a0ff630f270a2') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning) {
@@ -1063,13 +1063,19 @@ class theSpawn {
             if (Game.creeps[name] !== undefined) {
                 let zzz = name; //[0] + name[1] + name[2] + "@" + Game.creeps[name].pos.roomName + ',' + Game.creeps[name].pos.x + "," + Game.creeps[name].pos.y;
                 let cpuUsedz = calculateCPU((Game.cpu.getUsed() - start), Game.creeps[name]);
-                if (cpuUsedz > 100)
+                if (cpuUsedz > 150) {
                     cpuUsed[zzz] = cpuUsedz;
+                } else if (cpuUsedz > 125 && Game.creeps[name].memory.cpuCount > 800) {
+                    cpuUsed[zzz] = cpuUsedz;
+                } else if (cpuUsedz > 75 && Game.creeps[name].memory.cpuCount > 1200) {
+                    cpuUsed[zzz] = cpuUsedz;
+                }
+
             }
 
         }
         Memory.stats.roles = totalRoles;
-        Memory.stats.newCpuCount = cpuUsed;
+        Memory.stats.theCpuCount = cpuUsed;
         //        console.log(totalRoles);
     }
 
