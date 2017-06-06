@@ -549,7 +549,7 @@ class StructureInteract {
 
         let target = Game.getObjectById(creep.memory.wallTargetID);
 
-        if (target !== undefined) {
+        if (target !== null) {
             creep.repair(target);
             if (!creep.pos.inRangeTo(target, 2)) creep.moveTo(target);
         } else {
