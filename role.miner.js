@@ -56,7 +56,7 @@ function doWork(creep) {
             //    && creep.room.name != 'E25S76'&& creep.room.name != 'E26S76'&& creep.room.name != 'E26S75'
             //    && creep.room.name != 'E25S74'&& creep.room.name != 'E26S74'&& creep.room.name != 'E25S75'
             //)&& 
-            contain.hits < contain.hitsMax - 5000) || (contain.hits < 50000)) {
+            contain.hits < contain.hitsMax - 25000) || (contain.hits < 50000)) {
         if (!creep.pos.isNearTo) {
             creep.say(creep.moveTo(contain));
         }

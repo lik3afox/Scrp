@@ -628,7 +628,9 @@ class baseParent {
                         creep.moveMe(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     } else if (creep.memory.goal == '5873bd6f11e3e4361b4d934b') {
                         creep.moveTo(2, 2);
-                    } else {
+                    } else if (creep.memory.goal == '5873bd6f11e3e4361b4d9351'){
+                        creep.moveTo(42,38 );
+                    }else {
                         for (var e in Game.flags) {
                             if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
                                 /*let contain = Game.getObjectById(creep.memory.workContainer);
