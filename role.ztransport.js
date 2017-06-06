@@ -12,7 +12,7 @@ var roleParent = require('role.parent');
 // Level 4 = 1300 / 20
 // Level 5 = 1800 / 30
 // Level 6 = 2300 / 40  Not added yet, not certain if needed.
-
+var rePath = 100;
 var pathVis = {
     fill: 'transparent',
     stroke: '#ff0',
@@ -122,7 +122,8 @@ class transportz extends roleParent {
                 let task = {};
                 task.options = {
                     ignoreRoads: _ignoreRoad,
-                    reusePath: 49,
+                    reusePath
+: rePath,
                     visualizePathStyle: pathVis
                 };
                 task.pos = Game.getObjectById(creep.memory.parent).pos;
@@ -145,7 +146,7 @@ class transportz extends roleParent {
                 let task = {};
                 task.options = {
                     ignoreRoads: _ignoreRoad,
-                    reusePath: 49,
+                    reusePath: rePath,
                     visualizePathStyle: pathVis
                 };
                 task.pos = goingTo;
@@ -224,7 +225,7 @@ class transportz extends roleParent {
                                 creep.moveTo(target, {
                                     ignoreRoads: _ignoreRoad,
                                     maxRooms: 1,
-                                    reusePath: 49,
+                                    reusePath: rePath,
                                     visualizePathStyle: {
                                         fill: 'transparent',
                                         stroke: '#ff0',

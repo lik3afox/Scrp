@@ -1,6 +1,8 @@
 var roleParent = require('role.parent');
 var constr = require('commands.toStructure');
 var movement = require('commands.toMove');
+var rePath = 100;
+
 
 var visPath = {
     fill: 'transparent',
@@ -146,7 +148,7 @@ class transport extends roleParent {
                     let task = {};
 
                     task.options = {
-                        reusePath: 49,
+                        reusePath: rePath,
                         visualizePathStyle: {
                             fill: 'transparent',
                             stroke: '#ff0',
@@ -196,7 +198,7 @@ class transport extends roleParent {
                 let bads = getBads(creep);
                 if (bads.length === 0) {
                     creep.moveMe(Game.getObjectById(creep.memory.parent), {
-                        reusePath: 49
+                        reusePath: rePath
                     });
                 } else {
                     creep.runFrom(bads);
@@ -251,7 +253,7 @@ class transport extends roleParent {
 
                 let task = {};
                 task.options = {
-                    reusePath: 49,
+                    reusePath: rePath,
                     ignoreRoads: true,
                     visualizePathStyle: {
                         fill: 'transparent',
@@ -281,7 +283,7 @@ class transport extends roleParent {
                 var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveMe(goingTo, {
                     ignoreRoads: _ignoreRoad,
-                    reusePath: 49,
+                    reusePath: rePath,
                     visualizePathStyle: visPath
                 });
             }

@@ -211,12 +211,15 @@ var E35S73Module = [ // Spawn11 Room E28S77
 var E38S74Module = [
     ['first', require('role.first'), 0, 0]
 ];
+var E23S75Module = [
+    ['first', require('role.first'), 2, 0]
+];
 
 
 var E33S76Module = [
     ['first', require('role.first'), 2, 1],
-    ['linker', require('role.linker'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 3, 5],
+    ['linker', require('role.linker'), 1, 2],
+    ['upbuilder', require('role.upbuilder'), 1, 6],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['wallwork', require('role.wallworker'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2]
@@ -714,6 +717,10 @@ function getCurrentModule(spawn) {
     }
     if (spawn.room.controller.level > 3 && spawn.name == 'Spawn2') {
         return spawn2Module;
+    }
+
+    if (spawn.name == 'Spawn37') {
+        return E23S75Module;
     }
 
     if (spawn.room.controller.level > 3 && spawn.room.name == 'E33S76') {

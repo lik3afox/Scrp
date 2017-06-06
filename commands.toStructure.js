@@ -300,7 +300,7 @@ class StructureInteract {
             }
         }); //.sort((a, b) => a.amount - b.amount); ;
         if (close === undefined) return false;
-//        creep.say(close.amount);
+        //        creep.say(close.amount);
         if (creep.pos.isNearTo(close)) {
             creep.pickup(close);
         } else {
@@ -370,7 +370,8 @@ class StructureInteract {
 
         let zlose = creep.pos.findInRange(FIND_STRUCTURES, 3);
         zclose = _.filter(zlose, function(object) {
-            return (((object.structureType != STRUCTURE_WALL) && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax)); });
+            return (((object.structureType != STRUCTURE_WALL) && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax));
+        });
         console.log(close.length, zlose.length);
         if (close.length > 0) {
             creep.say('cre');
@@ -499,20 +500,13 @@ class StructureInteract {
             let bb = creep.pos.findClosestByRange(contargets);
             creep.memory.constructionID = bb.id;
         }
-        creep.say('bui');
         let ztarget = Game.getObjectById(creep.memory.constructionID);
         if (ztarget === null) {
-            var contargetz = getConstruction(creep);
-            if (contargetz.length === 0) {
-                creep.memory.constructionID = undefined;
-                return false;
-            }
-            creep.memory.constructionID = contargetz[0].id;
+            creep.memory.constructionID = undefined;
             return false;
         }
 
         creep.say('Build');
-        //        contargets.sort((a, b) => a.hits - b.hits);
         if (creep.build(ztarget) == ERR_NOT_IN_RANGE) {
             creep.moveTo(ztarget);
         }

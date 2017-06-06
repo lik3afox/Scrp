@@ -97,36 +97,11 @@ class engineerClass extends roleParent {
 
 
             if (creep.memory.building) {
-                /*let zz = Game.getObjectById(creep.memory.renewSpawnID)
-                let tw = Game.getObjectById('58eb90f785d61a50d4919c1c')
-                if(creep.pos.isNearTo(zz)&&zz.energy < 200 ) {
-                    creep.transfer(zz,RESOURCE_ENERGY);
-                } else if(creep.pos.isNearTo(tw)&&tw.energy < 500 ) {
-                    creep.transfer(tw,RESOURCE_ENERGY);
-                } */
-                //                    if(creep.memory.roleID == 0) {
-                /*                        let zz = Game.getObjectById(creep.memory.renewSpawnID);
-                                        if(zz != undefined && creep.pos.isNearTo(zz) && zz.energy < 100 ) {
-                                            creep.transfer(zz,RESOURCE_ENERGY)
-                                        } else {*/
-                //                            if(!spawn.moveToTransfer(creep)){
-
-                //if (!spawn.moveToTransfer(creep)) {
                 if (!constr.moveToBuild(creep)) {
                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(creep.room.controller);
                     }
                 }
-                // }
-                //                      }
-                /*              } else {
-                    if (!constr.moveToBuild(creep)) {
-                                if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                        creep.moveTo(creep.room.controller);
-                                }
-                        }
-                }
-*/
 
             } else {
                 if (creep.room.name == 'E33S76') {
@@ -142,14 +117,14 @@ class engineerClass extends roleParent {
                     }
                 } else {
                     //if (!super._constr.moveToPickUpEnergy(creep, 300)) {
-                    //if (!super._containers.withdrawFromStorage(creep)) {
-                    //                      if (!super._containers.moveToWithdraw(creep)) {
-                    //           if (!super._containers.moveToWithdraw(creep))
-                    super._sources.moveToWithdraw(creep);
-                    //                  }
-                    //                        creep.say('zZzZ')
-                    //  }
-                    //}
+                    if (!super._containers.withdrawFromTerminal(creep)) {
+                        //                      if (!super._containers.moveToWithdraw(creep)) {
+                        //           if (!super._containers.moveToWithdraw(creep))
+                        super._sources.moveToWithdraw(creep);
+                        //                  }
+                        //                        creep.say('zZzZ')
+                        //  }
+                    }
 
                 }
             }

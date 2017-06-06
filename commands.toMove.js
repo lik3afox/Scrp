@@ -519,19 +519,24 @@ class MoveInteract {
         var E25S76 = ['E25S75', 'E26S76'];
         var E35S84 = ['E35S84', 'E35S85', 'E34S84'];
         var E34S84 = ['E35S84', 'E35S85', 'E34S84'];
+
         var E35S74 = ['E35S74', 'E35S75', 'E34S74', 'E36S74', 'E36S75'];
-        var E34S74 = ['E35S74', 'E35S75', 'E34S74'];
-        var E36S74 = ['E35S74', 'E35S75', 'E36S74', 'E36S75'];
+        var E34S74 = ['E35S74', 'E34S74'];
+        var E36S74 = ['E35S74', 'E36S74', 'E36S75'];
         var E36S75 = ['E35S74', 'E35S75', 'E36S74', 'E36S75'];
+        var E35S76 = ['E35S76', 'E34S76', 'E35S75'];
+        var E34S76 = ['E35S76', 'E34S76'];
 
-        let flagz = _.filter(Game.flags, function(f) {
-            return f.color == FLAG.DEFEND;
-        });
+        var W4S94 = ['W4S94', 'W5S94'];
+        var W5S94 = ['W4S94', 'W5S94'];
 
-        if (creep.room.name == 'E28S73') {
-            //            console.log(flagz.length, creep.defendFlags().length);
-        }
+        /*
+                let flagz = _.filter(Game.flags, function(f) {
+                    return f.color == FLAG.DEFEND;
+                });
 
+                console.log(flagz.length); */
+        let flagz = creep.defendFlags();
         let targetFlag;
 
         for (var e in flagz) {
@@ -549,6 +554,21 @@ class MoveInteract {
                 //break;
             } else if (creep.memory.role == 'guard' || creep.memory.role == 'shooter') {
                 switch (creep.room.name) {
+                    case 'E34S76':
+                        if (_.contains(E34S76, flagz[e].pos.roomName)) {
+                            maxDistance = 1;
+                        } else {
+                            maxDistance = 0;
+                        }
+                        break;
+                    case 'E35S76':
+                        if (_.contains(E35S76, flagz[e].pos.roomName)) {
+                            maxDistance = 1;
+                        } else {
+                            maxDistance = 0;
+                        }
+                        break;
+
                     case 'E36S74':
                         if (_.contains(E36S74, flagz[e].pos.roomName)) {
                             maxDistance = 1;

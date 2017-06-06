@@ -282,7 +282,12 @@ class PowerInteract {
         } else if (powerBank.power < 1599) {
             console.log('Not enough power@', powerBank.pos);
             return false;
-        } else {
+        }
+        /*else if (powerBank.power < Game.cpu.bucket + 3000) {
+                   console.log('Not enough CPU@', powerBank.pos);
+                   return false;
+               } */
+        else {
             let rando = Math.floor(Math.random() * 100) + 1;
             var name = 'powerbankX' + rando;
             console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);

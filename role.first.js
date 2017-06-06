@@ -373,7 +373,7 @@ class roleFirst extends roleParent {
             getEnergy(creep);
 
         } else {
-            if (creep.room.energyAvailable == creep.room.energyCapacityAvailable || (creep.room.name == 'E37S75' && creep.room.energyAvailable == (creep.room.energyCapacityAvailable - 900))) {
+            if (creep.room.name != 'E23S75' && creep.room.energyAvailable == creep.room.energyCapacityAvailable || (creep.room.name == 'E37S75' && creep.room.energyAvailable == (creep.room.energyCapacityAvailable - 900))) {
                 if (creep.room.powerspawn !== undefined && creep.room.powerspawn !== null) {
                     if (creep.room.powerspawn.energy > creep.room.powerspawn.energyCapacity - 1000) {
                         //                        if(!mineralContainerEmpty(creep))

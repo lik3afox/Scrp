@@ -61,13 +61,25 @@ module.exports = function() {
     });
 
     Creep.prototype.defendFlags = function() {
-        if (this._defendFlags === undefined) {
-            this._defendFlags = _.filter(Game.flags, function(f) {
+        var redFlags;
+
+        if (this.memory.redFlagNames === undefined || this.memory.redFlagTimer != Game.time) {
+            redFlags = _.filter(Game.flags, function(f) {
                 return f.color == COLOR_RED;
             });
-
+            let redFlagsArray = [];
+            for (var e in redFlags) {
+                redFlagsArray.push(redFlags[e].name);
+            }
+            this.memory.redFlagNames = redFlagsArray;
+            this.memory.redFlagTimer = Game.time;
+            return redFlags;
         }
-        return this._defendFlags;
+        redFlags = [];
+        for (var z in this.memory.redFlagNames) {
+            redFlags.push(Game.flags[this.memory.redFlagNames[z]]);
+        }
+        return redFlags;
     };
 
     Room.prototype.dropped = function() {
