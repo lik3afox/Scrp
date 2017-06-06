@@ -211,8 +211,13 @@ var E35S73Module = [ // Spawn11 Room E28S77
 var E38S74Module = [
     ['first', require('role.first'), 0, 0]
 ];
+
 var E23S75Module = [
-    ['first', require('role.first'), 2, 0]
+    ['first', require('role.first'), 2, 0],
+    ['upbuilder', require('role.upbuilder'), 1, 2],
+    ['linker', require('role.linker'), 3, 4],
+    ['harvester', require('role.harvester'), 2, 2]
+
 ];
 
 

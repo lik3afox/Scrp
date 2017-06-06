@@ -117,13 +117,13 @@ class engineerClass extends roleParent {
                     }
                 } else {
                     //if (!super._constr.moveToPickUpEnergy(creep, 300)) {
+                                              if (!super._containers.moveToWithdraw(creep)) {
                     if (!super._containers.withdrawFromTerminal(creep)) {
-                        //                      if (!super._containers.moveToWithdraw(creep)) {
                         //           if (!super._containers.moveToWithdraw(creep))
                         super._sources.moveToWithdraw(creep);
                         //                  }
                         //                        creep.say('zZzZ')
-                        //  }
+                          }
                     }
 
                 }

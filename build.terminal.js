@@ -445,7 +445,7 @@ function makeMineralOrder() {
         'X': 25000
     };
     for (var e in minMinerals) {
-        if (Memory.totalMinerals[e] < 25000) {
+        if (Memory.stats.totalMinerals[e] < 25000) {
             amount = getAverageMineralPrice(e, true);
             console.log(amount, anyLikeOrder(e, "E28S71"), e);
             if (amount !== undefined && !anyLikeOrder(e, "E28S71")) {

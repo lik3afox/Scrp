@@ -287,12 +287,12 @@ class roleGuard extends roleParent {
 
                 creep.memory.keeperLair = creep.room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_KEEPER_LAIR } });
                 if (creep.memory.party == 'Flag57') {
-                    let zz = Game.getObjectById('5836b8288b8b9619519f191c');
-                    if (zz !== null)
-                        creep.memory.keeperLair.push(zz);
-                    zz = Game.getObjectById('5836b8268b8b9619519f18bc');
-                    if (zz !== null)
-                        creep.memory.keeperLair.push(zz);
+          //          let zz = Game.getObjectById('5836b8288b8b9619519f191c');
+        //            if (zz !== null)
+      //                  creep.memory.keeperLair.push(zz);
+    //                zz = Game.getObjectById('5836b8268b8b9619519f18bc');
+  //                  if (zz !== null)
+//                        creep.memory.keeperLair.push(zz);
                 }
                 creep.memory.goTo = analyzeSourceKeeper(creep);
 

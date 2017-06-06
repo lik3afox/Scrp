@@ -109,7 +109,7 @@ class mineralRole extends roleParent {
                     });
                     return;
                 }
-            } else if (creep.room.terminal !== undefined) {
+            } else if (creep.room.terminal !== undefined&& creep.room.controller.owner !== undefined) {
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     for (var a in creep.carry) {
                         creep.transfer(creep.room.terminal, a);
@@ -121,7 +121,7 @@ class mineralRole extends roleParent {
                     });
                     return;
                 }
-            } else if (creep.room.storage !== undefined) {
+            } else if (creep.room.storage !== undefined && creep.room.controller.owner !== undefined) {
                 if (creep.pos.isNearTo(creep.room.storage)) {
                     for (var z in creep.carry) {
                         creep.transfer(creep.room.storage, z);
