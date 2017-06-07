@@ -410,7 +410,7 @@ function getAverageMineralPrice(resource, buy) {
     /*    let zz = _.filter(Game.market.orders, function(o) {
             return o.type == (buy ? ORDER_BUY : ORDER_SELL) && o.resourceType == resource && o.active === true;
         }); */
-    //    console.log(e,'less than 25000',Memory.totalMinerals[e],zz.length);
+    //    console.log(e,'less than 25000',Memory.stats.totalMinerals[e],zz.length);
     //    if (zz.length === 0) {
     var amount;
     let zz = Game.market.getAllOrders({ type: (buy ? ORDER_BUY : ORDER_SELL), resourceType: resource });
@@ -458,19 +458,7 @@ function makeMineralOrder() {
 }
 
 function reportTerminals() {
-    let zz = countTerminals();
-    /*    let reportz = "";
-        for (var e in zz) {
-            if (zz[e].type == 'sk') {
-                reportz = reportz + '\n';
-            } else {
-                reportz = reportz + e + " " + zz[e] + "|";
-            }
-        } */
-    //    RawMemory.segments[0] = reportz;
-    Memory.stats.totalMinerals = zz;
-    //    Memory.totalMinerals = zz;
-
+    Memory.stats.totalMinerals = countTerminals();
 }
 
 function forEveryTerminal(terminal) {
@@ -515,7 +503,8 @@ class roleTerminal {
 
         makeMineralOrder();
         cleanUpOrders();
-        reportTerminals();
+        Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
+
         //            Memory.termRun = 10;
         for (var e in terminals) {
             let terminal = Game.getObjectById(terminals[e]);

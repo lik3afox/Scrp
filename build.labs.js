@@ -149,9 +149,15 @@ function whatDoIHave(creep) {
 
 function labDo(roomName, created, labz, laby) {
     let labs = returnLabs(roomName);
-    if (created === 0) return false;
-    //    console.log(( Memory.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
-    if (Memory.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource]) return false;
+    if (created === 0) {
+        //        console.log('created 0 ', created, labz, laby, roomName);
+        return false;
+    }
+    //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
+    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource]) {
+        //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
+        return false;
+    }
     let lab1 = Game.getObjectById(labs[created - 1].id);
     let lab2 = Game.getObjectById(labs[labz - 1].id);
     let lab3 = Game.getObjectById(labs[laby - 1].id);
@@ -171,7 +177,7 @@ function labDo(roomName, created, labz, laby) {
 
     let zz = lab1.runReaction(lab2, lab3);
 
-    //if(zz != 0)console.log(created,labz,l.aby, lab1.mineralAmount,'lab Reaction',    zz,lab1.mineralType,lab2.mineralType,lab3.mineralType,roomName );
+    if (zz !== 0) console.log(created, labz, laby, lab1.mineralAmount, 'lab Reaction', zz, lab1.mineralType, lab2.mineralType, lab3.mineralType, roomName);
     return true;
 }
 
@@ -410,9 +416,7 @@ class buildLab {
 
             for (var a in Game.rooms[roomName].memory.labMix) {
                 let form = Game.rooms[roomName].memory.labMix[a];
-                if (labDo(roomName, form[0], form[1], form[2])) {
-                    if (roomName == 'E28S73') break;
-                }
+                if (labDo(roomName, form[0], form[1], form[2])) {}
             }
 
         }

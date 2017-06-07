@@ -242,29 +242,43 @@ module.exports.loop = blackMagic(function() {
                 Game.spawns[title].memory.segmentID = totalSpawn;
                 tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
 
-                if (Game.spawns[title].memory.roomCheck === undefined) {
-                    Game.spawns[title].memory.roomCheck = roomCheck;
-                }
-                Game.spawns[title].memory.roomCheck--;
-
-                if (Game.spawns[title].memory.roomCheck < 0) {
-                    Game.spawns[title].memory.roomCheck = roomCheck;
-
-                    for (var name in Game.rooms) { // Start of Room loop w/ spawn
-                        if (Game.spawns[title].pos.roomName == Game.rooms[name].name) {
-                            if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
-                                ccSpawn.homeAnalyzed(Game.rooms[name], Game.spawns[title]);
-                            }
-                        } else {
-                            // See if this room has been analyzed by this spawn. 
-                            // Analyze Room for this spawn
-                            if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
-                                ccSpawn.analyzeRoom(Game.spawns[title], Game.rooms[name]);
-                            }
-                        }
-                    } // End of room loop. 
+                if (Game.spawns[title].memory.roadsTo.length === 0) {
+                    var BUILD = {
+                        source: 'xxxx',
+                        sourcePos: new RoomPosition(5, 5, 'S25W55'),
+                        miner: false,
+                        transport: false,
+                        expLevel: 0
+                    };
+                    Game.spawns[title].memory.roadsTo.push(BUILD);
                 }
 
+                /*                 This is for building automated stuff at home when it first starts.  
+                                if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
+                                    ccSpawn.homeAnalyzed(Game.rooms[name], Game.spawns[title]);
+                                }*/
+
+                /*
+                                if (Game.spawns[title].memory.roomCheck === undefined) {
+                                    Game.spawns[title].memory.roomCheck = roomCheck;
+                                }
+                                Game.spawns[title].memory.roomCheck--;
+
+                                if (Game.spawns[title].memory.roomCheck < 0) {
+                                    Game.spawns[title].memory.roomCheck = roomCheck;
+
+                                    for (var name in Game.rooms) { // Start of Room loop w/ spawn
+                                        if (Game.spawns[title].pos.roomName == Game.rooms[name].name) {
+                                        } else {
+                                            // See if this room has been analyzed by this spawn. 
+                                            // Analyze Room for this spawn
+                                            if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
+                                                ccSpawn.analyzeRoom(Game.spawns[title], Game.rooms[name]);
+                                            }
+                                        }
+                                    } // End of room loop. 
+                                }
+                */
             }
 
             let anySpawn = false;
