@@ -249,12 +249,9 @@ class roleTower {
                 }
             }
             //      }
-            var hurt = Game.rooms[roomName].find(FIND_MY_CREEPS, {
-                filter: (thisCreep) => {
-                    return thisCreep.hits < thisCreep.hitsMax;
-                }
-            });
-
+            var hurt = Game.rooms[roomName].find(FIND_MY_CREEPS);
+            hurt = _.filter(hurt, function(thisCreep) {
+                return thisCreep.hits < thisCreep.hitsMax; });
             //        showTowerRange(towers);
 
             if (!defendRoom(towers, hostiles)) {

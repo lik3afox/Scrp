@@ -39,7 +39,7 @@ function getTargets(creep) {
 
             }
         }
-//        console.log(zzz.length, '/', creep.memory.spawnTargets.length, creep.pos);
+        //        console.log(zzz.length, '/', creep.memory.spawnTargets.length, creep.pos);
         creep.say('bizzches', true);
         return zzz;
     }
@@ -64,25 +64,25 @@ function getTargets(creep) {
     let zzz;
     //    if (creep.room.name == 'E35S83') {
     zzz = creep.room.find(FIND_MY_STRUCTURES);
-        if (creep.room.name == 'E35S83') {
+    if (creep.room.name == 'E35S83') {
 
-    zzz = _.filter(zzz, function(structure) {
-        return (structure.structureType == STRUCTURE_EXTENSION ||
-            structure.structureType == STRUCTURE_SPAWN ||
-            structure.structureType == STRUCTURE_TOWER ||
-            structure.structureType == STRUCTURE_LAB 
-        );
-    });
-} else {
-    zzz = _.filter(zzz, function(structure) {
-        return (structure.structureType == STRUCTURE_EXTENSION ||
-            structure.structureType == STRUCTURE_SPAWN ||
-            structure.structureType == STRUCTURE_TOWER ||
-            structure.structureType == STRUCTURE_LAB ||
-            structure.structureType == STRUCTURE_POWER_SPAWN
-        );
-    });
-}
+        zzz = _.filter(zzz, function(structure) {
+            return (structure.structureType == STRUCTURE_EXTENSION ||
+                structure.structureType == STRUCTURE_SPAWN ||
+                structure.structureType == STRUCTURE_TOWER ||
+                structure.structureType == STRUCTURE_LAB
+            );
+        });
+    } else {
+        zzz = _.filter(zzz, function(structure) {
+            return (structure.structureType == STRUCTURE_EXTENSION ||
+                structure.structureType == STRUCTURE_SPAWN ||
+                structure.structureType == STRUCTURE_TOWER ||
+                structure.structureType == STRUCTURE_LAB ||
+                structure.structureType == STRUCTURE_POWER_SPAWN
+            );
+        });
+    }
 
     creep.memory.spawnTargets = [];
     for (var a in zzz) {
@@ -194,6 +194,26 @@ function checkAround(creep) {
         return true;
     }
     return false;
+}
+
+function determineAlphaSpawn(spawn) {
+    if (spawn.memory.alphaSpawn !== undefined) return true;
+
+    let spwns = spawn.room.find(FIND_STRUCTURES, {
+        filter: {
+            structureType: STRUCTURE_SPAWN
+        }
+    });
+
+    if (spwns.length == 1) {
+        spwns[0].memory.alphaSpawn = true;
+    }
+    for (var a in spwns) {
+        if (spwns[a].memory.alphaSpawn === undefined) {
+            spwns[a].memory.alphaSpawn = false;
+            spwns[a].memory.alphaSpawnID = spwns[0].id;
+        }
+    }
 }
 
 function getNewTarget(creep) {
@@ -418,56 +438,58 @@ class SpawnInteract {
 
     static checkMemory(spawn) {
 
-        if (spawn.memory.alphaSpawn) {
-            // Mode is to determine what is being built and also controller level so build.
-            if (spawn.memory.mode === undefined) {
-                spawn.memory.mode = 'beginning';
-                console.log('----------------Create mode Variable----------------');
-            }
-            if (spawn.memory.buildLevel === undefined) {
-                spawn.memory.buildLevel = 0;
-                console.log('----------------Create buildLevel Variable----------------');
-            }
-            // If there is no memory.create array then create it.
-            // Create is an array to hold what will be created.
+            determineAlphaSpawn(spawn);
 
-            if (spawn.memory.currentStack === undefined) {
-                spawn.memory.currentStack = 'create';
-                console.log('----------------Create CurrentStack Variable----------------');
-            }
-            if (spawn.memory.create === undefined) {
-                spawn.memory.create = [];
-                console.log('----------------Create Spawn Stack----------------');
-            }
-            if (spawn.memory.warCreate === undefined) {
-                spawn.memory.warCreate = [];
-                console.log('----------------Create Spawn WarStack----------------');
-            }
-            if (spawn.memory.expandCreate === undefined) {
-                spawn.memory.expandCreate = [];
-                console.log('----------------Create Spawn ExpansionStack----------------');
-            }
-
-            // Analyzed is an array of rooms that this spawn has looked at. 
-            if (spawn.memory.analyzed === undefined) {
-                for (var e in Game.spawns) {
-                    if (Game.spawns[e].homeEmpire) {
-                        spawn.memory.analyzed = Game.spawns[e].analyzed;
-                    }
+            if (spawn.memory.alphaSpawn) {
+                // Mode is to determine what is being built and also controller level so build.
+                if (spawn.memory.mode === undefined) {
+                    spawn.memory.mode = 'beginning';
+                    console.log('----------------Create mode Variable----------------');
                 }
-                spawn.memory.analyzed = [];
-                console.log('----------------Create Spawn Analyzed STACK----------------');
-            }
+                if (spawn.memory.buildLevel === undefined) {
+                    spawn.memory.buildLevel = 0;
+                    console.log('----------------Create buildLevel Variable----------------');
+                }
+                // If there is no memory.create array then create it.
+                // Create is an array to hold what will be created.
 
-            // roadsTo is an array of sources in other rooms that have roads to them. 
-            if (spawn.memory.roadsTo === undefined) {
-                spawn.memory.roadsTo = [];
-                console.log('----------------Create Spawn RoadsTo ----------------');
-            }
+                if (spawn.memory.currentStack === undefined) {
+                    spawn.memory.currentStack = 'create';
+                    console.log('----------------Create CurrentStack Variable----------------');
+                }
+                if (spawn.memory.create === undefined) {
+                    spawn.memory.create = [];
+                    console.log('----------------Create Spawn Stack----------------');
+                }
+                if (spawn.memory.warCreate === undefined) {
+                    spawn.memory.warCreate = [];
+                    console.log('----------------Create Spawn WarStack----------------');
+                }
+                if (spawn.memory.expandCreate === undefined) {
+                    spawn.memory.expandCreate = [];
+                    console.log('----------------Create Spawn ExpansionStack----------------');
+                }
+
+                // Analyzed is an array of rooms that this spawn has looked at. 
+                if (spawn.memory.analyzed === undefined) {
+                    for (var e in Game.spawns) {
+                        if (Game.spawns[e].homeEmpire) {
+                            spawn.memory.analyzed = Game.spawns[e].analyzed;
+                        }
+                    }
+                    spawn.memory.analyzed = [];
+                    console.log('----------------Create Spawn Analyzed STACK----------------');
+                }
+
+                // roadsTo is an array of sources in other rooms that have roads to them. 
+                if (spawn.memory.roadsTo === undefined) {
+                    spawn.memory.roadsTo = [];
+                    console.log('----------------Create Spawn RoadsTo ----------------');
+                }
 
 
-        } else {
-            /* let masterSpawn;
+            } else {
+                /* let masterSpawn;
          for(var i in Game.spawns) {
              if(Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == spawn.room.name) {
                  masterSpawn = Game.spawns[i];
@@ -481,52 +503,65 @@ class SpawnInteract {
             spawn.memory.create = masterSpawn.memory.warCreate;
             console.log('----------------Create Spawn ExpansionStack----------------');
         } */
-        }
-
-    }
-
-    static homeAnalyzed(room, spawn) {
-        if (!spawn.memory.alphaSpawn) return false;
-        console.log('----------------Analyzing', room.name, '----------------');
-        var sources = room.find(FIND_SOURCES);
-
-        var structure = room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTROLLER);
             }
-        });
-
-        sources = sources.concat(structure);
-
-        console.log('----------------' + sources.length + ':Paths made', '----------------');
-        for (var e in sources) {
-            var path = room.findPath(spawn.pos, sources[e].pos, {
-                ignoreCreeps: true
-            });
-            for (var i in path) {
-                var pos = new RoomPosition(path[i].x, path[i].y, room.name);
-                room.createConstructionSite(pos, STRUCTURE_ROAD);
-            }
-        }
-
-        console.log('-------------surrounded by roads ---------------------');
-
-        var roads = [
-            [0, 1],
-            [-1, 0],
-            [0, -1],
-            [1, 0]
-        ];
-        //            spawn.room.createConstructionSite(roads[e][0],roads[e][1], STRUCTURE_ROAD);
-        for (var a in roads) {
-            spawn.room.createConstructionSite(roads[a][0] + spawn.pos.x, roads[a][1] + spawn.pos.y, STRUCTURE_ROAD);
 
         }
+        /*
+            static homeAnalyzed(room, spawn) {
+                if (!spawn.memory.alphaSpawn) return false;
+                console.log('----------------Analyzing', room.name, '----------------');
+                var sources = room.find(FIND_SOURCES);
 
-        spawn.memory.analyzed.push(room.name);
-    }
+                var structure = room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_CONTROLLER);
+                    }
+                });
+
+                sources = sources.concat(structure);
+
+                console.log('----------------' + sources.length + ':Paths made', '----------------');
+                for (var e in sources) {
+                    var path = room.findPath(spawn.pos, sources[e].pos, {
+                        ignoreCreeps: true
+                    });
+                    for (var i in path) {
+                        var pos = new RoomPosition(path[i].x, path[i].y, room.name);
+                        room.createConstructionSite(pos, STRUCTURE_ROAD);
+                    }
+                }
+
+                console.log('-------------surrounded by roads ---------------------');
+
+                var roads = [
+                    [0, 1],
+                    [-1, 0],
+                    [0, -1],
+                    [1, 0]
+                ];
+                //            spawn.room.createConstructionSite(roads[e][0],roads[e][1], STRUCTURE_ROAD);
+                for (var a in roads) {
+                    spawn.room.createConstructionSite(roads[a][0] + spawn.pos.x, roads[a][1] + spawn.pos.y, STRUCTURE_ROAD);
+
+                }
+
+                spawn.memory.analyzed.push(room.name);
+            } */
 
     static renewCreep(spawn) {
+        if (spawn.autoRenew) {
+            let zz = spawn.pos.findInRange(FIND_CREEPS, 1);
+            zz = _.filter(zz, function(object) {
+                return (object !== null && object.memory !== undefined && object !== undefined && !object.memory.reportDeath &&
+                    object.memory.role != 'scientist' && object.ticksToLive < 1300);
+            });
+            if (zz.length === 0) return false;
+            let creep = zz[0];
+            spawn.renewCreep(creep);
+            return;
+        }
+
+
         if (spawn.room.name == 'E26S73') {
             spawn.memory.renewEnergyLevel = 1300;
         }
@@ -610,50 +645,50 @@ class SpawnInteract {
     }
 
     static createFromStack(spawn) {
-        var STACK = getStack(spawn);
-        if (spawn.memory.notSpawner === true) return;
-        if (STACK.length > 0) {
-            // Creation here.
+            var STACK = getStack(spawn);
+            if (spawn.memory.notSpawner === true) return;
+            if (STACK.length > 0) {
+                // Creation here.
 
-            if (spawn.canCreateCreep(STACK[0].build) == OK) {
+                if (spawn.canCreateCreep(STACK[0].build) == OK) {
 
-                spawn.memory.CreatedMsg = STACK[0].memory.role;
-                let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
-                //                console.log(spawn.memory.CreatedMsg,ez);
+                    spawn.memory.CreatedMsg = STACK[0].memory.role;
+                    let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
+                    //                console.log(spawn.memory.CreatedMsg,ez);
 
-                if (ez == -3) {
-                    STACK[0].name = STACK[0].name + 'v';
+                    if (ez == -3) {
+                        STACK[0].name = STACK[0].name + 'v';
+                    }
+                    STACK.shift();
+                } else if (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable) {
+                    let count = 0;
+                    do {
+                        count++;
+                        STACK[0].build.shift();
+                    } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
+                    console.log('><><>>>>-=-=-DOWNGRADE MODULE X' + count + '-=-=-=-=<<<<><><');
+
+                } else if (STACK[0].length === undefined && STACK[0].length === 0) {
+                    console.log("ERROR");
+                    console.log("ERROR");
+                    console.log("ERROR");
+                    console.log("ERROR");
+                    console.log("ERROR");
+                    //STACK.shift();
+
                 }
-                STACK.shift();
-            } else if (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable) {
-                let count = 0;
-                do {
-                    count++;
-                    STACK[0].build.shift();
-                } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
-                console.log('><><>>>>-=-=-DOWNGRADE MODULE X' + count + '-=-=-=-=<<<<><><');
-
-            } else if (STACK[0].length === undefined && STACK[0].length === 0) {
-                console.log("ERROR");
-                console.log("ERROR");
-                console.log("ERROR");
-                console.log("ERROR");
-                console.log("ERROR");
-                //STACK.shift();
 
             }
-
         }
-    }
-
-    static analyzed(Memory, room) {
-            for (var i in Memory.analyzed) {
-                if (Memory.analyzed[i] == room) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        /*
+            static analyzed(Memory, room) {
+                    for (var i in Memory.analyzed) {
+                        if (Memory.analyzed[i] == room) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }*/
         /*static runSpawnCount(spawnID) {
 
                 let spawn = Game.getObjectById(spawnID);
@@ -696,86 +731,88 @@ class SpawnInteract {
                 spawn.memory.totalCreep = total;
                 return totalCreeps;
             }*/
+        /*
+            static analyzeRoom(spawn, room) {
+                // See how far away it iss
+                if (!spawn.memory.alphaSpawn) return false;
 
-    static analyzeRoom(spawn, room) {
-        // See how far away it iss
-        if (!spawn.memory.alphaSpawn) return false;
+                //        let hostil = room.find(FIND_HOSTILE_CREEPS);
+                //       if(hostil.length > 0) return; 
 
-        //        let hostil = room.find(FIND_HOSTILE_CREEPS);
-        //       if(hostil.length > 0) return; 
-
-        /*        for  (var e in Game.rooms) {
-                    if(Game.rooms[e].name == room) {
-                        if(Game.rooms[room].controller.owner != undefined)  {
-                            console.log(room,'under other control');
-                            return;
-                            }
-                        }
-                    }*/
-
-        // console.log( Game.rooms[room].controller.owner.username, );    
-        var distance = Game.map.getRoomLinearDistance(room.name, spawn.room.name);
-        //        console.log(distance,distance,distance,distance,distance,distance);
-        if (distance < 2) {
-            // If not analyzed then lets start the analyzation
-            // How many sources in room.
-            var sources = room.find(FIND_SOURCES);
-            console.log('found sources', sources.length, ' in ', room.name);
-            for (var e in sources) {
-
-                let temp = {
-                    build: [MOVE],
-                    name: undefined,
-                    memory: {
-                        role: 'boss',
-                        home: room.name,
-                        parent: spawn.id,
-                        goal: sources[e].id
-
-                    }
-                };
-                console.log('Added boss to create road to source to stack');
-                spawn.memory.create.push(temp);
-            }
-
-            // If more than 3 sources then sourcekeeper room
-            if (sources.length == 3) {
-                // Find the minearl
-                var harvest = room.find(FIND_MINERALS);
-
-                var BUILD = {
-                    source: harvest[0].id,
-                    sourcePos: new RoomPosition(harvest[0].pos.x, harvest[0].pos.y, harvest[0].pos.roomName),
-                    mineral: false,
-                    expLevel: 11
-                };
-                spawn.memory.roadsTo.push(BUILD);
-            }
-            /*
-                        if(harvest >0) {
-                            for(var i in harvest) {
-                            let temp = {
-                                build: [MOVE],
-                                name: undefined,
-                                memory: {
-                                    role: 'boss',
-                                    home: room.name,
-                                    parent: spawn.id,
-                                    goal: harvest[i].id
-
+                /*        for  (var e in Game.rooms) {
+                            if(Game.rooms[e].name == room) {
+                                if(Game.rooms[room].controller.owner != undefined)  {
+                                    console.log(room,'under other control');
+                                    return;
+                                    }
                                 }
+                            }*/
+        /*
+                // console.log( Game.rooms[room].controller.owner.username, );    
+                var distance = Game.map.getRoomLinearDistance(room.name, spawn.room.name);
+                //        console.log(distance,distance,distance,distance,distance,distance);
+                if (distance < 2) {
+                    // If not analyzed then lets start the analyzation
+                    // How many sources in room.
+                    var sources = room.find(FIND_SOURCES);
+                    console.log('found sources', sources.length, ' in ', room.name);
+                    for (var e in sources) {
+
+                        let temp = {
+                            build: [MOVE],
+                            name: undefined,
+                            memory: {
+                                role: 'boss',
+                                home: room.name,
+                                parent: spawn.id,
+                                goal: sources[e].id
+
                             }
+                        };
+                        console.log('Added boss to create road to source to stack');
+                        spawn.memory.create.push(temp);
+                    }
 
-                            console.log('Added boss to create road to Harvest to stack');
-                            spawn.memory.create.push(temp);
-                        }
-                        }*/
+                    // If more than 3 sources then sourcekeeper room
+                    if (sources.length == 3) {
+                        // Find the minearl
+                        var harvest = room.find(FIND_MINERALS);
 
-        }
-        // Add it to spawn memory. 
-        //        console.log('ERRORERRORERRORERRORERRORERRORERRORERRORERROR');
-        spawn.memory.analyzed.push(room.name);
-    }
+                        var BUILD = {
+                            source: harvest[0].id,
+                            sourcePos: new RoomPosition(harvest[0].pos.x, harvest[0].pos.y, harvest[0].pos.roomName),
+                            mineral: false,
+                            expLevel: 11
+                        };
+                        spawn.memory.roadsTo.push(BUILD);
+                    }
+                    /*
+                                if(harvest >0) {
+                                    for(var i in harvest) {
+                                    let temp = {
+                                        build: [MOVE],
+                                        name: undefined,
+                                        memory: {
+                                            role: 'boss',
+                                            home: room.name,
+                                            parent: spawn.id,
+                                            goal: harvest[i].id
+
+                                        }
+                                    }
+
+                                    console.log('Added boss to create road to Harvest to stack');
+                                    spawn.memory.create.push(temp);
+                                }
+                                }*/
+        /*
+                }
+                // Add it to spawn memory. 
+                //        console.log('ERRORERRORERRORERRORERRORERRORERRORERRORERROR');
+                spawn.memory.analyzed.push(room.name);
+            } */
+
+
 }
 module.exports = SpawnInteract;
 //5836b80e8b8b9619519f1603 E24S74 17,42

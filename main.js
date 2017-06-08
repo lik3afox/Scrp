@@ -32,49 +32,14 @@ function whoWorksFor(goal) {
 }
 
 
-function DoRenew(spawn) {
-    /*    let zz = spawn.pos.findInRange(FIND_CREEPS, 1, {
-            filter: object => ((object.memory == undefined || !object.memory.reportDeath) &&object.memory.role != undefined &&
-                object.memory.role != 'scientist' && object.ticksToLive < 1300)
-        });*/
-    let zz = spawn.pos.findInRange(FIND_CREEPS, 1, {
-        filter: object => (object !== null && object.memory !== undefined && object !== undefined && !object.memory.reportDeath &&
-            object.memory.role != 'scientist' && object.ticksToLive < 1300)
-    });
-    if (zz.length === 0) return false;
-    let creep = zz[0];
-    spawn.renewCreep(creep);
-}
-
-function determineAlphaSpawn(spawn) {
-    if (spawn.memory.alphaSpawn !== undefined) return true;
-
-    let spwns = spawn.room.find(FIND_STRUCTURES, {
-        filter: {
-            structureType: STRUCTURE_SPAWN
-        }
-    });
-
-    if (spwns.length == 1) {
-        spwns[0].memory.alphaSpawn = true;
-    }
-    for (var a in spwns) {
-        if (spwns[a].memory.alphaSpawn === undefined) {
-            spwns[a].memory.alphaSpawn = false;
-            spwns[a].memory.alphaSpawnID = spwns[0].id;
-        }
-    }
-
-}
 
 function rampartCheck(spawn) {
 
 
-    var targets = spawn.room.find(FIND_HOSTILE_CREEPS, {
-        filter: object => (object.owner.username != 'Invader' && object.owner.username != 'zolox'
-                //&& object.owner.username != 'admon'
-            )
-            //            filter: object => (object.owner.username != 'Invader')
+    var targets = spawn.room.find(FIND_HOSTILE_CREEPS);
+    targets = _.filter(targets, function(object) {
+        return (object.owner.username != 'Invader' && object.owner.username != 'zolox' && object.owner.username != 'admon');
+        //            filter: object => (object.owner.username != 'Invader')
     });
 
     if (targets.length === 0) return;
@@ -230,7 +195,6 @@ module.exports.loop = blackMagic(function() {
             //        safemodeCheck(Game.spawns[title]);
 
             ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
-            determineAlphaSpawn(Game.spawns[title]);
 
             if (Game.spawns[title].memory.newSpawn === undefined) {
                 spawnsDo.checkNewSpawn(Game.spawns[title]);
@@ -304,16 +268,16 @@ module.exports.loop = blackMagic(function() {
                     }
 
                 }
-                if (Game.spawns[title].memory.autoRenew)
-                    DoRenew(Game.spawns[title]);
                 ccSpawn.createFromStack(Game.spawns[title]);
 
                 if (Game.spawns[title].memory.lastSpawn === undefined)
                     Game.spawns[title].memory.lastSpawn = 0;
                 Game.spawns[title].memory.lastSpawn++;
+
                 ccSpawn.renewCreep(Game.spawns[title]);
+
                 // This function is to make sure this spawn hasn't failed. 
-                Game.spawns[title].deadCheck();
+                //                      Game.spawns[title].deadCheck();
 
             } else if (Game.spawns[title].memory.alphaSpawn && Game.spawns[title].memory.checkCount < -25) {
                 let zz = spawnsDo.spawnCount(Game.spawns[title].id);

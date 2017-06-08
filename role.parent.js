@@ -624,13 +624,13 @@ class baseParent {
 
                     if (creep.memory.goal == '5836b8118b8b9619519f1659' ||
                         creep.memory.goal == '5836b82b8b8b9619519f1967' ||
-                        creep.memory.goal == '5873bd6f11e3e4361b4d9351' || creep.memory.goal == '5836b82b8b8b9619519f196c') {
+                        creep.memory.goal == '5836b82b8b8b9619519f196c') {
                         creep.moveMe(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     } else if (creep.memory.goal == '5873bd6f11e3e4361b4d934b') {
                         creep.moveTo(2, 2);
-                    } else if (creep.memory.goal == '5873bd6f11e3e4361b4d9351'){
-                        creep.moveTo(42,38 );
-                    }else {
+                    } else if (creep.memory.goal == '5873bd6f11e3e4361b4d9351') {
+                        creep.moveTo(42, 38);
+                    } else {
                         for (var e in Game.flags) {
                             if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
                                 /*let contain = Game.getObjectById(creep.memory.workContainer);
