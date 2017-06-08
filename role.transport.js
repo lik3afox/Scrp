@@ -263,13 +263,15 @@ class transport extends roleParent {
                     }
                 };
                 let zzz = Game.getObjectById(creep.memory.workContain);
-                task.pos = new RoomPosition(zzz.pos.x, zzz.pos.y, zzz.pos.roomName);
-                task.order = "moveTo";
-                task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
-                if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
-                task.energyPickup = true;
-                task.rangeHappy = 2;
-                creep.memory.task.push(task);
+                if (zzz !== null) {
+                    task.pos = new RoomPosition(zzz.pos.x, zzz.pos.y, zzz.pos.roomName);
+                    task.order = "moveTo";
+                    task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+                    if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
+                    task.energyPickup = true;
+                    task.rangeHappy = 2;
+                    creep.memory.task.push(task);
+                }
 
             } else if (_goal !== null) {
 

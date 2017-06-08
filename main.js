@@ -187,8 +187,8 @@ module.exports.loop = blackMagic(function() {
     var total = 0;
     spawnsDo.runCreeps();
     var spawnReport = {};
-
     for (var title in Game.spawns) { // Start of spawn Loo
+
         if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
 
             rampartCheck(Game.spawns[title]);
@@ -203,7 +203,6 @@ module.exports.loop = blackMagic(function() {
             if (Game.spawns[title].memory.alphaSpawn) {
 
                 totalSpawn++;
-                Game.spawns[title].memory.segmentID = totalSpawn;
                 tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
 
                 if (Game.spawns[title].memory.roadsTo.length === 0) {

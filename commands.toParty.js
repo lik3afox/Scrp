@@ -49,7 +49,7 @@ var bigPowerParty = [
 ];
 
 var smallPowerParty = [
-    ['fighter', require('army.fighter'), 1, 9],
+    ['fighter', require('army.fighter'), 1, 8],
     ['healer', require('army.healer'), 1, 5] // Healer
 ];
 

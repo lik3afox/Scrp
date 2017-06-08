@@ -1,3 +1,12 @@
+var linksCache = [];
+
+function getCached(id) {
+    if (linksCache[id] === undefined) {
+        linksCache[id] = Game.getObjectById(id);
+    }
+    return linksCache[id];
+}
+
 module.exports = function() {
 
     Object.defineProperty(Creep.prototype, "carryTotal", {
@@ -54,17 +63,11 @@ module.exports = function() {
         }
     });
 
-    Object.defineProperty(Creep.prototype, "stats", {
-        configurable: true,
-        get: function() {
-            return this.memory.stats;
-        },
-    });
     Creep.prototype.stats = function(stat) {
-        if (creep.memory.stats === undefined) {
-            creep.memory.stats = {};
+        if (this.memory.stats === undefined) {
+            this.memory.stats = {};
         }
-        if (creep.memory.stats[stat] === undefined) {
+        if (this.memory.stats[stat] === undefined) {
             /*
         let wParts = _.filter(creep.body, { type: WORK }).length;
         let mParts = _.filter(creep.body, { type: MOVE }).length;
@@ -76,41 +79,30 @@ module.exports = function() {
             */
             switch (stat) {
                 case 'mining':
-                    let zz = creep.memory.stats[stat] = _.filter(creep.body, { type: WORK }).length * 2;
+                    let zz = this.memory.stats[stat] = _.filter(this.body, { type: WORK }).length * 2;
                     return zz;
                 case 'heal':
                 case 'healing':
-                    let zzz = creep.memory.stats[stat] = _.filter(creep.body, { type: HEAL }).length;
+                    let zzz = this.memory.stats[stat] = _.filter(this.body, { type: HEAL }).length;
                     return zzz;
                 default:
                     console.log('requested stat not existant');
                     break;
             }
         } else {
-            return creep.memory.stats[stat];
+            return this.memory.stats[stat];
         }
     };
+    var redFlags;
     Creep.prototype.defendFlags = function() {
-        var redFlags;
-
-        if (this.memory.redFlagNames === undefined || this.memory.redFlagTimer != Game.time) {
+        if (redFlags === undefined) {
             redFlags = _.filter(Game.flags, function(f) {
                 return f.color == COLOR_RED;
             });
-            let redFlagsArray = [];
-            for (var e in redFlags) {
-                redFlagsArray.push(redFlags[e].name);
-            }
-            this.memory.redFlagNames = redFlagsArray;
-            this.memory.redFlagTimer = Game.time;
-            return redFlags;
-        }
-        redFlags = [];
-        for (var z in this.memory.redFlagNames) {
-            redFlags.push(Game.flags[this.memory.redFlagNames[z]]);
         }
         return redFlags;
     };
+
 
     Room.prototype.dropped = function() {
         var dEnergy;

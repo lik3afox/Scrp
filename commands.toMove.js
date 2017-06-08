@@ -442,7 +442,7 @@ class MoveInteract {
         for (var i in Game.spawns) {
             for (var e in Game.spawns[i].memory.roadsTo) {
                 //          console.log(Game.spawns[i].memory.roadsTo[e].source , goalID);
-                if (Game.spawns[i].memory.roadsTo[e].source == goalID) {
+                if (Game.spawns[i].memory.roadsTo[e] !== null && Game.spawns[i].memory.roadsTo[e].source == goalID) {
 
                     //              console.log(Game.spawns[i].memory.roadsTo[e].sourcePos.x);
 

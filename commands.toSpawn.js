@@ -25,81 +25,72 @@ function getModule(spawn) {
 var roomCache = [];
 
 function getTargets(creep) {
-    if (roomCache[creep.room.name] === undefined) {
-        if (creep.memory.spawnTargets !== undefined) {
-            let zzz = [];
-            for (var e in creep.memory.spawnTargets) {
-                let target = Game.getObjectById(creep.memory.spawnTargets[e]);
-                //            console.log(target.energy);
+    //    if (roomCache[creep.room.name] === undefined) {
+    if (creep.memory.spawnTargets !== undefined) {
+        let zzz = [];
+        for (var e in creep.memory.spawnTargets) {
+            let target = Game.getObjectById(creep.memory.spawnTargets[e]);
+            //            console.log(target.energy);
+            if (target.energy < target.energyCapacity) {
+                if (creep.pos.isNearTo(target)) {
+                    return [target];
+                }
+                zzz.push(target);
+            }
+        }
+        //        console.log(zzz.length, '/', creep.memory.spawnTargets.length, creep.pos);
+        creep.say('bizzches', true);
+        //          roomCache[creep.room.name] = zzz;
+        //        console.log('Setting roomCache', roomCache[creep.room.name].length, creep.room.name);
+        return zzz;
+    }
+
+    let zzz;
+
+    zzz = creep.room.find(FIND_MY_STRUCTURES);
+    if (creep.room.name == 'E35S83') {
+
+        zzz = _.filter(zzz, function(structure) {
+            return (structure.structureType == STRUCTURE_EXTENSION ||
+                structure.structureType == STRUCTURE_SPAWN ||
+                structure.structureType == STRUCTURE_TOWER ||
+                structure.structureType == STRUCTURE_LAB
+            );
+        });
+    } else {
+        zzz = _.filter(zzz, function(structure) {
+            return (structure.structureType == STRUCTURE_EXTENSION ||
+                structure.structureType == STRUCTURE_SPAWN ||
+                structure.structureType == STRUCTURE_TOWER ||
+                structure.structureType == STRUCTURE_LAB ||
+                structure.structureType == STRUCTURE_POWER_SPAWN
+            );
+        });
+    }
+
+    creep.memory.spawnTargets = [];
+    for (var a in zzz) {
+        creep.memory.spawnTargets.push(zzz[a].id);
+    }
+
+    //        roomCache[creep.room.name] = zzz;
+    //       console.log('Setting roomCache', roomCache[creep.room.name].length, creep.room.name);
+    return zzz;
+    /*    } else {
+            let tempzzz = [];
+            for (var v in roomCache[creep.room.name]) {
+                let target = roomCache[creep.room.name][v];
                 if (target.energy < target.energyCapacity) {
                     if (creep.pos.isNearTo(target)) {
                         return [target];
-                    } else {
-                        zzz.push(target);
                     }
-
+                    tempzzz.push(roomCache[creep.room.name][v]);
                 }
             }
-            //        console.log(zzz.length, '/', creep.memory.spawnTargets.length, creep.pos);
-            creep.say('bizzches', true);
-            console.log('Setting roomCache', creep.room.name);
-            roomCache[creep.room.name] = zzz;
-            return zzz;
-        }
-
-        if (creep.room.name == 'E27S75' || creep.room.name == 'E37S75') {
-            let zzz = creep.room.find(FIND_MY_STRUCTURES);
-            zzz = _.filter(zzz, function(structure) {
-                return (structure.structureType == STRUCTURE_TOWER ||
-                    structure.structureType == STRUCTURE_EXTENSION
-                    //                structure.structureType == STRUCTURE_POWER_SPAWN ||
-                    //structure.structureType == STRUCTURE_LAB
-                ) && structure.energy < structure.energyCapacity;
-            });
-            /*        if (creep.memory.spawnTargets === undefined) {
-                        creep.memory.spawnTargets = [];
-                        for (var z in zzz) {
-                            creep.memory.spawnTargets.push(zzz[z].id);
-                        }
-                    }
-                    return zzz; */
-        }
-
-        let zzz;
-        //    if (creep.room.name == 'E35S83') {
-        zzz = creep.room.find(FIND_MY_STRUCTURES);
-        if (creep.room.name == 'E35S83') {
-
-            zzz = _.filter(zzz, function(structure) {
-                return (structure.structureType == STRUCTURE_EXTENSION ||
-                    structure.structureType == STRUCTURE_SPAWN ||
-                    structure.structureType == STRUCTURE_TOWER ||
-                    structure.structureType == STRUCTURE_LAB
-                );
-            });
-        } else {
-            zzz = _.filter(zzz, function(structure) {
-                return (structure.structureType == STRUCTURE_EXTENSION ||
-                    structure.structureType == STRUCTURE_SPAWN ||
-                    structure.structureType == STRUCTURE_TOWER ||
-                    structure.structureType == STRUCTURE_LAB ||
-                    structure.structureType == STRUCTURE_POWER_SPAWN
-                );
-            });
-        }
-
-        creep.memory.spawnTargets = [];
-        for (var a in zzz) {
-            creep.memory.spawnTargets.push(zzz[a].id);
-        }
-
-        roomCache[creep.room.name] = zzz;
-        console.log('Setting roomCache', creep.room.name);
-        return zzz;
-    } else {
-        console.log('returning roomCache', creep.room.name);
-        return roomCache[creep.room.name];
-    }
+            console.log('returning roomCache', tempzzz
+    .length, creep.room.name);
+            return tempzzz.push;
+        } */
 
     /*  } else {
           zzz = creep.room.find(FIND_MY_STRUCTURES);

@@ -128,7 +128,7 @@ class roleHarvester extends roleParent {
         }
         if (creep.memory.level > 1) super.renew(creep);
 
-        if (creep.carry.energy > creep.carryCapacity - creep.stats.mining) {
+        if (creep.carry.energy > creep.carryCapacity - creep.stats('mining')) {
             if (super.depositNonEnergy(creep)) return;
             if (!link.deposit(creep)) {
                 if (!depositSpawn(creep)) {

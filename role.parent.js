@@ -685,13 +685,13 @@ class baseParent {
     static deathWatch(creep) {
         if (creep.memory.deathDistance === undefined) {
             let vv = Game.getObjectById(creep.memory.parent);
-            for (var a in vv.memory.roadsTo) {
-                if (creep.memory.goal == vv.memory.roadsTo[a].source) {
-                    if (vv.memory.roadsTo[a].aveDistance !== undefined) {
-                        creep.memory.deathDistance = vv.memory.roadsTo[a].aveDistance * 2;
-                    }
-                }
-            }
+            /*            for (var a in vv.memory.roadsTo) {
+                            if ( creep.memory.goal == vv.memory.roadsTo[a].source) {
+                                if (vv.memory.roadsTo[a].aveDistance !== undefined) {
+                                    creep.memory.deathDistance = vv.memory.roadsTo[a].aveDistance * 2;
+                                }
+                            }
+                        } */
             if (creep.memory.deathDistance === undefined) {
                 creep.memory.deathDistance = 'none';
             }

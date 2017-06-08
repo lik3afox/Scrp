@@ -1072,6 +1072,25 @@ class theSpawn {
                         break;
                     }
                 }
+                /*
+                                let creep = Game.creeps[name];
+                                let spawn = Game.getObjectById(creep.memory.parent);
+                                let thereIs = false;
+                                for(var e in spawn.memory.roadsTo) {
+                                    if(spawn.memory.roadsTo[e].source === creep.memory.goal) {
+                                        thereIs = true;
+                                        break;
+                                    } 
+                                }
+                                if(!thereIs) {
+                                    var BUILD = {
+                                        source: creep.memory.goal,
+                                        miner: false,
+                                        transport: false,
+                                        expLevel: 
+                                    };
+                                    spawn.memory.roadsTo.push(BUILD);
+                                } */
             }
             if (Game.creeps[name] !== undefined) {
                 let zzz = name; //[0] + name[1] + name[2] + "@" + Game.creeps[name].pos.roomName + ',' + Game.creeps[name].pos.x + "," + Game.creeps[name].pos.y;
@@ -1116,16 +1135,34 @@ class theSpawn {
 
 
         for (var ie in spawn.memory.roadsTo) {
-
+            if (spawn.memory.roadsTo[ie] === null) {
+                return;
+            }
             let xp = spawn.memory.roadsTo[ie].expLevel;
             _module = expansionModule[xp];
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 
+            /*            if (source !== null && source.mineralType !== undefined) {
+                            spawn.memory.roadsTo[ie].expLevel = 12;
+                            if (spawn.memory.roadsTo[ie].mineral === undefined) spawn.memory.roadsTo[ie].mineral = false;
+                            if (spawn.memory.roadsTo[ie].xtransport === undefined) spawn.memory.roadsTo[ie].xtransport = false;
+                            if (spawn.memory.roadsTo[ie].transport !== undefined) spawn.memory.roadsTo[ie].transport = undefined;
+                            if (spawn.memory.roadsTo[ie].miner !== undefined) spawn.memory.roadsTo[ie].miner = undefined;
+
+                        }
+                        if (spawn.memory.roadsTo[ie].sourcePos === undefined) {
+                            if (source !== null) {
+                                spawn.memory.roadsTo[ie].sourcePos = new RoomPosition(source.pos.x, source.pos.y, source.room.name);
+                            }
+                        }*/
+
             if (spawn.memory.roadsTo[ie].expLevel > 0) {
                 if (source === null) {
-                    console.log(source, spawn.memory.roadsTo[ie].source, spawn, ie);
-                    let obser = require('build.observer');
-                    obser.reqestRoom(spawn.memory.roadsTo[ie].sourcePos.roomName, 5);
+                    if (spawn.memory.roadsTo[ie].sourcePos !== undefined) {
+                        console.log(source, spawn.memory.roadsTo[ie].source, spawn, ie);
+                        let obser = require('build.observer');
+                        obser.reqestRoom(spawn.memory.roadsTo[ie].sourcePos.roomName, 5);
+                    }
                 } else {
                     if (source.room === undefined) {
                         console.log('HEREASD');
@@ -1186,7 +1223,7 @@ class theSpawn {
 
 
                 if (spawn.room.name == 'E35S73' && spawn.memory.roadsTo[ie].source == '5836b8288b8b9619519f190c') {
-                    maxTrans = spawn.memory.roadsTo[ie].transInfo.transportNum;
+                    //                    maxTrans = spawn.memory.roadsTo[ie].transInfo.transportNum;
                 }
 
                 if (spawn.memory.roadsTo[ie].transport !== undefined) {
@@ -1408,53 +1445,54 @@ class theSpawn {
         var e;
         switch (creep.memory.role) {
             case "miner":
-                for (e in spawn.memory.roadsTo) {
-                    if (spawn.memory.roadsTo[e].expLevel == 1) {
+                /*
+                                for (e in spawn.memory.roadsTo) {
+                                    if (spawn.memory.roadsTo[e].expLevel == 1) {
 
-                        if (creep.memory.keeperLairID === undefined || creep.memory.keeperLairID == 'none') {
-                            if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                                spawn.memory.roadsTo[e].expLevel = 2;
-                                spawn.memory.roadsTo[e].transport = false;
-                                return 0;
-                            }
-                        } else { // If this is an keeperlair set it to lv 13
-                            if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                                spawn.memory.roadsTo[e].expLevel = 9;
-                                spawn.memory.roadsTo[e].transport = false;
-                                return 0;
-                            }
+                                        if (creep.memory.keeperLairID === undefined || creep.memory.keeperLairID == 'none') {
+                                            if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
+                                                spawn.memory.roadsTo[e].expLevel = 2;
+                                                spawn.memory.roadsTo[e].transport = false;
+                                                return 0;
+                                            }
+                                        } else { // If this is an keeperlair set it to lv 13
+                                            if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
+                                                spawn.memory.roadsTo[e].expLevel = 9;
+                                                spawn.memory.roadsTo[e].transport = false;
+                                                return 0;
+                                            }
 
-                        }
+                                        }
 
-                    }
-                    if (spawn.memory.roadsTo[e].expLevel == 20) {
-                        if (spawn.memory.roadsTo[e].xtransport === undefined) {
-                            spawn.memory.roadsTo[e].xtransport = false;
-                            return 0;
-                        }
-                    }
-                }
+                                    }
+                                    if (spawn.memory.roadsTo[e].expLevel == 20) {
+                                        if (spawn.memory.roadsTo[e].xtransport === undefined) {
+                                            spawn.memory.roadsTo[e].xtransport = false;
+                                            return 0;
+                                        }
+                                    }
+                                }*/
 
                 return 750; // cooldown
 
             case "transport":
-                if (creep.memory.distance !== undefined && creep.memory.distance !== 0) {
-                    for (e in spawn.memory.roadsTo) {
-                        if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                            let expand = spawn.memory.roadsTo[e];
-                            if (expand.allDistance === undefined) {
-                                expand.allDistance = [];
-                            }
-                            if (creep.memory.distance !== 1)
-                                expand.allDistance.push(creep.memory.distance);
-                            //                      console.log("Creep Reporting distance :",creep.memory.distance,creep.memory.goal)
-                            if (expand.allDistance.length > 100) {
-                                expand.allDistance = undefined;
-                            }
+                /*                if (creep.memory.distance !== undefined && creep.memory.distance !== 0) {
+                                    for (e in spawn.memory.roadsTo) {
+                                        if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
+                                            let expand = spawn.memory.roadsTo[e];
+                                            if (expand.allDistance === undefined) {
+                                                expand.allDistance = [];
+                                            }
+                                            if (creep.memory.distance !== 1)
+                                                expand.allDistance.push(creep.memory.distance);
+                                            //                      console.log("Creep Reporting distance :",creep.memory.distance,creep.memory.goal)
+                                            if (expand.allDistance.length > 100) {
+                                                expand.allDistance = undefined;
+                                            }
 
-                        }
-                    }
-                }
+                                        }
+                                    }
+                                }*/
                 break;
             case "roadbuilder":
 

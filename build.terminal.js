@@ -202,16 +202,16 @@ function tradeEnergy(terminal) {
     let whatHappened = Game.market.deal(target.id, trans, targetRoom);
     console.log(whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost));
 
-    if (Memory.sellingHistory === undefined) { Memory.sellingHistory = []; }
+    /*    if (Memory.sellingHistory === undefined) { Memory.sellingHistory = []; }
 
-    let orderInfo = {
-        price: target.price,
-        distance: Game.map.getRoomLinearDistance(target.room, targetRoom),
-        energyCost: Game.market.calcTransactionCost(trans, target.room, targetRoom),
-        amount: trans
-    };
-    Memory.sellingHistory.push(orderInfo);
-
+        let orderInfo = {
+            price: target.price,
+            distance: Game.map.getRoomLinearDistance(target.room, targetRoom),
+            energyCost: Game.market.calcTransactionCost(trans, target.room, targetRoom),
+            amount: trans
+        };
+        Memory.sellingHistory.push(orderInfo);
+    */
     //    console.log('besties',target.id,trans,targetRoom,target.price,target.room);
     //    eTotal/1+target.cost 
     // Game.market.calcTransactionCost(1, targetRoom, order.roomName)

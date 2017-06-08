@@ -85,6 +85,14 @@ var maxMinerals = {
 
 };
 
+var linksCache = [];
+
+function getCached(id) {
+    if (linksCache[id] === undefined) {
+        linksCache[id] = Game.getObjectById(id);
+    }
+    return linksCache[id];
+}
 
 function whatDoIget(creep) {
     let labs = returnLabs(creep.room.name);
@@ -92,7 +100,7 @@ function whatDoIget(creep) {
     for (var i in labs) {
 
         if (labs[i].resource != 'none') {
-            let currentLab = Game.getObjectById(labs[i].id);
+            let currentLab = getCached(labs[i].id);
             //        console.log('lab works ',currentLab.energy , currentLab.energyCapacity,i)
             if (currentLab !== null && currentLab.energy < currentLab.energyCapacity && currentLab.room.name == creep.room.name) {
                 //                creep.say('yo');
@@ -121,7 +129,7 @@ function howMuchDoIget(creep, wanted) {
 function whereDoIPut(creep, have) {
     let labs = returnLabs(creep.room.name);
     for (var i in labs) {
-        let real = Game.getObjectById(labs[i].id);
+        let real = getCached(labs[i].id);
         if (real !== null && labs[i].resource == have && real.pos.roomName == creep.room.name && real.mineralAmount < labs[i].amount) {
             return labs[i].id;
         }
@@ -158,9 +166,9 @@ function labDo(roomName, created, labz, laby) {
         //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
         return false;
     }
-    let lab1 = Game.getObjectById(labs[created - 1].id);
-    let lab2 = Game.getObjectById(labs[labz - 1].id);
-    let lab3 = Game.getObjectById(labs[laby - 1].id);
+    let lab1 = getCached(labs[created - 1].id);
+    let lab2 = getCached(labs[labz - 1].id);
+    let lab3 = getCached(labs[laby - 1].id);
     lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
     lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
 
@@ -183,7 +191,7 @@ function labDo(roomName, created, labz, laby) {
 
 function labReady(roomName, labz) {
     let labs = returnLabs(roomName);
-    let lab1 = Game.getObjectById(labs[labz - 1].id);
+    let lab1 = getCached(labs[labz - 1].id);
     if (lab1.cooldown === 0) return true;
     return false;
 }
@@ -217,7 +225,7 @@ function updateRoomMember(roomName) {
     let minerals = {};
     let bb = Math.ceil(Math.random() * 2);
     for (var e in roomLabs) {
-        let lab = Game.getObjectById(roomLabs[e].id);
+        let lab = getCached(roomLabs[e].id);
         if (lab !== null) {
 
             if (bb == 1) {
@@ -273,7 +281,7 @@ class buildLab {
         let labs = returnLabs(creep.room.name);
         for (var i in labs) {
             if (labs[i].id != ' ') {
-                let test = Game.getObjectById(labs[i].id);
+                let test = getCached(labs[i].id);
                 if (test !== null && test.room.name == creep.room.name) {
                     returned.push(test);
                 }
@@ -433,7 +441,7 @@ class buildLab {
             // Terminal will use this, and then terminal will see if others have what it wants and gets it sent to them.
 
             for (var e in labs) {
-                let lab = Game.getObjectById(labs[e].id);
+                let lab = getCached(labs[e].id);
                 if (lab !== null) {
                     //        } && lab.mineralAmount < labs[e].amount) {
                     let temp = labs[e].resource;
@@ -447,7 +455,8 @@ class buildLab {
           let labs = returnLabs();
 
           for(var e in labs) {
-              let lab = Game.getObjectById(  labs[e].id );
+              let lab = Game.getObjectById
+(  labs[e].id );
               let res = labs[e].resource;
               let need = labs[e].amount;
               if(lab.mineralType != 'flex') {
@@ -467,7 +476,7 @@ class buildLab {
         creep.say('m');
         //    console.log(Where,'58b231304f9ae14589af186d');
         if (Where === undefined) return false;
-        let itgoes = Game.getObjectById(Where);
+        let itgoes = getCached(Where);
         //    console.log(Where,itgoes,itgoes.mineralType, What)
         if (What != RESOURCE_ENERGY) {
             if (itgoes.mineralType !== null) {

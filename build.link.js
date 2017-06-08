@@ -20,13 +20,22 @@ var _links = [
     '590f55b87ed675bb51e96132', '59217cc320243b65e83790bf', '592a46de7618175a3092fdae'
 ];
 
+var linksCache = [];
+
+function getCached(id) {
+    if (linksCache[id] === undefined) {
+        linksCache[id] = Game.getObjectById(id);
+    }
+    return linksCache[id];
+}
+
 function linkTransfer() {
     var LINK;
     var ttarget;
     for (var e in _links) {
 
 
-        LINK = Game.getObjectById(_links[e]);
+        LINK = getCached(_links[e]); //Game.getObjectById(_links[e]);
 
         if (LINK !== null && LINK.energy !== 800) {
             let targets = LINK.pos.findInRange(FIND_MY_CREEPS, 1, {
@@ -58,9 +67,9 @@ function sendEnergy(from, to, amount) {
     var linkTo;
 
     if (_.isArray(from)) {
-        linkTo = Game.getObjectById(to);
+        linkTo = getCached(to);
         for (var e in from) {
-            linkFrom = Game.getObjectById(from[e]);
+            linkFrom = getCached(from[e]);
             if (linkFrom !== null && linkTo !== null) {
                 linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' });
                 if (linkTo.energy < linkFrom.energy && linkFrom.cooldown === 0 && linkFrom.energy >= amount) {
@@ -73,8 +82,8 @@ function sendEnergy(from, to, amount) {
         }
 
     } else {
-        linkFrom = Game.getObjectById(from);
-        linkTo = Game.getObjectById(to);
+        linkFrom = getCached(from);
+        linkTo = getCached(to);
 
         if (linkFrom === null || linkTo === null) return false;
         linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' });
@@ -171,7 +180,7 @@ class buildLink {
         //return total;'5924524129c65d152e19c40c', 
         //        sendEnergy([''], '59243d3f403da5a97dea664a');
 
-        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc','5924524129c65d152e19c40c' ], '59243d3f403da5a97dea664a', 700);
+        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc', '5924524129c65d152e19c40c'], '59243d3f403da5a97dea664a', 700);
 
     }
 
@@ -199,7 +208,7 @@ class buildLink {
                 }
             }
         } else {
-            let LINK = Game.getObjectById(creep.memory.linkID);
+            let LINK = getCached(creep.memory.linkID);
             if (creep.pos.isNearTo(LINK)) {
                 creep.transfer(LINK, RESOURCE_ENERGY);
                 return true;
@@ -216,14 +225,14 @@ class buildLink {
 
         if (creep.memory.linkID === undefined) {
             for (var e in _links) {
-                LINK = Game.getObjectById(_links[e]);
+                LINK = getCached(_links[e]);
                 if (LINK !== null && creep.pos.isNearTo(LINK)) {
                     creep.memory.linkID = _links[e];
                     return true;
                 }
             }
         } else {
-            LINK = Game.getObjectById(creep.memory.linkID);
+            LINK = getCached(creep.memory.linkID);
             if (LINK !== null && creep.pos.isNearTo(LINK)) {
                 return true;
             }

@@ -1,13 +1,21 @@
-var observers = ['58b720b29b2a356930fd3438', '58ecd1142353c5da3b415c92', '58e886be32d51ba206139da7','5923cf17001830320d3e99c0'];
+var observers = ['58b720b29b2a356930fd3438', '58ecd1142353c5da3b415c92', '58e886be32d51ba206139da7', '5923cf17001830320d3e99c0'];
 //'E32S70',
 var roomsObserve = ['E30S80', 'E30S70', 'E31S70', 'E29S70', 'E30S71', 'E30S69',
-     'E28S70', 'E30S72', 'E30S68', 'E27S70', 'E26S70', 'E25S70',
+    'E28S70', 'E30S72', 'E30S68', 'E27S70', 'E26S70', 'E25S70',
     'E30S73', 'E30S74', 'E30S75', 'E30S76', 'E30S77',
     'E31S80', 'E29S80', 'E30S81', 'E30S79', 'E27S80', 'E26S80', 'E32S80', 'E33S80', 'E28S80', 'E30S82', 'E30S83', 'E30S78', 'E36S80', 'E35S80', 'E34S80', 'E33S80',
     'E36S70', 'E37S70', 'E38S70', 'E39S70', 'E40S70', 'E41S70', 'E42S70',
     'E40S68', 'E40S69', 'E40S71', 'E40S72', 'E40S73', 'E40S74'
 
 ];
+var linksCache = [];
+
+function getCached(id) {
+    if (linksCache[id] === undefined) {
+        linksCache[id] = Game.getObjectById(id);
+    }
+    return linksCache[id];
+}
 
 function doTask(tasks) {
     var target;
@@ -17,7 +25,7 @@ function doTask(tasks) {
         case "observer":
             let options = task.order.options;
             for (var a in observers) {
-                let ob = Game.getObjectById(observers[a]);
+                let ob = getCached(observers[a]);
                 for (var e in task.options) {
                     if (e == 'room') target = task.options[e];
                 }
@@ -48,7 +56,8 @@ class buildObserver {
     static reqestRoom(theroom, thetimed) {
         var request = { order: "observer", options: { room: theroom, timed: thetimed } };
         if (_.find(Memory.observerTask, function(o) {
-                return o.options.room == theroom; })) {
+                return o.options.room == theroom;
+            })) {
             return false;
         }
         Memory.observerTask.push(request);
@@ -56,7 +65,7 @@ class buildObserver {
 
     static doRoom(theroom) {
         for (var e in observers) {
-            let stru = Game.getObjectById(observers[e]);
+            let stru = getCached(observers[e]);
             stru.observeRoom(theroom);
         }
     }
@@ -81,7 +90,7 @@ class buildObserver {
         if (Game.rooms[target] === undefined) {
             // Then we observer
             for (var e in observers) {
-                let stru = Game.getObjectById(observers[e]);
+                let stru = getCached(observers[e]);
                 var distance = Game.map.getRoomLinearDistance(stru.room.name, target);
                 if (distance <= 10) {
                     stru.observeRoom(target);
@@ -94,7 +103,7 @@ class buildObserver {
                 power.analyzePowerBank(powerBank[0], Game.rooms[target]);
 
                 for (var o in observers) {
-                    let stru = Game.getObjectById(observers[o]);
+                    let stru = getCached(observers[o]);
                     stru.observeRoom(target);
                 }
 

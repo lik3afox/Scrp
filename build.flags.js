@@ -30,11 +30,11 @@ function doDefendThings(flag) {
         flag.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);
     }
 
-    let temp = [];
-    for (var e in hostiles) {
-        temp.push(hostiles[e].id);
-    }
-    flag.memory.hostilesID = temp;
+    //  let temp = [];
+    //    for (var e in hostiles) {
+    //    temp.push(hostiles[e].id);
+    //  }
+    //    flag.memory.hostilesID = temp;
     flag.room.memory.invasionFlag = flag.name;
 
     var creeps = flag.pos.findInRange(FIND_MY_CREEPS, 15);
@@ -118,15 +118,15 @@ function clearFlagMemory() {
 
 class buildFlags {
 
-    static getBads(flag) {
-        // This is used after it finds a flag.
-        if (flag.memory.hostilesID === undefined) return false;
-        let tmp = [];
-        for (var e in flag.memory.hostilesID) {
-            tmp.push(Game.getObjectById(flag.memory.hostilesID[e]));
-        }
-        return tmp;
-    }
+    /*    static getBads(flag) {
+            // This is used after it finds a flag.
+            if (flag.memory.hostilesID === undefined) return false;
+            let tmp = [];
+            for (var e in flag.memory.hostilesID) {
+                tmp.push(Game.getObjectById(flag.memory.hostilesID[e]));
+            }
+            return tmp;
+        } */
 
     static inRoom(search, creep) {
         var flag = getRoomFlag(creep);
@@ -153,38 +153,38 @@ class buildFlags {
     }
 
     /** @param {Creep} creep **/
+    /*
+        static reportMining(creep) {
 
-    static reportMining(creep) {
-
-        var roomFlag;
-        for (var e in Game.flags) {
-            if (Game.flags[e].pos.roomName == creep.pos.roomName && (Game.flags[e].color == COLOR_WHITE ||
-                    Game.flags[e].color == COLOR_BLUE ||
-                    Game.flags[e].color == COLOR_GREY)) {
-                roomFlag = Game.flags[e];
-                break;
+            var roomFlag;
+            for (var e in Game.flags) {
+                if (Game.flags[e].pos.roomName == creep.pos.roomName && (Game.flags[e].color == COLOR_WHITE ||
+                        Game.flags[e].color == COLOR_BLUE ||
+                        Game.flags[e].color == COLOR_GREY)) {
+                    roomFlag = Game.flags[e];
+                    break;
+                }
             }
-        }
-        if (roomFlag === undefined) {
-            console.log('NEEDS FLAG', creep.room.name);
-            return;
-        }
-        if (roomFlag.memory.goldMined === undefined) {
-            roomFlag.memory.goldMined = 0;
-        }
-        if (roomFlag.memory.totalMined === undefined) {
-            roomFlag.memory.totalMined = 0;
-        }
-
-        let workMod = 0;
-        for (var o in creep.body) {
-            if (creep.body[o].type == 'work') {
-                workMod++;
+            if (roomFlag === undefined) {
+                console.log('NEEDS FLAG', creep.room.name);
+                return;
             }
-        }
-        roomFlag.memory.goldMined = roomFlag.memory.goldMined + (workMod * 2);
-        roomFlag.memory.totalMined = roomFlag.memory.totalMined + (workMod * 2);
-    }
+            if (roomFlag.memory.goldMined === undefined) {
+                roomFlag.memory.goldMined = 0;
+            }
+            if (roomFlag.memory.totalMined === undefined) {
+                roomFlag.memory.totalMined = 0;
+            }
+
+            let workMod = 0;
+            for (var o in creep.body) {
+                if (creep.body[o].type == 'work') {
+                    workMod++;
+                }
+            }
+            roomFlag.memory.goldMined = roomFlag.memory.goldMined + (workMod * 2);
+            roomFlag.memory.totalMined = roomFlag.memory.totalMined + (workMod * 2);
+        } */
 
     /*static scan(){
         for(var e in Game.flags) {
@@ -215,11 +215,12 @@ class buildFlags {
             return o.color != COLOR_WHITE && o.color != COLOR_GREY && o.color != COLOR_CYAN;
         });
         //console.log(  (Game.cpu.getUsed() - start ), ' afterfilter',zFlags.length); start = Game.cpu.getUsed();
-
-        for (var e in zFlags) {
+        var e;
+        for (e in zFlags) {
             let flag = zFlags[e];
             //console.log(Game.flags[e],Game.flags[e].pos)
             //if(Game.flags[e].pos == undefined) console.log('adsfaf');
+            //            if(flag.room )
             switch (flag.color) {
 
                 case COLOR_RED:
@@ -231,13 +232,15 @@ class buildFlags {
                 case FLAG.GUARD:
 
                     let guard = flag;
-                    if (guard.memory.createCount === undefined) {
-                        guard.memory.createCount = delayBetweenScan;
-                    }
-                    guard.memory.createCount--;
-                    if (guard.memory.createCount < 0) {
-                        guard.memory.createCount = delayBetweenScan;
-                        require('commands.toGuard').create(flag);
+                    if (guard.room !== undefined) {
+                        if (guard.room.memory.guardCreateCount === undefined) {
+                            guard.room.memory.guardCreateCount = delayBetweenScan;
+                        }
+                        guard.room.memory.guardCreateCount--;
+                        if (guard.room.memory.guardCreateCount < 0) {
+                            guard.room.memory.guardCreateCount = delayBetweenScan;
+                            require('commands.toGuard').create(flag);
+                        }
                     }
                     break;
 
@@ -254,14 +257,16 @@ class buildFlags {
                         rampartThings(flag);
                     }
 
-                    if (rally.memory.createCount === undefined) {
-                        rally.memory.createCount = delayBetweenScan;
-                    }
-                    rally.memory.createCount--;
-                    if (rally.memory.createCount < 0) {
-                        party.create(flag);
-                        party.rally(flag);
-                        rally.memory.createCount = delayBetweenScan;
+                    if (rally.room !== undefined) {
+                        if (rally.room.memory.rallyCreateCount === undefined) {
+                            rally.room.memory.rallyCreateCount = delayBetweenScan;
+                        }
+                        rally.room.memory.rallyCreateCount--;
+                        if (rally.room.memory.rallyCreateCount < 0) {
+                            party.create(flag);
+                            party.rally(flag);
+                            rally.room.memory.rallyCreateCount = delayBetweenScan;
+                        }
                     }
 
                     break;
