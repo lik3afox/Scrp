@@ -249,8 +249,7 @@ class transport extends roleParent {
                     }
 
 
-                } else if (_goal !== null) {
-
+                } else if (creep.memory.workContain !== undefined) {
                 let task = {};
                 task.options = {
                     reusePath: rePath,
@@ -259,6 +258,31 @@ class transport extends roleParent {
                         fill: 'transparent',
                         stroke: '#ff0',
                         lineStyle: 'dashed',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                };
+                let zzz = Game.getObjectById(creep.memory.workContain);
+                task.pos = new RoomPosistion(zzz.pos.x, zzz.pos.y, zzz.pos.roomName);
+                task.order = "moveTo";
+
+
+                task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+                if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
+                task.energyPickup = true;
+                task.rangeHappy = rng;
+                creep.memory.task.push(task);
+
+            } else if (_goal !== null) {
+
+                let task = {};
+                task.options = {
+                    reusePath: rePath,
+                    ignoreRoads: true,
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#ff0',
+                        lineStyle: 'dotted',
                         strokeWidth: 0.15,
                         opacity: 0.5
                     }

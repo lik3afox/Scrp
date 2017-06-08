@@ -43,14 +43,14 @@ var defendParty = [
 // attacker
 ] */
 
-var powerParty = [
+var bigPowerParty = [
     ['fighter', require('army.fighter'), 1, 10],
     ['healer', require('army.healer'), 2, 4] // Healer
 ];
 
-var thePowerParty = [
-    ['fighter', require('army.fighter'), 2, 10],
-    ['healer', require('army.healer'), 2, 4] // Healer
+var smallPowerParty = [
+    ['fighter', require('army.fighter'), 1, 9],
+    ['healer', require('army.healer'), 1, 5] // Healer
 ];
 
 var mageParty = [
@@ -116,7 +116,8 @@ function getCurrentParty(flag) {
     // Powerflags do not use this to create they will do it themselves.
 
     if (flag.name.substr(0, 5) == 'power') {
-        if (flag.memory.spawn) return powerParty;
+        if (flag.memory.spawn) return smallPowerParty;
+        //        if (flag.memory.spawn) return bigPowerParty;
     }
     if (flag.name.substr(0, 5) == 'rampa') {
         return rampartParty;

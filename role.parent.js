@@ -668,7 +668,11 @@ class baseParent {
         if (stay.length === 0) return false;
         var close = creep.pos.findInRange(stay, 4);
         if (stay.length - close.length != stay.length) {
-//            creep.runFrom(stay);
+
+            var closer = creep.pos.findInRange(stay, 3);
+            if (closer.length > 0) {
+                creep.runFrom(stay);
+            }
             return true;
         } else {
             return false;
