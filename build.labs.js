@@ -211,7 +211,7 @@ function updateRoomMember(roomName) {
     if (Game.rooms[roomName].memory.calledMinerals === undefined) {
         Game.rooms[roomName].memory.calledMinerals = {};
     }
-    if (Game.rooms[roomName].memory.availableMinerals === undefined) Game.rooms[roomName].memory.availableMinerals = [];
+    //    if (Game.rooms[roomName].memory.availableMinerals === undefined) Game.rooms[roomName].memory.availableMinerals = [];
 
     let roomLabs = Game.rooms[roomName].memory.labs;
     let minerals = {};
@@ -254,9 +254,9 @@ function updateRoomMember(roomName) {
 
     Game.rooms[roomName].memory.labMinerals = minerals;
     // first update the availableMinearls;
-    for (var a in Game.rooms[roomName].memory.labMinerals) {
-        Game.rooms[roomName].memory.availableMinerals[a] = Game.rooms[roomName].memory.labMinerals[a] - Game.rooms[roomName].memory.calledMinerals[a];
-    }
+    //  for (var a in Game.rooms[roomName].memory.labMinerals) {
+    //      Game.rooms[roomName].memory.availableMinerals[a] = Game.rooms[roomName].memory.labMinerals[a] - Game.rooms[roomName].memory.calledMinerals[a];
+    //    }
 
 }
 
@@ -304,9 +304,9 @@ class buildLab {
         }).length;
         let mem = Game.rooms[roomName].memory;
         // first update the availableMinearls;
-        for (var a in mem.labMinerals) {
-            mem.availableMinerals[a] = mem.labMinerals[a] - mem.calledMinerals[a];
-        }
+        //    for (var a in mem.labMinerals) {
+        //          mem.availableMinerals[a] = mem.labMinerals[a] - mem.calledMinerals[a];
+        //        }
         let minNeeded;
         if (mineral == 'UO' ||
             mineral == 'LH' ||
@@ -352,11 +352,7 @@ class buildLab {
                 return n == HEAL;
             }).length;
             let mem = Game.rooms[roomName].memory;
-            // first update the availableMinearls;
-            for (var a in mem.labMinerals) {
-                mem.availableMinerals[a] = mem.labMinerals[a] - mem.calledMinerals[a];
-            }
-            console.log(workparts);
+
 
             //for(var a in boost) {
             let minNeeded;
@@ -375,7 +371,7 @@ class buildLab {
             if (boost == 'ZO') {
                 minNeeded = moveparts * 30;
             }
-            if (mem.availableMinerals[boost] >= minNeeded) {
+            if ((mem.labMinerals[a] - mem.calledMinerals[a]) >= minNeeded) {
                 //console.log(Game.rooms[roomName].memory.calledMinerals[boost],boost,minNeeded);
                 Game.rooms[roomName].memory.calledMinerals[boost] += minNeeded;
 

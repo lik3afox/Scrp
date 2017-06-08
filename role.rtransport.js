@@ -115,9 +115,9 @@ class reTransport extends roleParent {
     }
 
     static levels(level) {
-            if (level > classLevels.length - 1) level = classLevels.length - 1;
-            return classLevels[level];
-        }
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        return classLevels[level];
+    }
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
@@ -167,7 +167,7 @@ class reTransport extends roleParent {
             creep.memory.empty = true;
             creep.memory.repairTarget = undefined;
         }
-        if (creep.memory.stats.heal > 0) {
+        if (creep.memory.stats('heal') > 0) {
             creep.selfHeal();
 
             /*    if( !creep.healOther(5) ){

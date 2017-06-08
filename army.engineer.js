@@ -80,7 +80,7 @@ class engineerClass extends roleParent {
                 creep.memory.building = true;
             }
 
-            if (creep.carry.energy < (creep.memory.stats.mining + 1)) {
+            if (creep.carry.energy < (creep.memory.stats('mining') + 1)) {
                 creep.memory.building = false;
                 creep.say('harvesting');
 
@@ -117,13 +117,13 @@ class engineerClass extends roleParent {
                     }
                 } else {
                     //if (!super._constr.moveToPickUpEnergy(creep, 300)) {
-                                              if (!super._containers.moveToWithdraw(creep)) {
-                    if (!super._containers.withdrawFromTerminal(creep)) {
-                        //           if (!super._containers.moveToWithdraw(creep))
-                        super._sources.moveToWithdraw(creep);
-                        //                  }
-                        //                        creep.say('zZzZ')
-                          }
+                    if (!super._containers.moveToWithdraw(creep)) {
+                        if (!super._containers.withdrawFromTerminal(creep)) {
+                            //           if (!super._containers.moveToWithdraw(creep))
+                            super._sources.moveToWithdraw(creep);
+                            //                  }
+                            //                        creep.say('zZzZ')
+                        }
                     }
 
                 }

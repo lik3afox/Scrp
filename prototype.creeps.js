@@ -1,11 +1,5 @@
 module.exports = function() {
 
-    Object.defineProperty(Creep.prototype, "stats", {
-        configurable: true,
-        get: function() {
-            return this.memory.stats;
-        },
-    });
     Object.defineProperty(Creep.prototype, "carryTotal", {
         configurable: true,
         get: function() {
@@ -60,6 +54,42 @@ module.exports = function() {
         }
     });
 
+    Object.defineProperty(Creep.prototype, "stats", {
+        configurable: true,
+        get: function() {
+            return this.memory.stats;
+        },
+    });
+    Creep.prototype.stats = function(stat) {
+        if (creep.memory.stats === undefined) {
+            creep.memory.stats = {};
+        }
+        if (creep.memory.stats[stat] === undefined) {
+            /*
+        let wParts = _.filter(creep.body, { type: WORK }).length;
+        let mParts = _.filter(creep.body, { type: MOVE }).length;
+        let hParts = _.filter(creep.body, { type: HEAL }).length;
+        let rParts = _.filter(creep.body, { type: RANGED_ATTACK }).length;
+        let aParts = _.filter(creep.body, { type: ATTACK }).length;
+        let cParts = _.filter(creep.body, { type: CARRY }).length;
+        let cost = getCost(creep.body);
+            */
+            switch (stat) {
+                case 'mining':
+                    let zz = creep.memory.stats[stat] = _.filter(creep.body, { type: WORK }).length * 2;
+                    return zz;
+                case 'heal':
+                case 'healing':
+                    let zzz = creep.memory.stats[stat] = _.filter(creep.body, { type: HEAL }).length;
+                    return zzz;
+                default:
+                    console.log('requested stat not existant');
+                    break;
+            }
+        } else {
+            return creep.memory.stats[stat];
+        }
+    };
     Creep.prototype.defendFlags = function() {
         var redFlags;
 

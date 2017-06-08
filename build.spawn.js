@@ -775,8 +775,8 @@ function changeBuild(build, room) { // Input [body,body,carry],room
     // So we go through the body and take it apart
     // Once we take it apart, we'll start analzying the room and the parts that it can reduce.
     // First we will start with harvesting
-    let available = room.memory.availableMinerals;
-    if (available === undefined) return build;
+    //    let available = room.memory.availableMinerals;
+    //    if (available === undefined) return build;
 
     let workparts = _.filter(build, function(n) {
         return n == WORK;

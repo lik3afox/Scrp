@@ -153,47 +153,50 @@ function getDeathSpot(roomName) {
 class baseParent {
 
     static calcuateStats(creep) {
-        if (creep.memory.stats !== undefined) return;
+        return;
+        /*
+               if (creep.memory.stats !== undefined) return;
 
-        let wParts = _.filter(creep.body, { type: WORK }).length;
-        let mParts = _.filter(creep.body, { type: MOVE }).length;
-        let hParts = _.filter(creep.body, { type: HEAL }).length;
-        let rParts = _.filter(creep.body, { type: RANGED_ATTACK }).length;
-        let aParts = _.filter(creep.body, { type: ATTACK }).length;
-        let cParts = _.filter(creep.body, { type: CARRY }).length;
-        let cost = getCost(creep.body);
-        let stats = {
-            //            birthTime: Game.time
-            work: wParts,
-            heal: hParts,
-            carry: cParts,
-            move: mParts,
-            energyCost: cost,
-            spawnTime: creep.body.length * 3,
-            mining: wParts * 2,
-            harvesting: wParts,
-            attack: aParts * 30,
-            build: wParts * 5,
-            repair: wParts * 100,
-            repairEnergy: wParts,
-            upgrade: wParts,
-            carryMax: cParts * 50,
-            dismanle: wParts * 50,
-            healMax: hParts * 12,
-            rangeHeal: hParts * 4,
-            massMax: rParts * 1,
-            massMid: rParts * 4,
-            massMin: rParts * 10,
-            range: rParts * 10,
-            recovery: mParts,
-            fatigue: (creep.body.length - mParts),
-            swamp: (creep.body.length - mParts) * 5,
-            renewCost: Math.ceil(cost / 2.5 / creep.body.length),
-            renewTime: Math.floor(600 / creep.body.length),
+               let wParts = _.filter(creep.body, { type: WORK }).length;
+               let mParts = _.filter(creep.body, { type: MOVE }).length;
+               let hParts = _.filter(creep.body, { type: HEAL }).length;
+               let rParts = _.filter(creep.body, { type: RANGED_ATTACK }).length;
+               let aParts = _.filter(creep.body, { type: ATTACK }).length;
+               let cParts = _.filter(creep.body, { type: CARRY }).length;
+               let cost = getCost(creep.body);
+               let stats = {
+                   //            birthTime: Game.time
+                   // === 0 ? undefined : wParts
+                   work: wParts,
+                   heal: hParts,
+                   carry: cParts,
+                   move: mParts,
+                   energyCost: cost,
+                   spawnTime: creep.body.length * 3,
+                   mining: wParts * 2,
+                   harvesting: wParts,
+                   attack: aParts * 30,
+                   build: wParts * 5,
+                   repair: wParts * 100,
+                   repairEnergy: wParts,
+                   upgrade: wParts,
+                   carryMax: cParts * 50,
+                   dismanle: wParts * 50,
+                   healMax: hParts * 12,
+                   rangeHeal: hParts * 4,
+                   massMax: rParts * 1,
+                   massMid: rParts * 4,
+                   massMin: rParts * 10,
+                   range: rParts * 10,
+                   recovery: mParts,
+                   fatigue: (creep.body.length - mParts),
+                   swamp: (creep.body.length - mParts) * 5,
+                   renewCost: Math.ceil(cost / 2.5 / creep.body.length),
+                   renewTime: Math.floor(600 / creep.body.length),
 
-            level: creep.memory.level
-        };
-        creep.memory.stats = stats;
+                   level: creep.memory.level
+               };
+               creep.memory.stats = stats;*/
         //      let body = getBodyParts(creep);  This will look at parts returning part numbers - and modifiers. 
         //     Boosted?
         //    minig
