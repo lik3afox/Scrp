@@ -664,13 +664,11 @@ class baseParent {
                     }
                 } */
         var stay = creep.pos.findInRange(creep.room.hostilesHere(), 5);
-        //if(stay == undefined) {
-        //    stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS,4);  
-        //}
 
         if (stay.length === 0) return false;
         var close = creep.pos.findInRange(stay, 4);
         if (stay.length - close.length != stay.length) {
+//            creep.runFrom(stay);
             return true;
         } else {
             return false;

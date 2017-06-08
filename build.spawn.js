@@ -213,7 +213,7 @@ var E38S74Module = [
 ];
 
 var E23S75Module = [
-    ['first', require('role.first'), 1, 2],
+    ['first', require('role.first'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 1, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['linker', require('role.linker'), 2, 4],
@@ -224,7 +224,7 @@ var E23S75Module = [
 
 var E33S76Module = [
     ['first', require('role.first'), 2, 1],
-    ['linker', require('role.linker'), 1, 2],
+    ['linker', require('role.linker'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 1, 6],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['wallwork', require('role.wallworker'), 1, 3],

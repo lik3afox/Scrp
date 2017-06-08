@@ -171,7 +171,7 @@ class buildLink {
         //return total;'5924524129c65d152e19c40c', 
         //        sendEnergy([''], '59243d3f403da5a97dea664a');
 
-        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc', '59243d3f403da5a97dea664a'], '5924524129c65d152e19c40c', 700);
+        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc','5924524129c65d152e19c40c' ], '59243d3f403da5a97dea664a', 700);
 
     }
 
