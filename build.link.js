@@ -23,10 +23,10 @@ var _links = [
 var linksCache = [];
 
 function getCached(id) {
-    if (linksCache[id] === undefined) {
+//    if (linksCache[id] === undefined || ) {
         linksCache[id] = Game.getObjectById(id);
-    }
-    return linksCache[id];
+ //   }
+    return Game.getObjectById(id);// linksCache[id];
 }
 
 function linkTransfer() {

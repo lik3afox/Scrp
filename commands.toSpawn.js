@@ -268,7 +268,8 @@ class SpawnInteract {
             if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == creep.spawn) {
                 creep.memory.home = Game.spawns[i].room.name;
                 creep.memory.parent = Game.spawns[i].id;
-                Game.spawns[i].memory.warCreate.push(creep);
+                if(Game.spawns[i].memory.warCreate !== undefined )
+                    Game.spawns[i].memory.warCreate.push(creep);
                 console.log(Game.spawns[i], 'adding to stack', Game.spawns[i].name, creep.spawn);
             }
 

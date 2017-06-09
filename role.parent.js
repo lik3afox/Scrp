@@ -353,18 +353,34 @@ class baseParent {
                     if (badz.length === 0) {
                         if (task.energyPickup) {
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
-                                creep.moveMe(tmp2, task.options);
+                                if( creep.moveMe(tmp2, task.options) ==OK) {
+                                    if(task.count) {
+                                        creep.countDistance();
+                                    }
+                                }
                             }
                         } else {
-                            creep.moveMe(tmp2, task.options);
+                            if( creep.moveMe(tmp2, task.options) ==OK) {
+                                if(task.count) {
+                                    creep.countDistance();
+                                }
+                            }
                         }
                     }
                 } else if (task.energyPickup) {
                     if (!constr.moveToPickUpEnergyIn(creep, 7)) {
-                        creep.moveMe(tmp2, task.options);
+                        if( creep.moveMe(tmp2, task.options) ==OK) {
+                            if(task.count) {
+                            creep.countDistance();
+                            }
+                        }
                     }
                 } else {
-                    creep.moveMe(tmp2, task.options);
+                    if( creep.moveMe(tmp2, task.options) ==OK) {
+                        if(task.count) {
+                            creep.countDistance();
+                        }
+                    }
                 }
 
                 if (task.rangeHappy === undefined || task.rangeHappy === 0) {
@@ -854,6 +870,7 @@ class baseParent {
         }
 
         let focusFlag = Game.flags[creep.memory.focusFlagName];
+if(focusFlag === undefined)        console.log(creep.pos );
         if (focusFlag.pos.roomName == creep.room.name) {
             if (creep.room.controller.level >= 4 && creep.room.storage !== undefined) {
                 if (creep.room.controller.level < 6) {

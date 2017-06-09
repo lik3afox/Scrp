@@ -77,6 +77,7 @@ function powerAction(creep) {
             };
             task.pos = Game.flags[creep.memory.party].pos;
             task.order = "moveTo";
+            task.count = true;
             task.room = true;
             creep.memory.task.push(task);
 
