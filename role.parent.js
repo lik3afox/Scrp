@@ -346,7 +346,9 @@ class baseParent {
                 creep.say('T:move');
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
                 if (task.enemyWatch) {
-                    let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+                    let zzz = ['W4S94'];
+                    let rng = _.indexOf(zzz,creep.room.name) > 0 ? 4 : 6;
+                    let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, rng);
                     badz = _.filter(badz, function(object) {
                         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
                     });

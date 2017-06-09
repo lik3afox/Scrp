@@ -250,10 +250,12 @@ module.exports.loop = blackMagic(function() {
             }
             if ((Game.spawns[title].spawning === null)) {
                 if (Game.spawns[title].memory.alphaSpawn) {
+
                     let zz = _.filter(Game.spawns, function(o) {
                         return (o.spawning === null || o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
                     });
                     if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
+
                     if (anySpawn) {
                         if (Game.spawns[title].memory.checkCount === undefined) {
                             Game.spawns[title].memory.checkCount = countCheck;

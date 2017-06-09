@@ -162,7 +162,7 @@ function labDo(roomName, created, labz, laby) {
         return false;
     }
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
-    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource]) {
+    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied ) {
         //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
         return false;
     }

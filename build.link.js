@@ -17,16 +17,22 @@ var _links = [
     // Spawn room E38S72
     '58ffa4eaff28ce410959868a', '5908d7b565640df9183ab7cb', '5908fc066303cfc31b28f48a',
     // Spawn room W4S93
-    '590f55b87ed675bb51e96132', '59217cc320243b65e83790bf', '592a46de7618175a3092fdae'
+     '59217cc320243b65e83790bf', '592a46de7618175a3092fdae'
 ];
 
 var linksCache = [];
 
 function getCached(id) {
-//    if (linksCache[id] === undefined || ) {
-        linksCache[id] = Game.getObjectById(id);
- //   }
-    return Game.getObjectById(id);// linksCache[id];
+    if (linksCache[id] !== undefined ) {
+        if( linksCache[id] === null) {
+            console.log( 'Null Linked Cache',id);
+            return null;
+        } else {
+            return linksCache[id];        
+        }
+    }
+    linksCache[id] = Game.getObjectById(id);
+    return linksCache[id];
 }
 
 function linkTransfer() {
@@ -170,7 +176,7 @@ class buildLink {
         sendEnergy(['5906172405d3aa23ec649810', '590538c1db2e7585784144dc'], '590239e397a4002b4e9f550c', 700);
 
 
-        sendEnergy('590f55b87ed675bb51e96132', '590f2337820b9efc44a15794');
+//        sendEnergy('590f55b87ed675bb51e96132', '590f2337820b9efc44a15794');
         sendEnergy(['59134206c9fe82b849c2c92e', '59217cc320243b65e83790bf'], '590f2337820b9efc44a15794', 700);
 
         sendEnergy('592a46de7618175a3092fdae', '59233b3584aa3b2902f2543e');

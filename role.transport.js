@@ -160,7 +160,7 @@ class transport extends roleParent {
                     task.pos = goal.pos;
                     task.order = "roadMoveTo";
                     let zzz = Game.getObjectById(creep.memory.goal);
-                    if (zzz.energyCapacity === 3000) {
+                    if (zzz !== null && zzz.energyCapacity === 3000) {
                         task.enemyWatch = false;
                     } else {
                         task.enemyWatch = true;
