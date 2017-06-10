@@ -65,10 +65,9 @@ class engineerClass extends roleParent {
 
             creep.say('eng!');
             if (creep.memory.renewSpawnID === undefined) {
-                let finded = creep.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_SPAWN);
-                    }
+                let finded = creep.room.find(FIND_STRUCTURES);
+                finded = _.filter(finded, function(structure) {
+                    return (structure.structureType == STRUCTURE_SPAWN);
                 });
                 if (finded.length > 0) {
                     creep.memory.renewSpawnID = finded[0].id;

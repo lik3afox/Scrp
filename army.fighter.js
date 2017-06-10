@@ -123,7 +123,9 @@ function powerAction(creep) {
     if (Game.flags[creep.memory.party] !== undefined) {
         if (creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
             if (creep.memory.powerbankID === undefined) {
-                let zz = creep.room.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_POWER_BANK });
+                let zz = creep.room.find(FIND_STRUCTURES);
+                zz = _.filter(zz, function(o) {
+                    return o.structureType == STRUCTURE_POWER_BANK; });
                 if (zz.length > 0) {
                     creep.memory.powerbankID = zz[0].id;
                 }

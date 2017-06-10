@@ -50,6 +50,8 @@ function getSpawnCreating(flag) {
             return 'E35S73';
         case 'Flag57':
             return 'E37S75';
+        case 'Flag7':
+            return 'E26S77';
         case 'Flag8':
             return 'E33S76';
 
@@ -67,6 +69,7 @@ function getCurrentParty(flag) {
         case 'Flag57':
         case 'Flag55':
         case 'Flag8':
+        case 'Flag7':
             return guardParty;
         case 'Flag41':
         case 'Flag40':
@@ -91,25 +94,23 @@ function getCurrentParty(flag) {
 
 function findParty(flag) {
     var currentParty = getCurrentParty(flag);
+    var creationRoom = getSpawnCreating(flag);
     var total = [];
+
+    let yy = _.filter(Game.creeps, function(o) {
+        return o.memory.party == flag.name;
+    });
     for (var i in currentParty) {
 
-        let zz = _.filter(Game.creeps, function(o) {
-            return o.memory.role == currentParty[i][_name] &&
-                o.memory.party == flag.name;
+        let zz = _.filter(yy, function(o) {
+            return o.memory.role == currentParty[i][_name];
         });
         total[currentParty[i][_name]] = zz.length;
 
-        /*      for(var e in Game.creeps) {
-                if(Game.creeps[e].memory.role == currentParty[i][_name] &&
-                  Game.creeps[e].memory.party == flag.name) {
-
-                  total[currentParty[i][_name]]++;
-                }
-              }*/
-
         for (var a in currentParty) {
+
             for (var e in Game.spawns) {
+
                 let spawnz = Game.spawns[e];
                 for (var u in spawnz.memory.warCreate) {
                     if (currentParty[a][_name] == spawnz.memory.warCreate[u].memory.role &&
@@ -118,7 +119,9 @@ function findParty(flag) {
                     }
                 }
             }
+
         }
+
     }
     return total;
 }

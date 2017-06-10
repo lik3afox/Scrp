@@ -105,8 +105,9 @@ function globalCreep() {
 }
 
 function safemodeCheck(spawn) {
-    var targets = spawn.pos.findInRange(FIND_HOSTILE_CREEPS, 1, {
-        filter: object => (object.owner.username != 'Invader' && object.owner.username != 'zolox')
+    var targets = spawn.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+    targets = _.filter(targets, function(object) {
+        return (object.owner.username != 'Invader' && object.owner.username != 'zolox');
     });
     //    console.log('testin safemode',spawn.room.controller.safeModeCooldown);
     if (targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
@@ -157,6 +158,13 @@ function blackMagic(fn) {
 module.exports.loop = blackMagic(function() {
     var start = Game.cpu.getUsed();
 
+    if (Memory.showInfo === undefined) Memory.showInfo = 5;
+    // showInfo depending on the level will do different things. Lv 5 is max show all get all cpu and such info
+    // 4 is remove creeps
+    // 3 remove High grafana stas
+    // 2 Remove Low grafana stats
+    // 1 Remove visual
+    // 0 No extra
     //profiler.wrap(function() {
     /*        let lastLoaded = Memory.loaded;
             if (Game.time == loaded) {
@@ -363,6 +371,7 @@ module.exports.loop = blackMagic(function() {
         credits: Game.market.credits
             //        num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
     };
+
 
     /*
     for(var e in Game.constructionSites) {

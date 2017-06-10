@@ -42,7 +42,10 @@ function powerAction(creep) {
     if (Game.flags[creep.memory.party] !== undefined) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party], 5)) {
             if (creep.memory.powerbankID === undefined) {
-                let vv = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
+                let vv = creep.room.find(FIND_STRUCTURES);
+                vv = _.filter(vv, function(s) {
+                    return s.structureType == STRUCTURE_POWER_BANK;
+                });
                 if (vv.length > 0) {
                     creep.memory.powerbankID = vv[0].id;
                 }
@@ -148,10 +151,9 @@ class healerClass extends roleParent {
             }
         }
         //  creep.heal(creep);
-        var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 5, {
-            filter: function(object) {
-                return object.hits < object.hitsMax;
-            }
+        var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 5);
+        hurtz = _.filter(hurtz, function(object) {
+            return object.hits < object.hitsMax;
         }).sort((a, b) => a.hits - b.hits);
 
 

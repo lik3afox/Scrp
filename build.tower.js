@@ -167,20 +167,18 @@ function scanForRepair(troom) {
         return false;
     }
     troom.memory.timedScan = scanDelay;
-    let repairs = troom.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-            return ((structure.structureType == STRUCTURE_RAMPART) && structure.hits == 1);
-        }
+    let repairs = troom.find(FIND_STRUCTURES);
+    repairs = _.filter(repairs, function(structure) {
+        return ((structure.structureType == STRUCTURE_RAMPART) && structure.hits == 1);
     });
     for (var e in repairs) {
         troom.memory.repairQuery.push(repairs[e].id);
     }
 
-    repairs = troom.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-            return ((structure.structureType != STRUCTURE_WALL &&
-                structure.structureType != STRUCTURE_RAMPART) && structure.hits < structure.hitsMax - 1000);
-        }
+    repairs = troom.find(FIND_STRUCTURES);
+    repairs = _.filter(repairs, function(structure) {
+        return ((structure.structureType != STRUCTURE_WALL &&
+            structure.structureType != STRUCTURE_RAMPART) && structure.hits < structure.hitsMax - 1000);
     });
     if (repairs.length === 0) return false;
 
@@ -195,8 +193,10 @@ function scanForRepair(troom) {
 
 function repairRampart(towers) {
     if (towers[0].room.memory.towerRepairID === undefined) {
-        let targets = towers[0].room.find(FIND_STRUCTURES, {
-            filter: object => (object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART)
+        let targets = towers[0].room.find(FIND_STRUCTURES);
+
+        targets = _.filter(targets, function(object) {
+            return (object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART);
         }).sort((a, b) => a.hits - b.hits);
         towers[0].room.memory.towerRepairID = targets[0].id;
     }
@@ -222,12 +222,10 @@ class roleTower {
     /** @param {Creep} creep **/
     static run(roomName) {
         //    var total = 0;
-        var towers = Game.rooms[roomName].find(
-            FIND_MY_STRUCTURES, {
-                filter: {
-                    structureType: STRUCTURE_TOWER
-                }
-            });
+        var towers = Game.rooms[roomName].find(FIND_MY_STRUCTURES);
+        towers = _.filter(towers, function(o) {
+            return o.structureType == STRUCTURE_TOWER;
+        });
 
         if (towers.length > 0) {
             //                showTowerRange(towers);  
@@ -251,7 +249,8 @@ class roleTower {
             //      }
             var hurt = Game.rooms[roomName].find(FIND_MY_CREEPS);
             hurt = _.filter(hurt, function(thisCreep) {
-                return thisCreep.hits < thisCreep.hitsMax; });
+                return thisCreep.hits < thisCreep.hitsMax;
+            });
             //        showTowerRange(towers);
 
             if (!defendRoom(towers, hostiles)) {

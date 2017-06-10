@@ -26,10 +26,9 @@ var attack = require('commands.toAttack');
 var contain = require('commands.toContainer');
 
 function clearLabs(creep) {
-    let labs = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-            return (structure.structureType == STRUCTURE_LAB && structure.mineralAmount > 0);
-        }
+    let labs = creep.room.find(FIND_STRUCTURES);
+    labs = _.filter(labs, function(structure) {
+        return (structure.structureType == STRUCTURE_LAB && structure.mineralAmount > 0);
     });
     creep.say(labs.length);
     if (labs.length > 0) {

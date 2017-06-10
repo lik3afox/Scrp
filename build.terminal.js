@@ -476,8 +476,9 @@ function forEveryTerminal(terminal) {
             let doit = true;
             //          terminal.room.memory.powerSpawn = undefined;
             if (terminal.room.memory.powerSpawnID === undefined && reNeeded == RESOURCE_POWER) {
-                let zz = terminal.room.find(FIND_STRUCTURES, {
-                    filter: o => o.structureType == STRUCTURE_POWER_SPAWN
+                let zz = terminal.room.find(FIND_STRUCTURES);
+                zz = _.filter(zz, function(o) {
+                    return o.structureType == STRUCTURE_POWER_SPAWN;
                 });
                 if (zz.length === 0) {
                     doit = false;
@@ -514,8 +515,9 @@ class roleTerminal {
             let needed = labs.neededMinerals(terminal.pos.roomName);
             getMinerals(terminal, needed);
             if (terminal.room.memory.powerSpawnID === undefined) {
-                let zz = terminal.room.find(FIND_STRUCTURES, {
-                    filter: o => o.structureType == STRUCTURE_POWER_SPAWN
+                let zz = terminal.room.find(FIND_STRUCTURES);
+                zz = _.filter(zz, function(o) {
+                    return o.structureType == STRUCTURE_POWER_SPAWN;
                 });
                 if (zz.length === 0) {
                     //      doit = false;

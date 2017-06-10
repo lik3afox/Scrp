@@ -97,7 +97,10 @@ class buildObserver {
                 }
             }
         } else {
-            let powerBank = Game.rooms[target].find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
+            let powerBank = Game.rooms[target].find(FIND_STRUCTURES);
+            powerBank = _.filter(powerBank, function(s) {
+                return s.structureType == STRUCTURE_POWER_BANK;
+            });
             if (powerBank.length > 0) {
                 let power = require('commands.toPower');
                 power.analyzePowerBank(powerBank[0], Game.rooms[target]);

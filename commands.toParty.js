@@ -377,7 +377,6 @@ class partyInteract {
 
     static runFlag() {
 
-
     }
 
     static rally(flag) {
@@ -417,7 +416,6 @@ class partyInteract {
 
     }
 
-
     static create(flag) {
         var totalParty = findParty(flag);
         var currentParty = getCurrentParty(flag);
@@ -455,90 +453,6 @@ class partyInteract {
             }
         }
     }
-
-    static gathered(flag) {
-        //    console.log(flag.pos);
-
-        var my = flag;
-        //    console.log(my);
-
-        var total = flag.pos.findInRange(FIND_MY_CREEPS, 10, {
-            filter: (creep) => {
-                return (creep.memory.role == 'fighter' ||
-                    creep.memory.role == 'mage' ||
-                    creep.memory.role == 'healer' ||
-                    creep.memory.role == 'ranger');
-            }
-
-        });
-
-        // needed from array
-        // found in total.
-        let totalz = []; //findParty();
-        let needed = [];
-        var currentParty = getCurrentParty(flag);
-
-        for (var e in currentParty) {
-            needed[currentParty[e][_name]] = currentParty[e][_number];
-            totalz[currentParty[e][_name]] = 0;
-        }
-
-        for (var o in total) {
-            for (var a in totalz)
-                if (total[o].memory.role == a) {
-                    totalz[a]++;
-                }
-        }
-
-        //    console.log('total',total,totalz);
-        var completed = true;
-        for (var i in needed) {
-            for (var u in totalz) {
-                if (i == u)
-
-                //        console.log(i,e,totalz[e],needed[i]);
-                    if ((u == i) && (totalz[u] < needed[i])) {
-
-                    completed = false;
-
-                }
-            }
-        }
-        return completed;
-    }
-
-    static isFlag() {
-        for (var e in Game.flags) {
-            //      console.log(Game.flags[e].color);
-            if (Game.flags[e].color == COLOR_YELLOW) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    static followTheLeader(creep) {
-        if (creep.memory.roleID === 0) {
-            var movement = require('commands.toMove');
-            movement.moveToFlag(creep);
-            for (var e in Game.creeps) {
-                if (Game.creeps[e].memory.role == 'defender' && Game.creeps[e].memory.roleID !== 0) {
-                    Game.creeps[e].memory.leader = creep.id;
-                }
-            }
-        } else {
-            creep.say('fol');
-            creep.moveTo(Game.getObjectById(creep.memory.leader));
-            return false;
-        }
-    }
-
-    // An Yellow attack flag can also be placed where the warband will go when completed. 
-
-    // it goes through the current party and request it to a spawner.
-
-    // Once created they all rally towards the yellow flag until it meet the criteria for the warband.
-    // Then go towards the yellow attack flag.
 
 }
 
