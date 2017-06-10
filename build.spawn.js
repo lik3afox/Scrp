@@ -132,7 +132,7 @@ var spawn3Module = [
     ['first', require('role.first'), 2, 2],
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['minHarvest', require('role.mineral'), 2, 5],
+    ['minHarvest', require('role.mineral'), 1, 6],
     ['nuker', require('role.nuker'), 1, 4],
     ['wallwork', require('role.wallworker'), 1, 5]
 ];

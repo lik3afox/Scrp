@@ -554,6 +554,21 @@ class MoveInteract {
                 //break;
             } else if (creep.memory.role == 'guard' || creep.memory.role == 'shooter') {
                 switch (creep.room.name) {
+                    case 'W4S94':
+                        if (_.contains(W4S94, flagz[e].pos.roomName)) {
+                            maxDistance = 1;
+                        } else {
+                            maxDistance = 0;
+                        }
+                        break;
+                    case 'W5S94':
+                        if (_.contains(W5S94, flagz[e].pos.roomName)) {
+                            maxDistance = 1;
+                        } else {
+                            maxDistance = 0;
+                        }
+                        break;
+
                     case 'E34S76':
                         if (_.contains(E34S76, flagz[e].pos.roomName)) {
                             maxDistance = 1;

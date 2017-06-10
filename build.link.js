@@ -20,19 +20,22 @@ var _links = [
      '59217cc320243b65e83790bf', '592a46de7618175a3092fdae'
 ];
 
-var linksCache = [];
+var gameCache = [];
 
 function getCached(id) {
-    if (linksCache[id] !== undefined ) {
-        if( linksCache[id] === null) {
-            console.log( 'Null Linked Cache',id);
+    if (gameCache[id] !== undefined ) {
+        if( gameCache[id] === null) {
+    //        console.log( 'Null Linked Cache',id);
             return null;
         } else {
-            return linksCache[id];        
+    //        console.log('returned cache',gameCache[id],id);
+            return gameCache[id];        
         }
-    }
-    linksCache[id] = Game.getObjectById(id);
-    return linksCache[id];
+    } 
+    let zzz = Game.getObjectById(id);
+//    console.log('Created Cache');
+    gameCache[id] = zzz; 
+    return zzz;//Game.getObjectById(id);
 }
 
 function linkTransfer() {
@@ -107,6 +110,7 @@ class buildLink {
 
     /** @param {Creep} creep **/
     static run() {
+        gameCache = [];
         linkTransfer();
 
         total = 0;
@@ -122,7 +126,7 @@ class buildLink {
 
         // Spawn 3
         sendEnergy(['58b094643386e27ab8eb8cb0', '58b087634b99972008ac7457'], '58b0ad8777b2837790268120', 700);
-        sendEnergy(['58b0e62dabc23087239d8454', '587e9b7e1421f25947a82946'], '58b0ad8777b2837790268120');
+        sendEnergy(['58b0e62dabc23087239d8454'], '58b0ad8777b2837790268120');
 
         // Spawn 2
         sendEnergy('58ef09f13685233e323f2786', '58ef020fa6a3e00542e66ce3');
@@ -187,7 +191,6 @@ class buildLink {
         //        sendEnergy([''], '59243d3f403da5a97dea664a');
 
         sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc', '5924524129c65d152e19c40c'], '59243d3f403da5a97dea664a', 700);
-
     }
 
     static deposit(creep) { // Used by harvesters
