@@ -46,6 +46,7 @@ var W4S93 = '59090e6f771e5d03793d20b4';
 var E33S76 = '5923a6cbf9f4ceb75afbc831';
 var E23S75 = '5934fa72604c7e190610993f';
 var upgradeSpawn = '58c074ead62936ed5e2bce0b';
+var E37S75 = '58f793ad1f64b8d842dc0c16';
 
 
 function clearTerminal(creep) {
@@ -114,6 +115,38 @@ function eitherOr(creep, containz1, containz2) {
     }
 
 }
+
+
+function E37S75Room(creep) {
+    let goto;
+    switch (creep.memory.roleID) {
+
+        case 0:
+            goto = Game.getObjectById('592b1f2b9eb200190288958e');
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+
+
+    }
+
+}
+
+
+
+
+function E37S75Transfer(creep) {
+    switch (creep.memory.roleID) {
+        //        case 1:
+        default: toStorageOrTerminal(creep);
+        break;
+    }
+}
+
 
 function E23S75Room(creep) {
     let goto;
@@ -212,7 +245,7 @@ function E33S76Room(creep) {
 function E33S76Transfer(creep) {
     switch (creep.memory.roleID) {
         case 1:
-            goto = creep.room.terminal;// Game.getObjectById('5924524129c65d152e19c40c');
+            goto = creep.room.terminal; // Game.getObjectById('5924524129c65d152e19c40c');
             if (goto !== null && creep.transfer(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(goto, {
                     reusePath: 20 //,ignoreCreeps:true
@@ -1109,6 +1142,9 @@ class roleLinker extends roleParent {
                 case E23S75:
                     E23S75Room(creep);
                     break;
+                case E37S75:
+                    E37S75Room(creep);
+                    break;
                 case spawn2:
                     spawn2Room(creep);
                     break;
@@ -1135,6 +1171,9 @@ class roleLinker extends roleParent {
                     break;
                 case spawn7:
                     s7Transfer(creep);
+                    break;
+                case E37S75:
+                    E37S75Transfer(creep);
                     break;
 
                 case spawn2:

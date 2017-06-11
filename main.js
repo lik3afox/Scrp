@@ -129,11 +129,11 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
             if (Game.flags.recontrol === undefined) {
 
                 spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                let zz = spawn.room.find(FIND_CREEPS);
-                zz = _.filter(zz, function(o) {
-                    return o.memory.role == 'miner';
-                });
-                if (zz.length > 0) zz[0].suicide();
+                /*                let zz = spawn.room.find(FIND_CREEPS);
+                                zz = _.filter(zz, function(o) {
+                                    return o.memory.role == 'miner';
+                                });
+                                if (zz.length > 0) zz[0].suicide(); */
             }
         }
     }
@@ -224,32 +224,6 @@ module.exports.loop = blackMagic(function() {
                     Game.spawns[title].memory.roadsTo.push(BUILD);
                 }
 
-                /*                 This is for building automated stuff at home when it first starts.  
-                                if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
-                                    ccSpawn.homeAnalyzed(Game.rooms[name], Game.spawns[title]);
-                                }*/
-
-                /*
-                                if (Game.spawns[title].memory.roomCheck === undefined) {
-                                    Game.spawns[title].memory.roomCheck = roomCheck;
-                                }
-                                Game.spawns[title].memory.roomCheck--;
-
-                                if (Game.spawns[title].memory.roomCheck < 0) {
-                                    Game.spawns[title].memory.roomCheck = roomCheck;
-
-                                    for (var name in Game.rooms) { // Start of Room loop w/ spawn
-                                        if (Game.spawns[title].pos.roomName == Game.rooms[name].name) {
-                                        } else {
-                                            // See if this room has been analyzed by this spawn. 
-                                            // Analyze Room for this spawn
-                                            if (!ccSpawn.analyzed(Game.spawns[title].memory, Game.rooms[name].name)) {
-                                                ccSpawn.analyzeRoom(Game.spawns[title], Game.rooms[name]);
-                                            }
-                                        }
-                                    } // End of room loop. 
-                                }
-                */
             }
 
             let anySpawn = false;
@@ -260,7 +234,7 @@ module.exports.loop = blackMagic(function() {
                 if (Game.spawns[title].memory.alphaSpawn) {
 
                     let zz = _.filter(Game.spawns, function(o) {
-                        return (o.spawning === null || o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
+                        return (o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
                     });
                     if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
 
@@ -372,13 +346,14 @@ module.exports.loop = blackMagic(function() {
             //        num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
     };
 
-
-    /*
+    //    whoWorksFor('5836b81b8b8b9619519f178d');
+    /*5836b8308b8b9619519f19fa
     for(var e in Game.constructionSites) {
         if(Game.constructionSites[e].pos.roomName == 'W4S95'){
             Game.constructionSites[e].remove();
         }
     } */
+
 
     if (Game.spawns.Spawn1 !== undefined) {
         let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);

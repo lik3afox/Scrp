@@ -58,11 +58,11 @@ var mageParty = [
 ];
 
 var warParty = [
-    ['first', require('role.first'), 0, 4],
-    ['fighter', require('army.fighter'), 0, 11],
-    ['demolisher', require('army.demolisher'), 0, 1],
-    ['ranger', require('army.ranger'), 0, 1],
-    ['healer', require('army.healer'), 0, 6] // Healer    
+    ['fighter', require('army.fighter'), 2, 11],
+    ['first', require('role.first'), 1, 4],
+    //    ['demolisher', require('army.demolisher'), 0, 1],
+    ['ranger', require('army.ranger'), 1, 1],
+    ['healer', require('army.healer'), 1, 6] // Healer    
 ];
 // ID: 5836bb2241230b6b7a5b9a1f 8,6 e24s76
 
@@ -214,7 +214,7 @@ function getSpawnCreating(flag) {
     switch (flag.name) {
         //    case 'scout2' :
         case 'warparty1':
-            return 'E26S73';
+            return 'W4S93';
 
         case 'warparty2':
             return 'E28S77';

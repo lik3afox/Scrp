@@ -46,11 +46,12 @@ var groupOne = [
     '58aff827090180496c7848fb', // Spawn 3
     '58b11106554d4c1333aed29b', // spawn 4
     '58af4822278c0725a7ad4642', // spawn 2
-    '58c074ead62936ed5e2bce0b', // E27S75
+    //    '58c074ead62936ed5e2bce0b', // E27S75
     '58fae20240468f2a39d50830', // E38S72
     '58d97b7b8c94aa185ccaf659', //E35S83
     '58f793ad1f64b8d842dc0c16', // E37S75
     '58dc1eb90c1c7697092ce5c2', // E35S73
+    '5923a6cbf9f4ceb75afbc831', // E33S76
     '59090e6f771e5d03793d20b4' // W4S93
     //,'58c074ead62936ed5e2bce0b' // E27S75
 ];
@@ -112,8 +113,14 @@ function changeParent(creep) {
 
     if (creep.memory.scientistID === undefined) { creep.memory.scientistID = 2; }
     if (creep.ticksToLive > (3 * creep.body.length) + creep.memory.distance) return false;
-
-    creep.memory.scientistID++;
+    let noScientist = false;
+    do {
+        creep.memory.scientistID++;
+        let zzz = _.filter(Game.creeps, function(o) {
+            return o.memory.role == 'scientist' && o.memory.scientistID == creep.memory.scientistID;
+        });
+        if (zzz.length === 0) noScientist = true;
+    } while (noScientist);
 
     let zz = Game.getObjectById(spawnGroup[creep.memory.scientistID]);
     //console.log(zz)
@@ -173,6 +180,7 @@ class scientistRole extends roleParent {
             return;
         }
 
+
         if (creep.memory.distance === undefined) creep.memory.distance = 0;
         //        super.rebirth(creep);
         //        if(Game.cpu.bucket < 3000 && creep.room.name !='E26S73') return;
@@ -203,8 +211,12 @@ class scientistRole extends roleParent {
         }
 
         if (creep.memory.putaway) {
-            if (!labsBuild.moveToTransfer(creep)) {
-                super._containers.moveToTerminal(creep);
+            if (creep.room.name == 'E33S76') {
+                super._containers.moveToStorage(creep);
+            } else {
+                if (!labsBuild.moveToTransfer(creep)) {
+                    super._containers.moveToTerminal(creep);
+                }
             }
         } else {
             var _labs = labsBuild.getLabs(creep);
@@ -229,16 +241,19 @@ class scientistRole extends roleParent {
                 if (!labsBuild.getFromTerminal(creep)) {
 
                     let otherThings = false;
-                    for (var e in creep.room.storage.store) {
-                        if (e != RESOURCE_ENERGY && creep.room.storage.store[e]) {
-                            otherThings = true;
-                            if (creep.pos.isNearTo(creep.room.storage)) {
-                                creep.withdraw(creep.room.storage, e);
-                            } else {
-                                creep.moveMe(creep.room.storage);
+                    if (creep.room.name !== 'E33S76') {
+                        for (var e in creep.room.storage.store) {
+                            if (e != RESOURCE_ENERGY && creep.room.storage.store[e]) {
+                                otherThings = true;
+                                if (creep.pos.isNearTo(creep.room.storage)) {
+                                    creep.withdraw(creep.room.storage, e);
+                                } else {
+                                    creep.moveMe(creep.room.storage);
+                                }
                             }
                         }
                     }
+
                     if (!otherThings) {
 
                         if (!mineralContainerEmpty(creep))

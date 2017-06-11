@@ -23,7 +23,7 @@ var classLevels = [
 
     [CARRY, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK, MOVE, CARRY, CARRY, MOVE],
     // Level 3
-    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE,
+    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK, MOVE,
         CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE, WORK, CARRY, CARRY, MOVE
     ],
 
@@ -41,7 +41,7 @@ var classLevels = [
     // MAX level 6 
     [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
-        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
+        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK,
         MOVE, WORK
     ]
 
@@ -253,7 +253,7 @@ class transport extends roleParent {
                 let task = {};
                 task.options = {
                     reusePath: rePath,
-                    ignoreRoads: true,
+                    ignoreRoads: false,
                     visualizePathStyle: {
                         fill: 'transparent',
                         stroke: '#ff0',
@@ -278,7 +278,7 @@ class transport extends roleParent {
                 let task = {};
                 task.options = {
                     reusePath: rePath,
-                    ignoreRoads: true,
+                    ignoreRoads: false,
                     visualizePathStyle: {
                         fill: 'transparent',
                         stroke: '#ff0',
@@ -306,7 +306,7 @@ class transport extends roleParent {
             } else if (_goal === null) {
                 var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveMe(goingTo, {
-                    ignoreRoads: _ignoreRoad,
+                    ignoreRoads: false,
                     reusePath: rePath,
                     visualizePathStyle: visPath
                 });

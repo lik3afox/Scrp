@@ -39,6 +39,7 @@ function shouldDie(creep) {
     }
 
 }
+var link = require('build.link');
 
 class transport extends roleParent {
     static rebuildMe(creep) {
@@ -67,7 +68,10 @@ class transport extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
-
+        if (link.stayDeposit(creep)) {
+            //            constr.pickUpEnergy(creep);
+            return;
+        }
         // First it needs to go to the room
         // if not in the room that it needs to be
         //      console.log();

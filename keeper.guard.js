@@ -26,7 +26,7 @@ function getPartyFlag(creep) {
 
 function getHostiles(creep) {
     let range = 4;
-    if (creep.room.name == 'E34S84'|| creep.room.name == 'W4S94') range = 6;
+    if (creep.room.name == 'E34S84' || creep.room.name == 'W4S94') range = 6;
     if (creep.room.name == 'E25S74' || creep.room.name == 'E24S74' || creep.room.name == 'E35S74') {
         range = 8;
     }
@@ -83,7 +83,11 @@ function attackCreep(creep, bads) {
             creep.attack(enemy);
             creep.rangedMassAttack();
         } else {
-            creep.selfHeal();
+            if (creep.hits > 2600) {
+                creep.attack(enemy);
+            } else {
+                creep.selfHeal();
+            }
         }
     } else if (distance < 4) {
 
@@ -187,7 +191,7 @@ function moveCreep(creep) {
     }
 
     let rmPos = new RoomPosition(creep.memory.keeperLair[creep.memory.goTo].pos.x, creep.memory.keeperLair[creep.memory.goTo].pos.y, creep.memory.keeperLair[creep.memory.goTo].pos.roomName);
-    if (!creep.pos.isNearTo(gota))
+    if (!creep.pos.isNearTo(gota)) {
         creep.moveMe(rmPos, {
             reusePath: 7,
             ignoreRoads: (creep.room.name == 'W4S94'),
@@ -199,16 +203,28 @@ function moveCreep(creep) {
                 opacity: 0.5
             }
         });
+    } else {
+        creep.say('zZzZz');
+    }
 
 }
 
 
 class roleGuard extends roleParent {
+
     static levels(level) {
         return classLevels;
     }
 
     static run(creep) {
+        if (creep.saying == 'zZzZz') {
+            creep.say('zZzZ');
+            return;
+        }
+        if (creep.saying == 'zZzZ') {
+            creep.say('zZz');
+            return;
+        }
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
@@ -287,12 +303,12 @@ class roleGuard extends roleParent {
 
                 creep.memory.keeperLair = creep.room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_KEEPER_LAIR } });
                 if (creep.memory.party == 'Flag57') {
-          //          let zz = Game.getObjectById('5836b8288b8b9619519f191c');
-        //            if (zz !== null)
-      //                  creep.memory.keeperLair.push(zz);
-    //                zz = Game.getObjectById('5836b8268b8b9619519f18bc');
-  //                  if (zz !== null)
-//                        creep.memory.keeperLair.push(zz);
+                    //          let zz = Game.getObjectById('5836b8288b8b9619519f191c');
+                    //            if (zz !== null)
+                    //                  creep.memory.keeperLair.push(zz);
+                    //                zz = Game.getObjectById('5836b8268b8b9619519f18bc');
+                    //                  if (zz !== null)
+                    //                        creep.memory.keeperLair.push(zz);
                 }
                 creep.memory.goTo = analyzeSourceKeeper(creep);
 

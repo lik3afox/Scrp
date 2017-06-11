@@ -347,7 +347,7 @@ class baseParent {
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
                 if (task.enemyWatch) {
                     let zzz = ['W4S94'];
-                    let rng = _.indexOf(zzz,creep.room.name) > 0 ? 4 : 6;
+                    let rng = _.indexOf(zzz, creep.room.name) > 0 ? 6 : 4;
                     let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, rng);
                     badz = _.filter(badz, function(object) {
                         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
@@ -355,31 +355,33 @@ class baseParent {
                     if (badz.length === 0) {
                         if (task.energyPickup) {
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
-                                if( creep.moveMe(tmp2, task.options) ==OK) {
-                                    if(task.count) {
+                                if (creep.moveMe(tmp2, task.options) == OK) {
+                                    if (task.count) {
                                         creep.countDistance();
                                     }
                                 }
                             }
                         } else {
-                            if( creep.moveMe(tmp2, task.options) ==OK) {
-                                if(task.count) {
+                            if (creep.moveMe(tmp2, task.options) == OK) {
+                                if (task.count) {
                                     creep.countDistance();
                                 }
                             }
                         }
+                    } else {
+                        //                        creep.runFrom(badz);
                     }
                 } else if (task.energyPickup) {
                     if (!constr.moveToPickUpEnergyIn(creep, 7)) {
-                        if( creep.moveMe(tmp2, task.options) ==OK) {
-                            if(task.count) {
-                            creep.countDistance();
+                        if (creep.moveMe(tmp2, task.options) == OK) {
+                            if (task.count) {
+                                creep.countDistance();
                             }
                         }
                     }
                 } else {
-                    if( creep.moveMe(tmp2, task.options) ==OK) {
-                        if(task.count) {
+                    if (creep.moveMe(tmp2, task.options) == OK) {
+                        if (task.count) {
                             creep.countDistance();
                         }
                     }
@@ -648,16 +650,14 @@ class baseParent {
                         creep.memory.goal == '5836b82b8b8b9619519f196c') {
                         creep.moveMe(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     } else if (creep.memory.goal == '5873bd6f11e3e4361b4d934b') {
-                        creep.moveTo(2, 2);
+                        creep.moveTo(2, 2, { maxOps: 50 });
                     } else if (creep.memory.goal == '5873bd6f11e3e4361b4d9351') {
-                        creep.moveTo(42, 38);
+                        creep.moveTo(42, 38, { maxOps: 50 });
+                    } else if (creep.memory.goal == '58dbc4338283ff5308a3eb05') {
+                        creep.moveTo(21, 42, { maxOps: 50 });
                     } else {
                         for (var e in Game.flags) {
                             if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
-                                /*let contain = Game.getObjectById(creep.memory.workContainer);
-                                if (contain !== null && creep.pos.isNearTo(contain)) {
-                                    creep.transfer(contain, RESOURCE_ENERGY);
-                                } */
                                 creep.moveMe(Game.flags[e], { ignoreRoads: true, maxOpts: 50 });
                                 return true;
                             }
@@ -872,7 +872,7 @@ class baseParent {
         }
 
         let focusFlag = Game.flags[creep.memory.focusFlagName];
-if(focusFlag === undefined)        console.log(creep.pos );
+        if (focusFlag === undefined) console.log(creep.pos);
         if (focusFlag.pos.roomName == creep.room.name) {
             if (creep.room.controller.level >= 4 && creep.room.storage !== undefined) {
                 if (creep.room.controller.level < 6) {

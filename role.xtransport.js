@@ -59,6 +59,7 @@ function shouldDie(creep) {
 
 }
 
+var link = require('build.link');
 
 function buildConstructionRoad(creep) {
     // First make sure there are no roads or constructionsites in 4 spaces
@@ -117,6 +118,11 @@ class transport extends roleParent {
         }
 
         if (super.depositNonEnergy(creep)) return;
+
+        if (link.stayDeposit(creep)) {
+            //            constr.pickUpEnergy(creep);
+            return;
+        }
 
         let _goal = Game.getObjectById(creep.memory.goal);
 

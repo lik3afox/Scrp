@@ -89,7 +89,7 @@ function repairRoom(towers) { // This function is given all the towers in a room
 
     for (var e in needs) {
         let target = Game.getObjectById(needs[e]);
-        if (target === undefined) {
+        if (target === null) {
             needs.splice(e, 1);
         } else if (target.hits > target.hitsMax - 1000) {
             needs.splice(e, 1);

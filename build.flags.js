@@ -232,15 +232,13 @@ class buildFlags {
                 case FLAG.GUARD:
 
                     let guard = flag;
-                    if (guard.room !== undefined) {
-                        if (guard.room.memory.guardCreateCount === undefined) {
-                            guard.room.memory.guardCreateCount = delayBetweenScan;
-                        }
-                        guard.room.memory.guardCreateCount--;
-                        if (guard.room.memory.guardCreateCount < 0) {
-                            guard.room.memory.guardCreateCount = delayBetweenScan;
-                            require('commands.toGuard').create(flag);
-                        }
+                    if (guard.memory.guardCreateCount === undefined) {
+                        guard.memory.guardCreateCount = 0;
+                    }
+                    guard.memory.guardCreateCount--;
+                    if (guard.memory.guardCreateCount < 0) {
+                        guard.memory.guardCreateCount = delayBetweenScan;
+                        require('commands.toGuard').create(flag);
                     }
                     break;
 
@@ -257,15 +255,15 @@ class buildFlags {
                         rampartThings(flag);
                     }
 
-                    if (rally.room !== undefined) {
-                        if (rally.room.memory.rallyCreateCount === undefined) {
-                            rally.room.memory.rallyCreateCount = delayBetweenScan;
+                    if (rally !== undefined) {
+                        if (rally.memory.rallyCreateCount === undefined) {
+                            rally.memory.rallyCreateCount = 0;
                         }
-                        rally.room.memory.rallyCreateCount--;
-                        if (rally.room.memory.rallyCreateCount < 0) {
+                        rally.memory.rallyCreateCount--;
+                        if (rally.memory.rallyCreateCount < 0) {
                             party.create(flag);
                             party.rally(flag);
-                            rally.room.memory.rallyCreateCount = delayBetweenScan;
+                            rally.memory.rallyCreateCount = delayBetweenScan;
                         }
                     }
 

@@ -17,24 +17,26 @@ var _links = [
     // Spawn room E38S72
     '58ffa4eaff28ce410959868a', '5908d7b565640df9183ab7cb', '5908fc066303cfc31b28f48a',
     // Spawn room W4S93
-    '59217cc320243b65e83790bf', '592a46de7618175a3092fdae'
+    '59217cc320243b65e83790bf', '592a46de7618175a3092fdae',
+    // Spawn room E37S75
+    '592b1d484bc45519161537ef', '592b3ffa429df6134a992506'
 ];
 
 var gameCache = [];
 
 function getCached(id) {
-    /*    if (gameCache[id] !== undefined) {
-            if (gameCache[id] === null) {
-                //        console.log( 'Null Linked Cache',id);
-                return null;
-            } else {
-                //        console.log('returned cache',gameCache[id],id);
-                return gameCache[id];
-            }
-        } */
+    if (gameCache[id] !== undefined) {
+        if (gameCache[id] === null) {
+            //        console.log( 'Null Linked Cache',id);
+            return null;
+        } else {
+            //        console.log('returned cache',gameCache[id],id);
+            return gameCache[id];
+        }
+    }
     let zzz = Game.getObjectById(id);
     //    console.log('Created Cache');
-    //  gameCache[id] = zzz;
+    gameCache[id] = zzz;
     return zzz; //Game.getObjectById(id);
 }
 
@@ -47,9 +49,9 @@ function linkTransfer() {
         LINK = getCached(_links[e]); //Game.getObjectById(_links[e]);
 
         if (LINK !== null && LINK.energy !== 800) {
-            let targets = LINK.pos.findInRange(FIND_MY_CREEPS);
-            targets = _.filter(targets, function(ss) {
-                return (ss.carry[RESOURCE_ENERGY] > 0 && ss.memory.linkID == _links[e]);
+            let targets = LINK.pos.findInRange(FIND_MY_CREEPS, 1);
+            targets = _.filter(targets, function(s) {
+                return (s.carry[RESOURCE_ENERGY] > 0 && s.memory.linkID == _links[e]);
             });
 
             if (targets.length !== 0) {
@@ -112,7 +114,6 @@ class buildLink {
 
     /** @param {Creep} creep **/
     static run() {
-        gameCache = [];
         linkTransfer();
 
         total = 0;
@@ -192,7 +193,12 @@ class buildLink {
         //return total;'5924524129c65d152e19c40c', 
         //        sendEnergy([''], '59243d3f403da5a97dea664a');
 
-        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc', '5924524129c65d152e19c40c'], '59243d3f403da5a97dea664a', 700);
+        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc'], '59243d3f403da5a97dea664a', 700);
+
+        sendEnergy(['592b1d484bc45519161537ef', '592b3ffa429df6134a992506'], '592b2bba08d445510286532a', 700);
+        sendEnergy(['592b2bba08d445510286532a', '592b29f24dbc43d258db1db4'], '592b1f2b9eb200190288958e', 700);
+
+        gameCache = []; // cleaning up cache for this tick.
     }
 
     static deposit(creep) { // Used by harvesters
@@ -230,8 +236,9 @@ class buildLink {
     static stayDeposit(creep) {
 
         if (creep.carry[RESOURCE_ENERGY] === 0) return false;
-        if (creep.room.name != creep.memory.home) return false;
-
+        if (creep.room.name != creep.memory.home && creep.room.name != 'E37S75') {
+            return false;
+        }
         let LINK;
 
         if (creep.memory.linkID === undefined) {
@@ -248,6 +255,7 @@ class buildLink {
                 return true;
             }
         }
+
     }
 
 }

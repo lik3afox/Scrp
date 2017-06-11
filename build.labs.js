@@ -54,10 +54,33 @@ E25S75
 var constr = require('commands.toStructure');
 var labmax = 2401;
 var allLabs = [{
-    id: '59138e5ebc565959264abfa5',
-    resource: 'XGH2O',
-    amount: 2700
-}];
+        id: '5938fdd462b8ff7e30107eb1',
+        resource: 'XGH2O',
+        amount: 2700
+    }, {
+        id: '593946bbeba80c4eae9ca4ec',
+        resource: 'none',
+        amount: 2700
+    }, {
+        id: '59397bc179c6c83efbe58950',
+        resource: 'none',
+        amount: 2700
+    }, {
+        id: '5939b5212b016b259c74422c',
+        resource: 'none',
+        amount: 2700
+    }, {
+        id: '5939db8e3d2cc933144120e8',
+        resource: 'none',
+        amount: 2700
+    }, {
+        id: '593a13a24053314604625508',
+        resource: 'none',
+        amount: 2700
+    }
+
+
+];
 
 var maxMinerals = {
     //    'U':300000,
@@ -88,9 +111,9 @@ var maxMinerals = {
 var linksCache = [];
 
 function getCached(id) {
-    if (linksCache[id] === undefined) {
-        linksCache[id] = Game.getObjectById(id);
-    }
+    //  if (linksCache[id] === undefined) {
+    linksCache[id] = Game.getObjectById(id);
+    //    }
     return linksCache[id];
 }
 
@@ -101,9 +124,11 @@ function whatDoIget(creep) {
 
         if (labs[i].resource != 'none') {
             let currentLab = getCached(labs[i].id);
-            //        console.log('lab works ',currentLab.energy , currentLab.energyCapacity,i)
+
+            //           if (creep.room.name == 'E35S73')
+            //                console.log('lab works ', currentLab.energy, currentLab.energyCapacity, i, labs[i].id);
+
             if (currentLab !== null && currentLab.energy < currentLab.energyCapacity && currentLab.room.name == creep.room.name) {
-                //                creep.say('yo');
                 return RESOURCE_ENERGY;
             }
             if (currentLab !== null && currentLab.mineralAmount < labs[i].amount && currentLab.room.name == creep.room.name &&
@@ -162,7 +187,7 @@ function labDo(roomName, created, labz, laby) {
         return false;
     }
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
-    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied ) {
+    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
         //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
         return false;
     }
@@ -199,7 +224,7 @@ function labReady(roomName, labz) {
 function returnLabs(roomName) {
     if (Game.rooms[roomName].memory.labs === undefined) {
         switch (roomName) {
-            case "W4S93":
+            case "E33S76":
                 return allLabs;
 
             default:
@@ -269,7 +294,7 @@ function updateRoomMember(roomName) {
 }
 
 //5836bb2241230b6b7a5b9a4d E35S75 43,15
-var labRooms = ['W4S93', 'E28S73', 'E35S73', 'E35S83', 'E29S79', 'E28S77', 'E26S77', 'E37S75', 'E28S71', 'E27S75', 'E26S73', 'E38S72'];
+var labRooms = ['E33S76', 'W4S93', 'E28S73', 'E35S73', 'E35S83', 'E29S79', 'E28S77', 'E26S77', 'E37S75', 'E28S71', 'E27S75', 'E26S73', 'E38S72'];
 class buildLab {
 
     static getPlans(roomName) {
@@ -410,7 +435,8 @@ class buildLab {
 
             if (Game.rooms[roomName].memory.labMix === undefined) {
                 Game.rooms[roomName].memory.labMix = [];
-                /*    Game.rooms[roomName].memory.labMix.push([3,2,6])
+                Game.rooms[roomName].memory.labMix.push([3, 2, 6]);
+                /*    
                     Game.rooms[roomName].memory.labMix.push([7,2,6])
                     Game.rooms[roomName].memory.labMix.push([4,5,9])
                     Game.rooms[roomName].memory.labMix.push([8,5,9])

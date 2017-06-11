@@ -138,6 +138,12 @@ class roleUpbuilder extends roleParent {
             }
 
         }
+
+        if (creep.room.name == 'E33S76' && creep.ticksToLive > 1400 && creep.room.controller.level !== 8) {
+            if (super.boosted(creep, ['XGH2O'])) {
+                return;
+            }
+        }
         if (super.depositNonEnergy(creep)) return;
 
 

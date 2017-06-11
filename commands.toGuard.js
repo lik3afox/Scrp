@@ -5,6 +5,10 @@ var shooterParty = [
     ['shooter', require('keeper.shooter'), 1, 4]
     //['guard',require('keeper.guard'), 0, 0]
 ];
+var invasionParty = [
+    ['responder', require('keeper.responder'), 1, 0]
+];
+
 
 var _name = 0;
 var _require = 1;
@@ -34,11 +38,12 @@ function getSpawnCreating(flag) {
             return 'E26S77';
         case 'Flag28':
             return 'E26S77';
+        case 'Flag58':
+            return 'E26S77';
         case 'Flag11':
             return 'E28S73';
         case 'Flag34':
         case 'E36S74':
-        case 'E36S75':
             return 'E35S73';
         case 'Flag39':
         case 'Flag41':
@@ -48,10 +53,14 @@ function getSpawnCreating(flag) {
             return 'W4S93';
         case 'Flag40':
             return 'E35S73';
-        case 'Flag57':
+        case 'Flag43':
+        case 'E36S75':
             return 'E37S75';
+        case 'Flag57':
+            return 'E33S76';
+
         case 'Flag7':
-            return 'E26S77';
+            return 'E26S73';
         case 'Flag8':
             return 'E33S76';
 
@@ -67,25 +76,23 @@ function getCurrentParty(flag) {
         case 'E36S75':
         case 'Flag56':
         case 'Flag57':
+        case 'Flag58':
         case 'Flag55':
         case 'Flag8':
-        case 'Flag7':
-            return guardParty;
-        case 'Flag41':
-        case 'Flag40':
-        case 'E36S74':
-            return shooterParty;
+        case 'Flag18':
+        case 'Flag20':
         case 'Flag11':
+        case 'Flag26':
+        case 'Flag34':
+        case 'E36S74':
         case 'Flag28':
             return guardParty;
-        case 'Flag18':
+        case 'Flag7':
+        case 'Flag43':
+            return invasionParty;
+        case 'Flag41':
+        case 'Flag40':
             return shooterParty;
-        case 'Flag20':
-            return shooterParty;
-        case 'Flag26':
-            return guardParty;
-        case 'Flag34':
-            return guardParty;
         default:
             return guardParty;
     }
@@ -96,14 +103,14 @@ function findParty(flag) {
     var currentParty = getCurrentParty(flag);
     var creationRoom = getSpawnCreating(flag);
     var total = [];
-
-    let yy = _.filter(Game.creeps, function(o) {
-        return o.memory.party == flag.name;
-    });
+    /*
+        let yy = _.filter(Game.creeps, function(o) {
+            return o.memory.party == flag.name;
+        });*/
     for (var i in currentParty) {
 
-        let zz = _.filter(yy, function(o) {
-            return o.memory.role == currentParty[i][_name];
+        let zz = _.filter(Game.creeps, function(o) {
+            return o.memory.role == currentParty[i][_name] && o.memory.party == flag.name;
         });
         total[currentParty[i][_name]] = zz.length;
 

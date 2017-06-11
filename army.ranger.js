@@ -28,23 +28,27 @@ class rangerClass extends roleParent {
 
     static run(creep) {
         if (creep.memory.level == 1)
-            if (super.boosted(creep, ['XZHO2', 'XGHO2'])) {
-                return; }
+            if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XKHO2'])) {
+                return;
+            }
+        if (super.returnEnergy(creep)) {
+            return;
+        }
 
         if (creep.pos.isNearTo(Game.flags.kill)) {
             creep.memory.waypoint = false;
         }
 
         creep.say('ranger');
-        //		creep.heal(creep);
+        //      creep.heal(creep);
         //var defendFlag = movement.
-        //		var enemy = creep.pos.findInRange(FIND_HOSTILE_CREEPS,3);
-        //		if(enemy.length > 0) {
-        //		} 
+        //      var enemy = creep.pos.findInRange(FIND_HOSTILE_CREEPS,3);
+        //      if(enemy.length > 0) {
+        //      } 
         creep.rangedMassAttack();
         //else   { 
         movement.flagMovement(creep);
-        //			}
+        //          }
     }
 
 

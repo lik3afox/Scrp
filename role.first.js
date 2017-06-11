@@ -255,7 +255,7 @@ function getEnergy(creep) {
         }
 
     } else if (creep.room.name == 'E35S83' ||
-        creep.room.name == 'E35S73zz') {
+        creep.room.name == 'E37S75') {
         //                    if(!constr.moveToPickUpEnergy(creep,creep.carryCapacity-75)){
         if (!containers.withdrawFromTerminal(creep)) {
             if (!containers.withdrawFromStorage(creep)) {}

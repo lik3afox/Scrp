@@ -6,6 +6,7 @@
 // The role (1) here will be linked to the require run.
 var allModule = [
     ['scientist', require('role.scientist')],
+    ['responder', require('keeper.responder')],
     ['minHarvest', require('role.mineral')],
     ['mineral', require('keeper.scientist')],
     ['guard', require('keeper.guard')],
@@ -214,7 +215,7 @@ var E38S74Module = [
 
 var E23S75Module = [
     ['first', require('role.first'), 2, 1],
-    ['upbuilder', require('role.upbuilder'), 1, 2],
+    ['upbuilder', require('role.upbuilder'), 4, 3],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['linker', require('role.linker'), 2, 4],
     ['harvester', require('role.harvester'), 2, 2]
@@ -226,6 +227,7 @@ var E33S76Module = [
     ['first', require('role.first'), 2, 1],
     ['linker', require('role.linker'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 2, 6],
+    ['scientist', require('role.wallworker'), 0, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['wallwork', require('role.wallworker'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2]
@@ -237,13 +239,15 @@ var W4S93Module = [
     ['homeDefender', require('role.defender2'), 1, 6],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['wallwork', require('role.wallworker'), 1, 3],
-    ['scientist', require('role.wallworker'), 0, 2],
+    ['scientist', require('role.wallworker'), 0, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2]
 ];
 
-var E38W75Module = [
+var E38W75Module = [ // E37S75
     ['first', require('role.first'), 1, 5],
+    ['linker', require('role.linker'), 1, 3],
+    ['harvester', require('role.harvester'), 1, 2],
     ['scientist', require('role.scientist'), 0, 3],
     ['nuker', require('role.nuker'), 1, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
@@ -326,7 +330,7 @@ var expansionModule = [
 
     [ // LEVEL 9 is another expansion that has a spawn.
         ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-              ['controller', require('role.controller'), 1, 5],  
+        ['controller', require('role.controller'), 1, 5],
         ['transport', require('role.transport'), 1, 5] // Gather and move - just carry 
     ],
     [ // LEVEL 10 is another expansion that has a spawn.5836b8168b8b9619519f1708
@@ -454,7 +458,7 @@ function cpuCount(creep, time) {
     }
     let avg = _.sum(creep.memory.cpu) / creep.memory.cpu.length;
     if (showEveryone) console.log('CPU used by ' + creep + ' is a ' + creep.memory.role +
-        ' Time : ' + 'avg:' + Math.floor(_.sum(creep.memory.cpu) / creep.memory.cpu.length), '/lst:', time, creep.pos, creep.carryTotal,creep.memory.goal);
+        ' Time : ' + 'avg:' + Math.floor(_.sum(creep.memory.cpu) / creep.memory.cpu.length), '/lst:', time, creep.pos, creep.carryTotal, creep.memory.goal);
     if ((creep.memory.cpu.length === 0 && time === 0) || (time !== 0))
         creep.memory.cpu.push(time);
     if (creep.memory.cpu.length > 30) creep.memory.cpu.shift();
@@ -709,7 +713,7 @@ function getCurrentModule(spawn) {
 
     var currentModuleLevel = getModuleLevel(spawn);
 
-    if ( spawn.room.controller.level > 3 && spawn.name == 'Spawn1') {
+    if (spawn.room.controller.level > 3 && spawn.name == 'Spawn1') {
         if (spawn.room.memory.roomModule === undefined) {
             var roomModule = [];
             for (var a in empireModules) {
@@ -1063,7 +1067,7 @@ class theSpawn {
                 for (var type in allModule) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'xx') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning) {
@@ -1138,26 +1142,26 @@ class theSpawn {
 
         for (var ie in spawn.memory.roadsTo) {
             if (spawn.memory.roadsTo[ie] === null) {
-            	console.log(spawn,spawn.pos);
+                console.log(spawn, spawn.pos);
                 return;
             }
             let xp = spawn.memory.roadsTo[ie].expLevel;
             _module = expansionModule[xp];
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
-/*
-                        if (source !== null && source.mineralType !== undefined) {
-                            spawn.memory.roadsTo[ie].expLevel = 12;
-                            if (spawn.memory.roadsTo[ie].mineral === undefined) spawn.memory.roadsTo[ie].mineral = false;
-                            if (spawn.memory.roadsTo[ie].ztransport === undefined) spawn.memory.roadsTo[ie].ztransport = false;
-                            if (spawn.memory.roadsTo[ie].ytransport !== undefined) spawn.memory.roadsTo[ie].ytransport = undefined;
-                            if (spawn.memory.roadsTo[ie].miner !== undefined) spawn.memory.roadsTo[ie].miner = undefined;
+            /*
+                                    if (source !== null && source.mineralType !== undefined) {
+                                        spawn.memory.roadsTo[ie].expLevel = 12;
+                                        if (spawn.memory.roadsTo[ie].mineral === undefined) spawn.memory.roadsTo[ie].mineral = false;
+                                        if (spawn.memory.roadsTo[ie].ztransport === undefined) spawn.memory.roadsTo[ie].ztransport = false;
+                                        if (spawn.memory.roadsTo[ie].ytransport !== undefined) spawn.memory.roadsTo[ie].ytransport = undefined;
+                                        if (spawn.memory.roadsTo[ie].miner !== undefined) spawn.memory.roadsTo[ie].miner = undefined;
 
-                        } 
-                        if (spawn.memory.roadsTo[ie].sourcePos === undefined) {
-                            if (source !== null) {
-                                spawn.memory.roadsTo[ie].sourcePos = new RoomPosition(source.pos.x, source.pos.y, source.room.name);
-                            }
-                        }*/
+                                    } 
+                                    if (spawn.memory.roadsTo[ie].sourcePos === undefined) {
+                                        if (source !== null) {
+                                            spawn.memory.roadsTo[ie].sourcePos = new RoomPosition(source.pos.x, source.pos.y, source.room.name);
+                                        }
+                                    }*/
 
             if (spawn.memory.roadsTo[ie].expLevel > 0) {
                 if (source === null) {

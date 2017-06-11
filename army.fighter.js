@@ -55,14 +55,14 @@ function findNewParty(creep) {
 function doAttack(creep) {
     let target;
     switch (creep.room.name) {
-        case "E38S82":
-            target = Game.getObjectById('58ba75aa041adbe4312ca6ac');
+        case "W11S97":
+            target = Game.getObjectById('5911a814d7c0ee551e9214c8');
             if (target !== null) {
                 if (creep.pos.isNearTo(target)) {
                     creep.attack(target);
                 }
             } else {
-                target = Game.getObjectById('58a56eba4d5d993ffadd2496');
+                target = Game.getObjectById('590e400df39a15945f06c3e2');
                 if (target !== null) {
                     if (creep.pos.isNearTo(target)) {
                         creep.attack(target);
@@ -125,7 +125,8 @@ function powerAction(creep) {
             if (creep.memory.powerbankID === undefined) {
                 let zz = creep.room.find(FIND_STRUCTURES);
                 zz = _.filter(zz, function(o) {
-                    return o.structureType == STRUCTURE_POWER_BANK; });
+                    return o.structureType == STRUCTURE_POWER_BANK;
+                });
                 if (zz.length > 0) {
                     creep.memory.powerbankID = zz[0].id;
                 }
@@ -212,7 +213,7 @@ class fighterClass extends roleParent {
                 return;
         }
         if (creep.memory.level == 11) {
-            if (super.boosted(creep, ['XZHO2', 'XGHO2'])) {
+            if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XUH2O'])) {
                 return;
             }
         }

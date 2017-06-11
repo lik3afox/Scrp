@@ -530,6 +530,15 @@ class MoveInteract {
         var W4S94 = ['W4S94', 'W5S94'];
         var W5S94 = ['W4S94', 'W5S94'];
 
+
+        var nonResponders = ['E24S74', 'E25S74', 'E26S74',
+            'E24S75', 'E25S75', 'E26S75',
+            'E24S76', 'E25S76', 'E26S76'
+        ]; // No, acutally what happens is that all creeps come and help kill range 
+        // This is for responders
+
+
+
         /*
                 let flagz = _.filter(Game.flags, function(f) {
                     return f.color == FLAG.DEFEND;
@@ -552,6 +561,8 @@ class MoveInteract {
                     maxDistance = 1; //  if(distance > 2) return false;
                 }
                 //break;
+            } else if (creep.memory.role == 'responder') {
+                maxDistance = 1;
             } else if (creep.memory.role == 'guard' || creep.memory.role == 'shooter') {
                 switch (creep.room.name) {
                     case 'W4S94':
