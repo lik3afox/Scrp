@@ -12,8 +12,9 @@ RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE, HEA
 // 800 Sets
 var classLevels = [
     // lv 0 - 5500 50 parts
-    [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+    [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
         RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+        ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
         HEAL, MOVE, HEAL, HEAL, HEAL, HEAL
     ]
@@ -102,19 +103,44 @@ function attackCreep(creep, bads) {
     }
 
 }*/
-function attackCreep(creep, bads) {
 
-    // This one will in the just go after the guys with range attack.
-
-    if (creep.memory.runAwayLimit === undefined) {
-        creep.memory.runAwayLimit = creep.hitsMax * 0.33;
+function getRangeAttacker(bads) {
+    for (var e in bads) {
+        let zzz = _.filter(bads[e].body, function(o) {
+            return o.type == RANGED_ATTACK;
+        });
+        if (zzz.length > 0)
+            return bads[e];
     }
+    return bads[0];
+}
 
-    if (bads.length === 0) {
-        creep.memory.needed = undefined;
-        return true;
+function invasionAttack(creep, bads) {
+    //    let enemy = creep.pos.findClosestByRange(bads);
+    if (creep.hits > 3000) {
+        let enemy = getRangeAttacker(bads);
+        //        creep.selfHeal(creep);
+        let distance = creep.pos.getRangeTo(enemy);
+        var targets = creep.pos.findInRange(bads, 3);
+        if (creep.pos.isNearTo(enemy)) {
+            creep.rangedMassAttack();
+            creep.attack(enemy);
+        } else if (targets.length > 1) {
+            creep.selfHeal();
+            creep.moveTo(enemy);
+            creep.rangedMassAttack();
+        } else {
+            creep.selfHeal();
+            creep.moveTo(enemy);
+            creep.rangedAttack(enemy);
+        }
+    } else {
+        creep.selfHeal();
+        creep.runFrom(bads);
     }
+}
 
+function SKAttack(creep, bads) {
     let enemy = creep.pos.findClosestByRange(bads);
 
     creep.selfHeal(creep);
@@ -150,7 +176,27 @@ function attackCreep(creep, bads) {
         creep.memory.getaway = false;
     }
 
+}
 
+function attackCreep(creep, bads) {
+
+    // This one will in the just go after the guys with range attack.
+
+    if (creep.memory.runAwayLimit === undefined) {
+        creep.memory.runAwayLimit = creep.hitsMax * 0.33;
+    }
+
+    if (bads.length === 0) {
+        creep.memory.needed = undefined;
+        return true;
+    }
+
+    let enemy = creep.pos.findClosestByRange(bads);
+    if (enemy.owner.username == 'Source Keeper') {
+        SKAttack(creep, bads);
+    } else {
+        invasionAttack(creep, bads);
+    }
 
 
 }

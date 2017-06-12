@@ -33,13 +33,14 @@ function getTargets(creep) {
             //            console.log(target.energy);
             if (target.energy < target.energyCapacity) {
                 if (creep.pos.isNearTo(target)) {
-                    return [target];
+                    zzz.unshift(target);
+                    return zzz;
                 }
                 zzz.push(target);
             }
         }
         //        console.log(zzz.length, '/', creep.memory.spawnTargets.length, creep.pos);
-        creep.say('bizzches', true);
+        //        creep.say('bizzches', true);
         //          roomCache[creep.room.name] = zzz;
         //        console.log('Setting roomCache', roomCache[creep.room.name].length, creep.room.name);
         return zzz;
@@ -268,7 +269,7 @@ class SpawnInteract {
             if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == creep.spawn) {
                 creep.memory.home = Game.spawns[i].room.name;
                 creep.memory.parent = Game.spawns[i].id;
-                if(Game.spawns[i].memory.warCreate !== undefined )
+                if (Game.spawns[i].memory.warCreate !== undefined)
                     Game.spawns[i].memory.warCreate.push(creep);
                 console.log(Game.spawns[i], 'adding to stack', Game.spawns[i].name, creep.spawn);
             }
@@ -392,11 +393,11 @@ class SpawnInteract {
             if (creep.pos.isNearTo(targets[goTo])) {
                 if (creep.transfer(targets[goTo], RESOURCE_ENERGY) == OK) {
                     if (creep.carry[RESOURCE_ENERGY] < 51) {
-                        creep.moveTo(creep.room.terminal);
+                        creep.moveTo(creep.room.terminal, { maxOpts: 100, reusePath: 1 });
                     } else {
                         if (targets[goTo + 1] !== undefined) {
                             if (!creep.pos.isNearTo(targets[goTo + 1]))
-                                creep.moveTo(targets[goTo + 1]);
+                                creep.moveTo(targets[goTo + 1], { maxOpts: 100, reusePath: 1 });
                             return true;
                         }
                     }

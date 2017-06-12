@@ -200,6 +200,7 @@ class scientistRole extends roleParent {
             creep.say('balls', true);
             return;
         }
+        if (creep.memory.distance === 0) creep.memory.distance = 100;
         creep.say('sci');
 
         var total = _.sum(creep.carry);
@@ -211,10 +212,10 @@ class scientistRole extends roleParent {
         }
 
         if (creep.memory.putaway) {
-            if (creep.room.name == 'E33S76') {
-                super._containers.moveToStorage(creep);
-            } else {
-                if (!labsBuild.moveToTransfer(creep)) {
+            if (!labsBuild.moveToTransfer(creep)) {
+                if (creep.room.name == 'E33S76') {
+                    super._containers.moveToStorage(creep);
+                } else {
                     super._containers.moveToTerminal(creep);
                 }
             }

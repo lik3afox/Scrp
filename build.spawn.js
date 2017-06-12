@@ -119,7 +119,7 @@ var spawn2Module = [
     ['first', require('role.first'), 2, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['linker', require('role.linker'), 1, 3],
-    ['homeDefender', require('role.defender2'), 1, 6],
+    //    ['homeDefender', require('role.defender2'), 1, 6],
     ['nuker', require('role.nuker'), 1, 4],
     ['scientist', require('role.scientist'), 0, 4],
     //        ['builder',    require('role.builder'), 3, 5],
@@ -214,10 +214,10 @@ var E38S74Module = [
 ];
 
 var E23S75Module = [
-    ['first', require('role.first'), 2, 1],
-    ['upbuilder', require('role.upbuilder'), 4, 3],
+    ['first', require('role.first'), 2, 3],
+    ['upbuilder', require('role.upbuilder'), 3, 4],
     ['wallwork', require('role.wallworker'), 1, 2],
-    ['linker', require('role.linker'), 2, 4],
+    ['linker', require('role.linker'), 3, 4],
     ['harvester', require('role.harvester'), 2, 2]
 
 ];

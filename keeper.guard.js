@@ -30,7 +30,8 @@ function getHostiles(creep) {
     if (creep.room.name == 'E25S74' || creep.room.name == 'E24S74' || creep.room.name == 'E35S74') {
         range = 8;
     }
-    if (creep.room.name == 'E24S75' || creep.room.name == 'E26S76') {
+    var rng10 = ['E24S75', 'E26S76', 'E36S74'];
+    if (_.indexOf(rng10, creep.room.name) > -1) {
         range = 10;
     }
 

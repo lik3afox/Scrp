@@ -31,7 +31,8 @@ function getCost(module) {
 function getSpawnCreating(flag) {
     switch (flag.name) {
         case 'Flag18':
-            return 'E26S73';
+        case 'Flag11':
+        case 'Flag8':
         case 'Flag26':
             return 'E26S73';
         case 'Flag20':
@@ -40,8 +41,6 @@ function getSpawnCreating(flag) {
             return 'E26S77';
         case 'Flag58':
             return 'E26S77';
-        case 'Flag11':
-            return 'E28S73';
         case 'Flag34':
         case 'E36S74':
             return 'E35S73';
@@ -85,6 +84,7 @@ function getCurrentParty(flag) {
         case 'Flag26':
         case 'Flag34':
         case 'E36S74':
+        case 'Flag8':
         case 'Flag28':
             return guardParty;
         case 'Flag7':
