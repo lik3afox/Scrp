@@ -457,10 +457,6 @@ function makeMineralOrder() {
 
 }
 
-function reportTerminals() {
-    Memory.stats.totalMinerals = countTerminals();
-}
-
 function forEveryTerminal(terminal) {
     for (var e in required) {
         //      console.log('Doing required',e,required[e].amount,required[e].resource)
@@ -527,7 +523,7 @@ class roleTerminal {
             }
 
 
-            let zz = _.sum(terminal.store);
+            let zz = terminal.store.total;
 
             needEnergy(terminal);
 

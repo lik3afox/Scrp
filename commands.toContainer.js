@@ -3,27 +3,7 @@
 // moveTo
 // withDraw
 
-// Ineffecent needs to do ID and get ID to move so it doesn't have to go througha nd sort and grab all the sturctres.
-function getNotFullContainers(creep) {
-    let containers = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-            return ((structure.structureType == STRUCTURE_CONTAINER) && (_.sum(structure.store) < structure.storeCapacity));
-        }
-    });
-    //console.log('# of cotainers', containers.length);
-    if (containers.length > 0) {
-        return containers;
-    } else {
-        let storage = creep.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return ((structure.structureType == STRUCTURE_STORAGE) && (_.sum(structure.store) < structure.storeCapacity));
-            }
-        });
-        //        console.log('go to storage');
-        return storage;
-    }
 
-}
 
 
 
@@ -36,14 +16,6 @@ function getNonEmptyContain(creep) {
     });
 }
 
-function getClosestNotFullContain(creep) {
-    return creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-            return ((structure.structureType == STRUCTURE_CONTAINER ||
-                structure.structureType == STRUCTURE_STORAGE) && (_.sum(structure.store) > 0));
-        }
-    }).id;
-}
 /*
 function getAllTypes(creep) {
 

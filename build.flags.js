@@ -226,7 +226,8 @@ class buildFlags {
                 case COLOR_RED:
                     doDefendThings(flag);
                     console.log('defend flag @', flag.pos);
-                    defendTotal++;
+                    if (Memory.showInfo > 1)
+                        defendTotal++;
                     break;
 
                 case FLAG.GUARD:
@@ -235,6 +236,7 @@ class buildFlags {
                     if (guard.memory.guardCreateCount === undefined) {
                         guard.memory.guardCreateCount = 0;
                     }
+
                     guard.memory.guardCreateCount--;
                     if (guard.memory.guardCreateCount < 0) {
                         guard.memory.guardCreateCount = delayBetweenScan;
@@ -247,7 +249,8 @@ class buildFlags {
                     let rally = flag;
                     if (flag.secondaryColor == COLOR_RED) {
                         var power = require('commands.toPower');
-                        powerTotal++;
+                        if (Memory.showInfo > 1)
+                            powerTotal++;
                         power.calcuate(flag);
                     }
 
@@ -273,8 +276,14 @@ class buildFlags {
             //            if(flag.color == 10 )
             //        console.log(  (Game.cpu.getUsed() - start ), ' after', flag.color,flag.secondaryColor); start = Game.cpu.getUsed();
         }
-        Memory.stats.powerPartyNum = powerTotal;
-        Memory.stats.defendFlagNum = defendTotal;
+        if (Memory.showInfo > 1) {
+            Memory.stats.powerPartyNum = powerTotal;
+            Memory.stats.defendFlagNum = defendTotal;
+        } else {
+            Memory.stats.powerPartyNum = undefined;
+            Memory.stats.defendFlagNum = undefined;
+
+        }
 
     }
 }

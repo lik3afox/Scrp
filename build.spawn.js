@@ -216,8 +216,8 @@ var E38S74Module = [
 var E23S75Module = [
     ['first', require('role.first'), 2, 3],
     ['upbuilder', require('role.upbuilder'), 3, 4],
-    ['wallwork', require('role.wallworker'), 1, 2],
-    ['linker', require('role.linker'), 3, 4],
+    ['wallwork', require('role.wallworker'), 0, 2],
+    ['linker', require('role.linker'), 3, 3],
     ['harvester', require('role.harvester'), 2, 2]
 
 ];
@@ -341,8 +341,9 @@ var expansionModule = [
 
     [ // LEVEL 11 is another expansion that has a spawn.
         ['mineral', require('keeper.scientist'), 1, 4],
+        ['rtransport', require('role.rtransport'), 1, 0],
         ['ztransport', require('role.ytransport'), 1, 0],
-        ['rtransport', require('role.rtransport'), 1, 0]
+        ['ytransport', require('role.ytransport'), 1, 0]
     ],
 
     [ // LEVEL 12 is another expansion that has a spawn. 5836b8168b8b9619519f1708
@@ -350,12 +351,13 @@ var expansionModule = [
         ['rtransport', require('role.rtransport'), 1, 0],
         ['ztransport', require('role.ytransport'), 1, 0],
         ['ytransport', require('role.ytransport'), 1, 0]
-
     ],
 
     [ // LEVEL 13 - for just a miner and transport.
-        ['mineral', require('keeper.scientist'), 1, 5],
-        ['ztransport', require('role.ytransport'), 1, 0]
+        ['mineral', require('keeper.scientist'), 1, 6],
+        ['rtransport', require('role.rtransport'), 1, 0],
+        ['ztransport', require('role.ytransport'), 1, 0],
+        ['ytransport', require('role.ytransport'), 1, 0]
     ],
     [ // LEVEL 14 - for an mineral For spawn3
         ['miner', require('role.miner'), 1, 3], // Gather and move 12- just carry 
@@ -1056,24 +1058,29 @@ class theSpawn {
         var cpuUsed = {};
 
         for (var name in spawnCreeps) { // Start of Creep Loop
-            start = Game.cpu.getUsed();
+            if (Memory.showInfo > 4)
+                start = Game.cpu.getUsed();
             if (!Game.creeps[name]) { // Check to see if this needs deletion
                 delete spawnCreeps[name]; // If it does then it does.
             } else {
-                if (totalRoles[Game.creeps[name].memory.role] === undefined) totalRoles[Game.creeps[name].memory.role] = 0;
-                totalRoles[Game.creeps[name].memory.role]++;
+
+                if (Memory.showInfo > 1) {
+                    if (totalRoles[Game.creeps[name].memory.role] === undefined) totalRoles[Game.creeps[name].memory.role] = 0;
+                    totalRoles[Game.creeps[name].memory.role]++;
+                    Memory.creepTotal++;
+                }
                 //                console.log(Game.creeps[name].memory.role, totalRoles[Game.creeps[name].memory.role]);
-                Memory.creepTotal++;
+
                 for (var type in allModule) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
-                        if (countCPU) { start = Game.cpu.getUsed(); }
+                        //                    if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
+                        //                      if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }
-                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
+                        //                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
 
                         break;
                     }
@@ -1098,7 +1105,7 @@ class theSpawn {
                                     spawn.memory.roadsTo.push(BUILD);
                                 } */
             }
-            if (Game.creeps[name] !== undefined) {
+            if (Game.creeps[name] !== undefined && Memory.showInfo > 4) {
                 let zzz = name; //[0] + name[1] + name[2] + "@" + Game.creeps[name].pos.roomName + ',' + Game.creeps[name].pos.x + "," + Game.creeps[name].pos.y;
                 let cpuUsedz = calculateCPU((Game.cpu.getUsed() - start), Game.creeps[name]);
                 if (cpuUsedz > 150) {
@@ -1108,30 +1115,17 @@ class theSpawn {
                 } else if (cpuUsedz > 75 && Game.creeps[name].memory.cpuCount > 1200) {
                     cpuUsed[zzz] = cpuUsedz;
                 }
-
+                Memory.stats.theCpuCount = cpuUsed;
+            } else {
+                Memory.stats.theCpuCount = undefined;
+            }
+            if (Memory.showInfo > 1) {
+                Memory.stats.roles = totalRoles;
             }
 
         }
-        Memory.stats.roles = totalRoles;
-        Memory.stats.theCpuCount = cpuUsed;
         //        console.log(totalRoles);
     }
-
-    static getNumber(roomName) {
-        var max = [];
-        for (var a in allModule) {
-            max[allModule[a][_name]] = 0;
-            for (var e in Game.creeps) {
-                if ((Game.creeps[e].memory.role == allModule[a][_name]) &&
-                    (Game.creeps[e].memory.home == roomName)) {
-                    max[allModule[a][_name]]++;
-                }
-            }
-        }
-
-        return max;
-    }
-
 
     static checkExpand(spawn, totalCreeps) {
         if (!spawn.memory.alphaSpawn || spawn.memory.roadsTo.length === 0) return;

@@ -496,18 +496,6 @@ class MoveInteract {
 
     }
 
-    static checkRoomForBads(creep) {
-        var hostiles = creep.room.find(FIND_HOSTILE_CREEPS, {
-            filter: object => (object.owner.username == 'Invader')
-        });
-
-        for (var e in Game.flags) {
-            if ((hostiles.length === 0) && (creep.room.name == Game.flags[e].pos.roomName)) {
-                Game.flags[e].remove();
-                return true;
-            }
-        }
-    }
 
     static moveToDefendFlag(creep, bades) {
 
@@ -796,11 +784,12 @@ class MoveInteract {
             });
             //            console.log(bads.length, 'checkForBadsPlaceFlag', creep.room);
             if (bads.length > 0) {
-                var flagz = creep.room.find(FIND_FLAGS, {
-                    filter: (flag) => {
+                var flagz = creep.room.find(FIND_FLAGS);
+                flagz = _.filter(flagz,
+                    function(flag) {
                         return (flag.color == FLAG.DEFEND);
                     }
-                });
+                );
                 //             return (flag.color == FLAG.DEFEND || flag.color == FLAG.GUARD);}} ); 
                 let type = bads[0].owner.username;
                 let z = bads[0].id[Math.floor(Math.random() * 15)];

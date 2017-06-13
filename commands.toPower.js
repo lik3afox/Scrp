@@ -41,7 +41,7 @@ class PowerInteract {
                     if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
                         room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
                     ) {
-                        report = report + " " + room + "(" + room.memory.powerCount + ")";
+                        //                        report = report + " " + room + "(" + room.memory.powerCount + ")";
                         if (powerS.processPower() == OK) {
                             room.memory.powerCount++;
                             total++;

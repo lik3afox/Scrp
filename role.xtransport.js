@@ -40,7 +40,8 @@ var classLevels =
 ;
 var _ignoreRoad = true;
 
-function shouldDie(creep) {
+function shouldDie
+(creep) {
     if (creep.hits === creep.hitsMax) return;
 
     let death = true;
@@ -60,25 +61,6 @@ function shouldDie(creep) {
 }
 
 var link = require('build.link');
-
-function buildConstructionRoad(creep) {
-    // First make sure there are no roads or constructionsites in 4 spaces
-    let radius = 4;
-    let strcts = creep.pos.findInRange(FIND_STRUCTURES, radius, {
-        filter: (structure) => {
-            return (structure.structureType === STRUCTURE_ROAD);
-        }
-    });
-    let sites = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, radius, {
-        filter: (structure) => {
-            return (structure.structureType === STRUCTURE_ROAD);
-        }
-    });
-    console.log(strcts.length, sites.length, creep.name, creep.pos);
-    if (strcts.length === 0 && sites.length === 0) {
-        creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
-    }
-}
 
 
 class transport extends roleParent {

@@ -11,13 +11,20 @@ var boost = ['KH'];
 //                if (_goal.room.name == creep.room.name && foxy.isInRange(creep, _goal.pos.x, _goal.pos.y, 5)) { 
 
 var classLevels = [
+    //0
     [MOVE, CARRY, WORK, WORK], //  300
+    //1
     [MOVE, WORK, WORK, WORK, MOVE, CARRY], //  450
+    //2
     [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY], // 550
+    //3
     [MOVE, WORK, MOVE, WORK, WORK, WORK, WORK, MOVE, CARRY], // 550
+    //4
     [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY], // 550
-
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY]
+    //5
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY],
+    //6
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY]
 ];
 
 function memoryCheck(creep) {
@@ -109,7 +116,7 @@ class mineralRole extends roleParent {
                     });
                     return;
                 }
-            } else if (creep.room.terminal !== undefined&& creep.room.controller.owner !== undefined) {
+            } else if (creep.room.terminal !== undefined && creep.room.controller.owner !== undefined) {
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     for (var a in creep.carry) {
                         creep.transfer(creep.room.terminal, a);

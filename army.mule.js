@@ -23,7 +23,8 @@ class muleClass extends roleParent {
         if (creep.memory.goHome === undefined) {
             creep.memory.goHome = false;
         }
-        let total = _.sum(creep.carry);
+        let total = creep.carryTotal
+;
         if (!creep.memory.goHome) {
             if (total === 0) {
                 let stor = creep.room.storage;

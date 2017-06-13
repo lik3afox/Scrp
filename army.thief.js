@@ -48,7 +48,7 @@ function clearLabs(creep) {
 
 function powerAction(creep) {
     var constr = require('commands.toStructure');
-    if (_.sum(creep.carry) === 0) {
+    if (creep.carryTotal === 0) {
         if (Game.flags[creep.memory.party] !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party], 4)) {
             if (!constr.pickUpCloseNonEnergy(creep)) {
                 creep.say('here');
@@ -115,12 +115,12 @@ class thiefClass extends roleParent {
 
         //        if (super._constr.pickUpNonEnergy(creep)) return;
 
-        let creepCarry = _.sum(creep.carry);
+        let creepCarry = creep.carryTotal;
 
         if (creep.memory.home == creep.room.name && creep.ticksToLive < 500 && creepCarry === 0) {
             creep.memory.death = true;
         }
-        if (creep.memory.home == creep.room.name && _.sum(creep.carry) > 0) {
+        if (creep.memory.home == creep.room.name && creep.carryTotal > 0) {
             // Find Minearls.
             if (creep.room.storage !== undefined) {
                 contain.moveToStorage(creep);
@@ -221,7 +221,7 @@ class thiefClass extends roleParent {
 
 
         }
-        if (_.sum(creep.carry) == creep.carryCapacity && creep.memory.home != creep.room.name) {
+        if (creep.carryTotal == creep.carryCapacity && creep.memory.home != creep.room.name) {
 
             var parentz = Game.getObjectById(creep.memory.parent);
             //            parent = new RoomPosition(35,35,"E38S72");

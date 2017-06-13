@@ -876,7 +876,7 @@ class baseParent {
         if (focusFlag.pos.roomName == creep.room.name) {
             if (creep.room.controller.level >= 4 && creep.room.storage !== undefined) {
                 if (creep.room.controller.level < 6) {
-                    if (creep.room.storage.store[RESOURCE_ENERGY] < 1000000) {
+                    if (creep.room.storage.store[RESOURCE_ENERGY] < 999000) {
                         containers.moveToStorage(creep);
                     } else {
                         if (!creep.pos.isEqualTo(focusFlag.pos)) {
