@@ -224,7 +224,7 @@ var E23S75Module = [
 
 
 var E33S76Module = [
-    ['first', require('role.first'), 2, 1],
+    ['first', require('role.first'), 2, 4],
     ['linker', require('role.linker'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 2, 6],
     ['scientist', require('role.wallworker'), 0, 3],

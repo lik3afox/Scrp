@@ -658,6 +658,8 @@ function upSpawnTransfer(creep) {
     //toStorageOrTerminal(creep);
     //          containers.moveToStorage(creep);        
     //return;
+    if (roleParent.depositNonEnergy(creep)) return;
+
     let zz = new RoomPosition(8, 34, 'E27S75');
     if (!creep.pos.isEqualTo(zz)) creep.moveTo(zz);
     if (creep.memory.towerID === undefined) {
@@ -684,12 +686,12 @@ function upSpawnTransfer(creep) {
         }
     } else {
         let zzz = Game.getObjectById(creep.memory.renewSpawnID);
-        let yyy = Game.getObjectById(creep.memory.towerID);
-        if (zzz.energy < 100) {
-            creep.transfer(zzz, RESOURCE_ENERGY);
-        } else if (yyy.energy < 1000) {
-            creep.transfer(yyy, RESOURCE_ENERGY);
-        }
+        //        let yyy = Game.getObjectById(creep.memory.towerID);
+        //      if (zzz.energy < 100) {
+        creep.transfer(zzz, RESOURCE_ENERGY);
+        //    } else if (yyy.energy < 1000) {
+        //      creep.transfer(yyy, RESOURCE_ENERGY);
+        //  }
     }
 
 

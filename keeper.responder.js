@@ -142,6 +142,9 @@ function invasionAttack(creep, bads) {
 
 function SKAttack(creep, bads) {
     let enemy = creep.pos.findClosestByRange(bads);
+    if (creep.memory.runAwayLimit === undefined) {
+        creep.memory.runAwayLimit = creep.hitsMax * 0.33;
+    }
 
     creep.selfHeal(creep);
     let distance = creep.pos.getRangeTo(enemy);
