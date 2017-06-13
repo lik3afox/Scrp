@@ -85,6 +85,22 @@ function doWork(creep) {
 
 }
 
+function reportMining(creep) {
+    let reporting = ['E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E25S76', 'E26S76',
+        'E35S74', 'E36S74', 'E35S75', 'E36S75', 'E34S76'
+    ];
+    let room = creep.room;
+    if (creep.memory.reportMining === undefined) {
+        creep.memory.reportMining = _.contains(reporting, room.name);
+    }
+    if (!creep.memory.reportMining) return false;
+    if (room.memory.mining === undefined) {
+        room.memory.mining = 0;
+    }
+    room.memory.mining += creep.stats('mining');
+}
+
+
 function shouldDie(creep) {
     if (creep.hits == creep.hitsMax) return;
 
@@ -188,6 +204,7 @@ class settler extends roleParent {
                         super.keeperFind(creep);
                     }
                     //                                flags.reportMining(creep);
+                    reportMining(creep);
                     creep.memory.isThere = true;
                     creep.room.visual.text(_source.energy + "/" + _source.ticksToRegeneration, _source.pos.x + 1, _source.pos.y, {
                         color: 'white',

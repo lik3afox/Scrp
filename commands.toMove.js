@@ -784,6 +784,11 @@ class MoveInteract {
             });
             //            console.log(bads.length, 'checkForBadsPlaceFlag', creep.room);
             if (bads.length > 0) {
+                // This is to clear mining history. 
+                if (creep.room.memory.mining !== undefined) {
+                    creep.room.memory.mining = 0;
+                }
+
                 var flagz = creep.room.find(FIND_FLAGS);
                 flagz = _.filter(flagz,
                     function(flag) {

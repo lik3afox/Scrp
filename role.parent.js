@@ -347,7 +347,7 @@ class baseParent {
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
                 if (task.enemyWatch) {
                     let zzz = ['W4S94'];
-                    let rng = _.indexOf(zzz, creep.room.name) > 0 ? 6 : 4;
+                    let rng = _.indexOf(zzz, creep.room.name) >= 0 ? 6 : 4;
                     let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, rng);
                     badz = _.filter(badz, function(object) {
                         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
@@ -369,6 +369,9 @@ class baseParent {
                             }
                         }
                     } else {
+                        if (creep.memory._move !== undefined) {
+                            creep.memory._move.time++;
+                        }
                         //                        creep.runFrom(badz);
                     }
                 } else if (task.energyPickup) {

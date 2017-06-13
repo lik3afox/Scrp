@@ -186,7 +186,7 @@ function attackCreep(creep, bads) {
     // This one will in the just go after the guys with range attack.
 
     if (creep.memory.runAwayLimit === undefined) {
-        creep.memory.runAwayLimit = creep.hitsMax * 0.33;
+        creep.memory.runAwayLimit = 3000;
     }
 
     if (bads.length === 0) {
