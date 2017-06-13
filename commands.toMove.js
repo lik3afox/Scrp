@@ -776,7 +776,7 @@ class MoveInteract {
         }
         creep.memory.checkForBadScan--;
         if (creep.memory.checkForBadScan < 0) {
-            creep.memory.checkForBadScan = Math.ceil(Math.random() * 7) + 3;
+            creep.memory.checkForBadScan = Math.ceil(Math.random() * 9) + 3;
 
             var bads = creep.room.find(FIND_HOSTILE_CREEPS);
             bads = _.filter(bads, function(o) {
@@ -784,7 +784,8 @@ class MoveInteract {
             });
             //            console.log(bads.length, 'checkForBadsPlaceFlag', creep.room);
             if (bads.length > 0) {
-                // This is to clear mining history. 
+
+                // This is to clear mining history after every attack.
                 if (creep.room.memory.mining !== undefined) {
                     creep.room.memory.mining = 0;
                 }
