@@ -27,10 +27,10 @@ function getPartyFlag(creep) {
 function getHostiles(creep) {
     let range = 4;
     if (creep.room.name == 'E34S84' || creep.room.name == 'W4S94') range = 6;
-    if (creep.room.name == 'E25S74' || creep.room.name == 'E24S74' || creep.room.name == 'E35S74') {
+    if (creep.room.name == 'E25S74'   || creep.room.name == 'E35S74') {
         range = 8;
     }
-    var rng10 = ['E24S75', 'E26S76', 'E36S74'];
+    var rng10 = ['E24S75', 'E26S76', 'E36S74','E24S74'];
     if (_.indexOf(rng10, creep.room.name) > -1) {
         range = 10;
     }
