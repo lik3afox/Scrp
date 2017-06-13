@@ -172,11 +172,18 @@ function E23S75Room(creep) {
             break;
         case 0:
             goto = Game.getObjectById('593d6e902c4a79a70901fac1');
-            //             require('commands.toStructure').pickUpEnergy(creep);
-            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(goto, {
-                    reusePath: 20 //,ignoreCreeps:true
-                });
+            if (goto !== null && goto.energy > 0) {
+                if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(goto);
+                }
+            } else {
+                goto = creep.room.terminal;
+                if (goto !== null && goto.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
+                    if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto);
+                    }
+                }
+
             }
             break;
 
@@ -190,6 +197,9 @@ function E23S75Room(creep) {
 
 function E23S75Transfer(creep) {
     switch (creep.memory.roleID) {
+        case 0:
+        toStorageOrTerminal(creep);
+        break;
         //        case 1:
         default: goto = creep.room.storage; //Game.getObjectById('5924524129c65d152e19c40c');
         for (var i in creep.carry) {

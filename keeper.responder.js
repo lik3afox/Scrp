@@ -26,7 +26,11 @@ var boost = [];
 
 function getHostiles(creep) {
     let range = 10;
-    return creep.pos.findInRange(creep.room.hostilesHere(), range);
+    let zzz = creep.pos.findInRange(creep.room.hostilesHere(), range);
+    let sources = creep.pos.findInRange(zzz,3);
+    if(sources.length > 0) return sources;
+    zzz = _.filter(zzz, function(o){return o.owner.username !== 'Source Keeper';});
+    return zzz;
 }
 /*
 function attackCreep(creep, bads) {

@@ -240,7 +240,7 @@ class scientistRole extends roleParent {
                 }
 
                 if (!labsBuild.getFromTerminal(creep)) {
-
+//if(creep.room.name == 'E23S75') console.log(labsBuild.getFromTerminal(creep));
                     let otherThings = false;
                     if (creep.room.name !== 'E33S76') {
                         for (var e in creep.room.storage.store) {
@@ -273,6 +273,16 @@ class scientistRole extends roleParent {
 
                 }
 
+            } else {
+                        for (var a in creep.room.storage.store) {
+                            if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
+                                if (creep.pos.isNearTo(creep.room.storage)) {
+                                    creep.withdraw(creep.room.storage, a);
+                                } else {
+                                    creep.moveMe(creep.room.storage);
+                                }
+                            }
+                        }
             }
 
             //            creep.moveTo(creep.room.terminal);

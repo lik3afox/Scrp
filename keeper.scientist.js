@@ -155,28 +155,21 @@ class mineralRole extends roleParent {
             }
 
         }
+
         if (_goal === null) {
             var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+            creep.say('creepy');
             creep.moveMe(goingTo, {
                 ignoreRoads: _ignoreRoad,
                 reusePath: 49,
                 visualizePathStyle: visPath
             });
         } else if (!(_goal.roomName == creep.room.name && foxy.isInRange(creep, _goal.x, _goal.y, 4))) {
-            if (creep.memory.keeperLairID !== undefined) {
-                let sKep = Game.getObjectById(creep.memory.keeperLairID);
-                if (sKep !== null) {
-                    if (sKep.ticksToSpawn === undefined || sKep.ticksToSpawn < 15 || sKep.ticksToSpawn > 295) {
-                        return;
-                    }
-                }
-            }
-            if (!super.guardRoom(creep)) {
 
+            if (!super.guardRoom(creep)) {
                 creep.moveTo(_goal, {
                     reusePath: 30
                 });
-
                 creep.memory.distance++;
             }
         } else {
