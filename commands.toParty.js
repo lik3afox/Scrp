@@ -85,7 +85,7 @@ var killParty = [
 ];
 
 var upgradeParty = [
-    ['Aupgrader', require('army.upgrader'), 1, 6]
+    ['Aupgrader', require('army.upgrader'), 5, 4]
 ];
 var upgrade2Party = [
     ['Aupgrader', require('army.upgrader'), 3, 6]
@@ -225,7 +225,7 @@ function getSpawnCreating(flag) {
 
 
         case '2upgrade':
-            return 'W4S93';
+            return 'E23S75';
 
             // case 'rampartDefender' :
             //    case 'upgrade':
@@ -254,7 +254,7 @@ function getSpawnCreating(flag) {
             return 'E28S71';
 
         case 'upgrade':
-            return 'E37S75';
+            return 'E23S75';
 
         case 'thief2':
             return 'E35S83';

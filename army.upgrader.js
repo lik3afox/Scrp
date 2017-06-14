@@ -53,8 +53,8 @@ class upgraderzClass extends roleParent {
         }
 
         //if(creep.memory.roleID == 0) creep.moveTo(9,32)
-        if (creep.room.name == 'W4S93') {
-            let zz = super.boosted(creep, ['GH']);
+        if (creep.room.name == 'E23S75') {
+            let zz = super.boosted(creep, ['XGH2O']);
             if (zz) {
                 return;
             }
@@ -93,7 +93,7 @@ class upgraderzClass extends roleParent {
                     creep.memory.renewSpawnID = finded[0].id;
                 }
                 //                var ccSpawn = require('commands.toSpawn');
-                if (creep.room.name != 'W4S93')
+                if (creep.room.name != 'E23S75')
                     spawn.wantRenew(creep);
 
             }
@@ -156,22 +156,28 @@ class upgraderzClass extends roleParent {
                     creep.moveTo(creep.room.controller);
                 }
             }
-            if (creep.room.name == 'W4S93') {
+            if (creep.room.name == 'E23S75') {
                 let zz;
                 switch (creep.memory.roleID) {
                     case 0:
-                        zz = new RoomPosition(5, 37, creep.room.name);
+                        zz = new RoomPosition(28, 34, creep.room.name);
                         break;
                     case 1:
-                        zz = new RoomPosition(6, 37, creep.room.name);
+                        zz = new RoomPosition(28, 33, creep.room.name);
                         break;
                     case 2:
-                        zz = new RoomPosition(7, 37, creep.room.name);
+                        zz = new RoomPosition(29, 33, creep.room.name);
+                        break;
+                    case 3:
+                        zz = new RoomPosition(30, 33, creep.room.name);
+                        break;
+                    case 4:
+                        zz = new RoomPosition(30, 34, creep.room.name);
                         break;
                 }
                 if (zz !== undefined) {
                     if (!creep.pos.isEqualTo(zz))
-                        creep.moveTo(zz);
+                        creep.moveTo(zz,{ignoreCreep:true});
                 }
             }
         }
