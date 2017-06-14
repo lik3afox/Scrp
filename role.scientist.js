@@ -47,6 +47,7 @@ var groupOne = [
     '58b11106554d4c1333aed29b', // spawn 4
     '58af4822278c0725a7ad4642', // spawn 2
     //    '58c074ead62936ed5e2bce0b', // E27S75
+    '5934fa72604c7e190610993f', // E23S75
     '58fae20240468f2a39d50830', // E38S72
     '58d97b7b8c94aa185ccaf659', //E35S83
     '58f793ad1f64b8d842dc0c16', // E37S75
@@ -240,7 +241,7 @@ class scientistRole extends roleParent {
                 }
 
                 if (!labsBuild.getFromTerminal(creep)) {
-//if(creep.room.name == 'E23S75') console.log(labsBuild.getFromTerminal(creep));
+                    //if(creep.room.name == 'E23S75') console.log(labsBuild.getFromTerminal(creep));
                     let otherThings = false;
                     if (creep.room.name !== 'E33S76') {
                         for (var e in creep.room.storage.store) {
@@ -274,15 +275,15 @@ class scientistRole extends roleParent {
                 }
 
             } else {
-                        for (var a in creep.room.storage.store) {
-                            if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
-                                if (creep.pos.isNearTo(creep.room.storage)) {
-                                    creep.withdraw(creep.room.storage, a);
-                                } else {
-                                    creep.moveMe(creep.room.storage);
-                                }
-                            }
+                for (var a in creep.room.storage.store) {
+                    if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
+                        if (creep.pos.isNearTo(creep.room.storage)) {
+                            creep.withdraw(creep.room.storage, a);
+                        } else {
+                            creep.moveMe(creep.room.storage);
                         }
+                    }
+                }
             }
 
             //            creep.moveTo(creep.room.terminal);

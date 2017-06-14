@@ -50,6 +50,12 @@ function moveToWithdraw(creep) {
     }
 
     if (creep.pos.isNearTo(source)) {
+        if (creep.memory.sourceID == '5836b80b8b8b9619519f15ae') {
+            var zzz = new RoomPosition(12, 14, 'E23S75');
+            if (!creep.pos.isEqualTo(zzz)) {
+                creep.moveTo(zzz);
+            }
+        }
         if (creep.harvest(source) == OK) {
             creep.memory.isThere = true;
             creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {

@@ -218,7 +218,7 @@ var E23S75Module = [
     ['upbuilder', require('role.upbuilder'), 2, 4],
     ['wallwork', require('role.wallworker'), 0, 2],
     ['scientist', require('role.wallworker'), 0, 3],
-    ['linker', require('role.linker'), 3, 3],
+    ['linker', require('role.linker'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2]
 
 ];
@@ -1538,34 +1538,37 @@ class theSpawn {
     static reportDeath(creep) {
         var spawn = Game.getObjectById(creep.memory.parent);
         //                console.log( creep.rebuildMe(creep)+'aasdfffffffffffffffffffffffffffffffffffffff' );
-        switch (creep.memory.role) {
-            case "miner":
-            case "transport":
-                spawn.memory.expandCreate.push(rebuildCreep(creep));
-                break;
-            case "xtransport":
-            case "ytransport":
-            case "ztransport":
-            case "rtransport":
-                spawn.memory.expandCreate.push(rebuildCreep(creep));
-                break;
+        if (spawn !== null)
+            switch (creep.memory.role) {
+                case "miner":
+                case "transport":
+                    spawn.memory.expandCreate.push(rebuildCreep(creep));
+                    break;
+                case "xtransport":
+                case "ytransport":
+                case "ztransport":
+                case "rtransport":
+                    spawn.memory.expandCreate.push(rebuildCreep(creep));
+                    break;
 
-            case "harvester":
-            case "first":
-                spawn.memory.create.unshift(rebuildCreep(creep));
-                break;
-            case "scientist":
-                spawn.memory.create.push(rebuildCreep(creep));
-                break;
-            case "guard":
-            case "shooter":
-                spawn.memory.warCreate.push(rebuildCreep(creep));
-                break;
-            case "fighter":
-            case "healer":
-                spawn.memory.warCreate.unshift(rebuildCreep(creep));
-                break;
-        }
+                case "harvester":
+                case "first":
+                    spawn.memory.create.unshift(rebuildCreep(creep));
+                    break;
+                case "scientist":
+                    spawn.memory.create.push(rebuildCreep(creep));
+                    break;
+                case "guard":
+                case "shooter":
+                    if (spawn.memory.warCreate === undefined) spawn.memory.warCreate = [];
+                    spawn.memory.warCreate.push(rebuildCreep(creep));
+                    break;
+                case "fighter":
+                case "healer":
+                    if (spawn.memory.warCreate === undefined) spawn.memory.warCreate = [];
+                    spawn.memory.warCreate.unshift(rebuildCreep(creep));
+                    break;
+            }
     }
 
 

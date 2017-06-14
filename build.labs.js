@@ -1,3 +1,5 @@
+var labRooms = ['E23S75', 'E33S76', 'W4S93', 'E28S73', 'E35S73', 'E35S83', 'E29S79', 'E28S77', 'E26S77', 'E37S75', 'E28S71', 'E27S75', 'E26S73', 'E38S72'];
+
 /*
 RESOURCE_ENERGY: "energy",
     RESOURCE_POWER: "power",
@@ -54,33 +56,18 @@ E25S75
 var constr = require('commands.toStructure');
 var labmax = 2401;
 var allLabs = [{
-        id: '5938fdd462b8ff7e30107eb1',
-        resource: 'XGH2O',
-        amount: 2700
-    }, {
-        id: '593946bbeba80c4eae9ca4ec',
-        resource: 'none',
-        amount: 2700
-    }, {
-        id: '59397bc179c6c83efbe58950',
-        resource: 'none',
-        amount: 2700
-    }, {
-        id: '5939b5212b016b259c74422c',
-        resource: 'none',
-        amount: 2700
-    }, {
-        id: '5939db8e3d2cc933144120e8',
-        resource: 'none',
-        amount: 2700
-    }, {
-        id: '593a13a24053314604625508',
-        resource: 'none',
-        amount: 2700
-    }
-
-
-];
+    id: '59404817f09551065801fb93',
+    resource: 'XGH2O',
+    amount: 2700
+}, {
+    id: '5940584df9399f32041dea6a',
+    resource: 'none',
+    amount: 2700
+}, {
+    id: '5940502fce1e936d4d837fa9',
+    resource: 'none',
+    amount: 2700
+}];
 
 var maxMinerals = {
     //    'U':300000,
@@ -186,6 +173,7 @@ function labDo(roomName, created, labz, laby) {
         //        console.log('created 0 ', created, labz, laby, roomName);
         return false;
     }
+    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
     if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
         //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
@@ -224,7 +212,7 @@ function labReady(roomName, labz) {
 function returnLabs(roomName) {
     if (Game.rooms[roomName].memory.labs === undefined) {
         switch (roomName) {
-            case "E33S76":
+            case "E23S75":
                 return allLabs;
 
             default:
@@ -294,7 +282,6 @@ function updateRoomMember(roomName) {
 }
 
 //5836bb2241230b6b7a5b9a4d E35S75 43,15
-var labRooms = ['E33S76', 'W4S93', 'E28S73', 'E35S73', 'E35S83', 'E29S79', 'E28S77', 'E26S77', 'E37S75', 'E28S71', 'E27S75', 'E26S73', 'E38S72'];
 class buildLab {
 
     static getPlans(roomName) {
@@ -435,7 +422,7 @@ class buildLab {
 
             if (Game.rooms[roomName].memory.labMix === undefined) {
                 Game.rooms[roomName].memory.labMix = [];
-                Game.rooms[roomName].memory.labMix.push([3, 2, 6]);
+                Game.rooms[roomName].memory.labMix.push([1, 2, 3]);
                 /*    
                     Game.rooms[roomName].memory.labMix.push([7,2,6])
                     Game.rooms[roomName].memory.labMix.push([4,5,9])
