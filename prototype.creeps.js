@@ -8,6 +8,12 @@ function getCached(id) {
 }
 
 module.exports = function() {
+    Object.defineProperty(Creep.prototype, "isHome", {
+        configurable: true,
+        get: function() {
+            return this.room.name == this.memory.home;
+        },
+    });
 
     Object.defineProperty(Creep.prototype, "carryTotal", {
         configurable: true,

@@ -353,7 +353,7 @@ class baseParent {
                         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
                     });
                     if (badz.length === 0) {
-                        if (task.energyPickup) {
+                        if (task.energyPickup && !creep.isHome) {
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
                                 if (creep.moveMe(tmp2, task.options) == OK) {
                                     if (task.count) {

@@ -27,9 +27,11 @@ var boost = [];
 function getHostiles(creep) {
     let range = 10;
     let zzz = creep.pos.findInRange(creep.room.hostilesHere(), range);
-    let sources = creep.pos.findInRange(zzz,3);
-    if(sources.length > 0) return sources;
-    zzz = _.filter(zzz, function(o){return o.owner.username !== 'Source Keeper';});
+    let sources = creep.pos.findInRange(zzz, 3);
+    if (sources.length > 0) return sources;
+    zzz = _.filter(zzz, function(o) {
+        return o.owner.username !== 'Source Keeper';
+    });
     return zzz;
 }
 /*
@@ -219,6 +221,22 @@ function moveCreep(creep) {
     }
 }
 
+var E25S75 = ['E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E25S76', 'E26S76'];
+
+function analyzeMining(creep) {
+    if (_.contains(E25S75, creep.room.name)) {
+        let flag = Game.flags[creep.memory.party];
+        let mostMinedRoom;
+        let mostMined = 0;
+        for (var e in E25S75) {
+            if (Game.rooms[E25S75[e]].memory.mining > mostMined) {
+                mostMinedRoom = E25S75[e];
+                mostMined = Game.rooms[E25S75[e]].memory.mining;
+            }
+        }
+        console.log(mostMinedRoom, mostMined, "Most mined room info");
+    }
+}
 
 class roleGuard extends roleParent {
 
@@ -229,6 +247,7 @@ class roleGuard extends roleParent {
     }
 
     static run(creep) {
+        analyzeMining(creep);
         if (creep.saying == 'ZzZzZzZ') {
             creep.say('ZzZzZz');
             return;

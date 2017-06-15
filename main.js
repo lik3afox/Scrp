@@ -347,7 +347,8 @@
             market.run();
         }
         observer.run();
-        power.run();
+        Memory.totalPowerProcessed = 0;
+        //        power.run();
         globalCreep();
         doUpgradeRooms();
         memoryStatsUpdate();
