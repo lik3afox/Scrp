@@ -123,6 +123,106 @@
         }
     }
 
+    function speedTest() {
+        var start = Game.cpu.getUsed();
+        var o;
+        var zzz = { a: 100, b: 200, c: 300, d: 400, e: 5, f: 7, z: 9, n: 1, x: 10, v: 50, m: 12, q: 12, w: 345, r: 34 };
+        let total = 0;
+        //        console.log((Game.cpu.getUsed() - start), '1');
+        start = Game.cpu.getUsed();
+        for (var e in zzz) {
+            total += zzz[e];
+            //    console.log(zzz[e], e);
+        }
+        console.log((Game.cpu.getUsed() - start), 'in');
+
+        start = Game.cpu.getUsed();
+        xxx = Object.keys(zzz);
+        for (var a in xxx) {
+            total += xxx[a];
+            //        console.log(zzz[xxx[a]], a, "2");
+        }
+        console.log((Game.cpu.getUsed() - start), 'keys+in');
+
+        start = Game.cpu.getUsed();
+        xxx = Object.keys(zzz);
+        for (o = 0; o < xxx.length; o++) {
+            total += xxx[o];
+            //          console.log(zzz[xxx[o]], o, "3");
+        }
+        console.log((Game.cpu.getUsed() - start), 'for <');
+
+        start = Game.cpu.getUsed();
+        xxx = Object.keys(zzz);
+        var n = xxx.length;
+        for (o = 0; o < n; o++) {
+            total += zzz[xxx[o]];
+            //          console.log(zzz[xxx[o]], o, "3");
+        }
+
+        console.log((Game.cpu.getUsed() - start), 'for < + var');
+
+        start = Game.cpu.getUsed();
+        xxx = Object.keys(zzz);
+        for (o = xxx.length; o > 0; o--) {
+            total += zzz[xxx[o]];
+            //          console.log(zzz[xxx[o]], o, "3");
+        }
+
+        console.log((Game.cpu.getUsed() - start), 'for < - var');
+
+        start = Game.cpu.getUsed();
+        //        if (_.isObject(zzz)) {
+        xxx = Object.keys(zzz);
+        var z = xxx.length;
+        while (z--) {
+            total += zzz[xxx[z]];
+            //            console.log(zzz[xxx[z]], z, "4");
+        }
+        //      }
+
+        console.log((Game.cpu.getUsed() - start), 'z--');
+        start = Game.cpu.getUsed();
+
+        var yyy = [100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9,
+            100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9
+        ];
+
+        start = Game.cpu.getUsed();
+        for (o = 0; o < yyy.length; o++) {
+            total += yyy[o];
+            //          console.log(zzz[xxx[o]], o, "3");
+        }
+
+        console.log((Game.cpu.getUsed() - start), 'Array for');
+        start = Game.cpu.getUsed();
+        var m = yyy.length;
+        for (o = 0; o < m; o++) {
+            total += yyy[o];
+            //          console.log(zzz[xxx[o]], o, "3");
+        }
+
+        console.log((Game.cpu.getUsed() - start), 'Array var for');
+        start = Game.cpu.getUsed();
+        for (o = yyy.length; o > 0; o--) {
+            total += yyy[o];
+            //          console.log(zzz[xxx[o]], o, "3");
+        }
+
+        console.log((Game.cpu.getUsed() - start), '----Array var for');
+        start = Game.cpu.getUsed();
+        var x = yyy.length;
+        while (x--) {
+            total += yyy[x];
+            //            console.log(zzz[xxx[z]], z, "4");
+        }
+
+        console.log((Game.cpu.getUsed() - start), 'Array z--');
+
+
+
+    }
+
     function doUpgradeRooms() { //5836b82d8b8b9619519f19be
         let spwns = ['58c074ead62936ed5e2bce0b']; //,''
         if (Game.flags.recontrol !== undefined) return;
@@ -352,7 +452,7 @@
         globalCreep();
         doUpgradeRooms();
         memoryStatsUpdate();
-
+        speedTest();
         //    whoWorksFor('5836b81b8b8b9619519f178d');
         /*5836b8308b8b9619519f19fa
         for(var e in Game.constructionSites) {
