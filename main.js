@@ -452,7 +452,7 @@
         globalCreep();
         doUpgradeRooms();
         memoryStatsUpdate();
-        speedTest();
+//        speedTest();
         //    whoWorksFor('5836b81b8b8b9619519f178d');
         /*5836b8308b8b9619519f19fa
         for(var e in Game.constructionSites) {

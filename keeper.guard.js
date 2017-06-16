@@ -96,27 +96,15 @@ function attackCreep(creep, bads) {
 
         // Ranged attack.
         if (targets.length > 2) {
-            if (enemy.owner.username != 'Source Keeper') {
                 creep.rangedMassAttack();
-            } else {
-                creep.selfHeal();
-            }
-
         } else {
-            if (enemy.owner.username != 'Source Keeper') {
                 creep.rangedAttack(enemy);
-            } else {
-                creep.selfHeal();
-            }
-
-        }
-        // Heal
+        } 
         creep.selfHeal();
-        // Move
-        creep.moveTo(enemy, { ignoreRoads: true });
+        creep.moveTo(enemy);
     } else if (distance >= 4) {
         creep.selfHeal();
-        creep.moveTo(enemy, { ignoreRoads: true });
+        creep.moveTo(enemy);
     }
 }
 

@@ -145,7 +145,6 @@ class settler extends roleParent {
             creep.say('zZ');
             return;
         }
-        constr.pickUpEnergy(creep);
         if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
             if (super.boosted(creep, creep.memory.needBoost)) {
                 return;
@@ -168,6 +167,8 @@ class settler extends roleParent {
         if (_source !== null && (_source.pos.roomName != creep.room.name)) creep.memory.distance++;
 
         if (creep.pos.isNearTo(_source)) {
+        constr.pickUpEnergy(creep);
+            
             if (_.sum(creep.carry) >= creep.carryCapacity - 15 && _source.energy !== 0) {
                 if (creep.memory.workContainer === undefined) {
                     let range = 7;

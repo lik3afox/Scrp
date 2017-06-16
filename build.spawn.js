@@ -219,7 +219,7 @@ var E23S75Module = [
     ['minHarvest', require('role.mineral'), 1, 3],
     ['wallwork', require('role.wallworker'), 0, 2],
     ['scientist', require('role.wallworker'), 0, 3],
-    ['linker', require('role.linker'), 2, 3],
+    ['linker', require('role.linker'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2]
 
 ];
@@ -1076,13 +1076,13 @@ class theSpawn {
                 for (var type in allModule) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        //                    if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
-                        //                      if (countCPU) { start = Game.cpu.getUsed(); }
+                                            if (Game.creeps[name].memory.role == 'responder') { countCPU = true; } else { countCPU = false; }
+                                              if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }
-                        //                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
+                                                if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
 
                         break;
                     }

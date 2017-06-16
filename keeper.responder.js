@@ -229,7 +229,7 @@ function analyzeMining(creep) {
         let mostMinedRoom;
         let mostMined = 0;
         for (var e in E25S75) {
-            if (Game.rooms[E25S75[e]].memory.mining > mostMined) {
+            if (Game.rooms[ E25S75[e] ] !== undefined && Game.rooms[ E25S75[e] ].memory.mining > mostMined) {
                 mostMinedRoom = E25S75[e];
                 mostMined = Game.rooms[E25S75[e]].memory.mining;
             }
