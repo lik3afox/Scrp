@@ -19,7 +19,6 @@ var classLevels = [
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-var attack = require('commands.toAttack');
 var sources = require('commands.toSource');
 var constr = require('commands.toStructure');
 var spawn = require('commands.toSpawn');
@@ -41,7 +40,7 @@ class engineerClass extends roleParent {
             return;
         }
 
-        super.calcuateStats(creep);
+
         if (super.doTask(creep)) {
             return;
         }
@@ -107,11 +106,12 @@ class engineerClass extends roleParent {
                     if (!super._constr.moveToPickUpEnergy(creep, 300)) {
                         if (!super._containers.moveToWithdraw(creep)) {
                             let zz = Game.getObjectById('588371768b6b60986f18d1d8');
-                            if (creep.pos.isNearTo(zz)) {
-                                creep.dismantle(zz);
-                            } else {
-                                creep.moveMe(zz);
-                            }
+                            if (zz !== null)
+                                if (creep.pos.isNearTo(zz)) {
+                                    creep.dismantle(zz);
+                                } else {
+                                    creep.moveMe(zz);
+                                }
                         }
                     }
                 } else {

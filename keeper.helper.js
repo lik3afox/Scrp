@@ -11,7 +11,6 @@ warinternal [4:18 PM]
 */
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
-var attack = require('commands.toAttack');
 var struct = require('commands.toStructure');
 
 var targetId = '587022ea601aa5b440019da3';

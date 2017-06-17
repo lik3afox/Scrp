@@ -43,7 +43,6 @@ var sources = require('commands.toSource');
 var links = require('build.link');
 var spawnsCC = require('commands.toSpawn');
 var labsBuild = require('build.labs');
-var attack = require('commands.toAttack');
 var power = require('commands.toPower');
 
 // this class will go through and see if this creep has been boosted by this already. 
@@ -647,25 +646,36 @@ class baseParent {
                             creep.transfer(zz, RESOURCE_ENERGY);
                         }
                     }
-
-                    if (creep.memory.goal == '5836b8118b8b9619519f1659' ||
-                        creep.memory.goal == '5836b82b8b8b9619519f1967' ||
-                        creep.memory.goal == '5836b82b8b8b9619519f196c') {
-                        creep.moveMe(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
-                    } else if (creep.memory.goal == '5873bd6f11e3e4361b4d934b') {
-                        creep.moveTo(2, 2, { maxOps: 50 });
-                    } else if (creep.memory.goal == '5873bd6f11e3e4361b4d9351') {
-                        creep.moveTo(42, 38, { maxOps: 50 });
-                    } else if (creep.memory.goal == '58dbc4338283ff5308a3eb05') {
-                        creep.moveTo(21, 42, { maxOps: 50 });
-                    } else {
-                        for (var e in Game.flags) {
-                            if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
-                                creep.moveMe(Game.flags[e], { ignoreRoads: true, maxOpts: 50 });
-                                return true;
+                    switch (creep.memory.goal) {
+                        case '5836b8118b8b9619519f1659':
+                        case '5836b82b8b8b9619519f1967':
+                        case '5836b82b8b8b9619519f196c':
+                            creep.moveMe(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
+                            break;
+                        case '5873bd6f11e3e4361b4d934b':
+                            creep.moveTo(2, 2, { maxOps: 50 });
+                            break;
+                        case '5873bd6f11e3e4361b4d9351':
+                            creep.moveTo(42, 38, { maxOps: 50 });
+                            break;
+                        case '58dbc4338283ff5308a3eb05':
+                            creep.moveTo(21, 42, { maxOps: 50 });
+                            break;
+                        default:
+                            if (creep.memory.runFromKeeper === undefined) {
+                                for (var e in Game.flags) {
+                                    if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
+                                        creep.memory.runFromKeeper = new RoomPosition(Game.flags[e].pos.x, Game.flags[e].pos.y, Game.flags[e].pos.roomName);
+                                        creep.moveMe(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
+                                        return true;
+                                    }
+                                }
+                            } else {
+                                creep.moveMe(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
                             }
-                        }
+                            break;
                     }
+
                     return true;
 
                 } else {

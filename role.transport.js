@@ -1,6 +1,9 @@
 var roleParent = require('role.parent');
 var constr = require('commands.toStructure');
+var containers = require('commands.toContainer');
+var spawns = require('commands.toSpawn');
 var movement = require('commands.toMove');
+var link = require('build.link');
 var rePath = 100;
 
 
@@ -52,8 +55,8 @@ function shouldDie(creep) {
     if (creep.hits == creep.hitsMax) return;
 
     let death = true;
-
-    for (var e in creep.body) {
+    var e = creep.body.length;
+    while (e--) {
         if (creep.body[e].type == 'move' && creep.body[e].hits > 0) {
             death = false;
         }
@@ -74,7 +77,6 @@ function getBads(creep) {
     });
     return bads;
 }
-var link = require('build.link');
 
 class transport extends roleParent {
     static rebuildMe(creep) {
@@ -96,9 +98,8 @@ class transport extends roleParent {
         }
 
         super.rebirth(creep);
-        super.calcuateStats(creep);
 
-        let total = _.sum(creep.carry);
+        //        let total = _.sum(creep.carry);
 
         if (link.stayDeposit(creep)) {
             constr.pickUpEnergy(creep);
@@ -113,7 +114,6 @@ class transport extends roleParent {
             return;
         }
         if (super.keeperWatch(creep)) {
-            //  if(creep.carry[RESOURCE_ENERGY] > creep.carryCapacity *.5)
             return;
         }
         if (movement.runAway(creep)) {
@@ -128,10 +128,10 @@ class transport extends roleParent {
         if (creep.memory.gohome === undefined) { creep.memory.gohome = false; }
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }
 
-        if ((!creep.memory.gohome && total > creep.carryCapacity - 45)) {
+        if ((!creep.memory.gohome && creep.carryTotal > creep.carryCapacity - 45)) {
             creep.memory.gohome = true;
             creep.memory.empty = false;
-        } else if (total < 20) {
+        } else if (creep.carryTotal < 20) {
             creep.memory.gohome = false;
             creep.memory.empty = true;
         }
@@ -174,11 +174,9 @@ class transport extends roleParent {
 
 
             } else if (creep.memory.home == creep.room.name) {
-                var containers = require('commands.toContainer');
 
                 if (!containers.moveToStorage(creep)) {
                     if (!containers.moveToTerminal(creep)) {
-                        var spawns = require('commands.toSpawn');
                         if (!spawns.moveToTransfer(creep)) {
                             if (!constr.doCloseBuild(creep)) {
                                 if (!containers.moveToTransfer(creep)) {
@@ -210,68 +208,68 @@ class transport extends roleParent {
             if (creep.room.name == 'E27S74') rng = 3;
 
             if (!super._constr.moveToPickUpEnergyIn(creep, 7))
-                if (_goal !== null && creep.pos.inRangeTo(_goal, rng)) {
-
-                    if (creep.memory.workContain === undefined) {
-
-                        let contain = _goal.room.find(FIND_STRUCTURES, {
-                            filter: {
-                                structureType: STRUCTURE_CONTAINER
-                            }
-                        });
-                        contain = _goal.pos.findInRange(contain, 10);
-                        contain = _goal.pos.findClosestByRange(contain);
-                        if (contain !== null) {
-                            creep.memory.workContain = contain.id;
+                if (creep.memory.workContain !== undefined) {
+                    let task = {};
+                    task.options = {
+                        reusePath: rePath,
+                        ignoreRoads: false,
+                        visualizePathStyle: {
+                            fill: 'transparent',
+                            stroke: '#ff0',
+                            lineStyle: 'dashed',
+                            strokeWidth: 0.15,
+                            opacity: 0.5
                         }
+                    };
+                    let zzz = Game.getObjectById(creep.memory.workContain);
+                    if (zzz !== null) {
+                        task.pos = new RoomPosition(zzz.pos.x, zzz.pos.y, zzz.pos.roomName);
+                        task.order = "moveTo";
+                        task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+                        if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
+                        task.energyPickup = true;
+                        task.rangeHappy = 2;
+                        creep.memory.task.push(task);
                     }
 
-                    let contain = Game.getObjectById(creep.memory.workContain);
-                    if (contain !== null) {
-                        if (_.sum(contain.store) > 100) {
-                            if (creep.pos.isNearTo(contain)) {
-                                for (var e in contain.store) {
-                                    if (creep.withdraw(contain, e) == OK) {
-                                        super.keeperFind(creep);
-                                    }
-                                }
-                            } else {
-                                creep.moveTo(contain, { maxOps: 50 });
-                            }
-                        } else if (creep.pos.isNearTo(_goal)) {
-                            creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
-                        } else {
-                            creep.say('zZzZ');
-                        }
+                } else if (_goal !== null && creep.pos.inRangeTo(_goal, rng)) {
 
+                if (creep.memory.workContain === undefined) {
+
+                    let contain = _goal.room.find(FIND_STRUCTURES, {
+                        filter: {
+                            structureType: STRUCTURE_CONTAINER
+                        }
+                    });
+                    contain = _goal.pos.findInRange(contain, 10);
+                    contain = _goal.pos.findClosestByRange(contain);
+                    if (contain !== null) {
+                        creep.memory.workContain = contain.id;
+                    }
+                }
+
+                let contain = Game.getObjectById(creep.memory.workContain);
+                if (contain !== null) {
+                    if (_.sum(contain.store) > 100) {
+                        if (creep.pos.isNearTo(contain)) {
+                            for (var e in contain.store) {
+                                if (creep.withdraw(contain, e) == OK) {
+                                    super.keeperFind(creep);
+                                }
+                            }
+                        } else {
+                            creep.moveTo(contain, { maxOps: 50 });
+                        }
+                    } else if (creep.pos.isNearTo(_goal)) {
+                        creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     } else {
                         creep.say('zZzZ');
                     }
 
-
-                } else if (creep.memory.workContain !== undefined) {
-                let task = {};
-                task.options = {
-                    reusePath: rePath,
-                    ignoreRoads: false,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#ff0',
-                        lineStyle: 'dashed',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                };
-                let zzz = Game.getObjectById(creep.memory.workContain);
-                if (zzz !== null) {
-                    task.pos = new RoomPosition(zzz.pos.x, zzz.pos.y, zzz.pos.roomName);
-                    task.order = "moveTo";
-                    task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
-                    if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
-                    task.energyPickup = true;
-                    task.rangeHappy = 2;
-                    creep.memory.task.push(task);
+                } else {
+                    creep.say('zZzZ');
                 }
+
 
             } else if (_goal !== null) {
 

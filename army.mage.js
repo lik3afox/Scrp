@@ -26,7 +26,6 @@ warinternal [4:18 PM]
 */
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
-var attack = require('commands.toAttack');
 //var flags = require('build.flags');
 
 
@@ -42,7 +41,8 @@ class roleGuard extends roleParent {
             return;
         }
         if (super.boosted(creep, boost)) {
-            return; }
+            return;
+        }
         //E27S81  spawn 58b6e108e5da646c1eb6c6e6
         // Wall   58bcaa7d2c6316d758cf9efd
         // Towers  58bc6d52bb2aee1d0c8e3315   58c9c9f7f26e3bce72b17dd9
@@ -70,7 +70,7 @@ class roleGuard extends roleParent {
             let target;
             for (var e in E27S71) {
                 target = Game.getObjectById(E27S71[e]);
-                if (target !== undefined) {
+                if (target !== null) {
                     if (creep.dismantle(target) == ERR_NOT_IN_RANGE) {}
                     creep.moveTo(target);
                     return;

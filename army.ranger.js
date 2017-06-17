@@ -9,7 +9,6 @@ var classLevels = [
 var boost = [RESOURCE_LEMERGIUM_OXIDE, 'KO'];
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-var attack = require('commands.toAttack');
 //STRUCTURE_POWER_BANK:
 
 function getDefendFlag() {

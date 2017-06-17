@@ -118,7 +118,6 @@ function specialrun(creep) {
 }
 
 var roleParent = require('role.parent');
-var hostile = require('commands.toAttack');
 var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
 var container = require('commands.toContainer');

@@ -38,9 +38,10 @@ function focusMinerals(targetID, mineral) {
     if (targetID === undefined) return;
     if (mineral === undefined) return;
     let target = Game.getObjectById(targetID);
+    if (target === null) return;
     for (var e in terminals) {
         let term = Game.getObjectById(terminals[e]);
-        if (term.store[mineral] > 1) {
+        if (term !== null && term.store[mineral] > 1) {
             term.send(mineral, term.store[mineral] - 1, target.room.name, 'focus Trade');
         }
     }

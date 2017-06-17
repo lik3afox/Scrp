@@ -31,7 +31,6 @@ var classLevels = [
 
 var boost = [RESOURCE_LEMERGIUM_OXIDE];
 var movement = require('commands.toMove');
-var attack = require('commands.toAttack');
 var roleParent = require('role.parent');
 //STRUCTURE_POWER_BANK:
 function findNewParty(creep) {
@@ -189,7 +188,7 @@ class fighterClass extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
-        super.calcuateStats(creep);
+
         if (super.doTask(creep)) {
             return;
         }
@@ -222,9 +221,13 @@ class fighterClass extends roleParent {
             }
         }
 
-        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3, {
-            filter: object => (object.owner.username != 'NobodysNightmare' && object.owner.username != 'admon' && object.owner.username != 'lolzor')
-        });
+        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3);
+
+        enemy = _.filter(enemy,
+            function(object) {
+                return (object.owner.username != 'NobodysNightmare' && object.owner.username != 'admon' && object.owner.username != 'lolzor');
+            }
+        );
 
         //movement.flagMovement(creep);
         creep.say(enemy.length, true);

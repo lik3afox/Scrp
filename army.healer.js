@@ -16,7 +16,6 @@ var boost = [];
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-var attack = require('commands.toAttack');
 
 function findNewParty(creep) {
     // first we will look at Game.falgs
@@ -89,7 +88,7 @@ function powerAction(creep) {
 
     } else {
         //   let pBank = Game.getObjectById( creep.memory.powerbankID);
-        //      if(pBank == undefined) {
+        //      if(pBank == null) {
         if (!power.findNewPowerParty(creep))
             creep.memory.death = true;
         //      }

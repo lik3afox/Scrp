@@ -9,7 +9,6 @@ var classLevels = [
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-var attack = require('commands.toAttack');
 //STRUCTURE_POWER_BANK:
 class hackerClass extends roleParent {
     static levels(level) {

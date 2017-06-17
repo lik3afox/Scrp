@@ -281,9 +281,9 @@ class roleGuard extends roleParent {
         if (bads.length > 0) {
             attackCreep(creep, bads);
         } else {
-            if (!creep.healOther()) {
-                creep.selfHeal();
-                if (!movement.moveToDefendFlag(creep)) {
+            if (!movement.moveToDefendFlag(creep)) {
+                if (!creep.healOther()) {
+                    creep.selfHeal();
                     moveCreep(creep);
                 }
             }

@@ -25,7 +25,6 @@ var boost = ['XGH2O', 'GH'];
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-//var attack = require('commands.toAttack');
 var sources = require('commands.toSource');
 var constr = require('commands.toStructure');
 var spawn = require('commands.toSpawn');
@@ -104,14 +103,16 @@ class upgraderzClass extends roleParent {
                     //                    if(creep.pos.isNearTo(creep.room.storage)) {
                     //                      creep.withdraw(creep.room.storage,RESOURCE_ENERGY);
                     //                } else {
-                    if (creep.pos.isNearTo(spawn)) {
-                        if (spawn.energy > 0) {
-                            creep.say('MINE!');
-                            creep.withdraw(spawn, RESOURCE_ENERGY);
-                        }
+                    if (spawn !== null) {
+                        if (creep.pos.isNearTo(spawn)) {
+                            if (spawn.energy > 0) {
+                                creep.say('MINE!');
+                                creep.withdraw(spawn, RESOURCE_ENERGY);
+                            }
 
-                    } else {
-                        creep.moveTo(spawn);
+                        } else {
+                            creep.moveTo(spawn);
+                        }
                     }
                     //              }
 
@@ -177,7 +178,7 @@ class upgraderzClass extends roleParent {
                 }
                 if (zz !== undefined) {
                     if (!creep.pos.isEqualTo(zz))
-                        creep.moveTo(zz,{ignoreCreep:true});
+                        creep.moveTo(zz, { ignoreCreep: true });
                 }
             }
         }

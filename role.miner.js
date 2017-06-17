@@ -3,7 +3,6 @@ var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
 var source = require('commands.toSource');
 var containers = require('commands.toContainer');
-var flags = require('build.flags');
 //var foxy = require('foxMethods'); // Foxy methods.
 
 

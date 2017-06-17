@@ -3,7 +3,6 @@ var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
 var source = require('commands.toSource');
 var containers = require('commands.toContainer');
-var flags = require('build.flags');
 
 var boost = ['KH'];
 
@@ -93,11 +92,9 @@ class mineralRole extends roleParent {
             creep.memory.death = true;
         }
 
-        if (creep.room.name == _goal.roomName && super.keeperWatch(creep)) { // two parter - keeperFind happens when
+        if (super.keeperWatch(creep)) { // two parter - keeperFind happens when
             return;
         }
-
-        //        constr.pickUpNonEnergy(creep);
 
         // He's not in 5 spaces of his goal. so he needs to move there. 
         if (creep.memory.goHome) {
@@ -178,11 +175,14 @@ class mineralRole extends roleParent {
 
                 if (creep.pos.isNearTo(_source)) {
                     if (creep.memory.ExtractID === undefined) {
-                        let vr = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_EXTRACTOR });
+                        let vr = creep.room.find(FIND_STRUCTURES);
+                        vr = _.filter(vr, function(s) {
+                            return s.structureType == STRUCTURE_EXTRACTOR;
+                        });
                         creep.memory.ExtractID = vr[0].id;
                     }
                     let extract = Game.getObjectById(creep.memory.ExtractID);
-                    if (extract.cooldown === 0) {
+                    if (extract !== null && extract.cooldown === 0) {
                         if (creep.harvest(_source) == OK) {
                             super.keeperFind(creep);
                         }

@@ -46,7 +46,7 @@ function defendRoom(towers, hostiles) {
         while (e--) {
             if (towers[e].energy > 0) {
                 let zz = Math.floor(Math.random() * hostiles.length);
-                let zzz = Game.getObjectById('58fd0a6a344ac64d3b4ac231');
+                //                let zzz = Game.getObjectById('58fd0a6a344ac64d3b4ac231');
                 //            if(zzz != undefined) {
                 //              towers[e].attack(zzz);
                 //                }else {

@@ -10,7 +10,6 @@ var classLevels = [
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-var attack = require('commands.toAttack');
 //STRUCTURE_POWER_BANK:
 class muleClass extends roleParent {
     static levels(level) {
@@ -23,8 +22,7 @@ class muleClass extends roleParent {
         if (creep.memory.goHome === undefined) {
             creep.memory.goHome = false;
         }
-        let total = creep.carryTotal
-;
+        let total = creep.carryTotal;
         if (!creep.memory.goHome) {
             if (total === 0) {
                 let stor = creep.room.storage;
@@ -65,7 +63,8 @@ class muleClass extends roleParent {
                 creep.memory.goHome = false;
             } else {
                 let zz = Game.getObjectById(creep.memory.parent);
-                creep.moveTo(zz, { reusePath: 50 });
+                if (zz !== null)
+                    creep.moveTo(zz, { reusePath: 50 });
             }
         }
 

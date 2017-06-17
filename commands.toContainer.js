@@ -121,11 +121,12 @@ class ContainerInteract {
         }
         if (creep.room.memory.nukeID === undefined) return false;
         let nuke = Game.getObjectById(creep.room.memory.nukeID);
-        if (creep.pos.isNearTo(nuke)) {
-            creep.transfer(nuke, RESOURCE_ENERGY);
-        } else {
-            creep.moveMe(nuke);
-        }
+        if (nuke !== null)
+            if (creep.pos.isNearTo(nuke)) {
+                creep.transfer(nuke, RESOURCE_ENERGY);
+            } else {
+                creep.moveMe(nuke);
+            }
     }
 
 

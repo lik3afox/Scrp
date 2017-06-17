@@ -576,31 +576,32 @@ function rebuildCreep(creep) {
         let spawn = Game.getObjectById(creep.memory.parent);
         let _module;
         let goalInfo;
-        for (var e in spawn.memory.roadsTo) {
-            if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                _module = expansionModule[spawn.memory.roadsTo[e].expLevel];
-                goalInfo = spawn.memory.roadsTo[e];
-                if (creep.memory.role == 'transport') {
-                    analyzeSource(spawn.memory.roadsTo[e]);
+        if (spawn !== null) {
+            for (var e in spawn.memory.roadsTo) {
+                if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
+                    _module = expansionModule[spawn.memory.roadsTo[e].expLevel];
+                    goalInfo = spawn.memory.roadsTo[e];
+                    if (creep.memory.role == 'transport') {
+                        analyzeSource(spawn.memory.roadsTo[e]);
+                    }
+                }
+                break;
+            }
+            if (_body === undefined || _body === null) {
+                for (var o in _module) {
+                    if (_module[o][_name] == creep.memory.role) {
+                        //       _body = _module[e][_require].levels(_module[e][_level],spawn.room);
+                        _body = getModuleRole(_module[o][_name]).levels(_module[o][_level], spawn.room);
+                        break;
+                    }
                 }
             }
-            break;
-        }
 
-        if (_body === undefined || _body === null) {
-            for (var o in _module) {
-                if (_module[o][_name] == creep.memory.role) {
-                    //       _body = _module[e][_require].levels(_module[e][_level],spawn.room);
-                    _body = getModuleRole(_module[o][_name]).levels(_module[o][_level], spawn.room);
-                    break;
-                }
-            }
         }
-
-        //if((creep.memory.home == 'E35S73') && creep.memory.role == 'miner' ) {   console.log(_body,'ray');    }
 
     } else if (creep.memory.role == 'first' || creep.memory.role == 'harvester' || creep.memory.role == 'scientist') {
         currentModule = getCurrentModule(Game.getObjectById(creep.memory.parent));
+
         for (var type in currentModule) {
             if (currentModule[type][_name] == creep.memory.role) {
                 _body = getModuleRole(currentModule[type][_name]).levels(currentModule[type][_level], creep.memory.home);
@@ -715,6 +716,7 @@ function getNuke(spawn) {
 
 function getCurrentModule(spawn) {
 
+    if (spawn === null || spawn === undefined) return;
     var currentModuleLevel = getModuleLevel(spawn);
 
     if (spawn.room.controller.level > 3 && spawn.name == 'Spawn1') {
@@ -972,8 +974,10 @@ class theSpawn {
             totalBuild = totalBuild + spawnCreeps[name].body.length;
         }
         let spawn = Game.getObjectById(spawnID);
-        spawn.memory.TotalBuild = (totalBuild * 3) + total;
-        spawn.memory.totalCreep = total;
+        if (spawn !== null) {
+            spawn.memory.TotalBuild = (totalBuild * 3) + total;
+            spawn.memory.totalCreep = total;
+        }
         return totalCreeps;
     }
 
@@ -1429,6 +1433,7 @@ class theSpawn {
 
     static reportFrom(creep) {
         var spawn = Game.getObjectById(creep.memory.parent);
+        if (spawn === null) return false;
         var e;
         switch (creep.memory.role) {
             case "miner":

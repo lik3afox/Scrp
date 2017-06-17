@@ -28,7 +28,6 @@ var classLevels = [
 
 var boost = ['LH'];
 var roleParent = require('role.parent');
-var hostile = require('commands.toAttack');
 var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
 var contain = require('commands.toContainer');

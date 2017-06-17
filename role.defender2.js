@@ -156,8 +156,6 @@ function rampartDefense(creep) {
 }
 
 var roleParent = require('role.parent');
-//var hostile = require('commands.toAttack');
-//var container = require('commands.toContainer');
 
 class roleNewDefender extends roleParent {
     static levels(level) {
@@ -176,7 +174,8 @@ class roleNewDefender extends roleParent {
             return;
         }
         if (rampartDefense(creep)) {
-            return; }
+            return;
+        }
 
         if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
 

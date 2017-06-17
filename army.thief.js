@@ -22,7 +22,6 @@ var classLevels = [
 var boost = ['XKH2O'];
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-var attack = require('commands.toAttack');
 var contain = require('commands.toContainer');
 
 function clearLabs(creep) {

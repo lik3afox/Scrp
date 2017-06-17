@@ -2,14 +2,14 @@ var party = require('commands.toParty');
 var FLAG = require('foxGlobals');
 var delayBetweenScan = 15;
 
-
+/*
 function getRoomFlag(creep) {
     for (var i in Game.flags) {
         if (Game.flags[i].color == COLOR_WHITE && Game.flags[i].pos.roomName == creep.pos.roomName) {
             return Game.flags[i];
         }
     }
-}
+}*/
 
 function doDefendThings(flag) {
     if (flag.room === undefined) return;
@@ -79,35 +79,6 @@ function rampartThings(flag) {
     }
     flag.memory.invaderTimed++;
 }
-/*
-function findParty() {
-    // we need to go through the creeps/warcreate of all the spawns only once.
-    // once we do, we create an object that holds the party and numbers it has, sending it to
-    // creation and see if a screep needs to be created.
-    let ztotal = [];
-    for (var z in Game.flags) {
-        if (Game.flags[z].color == FLAG.GUARD) {
-            let temp = { party: z, total: 0 };
-            ztotal.push(temp);
-        }
-    }
-    // z = flag name. which equals flag party name. 
-    for (var e in Game.creeps) {
-        if (Game.creeps[e].memory.party !== undefined) {
-            for (var a in ztotal) {
-                if (ztotal[a].party == Game.creeps[e].memory.party) {
-                    ztotal[a].total++;
-                }
-            }
-        }
-    }
-
-    for (var o in ztotal) {
-        console.log(ztotal[o].party, ztotal[o].total, o);
-    }
-
-    return ztotal;
-} */
 
 function clearFlagMemory() {
     var keys = Object.keys(Memory.flags);
@@ -126,45 +97,25 @@ function clearFlagMemory() {
 }
 
 class buildFlags {
-
-    /*    static getBads(flag) {
-            // This is used after it finds a flag.
-            if (flag.memory.hostilesID === undefined) return false;
-            let tmp = [];
-            for (var e in flag.memory.hostilesID) {
-                tmp.push(Game.getObjectById(flag.memory.hostilesID[e]));
+    /*
+        static clearAllFlags() {
+            let total = 0;
+            var keys = Object.keys(Game.flags);
+            var e = keys.length;
+            var z;
+            while (e--) {
+                z = keys[e];
+                if (Game.flags[z].memory.scanned !== undefined) {
+                    Game.flags[z].memory.scanned = undefined;
+                    total++;
+                }
+                if (Game.flags[z].room !== undefined) {
+                    Game.flags[z].memory.room = Game.flags[z].room.name;
+                }
             }
-            return tmp;
-        } */
-
-    static inRoom(search, creep) {
-        var flag = getRoomFlag(creep);
-        for (var i in flag.memory.scan) {
-            if (i == search) {
-                return flag.memory.scan[i];
-            }
+            console.log('cleared ', total, 'flags');
         }
-    }
-
-
-    static clearAllFlags() {
-        let total = 0;
-        var keys = Object.keys(Game.flags);
-        var e = keys.length;
-        var z;
-        while (e--) {
-            z = keys[e];
-            if (Game.flags[z].memory.scanned !== undefined) {
-                Game.flags[z].memory.scanned = undefined;
-                total++;
-            }
-            if (Game.flags[z].room !== undefined) {
-                Game.flags[z].memory.room = Game.flags[z].room.name;
-            }
-        }
-        console.log('cleared ', total, 'flags');
-    }
-
+    */
     /** @param {Creep} creep **/
     /*
         static reportMining(creep) {
