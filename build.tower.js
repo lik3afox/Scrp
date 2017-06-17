@@ -6,7 +6,8 @@ function scanHostileBelowToughness(target) {
     //    let target = Game.getObjectById(creepid);
     let body = target.body;
     let toughness = 0;
-    for (var e in body) {
+    var e = body.length;
+    while (e--) {
         //     console.log(body[e].type,body[e].boost);
         if (body[e].type == TOUGH && body[e].boost !== undefined) {
             toughness++;
@@ -24,7 +25,8 @@ function scanHostileBelowToughness(target) {
 // This function should do one of two things - return false/undefined means that no focus.
 // or a bad guy that has less hp than his toughness parts, so he takes more damage.
 function analyzedBads(hostiles) {
-    for (var e in hostiles) {
+    var e = hostiles.length;
+    while (e--) {
         if (scanHostileBelowToughness(hostiles[e])) {
             return hostiles[e];
         }
@@ -38,8 +40,10 @@ function defendRoom(towers, hostiles) {
     // Random attack targets
     // Until one of them gets below toughness hp
     let focusTarget = analyzedBads(hostiles);
+    var e;
     if (!focusTarget) {
-        for (var e in towers) {
+        e = towers.length;
+        while (e--) {
             if (towers[e].energy > 0) {
                 let zz = Math.floor(Math.random() * hostiles.length);
                 let zzz = Game.getObjectById('58fd0a6a344ac64d3b4ac231');
@@ -52,10 +56,11 @@ function defendRoom(towers, hostiles) {
             }
         }
     } else {
-        for (var o in towers) {
-            if (towers[o].energy > 0) {
-                showTowerRange(towers[o]);
-                towers[o].attack(focusTarget);
+        e = towers.length;
+        while (e--) {
+            if (towers[e].energy > 0) {
+                showTowerRange(towers[e]);
+                towers[e].attack(focusTarget);
             }
         }
     }
@@ -65,7 +70,8 @@ function defendRoom(towers, hostiles) {
 function healRoom(towers, hurt) {
     if (hurt.length === 0) return false;
     if (hurt.length > 0) {
-        for (var e in towers) {
+        var e = towers.length;
+        while (e--) {
             if (towers[e].energy > 0) {
 
                 showTowerRange(towers[e]);
@@ -86,8 +92,8 @@ function repairRoom(towers) { // This function is given all the towers in a room
     let needs = towers[0].room.memory.repairQuery;
     let towerNum = 0;
     let towerMax = towers.length - 1;
-
-    for (var e in needs) {
+    var e = needs.length;
+    while (e--) {
         let target = Game.getObjectById(needs[e]);
         if (target === null) {
             needs.splice(e, 1);
@@ -181,8 +187,8 @@ function scanForRepair(troom) {
             structure.structureType != STRUCTURE_RAMPART) && structure.hits < structure.hitsMax - 1000);
     });
     if (repairs.length === 0) return false;
-
-    for (var o in repairs) {
+    var o = repairs.length;
+    while (o--) {
         troom.memory.repairQuery.push(repairs[o].id);
     }
 
@@ -212,7 +218,7 @@ function repairRampart(towers) {
 
 
 var constr = require('commands.toStructure');
-
+//var towerSafe =  ['zolox','admon84']
 class roleTower {
     /*
         static rescan(tower) {

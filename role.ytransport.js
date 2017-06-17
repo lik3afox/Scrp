@@ -153,7 +153,7 @@ class transport extends roleParent {
 
             } else {
 
-                let foxy = require('foxMethods');
+
                 // If in the same room and with in a square of 5 away from goal. 
                 if (_goal.room.name === creep.room.name) {
                     // First look for containers and picking up stuff.

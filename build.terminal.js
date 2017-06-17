@@ -18,7 +18,7 @@ let basic = [
     'KO', 'KHO2', 'XKHO2',
 ];
 var terminals = ['58b0bd65ad252479508f2eab', '58b31b469e8b37461c88d6f3', '58e174a1be34d67531319d7f', '58e2633bd12e106302dce492',
-    '58b1cbbd08b3b7bd61139e14','594040ae3058b1431a1d2629', '58bb4e55942e459e3151f9b6', '58bf37b77dfb1e2f42591b87', '58bfb95f87bda510020bb080', '58c48f1b119a7dfa3b53525d',
+    '58b1cbbd08b3b7bd61139e14', '594040ae3058b1431a1d2629', '58bb4e55942e459e3151f9b6', '58bf37b77dfb1e2f42591b87', '58bfb95f87bda510020bb080', '58c48f1b119a7dfa3b53525d',
     '58f81a437684166367608336', '5902420f523e1c2d5ca6114a', '591365a95128141e7200c235', '592c8d47cc8d322372c51e45'
 ];
 
@@ -129,6 +129,7 @@ function shareEnergy(terminal) {
 function needEnergy(terminal) {
     //   console(terminal.room.storage.store[RESOURCE_ENERGY]);
     if (terminal.room.name == 'E33S76') return;
+
     if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
         if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
             let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
@@ -523,7 +524,7 @@ class roleTerminal {
             }
 
 
-            let zz = terminal.store.total;
+            let zz = terminal.total;
 
             needEnergy(terminal);
 

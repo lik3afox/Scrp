@@ -311,7 +311,7 @@ class reTransport extends roleParent {
                                 creep.runFrom(badz);
                             }
                         }
-                        if (target.structureType == STRUCTURE_CONTAINER && target.store.total === 0) {
+                        if (target.structureType == STRUCTURE_CONTAINER && target.total === 0) {
                             creep.memory.gotoID = undefined;
                         }
 

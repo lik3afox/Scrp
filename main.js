@@ -32,7 +32,11 @@
     var countCheck = 3;
 
     function whoWorksFor(goal) {
-        for (var e in Game.creeps) {
+        var keys = Object.keys(Game.creeps);
+        var a = keys.length;
+        var e;
+        while (a--) {
+            e = keys[a];
             if (Game.creeps[e].memory.goal == goal) {
                 console.log(goal, Game.creeps[e].memory.home, Game.creeps[e].name, Game.creeps[e].memory.role, Game.creeps[e].pos, "lvl:", Game.creeps[e].memory.level);
             }
@@ -51,7 +55,8 @@
         });
 
         if (targets.length === 0) return;
-        for (var e in targets) {
+        var e = targets.length;
+        while (e--) {
 
             let nearRampart = targets[e].pos.findInRange(FIND_STRUCTURES, 1, {
                 filter: object => (object.structureType == 'rampart')
@@ -86,7 +91,11 @@
             });
             let total = 0;
             total += sci.length;
-            for (var e in Game.spawns) {
+            var keys = Object.keys(Game.spawns);
+            var a = keys.length;
+            var e;
+            while (a--) {
+                e = keys[a];
                 if (Game.spawns[e].memory.alphaSpawn) {
                     let sci2 = _.filter(Game.spawns[e].memory.create, function(o) {
                         return o.memory.role == 'scientist';
@@ -96,6 +105,7 @@
                     total += sci2.length;
                 }
             }
+
             console.log('Did a test for scientist found:' + total);
             if (total < scientist) {
                 let temp = {
@@ -124,6 +134,7 @@
     }
 
     function speedTest() {
+
         var start = Game.cpu.getUsed();
         var o;
         var zzz = { a: 100, b: 200, c: 300, d: 400, e: 5, f: 7, z: 9, n: 1, x: 10, v: 50, m: 12, q: 12, w: 345, r: 34 };
@@ -136,13 +147,6 @@
         }
         console.log((Game.cpu.getUsed() - start), 'in');
 
-        start = Game.cpu.getUsed();
-        xxx = Object.keys(zzz);
-        for (var a in xxx) {
-            total += xxx[a];
-            //        console.log(zzz[xxx[a]], a, "2");
-        }
-        console.log((Game.cpu.getUsed() - start), 'keys+in');
 
         start = Game.cpu.getUsed();
         xxx = Object.keys(zzz);
@@ -226,8 +230,8 @@
     function doUpgradeRooms() { //5836b82d8b8b9619519f19be
         let spwns = ['58c074ead62936ed5e2bce0b']; //,''
         if (Game.flags.recontrol !== undefined) return;
-
-        for (var e in spwns) {
+        var e = spwns.length;
+        while (e--) {
             let spawn = Game.getObjectById(spwns[e]);
             let control = spawn.room.controller;
             if (control.level < 7) return;
@@ -235,13 +239,7 @@
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
             if (control.level >= 7 && control.progress > 10900000) {
                 if (Game.flags.recontrol === undefined) {
-
                     spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                    /*                let zz = spawn.room.find(FIND_CREEPS);
-                                    zz = _.filter(zz, function(o) {
-                                        return o.memory.role == 'miner';
-                                    });
-                                    if (zz.length > 0) zz[0].suicide(); */
                 }
             }
         }
@@ -303,8 +301,8 @@
                     console.log("Script reload after", loaded - lastLoaded, "ticks took " + Game.cpu.getUsed().toFixed(3) + " CPU.");
                     Memory.loaded = Game.time;
                 } */
-
-        for (let i in prototypes) {
+        var i = prototypes.length;
+        while (i--) {
             prototypes[i]();
         }
 
@@ -327,8 +325,11 @@
         var total = 0;
         spawnsDo.runCreeps();
         var spawnReport = {};
-        for (var title in Game.spawns) { // Start of spawn Loo
-
+        var keys = Object.keys(Game.spawns);
+        var t = keys.length;
+        var title;
+        while (t--) { // Start of spawn Loo
+            title = keys[t];
             if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
 
                 rampartCheck(Game.spawns[title]);
@@ -452,7 +453,7 @@
         globalCreep();
         doUpgradeRooms();
         memoryStatsUpdate();
-//        speedTest();
+        //        speedTest();
         //    whoWorksFor('5836b81b8b8b9619519f178d');
         /*5836b8308b8b9619519f19fa
         for(var e in Game.constructionSites) {

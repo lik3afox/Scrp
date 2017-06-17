@@ -4,7 +4,7 @@ var constr = require('commands.toStructure');
 var source = require('commands.toSource');
 var containers = require('commands.toContainer');
 var flags = require('build.flags');
-var foxy = require('foxMethods'); // Foxy methods.
+//var foxy = require('foxMethods'); // Foxy methods.
 
 
 // If in the same room and with in a square of 5 away from goal. 
@@ -167,8 +167,8 @@ class settler extends roleParent {
         if (_source !== null && (_source.pos.roomName != creep.room.name)) creep.memory.distance++;
 
         if (creep.pos.isNearTo(_source)) {
-        constr.pickUpEnergy(creep);
-            
+            constr.pickUpEnergy(creep);
+
             if (_.sum(creep.carry) >= creep.carryCapacity - 15 && _source.energy !== 0) {
                 if (creep.memory.workContainer === undefined) {
                     let range = 7;

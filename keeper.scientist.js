@@ -4,11 +4,8 @@ var constr = require('commands.toStructure');
 var source = require('commands.toSource');
 var containers = require('commands.toContainer');
 var flags = require('build.flags');
-var foxy = require('foxMethods'); // Foxy methods.
 
 var boost = ['KH'];
-// If in the same room and with in a square of 5 away from goal. 
-//                if (_goal.room.name == creep.room.name && foxy.isInRange(creep, _goal.pos.x, _goal.pos.y, 5)) { 
 
 var classLevels = [
     //0
@@ -164,7 +161,7 @@ class mineralRole extends roleParent {
                 reusePath: 49,
                 visualizePathStyle: visPath
             });
-        } else if (!(_goal.roomName == creep.room.name && foxy.isInRange(creep, _goal.x, _goal.y, 4))) {
+        } else if (!(_goal.roomName == creep.room.name && creep.pos.inRangeTo(_goal.x, _goal.y, 4))) {
 
             if (!super.guardRoom(creep)) {
                 creep.moveTo(_goal, {

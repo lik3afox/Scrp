@@ -45,7 +45,8 @@ function getCached(id) {
 function linkTransfer() {
     var LINK;
     var ttarget;
-    for (var e in _links) {
+    var e = _links.length;
+    while (e--) {
 
 
         LINK = getCached(_links[e]); //Game.getObjectById(_links[e]);
@@ -57,19 +58,14 @@ function linkTransfer() {
             });
 
             if (targets.length !== 0) {
-                ttarget = undefined;
-                let amount = 3000;
-                for (var o in targets) {
-                    if (targets[o].carry[RESOURCE_ENERGY] < amount) {
-                        ttarget = targets[o];
-                        amount = targets[o].carry[RESOURCE_ENERGY];
-                    }
-                }
+
+                if (targets.length > 1)
+                    targets.sort((a, b) => a.carry[RESOURCE_ENERGY] - b.carry[RESOURCE_ENERGY]);
+
+                ttarget = targets[0];
 
                 if (ttarget !== undefined) {
-                    //                    let amountSent = ttarget.carry[RESOURCE_ENERGY];
                     let vv = ttarget.transfer(LINK, RESOURCE_ENERGY);
-                    //                    console.log(ttarget,"in",ttarget.pos,vv, 'tried to linkransfer', LINK.pos.isNearTo(ttarget));
                 }
             }
         }
@@ -83,7 +79,8 @@ function sendEnergy(from, to, amount) {
 
     if (_.isArray(from)) {
         linkTo = getCached(to);
-        for (var e in from) {
+        var e = from.length;
+        while (e--) {
             linkFrom = getCached(from[e]);
             if (linkFrom !== null && linkTo !== null) {
                 linkFrom.room.visual.line(linkFrom.pos, linkTo.pos, { color: 'blue' });
@@ -200,7 +197,7 @@ class buildLink {
         sendEnergy(['592b1d484bc45519161537ef', '592b3ffa429df6134a992506'], '592b2bba08d445510286532a', 700);
         sendEnergy(['592b2bba08d445510286532a', '592b29f24dbc43d258db1db4'], '592b1f2b9eb200190288958e', 700);
 
-        sendEnergy(['59437ada633ad90d033e741c','59408dd58b64951171f89b71', '593da1f5694770f664e2df0b'], '593d6e902c4a79a70901fac1', 700);
+        sendEnergy(['59437ada633ad90d033e741c', '59408dd58b64951171f89b71', '593da1f5694770f664e2df0b'], '593d6e902c4a79a70901fac1', 700);
 
         gameCache = []; // cleaning up cache for this tick.
     }
@@ -246,7 +243,8 @@ class buildLink {
         let LINK;
 
         if (creep.memory.linkID === undefined) {
-            for (var e in _links) {
+            var e = _links.length;
+            while (e--) {
                 LINK = getCached(_links[e]);
                 if (LINK !== null && creep.pos.isNearTo(LINK)) {
                     creep.memory.linkID = _links[e];

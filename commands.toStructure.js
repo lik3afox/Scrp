@@ -2,7 +2,6 @@
 // Way for creep to interact wtih repair/build and constructionsite
 // This needs to be fixed for goal and not to find a goal every tick
 
-var foxy = require('foxMethods');
 
 function getConstruction(creep) {
     return creep.room.find(FIND_MY_CONSTRUCTION_SITES);

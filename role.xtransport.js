@@ -40,8 +40,7 @@ var classLevels =
 ;
 var _ignoreRoad = true;
 
-function shouldDie
-(creep) {
+function shouldDie(creep) {
     if (creep.hits === creep.hitsMax) return;
 
     let death = true;
@@ -221,10 +220,10 @@ class transport extends roleParent {
 
             } else {
 
-                let foxy = require('foxMethods');
+                //let foxy = require('foxMethods');
                 // If in the same room and with in a square of 5 away from goal. 
                 if (!super._constr.moveToPickUpEnergyIn(creep, 5))
-                    if (_goal.room.name === creep.room.name && foxy.isInRange(creep, _goal.pos.x, _goal.pos.y, 5)) {
+                    if (_goal.room.name === creep.room.name && creep.pos.inRangeTo(_goal.pos, 5)) {
                         //                    if (!constr.pickUpEnergy(creep)) {
                         if (creep.memory.workContain === undefined) {
                             let contain = creep.pos.findClosestByRange(FIND_STRUCTURES, {

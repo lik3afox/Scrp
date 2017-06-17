@@ -199,7 +199,13 @@ module.exports = function() {
     };
 
     Creep.prototype.healOther = function(range) {
-        var hurtz = this.pos.findInRange(FIND_MY_CREEPS, range);
+        var hurtz;
+        if (range !== undefined) {
+            hurtz = this.pos.findInRange(FIND_MY_CREEPS, range);
+        } else {
+            hurtz = this.room.find(FIND_MY_CREEPS);
+        }
+
         hurtz = _.filter(hurtz, function(object) {
             return object.hits < object.hitsMax;
         });
@@ -207,7 +213,8 @@ module.exports = function() {
         if (hurtz.length > 0) {
             if (!this.pos.isNearTo(hurtz[0])) {
                 this.rangedHeal(hurtz[0]);
-                this.moveTo(hurtz[0]);
+                this.room.visual.line(this.pos, hurtz[0].pos);
+                this.moveTo(hurtz[0], { maxOpts: 100 });
             } else {
                 this.heal(hurtz[0]);
             }

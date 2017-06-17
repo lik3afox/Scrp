@@ -55,7 +55,8 @@ function rampartThings(flag) {
             return n.room.name == flag.room.name;
         });
         console.log(roomCreeps.length, 'trea');
-        for (var a in roomCreeps) {
+        var a = roomCreeps.length;
+        while (a--) {
             roomCreeps[a].memory.rampartDefense = true;
         }
         flag.memory.alert = true;
@@ -68,7 +69,8 @@ function rampartThings(flag) {
             flag.memory.invaderTimed = undefined;
             flag.memory.alert = undefined;
             let roomCreeps = _.filter(Game.creeps, { filter: z => z.room.name == flag.room.name });
-            for (var o in roomCreeps) {
+            var o = roomCreeps.length;
+            while (o--) {
                 roomCreeps[o].memory.rampartDefense = false;
             }
             flag.room.memory.towerRepairID = undefined;
@@ -77,7 +79,7 @@ function rampartThings(flag) {
     }
     flag.memory.invaderTimed++;
 }
-
+/*
 function findParty() {
     // we need to go through the creeps/warcreate of all the spawns only once.
     // once we do, we create an object that holds the party and numbers it has, sending it to
@@ -105,14 +107,21 @@ function findParty() {
     }
 
     return ztotal;
-}
+} */
 
 function clearFlagMemory() {
-    for (var a in Memory.flags) {
+    var keys = Object.keys(Memory.flags);
+    var e = keys.length;
+    var a;
+    while (e--) {
+        a = keys[e];
         if (Game.flags[a] === undefined) delete Memory.flags[a];
     }
-    for (var e in Memory.rooms) {
-        if (Game.rooms[e] === undefined) delete Memory.rooms[e];
+    keys = Object.keys(Memory.rooms);
+    e = keys.length;
+    while (e--) {
+        a = keys[e];
+        if (Game.rooms[a] === undefined) delete Memory.rooms[a];
     }
 }
 
@@ -140,7 +149,11 @@ class buildFlags {
 
     static clearAllFlags() {
         let total = 0;
-        for (var z in Game.flags) {
+        var keys = Object.keys(Game.flags);
+        var e = keys.length;
+        var z;
+        while (e--) {
+            z = keys[e];
             if (Game.flags[z].memory.scanned !== undefined) {
                 Game.flags[z].memory.scanned = undefined;
                 total++;
@@ -215,9 +228,10 @@ class buildFlags {
             return o.color != COLOR_WHITE && o.color != COLOR_GREY && o.color != COLOR_CYAN;
         });
         //console.log(  (Game.cpu.getUsed() - start ), ' afterfilter',zFlags.length); start = Game.cpu.getUsed();
-        var e;
-        for (e in zFlags) {
-            let flag = zFlags[e];
+        var e = zFlags.length;
+        var flag;
+        while (e--) {
+            flag = zFlags[e];
             //console.log(Game.flags[e],Game.flags[e].pos)
             //if(Game.flags[e].pos == undefined) console.log('adsfaf');
             //            if(flag.room )

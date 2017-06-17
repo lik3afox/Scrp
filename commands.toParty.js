@@ -85,7 +85,7 @@ var killParty = [
 ];
 
 var upgradeParty = [
-    ['Aupgrader', require('army.upgrader'), 1, 5]
+    ['Aupgrader', require('army.upgrader'), 4, 6]
 ];
 var upgrade2Party = [
     ['Aupgrader', require('army.upgrader'), 3, 6]

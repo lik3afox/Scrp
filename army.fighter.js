@@ -39,7 +39,9 @@ function findNewParty(creep) {
     let pbFlags = _.filter(Game.flags, function(o) {
         return o.color == COLOR_YELLOW && o.secondaryColor == COLOR_RED;
     });
-    for (var a in pbFlags) {
+    var e = pbFlags.length;
+    while (e--) {
+        var a = pbFlags[e];
         let dis = Game.map.getRoomLinearDistance(creep.room.name, pbFlags[a].pos.roomName);
         if (dis <= 5 && pbFlags[a].name != creep.memory.party) {
             console.log(creep, "Has switched to new party", pbFlags[a].name, 'from', creep.memory.party);
@@ -49,6 +51,7 @@ function findNewParty(creep) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -91,7 +94,8 @@ function doAttack(creep) {
 function returnClosestSpawn(roomName) {
     var distance = 100;
     var spawn;
-    for (var e in Game.spawns) {
+    var e = _.filter(Game.spawns).length;
+    while (e--) {
         if (Game.spawns[e].memory.alphaSpawn) {
             var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
             if (tempDis < distance) {

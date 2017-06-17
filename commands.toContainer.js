@@ -3,10 +3,6 @@
 // moveTo
 // withDraw
 
-
-
-
-
 function getNonEmptyContain(creep) {
     return creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
@@ -16,106 +12,8 @@ function getNonEmptyContain(creep) {
     });
 }
 
-/*
-function getAllTypes(creep) {
-
-
-
-
-
-
-        let storage = creep.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (( (structure.structureType == STRUCTURE_STORAGE) ||
-                     (structure.structureType == STRUCTURE_TOWER) ||
-                     (structure.structureType == STRUCTURE_CONTAINER) ||
-                     (structure.structureType == STRUCTURE_SPAWN) ||
-                     (structure.structureType == STRUCTURE_EXTENSION) ||
-                    (structure.structureType == STRUCTURE_LINK)
-                     )
-                    && (_.sum(structure.store) < structure.storeCapacity));
-            }
-        });
-
-console.log('next',storage.length,real.length);
-        return storage
-}
-/*
-function depositToAll(creep) {
-var flags = require('build.flags');
-/*var real = [];
-
-var newz = flags.inRoom('structures',creep);
-for(var e in newz) {
-    if(( (newz[e].structureType == STRUCTURE_STORAGE) ||
-                     (newz[e].structureType == STRUCTURE_TOWER) ||
-                     (newz[e].structureType == STRUCTURE_CONTAINER) ||
-                     (newz[e].structureType == STRUCTURE_SPAWN) ||
-                     (newz[e].structureType == STRUCTURE_EXTENSION) ||
-                    (newz[e].structureType == STRUCTURE_LINK)
-                     )
-                    && (_.sum(newz[e].store) < newz[e].storeCapacity)&&
-                    (creep.pos.isNearTo(newz[e] ))   ) {
-        real.push(newz[e])
-    }
-} 
-
-var allType = creep.pos.findInRange(FIND_STRUCTURES,1,{
-            filter: (structure) => {
-                return (( (structure.structureType == STRUCTURE_STORAGE) ||
-                     (structure.structureType == STRUCTURE_TOWER) ||
-                     (structure.structureType == STRUCTURE_CONTAINER) ||
-                     (structure.structureType == STRUCTURE_SPAWN) ||
-                     (structure.structureType == STRUCTURE_EXTENSION) ||
-                    (structure.structureType == STRUCTURE_LINK)
-                     )
-                    && (_.sum(structure.store) < structure.storeCapacity));
-            }
-        });
-
-        for(var i in allType) {
-           if( creep.transfer(allType[i], RESOURCE_ENERGY)== OK ) {
-            return true;
-           }
-        }
-        return false;
-}
-*/
 class ContainerInteract {
     constructor() {}
-        /*
-
-            static areAllRoomContainFull(room) {
-
-                var structures = room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return ((structure.structureType == STRUCTURE_CONTAINER) && (_.sum(structure.store) < structure.storeCapacity));
-                    }
-                });
-                if (structures.length == 0) return true;
-                else return false;
-
-            }
-            static ifNearContainer(creep) {
-                return depositToAll(creep) ;
-            }
-
-        for(var i in Game.structures) {
-            if(Game.structures[i].room.name == creep.room.name){
-                if(Game.structures[i].structureType == STRUCTURE_CONTAINER) {
-            console.log(Game.structures[i].room.name, creep.room.name,Game.structures[i].structureType);
-                if(creep.pos.isNearTo(Game.structures[i]) ) {
-                    if( creep.transfer(Game.structures[i],RESOURCE_ENERGY) == OK) {
-                        return true;
-                        }
-                }
-            }
-            }
-        }
-
-        */
-        //    static toContainer(creep) {
-        //    }
 
     static fromContainer(creep) {
         var containers = creep.pos.findInRange(FIND_STRUCTURES, 1, {
@@ -137,35 +35,7 @@ class ContainerInteract {
         return containers;
     }
 
-    /*
-       static  getSortByClose(creep) {
-            var containers = getNonEmptyContain(creep);
-            //containers.sort((a, b) => a.hits - b.hits);
-            return containers;
-        }
-    */
-    /*
-       
-    /*
-    /*
-        
 
-    /*    static toCreep(creep) {
-            let temp = creep.pos.findInRange(FIND_CREEPS,1, {
-                filter: (creep) => {
-                    return (creep.memory.role != 'harvester' && 
-                        creep.memory.role != 'transport' &&
-                        creep.memory.role != 'miner');
-                }
-            });
-
-            if( creep.transfer(temp[0]) == OK) {
-                creep.say('tran');
-                return true;
-            }
-            return false;
-
-        }*/
     static moveToTransfer(creep) {
         //console.log('used sued');
         var containers = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -328,15 +198,6 @@ class ContainerInteract {
             return false;
         }
     }
-
-    /*
-    creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-            return ((structure.structureType == STRUCTURE_CONTAINER ||
-                structure.structureType == STRUCTURE_STORAGE) && (_.sum(structure.store) > 0));
-        }
-    });
-*/
 
     static moveToWithdraw(creep) {
 

@@ -27,11 +27,11 @@ var boost = [];
 function getHostiles(creep) {
     let range = 10;
     let zzz = creep.pos.findInRange(creep.room.hostilesHere(), range);
-    let sources = creep.pos.findInRange(zzz, 3);
-    if (sources.length > 0) return sources;
-    zzz = _.filter(zzz, function(o) {
-        return o.owner.username !== 'Source Keeper';
-    });
+    //    let sources = creep.pos.findInRange(zzz, 3);
+    //    if (sources.length > 0)   return zzz;
+    /*    zzz = _.filter(zzz, function(o) {
+            return o.owner.username !== 'Source Keeper';
+        });*/
     return zzz;
 }
 /*
@@ -229,12 +229,15 @@ function analyzeMining(creep) {
         let mostMinedRoom;
         let mostMined = 0;
         for (var e in E25S75) {
-            if (Game.rooms[ E25S75[e] ] !== undefined && Game.rooms[ E25S75[e] ].memory.mining > mostMined) {
+            if (Game.rooms[E25S75[e]] !== undefined && Game.rooms[E25S75[e]].memory.mining > mostMined) {
                 mostMinedRoom = E25S75[e];
                 mostMined = Game.rooms[E25S75[e]].memory.mining;
             }
         }
-        console.log(mostMinedRoom, mostMined, "Most mined room info");
+        console.log(flag, flag.room.name, mostMinedRoom, mostMined, "Most mined room info");
+        if (flag.room.name !== mostMinedRoom) {
+            flag.setPosition(new RoomPosition(flag.pos.x, flag.pos.y, mostMinedRoom));
+        }
     }
 }
 
@@ -247,7 +250,7 @@ class roleGuard extends roleParent {
     }
 
     static run(creep) {
-        analyzeMining(creep);
+
         if (creep.saying == 'ZzZzZzZ') {
             creep.say('ZzZzZz');
             return;
@@ -261,6 +264,7 @@ class roleGuard extends roleParent {
             return;
         }
         if (creep.saying == 'ZzZz') {
+            analyzeMining(creep);
             creep.say('ZzZ');
             return;
         }
@@ -277,9 +281,11 @@ class roleGuard extends roleParent {
         if (bads.length > 0) {
             attackCreep(creep, bads);
         } else {
-            creep.selfHeal();
-            if (!movement.moveToDefendFlag(creep)) {
-                moveCreep(creep);
+            if (!creep.healOther()) {
+                creep.selfHeal();
+                if (!movement.moveToDefendFlag(creep)) {
+                    moveCreep(creep);
+                }
             }
         }
     }

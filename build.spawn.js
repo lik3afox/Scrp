@@ -5,44 +5,44 @@
 // This module is where the require counts and what really determines the behavior.
 // The role (1) here will be linked to the require run.
 var allModule = [
-    ['scientist', require('role.scientist')],
+    ['recontroller', require('army.recontroller')],
+    ['ranger', require('army.ranger')],
+    ['demolisher', require('army.demolisher')],
+    ['thief', require('army.thief')],
+    ['mule', require('army.mule')],
+    ['Acontroller', require('army.controller')],
+    ['healer', require('army.healer')], // Gather and move - just carry 
+    ['nuker', require('role.nuker')],
+    ['shooter', require('keeper.shooter')],
+    ['tower', require('role.tower')],
     ['responder', require('keeper.responder')],
     ['minHarvest', require('role.mineral')],
     ['mineral', require('keeper.scientist')],
-    ['guard', require('keeper.guard')],
     ['engineer', require('army.engineer')],
-    ['recontroller', require('army.recontroller')],
     ['repairer', require('role.repairer')],
-    ['builder', require('role.builder')],
-    ['roadbuilder', require('role.roadbuilder')], // Pick up/harvest to build. 
-    ['fighter', require('army.fighter')],
-    ['boss', require('role.constructionBoss')],
-    ['first', require('role.first')], // Should never have more firsts than containers...maybe..mmmm
-    ['harvester', require('role.harvester')],
-    ['upbuilder', require('role.upbuilder')],
     ['scout', require('army.scout')],
+    ['rampartGuard', require('army.rampartGuard')],
     ['homeDefender', require('role.defender2')],
+    ['builder', require('role.builder')],
+    //    ['roadbuilder', require('role.roadbuilder')], // Pick up/harvest to build. 
+    ['fighter', require('army.fighter')],
+    //    ['boss', require('role.constructionBoss')],
+    ['upbuilder', require('role.upbuilder')],
     ['controller', require('role.controller')],
-    ['linker', require('role.linker')],
+    ['scientist', require('role.scientist')],
     ['xtransport', require('role.xtransport')], // Harvester - experiemnt w/o carry
     ['ytransport', require('role.ytransport')], // Harvester - experiemnt w/o carry
     ['ztransport', require('role.ztransport')], // Harvester - experiemnt w/o carry
     ['rtransport', require('role.rtransport')], // Harvester - experiemnt w/o carry
     ['upgrader', require('role.upgrader')],
-    ['ranger', require('army.ranger')],
-    ['miner', require('role.miner')], // Harvester - experiemnt w/o carry
-    ['demolisher', require('army.demolisher')],
     ['Aupgrader', require('army.upgrader')],
-    ['thief', require('army.thief')],
-    ['mule', require('army.mule')],
-    ['Acontroller', require('army.controller')],
+    ['guard', require('keeper.guard')],
+    ['wallwork', require('role.wallworker')],
+    ['first', require('role.first')], // Should never have more firsts than containers...maybe..mmmm
+    ['harvester', require('role.harvester')],
+    ['linker', require('role.linker')],
     ['transport', require('role.transport')], // Gather and move - just carry 
-    ['healer', require('army.healer')], // Gather and move - just carry 
-    ['nuker', require('role.nuker')],
-    ['shooter', require('keeper.shooter')],
-    ['rampartGuard', require('army.rampartGuard')],
-    ['tower', require('role.tower')],
-    ['wallwork', require('role.wallworker')]
+    ['miner', require('role.miner')] // Harvester - experiemnt w/o carry
 ];
 
 var controllerLevel = 3500;
@@ -215,7 +215,7 @@ var E38S74Module = [
 
 var E23S75Module = [
     ['first', require('role.first'), 2, 3],
-    ['builder', require('role.builder'), 1, 5],
+    ['builder', require('role.builder'), 0, 5],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['wallwork', require('role.wallworker'), 0, 2],
     ['scientist', require('role.wallworker'), 0, 3],
@@ -1058,8 +1058,11 @@ class theSpawn {
         Memory.creepTotal = 0;
         var totalRoles = {};
         var cpuUsed = {};
-
-        for (var name in spawnCreeps) { // Start of Creep Loop
+        var keys = Object.keys(Memory.creeps);
+        var e = keys.length;
+        var name;
+        while (e--) { // Start of Creep Loop
+            name = keys[e];
             if (Memory.showInfo > 4)
                 start = Game.cpu.getUsed();
             if (!Game.creeps[name]) { // Check to see if this needs deletion
@@ -1072,40 +1075,21 @@ class theSpawn {
                     Memory.creepTotal++;
                 }
                 //                console.log(Game.creeps[name].memory.role, totalRoles[Game.creeps[name].memory.role]);
-
-                for (var type in allModule) {
+                var type = allModule.length;
+                while (type--) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                                            if (Game.creeps[name].memory.role == 'responder') { countCPU = true; } else { countCPU = false; }
-                                              if (countCPU) { start = Game.cpu.getUsed(); }
+                        if (Game.creeps[name].memory.role == 'responder') { countCPU = true; } else { countCPU = false; }
+                        if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }
-                                                if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
+                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
 
                         break;
                     }
                 }
-                /*
-                                let creep = Game.creeps[name];
-                                let spawn = Game.getObjectById(creep.memory.parent);
-                                let thereIs = false;
-                                for(var e in spawn.memory.roadsTo) {
-                                    if(spawn.memory.roadsTo[e].source === creep.memory.goal) {
-                                        thereIs = true;
-                                        break;
-                                    } 
-                                }
-                                if(!thereIs) {
-                                    var BUILD = {
-                                        source: creep.memory.goal,
-                                        miner: false,
-                                        transport: false,
-                                        expLevel: 
-                                    };
-                                    spawn.memory.roadsTo.push(BUILD);
-                                } */
             }
             if (Game.creeps[name] !== undefined && Memory.showInfo > 4) {
                 let zzz = name; //[0] + name[1] + name[2] + "@" + Game.creeps[name].pos.roomName + ',' + Game.creeps[name].pos.x + "," + Game.creeps[name].pos.y;
