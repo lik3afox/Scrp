@@ -107,7 +107,9 @@ function specialrun(creep) {
             if (creep.room.terminal !== undefined) {
                 container.moveToTerminal(creep);
             } else {
-                creep.moveTo(Game.getObjectById(creep.memory.parent));
+                let zzz = Game.getObjectById(creep.memory.parent);
+                if (zzz !== null)
+                    creep.moveTo(zzz);
             }
             creep.say('loot');
         } else if (!movement.moveToDefendFlag(creep)) {
@@ -183,7 +185,10 @@ class roleAttacker extends roleParent {
                 if (creep.room.terminal !== undefined) {
                     container.moveToTerminal(creep);
                 } else {
-                    creep.moveTo(Game.getObjectById(creep.memory.parent));
+                    let zzz = Game.getObjectById(creep.memory.parent);
+                    if (zzz !== null)
+                        creep.moveTo(zzz);
+
                 }
                 creep.say('loot');
                 return;

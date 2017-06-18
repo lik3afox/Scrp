@@ -1550,6 +1550,7 @@ class theSpawn {
                     break;
                 case "guard":
                 case "shooter":
+                case "responder":
                     if (spawn.memory.warCreate === undefined) spawn.memory.warCreate = [];
                     spawn.memory.warCreate.push(rebuildCreep(creep));
                     break;

@@ -30,15 +30,16 @@ class roadbuilder extends roleParent {
         super.rebuildMe(creep);
     }
     static levels(level) {
-            if (level > classLevels.length - 1) level = classLevels.length - 1;
-            return classLevels[level];
-        }
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        return classLevels[level];
+    }
 
     static run(creep) {
         creep.say('rr');
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         if (super.returnEnergy(creep)) {
             return;
@@ -87,12 +88,14 @@ class roadbuilder extends roleParent {
 
                 } else {
                     if (!super.guardRoom(creep)) {
-                        creep.moveTo(Game.getObjectById(creep.memory.parent), { reusePath: 30 });
+                        let zzz = Game.getObjectById(creep.memory.parent);
+                        if (zzz !== null)
+                            creep.moveTo(zzz, { reusePath: 30 });
                     }
                 }
             } else {
                 var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
-                if (creep.room.name != goingTo.roomName) {
+                if (goingTo !== null && creep.room.name != goingTo.roomName) {
 
                     creep.moveTo(goingTo, { reusePath: 30 });
 

@@ -73,7 +73,7 @@ function countTerminals() {
         let info = { type: basic[b], amount: 0 };
         for (var e in terminals) {
             let target = Game.getObjectById(terminals[e]);
-            if (target.store[basic[b]] > 0) {
+            if (target !== null && target.store[basic[b]] > 0) {
                 info.amount += target.store[basic[b]];
             }
         }
@@ -109,7 +109,7 @@ function shareEnergy(terminal) {
     var currentLow = 1000000;
     for (var e in terminals) {
         let storage = Game.getObjectById(terminals[e]).room.storage;
-        if (storage.store[RESOURCE_ENERGY] < 800000) {
+        if (storage !== null && storage !== undefined && storage.store[RESOURCE_ENERGY] < 800000) {
             if (storage.store[RESOURCE_ENERGY] < currentLow) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
@@ -141,7 +141,7 @@ function needEnergy(terminal) {
             var currentHigh = 0;
             for (var e in terminals) {
                 let storage = Game.getObjectById(terminals[e]);
-                if (storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name) {
+                if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name) {
                     highestEnergy = Game.getObjectById(terminals[e]);
                     currentHigh = storage.store[RESOURCE_ENERGY];
                 }
@@ -388,7 +388,7 @@ function sendEnergy(terminal) {
 
     for (var e in terminals) {
         let zzterminal = Game.getObjectById(terminals[e]);
-        if (zzterminal.room.storage.store[RESOURCE_ENERGY] < 200000) {
+        if (zzterminal !== null && zzterminal.room.storage.store[RESOURCE_ENERGY] < 200000) {
             let energyAmount = terminal.store[RESOURCE_ENERGY] * 0.1;
             terminal.send(RESOURCE_ENERGY, energyAmount, zzterminal.room.name, 'upkeep');
         }
@@ -507,41 +507,44 @@ class roleTerminal {
         //            Memory.termRun = 10;
         for (var e in terminals) {
             let terminal = Game.getObjectById(terminals[e]);
-            focusEnergy(terminal);
-            forEveryTerminal(terminal);
-            terminal.room.memory.didOrder = false;
-            let needed = labs.neededMinerals(terminal.pos.roomName);
-            getMinerals(terminal, needed);
-            if (terminal.room.memory.powerSpawnID === undefined) {
-                let zz = terminal.room.find(FIND_STRUCTURES);
-                zz = _.filter(zz, function(o) {
-                    return o.structureType == STRUCTURE_POWER_SPAWN;
-                });
-                if (zz.length === 0) {
-                    //      doit = false;
-                } else {
-                    terminal.room.memory.powerSpawnID = zz[0].id;
+            if (terminal !== null) {
+                focusEnergy(terminal);
+                //            forEveryTerminal(terminal);
+                terminal.room.memory.didOrder = false;
+                let needed = labs.neededMinerals(terminal.pos.roomName);
+                getMinerals(terminal, needed);
+                if (terminal.room.memory.powerSpawnID === undefined) {
+                    let zz = terminal.room.find(FIND_STRUCTURES);
+                    zz = _.filter(zz, function(o) {
+                        return o.structureType == STRUCTURE_POWER_SPAWN;
+                    });
+                    if (zz.length === 0) {
+                        //      doit = false;
+                    } else {
+                        terminal.room.memory.powerSpawnID = zz[0].id;
+                    }
                 }
-            }
 
 
-            let zz = terminal.total;
+                let zz = terminal.total;
 
-            needEnergy(terminal);
+                needEnergy(terminal);
 
-            if (zz > 299000 && terminal.room.name != 'E33S76') {
-                if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
-                    if (!shareEnergy(terminal)) { // Moves energy around
-                        if (Memory.terminalTarget !== undefined && Memory.terminalTarget != 'none') {
-                            if (!sendEnergy(terminal)) { // Send energy to a target
-                                tradeEnergy(terminal);
+                if (zz > 299000 && terminal.room.name != 'E33S76') {
+                    if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
+                        if (!shareEnergy(terminal)) { // Moves energy around
+                            if (Memory.terminalTarget !== undefined && Memory.terminalTarget != 'none') {
+                                if (!sendEnergy(terminal)) { // Send energy to a target
+                                    tradeEnergy(terminal);
+                                }
                             }
                         }
+                        tradeEnergy(terminal);
+                        tradeMineral(terminal);
                     }
-                    tradeEnergy(terminal);
-                    tradeMineral(terminal);
                 }
             }
+
         }
     }
 

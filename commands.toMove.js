@@ -154,12 +154,15 @@ function getRetreatFlag(creep) {
 
         default:
             let targetParent = Game.getObjectById(creep.memory.parent);
-            for (var a in Game.flags) {
-                if (targetParent.pos.roomName == Game.flags[a].pos.roomName && Game.flags[a].color == COLOR_WHITE) {
-                    let zz = new RoomPosition(Game.flags[a].pos.x, Game.flags[a].pos.y, Game.flags[a].pos.roomName);
-                    creep.memory.runTarget = zz;
-                    return zz;
+            if (targetParent !== null) {
+                for (var a in Game.flags) {
+                    if (targetParent.pos.roomName == Game.flags[a].pos.roomName && Game.flags[a].color == COLOR_WHITE) {
+                        let zz = new RoomPosition(Game.flags[a].pos.x, Game.flags[a].pos.y, Game.flags[a].pos.roomName);
+                        creep.memory.runTarget = zz;
+                        return zz;
+                    }
                 }
+
             }
             break;
 
@@ -738,7 +741,8 @@ class MoveInteract {
 
     static moveHome(creep) {
         let home = Game.getObjectById(creep.memory.parent);
-        creep.moveMe(home, { reusePath: 30 });
+        if (home !== null)
+            creep.moveMe(home, { reusePath: 30 });
     }
 
     static runAway(creep) {

@@ -60,21 +60,24 @@ class mineralRole extends roleParent {
 
         if (isNear && carry < creep.carryCapacity - 49 && minz.mineralAmount !== 0) {
             let extract = Game.getObjectById(creep.memory.extractID);
-            cdNeed = extract.cooldown;
-            if (cdNeed === 0)
-                if (creep.harvest(minz) == OK) {
-                    if (creep.memory.mineralContainID === undefined) {
-                        let stru = creep.pos.findInRange(FIND_STRUCTURES, 5);
-                        stru = _.filter(stru, function(o) {
-                            return o.structureType == STRUCTURE_CONTAINER;
-                        });
-                        if (stru.length !== 0) {
-                            creep.memory.mineralContainID = stru[0].id;
-                        } else {
-                            creep.memory.mineralContainID = 'none';
+            if (!extract) {
+                cdNeed = extract.cooldown;
+                if (cdNeed === 0)
+                    if (creep.harvest(minz) == OK) {
+                        if (creep.memory.mineralContainID === undefined) {
+                            let stru = creep.pos.findInRange(FIND_STRUCTURES, 5);
+                            stru = _.filter(stru, function(o) {
+                                return o.structureType == STRUCTURE_CONTAINER;
+                            });
+                            if (stru.length !== 0) {
+                                creep.memory.mineralContainID = stru[0].id;
+                            } else {
+                                creep.memory.mineralContainID = 'none';
+                            }
                         }
                     }
-                }
+
+            }
         } else if (!isNear && carry < creep.carryCapacity - 49) {
             creep.moveMe(minz, { reusePath: 15 });
         } else {

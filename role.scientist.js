@@ -275,15 +275,16 @@ class scientistRole extends roleParent {
                 }
 
             } else {
-                for (var a in creep.room.storage.store) {
-                    if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
-                        if (creep.pos.isNearTo(creep.room.storage)) {
-                            creep.withdraw(creep.room.storage, a);
-                        } else {
-                            creep.moveMe(creep.room.storage);
+                if (creep.room.storage !== undefined)
+                    for (var a in creep.room.storage.store) {
+                        if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
+                            if (creep.pos.isNearTo(creep.room.storage)) {
+                                creep.withdraw(creep.room.storage, a);
+                            } else {
+                                creep.moveMe(creep.room.storage);
+                            }
                         }
                     }
-                }
             }
 
             //            creep.moveTo(creep.room.terminal);

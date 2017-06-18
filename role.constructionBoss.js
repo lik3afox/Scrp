@@ -23,7 +23,8 @@ class constructionBoss extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         /*
         for (var name in Game.rooms) {
@@ -62,7 +63,7 @@ class constructionBoss extends roleParent {
         //        console.log(target, creep.memory.goal,Game.getObjectById(creep.memory.goal));
         if (target !== null && creep.pos.inRangeTo(target, 1)) {
             creep.say('Reporting');
-            var parent = Game.getObjectById(creep.memory.parent);
+            //            var parent = Game.getObjectById(creep.memory.parent);
             var spawn = require('build.spawn');
 
             spawn.reportFrom(creep);

@@ -404,7 +404,7 @@ class baseParent {
                 creep.say('T:att');
                 target = Game.getObjectById(task.targetID);
                 let distance = creep.pos.getRangeTo(target);
-                if (target === undefined) orderComplete = true;
+                if (!target) orderComplete = true;
                 if (distance == 1) {
                     //status check to see if we have attack damage.
                     creep.attack(target);
@@ -421,15 +421,18 @@ class baseParent {
             case "harvest":
                 creep.say('T:hvst');
                 let source = Game.getObjectById(task.targetID);
-                if (creep.pos.isNearTo(source)) {
-                    creep.harvest(source);
-                } else {
-                    creep.moveTo(source);
+                if (source !== null) {
+                    if (creep.pos.isNearTo(source)) {
+                        creep.harvest(source);
+                    } else {
+                        creep.moveTo(source);
+                    }
+                    if (_.sum(creep.carry) == 3) {
+                        orderComplete = true;
+                    } // this will be work
+                    // Needs location and ID
+
                 }
-                if (_.sum(creep.carry) == 3) {
-                    orderComplete = true;
-                } // this will be work
-                // Needs location and ID
                 break;
 
             case "deposit":
@@ -437,16 +440,18 @@ class baseParent {
                 creep.say('T:dpst');
 
                 target = Game.getObjectById(task.targetID);
-                if (creep.pos.isNearTo(target)) {
-                    for (var e in creep.carry) {
-                        creep.transfer(target, e);
-                    }
-                    if (_.sum(creep.carry) === 0) {
-                        orderComplete = true;
-                    }
+                if (target !== null) {
+                    if (creep.pos.isNearTo(target)) {
+                        for (var e in creep.carry) {
+                            creep.transfer(target, e);
+                        }
+                        if (_.sum(creep.carry) === 0) {
+                            orderComplete = true;
+                        }
 
-                } else {
-                    creep.moveTo(target);
+                    } else {
+                        creep.moveTo(target);
+                    }
                 }
                 break;
 
@@ -578,8 +583,8 @@ class baseParent {
 
         if (creep.memory.boostNeeded.length > 0 && creep.memory.home == creep.room.name) {
 
-
-            for (var a in creep.memory.boostNeeded) {
+            var a = creep.memory.boostNeeded.length;
+            while (a--) {
 
                 if (creepParts(creep, boosted)) { // this checks an existanced boost already happened.
 
@@ -715,7 +720,8 @@ class baseParent {
 
     static deathWatch(creep) {
         if (creep.memory.deathDistance === undefined) {
-            let vv = Game.getObjectById(creep.memory.parent);
+            //            let vv = Game.getObjectById(creep.memory.parent);
+
             /*            for (var a in vv.memory.roadsTo) {
                             if ( creep.memory.goal == vv.memory.roadsTo[a].source) {
                                 if (vv.memory.roadsTo[a].aveDistance !== undefined) {
@@ -774,9 +780,11 @@ class baseParent {
             let spot = getDeathSpot(creep.memory.home);
             if (spot === undefined) {
                 let parent = Game.getObjectById(creep.memory.parent);
-                creep.moveTo(parent, { reusePath: 25 });
-                if (creep.pos.isNearTo(parent)) {
-                    parent.recycleCreep(creep);
+                if (parent !== null) {
+                    creep.moveTo(parent, { reusePath: 25 });
+                    if (creep.pos.isNearTo(parent)) {
+                        parent.recycleCreep(creep);
+                    }
                 }
             } else {
                 if (creep.pos.isEqualTo(spot)) {
@@ -1019,13 +1027,23 @@ class baseParent {
             creep.memory.mineralRoomID = tempinz[0].id;
         }
         let tempin = Game.getObjectById(creep.memory.mineralRoomID);
-
-        for (var e in keepers) {
-            let keeperTarget = Game.getObjectById(keepers[e].id);
-            //        let lair = Game.getObjectById(  creep.memory.keeperLair[creep.memory.goTo].id)
-            //        console.log(keeperTarget,keepers[e].id,keeperTarget.ticksToSpawn,e,lowest,":",targetID);
-            if (tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76") {
-                if (tempin.mineralAmount !== 0) {
+        if (tempin !== null)
+            for (var e in keepers) {
+                let keeperTarget = Game.getObjectById(keepers[e].id);
+                //        let lair = Game.getObjectById(  creep.memory.keeperLair[creep.memory.goTo].id)
+                //        console.log(keeperTarget,keepers[e].id,keeperTarget.ticksToSpawn,e,lowest,":",targetID);
+                if (tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76") {
+                    if (tempin.mineralAmount !== 0) {
+                        if (keeperTarget.ticksToSpawn === undefined) {
+                            targetID = e;
+                            break;
+                            //Winner
+                        } else if (keeperTarget.ticksToSpawn < lowest) {
+                            lowest = keeperTarget.ticksToSpawn;
+                            targetID = e;
+                        }
+                    }
+                } else {
                     if (keeperTarget.ticksToSpawn === undefined) {
                         targetID = e;
                         break;
@@ -1034,21 +1052,11 @@ class baseParent {
                         lowest = keeperTarget.ticksToSpawn;
                         targetID = e;
                     }
+
                 }
-            } else {
-                if (keeperTarget.ticksToSpawn === undefined) {
-                    targetID = e;
-                    break;
-                    //Winner
-                } else if (keeperTarget.ticksToSpawn < lowest) {
-                    lowest = keeperTarget.ticksToSpawn;
-                    targetID = e;
-                }
+
 
             }
-
-
-        }
 
         return targetID;
     }

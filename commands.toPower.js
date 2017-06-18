@@ -291,7 +291,7 @@ class PowerInteract {
             let rando = Math.floor(Math.random() * 100) + 1;
             var name = 'powerbankX' + rando;
             console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);
-            if (room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === undefined) {
+            if (room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === null) {
                 Memory.flagName = name;
                 Memory.flagPos = new RoomPosition(powerBank.pos.x, powerBank.pos.y, powerBank.pos.roomName);
                 Memory.flagCol = COLOR_YELLOW;

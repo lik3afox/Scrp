@@ -213,10 +213,12 @@ class roleNewDefender extends roleParent {
             let rest = restingSpot(creep); // If this has an assign spot in a room.
             if (!rest) {
                 let mom = Game.getObjectById(creep.memory.renewSpawnID);
-                if (creep.pos.isNearTo(mom)) {
-                    creep.say('ZzZz', true);
-                } else {
-                    creep.moveTo(mom);
+                if (!mom) {
+                    if (creep.pos.isNearTo(mom)) {
+                        creep.say('ZzZz', true);
+                    } else {
+                        creep.moveTo(mom);
+                    }
                 }
             } else {
                 if (creep.pos.isEqualTo(rest)) {

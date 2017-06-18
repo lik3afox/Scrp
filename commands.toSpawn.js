@@ -173,9 +173,11 @@ class SpawnInteract {
 
     static requestCreep(creepWanted, spawnID) {
         let spawn = Game.getObjectById(spawnID);
-        console.log('request happening', spawn, creepWanted.build);
-        spawn.memory.warCreate.push(creepWanted);
-        return true;
+        if (spawn !== null) {
+            console.log('request happening', spawn, creepWanted.build);
+            spawn.memory.warCreate.push(creepWanted);
+            return true;
+        }
     }
 
     static addToWarStack(creep) {
@@ -398,6 +400,7 @@ class SpawnInteract {
     static removeRenew(creep) {
 
         let spawn = Game.getObjectById(creep.memory.renewSpawnID);
+        if (spawn === null) return;
         let zz = spawn.memory.wantRenew;
         var e = zz.length;
         while (e--) {
@@ -433,7 +436,10 @@ class SpawnInteract {
                 } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
                 console.log('><><>>>>-=-=-DOWNGRADE MODULE X' + count + '-=-=-=-=<<<<><><');
 
-            } else if (STACK[0].length === undefined || STACK[0].length === 0) {
+            } else if (STACK[0].length === undefined && STACK[0].length === 0) {
+
+                console.log("ERROR", spawn, spawn.pos);
+                console.log("ERROR");
                 console.log("ERROR");
                 //STACK.shift();
 

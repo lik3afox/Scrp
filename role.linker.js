@@ -198,20 +198,22 @@ function E23S75Room(creep) {
 function E23S75Transfer(creep) {
     switch (creep.memory.roleID) {
         case 0:
-        toStorageOrTerminal(creep);
-        break;
-        //        case 1:
-        default: goto = creep.room.storage; //Game.getObjectById('5924524129c65d152e19c40c');
-        for (var i in creep.carry) {
+            toStorageOrTerminal(creep);
+            break;
+            //        case 1:
+        default:
+            goto = creep.room.storage; //Game.getObjectById('5924524129c65d152e19c40c');
+            if (goto !== undefined)
+                for (var i in creep.carry) {
 
-            if (goto !== null && creep.transfer(goto, i) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(goto, {
-                    reusePath: 20 //,ignoreCreeps:true
-                });
-                break;
-            }
-        }
-        break;
+                    if (goto !== null && creep.transfer(goto, i) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto, {
+                            reusePath: 20 //,ignoreCreeps:true
+                        });
+                        break;
+                    }
+                }
+            break;
     }
 }
 
@@ -224,7 +226,7 @@ function E33S76Room(creep) {
         case 0:
             goto = creep.room.storage; //Game.getObjectById('5924524129c65d152e19c40c');
             //             require('commands.toStructure').pickUpEnergy(creep);
-            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            if (!goto && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(goto, {
                     reusePath: 20 //,ignoreCreeps:true
                 });
@@ -252,8 +254,8 @@ function E33S76Room(creep) {
 function E33S76Transfer(creep) {
     switch (creep.memory.roleID) {
         case 1:
-                containers.moveToTerminal(creep);
-        break;
+            containers.moveToTerminal(creep);
+            break;
 
         case 0:
             goto = Game.getObjectById('5924524129c65d152e19c40c');
@@ -660,8 +662,8 @@ function upspawnRoom(creep) {
         }
     }
 
-    let zzz = new RoomPosition(8,34,'E27S75');
-    if(!creep.pos.isEqualTo(zzz)) creep.moveTo(zzz);
+    let zzz = new RoomPosition(8, 34, 'E27S75');
+    if (!creep.pos.isEqualTo(zzz)) creep.moveTo(zzz);
 }
 
 function upSpawnTransfer(creep) {
@@ -698,7 +700,8 @@ function upSpawnTransfer(creep) {
         let zzz = Game.getObjectById(creep.memory.renewSpawnID);
         //        let yyy = Game.getObjectById(creep.memory.towerID);
         //      if (zzz.energy < 100) {
-        creep.transfer(zzz, RESOURCE_ENERGY);
+        if (!zzz)
+            creep.transfer(zzz, RESOURCE_ENERGY);
         //    } else if (yyy.energy < 1000) {
         //      creep.transfer(yyy, RESOURCE_ENERGY);
         //  }
@@ -974,9 +977,11 @@ function s3Transfer(creep) {
 function spawn2Room(creep) {
     switch (creep.memory.roleID) {
         case 0:
-
+            gotoz = creep.room.terminal;
             goto = Game.getObjectById('58b128380aac12d30a19c037');
-            if (goto !== null && _.sum(goto.store) > 400) {
+            if (gotoz !== undefined && gotoz.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
+                if (creep.withdraw(gotoz, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
+            } else if (goto !== null && _.sum(goto.store) > 400) {
                 if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto, { reusePath: 20 });
                 }
@@ -1021,7 +1026,7 @@ function spawn1Room(creep) {
 
             let goto = Game.getObjectById('58b4aadfd7bddc4460e23ff7');
             let goto2 = Game.getObjectById('58afd5afe6b54f9d2738d242');
-            if (goto !== null && _.sum(goto.store) > 1000) {
+            if (goto !== null && goto.total > 1000) {
                 if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto, {
                         reusePath: 20

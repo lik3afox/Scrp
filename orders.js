@@ -9,7 +9,7 @@ Game.rooms.E28S73.terminal.send(RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE, 500, 'E26
 
 Game.rooms.E29S79.terminal.send(RESOURCE_POWER, 10000, 'E37S75', 'trade');
 
-Game.rooms.E26S77.terminal.send('XGH2O', 40000, 'E38S82', 'trade');
+Game.rooms.E27S75.terminal.send(RESOURCE_ENERGY, 100000, 'E23S75', 'trade');
 
 Game.rooms.E27S74.terminal.send('H', 15777, 'E28S71', 'trade');
 
@@ -20,11 +20,13 @@ Game.market.cancelOrder('589a4c6230c9ccee528ba498');
 var cost = Game.market.calcTransactionCost(10000, 'E28S73', 'E28S71');
 
 Game.market.createOrder(ORDER_BUY, 'XUH2O', 0.05, 10000, "E28S77");
-Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1200000, "W4S93");
+Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.02, 1000000, "E23S75");
 
 Game.market.createOrder(ORDER_BUY, 'O', 0.15, 50000, "E28S71");
 
-Game.market.createOrder(ORDER_SELL, 'U', 0.17, 100000, "E37S75");
+Game.market.createOrder(ORDER_SELL, 'H', 0.23, 40000, "W4S93");
+
+Game.market.createOrder(ORDER_SELL, 'H', 0.22, 40000, "E23S75");
 
 let parsed = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(room_name);
 let we = parsed[1]; // will contain W or E

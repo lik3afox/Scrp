@@ -56,11 +56,13 @@ class roleGuard extends roleParent {
 
         if (creep.memory.full) {
             let target = Game.getObjectById(targetId);
-            if (creep.pos.isNearTo(target)) {
-                creep.transfer(target, RESOURCE_ENERGY);
-            } else {
-                creep.moveTo(target, { reusePath: 20 });
-                creep.heal(creep);
+            if (!target) {
+                if (creep.pos.isNearTo(target)) {
+                    creep.transfer(target, RESOURCE_ENERGY);
+                } else {
+                    creep.moveTo(target, { reusePath: 20 });
+                    creep.heal(creep);
+                }
             }
         } else {
 

@@ -1,6 +1,6 @@
 function checkNCreate(id) {
     let creep = Game.getObjectById(id);
-    if (creep === undefined) {
+    if (creep === null) {
         console.log('Id is invalid');
         return false;
     }
