@@ -171,7 +171,7 @@ class mineralRole extends roleParent {
             if (creep.memory.mining) {
                 //                creep.say('fu',creep.memory.mining);
                 var _source = Game.getObjectById(creep.memory.goal);
-                if (!_source && _source.mineralAmount === 0) creep.memory.goHome = true;
+                if (_source !== null && _source.mineralAmount === 0) creep.memory.goHome = true;
 
                 if (creep.pos.isNearTo(_source)) {
                     if (creep.memory.ExtractID === undefined) {

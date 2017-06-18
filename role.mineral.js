@@ -60,7 +60,7 @@ class mineralRole extends roleParent {
 
         if (isNear && carry < creep.carryCapacity - 49 && minz.mineralAmount !== 0) {
             let extract = Game.getObjectById(creep.memory.extractID);
-            if (!extract) {
+            if (extract !== null) {
                 cdNeed = extract.cooldown;
                 if (cdNeed === 0)
                     if (creep.harvest(minz) == OK) {

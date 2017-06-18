@@ -226,7 +226,7 @@ function E33S76Room(creep) {
         case 0:
             goto = creep.room.storage; //Game.getObjectById('5924524129c65d152e19c40c');
             //             require('commands.toStructure').pickUpEnergy(creep);
-            if (!goto && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            if (goto !== undefined && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(goto, {
                     reusePath: 20 //,ignoreCreeps:true
                 });
@@ -700,7 +700,7 @@ function upSpawnTransfer(creep) {
         let zzz = Game.getObjectById(creep.memory.renewSpawnID);
         //        let yyy = Game.getObjectById(creep.memory.towerID);
         //      if (zzz.energy < 100) {
-        if (!zzz)
+        if (zzz !== null)
             creep.transfer(zzz, RESOURCE_ENERGY);
         //    } else if (yyy.energy < 1000) {
         //      creep.transfer(yyy, RESOURCE_ENERGY);

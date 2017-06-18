@@ -404,10 +404,10 @@ class baseParent {
                 creep.say('T:att');
                 target = Game.getObjectById(task.targetID);
                 let distance = creep.pos.getRangeTo(target);
-                if (!target) orderComplete = true;
                 if (distance == 1) {
                     //status check to see if we have attack damage.
                     creep.attack(target);
+                    orderComplete = true;
                     // if this has work parts instead then dismantle
                     // creep.dismantle(target);
                 } else if (distance < 4) {

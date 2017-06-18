@@ -553,7 +553,14 @@ class MoveInteract {
                 }
                 //break;
             } else if (creep.memory.role == 'responder') {
-                maxDistance = 1;
+                var E25S75 = ['E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E25S76', 'E26S76'];
+                if (_.contains(E25S75, targetFlag.room)) {
+                    maxDistance = 2;
+                } else {
+                    maxDistance = 0;
+                }
+
+
             } else if (creep.memory.role == 'guard' || creep.memory.role == 'shooter') {
                 switch (creep.room.name) {
                     case 'W4S94':

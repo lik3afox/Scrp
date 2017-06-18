@@ -77,7 +77,7 @@ function mineralContainerEmpty(creep) {
     }
 
     let contain = Game.getObjectById(creep.memory.mineralContainerID);
-    if (!contain) {
+    if (contain !== null) {
         if (creep.pos.isNearTo(contain)) {
             for (var o in contain) {
                 creep.withdraw(contain, o);
@@ -251,7 +251,7 @@ function moveOnPath(creep) {
 function getEnergy(creep) {
     if (creep.room.name == "E27S75") {
         let tgt = Game.getObjectById('58c15b77dae08a9e411bb197');
-        if (!tgt && creep.withdraw(tgt, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (tgt !== null && creep.withdraw(tgt, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(tgt);
             creep.say('E28');
 
@@ -349,7 +349,7 @@ class roleFirst extends roleParent {
         }
         if (creep.room.name != creep.memory.home) {
             let zzz = Game.getObjectById(creep.memory.parent);
-            if (!zzz)
+            if (zzz !== null)
                 creep.moveTo(zzz);
             return;
         }
