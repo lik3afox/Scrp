@@ -29,9 +29,13 @@ function moveToWithdraw(creep) {
     let source = Game.getObjectById(creep.memory.sourceID);
     if (source === null) {
         var total = creep.room.find(FIND_SOURCES);
-        for (var z in total) {
+        var z = total.length;
+        while (z--) {
             let otherHasIt = false;
-            for (var e in Game.creeps) {
+            var keys = Object.keys(Game.creeps);
+            var l = keys.length;
+            while (l--) {
+                var e = keys[l];
                 if (Game.creeps[e].memory.role == creep.memory.role && Game.creeps[e].memory.sourceID == total[z].id) {
                     otherHasIt = true;
                 }
@@ -123,8 +127,8 @@ class roleHarvester extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
 
-//        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
-            creep.pickUpEnergy();
+        //        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
+        creep.pickUpEnergy();
 
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }

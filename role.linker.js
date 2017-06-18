@@ -203,9 +203,11 @@ function E23S75Transfer(creep) {
             //        case 1:
         default:
             goto = creep.room.storage; //Game.getObjectById('5924524129c65d152e19c40c');
-            if (goto !== undefined)
-                for (var i in creep.carry) {
-
+            if (goto !== undefined) {
+                var keys = Object.keys(creep.carry);
+                var o = keys.length;
+                while (o--) {
+                    var i = keys[o];
                     if (goto !== null && creep.transfer(goto, i) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(goto, {
                             reusePath: 20 //,ignoreCreeps:true
@@ -213,6 +215,7 @@ function E23S75Transfer(creep) {
                         break;
                     }
                 }
+            }
             break;
     }
 }
@@ -579,7 +582,10 @@ function spawn7Room(creep) {
         default:
 
             if (creep.pos.isNearTo(creep.room.storage)) {
-                for (var e in creep.room.storage.store) {
+                var keys = Object.keys(creep.room.storage.store);
+                var z = keys.length;
+                while (z--) {
+                    var e = keys[z];
                     creep.withdraw(creep.room.storage, e);
                 }
             } else {

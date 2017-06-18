@@ -95,7 +95,8 @@ function mineralContainerEmpty(creep) {
 
 function isOnPath(creep) {
     let path = creep.memory.patrolpath;
-    for (var e in path) {
+    var e = path.length;
+    while (e--) {
         if (creep.pos.x == path[e].x && creep.pos.y == path[e].y) {
             return true;
         }
@@ -116,7 +117,8 @@ function goToMovePath(creep, patrol) {
             if (creep.memory.pathClose === undefined) {
                 let pos = [];
                 var pathz = creep.memory.patrolpath;
-                for (var e in pathz) {
+                var e = pathz.length;
+                while (e--) {
                     pos.push(new RoomPosition(pathz[e].x, pathz[e].y, creep.room.name));
                 }
                 creep.memory.pathClose = creep.pos.findClosestByRange(pos);

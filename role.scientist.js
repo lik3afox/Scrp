@@ -68,8 +68,13 @@ function mineralContainerEmpty(creep) {
     contains = _.filter(contains, function(o) {
         return o.structureType == STRUCTURE_CONTAINER;
     });
-    for (var e in contains) {
-        for (var a in contains[e].store) {
+    var e = contains.length;
+    var a;
+    while (e--) {
+        var keys = Object.keys(contains[e].store);
+        var z = keys.length;
+        while (z--) {
+            a = keys[z];
             if (a != RESOURCE_ENERGY && contains[e].store[a] > creep.stats.carry) {
                 //            console.log(contains[e])
                 if (creep.pos.isNearTo(contains[e])) {
@@ -85,7 +90,8 @@ function mineralContainerEmpty(creep) {
 
 function getPlan(lab) {
     var theplans = labsBuild.getPlans(lab.room.name);
-    for (var i in theplans) {
+    var i = theplans.length;
+    while (i--) {
         if (lab.id == theplans[i].id) {
             return theplans[i];
         }
@@ -146,7 +152,8 @@ function changeParent(creep) {
 
 function labNeedReducing(creep) {
     var theplans = labsBuild.getPlans(creep.room.name);
-    for (var e in theplans) {
+    var e = theplans.length;
+    while (e--) {
         let lab = Game.getObjectById(theplans[e].id);
         if (theplans[e].emptied && lab.room.name == creep.room.name) {
             if (lab.mineralAmount > 601) {
@@ -224,7 +231,8 @@ class scientistRole extends roleParent {
             var _labs = labsBuild.getLabs(creep);
 
             if (_labs.length > 0 && _.sum(creep.carry) === 0) { // If there are labs. 
-                for (var i in _labs) { // go through them
+                var i = _labs.length;
+                while (i--) { // go through them
                     var plan = getPlan(_labs[i]); // get the plans
 
                     if ((plan.resource != _labs[i].mineralType) && (_labs[i].mineralAmount > 0)) {
@@ -244,7 +252,10 @@ class scientistRole extends roleParent {
                     //if(creep.room.name == 'E23S75') console.log(labsBuild.getFromTerminal(creep));
                     let otherThings = false;
                     if (creep.room.name !== 'E33S76') {
-                        for (var e in creep.room.storage.store) {
+                        var keys = Object.keys(creep.room.storage.store);
+                        var n = keys.length;
+                        while (n--) {
+                            var e = keys[n];
                             if (e != RESOURCE_ENERGY && creep.room.storage.store[e]) {
                                 otherThings = true;
                                 if (creep.pos.isNearTo(creep.room.storage)) {
@@ -254,6 +265,7 @@ class scientistRole extends roleParent {
                                 }
                             }
                         }
+
                     }
 
                     if (!otherThings) {
@@ -275,8 +287,11 @@ class scientistRole extends roleParent {
                 }
 
             } else {
-                if (creep.room.storage !== undefined)
-                    for (var a in creep.room.storage.store) {
+                if (creep.room.storage !== undefined) {
+                    var keyz = Object.keys(creep.room.storage.store);
+                    var z = keyz.length;
+                    while (z--) {
+                        var a = keyz[z];
                         if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
                             if (creep.pos.isNearTo(creep.room.storage)) {
                                 creep.withdraw(creep.room.storage, a);
@@ -285,6 +300,8 @@ class scientistRole extends roleParent {
                             }
                         }
                     }
+
+                }
             }
 
             //            creep.moveTo(creep.room.terminal);

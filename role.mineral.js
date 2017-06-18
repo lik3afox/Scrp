@@ -100,7 +100,10 @@ class mineralRole extends roleParent {
                     }
 
                 } else {
-                    for (var e in creep.carry) {
+                    var keys = Object.keys(creep.carry);
+                    var z = keys.length;
+                    while (z--) {
+                        var e = keys[z];
                         if (creep.carry[e] > 0) {
                             creep.say(creep.transfer(contain, e));
                             return;

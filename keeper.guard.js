@@ -30,7 +30,6 @@ function attackCreep(creep, bads) {
         creep.memory.needed = undefined;
         return true;
     }
-
     let enemy = creep.pos.findClosestByRange(bads);
     let distance = creep.pos.getRangeTo(enemy);
     creep.say('attk' + distance);
@@ -49,10 +48,10 @@ function attackCreep(creep, bads) {
         }
     } else if (distance < 4) {
 
-        var targets = creep.pos.findInRange(bads, 3);
+        //        var targets = creep.pos.findInRange(bads, 3);
 
         // Ranged attack.
-        if (targets.length > 2) {
+        if (bads.length > 2) {
             creep.rangedMassAttack();
         } else {
             creep.rangedAttack(enemy);
@@ -154,7 +153,7 @@ function moveCreep(creep) {
             creep.say('zZzZz');
         }
     } else {
-        creep.say('zZzZz');
+        //        creep.say('zZzZz');
     }
 
 }

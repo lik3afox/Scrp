@@ -262,10 +262,12 @@ class transport extends roleParent {
 
                 let contain = Game.getObjectById(creep.memory.workContain);
                 if (contain !== null) {
-                    if (_.sum(contain.store) > 100) {
+                    if (contain.total > 100) {
                         if (creep.pos.isNearTo(contain)) {
-                            for (var e in contain.store) {
-                                if (creep.withdraw(contain, e) == OK) {
+                            var keyz = Object.keys(contain.store);
+                            var a = keyz.length;
+                            while (a--) {
+                                if (creep.withdraw(contain, keyz[a]) == OK) {
                                     super.keeperFind(creep);
                                 }
                             }

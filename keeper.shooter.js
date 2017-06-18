@@ -80,8 +80,9 @@ function analyzeSourceKeeper(creep) {
 
     }
 
-    let others = creep.room.find(FIND_MY_CREEPS, {
-        filter: object => (object.memory.party == creep.memory.party)
+    let others = creep.room.find(FIND_MY_CREEPS);
+    others = _.filter(others, function(object) {
+        return (object.memory.party == creep.memory.party);
     });
     if (others.length > 0) {
         for (var z in others) {
@@ -198,14 +199,17 @@ class roleGuard extends roleParent {
     static run(creep) {
 
         if (super.returnEnergy(creep)) {
-            return; }
+            return;
+        }
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
         super.rebirth(creep);
 
         if (super.boosted(creep, boost)) {
-            return; }
+            return;
+        }
 
 
         if (creep.memory.goalPos === undefined) {

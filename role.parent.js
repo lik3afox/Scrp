@@ -5,8 +5,12 @@ var sign = '[Ypsilon Pact]: Territory Claimed by Likeafox. Respect our Borders.'
 
 function getCost(module) {
     var total = 0;
-    for (var i in module) {
-        for (var e in BODYPART_COST) {
+    var i = module.length;
+    while (i--) {
+        var keys = Object.keys(BODYPART_COST);
+        var z = keys.length;
+        while (z--) {
+            var e = keys[z];
             if (module[i] == e) {
                 total += BODYPART_COST[e];
             }
@@ -23,7 +27,8 @@ function keeperFindAt(xx, yy, creep) {
         if (yy + varen > 49) yy = 49 - varen;
         if (xx + varen > 49) xx = 49 - varen;
         let find = creep.room.lookForAtArea(LOOK_STRUCTURES, yy - varen, xx - varen, yy + varen, xx + varen, true);
-        for (var e in find) {
+        var e = find.length;
+        while (e--) {
             if (find[e].structure.structureType == STRUCTURE_KEEPER_LAIR) {
                 creep.memory.keeperLairID = find[e].structure.id;
                 return;
@@ -85,12 +90,14 @@ function creepParts(creep, boost) {
             break;
 
     }
-    for (var e in creep.body) {
+    var e = creep.body.length;
+    while (e--) {
         //    console.log(creep.body[e].boost, boost);
         if (creep.body[e].type == type && (creep.body[e].boost === undefined && creep.body[e].boost === null)) {
             //console.log(boost,type,creep.body[e].boost,creep.body[e].type,creep.pos);
             return true;
         }
+
 
         /*    if(creep.body[e].boost == boost) {
               return false;
@@ -99,7 +106,7 @@ function creepParts(creep, boost) {
 
     return true;
 }
-
+/*
 function getCost(module) {
     var total = 0;
     for (var i in module) {
@@ -110,7 +117,7 @@ function getCost(module) {
         }
     }
     return total;
-}
+} */
 
 function getParts(creep) {
     let parts = {
@@ -442,7 +449,10 @@ class baseParent {
                 target = Game.getObjectById(task.targetID);
                 if (target !== null) {
                     if (creep.pos.isNearTo(target)) {
-                        for (var e in creep.carry) {
+                        var keys = Object.keys(creep.carry);
+                        var n = keys.length;
+                        while (n--) {
+                            var e = keys[n];
                             creep.transfer(target, e);
                         }
                         if (_.sum(creep.carry) === 0) {
@@ -668,7 +678,10 @@ class baseParent {
                             break;
                         default:
                             if (creep.memory.runFromKeeper === undefined) {
-                                for (var e in Game.flags) {
+                                var keys = Object.keys(Game.flags);
+                                var o = keys.length;
+                                while (o--) {
+                                    var e = keys[o];
                                     if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
                                         creep.memory.runFromKeeper = new RoomPosition(Game.flags[e].pos.x, Game.flags[e].pos.y, Game.flags[e].pos.roomName);
                                         creep.moveMe(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
@@ -792,8 +805,8 @@ class baseParent {
                     spwns = _.filter(spwns, function(o) {
                         return o.structureType == STRUCTURE_SPAWN;
                     });
-
-                    for (var e in spwns) {
+                    var e = spwns.length;
+                    while (e--) {
                         if (creep.pos.isNearTo(spwns[e])) {
                             spwns[e].recycleCreep(creep);
                             return true;
@@ -883,7 +896,8 @@ class baseParent {
             flags = _.filter(Game.flags, function(f) {
                 return f.color == COLOR_CYAN;
             });
-            for (var e in flags) {
+            var e = flags.length;
+            while (e--) {
                 var distance = Game.map.getRoomLinearDistance(creep.room.name, flags[e].pos.roomName);
                 if (distance < 5) {
                     creep.memory.focusFlagName = flags[e].name;
@@ -968,7 +982,10 @@ class baseParent {
             target = creep.room.storage;
         }
         //  if(creep.carry[RESOURCE_ENERGY] > 0) return false;
-        for (var e in creep.carry) {
+        var keys = Object.keys(creep.carry);
+        var p = keys.length;
+        while (p--) {
+            var e = keys[p];
             if (e != RESOURCE_ENERGY && creep.carry[e] > 0) {
                 creep.say('has chzzburger');
                 if (creep.pos.isNearTo(target)) {
@@ -1027,8 +1044,9 @@ class baseParent {
             creep.memory.mineralRoomID = tempinz[0].id;
         }
         let tempin = Game.getObjectById(creep.memory.mineralRoomID);
-        if (tempin !== null)
-            for (var e in keepers) {
+        if (tempin !== null) {
+            var e = keepers.length;
+            while (e--) {
                 let keeperTarget = Game.getObjectById(keepers[e].id);
                 //        let lair = Game.getObjectById(  creep.memory.keeperLair[creep.memory.goTo].id)
                 //        console.log(keeperTarget,keepers[e].id,keeperTarget.ticksToSpawn,e,lowest,":",targetID);
@@ -1057,6 +1075,8 @@ class baseParent {
 
 
             }
+        }
+
 
         return targetID;
     }

@@ -105,7 +105,10 @@ function lootRun(creep) {
 
     // go home and deposit.
     if (creep.pos.isNearTo(target)) {
-        for (var e in creep.carry) {
+        var keys = Object.keys(creep.carry);
+        var z = keys.length;
+        while (z--) {
+            var e = keys[z];
             creep.transfer(target, e);
         }
     } else {

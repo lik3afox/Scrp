@@ -105,7 +105,8 @@ function shouldDie(creep) {
 
     let death = true;
 
-    for (var e in creep.body) {
+    var e = creep.body.length;
+    while (e--) {
         if (creep.body[e].type == 'move' && creep.body[e].hits > 0) {
             death = false;
         }
