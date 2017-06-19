@@ -231,17 +231,18 @@ class transport extends roleParent {
                             task.energyPickup = true;
                             task.rangeHappy = 1;
                             creep.memory.task.push(task);
-                        } else if (creep.pos.isNearTo(zzz)) {
-                        if (zzz.total > 100) {
-                            var keys = Object.keys(zzz.store);
-                            var z = keys.length;
-                            while (z--) {
-                                var o = keys[z];
-                                if (creep.withdraw(zzz, o) == OK) {
-                                    super.keeperFind(creep);
-                                }
+                        } else if (creep.pos.isNearTo(zzz) && zzz.total > 100) {
+
+                        var keys = Object.keys(zzz.store);
+                        var z = keys.length;
+                        while (z--) {
+                            var o = keys[z];
+                            if (creep.withdraw(zzz, o) == OK) {
+                                super.keeperFind(creep);
                             }
                         }
+                    } else if (creep.pos.isEqualTo(zzz)) {
+                        creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     }
 
                 } else if (_goal !== null && creep.pos.inRangeTo(_goal, rng)) {

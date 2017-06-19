@@ -253,7 +253,8 @@ class roleGuard extends roleParent {
             if (creep.memory.keeperLair === undefined) {
 
                 creep.memory.keeperLair = creep.room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_KEEPER_LAIR } });
-                creep.memory.goTo = super.analyzeSourceKeeper(creep);
+                creep.memory.goTo = super
+.analyzeSourceKeeper(creep);
 
             }
             if (!movement.moveToDefendFlag(creep)) {

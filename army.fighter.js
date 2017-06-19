@@ -93,8 +93,11 @@ function doAttack(creep) {
 function returnClosestSpawn(roomName) {
     var distance = 100;
     var spawn;
-    var e = _.filter(Game.spawns).length;
-    while (e--) {
+    //    var e = _.filter(Game.spawns).length;
+    var keys = Object.keys(Game.spawns);
+    var a = keys.length;
+    while (a--) {
+        var e = keys[a];
         if (Game.spawns[e].memory.alphaSpawn) {
             var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
             if (tempDis < distance) {

@@ -59,9 +59,7 @@ function getTargets(creep) {
 
 function getCost(module) {
     var total = 0;
-    var i = module.total;
-
-    while (i--) {
+    for (var i in module) {
         for (var e in BODYPART_COST) {
             if (module[i] == e) {
                 total += BODYPART_COST[e];
@@ -104,7 +102,7 @@ function getStack(spawn) {
 
 
                 alpha.memory.currentStack = 'create';
-                if (alpha.memory.create.length === 0 && alpha.memory.warCreate.length > 0) {
+                if (alpha.memory.create.length === 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length > 0) {
                     alpha.memory.currentStack = 'war';
                 }
 
@@ -415,6 +413,11 @@ class SpawnInteract {
 
     static createFromStack(spawn) {
         var STACK = getStack(spawn);
+        //    if (spawn.name == 'Spawn9') {
+        //          var test = [ ];
+        //            console.log(STACK.length, STACK[0].build.length, STACK[0].name, spawn.canCreateCreep(STACK[0].build), getCost(test), spawn.room.energyCapacityAvailable);
+
+        //        }
         if (spawn.memory.notSpawner === true) return;
         if (STACK.length > 0) {
             // Creation here.

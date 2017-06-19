@@ -174,7 +174,7 @@ class thiefClass extends roleParent {
                 if (target !== undefined) {
                     for (var e in target.store) {
                         //                        if (e != RESOURCE_ENERGY)
-                        if (target.store[e] > 0) {
+                        if (target.store[e] > 0 && e !== RESOURCE_ENERGY) {
                             getting = e;
                             break;
                         }
@@ -184,7 +184,7 @@ class thiefClass extends roleParent {
                     target = creep.room.terminal;
                     if (target !== undefined) {
                         for (var o in target.store) {
-                            if (target.store[o] > 0) {
+                            if (target.store[o] > 0 && o !== RESOURCE_ENERGY) {
                                 getting = o;
                                 break;
                             }

@@ -677,19 +677,23 @@ class baseParent {
                             creep.moveTo(21, 42, { maxOps: 50 });
                             break;
                         default:
+
                             if (creep.memory.runFromKeeper === undefined) {
+                                creep.say('a');
                                 var keys = Object.keys(Game.flags);
                                 var o = keys.length;
                                 while (o--) {
                                     var e = keys[o];
+                                    console.log(e, keys[o], o);
                                     if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
                                         creep.memory.runFromKeeper = new RoomPosition(Game.flags[e].pos.x, Game.flags[e].pos.y, Game.flags[e].pos.roomName);
-                                        creep.moveMe(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
+                                        creep.moveTo(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
                                         return true;
                                     }
                                 }
                             } else {
-                                creep.moveMe(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
+                                creep.say('b');
+                                creep.moveTo(new RoomPosition(creep.memory.runFromKeeper.x, creep.memory.runFromKeeper.y, creep.memory.runFromKeeper.roomName), { ignoreRoads: true, maxOpts: 50 });
                             }
                             break;
                     }
@@ -1050,7 +1054,7 @@ class baseParent {
                 let keeperTarget = Game.getObjectById(keepers[e].id);
                 //        let lair = Game.getObjectById(  creep.memory.keeperLair[creep.memory.goTo].id)
                 //        console.log(keeperTarget,keepers[e].id,keeperTarget.ticksToSpawn,e,lowest,":",targetID);
-                if (tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76") {
+                if (tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76" && creep.room.name != 'E24S75') {
                     if (tempin.mineralAmount !== 0) {
                         if (keeperTarget.ticksToSpawn === undefined) {
                             targetID = e;

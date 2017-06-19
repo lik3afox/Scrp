@@ -54,7 +54,7 @@ function rampartThings(flag) {
         let roomCreeps = _.filter(Game.creeps, function(n) {
             return n.room.name == flag.room.name;
         });
-        console.log(roomCreeps.length, 'trea');
+        //        console.log(roomCreeps.length, 'trea');
         var a = roomCreeps.length;
         while (a--) {
             roomCreeps[a].memory.rampartDefense = true;

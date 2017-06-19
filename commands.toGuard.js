@@ -32,7 +32,6 @@ function getSpawnCreating(flag) {
     switch (flag.name) {
         case 'Flag18':
         case 'Flag11':
-        case 'Flag8':
         case 'Flag26':
             return 'E26S73';
         case 'Flag20':
@@ -40,12 +39,16 @@ function getSpawnCreating(flag) {
         case 'Flag28':
             return 'E26S77';
         case 'Flag58':
+        case 'Flag8':
+
             return 'E23S75';
         case 'Flag34':
         case 'E36S74':
+        case 'Flag51':
             return 'E35S73';
         case 'Flag39':
         case 'Flag41':
+
             return 'E35S83';
         case 'Flag56':
         case 'Flag55':
@@ -54,6 +57,7 @@ function getSpawnCreating(flag) {
             return 'E35S73';
         case 'Flag43':
         case 'E36S75':
+        case 'Flag52':
             return 'E37S75';
         case 'Flag57':
             return 'E33S76';
@@ -86,6 +90,8 @@ function getCurrentParty(flag) {
         case 'E36S74':
         case 'Flag8':
         case 'Flag28':
+        case 'Flag51':
+        case 'Flag52':
             return guardParty;
         case 'Flag7':
         case 'Flag43':

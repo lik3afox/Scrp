@@ -11,12 +11,12 @@ var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 
 function getHostiles(creep) {
-    let range = 4;
+    let range = 5;
     if (creep.room.name == 'E34S84' || creep.room.name == 'W4S94') range = 6;
     if (creep.room.name == 'E25S74' || creep.room.name == 'E35S74') {
         range = 8;
     }
-    var rng10 = ['E24S75', 'E26S76', 'E36S74', 'E24S74'];
+    var rng10 = ['E24S75', 'E26S76', 'E36S74', 'E24S74', 'E34S74'];
     if (_.contains(rng10, creep.room.name)) {
         range = 10;
     }
@@ -83,7 +83,9 @@ function analyzeSourceKeeper(creep) {
         //        let lair = Game.getObjectById(  creep.memory.keeperLair[creep.memory.goTo].id)
         //        console.log(keeperTarget,keepers[e].id,keeperTarget.ticksToSpawn,e,lowest,":",targetID);
         if (keeperTarget !== null && tempin !== null) {
-            if (keepers[e] !== null && tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76" && creep.room.name != "E25S76" && creep.room.name != "E36S75" && creep.room.name != "E34S76") {
+            if (keepers[e] !== null && tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76" && creep.room.name != 'E24S75' &&
+                creep.room.name != "E26S76" && creep.room.name != "E35S74" &&
+                creep.room.name != "E25S76" && creep.room.name != "E36S75" && creep.room.name != "E34S76") {
                 if (creep.room.name != "E35S84") {
                     if (tempin.mineralAmount !== 0) {
                         if (keeperTarget.ticksToSpawn === undefined) {

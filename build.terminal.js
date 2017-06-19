@@ -46,8 +46,9 @@ function focusMinerals(targetID, mineral) {
         }
     }
 }
-
+/*
 function focusEnergy(terminal) {
+    // This terminal will request energy from others. 
     if (terminal.room.controller.level === 8 || terminal.room.name == 'E27S75') return false;
     if (terminal.store[RESOURCE_ENERGY] > 10000) return false;
 
@@ -65,6 +66,71 @@ function focusEnergy(terminal) {
     let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
     console.log('FOCUS terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:', zz);
 
+} */
+
+function shareEnergy(terminal) {
+
+    // When full, From this terminal, we will send energy to another.
+    // Lets check here in all the storages to see if that room's storage level is at.
+
+    var lowestStore;
+    var currentLow = 1000000;
+    for (var e in terminals) {
+        let storage = Game.getObjectById(terminals[e]).room.storage;
+        if (storage !== null && storage !== undefined && storage.store[RESOURCE_ENERGY] < 800000) {
+            if (storage.store[RESOURCE_ENERGY] < currentLow) {
+                lowestStore = storage;
+                currentLow = storage.store[RESOURCE_ENERGY];
+            }
+        }
+    }
+    if (lowestStore === undefined) return false;
+
+
+    let amount = lowestStore.store[RESOURCE_ENERGY] * 0.1;
+    let zz = terminal.send(RESOURCE_ENERGY, amount, lowestStore.room.name, 'Sharing Energy');
+    console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
+    return true;
+}
+
+function needEnergy(terminal) {
+    if (terminal.store[RESOURCE_ENERGY] < 1000 || terminal.room.storage.store[RESOURCE_ENERGY] < 1000) {
+        var highestEnergy;
+        var currentHigh = 0;
+        for (var e in terminals) {
+            let storage = Game.getObjectById(terminals[e]);
+            if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh &&
+                terminal.room.name != storage.room.name &&
+                storage.room.controller.level === 8) {
+                highestEnergy = Game.getObjectById(terminals[e]);
+                currentHigh = storage.store[RESOURCE_ENERGY];
+            }
+        }
+        let amount = currentHigh * 0.25;
+        let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
+        console.log('This terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:', zz);
+        //    console.log('this room has Order for it');
+    }
+    //   console(terminal.room.storage.store[RESOURCE_ENERGY]);
+    // This terminal if below 100k will make a order if none exist.
+    // Find the highest terminal that's level 8 and get energy from it.
+
+    if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
+        if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
+            let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
+            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
+        }
+    }
+
+    if (terminal.room.terminal.store[RESOURCE_POWER] > 45000) {
+        let amount = getAverageMineralPrice(RESOURCE_POWER, false);
+        if (amount !== undefined) {
+            if (!anyLikeOrder(RESOURCE_POWER, terminal.room.name)) {
+                let qq = Game.market.createOrder(ORDER_SELL, RESOURCE_POWER, amount, 40000, terminal.room.name);
+                console.log(ORDER_SELL, RESOURCE_POWER, amount, 45000, terminal.room.name, 'current average price for power', qq);
+            }
+        }
+    }
 }
 
 function countTerminals() {
@@ -102,70 +168,6 @@ function buyGH2O() {
     }
 }
 
-function shareEnergy(terminal) {
-    // Lets check here in all the storages to see if that room's storage level is at.
-
-    var lowestStore;
-    var currentLow = 1000000;
-    for (var e in terminals) {
-        let storage = Game.getObjectById(terminals[e]).room.storage;
-        if (storage !== null && storage !== undefined && storage.store[RESOURCE_ENERGY] < 800000) {
-            if (storage.store[RESOURCE_ENERGY] < currentLow) {
-                lowestStore = storage;
-                currentLow = storage.store[RESOURCE_ENERGY];
-            }
-        }
-    }
-    if (lowestStore === undefined) return false;
-
-
-    let amount = lowestStore.store[RESOURCE_ENERGY] * 0.1;
-    let zz = terminal.send(RESOURCE_ENERGY, amount, lowestStore.room.name, 'Sharing Energy');
-    console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
-    return true;
-
-
-}
-
-function needEnergy(terminal) {
-    //   console(terminal.room.storage.store[RESOURCE_ENERGY]);
-    if (terminal.room.name == 'E33S76') return;
-
-    if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
-        if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
-            let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
-            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
-        } else {
-
-            var highestEnergy;
-            var currentHigh = 0;
-            for (var e in terminals) {
-                let storage = Game.getObjectById(terminals[e]);
-                if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name) {
-                    highestEnergy = Game.getObjectById(terminals[e]);
-                    currentHigh = storage.store[RESOURCE_ENERGY];
-                }
-            }
-            let amount = currentHigh * 0.25;
-            console.log(highestEnergy, currentHigh, RESOURCE_ENERGY, amount, terminal.room.name);
-            let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
-            console.log('This terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:', zz);
-            //    console.log('this room has Order for it');
-        }
-
-    }
-
-    if (terminal.room.terminal.store[RESOURCE_POWER] > 45000) {
-
-        let amount = getAverageMineralPrice(RESOURCE_POWER, false);
-        if (amount !== undefined) {
-            if (!anyLikeOrder(RESOURCE_POWER, terminal.room.name)) {
-                let qq = Game.market.createOrder(ORDER_SELL, RESOURCE_POWER, amount, 40000, terminal.room.name);
-                console.log(ORDER_SELL, RESOURCE_POWER, amount, 45000, terminal.room.name, 'current average price for power', qq);
-            }
-        }
-    }
-}
 
 function tradeEnergy(terminal) {
 
@@ -498,7 +500,7 @@ class roleTerminal {
 
         //console.log( checkEnergyProfit(10,.02,1000) );
 
-        focusMinerals(focusID, focusMin);
+        //        focusMinerals(focusID, focusMin);
 
         makeMineralOrder();
         cleanUpOrders();
@@ -508,7 +510,7 @@ class roleTerminal {
         for (var e in terminals) {
             let terminal = Game.getObjectById(terminals[e]);
             if (terminal !== null) {
-                focusEnergy(terminal);
+                //          focusEnergy(terminal); Removed
                 //            forEveryTerminal(terminal);
                 terminal.room.memory.didOrder = false;
                 let needed = labs.neededMinerals(terminal.pos.roomName);

@@ -13,11 +13,6 @@ function getTotalFlag() {
     return total;
 }
 
-function isInFlagRoom(creep, flagColor) {
-    //  if(creep.room.name)
-
-}
-
 var portalID = '5881eb5de8d5a7884c0ac723';
 
 function moveToWayFlag(creep) {
@@ -554,10 +549,11 @@ class MoveInteract {
                 //break;
             } else if (creep.memory.role == 'responder') {
                 var E25S75 = ['E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E25S76', 'E26S76'];
-                if (_.contains(E25S75, targetFlag.room)) {
+                var E35S75 = ['E35S75', 'E34S75', 'E34S76', 'E36S75', 'E34S76'];
+                if (_.contains(E25S75, targetFlag.room) || _.contains(E35S75, targetFlag.room)) {
                     maxDistance = 2;
                 } else {
-                    maxDistance = 0;
+                    maxDistance = 1;
                 }
 
 

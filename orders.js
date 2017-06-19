@@ -27,6 +27,9 @@ Game.market.createOrder(ORDER_BUY, 'O', 0.15, 50000, "E28S71");
 Game.market.createOrder(ORDER_SELL, 'H', 0.23, 40000, "W4S93");
 
 Game.market.createOrder(ORDER_SELL, 'H', 0.22, 40000, "E23S75");
+Game.market.changeOrderPrice('59456151c6f617101cab61f3', 0.17);
+
+
 
 let parsed = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(room_name);
 let we = parsed[1]; // will contain W or E

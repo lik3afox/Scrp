@@ -78,7 +78,7 @@ class engineerClass extends roleParent {
                 creep.memory.building = true;
             }
 
-            if (creep.carry.energy < (creep.memory.stats('mining') + 1)) {
+            if (creep.carry.energy < (creep.stats('mining') + 1)) {
                 creep.memory.building = false;
                 creep.say('harvesting');
 

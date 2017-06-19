@@ -1083,7 +1083,7 @@ class theSpawn {
                 while (type--) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'responder') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning) {

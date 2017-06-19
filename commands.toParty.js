@@ -25,7 +25,7 @@ var engineer2Party = [
     ['engineer', require('army.engineer'), 1, 5],
 ];
 var thiefParty = [
-    ['thief', require('army.thief'), 2, 3],
+    ['thief', require('army.thief'), 3, 3],
 ];
 var thief2Party = [
     ['thief', require('army.thief'), 1, 3],
@@ -85,7 +85,7 @@ var killParty = [
 ];
 
 var upgradeParty = [
-    ['Aupgrader', require('army.upgrader'), 5, 6]
+    ['Aupgrader', require('army.upgrader'), 4, 6]
 ];
 var upgrade2Party = [
     ['Aupgrader', require('army.upgrader'), 3, 6]
@@ -239,9 +239,9 @@ function getSpawnCreating(flag) {
 
         case 'upgradeRoom':
             return 'E27S75';
-        case 'engineer':
-            return 'E26S73';
+            //            return 'E26S73';
 
+        case 'engineer':
         case 'recontrol':
         case 'test':
         case 'control':
