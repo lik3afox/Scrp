@@ -233,7 +233,7 @@ class transport extends roleParent {
                             creep.memory.task.push(task);
                         } else if (creep.pos.isNearTo(zzz) && zzz.total > 100) {
 
-                        var keys = Object.keys(zzz.store);
+                        var keys = Object.keys(zzz.store); // Picking up
                         var z = keys.length;
                         while (z--) {
                             var o = keys[z];
@@ -280,7 +280,6 @@ class transport extends roleParent {
                     } else {
                         creep.say('zZzZ');
                     }
-
                 } else {
                     creep.say('zZzZ');
                 }

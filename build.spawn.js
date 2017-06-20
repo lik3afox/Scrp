@@ -257,6 +257,8 @@ var E38W75Module = [ // E37S75
 
 ];
 
+var E21S78Module = [];
+
 var E38S72Module = [
     ['first', require('role.first'), 2, 3],
     ['nuker', require('role.nuker'), 1, 3],
@@ -770,6 +772,9 @@ function getCurrentModule(spawn) {
     }
     if (spawn.name == 'W4S93') {
         return W4S93Module;
+    }
+    if (spawn.name == 'E21S78') {
+        return E21S78Module;
     }
     if (spawn.name == 'E38S72') {
         return E38S72Module;

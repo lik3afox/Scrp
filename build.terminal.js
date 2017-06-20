@@ -101,14 +101,14 @@ function needEnergy(terminal) {
             let storage = Game.getObjectById(terminals[e]);
             if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh &&
                 terminal.room.name != storage.room.name &&
-                storage.room.controller.level === 8) {
+                (storage.room.controller.level === 8 || storage.room.name == 'E27S75')) {
                 highestEnergy = Game.getObjectById(terminals[e]);
                 currentHigh = storage.store[RESOURCE_ENERGY];
             }
         }
         let amount = currentHigh * 0.25;
         let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
-        console.log('This terminal', terminal.room, 'gets' + amount + ' energy', highestEnergy.room, 'result:', zz);
+        console.log('This terminal:', terminal.room, 'gets' + amount + ' energy:', highestEnergy.room, 'result:', zz);
         //    console.log('this room has Order for it');
     }
     //   console(terminal.room.storage.store[RESOURCE_ENERGY]);

@@ -242,6 +242,7 @@ function getSpawnCreating(flag) {
             //            return 'E26S73';
 
         case 'engineer':
+            return 'E23S75';
         case 'recontrol':
         case 'test':
         case 'control':

@@ -720,7 +720,9 @@ class baseParent {
                     }
                 } */
         var stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
-        stay = _.filter(stay,function(o){return o.owner.username !== 'ponka';});
+        stay = _.filter(stay, function(o) {
+            return o.owner.username !== 'ponka';
+        });
 
         if (stay.length === 0) return false;
         var close = creep.pos.findInRange(stay, 4);
@@ -1136,10 +1138,9 @@ class baseParent {
             detect = 4;
         }
 
-        let greyflag = creep.pos.findInRange(FIND_FLAGS, detect, {
-            filter: (structure) => {
-                return (structure.color == COLOR_GREY);
-            }
+        let greyflag = creep.pos.findInRange(FIND_FLAGS, detect);
+        greyflag = _.filter(greyflag, function(structure) {
+            return (structure.color == COLOR_GREY);
         });
 
         //  return false;
