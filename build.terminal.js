@@ -255,7 +255,7 @@ function newTradeEnergy(terminal) {
             let whatHappened = Game.market.deal(target.id, trans, targetRoom);
             console.log('A+ Deal:', whatHappened, '*EstEnergyGained:', energyGained, 'From:', terminal.room, 'to', target.room, '@', target.price, 'profit', profit, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans, "total", energyUsed);
             return true;
-        } else if (energyGained > 700 && GREAT < perEnergy) {
+        } else if (energyGained > 600 && GREAT < perEnergy) {
             let whatHappened = Game.market.deal(target.id, trans, targetRoom);
             console.log('A Deal:', whatHappened, '*EstEnergyGained:', energyGained, 'From:', terminal.room, 'to', target.room, '@', target.price, 'profit', profit, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans, "total", energyUsed);
             return true;
