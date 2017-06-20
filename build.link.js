@@ -21,7 +21,9 @@ var _links = [
     // E23S75
     '593da1f5694770f664e2df0b',
     // Spawn room E37S75
-    '592b1d484bc45519161537ef', '592b3ffa429df6134a992506'
+    '592b1d484bc45519161537ef', '592b3ffa429df6134a992506',
+    // E33S76
+    '5949a8128a497d010b6c1e4a'
 ];
 
 var gameCache = [];
@@ -150,9 +152,8 @@ class buildLink {
 
         // Spawn 5  
 
-        sendEnergy('58ba4ff836439c9e6a5a1c23', '58d5773ea599843615337062', 700);
-        //sendEnergy('58ba4ff836439c9e6a5a1c23','58ba2df2045ee10bf18fb464',700);
-        sendEnergy('58ba2df2045ee10bf18fb464', '58d5773ea599843615337062');
+        sendEnergy('58ba4ff836439c9e6a5a1c23', '58ba2df2045ee10bf18fb464', 700);
+        
         // 
         sendEnergy('58df611bbeb92e3de67dff2f', '58baddb59ac6e6215aa593b6');
         sendEnergy('58baf3bdefbd256c113625e9', '58dfcf2ccdfd8bc567323e91');
@@ -192,7 +193,7 @@ class buildLink {
         //return total;'5924524129c65d152e19c40c', 
         //        sendEnergy([''], '59243d3f403da5a97dea664a');
 
-        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc'], '59243d3f403da5a97dea664a');
+        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc','5949a8128a497d010b6c1e4a'], '5924524129c65d152e19c40c');
 
         sendEnergy(['592b1d484bc45519161537ef', '592b3ffa429df6134a992506'], '592b2bba08d445510286532a');
         sendEnergy('592b2bba08d445510286532a', '592b1f2b9eb200190288958e');

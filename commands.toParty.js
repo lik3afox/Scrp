@@ -318,7 +318,7 @@ function returnClosestRoom(roomName) {
 function findParty(flag) {
     var currentParty = getCurrentParty(flag);
     var total = [];
-    let report = flag.name + " Party:";
+    //let report = flag.name + " Party:";
 
     for (var i in currentParty) {
         total[currentParty[i][_name]] = 0;
@@ -340,10 +340,10 @@ function findParty(flag) {
             }
         }
         //                   function addFromCreateStack(totalCreeps,role,spawn) {
-        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::';
+  //      report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::';
 
     }
-    console.log(report);
+//    console.log(report);
 
     return total;
 }

@@ -359,7 +359,7 @@ class baseParent {
                         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
                     });
                     if (badz.length === 0) {
-                        if (task.energyPickup && !creep.isHome) {
+                        if (task.energyPickup ) {//!creep.isHome
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
                                 if (creep.moveMe(tmp2, task.options) == OK) {
                                     if (task.count) {
@@ -684,7 +684,7 @@ class baseParent {
                                 var o = keys.length;
                                 while (o--) {
                                     var e = keys[o];
-                                    console.log(e, keys[o], o);
+//                                    console.log(e, keys[o], o);
                                     if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
                                         creep.memory.runFromKeeper = new RoomPosition(Game.flags[e].pos.x, Game.flags[e].pos.y, Game.flags[e].pos.roomName);
                                         creep.moveTo(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });

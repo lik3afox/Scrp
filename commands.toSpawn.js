@@ -186,7 +186,7 @@ class SpawnInteract {
                 creep.memory.parent = Game.spawns[i].id;
                 if (Game.spawns[i].memory.warCreate !== undefined)
                     Game.spawns[i].memory.warCreate.push(creep);
-                console.log(Game.spawns[i], 'adding to stack', Game.spawns[i].name, creep);
+//                console.log(Game.spawns[i], 'adding to stack', Game.spawns[i].name, creep);
             }
 
         }
@@ -403,7 +403,7 @@ class SpawnInteract {
         var e = zz.length;
         while (e--) {
             if (zz[e] == creep.id) {
-                console.log(e, zz[e], "removecreep");
+//                console.log(e, zz[e], "removecreep");
                 zz.splice(e, 1);
                 break;
             }

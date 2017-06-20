@@ -85,7 +85,7 @@ class mineralRole extends roleParent {
             //if(creep.memory.mineralContainID != undefined && creep.memory.mineralContainID != 'none') 
             let contain = Game.getObjectById(creep.memory.mineralContainID);
             if (contain === null || contain === undefined) {
-                if (creep.room.name == 'E33S76') {
+                if (creep.room.name == 'E33S76z') {
                     super._containers.moveToStorage(creep);
                 } else {
                     if (!super._containers.moveToTerminal(creep)) {

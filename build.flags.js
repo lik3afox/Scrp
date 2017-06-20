@@ -190,7 +190,7 @@ class buildFlags {
 
                 case COLOR_RED:
                     doDefendThings(flag);
-                    console.log('defend flag @', flag.pos);
+//                    console.log('defend flag @', flag.pos);
                     if (Memory.showInfo > 1)
                         defendTotal++;
                     break;

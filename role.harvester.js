@@ -91,7 +91,7 @@ function depositSpawn(creep) {
 
 function depositContain(creep) {
     var conta;
-    if (creep.room.name == 'E29S79') console.log(creep.memory.containerID);
+//    if (creep.room.name == 'E29S79') console.log(creep.memory.containerID);
     if (creep.memory.containerID === undefined) {
         let contain = creep.pos.findInRange(FIND_STRUCTURES, 1, {
             filter: (structure) => {

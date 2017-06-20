@@ -85,9 +85,9 @@ class mineralRole extends roleParent {
 
         var _goal = movement.getRoomPos(creep.memory.goal);
         let min = Game.getObjectById(creep.memory.goal);
-        if (creep.room.name == 'W5S94') {
-            console.log(min, min !== null ? min.mineralAmount : 0, carry);
-        }
+   //     if (creep.room.name == 'W5S94') {
+//            console.log(min, min !== null ? min.mineralAmount : 0, carry);
+ //       }
         if (min !== null && min.mineralAmount === 0 && carry === 0) {
             creep.memory.death = true;
         }
@@ -98,7 +98,7 @@ class mineralRole extends roleParent {
 
         // He's not in 5 spaces of his goal. so he needs to move there. 
         if (creep.memory.goHome) {
-            if (creep.room.name == 'E33S76') {
+            if (creep.room.name == 'E33S76zz') {
                 if (creep.pos.isNearTo(creep.room.storage)) {
                     for (var e in creep.carry) {
                         creep.transfer(creep.room.storage, e);

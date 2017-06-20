@@ -243,6 +243,7 @@ class StructureInteract {
         creep.memory.nextEnergyScan--;
         if (creep.memory.nextEnergyScan < 0) {
             var dEnergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, range);
+            dEnergy = _.filter(dEnergy, function(d) {return d.amount > 200;});
             if (dEnergy.length === 0) {
                 creep.memory.nextEnergyScan = range;
                 return false;

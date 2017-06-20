@@ -258,9 +258,9 @@ class PowerInteract {
                 spawn.requestCreep(transport, spawnID);
                 count--;
             } while (count > 0);
-            console.log(theRoom.memory.transSent);
+//            console.log(theRoom.memory.transSent);
             theRoom.memory.transSent = true;
-            console.log(theRoom.memory.transSent);
+  //          console.log(theRoom.memory.transSent);
 
         }
         //               let damageNeed = powerB.hits/powerB.ticksToDecay;
