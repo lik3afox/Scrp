@@ -225,16 +225,29 @@ function E33S76Room(creep) {
     let goto;
     creep.say('ya');
     switch (creep.memory.roleID) {
-
         case 0:
-            goto = creep.room.storage; //Game.getObjectById('5924524129c65d152e19c40c');
+
+            goto = creep.room.terminal; //Game.getObjectById('5924524129c65d152e19c40c');
             //             require('commands.toStructure').pickUpEnergy(creep);
-            if (goto !== undefined && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(goto, {
-                    reusePath: 20 //,ignoreCreeps:true
-                });
+            for (var e in goto.store) {
+                if (e !== RESOURCE_ENERGY) {
+                    if (creep.withdraw(goto, e) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto, {
+                            reusePath: 20 //,ignoreCreeps:true
+                        });
+                    }
+                }
             }
             break;
+            /*case 0:
+                goto = creep.room.storage; //Game.getObjectById('5924524129c65d152e19c40c');
+                //             require('commands.toStructure').pickUpEnergy(creep);
+                if (goto !== undefined && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(goto, {
+                        reusePath: 20 //,ignoreCreeps:true
+                    });
+                }
+                break; */
         case 1:
 
             goto = Game.getObjectById('59243d3f403da5a97dea664a');
@@ -256,27 +269,30 @@ function E33S76Room(creep) {
 
 function E33S76Transfer(creep) {
     switch (creep.memory.roleID) {
+        case 0:
+            containers.moveToStorage(creep);
+
+            break;
         case 1:
             containers.moveToTerminal(creep);
             break;
 
-        case 0:
-            goto = Game.getObjectById('5924524129c65d152e19c40c');
-            if (goto !== null && creep.transfer(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(goto, {
-                    reusePath: 20 //,ignoreCreeps:true
-                });
-            }
-            break;
+            /*         case 0:
+                            goto = Game.getObjectById('5924524129c65d152e19c40c');
+                        if (goto !== null && creep.transfer(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(goto, {
+                                reusePath: 20 //,ignoreCreeps:true
+                            });
+                        }
+                        break; */
 
-        default:
-            if (creep.room.storage === undefined) {
-                moveToAndDrop(creep, new RoomPosition(32, 10, 'E33S76'));
-            } else {
-                containers.moveToStorage(creep);
-            }
+            /*            default: if (creep.room.storage === undefined) {
+                                moveToAndDrop(creep, new RoomPosition(32, 10, 'E33S76'));
+                            } else {
+                                containers.moveToStorage(creep);
+                            }
 
-            break;
+                        break;*/
     }
 }
 

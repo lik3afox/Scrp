@@ -153,7 +153,7 @@ var spawn5Module = [
     ['first', require('role.first'), 2, 3],
     ['scientist', require('role.scientist'), 0, 4],
     ['linker', require('role.linker'), 1, 3],
-    ['upbuilder', require('role.upbuilder'), 1, 5],
+    ['upbuilder', require('role.upbuilder'), 2, 5],
     ['wallwork', require('role.wallworker'), 0, 0],
     ['minHarvest', require('role.mineral'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2]
