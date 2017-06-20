@@ -121,7 +121,7 @@ class transportz extends roleParent {
 
                 let task = {};
                 task.options = {
-                    ignoreRoads: _ignoreRoad,
+                    ignoreRoads: creep.room.name == 'E35S85' ? false : _ignoreRoad,
                     reusePath: rePath,
                     visualizePathStyle: pathVis
                 };

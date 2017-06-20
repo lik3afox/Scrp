@@ -56,15 +56,14 @@ function doWork(creep) {
             //    && creep.room.name != 'E25S74'&& creep.room.name != 'E26S74'&& creep.room.name != 'E25S75'
             //)&& 
             contain.hits < contain.hitsMax - 25000) || (contain.hits < 50000)) {
-        if (!creep.pos.isNearTo) {
-            creep.say(creep.moveTo(contain));
+        if (!creep.pos.isNearTo(contain)) {
         }
 
         let rep = creep.repair(contain);
         if (rep == ERR_NOT_IN_RANGE) {
             creep.say('m2w');
 
-            creep.moveTo(contain);
+//            creep.moveTo(contain);
         } else if (rep == OK) {
             return true;
         }
@@ -76,8 +75,15 @@ function doWork(creep) {
             }
         } else {
             //          creep.say('m');
-            creep.say('m2w!!');
-            creep.moveTo(contain);
+        	switch(creep.memory.goal) {
+        		case '5836b8268b8b9619519f18b1':
+        			creep.moveTo(33,34);
+        		break;
+        		default:
+		            creep.moveTo(contain);
+        		break;
+        	}
+
         }
         // Deposit
     }

@@ -20,8 +20,9 @@ function getHostiles(creep) {
     if (_.contains(rng10, creep.room.name)) {
         range = 10;
     }
-
-    return creep.pos.findInRange(FIND_HOSTILE_CREEPS, range);
+    let returned = creep.pos.findInRange(FIND_HOSTILE_CREEPS, range);
+    returned = _.filter(returned, function(o){return o.owner.username !== 'ponka';});
+    return returned;
 
 }
 

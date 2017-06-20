@@ -719,7 +719,8 @@ class baseParent {
                         return true;
                     }
                 } */
-        var stay = creep.pos.findInRange(creep.room.hostilesHere(), 5);
+        var stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
+        stay = _.filter(stay,function(o){return o.owner.username !== 'ponka';});
 
         if (stay.length === 0) return false;
         var close = creep.pos.findInRange(stay, 4);
