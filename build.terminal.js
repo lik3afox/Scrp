@@ -168,6 +168,118 @@ function buyGH2O() {
     }
 }
 
+function newTradeEnergy(terminal) {
+
+    // Below here we're selling energy.
+
+    let eTotal = terminal.store[RESOURCE_ENERGY];
+    if (eTotal < 30000) return false;
+    let targetRoom = terminal.pos.roomName;
+    if (Memory.termReport) console.log(terminal, 'has ', eTotal, targetRoom);
+    let Orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_ENERGY });
+    let target = { price: 0.0001, id: undefined, cost: 1000, amount: 1, room: undefined, trans: 1 };
+
+
+    let EnergyNum = terminal.store[RESOURCE_ENERGY] * 0.1;
+
+
+    for (var e in Orders) {
+        let temp = (Game.market.calcTransactionCost(EnergyNum, targetRoom, Orders[e].roomName) / EnergyNum);
+        let profit = Orders[e].price;
+        // so far this only calcuates the distance - and the closest is best so far. 
+        // What htis logic below is
+        // profit / 1 energy + cost    
+
+        //console.log( profit/(1+temp), target.price/(1+target.cost),target.price,temp );
+        if (profit / (1 + temp) > target.price / (1 + target.cost) && Orders[e].roomName != 'E24S72' && Orders[e].roomName != 'E22S77') {
+            target.id = Orders[e].id;
+            target.cost = temp;
+            target.amount = Orders[e].amount;
+            target.price = Orders[e].price;
+            target.room = Orders[e].roomName;
+        }
+    }
+    let trans = EnergyNum; // (Math.floor(eTotal / (1 + target.cost)));
+    if (trans > target.amount) trans = target.amount;
+    if (trans > maxEnergyTrans) trans = maxEnergyTrans;
+    let cost = Game.market.calcTransactionCost(trans, target.room, terminal.room.name);
+    let perEnergy = cost / trans;
+    var profitLine;
+    /*
+    1000,000 = 10,000 + credits charge for the order (price(.01)* amount(1000000)* 0.05);
+    500 for the order.
+
+    ( 1000000 - (10500 / energySell) )  / (10500 / energySell)
+    */
+    switch (target.price) {
+        case 0.02:
+            profitLine = 0.90;
+            break;
+        case 0.03:
+            profitLine = 1.85;
+            break;
+        case 0.04:
+            profitLine = 2.80;
+            break;
+        case 0.05:
+            profitLine = 3.71;
+            break;
+        case 0.06:
+            profitLine = 4.71;
+            break;
+        case 0.07:
+            profitLine = 5.66;
+            break;
+        case 0.07:
+            profitLine = 6.61;
+
+            break;
+        default:
+            break;
+    }
+    //    console.log(profitLine, perEnergy);
+    if (profitLine > perEnergy) {
+
+        let BAD = profitLine; // Anything at the profit line.
+        let GOOD = profitLine * 0.9; // .81
+        let GREAT = profitLine * 0.7; // .63
+        let AWESOME = profitLine * 0.5;
+        var profit = target.price * trans;
+        var energyUsed = cost + trans;
+        var rawEnergyProfit = profit * 100; // Assuming you buy energy @ .01;
+        var estOrderCost = 0.01 * 0.05 * (trans * 0.95);
+        var realProfit = profit - estOrderCost;
+        var energyGained = (realProfit * 100) - energyUsed;
+
+        if (energyGained > 1000 && GOOD < perEnergy) {
+            let whatHappened = Game.market.deal(target.id, trans, targetRoom);
+            console.log('A+ Deal:', whatHappened, '*EstEnergyGained:', energyGained, 'From:', terminal.room, 'to', target.room, '@', target.price, 'profit', profit, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans, "total", energyUsed);
+            return true;
+        } else if (energyGained > 700 && GREAT < perEnergy) {
+            let whatHappened = Game.market.deal(target.id, trans, targetRoom);
+            console.log('A Deal:', whatHappened, '*EstEnergyGained:', energyGained, 'From:', terminal.room, 'to', target.room, '@', target.price, 'profit', profit, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans, "total", energyUsed);
+            return true;
+        } else {
+
+        }
+
+        /*        if (AWESOME > perEnergy) {
+                    console.log('ESTEnergyGained:', energyGained, 'EnergyUsed', energyUsed, 'Credit Profit', profit);
+                    console.log('A++Profit SELL :', terminal.room, 'to', target.room, '@', target.price, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans);
+                } else if (GREAT > perEnergy) {
+                    console.log('ESTEnergyGained:', energyGained, 'EnergyUsed', energyUsed, 'Credit Profit', profit);
+                    console.log('A Profit SELL :', terminal.room, 'to', target.room, '@', target.price, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans);
+                } else if (GOOD > perEnergy) {
+                    console.log('ESTEnergyGained:', energyGained, 'EnergyUsed', energyUsed, 'Credit Profit', profit);
+                    console.log('B Profit SELL :', terminal.room, 'to', target.room, '@', target.price, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans);
+                } else { //        if(GOOD > perEnergy ) {
+                    console.log('C Profit SELL :', terminal.room, 'to', target.room, '@', target.price, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans);
+                }
+        */
+
+    }
+
+}
 
 function tradeEnergy(terminal) {
 
@@ -510,6 +622,7 @@ class roleTerminal {
         for (var e in terminals) {
             let terminal = Game.getObjectById(terminals[e]);
             if (terminal !== null) {
+                newTradeEnergy(terminal);
                 //          focusEnergy(terminal); Removed
                 //            forEveryTerminal(terminal);
                 terminal.room.memory.didOrder = false;
@@ -537,11 +650,11 @@ class roleTerminal {
                         if (!shareEnergy(terminal)) { // Moves energy around
                             if (Memory.terminalTarget !== undefined && Memory.terminalTarget != 'none') {
                                 if (!sendEnergy(terminal)) { // Send energy to a target
-                                    tradeEnergy(terminal);
+                                    //                                  tradeEnergy(terminal);
                                 }
                             }
                         }
-                        tradeEnergy(terminal);
+                        //                        tradeEnergy(terminal);
                         tradeMineral(terminal);
                     }
                 }
