@@ -173,7 +173,7 @@ function newTradeEnergy(terminal) {
     // Below here we're selling energy.
 
     let eTotal = terminal.store[RESOURCE_ENERGY];
-    if (eTotal < 30000) return false;
+    if (eTotal < 21000) return false;
     let targetRoom = terminal.pos.roomName;
     if (Memory.termReport) console.log(terminal, 'has ', eTotal, targetRoom);
     let Orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_ENERGY });
@@ -251,11 +251,11 @@ function newTradeEnergy(terminal) {
         var realProfit = profit - estOrderCost;
         var energyGained = (realProfit * 100) - energyUsed;
 
-        if (energyGained > 1000 && GOOD < perEnergy) {
+        if (GOOD < perEnergy) {
             let whatHappened = Game.market.deal(target.id, trans, targetRoom);
             console.log('A+ Deal:', whatHappened, '*EstEnergyGained:', energyGained, 'From:', terminal.room, 'to', target.room, '@', target.price, 'profit', profit, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans, "total", energyUsed);
             return true;
-        } else if (energyGained > 600 && GREAT < perEnergy) {
+        } else if (GREAT < perEnergy) {
             let whatHappened = Game.market.deal(target.id, trans, targetRoom);
             console.log('A Deal:', whatHappened, '*EstEnergyGained:', energyGained, 'From:', terminal.room, 'to', target.room, '@', target.price, 'profit', profit, 'Transfer:', cost, 'perEnergy', perEnergy, "Amount", trans, "total", energyUsed);
             return true;
