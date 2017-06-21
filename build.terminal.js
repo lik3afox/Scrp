@@ -576,24 +576,38 @@ function energyCheck(terminal) {
     return false;
 }
 
-function getMostTerminal(target, mineral) {
-
-    let highest = 0;
-
-    for (var e in terminals) {
-        if (terminal.id != terminals[e]) {
+function getMostTerminal(mineralz,target) {
+let highest = 0;
+var bested;
+var e;
+var mineral = mineralz.toLowerCase();
+if(target === undefined) {
+	e = terminals.length;
+    while (e--) {
             let tmp = Game.getObjectById(terminals[e]);
             if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest) {
                 highest = tmp.store[mineral];
-                target = tmp;
+                bested = tmp;
+            }
+    }
+    return bested;
+
+} else {
+    for (e in terminals) {
+        if (target.id != terminals[e]) {
+            let tmp = Game.getObjectById(terminals[e]);
+            if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest) {
+                highest = tmp.store[mineral];
+                bested = tmp;
             }
         }
     }
-
-    return target;
+    return bested;
 }
 
-function doDebt(terminal) {
+}
+
+function doDebt() {
 
     if (Memory.debts === undefined) {
         Memory.debts = [];
@@ -619,27 +633,30 @@ function doDebt(terminal) {
     var mineral = Debt.type;
     var roomTarget = Debt.room;
     var debtAmount = Debt.amount;
+    var giver = getMostTerminal(Debt.type);
 
-    var giver = getMostTerminal(terminal, Debt.type);
-
-    console.log('giver', giver.room);
-
-    target = Memory.terminalTarget;
-    let energyAmount = terminal.store[RESOURCE_ENERGY] * 0.1;
-    if (Memory.termReport) console.log(terminal.pos, 'sending Energy', target, 'For:', energyAmount);
-    if (terminal.send(RESOURCE_ENERGY, energyAmount, target, 'Etransfer') == OK) {
-        terminal.room.memory.didOrder = true;
-        return;
+    var transferAmount = 1000;
+	if(giver === undefined) {
+		console.log('ERROR in DEBT',Debt.type,Debt.room,Debt.amount);
+		return false;
+	}
+    if(giver.store[Debt.type] < transferAmount*3) {
+    	console.log('Error in Debt, not enough funds');
+    	return false;
     }
 
-    for (var e in terminals) {
-        let zzterminal = Game.getObjectById(terminals[e]);
-        if (zzterminal !== null && zzterminal.room.storage.store[RESOURCE_ENERGY] < 200000) {
-            let energyAmount = terminal.store[RESOURCE_ENERGY] * 0.1;
-            terminal.send(RESOURCE_ENERGY, energyAmount, zzterminal.room.name, 'upkeep');
-        }
-    }
 
+	var result = giver.send(RESOURCE_ENERGY, transferAmount, Debt.room, 'Debt@'+Debt.amount);
+	if ( result == OK) {
+        Debt.amount -= transferAmount;
+    }
+    if(Debt.amount <= 0) {
+    	console.log(result,'Debt COMPLETED!!',Debt.room,Debt.type);
+    	Memory.debts.unshift();
+    } else {
+    console.log(result,'Debt Sending',Debt.room,'sending:',Debt.type,'From:',giver.room.name,'Amount:',transferAmount,'Debt@',Debt.amount);
+
+    }
     return true;
 }
 
@@ -749,14 +766,13 @@ class roleTerminal {
         makeMineralOrder();
         cleanUpOrders();
         Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
+                doDebt(); // Send energy to a target
 
         //            Memory.termRun = 10;
         for (var e in terminals) {
             let terminal = Game.getObjectById(terminals[e]);
             if (terminal !== null) {
-                if (!doDebt(terminal)) { // Send energy to a target
                     newTradeEnergy(terminal);
-                }
                 //          focusEnergy(terminal); Removed
                 //            forEveryTerminal(terminal);
                 terminal.room.memory.didOrder = false;

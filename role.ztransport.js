@@ -155,7 +155,7 @@ class transportz extends roleParent {
             }
 
             // If in the same room and with in a square of 5 away from goal. 
-            if (_goal.room.name === creep.room.name) {
+            if (_goal !== null && _goal.room.name === creep.room.name) {
                 // First look for containers and picking up stuff.
                 // Then assigns it to memory.
                 if (creep.memory.gotoID === undefined) {

@@ -11,7 +11,7 @@
 // Mostly works with spawn.
 
 var classLevels = [
-    [CARRY, MOVE, CARRY, MOVE], // 300
+    [CARRY, MOVE, CARRY, MOVE,WORK], // 300
 
     [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, CARRY, MOVE], // 550
 
