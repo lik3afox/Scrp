@@ -258,9 +258,9 @@ class PowerInteract {
                 spawn.requestCreep(transport, spawnID);
                 count--;
             } while (count > 0);
-//            console.log(theRoom.memory.transSent);
+            //            console.log(theRoom.memory.transSent);
             theRoom.memory.transSent = true;
-  //          console.log(theRoom.memory.transSent);
+            //          console.log(theRoom.memory.transSent);
 
         }
         //               let damageNeed = powerB.hits/powerB.ticksToDecay;
@@ -305,29 +305,6 @@ class PowerInteract {
         }
 
 
-    }
-
-    static attackPowerbank(creep) {
-        if (creep.memory.powerbankID === undefined) {
-            let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
-
-            creep.memory.powerbankID = find[0].id;
-        }
-
-        let powerbank = Game.getObjectById(creep.memory.powerbankID);
-
-        if (powerbank !== null) {
-            if (creep.pos.isNearTo(powerbank)) {
-                if (creep.attack(powerbank) == OK) {
-                    creep.countStop();
-                }
-                return true;
-            } else {
-                creep.say(creep.moveTo(powerbank));
-                return false;
-            }
-        }
-        return false;
     }
 
 }

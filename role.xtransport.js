@@ -170,7 +170,7 @@ class transport extends roleParent {
 
             if (_goal === null) {
                 var goingTo = super._movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
-                creep.moveTo(goingTo, {
+                creep.moveMe(goingTo, {
                     ignoreRoads: _ignoreRoad,
                     reusePath: 49,
                     visualizePathStyle: {
@@ -253,7 +253,7 @@ class transport extends roleParent {
                                     creep.say('zZzZ');
                                 }
                             } else {
-                                creep.moveTo(contain);
+                                creep.moveMe(contain);
                             }
 
                         } else {
@@ -272,7 +272,7 @@ class transport extends roleParent {
                         }
 
                         if (!super.guardRoom(creep)) {
-                            creep.moveTo(_goal, {
+                            creep.moveMe(_goal, {
                                 ignoreRoads: _ignoreRoad,
                                 reusePath: 49,
                                 visualizePathStyle: {

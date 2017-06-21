@@ -100,6 +100,9 @@ class transport extends roleParent {
         super.rebirth(creep);
 
         //        let total = _.sum(creep.carry);
+        if (super.doTask(creep)) {
+            return;
+        }
 
         if (link.stayDeposit(creep)) {
             constr.pickUpEnergy(creep);
@@ -117,9 +120,6 @@ class transport extends roleParent {
             return;
         }
         if (movement.runAway(creep)) {
-            return;
-        }
-        if (super.doTask(creep)) {
             return;
         }
 

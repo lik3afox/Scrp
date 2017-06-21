@@ -21,7 +21,8 @@ function getHostiles(creep) {
         range = 10;
     }
     let returned = creep.pos.findInRange(FIND_HOSTILE_CREEPS, range);
-    returned = _.filter(returned, function(o){return o.owner.username !== 'ponka';});
+    returned = _.filter(returned, function(o) {
+        return o.owner.username !== 'ponka'; });
     return returned;
 
 }
@@ -58,10 +59,10 @@ function attackCreep(creep, bads) {
             creep.rangedAttack(enemy);
         }
         creep.selfHeal();
-        creep.moveTo(enemy);
+        creep.moveTo(enemy, { ignoreRoads: true });
     } else if (distance >= 4) {
         creep.selfHeal();
-        creep.moveTo(enemy);
+        creep.moveTo(enemy, { ignoreRoads: true });
     }
 }
 

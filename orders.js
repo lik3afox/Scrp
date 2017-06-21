@@ -9,7 +9,8 @@ Game.rooms.E28S73.terminal.send(RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE, 500, 'E26
 
 Game.rooms.E29S79.terminal.send(RESOURCE_POWER, 10000, 'E37S75', 'trade');
 
-Game.rooms.E27S75.terminal.send(RESOURCE_ENERGY, 100000, 'E23S75', 'trade');
+Game.rooms.E23S75.terminal.send(RESOURCE_ENERGY, 15000, 'E33S76', 'trade');
+
 
 Game.rooms.E27S74.terminal.send('H', 15777, 'E28S71', 'trade');
 
@@ -24,7 +25,7 @@ Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.02, 1000000, "E23S75");
 
 Game.market.createOrder(ORDER_BUY, 'O', 0.15, 50000, "E28S71");
 
-Game.market.createOrder(ORDER_SELL, 'L', 0.17, 60000, "E35S73");
+Game.market.createOrder(ORDER_SELL, 'K', 0.10, 75000, "E33S76");
 
 Game.market.createOrder(ORDER_SELL, 'H', 0.22, 40000, "E23S75");
 Game.market.changeOrderPrice('59456151c6f617101cab61f3', 0.17);

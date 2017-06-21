@@ -153,7 +153,7 @@ class buildLink {
         // Spawn 5  
 
         sendEnergy('58ba4ff836439c9e6a5a1c23', '58ba2df2045ee10bf18fb464', 700);
-        
+
         // 
         sendEnergy('58df611bbeb92e3de67dff2f', '58baddb59ac6e6215aa593b6');
         sendEnergy('58baf3bdefbd256c113625e9', '58dfcf2ccdfd8bc567323e91');
@@ -193,13 +193,21 @@ class buildLink {
         //return total;'5924524129c65d152e19c40c', 
         //        sendEnergy([''], '59243d3f403da5a97dea664a');
 
-        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc','5949a8128a497d010b6c1e4a'], '5924524129c65d152e19c40c');
+        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc'], '5924524129c65d152e19c40c');
+        sendEnergy('5949a8128a497d010b6c1e4a', '59346fe0b9ec62526a4218dc');
+        //        ''
+        sendEnergy('5924524129c65d152e19c40c', '59243d3f403da5a97dea664a');
 
         sendEnergy(['592b1d484bc45519161537ef', '592b3ffa429df6134a992506'], '592b2bba08d445510286532a');
         sendEnergy('592b2bba08d445510286532a', '592b1f2b9eb200190288958e');
         sendEnergy('592b29f24dbc43d258db1db4', '592b1f2b9eb200190288958e', 700);
+        sendEnergy('593da1f5694770f664e2df0b', '5949e84c088c672237d2cf79');
+        sendEnergy('5949e84c088c672237d2cf79', '5949da19dd7f393da48578db');
+        sendEnergy('5949da19dd7f393da48578db', '593d6e902c4a79a70901fac1');
 
-        sendEnergy(['59437ada633ad90d033e741c', '59408dd58b64951171f89b71', '593da1f5694770f664e2df0b'], '593d6e902c4a79a70901fac1', 700);
+
+
+        sendEnergy(['59437ada633ad90d033e741c', '59408dd58b64951171f89b71'], '593d6e902c4a79a70901fac1', 700);
 
         gameCache = []; // cleaning up cache for this tick.
     }

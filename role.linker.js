@@ -67,7 +67,7 @@ function clearTerminal(creep) {
 function toStorageOrTerminal(creep) {
     let maxStorage = 850000;
     //    if (creep.room.name == 'E26S77') maxStorage = 400000;
-    if(creep.carry[RESOURCE_ENERGY] === 0 && creep.carryTotal !== 0) {
+    if (creep.carry[RESOURCE_ENERGY] === 0 && creep.carryTotal !== 0) {
         containers.moveToTerminal(creep);
     } else if (creep.room.terminal.total == 300000) {
         containers.moveToStorage(creep);
@@ -204,7 +204,7 @@ function E23S75Transfer(creep) {
             break;
             //        case 1:
         default:
-            goto = creep.room.storage; 
+            goto = creep.room.storage;
             if (goto !== undefined) {
                 var keys = Object.keys(creep.carry);
                 var o = keys.length;
@@ -226,32 +226,32 @@ function E23S75Transfer(creep) {
 function E33S76Room(creep) {
     let goto;
     switch (creep.memory.roleID) {
-            case 0:
-                goto = Game.getObjectById('5924524129c65d152e19c40c');
-                //             require('commands.toStructure').pickUpEnergy(creep);
-                if (goto !== null && goto.energy > 0){
-                    if( creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.say('ya');
-                        creep.moveTo(goto, {
+        case 0:
+            goto = Game.getObjectById('5924524129c65d152e19c40c');
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null && goto.energy > 0) {
+                if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.say('ya');
+                    creep.moveTo(goto, {
                         reusePath: 20 //,ignoreCreeps:true
+                    });
+                }
+            } else {
+
+                let str = creep.room.terminal;
+                if (str.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
+                    if (creep.withdraw(str, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveMe(str, {
+                            reusePath: 20
                         });
                     }
                 } else {
-
-                    let str = creep.room.terminal;
-                    if (str.store[RESOURCE_ENERGY] > 20000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000){
-                        if (creep.withdraw(str, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveMe(str, {
-                                reusePath: 20
-                            });
-                        }
-                    } else {
-                    for(var o in creep.room.storage.store){
-                        creep.withdraw(creep.room.storage,o);
-                    }
+                    for (var o in creep.room.storage.store) {
+                        creep.withdraw(creep.room.storage, o);
                     }
                 }
-                break; 
+            }
+            break;
 
     }
 
@@ -267,8 +267,8 @@ function E33S76Transfer(creep) {
             toStorageOrTerminal(creep);
 
             break;
-  //          containers.moveToTerminal(creep);
-//            break;
+            //          containers.moveToTerminal(creep);
+            //            break;
 
             /*         case 0:
                             goto = Game.getObjectById('5924524129c65d152e19c40c');
@@ -820,11 +820,11 @@ function s5Transfer(creep) {
             case 0:
 
         //    let link = Game.getObjectById('58ba2df2045ee10bf18fb464');
-      //  if (link !== null && link.energy < 700) {
-    //        creep.transfer(link, RESOURCE_ENERGY);
-  //      } else {
+        //  if (link !== null && link.energy < 700) {
+        //        creep.transfer(link, RESOURCE_ENERGY);
+        //      } else {
             toStorageOrTerminal(creep);
-//        }
+        //        }
         //containers.moveToTerminal(creep);
         //            containers.moveToStorage(creep);
         break;

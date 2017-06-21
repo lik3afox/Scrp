@@ -38,6 +38,7 @@ function getSpawnCreating(flag) {
             return 'E26S77';
         case 'Flag28':
             return 'E26S77';
+        case 'Flag53':
         case 'Flag58':
         case 'Flag8':
 
@@ -81,6 +82,7 @@ function getCurrentParty(flag) {
         case 'Flag57':
         case 'Flag58':
         case 'Flag55':
+        case 'Flag53':
         case 'Flag8':
         case 'Flag18':
         case 'Flag20':

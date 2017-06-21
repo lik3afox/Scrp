@@ -216,8 +216,9 @@ var E38S74Module = [
 var E23S75Module = [
     ['first', require('role.first'), 2, 3],
     ['builder', require('role.builder'), 0, 5],
+    ['upbuilder', require('role.upbuilder'), 1, 7],
     ['minHarvest', require('role.mineral'), 1, 3],
-    ['wallwork', require('role.wallworker'), 0, 2],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['scientist', require('role.wallworker'), 0, 3],
     ['linker', require('role.linker'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2]
@@ -810,7 +811,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
     room.memory.tempBoost = []; //+200% harvest effectiveness
 
 
-//    console.log(workCount, room.memory.labMinerals.UO - room.memory.calledMinerals.UO, nWorkPart * 30);
+    //    console.log(workCount, room.memory.labMinerals.UO - room.memory.calledMinerals.UO, nWorkPart * 30);
     if (workCount >= 3 && room.memory.labMinerals.UO - room.memory.calledMinerals.UO >= nWorkPart * 30) {
         // so "UO" will make it 3 instead of 1 work, 
         let workparts = [];
@@ -1087,13 +1088,13 @@ class theSpawn {
                 while (type--) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-  //                      if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
-    //                    if (countCPU) { start = Game.cpu.getUsed(); }
+                        //                      if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
+                        //                    if (countCPU) { start = Game.cpu.getUsed(); }
 
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }
-//                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
+                        //                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
 
                         break;
                     }
@@ -1368,7 +1369,7 @@ class theSpawn {
                             // create an unit
 
                             if (temp.memory.role == 'miner') {
-                                console.log('create', _module[uo][_name], ':' + spawn.memory.roadsTo[ie].source);
+                                //                                console.log('create', _module[uo][_name], ':' + spawn.memory.roadsTo[ie].source);
                                 spawn.memory.expandCreate.unshift(temp);
                                 spawn.memory.roadsTo[ie][type] = true;
                             }

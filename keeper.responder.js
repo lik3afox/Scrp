@@ -212,7 +212,7 @@ function attackCreep(creep, bads) {
 
 function moveCreep(creep) {
     let pflag = Game.flags[creep.memory.party];
-    if (!creep.pos.isNearTo(pflag)) {
+    if (!creep.pos.inRangeTo(pflag, 5)) {
         creep.moveMe(pflag);
         creep.countDistance();
     } else {
@@ -221,7 +221,7 @@ function moveCreep(creep) {
     }
 }
 
-var E25S75 = ['E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E25S76', 'E26S76'];
+var E25S75 = ['E24S74', 'E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E24S76', 'E25S76', 'E26S76'];
 
 function analyzeMining(creep) {
     if (_.contains(E25S75, creep.room.name)) {
@@ -234,7 +234,7 @@ function analyzeMining(creep) {
                 mostMined = Game.rooms[E25S75[e]].memory.mining;
             }
         }
-        console.log(flag, flag.room.name, mostMinedRoom, mostMined, "Most mined room info");
+        //        console.log(flag, flag.room.name, mostMinedRoom, mostMined, "Most mined room info");
         if (flag.room.name !== mostMinedRoom) {
             flag.setPosition(new RoomPosition(flag.pos.x, flag.pos.y, mostMinedRoom));
         }

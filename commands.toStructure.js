@@ -243,9 +243,11 @@ class StructureInteract {
         creep.memory.nextEnergyScan--;
         if (creep.memory.nextEnergyScan < 0) {
             var dEnergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, range);
-            dEnergy = _.filter(dEnergy, function(d) {return d.amount > 200;});
+            dEnergy = _.filter(dEnergy, function(d) {
+                return d.amount > 200;
+            });
             if (dEnergy.length === 0) {
-                creep.memory.nextEnergyScan = range;
+                creep.memory.nextEnergyScan = 0; //range;
                 return false;
             }
             let close = dEnergy[0]; //= creep.pos.findClosestByRange(dEnergy);
@@ -408,55 +410,55 @@ class StructureInteract {
         return false;
     }
     static doCloseRoadBuild(creep) {
-        if (creep.memory.closeRoadBuildTimer === undefined) {
-            creep.memory.closeRoadBuildTimer = 0;
-        }
-        creep.memory.closeRoadBuildTimer--;
-        if (creep.memory.closeRoadBuildTimer < 0) {
-            let zbuild = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 1);
-            if (zbuild.length === 0) {
-                creep.memory.closeRoadBuildTimer = 4;
-                return false;
+            if (creep.memory.closeRoadBuildTimer === undefined) {
+                creep.memory.closeRoadBuildTimer = 0;
             }
-            creep.build(zbuild[0]);
-        }
-        return false;
-    }
-
-    static attackPowerbank(creep) {
-        if (creep.memory.powerbankID === undefined) {
-            let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
-
-            creep.memory.powerbankID = find[0].id;
-        }
-
-        let powerbank = Game.getObjectById(creep.memory.powerbankID);
-
-        if (powerbank !== null) {
-            //        if(creep.pos.isNearTo(powerbank)) {
-            //              creep.attack(powerbank);
-            //            } else {
-            creep.say(creep.moveTo(powerbank));
-            //      }
-        }
-    }
-    static dismantlePowerbank(creep) {
-        if (creep.memory.powerbankID === undefined) {
-            let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
-
-            creep.memory.powerbankID = find[0].id;
-        }
-
-        let powerbank = Game.getObjectById(creep.memory.powerbankID);
-
-        if (powerbank !== null) {
-            if (creep.pos.isNearTo(powerbank)) {
-                creep.say(creep.dismantle(powerbank));
-            } else {
-                creep.say(creep.moveTo(powerbank));
+            creep.memory.closeRoadBuildTimer--;
+            if (creep.memory.closeRoadBuildTimer < 0) {
+                let zbuild = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3);
+                if (zbuild.length === 0) {
+                    creep.memory.closeRoadBuildTimer = 4;
+                    return false;
+                }
+                creep.build(zbuild[0]);
             }
+            return false;
         }
-    }
+        /*
+            static attackPowerbank(creep) {
+                if (creep.memory.powerbankID === undefined) {
+                    let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
+
+                    creep.memory.powerbankID = find[0].id;
+                }
+
+                let powerbank = Game.getObjectById(creep.memory.powerbankID);
+
+                if (powerbank !== null) {
+                    //        if(creep.pos.isNearTo(powerbank)) {
+                    //              creep.attack(powerbank);
+                    //            } else {
+                    creep.say(creep.moveTo(powerbank));
+                    //      }
+                }
+            } 
+            static dismantlePowerbank(creep) {
+                if (creep.memory.powerbankID === undefined) {
+                    let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
+
+                    creep.memory.powerbankID = find[0].id;
+                }
+
+                let powerbank = Game.getObjectById(creep.memory.powerbankID);
+
+                if (powerbank !== null) {
+                    if (creep.pos.isNearTo(powerbank)) {
+                        creep.say(creep.dismantle(powerbank));
+                    } else {
+                        creep.say(creep.moveTo(powerbank));
+                    }
+                }
+            }*/
 
     static doCloseBuild(creep) {
 
