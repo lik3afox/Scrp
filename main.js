@@ -133,101 +133,8 @@
         }
     }
 
-    function speedTest() {
-
-        var start = Game.cpu.getUsed();
-        var o;
-        var zzz = { a: 100, b: 200, c: 300, d: 400, e: 5, f: 7, z: 9, n: 1, x: 10, v: 50, m: 12, q: 12, w: 345, r: 34 };
-        let total = 0;
-        //        console.log((Game.cpu.getUsed() - start), '1');
-        start = Game.cpu.getUsed();
-        for (var e in zzz) {
-            total += zzz[e];
-            //    console.log(zzz[e], e);
-        }
-        console.log((Game.cpu.getUsed() - start), 'in');
-
-
-        start = Game.cpu.getUsed();
-        xxx = Object.keys(zzz);
-        for (o = 0; o < xxx.length; o++) {
-            total += xxx[o];
-            //          console.log(zzz[xxx[o]], o, "3");
-        }
-        console.log((Game.cpu.getUsed() - start), 'for <');
-
-        start = Game.cpu.getUsed();
-        xxx = Object.keys(zzz);
-        var n = xxx.length;
-        for (o = 0; o < n; o++) {
-            total += zzz[xxx[o]];
-            //          console.log(zzz[xxx[o]], o, "3");
-        }
-
-        console.log((Game.cpu.getUsed() - start), 'for < + var');
-
-        start = Game.cpu.getUsed();
-        xxx = Object.keys(zzz);
-        for (o = xxx.length; o > 0; o--) {
-            total += zzz[xxx[o]];
-            //          console.log(zzz[xxx[o]], o, "3");
-        }
-
-        console.log((Game.cpu.getUsed() - start), 'for < - var');
-
-        start = Game.cpu.getUsed();
-        //        if (_.isObject(zzz)) {
-        xxx = Object.keys(zzz);
-        var z = xxx.length;
-        while (z--) {
-            total += zzz[xxx[z]];
-            //            console.log(zzz[xxx[z]], z, "4");
-        }
-        //      }
-
-        console.log((Game.cpu.getUsed() - start), 'z--');
-        start = Game.cpu.getUsed();
-
-        var yyy = [100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9,
-            100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9, 100, 200, 300, 400, 5, 7, 9
-        ];
-
-        start = Game.cpu.getUsed();
-        for (o = 0; o < yyy.length; o++) {
-            total += yyy[o];
-            //          console.log(zzz[xxx[o]], o, "3");
-        }
-
-        console.log((Game.cpu.getUsed() - start), 'Array for');
-        start = Game.cpu.getUsed();
-        var m = yyy.length;
-        for (o = 0; o < m; o++) {
-            total += yyy[o];
-            //          console.log(zzz[xxx[o]], o, "3");
-        }
-
-        console.log((Game.cpu.getUsed() - start), 'Array var for');
-        start = Game.cpu.getUsed();
-        for (o = yyy.length; o > 0; o--) {
-            total += yyy[o];
-            //          console.log(zzz[xxx[o]], o, "3");
-        }
-
-        console.log((Game.cpu.getUsed() - start), '----Array var for');
-        start = Game.cpu.getUsed();
-        var x = yyy.length;
-        while (x--) {
-            total += yyy[x];
-            //            console.log(zzz[xxx[z]], z, "4");
-        }
-
-        console.log((Game.cpu.getUsed() - start), 'Array z--');
-
-
-
-    }
-
     function doUpgradeRooms() { //5836b82d8b8b9619519f19be
+        if (Memory.war) return;
         let spwns = ['58c074ead62936ed5e2bce0b']; //,''
         if (Game.flags.recontrol !== undefined) return;
         var e = spwns.length;
@@ -245,6 +152,15 @@
         }
     }
     var loaded = Game.time;
+
+    function doRoomReport(room) {
+        bads = room.find(FIND_HOSTILE_CREEPS);
+        bads = _.filter(bads,function(creep) {
+            return creep.owner.username !== 'Invader';
+        });
+if(bads.length > 0)
+console.log('Bad guys found @',room,'from:',bads.owner.username);
+    }
 
     function memoryStatsUpdate() {
         if (Memory.showInfo === 0) return; // Low Grafana stats.
@@ -294,6 +210,8 @@
     module.exports.loop = blackMagic(function() {
         var start = Game.cpu.getUsed();
 
+        if (Memory.war === undefined) Memory.war = true;
+
         if (Memory.showInfo === undefined) Memory.showInfo = 5;
         //profiler.wrap(function() {
         /*        let lastLoaded = Memory.loaded;
@@ -312,7 +230,7 @@
         var doSpawnChecks = false;
 
         //    console.log('********************START REPORT****************************');
-        safemodeCheck(Game.spawns.Spawn1);
+        //        safemodeCheck(Game.spawns.Spawn1);
         if (Memory.doFlag === undefined) Memory.doFlag = 1;
         Memory.doFlag--;
         if (Memory.doFlag === 0) {
@@ -328,10 +246,16 @@
         var keys = Object.keys(Game.spawns);
         var t = keys.length;
         var title;
-        while (t--) { // Start of spawn Loo
+        while (t--) { // Start of spawn Loop
+
+            if(Memory.war) {
+                if(Game.spawns[title] !== undefined && Game.spawns[title].room !== undefined)
+                doRoomReport(Game.spawns[title].room );
+            }
             title = keys[t];
             if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
 
+                safemodeCheck(Game.spawns[title]);
                 rampartCheck(Game.spawns[title]);
                 //        safemodeCheck(Game.spawns[title]);
 

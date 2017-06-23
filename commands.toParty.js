@@ -58,11 +58,20 @@ var mageParty = [
 ];
 
 var warParty = [
-    ['fighter', require('army.fighter'), 2, 11],
-    ['first', require('role.first'), 1, 4],
-    //    ['demolisher', require('army.demolisher'), 0, 1],
-    ['ranger', require('army.ranger'), 1, 1],
-    ['healer', require('army.healer'), 1, 6] // Healer    
+    ['first', require('role.first'), 0, 4],
+    ['scientist', require('role.scientist'), 0, 3],
+    ['ranger', require('army.ranger'), 5, 1],
+//    ['fighter', require('army.fighter'), 0, 11],
+//    ['demolisher', require('army.demolisher'), 0, 2],
+    ['healer', require('army.healer'), 2, 6] // Healer    
+];
+var warParty2 = [
+    //    ['first', require('role.first'), 0, 4],
+    //    ['scientist', require('role.scientist'), 0, 3],
+    ['ranger', require('army.ranger'), 0, 1],
+    ['fighter', require('army.fighter'), 0, 11],
+    ['demolisher', require('army.demolisher'), 0, 2],
+    ['healer', require('army.healer'), 0, 6] // Healer    
 ];
 // ID: 5836bb2241230b6b7a5b9a1f 8,6 e24s76
 
@@ -80,7 +89,7 @@ var recontrolParty = [
     ['recontroller', require('army.recontroller'), 1, 0]
 ];
 var killParty = [
-    ['ranger', require('army.ranger'), 1, 3]
+    ['ranger', require('army.ranger'), 1, 1]
     //    ['Acontroller', require('army.controller'), 1, 0]
 ];
 
@@ -128,9 +137,9 @@ function getCurrentParty(flag) {
 
         case 'upgradeRoom':
             return upgradeRoomParty;
-
-        case 'warparty1':
         case 'warparty2':
+            return warParty2;
+        case 'warparty1':
         case 'warparty3':
             return warParty;
 
@@ -214,10 +223,9 @@ function getSpawnCreating(flag) {
     switch (flag.name) {
         //    case 'scout2' :
         case 'warparty1':
-            return 'W4S93';
-
+            return 'E38S72';
         case 'warparty2':
-            return 'E28S77';
+            return 'E23S75';
 
         case 'warparty3':
         case 'demo':
@@ -318,7 +326,7 @@ function returnClosestRoom(roomName) {
 function findParty(flag) {
     var currentParty = getCurrentParty(flag);
     var total = [];
-    //let report = flag.name + " Party:";
+    let report = flag.name + " Party:";
 
     for (var i in currentParty) {
         total[currentParty[i][_name]] = 0;
@@ -339,11 +347,10 @@ function findParty(flag) {
                 }
             }
         }
-        //                   function addFromCreateStack(totalCreeps,role,spawn) {
-  //      report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::';
+        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::';
 
     }
-//    console.log(report);
+    console.log(report);
 
     return total;
 }

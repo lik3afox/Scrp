@@ -17,40 +17,30 @@ var roleParent = require('role.parent');
 function doAttack(creep) {
     let target;
     switch (creep.room.name) {
-        case "E37S79":
-            target = Game.getObjectById('58a84f9cff111d524e669e8f');
-            if (target !== null) {
-                if (creep.pos.isNearTo(target)) {
-                    creep.dismantle(target);
-                }
-            } else {
-                target = Game.getObjectById('58a56eba4d5d993ffadd2496');
+        case "E15S63":
+            var E18S64targets = ['590e45817f0a72187ae0ceb6'];
+            for (var a in E18S64targets) {
+                target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
+                    if (creep.pos.isNearTo(target)) {
+                        creep.dismantle(target);
+                        break;
+                    }
+                }
+            }
+             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+            if (bads.length > 0) {
+                creep.dismantle(bads[0]);
+                break;
+            } 
+            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES,1);
+            if (bads.length > 0) {
+                creep.dismantle(bads[0]);
+                break;
+            } 
 
-                    if (creep.pos.isNearTo(target)) {
-                        creep.dismantle(target);
-                    }
-                }
-            }
-            //        return true;
             break;
-        case "E17S76":
-            target = Game.getObjectById('58677af00d89403c0f3cea15');
-            if (target !== null) {
-                if (creep.pos.isNearTo(target)) {
-                    creep.dismantle(target);
-                }
-            } else {
-                target = Game.getObjectById('588893b8dc89f23ad43c3d52');
-                if (target !== null) {
-                    if (creep.pos.isNearTo(target)) {
-                        creep.dismantle(target);
-                    }
-                }
-            }
-            creep.say('yoyo');
-            //            return true;
-            break;
+
 
     }
     return false;
@@ -74,8 +64,8 @@ class demolisherClass extends roleParent {
         } else {
             creep.memory.death = true;
         }
-        if (creep.memory.level == 1) {
-            if (super.boosted(creep, ['XZHO2', 'XGHO2'])) {
+        if (creep.memory.level == 2) {
+            if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XZH2O'])) {
                 return;
             }
         }

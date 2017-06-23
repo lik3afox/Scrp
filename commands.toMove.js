@@ -44,11 +44,11 @@ function moveToWayFlag(creep) {
     creep.say('way' + creep.moveTo(wayflag, { reusePath: 40, ignoreRoads: true }));
     //    creep.moveTo(wayflag);
 
-    var inRange = creep.pos.findInRange(FIND_FLAGS, 1, {
-        filter: (flag) => {
+    var inRange = creep.pos.findInRange(FIND_FLAGS, 1);
+    inRange = _.filter(inRange,
+        function(flag) {
             return (flag.color == FLAG.WAYPOINT);
-        }
-    });
+        });
 
     if (inRange.length > 0) { // if through the portal...
         creep.memory.waypoint = true;

@@ -247,7 +247,7 @@ class roleTower {
             let zz = Game.flags[named];
             if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
                 // SO we should just repair and make it longer
-                if (zz.memory.invaderTimed > 750) {
+                if (zz.memory.invaderTimed > 375) {
                     repairRampart(towers);
                     return;
                 }

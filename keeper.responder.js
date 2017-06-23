@@ -25,7 +25,7 @@ var movement = require('commands.toMove');
 var boost = [];
 
 function getHostiles(creep) {
-    let range = 10;
+    let range = 4;
     let zzz = creep.pos.findInRange(creep.room.hostilesHere(), range);
     //    let sources = creep.pos.findInRange(zzz, 3);
     //    if (sources.length > 0)   return zzz;

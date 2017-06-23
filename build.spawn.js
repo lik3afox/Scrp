@@ -143,7 +143,7 @@ var spawn4Module = [ // Room E26S77 Spawn 5
     ['minHarvest', require('role.mineral'), 1, 4],
     ['scientist', require('role.scientist'), 0, 4],
     ['nuker', require('role.nuker'), 1, 4],
-    ['wallwork', require('role.wallworker'), 1, 3],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['harvester', require('role.harvester'), 1, 2]
 
@@ -154,7 +154,7 @@ var spawn5Module = [
     ['scientist', require('role.scientist'), 0, 4],
     ['linker', require('role.linker'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 5],
-    ['wallwork', require('role.wallworker'), 1, 4],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['minHarvest', require('role.mineral'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2]
 
@@ -202,7 +202,7 @@ var E35S73Module = [ // Spawn11 Room E28S77
     ['minHarvest', require('role.mineral'), 1, 4],
     ['nuker', require('role.nuker'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['wallwork', require('role.wallworker'), 1, 4],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2]
 
 
@@ -232,7 +232,7 @@ var E33S76Module = [
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['scientist', require('role.wallworker'), 0, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
-    ['wallwork', require('role.wallworker'), 1, 3],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2]
 ];
 
@@ -241,7 +241,7 @@ var W4S93Module = [
     ['linker', require('role.linker'), 1, 3],
     ['homeDefender', require('role.defender2'), 1, 6],
     ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['wallwork', require('role.wallworker'), 1, 3],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['scientist', require('role.wallworker'), 0, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2]
@@ -252,13 +252,19 @@ var E38W75Module = [ // E37S75
     ['linker', require('role.linker'), 1, 3],
     ['harvester', require('role.harvester'), 1, 2],
     ['scientist', require('role.scientist'), 0, 3],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['nuker', require('role.nuker'), 1, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7]
 
 ];
 
-var E21S78Module = [];
+var E21S78Module = [
+    ['first', require('role.first'), 0, 0],
+    ['upbuilder', require('role.upbuilder'), 0, 1],
+    ['harvester', require('role.harvester'), 0, 2],
+    ['linker', require('role.linker'), 0, 3]
+];
 
 var E38S72Module = [
     ['first', require('role.first'), 2, 3],
@@ -774,7 +780,7 @@ function getCurrentModule(spawn) {
     if (spawn.name == 'W4S93') {
         return W4S93Module;
     }
-    if (spawn.name == 'E21S78') {
+    if (spawn.name == 'Spawn39') {
         return E21S78Module;
     }
     if (spawn.name == 'E38S72') {
@@ -1086,11 +1092,12 @@ class theSpawn {
                 }
                 var type = allModule.length;
                 while (type--) {
-
+                    if (Game.creeps[name].memory.role == 'wallworker') {
+                        Game.creeps[name].memory.role = 'upbuilder';
+                    }
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
                         //                      if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
                         //                    if (countCPU) { start = Game.cpu.getUsed(); }
-
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }

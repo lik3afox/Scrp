@@ -530,7 +530,7 @@ function giveMinerals(terminal, mineral, amount) {
 
     //              let sentResult = target.send(mineral, amount, targetRoom, '1zz');               
     //if(true)              console.log('Sending Minerals:',target.pos.roomName,mineral,amount, 'azz');
-    if (target !== null) {
+    if (target !== undefined) {
         let sender = target.pos.roomName;
         if (target.store[mineral] < 100) return;
         if (amount === undefined) {
@@ -576,34 +576,34 @@ function energyCheck(terminal) {
     return false;
 }
 
-function getMostTerminal(mineralz,target) {
-let highest = 0;
-var bested;
-var e;
-var mineral = mineralz.toLowerCase();
-if(target === undefined) {
-	e = terminals.length;
-    while (e--) {
-            let tmp = Game.getObjectById(terminals[e]);
-            if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest) {
-                highest = tmp.store[mineral];
-                bested = tmp;
-            }
-    }
-    return bested;
-
-} else {
-    for (e in terminals) {
-        if (target.id != terminals[e]) {
+function getMostTerminal(mineralz, target) {
+    let highest = 0;
+    var bested;
+    var e;
+    var mineral = mineralz.toLowerCase();
+    if (target === undefined) {
+        e = terminals.length;
+        while (e--) {
             let tmp = Game.getObjectById(terminals[e]);
             if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest) {
                 highest = tmp.store[mineral];
                 bested = tmp;
             }
         }
+        return bested;
+
+    } else {
+        for (e in terminals) {
+            if (target.id != terminals[e]) {
+                let tmp = Game.getObjectById(terminals[e]);
+                if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest) {
+                    highest = tmp.store[mineral];
+                    bested = tmp;
+                }
+            }
+        }
+        return bested;
     }
-    return bested;
-}
 
 }
 
@@ -636,25 +636,25 @@ function doDebt() {
     var giver = getMostTerminal(Debt.type);
 
     var transferAmount = 1000;
-	if(giver === undefined) {
-		console.log('ERROR in DEBT',Debt.type,Debt.room,Debt.amount);
-		return false;
-	}
-    if(giver.store[Debt.type] < transferAmount*3) {
-    	console.log('Error in Debt, not enough funds');
-    	return false;
+    if (giver === undefined) {
+        console.log('ERROR in DEBT', Debt.type, Debt.room, Debt.amount);
+        return false;
+    }
+    if (giver.store[Debt.type] < transferAmount * 3) {
+        console.log('Error in Debt, not enough funds');
+        return false;
     }
 
 
-	var result = giver.send(RESOURCE_ENERGY, transferAmount, Debt.room, 'Debt@'+Debt.amount);
-	if ( result == OK) {
+    var result = giver.send(RESOURCE_ENERGY, transferAmount, Debt.room, 'Debt@' + Debt.amount);
+    if (result == OK) {
         Debt.amount -= transferAmount;
     }
-    if(Debt.amount <= 0) {
-    	console.log(result,'Debt COMPLETED!!',Debt.room,Debt.type);
-    	Memory.debts.unshift();
+    if (Debt.amount <= 0) {
+        console.log(result, 'Debt COMPLETED!!', Debt.room, Debt.type);
+        Memory.debts.unshift();
     } else {
-    console.log(result,'Debt Sending',Debt.room,'sending:',Debt.type,'From:',giver.room.name,'Amount:',transferAmount,'Debt@',Debt.amount);
+        console.log(result, 'Debt Sending', Debt.room, 'sending:', Debt.type, 'From:', giver.room.name, 'Amount:', transferAmount, 'Debt@', Debt.amount);
 
     }
     return true;
@@ -766,12 +766,13 @@ class roleTerminal {
         makeMineralOrder();
         cleanUpOrders();
         Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
-                doDebt(); // Send energy to a target
+        doDebt(); // Send energy to a target
 
         //            Memory.termRun = 10;
         for (var e in terminals) {
             let terminal = Game.getObjectById(terminals[e]);
             if (terminal !== null) {
+                if (!Memory.war)
                     newTradeEnergy(terminal);
                 //          focusEnergy(terminal); Removed
                 //            forEveryTerminal(terminal);

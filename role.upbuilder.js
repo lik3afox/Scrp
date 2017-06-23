@@ -101,6 +101,9 @@ function getSpot(roomName) {
 class roleUpbuilder extends roleParent {
 
     static levels(level) {
+        if (Memory.war && level == 7) {
+            return classLevels[6];
+        }
         if (level > classLevels.length - 1)
             level = classLevels.length - 1;
         return classLevels[level];
@@ -126,22 +129,28 @@ class roleUpbuilder extends roleParent {
         }
 
 
-        if (creep.ticksToLive > 1450 && creep.room.controller.level == 8) {
-            let zz;
-            if (creep.room.name == 'E37S75') {
-                zz = super.boosted(creep, ['XGH2O']);
-            } else {
-                zz = super.boosted(creep, ['GH']);
-            }
-            if (zz) {
-                return;
-            }
-
+        if (Memory.war && creep.ticksToLive < 1300) {
+            require('role.wallworker').run(creep);
+            return;
         }
+        if (!Memory.war) {
+            if (creep.ticksToLive > 1450 && creep.room.controller.level == 8) {
+                let zz;
+                if (creep.room.name == 'E37S75') {
+                    zz = super.boosted(creep, ['XGH2O']);
+                } else {
+                    zz = super.boosted(creep, ['GH']);
+                }
+                if (zz) {
+                    return;
+                }
 
-        if (creep.room.name == 'E33S76' && creep.ticksToLive > 1400 && creep.room.controller.level !== 8) {
-            if (super.boosted(creep, ['XGH2O'])) {
-                return;
+            }
+
+            if (creep.room.name == 'E33S76' && creep.ticksToLive > 1400 && creep.room.controller.level !== 8) {
+                if (super.boosted(creep, ['XGH2O'])) {
+                    return;
+                }
             }
         }
         if (super.depositNonEnergy(creep)) return;

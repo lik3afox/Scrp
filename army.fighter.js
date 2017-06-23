@@ -54,41 +54,57 @@ function findNewParty(creep) {
     return false;
 }
 
+var E18S64targets = ['58f844ac24da03916bf3b00b', '58efba5cd63a0941a119c94f'];
+
 function doAttack(creep) {
     let target;
+    var a;
+    var bads;
     switch (creep.room.name) {
-        case "W11S97":
-            target = Game.getObjectById('5911a814d7c0ee551e9214c8');
-            if (target !== null) {
-                if (creep.pos.isNearTo(target)) {
-                    creep.attack(target);
-                }
-            } else {
-                target = Game.getObjectById('590e400df39a15945f06c3e2');
+        case "E18S64":
+            var E18S64targets = ['58ca9687c9da56fb47768663', '58efba5cd63a0941a119c94f'];
+            for ( a in E18S64targets) {
+                target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
                     if (creep.pos.isNearTo(target)) {
                         creep.attack(target);
+                        break;
                     }
                 }
             }
+             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+            if (bads.length > 0)
+                creep.attack(bads[0]);
+
             break;
-        case "E17S76":
-            target = Game.getObjectById('58677af00d89403c0f3cea15');
-            if (target !== null) {
-                if (creep.pos.isNearTo(target)) {
-                    creep.attack(target);
-                }
-            } else {
-                target = Game.getObjectById('588893b8dc89f23ad43c3d52');
+
+        case "E15S63":
+    //        var E16S63targets = [];
+//            for (var i in E16S63targets) {
+                target = Game.getObjectById('590e45817f0a72187ae0ceb6');
                 if (target !== null) {
                     if (creep.pos.isNearTo(target)) {
-                        creep.attack(target);
+                    creep.say(creep.attack(target)+'zz');
+                        
+                        break;
                     }
-                }
-            }
-            break;
+                } 
+  //          }
+             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+            if (bads.length > 0) {
+                creep.attack(bads[0]);
+                break;
+            } 
+            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES,1);
+            if (bads.length > 0) {
+                creep.attack(bads[0]);
+                break;
+            } 
+
+
     }
 }
+
 
 function returnClosestSpawn(roomName) {
     var distance = 100;
@@ -228,7 +244,7 @@ class fighterClass extends roleParent {
 
         enemy = _.filter(enemy,
             function(object) {
-                return (object.owner.username != 'NobodysNightmare' && object.owner.username != 'admon' && object.owner.username != 'lolzor');
+                return (object.owner.username != 'daboross' && object.owner.username != 'NobodysNightmare' && object.owner.username != 'admon' && object.owner.username != 'lolzor');
             }
         );
 

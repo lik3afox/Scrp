@@ -173,9 +173,13 @@ function labDo(roomName, created, labz, laby) {
         //        console.log('created 0 ', created, labz, laby, roomName);
         return false;
     }
+    if(labs[created - 1] === undefined || labs[labz - 1] === undefined|| labs[laby - 1]===undefined ) {
+        console.log('undefined Lab');
+        return false;
+    }
     //    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
-    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
+    if (  Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
         //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
         return false;
     }
@@ -209,6 +213,262 @@ function labReady(roomName, labz) {
     return false;
 }
 
+var muster = [{
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XGHO2',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XZH2O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XLHO2',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XUH2O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XZHO2',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XKHO2',
+    amount: 2700,
+    emptied: false
+}];
+
+// Attack
+var XUH2O = [];
+
+// Range Attack
+var XKHO2 = [];
+
+// MOVE
+var XZHO2 = [{
+    id: 'getReplaced',
+    resource: 'Z',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'ZO',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'ZHO2',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XZHO2',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XZHO2',
+    amount: 1,
+    emptied: true
+}];
+
+// DISMANTLE
+var XZH2O = [{
+    id: 'getReplaced',
+    resource: 'Z',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'ZH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2500,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'ZH2O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XZH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XZH2O',
+    amount: 1,
+    emptied: true
+}];
+
+// TOUGH
+var XGHO2 = [];
+
+// HAL
+var XLHO2 = [];
+
+function labMode(roomName, mode, labs) {
+    switch (mode) {
+        case 'muster':
+            Game.rooms[roomName].memory.labMode = 'muster';
+            for (var a in muster) {
+                if (labs[a] !== undefined)
+                    muster[a].id = labs[a].id;
+            }
+
+            return muster;
+        case 'XZH2O':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (var e in XZH2O) {
+                XZH2O[e].id = labs[e].id;
+            }
+
+            return XZH2O;
+
+        case 'XZHO2':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (var b in XZHO2) {
+                XZHO2[b].id = labs[b].id;
+            }
+
+        return XZHO2;
+        default:
+        var count = {};
+        for(var c in labs) {
+            if(count[c] === undefined) {
+                count[c] = 0;
+            }
+            count[c]++;
+            if(count[c] > 1) {
+                labs[c].resource = 'UH'; 
+            }
+        }
+        return labs;
+    }
+}
+//Game.rooms[roomName].memory.labMix.push([7,2,6])
+
+var E33S76WarMix = [
+    [3, 1, 2],
+    [4, 2, 5],
+    [6, 3, 4],
+    [9, 7, 6],
+    [10, 7, 6]
+];
+
+
+function getLabMixes(roomName) {
+    if (Memory.war) {
+        var newMixes = [];
+        switch (roomName) {
+            case 'E33S76':
+            case 'E26S77':
+                return E33S76WarMix;
+            case 'E38S72':
+            case 'E23S75':
+            case 'E28S71':
+            case 'E26S73':
+
+                return []; // Mustering rooms.
+            default:
+                return Game.rooms[roomName].memory.labMix;
+        }
+    } else {
+        return Game.rooms[roomName].memory.labMix;
+    }
+}
+
+function setLabs(roomName, labs) {
+    /*    var warLab = {
+            id: lab.id,
+            emptied: lab.resource,
+            amount: lab.resource,
+            resource: lab.resource
+        }; */
+
+    switch (roomName) {
+        case 'E26S77':
+            return labMode(roomName, 'XZHO2', labs);
+        case 'E26S73':
+        case 'E38S72':
+        case 'E28S71':
+            return labMode(roomName, 'muster', labs);
+        case 'E33S76':
+            return labMode(roomName, 'XZH2O', labs);
+        case 'E23S75':
+
+            return labMode(roomName, 'muster', labs);
+        case 'E35S83':
+            return labMode(roomName, 'light',labs);
+
+        default:
+            return labs;
+    }
+    //    console.log('2', labs.length);
+    return labs;
+}
+
 function returnLabs(roomName) {
     if (Game.rooms[roomName].memory.labs === undefined) {
         switch (roomName) {
@@ -220,7 +480,28 @@ function returnLabs(roomName) {
                 return [];
         }
     } else {
-        return Game.rooms[roomName].memory.labs;
+        if (Memory.war) {
+            var currentLabs = Game.rooms[roomName].memory.labs;
+            var warLabs = [];
+            //            var e = currentLabs.length;
+            for (var e in currentLabs) {
+                var lab = currentLabs[e];
+                var warLab = {
+                    id: lab.id,
+                    emptied: lab.emptied,
+                    amount: lab.amount,
+                    resource: lab.resource
+                };
+                warLabs.push(warLab);
+            }
+
+            //return ;
+            return setLabs(roomName, warLabs);
+        } else {
+            return Game.rooms[roomName].memory.labs;
+        }
+
+
     }
 
 }
@@ -280,6 +561,8 @@ function updateRoomMember(roomName) {
     //    }
 
 }
+
+
 
 //5836bb2241230b6b7a5b9a4d E35S75 43,15
 class buildLab {
@@ -419,20 +702,9 @@ class buildLab {
             }
             updateRoomMember(roomName);
 
-
-            if (Game.rooms[roomName].memory.labMix === undefined) {
-                Game.rooms[roomName].memory.labMix = [];
-                Game.rooms[roomName].memory.labMix.push([1, 2, 3]);
-                /*    
-                    Game.rooms[roomName].memory.labMix.push([7,2,6])
-                    Game.rooms[roomName].memory.labMix.push([4,5,9])
-                    Game.rooms[roomName].memory.labMix.push([8,5,9])
-                    Game.rooms[roomName].memory.labMix.push([10,5,9])*/
-                //    Game.rooms[roomName].memory.labMix.push([10,4,7])
-            }
-
-            for (var a in Game.rooms[roomName].memory.labMix) {
-                let form = Game.rooms[roomName].memory.labMix[a];
+            var labMix = getLabMixes(roomName);
+            for (var a in labMix) {
+                let form = labMix[a];
                 if (labDo(roomName, form[0], form[1], form[2])) {}
             }
 

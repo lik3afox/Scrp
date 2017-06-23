@@ -1,6 +1,6 @@
 var party = require('commands.toParty');
 var FLAG = require('foxGlobals');
-var delayBetweenScan = 15;
+var delayBetweenScan = 5;
 
 /*
 function getRoomFlag(creep) {
@@ -190,7 +190,7 @@ class buildFlags {
 
                 case COLOR_RED:
                     doDefendThings(flag);
-//                    console.log('defend flag @', flag.pos);
+                    //                    console.log('defend flag @', flag.pos);
                     if (Memory.showInfo > 1)
                         defendTotal++;
                     break;
