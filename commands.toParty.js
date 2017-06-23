@@ -61,8 +61,8 @@ var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 5, 1],
-//    ['fighter', require('army.fighter'), 0, 11],
-//    ['demolisher', require('army.demolisher'), 0, 2],
+    //    ['fighter', require('army.fighter'), 0, 11],
+    //    ['demolisher', require('army.demolisher'), 0, 2],
     ['healer', require('army.healer'), 2, 6] // Healer    
 ];
 var warParty2 = [
@@ -107,10 +107,15 @@ var upgradeRoomParty = [
 // Also have it so the upgrader also repairs the wall
 // If there's a mineral harvest - have him repair too.
 
-var rampartParty = [
+var rampartParty = [ // This is what currently si in effect, but 
+    // Rampart Will be range,repair,tower,and other things needed that is not attack.
     ['tower', require('role.tower'), 1, 0],
     ['rampartGuard', require('army.rampartGuard'), 1, 0]
+];
 
+// This is a rampart dude that is placed and will always go to that location. 
+var soloGuard = [
+    ['rampartGuard', require('army.rampartGuard'), 1, 0]
 ];
 // This party is created and sent to the red flag when done. 
 
@@ -130,6 +135,9 @@ function getCurrentParty(flag) {
     }
     if (flag.name.substr(0, 5) == 'rampa') {
         return rampartParty;
+    }
+    if (flag.name.substr(0, 2) == 'RA') {
+        return soloGuard;
     }
     switch (flag.name) {
         case 'test':
@@ -217,6 +225,9 @@ function getSpawnCreating(flag) {
 
     // Rampart Defense, gotta create it where the flag appears.
     if (flag.name.substr(0, 5) == 'rampa') {
+        return flag.room.name;
+    }
+    if (flag.name.substr(0, 2) == 'RA') {
         return flag.room.name;
     }
 

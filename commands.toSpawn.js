@@ -178,14 +178,14 @@ class SpawnInteract {
         }
     }
 
-    static addToWarStack(creep) {
+    static addToWarStack(newCreep) {
         // for now it will only created at homeEmpire.
         for (var i in Game.spawns) {
-            if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == creep.spawn) {
-                creep.memory.home = Game.spawns[i].room.name;
-                creep.memory.parent = Game.spawns[i].id;
+            if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == newCreep.room) {
+                newCreep.memory.home = Game.spawns[i].room.name;
+                newCreep.memory.parent = Game.spawns[i].id;
                 if (Game.spawns[i].memory.warCreate !== undefined)
-                    Game.spawns[i].memory.warCreate.push(creep);
+                    Game.spawns[i].memory.warCreate.push(newCreep);
                 //                console.log(Game.spawns[i], 'adding to stack', Game.spawns[i].name, creep);
             }
 

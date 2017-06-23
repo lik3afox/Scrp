@@ -59,6 +59,7 @@ class roleWallWorker extends roleParent {
                 }
             } else {
                 constr.moveToRepairWall(creep);
+
             }
 
             if (creep.carry.energy === 0) {

@@ -63,6 +63,7 @@
             });
 
             if (nearRampart.length > 0) {
+
                 var named = 'rampartD' + spawn.room.name;
                 if (Game.flags[named] === undefined) {
                     console.log('lets place a flag here for defense');
@@ -151,15 +152,40 @@
             }
         }
     }
+
+    function createParty(report) {
+        // With the report - we will create an array that is filled with the requirement part.
+        // 2/3 melee, 1 repair, 1 range
+    }
+
+    function analyzeHostiles(bads) {
+        return {};
+    }
+
     var loaded = Game.time;
+    var ALLIES = ['admon', 'zolox', 'Yilmas', 'Baj', 'Zeekner', 'Vlahn', 'Regnare'];
 
     function doRoomReport(room) {
         bads = room.find(FIND_HOSTILE_CREEPS);
-        bads = _.filter(bads,function(creep) {
+        bads = _.filter(bads, function(creep) {
             return creep.owner.username !== 'Invader';
         });
-if(bads.length > 0)
-console.log('Bad guys found @',room,'from:',bads.owner.username);
+        if (bads.length > 0)
+            console.log('Bad guys found @', room, 'from:', bads.owner.username);
+
+        room.memory.alert = true; // This will force walls/ramparts to start looking at damage.
+        // Determine Room Type - If the walls are next to entrace or not. 
+        var roomDefense;
+        if (roomDefense !== undefined) {
+            // Do close to exit defense
+        } else {
+            // DO normal defense
+        }
+        var report = analyzeHostiles(bads); // Here we get a report of the bads.
+
+        // Create defend party
+        var defendParty = createParty(report);
+
     }
 
     function memoryStatsUpdate() {
@@ -239,7 +265,7 @@ console.log('Bad guys found @',room,'from:',bads.owner.username);
         }
         // for creeps.
 
-
+        rampartCheck(Game.spawns.Spawn1);
         var total = 0;
         spawnsDo.runCreeps();
         var spawnReport = {};
@@ -248,15 +274,15 @@ console.log('Bad guys found @',room,'from:',bads.owner.username);
         var title;
         while (t--) { // Start of spawn Loop
 
-            if(Memory.war) {
-                if(Game.spawns[title] !== undefined && Game.spawns[title].room !== undefined)
-                doRoomReport(Game.spawns[title].room );
+            if (Memory.war) {
+                if (Game.spawns[title] !== undefined && Game.spawns[title].room !== undefined)
+                    doRoomReport(Game.spawns[title].room);
             }
             title = keys[t];
             if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
 
-                safemodeCheck(Game.spawns[title]);
-                rampartCheck(Game.spawns[title]);
+                //                safemodeCheck(Game.spawns[title]);
+
                 //        safemodeCheck(Game.spawns[title]);
 
                 ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
@@ -373,7 +399,7 @@ console.log('Bad guys found @',room,'from:',bads.owner.username);
         }
         observer.run();
         Memory.totalPowerProcessed = 0;
-        //        power.run();
+        power.run();
         globalCreep();
         doUpgradeRooms();
         memoryStatsUpdate();

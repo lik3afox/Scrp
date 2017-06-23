@@ -130,7 +130,7 @@ class thiefClass extends roleParent {
                 if (creep.pos.isNearTo(par)) {
                     creep.drop(RESOURCE_ENERGY);
                 } else {
-                    creep.moveTo(par);
+                    creep.moveTo(par, { reusePath: 75 });
                 }
 
             }
@@ -149,7 +149,7 @@ class thiefClass extends roleParent {
             if (creepCarry == creep.carryCapacity && creep.memory.home != creep.room.name) {
                 var parent = Game.getObjectById(creep.memory.parent);
                 if (!super.avoidArea(creep)) {
-                    creep.moveTo(parent);
+                    creep.moveTo(parent, { reusePath: 75 });
                 }
             } else {
                 if (!super.avoidArea(creep)) {
@@ -212,7 +212,7 @@ class thiefClass extends roleParent {
                 return;
             } else {
                 if (!super.avoidArea(creep)) {
-                    creep.moveMe(target);
+                    creep.moveMe(target, { reusePath: 75 });
                 }
             }
 
@@ -228,7 +228,7 @@ class thiefClass extends roleParent {
                 creep.drop(RESOURCE_ENERGY);
             } else {
                 if (!super.avoidArea(creep)) {
-                    creep.moveMe(parentz, { reusePath: 20 });
+                    creep.moveMe(parentz, { reusePath: 75 });
                 }
             }
 

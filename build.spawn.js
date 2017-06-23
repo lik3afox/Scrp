@@ -99,6 +99,7 @@ var upgradeModule = [
     ['upbuilder', require('role.upbuilder'), 0, 7],
     ['builder', require('role.builder'), 0, 5],
     ['scientist', require('role.scientist'), 0, 4],
+    ['wallwork', require('role.wallworker'), 3, 5],
     ['linker', require('role.linker'), 1, 10]
 ];
 
@@ -252,7 +253,7 @@ var E38W75Module = [ // E37S75
     ['linker', require('role.linker'), 1, 3],
     ['harvester', require('role.harvester'), 1, 2],
     ['scientist', require('role.scientist'), 0, 3],
-    ['wallwork', require('role.wallworker'), 1, 5],
+    ['wallwork', require('role.wallworker'), 2, 5],
     ['nuker', require('role.nuker'), 1, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7]
@@ -1096,12 +1097,12 @@ class theSpawn {
                         Game.creeps[name].memory.role = 'upbuilder';
                     }
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        //                      if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
-                        //                    if (countCPU) { start = Game.cpu.getUsed(); }
+                        if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
+                        if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }
-                        //                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
+                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
 
                         break;
                     }
@@ -1509,6 +1510,9 @@ class theSpawn {
                 }
 
                 break;
+            case "guard":
+
+
             case "boss":
                 var BUILD = {
                     source: creep.memory.goal,

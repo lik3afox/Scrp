@@ -158,21 +158,34 @@ class partyInteract {
         for (var e in currentParty) {
             for (var i in totalParty) {
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
-
+                    let home = getSpawnCreating(flag);
                     let temp = {
                         build: currentParty[e][_require].levels(currentParty[e][_level]),
-                        spawn: getSpawnCreating(flag), // This will return a room, and that room will add to alphaSpawn warstack.
+                        room: home, // This will return a room, and that room will add to alphaSpawn warstack.
                         name: undefined,
                         memory: {
                             role: currentParty[e][_name],
-                            home: 'default',
+                            home: home,
                             party: flag.name,
                             parent: 'default'
                         }
                     };
+                    var spawn = _.filter(Game.spawns, function(sp) {
+                        return sp.room.name == temp.room && sp.memory.alphaSpawn;
+                    });
+                    if (spawn.length > 0) {
+                        console.log('using new');
+                        temp.parent = spawn[0].id;
+                        spawn[0].memory.expandCreate.unshift(temp);
+                    } else {
+                        console.log('using old');
+                        let toSpawn = require('commands.toSpawn');
+                        toSpawn.addToWarStack(temp);
+                    }
 
-                    let toSpawn = require('commands.toSpawn');
-                    toSpawn.addToWarStack(temp);
+                    //                    toSpawn.
+
+
                     totalParty[i]++;
 
                 }

@@ -116,6 +116,9 @@ class transport extends roleParent {
             return;
         }
         super.calcuateStats(creep);
+        if (creep.room.name == 'E27S75' || creep.room.name == 'E37S75' && creep.carryTotal !== 0) {
+            super._constr.toRepairWall(creep);
+        }
         if (super.doTask(creep)) {
             return;
         }
@@ -127,7 +130,7 @@ class transport extends roleParent {
             creep.memory.gohome = false;
         }
 
-        let carry = _.sum(creep.carry);
+        let carry = creep.carryTotal;
 
         if (!creep.memory.gohome && carry > creep.carryCapacity - 45) {
             creep.memory.gohome = true;
@@ -270,7 +273,6 @@ class transport extends roleParent {
                                 return;
                             }
                         }
-
                         if (!super.guardRoom(creep)) {
                             creep.moveMe(_goal, {
                                 ignoreRoads: _ignoreRoad,

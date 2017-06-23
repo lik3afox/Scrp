@@ -527,24 +527,17 @@ class StructureInteract {
         }
         return true;
     }
-
-    static moveToRepairWall(creep) {
-        /*
-                let targets = creep.room.find(FIND_STRUCTURES, { emily? 
-                    filter: object => (object.structureType == STRUCTURE_WALL)
-                }).sort((a, b) => a.hits - b.hits); */
+    static toRepairWall(creep) {
 
         if (creep.memory.wallTargetID === undefined) {
-            let targets = creep.room.find(FIND_STRUCTURES, {
-                filter: object => (object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART)
-            }).sort((a, b) => a.hits - b.hits);
+            let targets = creep.pos.findInRange(FIND_STRUCTURES, 3);
+            targets = _.filter(targets,
+                function(object) {
+                    return object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART;
+                }
+            ).sort((a, b) => a.hits - b.hits);
             if (targets.length > 0) {
-                //    for(var e in targets) {
-                //            if(targets[e].pos.y != 2 && targets[e].pos.roomName != 'E26S77') {
                 creep.memory.wallTargetID = targets[0].id;
-                //                break;                
-                //          }
-                //          }
             }
         }
 
@@ -553,9 +546,47 @@ class StructureInteract {
 
         if (target !== null) {
             creep.repair(target);
+            if (!creep.pos.inRangeTo(target, 3)) {
+                creep.memory.wallTargetID = undefined;
+            }
+        } else {
+            creep.memory.wallTargetID = undefined;
+        }
+    }
+    static moveToRepairWall(creep) {
+
+        if (creep.memory.wallTargetID === undefined) {
+            let targets = creep.room.find(FIND_STRUCTURES);
+            targets = _.filter(targets,
+                function(object) {
+                    return object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART;
+                }
+            ).sort((a, b) => a.hits - b.hits);
+
+            if (targets.length > 0) {
+                creep.memory.wallTargetID = targets[0].id;
+            }
+        }
+
+
+        let target = Game.getObjectById(creep.memory.wallTargetID);
+
+        if (target !== null) {
+            creep.repair(target);
+            if (target.hits < creep.memory.wallTargetHp - 300) {
+                if (target.structureType == STRUCTURE_WALL) {
+                    //creep.room.createConstructionSite(target.x, target.y, STRUCTURE_RAMPART);
+                }
+                if (target.structureType == STRUCTURE_RAMPART && target.hits < 100000) {
+                    //   creep.room.createConstructionSite(target.x, target.y, STRUCTURE_WALL);
+                }
+            }
+            creep.memory.wallTargetHp = target.hits;
+
             if (!creep.pos.inRangeTo(target, 3)) creep.moveTo(target);
         } else {
             creep.memory.wallTargetID = undefined;
+            creep.memory.wallTargetHp = 0;
         }
     }
 

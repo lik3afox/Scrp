@@ -12,7 +12,8 @@ Game.rooms.E29S79.terminal.send(RESOURCE_POWER, 10000, 'E37S75', 'trade');
 Game.rooms.E23S75.terminal.send(RESOURCE_ENERGY, 15000, 'E33S76', 'trade');
 
 
-Game.rooms.E27S74.terminal.send('H', 15777, 'E28S71', 'trade');
+Game.rooms.E35S73.terminal.send('K', 20777, 'E28S77', 'trade');
+
 
 Game.rooms.E28S71.terminal.send(RESOURCE_ENERGY, 1500000, 'E26S77', 'trade');
 

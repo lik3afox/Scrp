@@ -91,7 +91,17 @@ var maxMinerals = {
     'LO': 30000,
     'LH': 30000,
     'KO': 30000,
-    'KH': 30000
+    'KH': 30000,
+
+    'XUHO2': 100000,
+    'XUH2O': 100000,
+    'XZHO2': 100000,
+    'XZH2O': 100000,
+    'XLHO2': 100000,
+    'XLH2O': 100000,
+    'XKHO2': 100000,
+    'XKH2O': 100000
+
 
 };
 
@@ -173,13 +183,13 @@ function labDo(roomName, created, labz, laby) {
         //        console.log('created 0 ', created, labz, laby, roomName);
         return false;
     }
-    if(labs[created - 1] === undefined || labs[labz - 1] === undefined|| labs[laby - 1]===undefined ) {
+    if (labs[created - 1] === undefined || labs[labz - 1] === undefined || labs[laby - 1] === undefined) {
         console.log('undefined Lab');
         return false;
     }
     //    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
-    if (  Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
+    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
         //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
         return false;
     }
@@ -251,10 +261,110 @@ var muster = [{
 }];
 
 // Attack
-var XUH2O = [];
+var XUH2O = [{
+    id: 'getReplaced',
+    resource: 'U',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'UH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'UH2O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XUH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XUH2O',
+    amount: 1,
+    emptied: true
+}];
 
 // Range Attack
-var XKHO2 = [];
+var XKHO2 = [{
+    id: 'getReplaced',
+    resource: 'K',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'KO',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'KHO2',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XKHO2',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XKHO2',
+    amount: 1,
+    emptied: true
+}];
 
 // MOVE
 var XZHO2 = [{
@@ -363,10 +473,110 @@ var XZH2O = [{
 }];
 
 // TOUGH
-var XGHO2 = [];
+var XGHO2 = [{
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'GO',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2500,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'GHO2',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XGHO2',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGHO2',
+    amount: 1,
+    emptied: true
+}];
 
 // HAL
-var XLHO2 = [];
+var XLHO2 = [{
+    id: 'getReplaced',
+    resource: 'L',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LO',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2500,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LHO2',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LGHO2',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'LGHO2',
+    amount: 1,
+    emptied: true
+}];
 
 function labMode(roomName, mode, labs) {
     switch (mode) {
@@ -392,19 +602,19 @@ function labMode(roomName, mode, labs) {
                 XZHO2[b].id = labs[b].id;
             }
 
-        return XZHO2;
+            return XZHO2;
         default:
-        var count = {};
-        for(var c in labs) {
-            if(count[c] === undefined) {
-                count[c] = 0;
+            var count = {};
+            for (var c in labs) {
+                if (count[c] === undefined) {
+                    count[c] = 0;
+                }
+                count[c]++;
+                if (count[c] > 1) {
+                    labs[c].resource = 'UH';
+                }
             }
-            count[c]++;
-            if(count[c] > 1) {
-                labs[c].resource = 'UH'; 
-            }
-        }
-        return labs;
+            return labs;
     }
 }
 //Game.rooms[roomName].memory.labMix.push([7,2,6])
@@ -460,7 +670,7 @@ function setLabs(roomName, labs) {
 
             return labMode(roomName, 'muster', labs);
         case 'E35S83':
-            return labMode(roomName, 'light',labs);
+            return labMode(roomName, 'light', labs);
 
         default:
             return labs;

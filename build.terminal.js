@@ -81,7 +81,7 @@ function shareEnergy(terminal) {
     var currentLow = 1000000;
     for (var e in terminals) {
         let storage = Game.getObjectById(terminals[e]).room.storage;
-        if (storage !== null && storage !== undefined && storage.store[RESOURCE_ENERGY] < 800000) {
+        if (storage !== null && storage.store[RESOURCE_ENERGY] < 800000) {
             if (storage.store[RESOURCE_ENERGY] < currentLow) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
@@ -91,7 +91,7 @@ function shareEnergy(terminal) {
     if (lowestStore === undefined) return false;
 
 
-    let amount = lowestStore.store[RESOURCE_ENERGY] * 0.1;
+    let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
     let zz = terminal.send(RESOURCE_ENERGY, amount, lowestStore.room.name, 'Sharing Energy');
     console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
     return true;
@@ -127,11 +127,23 @@ function needEnergy(terminal) {
     }
 
     if (terminal.room.terminal.store[RESOURCE_POWER] > 45000) {
-        let amount = getAverageMineralPrice(RESOURCE_POWER, false);
-        if (amount !== undefined) {
-            if (!anyLikeOrder(RESOURCE_POWER, terminal.room.name)) {
+        if (!anyLikeOrder(RESOURCE_POWER, terminal.room.name)) {
+            let amount = getAverageMineralPrice(RESOURCE_POWER, false);
+            if (amount !== undefined) {
                 let qq = Game.market.createOrder(ORDER_SELL, RESOURCE_POWER, amount, 40000, terminal.room.name);
                 console.log(ORDER_SELL, RESOURCE_POWER, amount, 45000, terminal.room.name, 'current average price for power', qq);
+            }
+        } else if (terminal.room.terminal.store[RESOURCE_POWER] > 75000) {
+            var order = _.filter(Game.market.orders, function(o) {
+                return o.resourceType == RESOURCE_POWER && o.roomName == terminal.room.name && Game.time - o.created > 30000;
+            });
+            if (order.length > 0) {
+                console.log('switching average of order');
+                let amount = getAverageMineralPrice(RESOURCE_POWER, false);
+                if (amount !== undefined) {
+
+                    Game.market.changeOrderPrice(order[0].id, amount);
+                }
             }
         }
     }
@@ -795,15 +807,17 @@ class roleTerminal {
                 let zz = terminal.total;
                 needEnergy(terminal);
 
-                if (zz > 299000 && terminal.room.name != 'E33S76') {
+                if (zz > 299000) {
                     if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
                         if (!shareEnergy(terminal)) { // Moves energy around
                             if (Memory.terminalTarget !== undefined && Memory.terminalTarget != 'none') {
+                                newTradeEnergy(terminal);
                                 //                                  tradeEnergy(terminal);
                                 //                                }
                             }
                         }
                         //                        tradeEnergy(terminal);
+                        //                        newTradeEnergy(terminal);
                         tradeMineral(terminal);
                     }
                 }

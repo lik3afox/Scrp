@@ -33,26 +33,43 @@ class PowerInteract {
                 let powerS = Game.getObjectById(Game.rooms[e].memory.powerSpawnID);
                 if (powerS !== null) {
                     let room = Game.rooms[e];
-                    //                  console.log(powerS, powerS.power,powerS.energy);
-                    //                  console.log(room.terminal.store[RESOURCE_ENERGY] > 19000 ,room.storage.store[RESOURCE_ENERGY]>899000 );
-
                     if (room.memory.powerCount === undefined) room.memory.powerCount = 0;
 
-                    if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
-                        room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
-                    ) {
-                        //                        report = report + " " + room + "(" + room.memory.powerCount + ")";
-                        if (powerS.processPower() == OK) {
-                            room.memory.powerCount++;
-                            total++;
-                            powerS.room.visual.text("!", powerS.pos, {
-                                color: '#e42f43 ',
-                                stroke: '#000000 ',
-                                strokeWidth: 0.123,
-                                font: 0.5
-                            });
+                    if (!Memory.war) {
+                        if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
+                            room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
+                        ) {
+                            //                        report = report + " " + room + "(" + room.memory.powerCount + ")";
+                            if (powerS.processPower() == OK) {
+                                room.memory.powerCount++;
+                                total++;
+                                powerS.room.visual.text("!", powerS.pos, {
+                                    color: '#e42f43 ',
+                                    stroke: '#000000 ',
+                                    strokeWidth: 0.123,
+                                    font: 0.5
+                                });
+                            }
                         }
+                    } else {
+                        if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
+                            room.terminal.total > 299000 && room.storage.store[RESOURCE_ENERGY] > 999000
+                        ) {
+                            //                        report = report + " " + room + "(" + room.memory.powerCount + ")";
+                            if (powerS.processPower() == OK) {
+                                room.memory.powerCount++;
+                                total++;
+                                powerS.room.visual.text("!", powerS.pos, {
+                                    color: '#e42f43 ',
+                                    stroke: '#000000 ',
+                                    strokeWidth: 0.123,
+                                    font: 0.5
+                                });
+                            }
+                        }
+
                     }
+
 
                 } else {
                     Game.rooms[e].memory.powerSpawnID = undefined;
