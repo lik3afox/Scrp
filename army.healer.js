@@ -166,7 +166,6 @@ class healerClass extends roleParent {
             return object.hits < object.hitsMax;
         }).sort((a, b) => a.hits - b.hits);
 
-        creep.rangedMassAttack();
 
         //return;
         if (hurtz[0] !== undefined) {
@@ -176,6 +175,9 @@ class healerClass extends roleParent {
                 creep.rangedMassAttack();
             }
             if (creep.pos.inRangeTo(hurtz[0], 3) && !creep.pos.isNearTo(hurtz[0])) {}
+        } else if (creep.hits < creep.hitsMax) {
+            creep.heal(creep);
+            creep.memory.lastHealed = creep.id;
         } else {
             // heal last
             var last = Game.getObjectById(creep.memory.lastHealed);
@@ -183,15 +185,16 @@ class healerClass extends roleParent {
                 creep.heal(last);
             }
         }
+        movement.flagMovement(creep);
 
-        /*        let zz = Game.getObjectById('594efcdf92e7a6334d910b97');
-                if (zz !== null && zz.hits > zz.hitsMax - 100) {
-                    if (creep.pos.isNearTo(zz))
-                        creep.rangedAttack(zz);
-                } */
+        /*        let zz = Game.getObjectById('595082872cf123870e614e0d');
+        if (zz !== null && zz.hits > zz.hitsMax - 5) {
+            if (creep.pos.isNearTo(zz))
+                creep.rangedAttack(zz);
+            creep.heal(zz);
+        } * /
         creep.say(creep.memory.party);
         //  if(hurtz[0] == undefined)
-        movement.flagMovement(creep);
 
 
         /*        if (creep.room.name == 'E18S64') {

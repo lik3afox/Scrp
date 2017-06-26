@@ -693,9 +693,9 @@ function getLabMixes(roomName) {
             case 'E29S79':
             case 'E28S71':
             case 'E23S75':
+            case 'E26S73':
                 return E33S76WarMix;
             case 'E35S83':
-            case 'E26S73':
 
                 //            case 'E27S75':
 
@@ -722,7 +722,7 @@ function setLabs(roomName, labs) {
             //        case 'E26S77':
             //            return labMode(roomName, 'XZHO2', labs);
         case 'E26S73':
-            return labMode(roomName, 'muster', labs); //
+            return labMode(roomName, 'XLHO2', labs); //
         case 'E28S71':
             return labMode(roomName, 'XKHO2', labs);
         case 'E33S76':

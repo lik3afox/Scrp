@@ -112,7 +112,10 @@ function doAttack(creep) {
                 return o.owner.username != 'daboross' && o.owner.username != 'baj';
             });
 
-            if (bads.length === 0) {} else {
+            if (bads.length > 2) {
+                creep.rangedMassAttack();
+
+            } else {
                 if (bads[0] !== undefined) {
                     if (creep.pos.inRangeTo(bads[0], 3)) {
                         creep.rangedAttack(bads[0]);

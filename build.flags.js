@@ -23,7 +23,6 @@
         });
 
         flag.room.visual.circle(flag.pos.x, flag.pos.y, { radius: 15, opacity: 0.15, fill: 'ff0000' });
-        console.log(hostiles.length, 'WHATF');
         if (hostiles.length === 0) {
             flag.remove();
         } else {

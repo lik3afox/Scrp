@@ -582,16 +582,19 @@ class StructureInteract {
         let target = Game.getObjectById(creep.memory.wallTargetID);
 
         if (target !== null) {
-            creep.repair(target);
-            if (target.hits < creep.memory.wallTargetHp - 300) {
-                if (target.structureType == STRUCTURE_WALL) {
-                    //creep.room.createConstructionSite(target.x, target.y, STRUCTURE_RAMPART);
+            if (creep.repair(target) == OK) {
+                if (target.hits < creep.memory.wallTargetHp - 750) {
+                    if (target.structureType == STRUCTURE_WALL) {
+                        console.log('Wall Getting Damage');
+                        //creep.room.createConstructionSite(target.x, target.y, STRUCTURE_RAMPART);
+                    }
+                    if (target.structureType == STRUCTURE_RAMPART) {
+                        console.log('Rampart Getting Damage');
+                        //   creep.room.createConstructionSite(target.x, target.y, STRUCTURE_WALL);
+                    }
                 }
-                if (target.structureType == STRUCTURE_RAMPART && target.hits < 100000) {
-                    //   creep.room.createConstructionSite(target.x, target.y, STRUCTURE_WALL);
-                }
+                creep.memory.wallTargetHp = target.hits;
             }
-            creep.memory.wallTargetHp = target.hits;
 
             if (!creep.pos.inRangeTo(target, 3)) creep.moveTo(target);
         } else {
