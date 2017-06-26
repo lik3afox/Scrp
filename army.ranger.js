@@ -3,7 +3,10 @@
 
 var classLevels = [
     [MOVE, RANGED_ATTACK],
-    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK]
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
+        RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+    ]
 
 ];
 var boost = [RESOURCE_LEMERGIUM_OXIDE, 'KO'];
@@ -11,50 +14,62 @@ var movement = require('commands.toMove');
 var roleParent = require('role.parent');
 //STRUCTURE_POWER_BANK:
 
-function rangeAttack(creep,targets){
-            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);    
-                if (bads.length === 0) {
-                for (var a in targets) {
-                    target = Game.getObjectById(targets[a]);
-                    if (target !== null) {
-                        if (creep.pos.isNearTo(target)) {
-                            creep.rangedMassAttack();
-                            return true;
-                        } else if (creep.pos.inRangeTo(target, 3)) {
-                            creep.rangedAttack(target);
-                            return true;
-                        }
-                    }
-                }
-                creep.rangedMassAttack();
+function rangeAttack(creep, targets) {
+    var E18S64targets = targets;
+    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+    bads = _.filter(bads, function(o) {
+        return !o.pos.lookForStructure(STRUCTURE_RAMPART);
+    });
+    if (bads.length === 0) {
 
-            } else {
-                if (bads[0] !== undefined) {
-                    if (creep.pos.inRangeTo(bads[0], 3)) {
-                        if (creep.pos.isNearTo(bads[0])) {
-                            //creep.rangedAttack(bads[0]);
-                            creep.rangedMassAttack();
-                        } else {
-
-                            creep.rangedAttack(bads[0]);
-                        }
-                        creep.say('pewpew', true);
-                    }
+        for (var a in E18S64targets) {
+            target = Game.getObjectById(E18S64targets[a]);
+            if (target !== null) {
+                if (creep.pos.isNearTo(target)) {
+                    creep.rangedMassAttack();
+                    creep.say('nice');
+                    return true;
+                } else if (creep.pos.inRangeTo(target, 3)) {
+                    creep.rangedAttack(target);
+                    creep.say('nice');
+                    return true;
                 }
             }
+        }
+        creep.rangedMassAttack();
+
+    } else {
+        var clost = creep.pos.findClosestByRange(bads);
+        if (clost !== undefined) {
+            if (creep.pos.inRangeTo(clost, 3)) {
+                if (creep.pos.isNearTo(clost)) {
+                    //creep.rangedAttack(bads[0]);
+                    creep.rangedMassAttack();
+                } else {
+
+                    creep.rangedAttack(clost);
+                }
+                creep.say('pewpew', true);
+            }
+        }
+    }
 }
 
 function doAttack(creep) {
     let target;
     var bads;
-        var a;
+    var a;
     switch (creep.room.name) {
         case "E18S64":
-            var E18S64targets = ['58f844ac24da03916bf3b00b', '58efba5cd63a0941a119c94f', '58be88cc436155731968483e', '58d9bd5f8f81ea7c04bda21f'];
-            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+            var E18S64targets = ['594b6b86c48f3ee4074cb8a5', '594ef7bdd73cce6432e3b586', '58be88cc436155731968483e', '58d9bd5f8f81ea7c04bda21f'];
+            var badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+            bads = _.filter(badz, function(o) {
+                return o.getActiveBodyparts(ATTACK) === 0;
+            });
 
-            if (bads.length === 0) {
-                for ( a in E18S64targets) {
+            if (badz.length === 0) {
+
+                for (a in E18S64targets) {
                     target = Game.getObjectById(E18S64targets[a]);
                     if (target !== null) {
                         if (creep.pos.isNearTo(target)) {
@@ -69,14 +84,15 @@ function doAttack(creep) {
                 creep.rangedMassAttack();
 
             } else {
-                if (bads[0] !== undefined) {
-                    if (creep.pos.inRangeTo(bads[0], 3)) {
-                        if (creep.pos.isNearTo(bads[0])) {
+                var clost = creep.pos.findClosestByRange(bad2s);
+                if (clost !== undefined) {
+                    if (creep.pos.inRangeTo(clost, 3)) {
+                        if (creep.pos.isNearTo(clost)) {
                             //creep.rangedAttack(bads[0]);
                             creep.rangedMassAttack();
                         } else {
 
-                            creep.rangedAttack(bads[0]);
+                            creep.rangedAttack(clost);
                         }
                         creep.say('pewpew', true);
                     }
@@ -84,15 +100,17 @@ function doAttack(creep) {
             }
             break;
 
-case "E16S63":
-rangeAttack(creep,['58c8bbf2564efa2205d5ac4d']);
+        case "E16S63":
+            rangeAttack(creep, ['58c8bbce6caaa767129ed296']);
 
 
             break;
 
         default:
             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
-            bads = _.filter(bads,function(o){return o.owner.username != 'daboross'; });
+            bads = _.filter(bads, function(o) {
+                return o.owner.username != 'daboross' && o.owner.username != 'baj';
+            });
 
             if (bads.length === 0) {} else {
                 if (bads[0] !== undefined) {
@@ -135,7 +153,12 @@ class rangerClass extends roleParent {
             creep.memory.waypoint = false;
         }
 
-        creep.say('ranger');
+        if (super.doTask(creep)) {
+            return;
+        }
+
+        creep.say(creep.memory.party);
+
         //      creep.heal(creep);
         //var defendFlag = movement.
         //      var enemy = creep.pos.findInRange(FIND_HOSTILE_CREEPS,3);
@@ -143,6 +166,13 @@ class rangerClass extends roleParent {
         //      } 
         doAttack(creep);
         //else   { 
+        if (creep.hits !== creep.hitsMax) {
+            if (super.edgeRun(creep)) {
+                return;
+            }
+        }
+
+
         movement.flagMovement(creep);
         //          }
     }

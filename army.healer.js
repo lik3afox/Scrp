@@ -12,10 +12,18 @@ var classLevels = [
         HEAL, HEAL
     ],
     // BOOSTED heal
-    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL]
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, RANGED_ATTACK, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
 
 ];
 var boost = [];
+var formation = [
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+];
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
@@ -127,14 +135,14 @@ class healerClass extends roleParent {
     static run(creep) {
         if (super.sayWhat(creep)) return;
         super.calcuateStats(creep);
+        if (super.returnEnergy(creep)) {
+            return;
+        }
         if (super.doTask(creep)) {
             return;
         }
 
         //  if(super.boosted(creep,boost)) { return;}   
-        if (super.returnEnergy(creep)) {
-            return;
-        }
 
         if (super.isPowerParty(creep)) {
             creep.memory.waypoint = true;
@@ -158,19 +166,48 @@ class healerClass extends roleParent {
             return object.hits < object.hitsMax;
         }).sort((a, b) => a.hits - b.hits);
 
+        creep.rangedMassAttack();
 
-        creep.say(hurtz.length);
         //return;
         if (hurtz[0] !== undefined) {
             if (creep.heal(hurtz[0]) == ERR_NOT_IN_RANGE) {
                 creep.rangedHeal(hurtz[0]);
+                creep.memory.lastHealed = hurtz[0].id;
+                creep.rangedMassAttack();
             }
-            //  if(!creep.pos.isNearTo(hurtz[0]) )
-            //          creep.moveTo(hurtz[0]);
+            if (creep.pos.inRangeTo(hurtz[0], 3) && !creep.pos.isNearTo(hurtz[0])) {}
+        } else {
+            // heal last
+            var last = Game.getObjectById(creep.memory.lastHealed);
+            if (last !== null) {
+                creep.heal(last);
+            }
         }
 
+        /*        let zz = Game.getObjectById('594efcdf92e7a6334d910b97');
+                if (zz !== null && zz.hits > zz.hitsMax - 100) {
+                    if (creep.pos.isNearTo(zz))
+                        creep.rangedAttack(zz);
+                } */
+        creep.say(creep.memory.party);
         //  if(hurtz[0] == undefined)
         movement.flagMovement(creep);
+
+
+        /*        if (creep.room.name == 'E18S64') {
+                    creep.selfHeal();
+                    var spn = Game.getObjectById('594fc84a66235f5268eb6c6a');
+                    if (spn !== null) {
+                        creep.moveTo(spn);
+                        return;
+                    }
+                    var tar = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+                    if (tar.length > 0) {
+                        let clost = creep.pos.findClosestByRange(tar);
+                        creep.moveTo(clost);
+                        return;
+                    }
+                } */
 
     }
 }

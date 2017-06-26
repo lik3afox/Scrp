@@ -68,6 +68,7 @@ function defendRoom(towers, hostiles) {
 }
 
 function healRoom(towers, hurt) {
+    //    console.log(towers[0].room.name);
     if (hurt.length === 0) return false;
     if (hurt.length > 0) {
         var e = towers.length;

@@ -7,7 +7,8 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
     // Boosted level
 
-    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK]
+    [WORK, WORK, WORK, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
 ];
 var boost = ['ZH'];
 
@@ -17,8 +18,8 @@ var roleParent = require('role.parent');
 function doAttack(creep) {
     let target;
     switch (creep.room.name) {
-        case "E15S63":
-            var E18S64targets = ['590e45817f0a72187ae0ceb6'];
+        case "E16S63":
+            var E18S64targets = ['58ca959dcdd55c4f68fe22be'];
             for (var a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
@@ -28,20 +29,12 @@ function doAttack(creep) {
                     }
                 }
             }
-             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+
+            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
             if (bads.length > 0) {
                 creep.dismantle(bads[0]);
                 break;
-            } 
-            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES,1);
-            if (bads.length > 0) {
-                creep.dismantle(bads[0]);
-                break;
-            } 
-
-            break;
-
-
+            }
     }
     return false;
 }
@@ -57,6 +50,10 @@ class demolisherClass extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
+        if (super.doTask(creep)) {
+            return;
+        }
+
         //        console.log(super.isFlagged(creep));
         if (super.isFlagged(creep)) {
             creep.memory.death = false;
@@ -71,6 +68,11 @@ class demolisherClass extends roleParent {
         }
 
         doAttack(creep);
+        //        console.log(creep.room.name, creep.hits, Game.flags.warparty5.pos, Game.flags.warparty5);
+        /*        if (creep.hits < 4500) {
+                    super.edgeRun(creep);
+                } */
+
         movement.flagMovement(creep);
         return;
     }

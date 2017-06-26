@@ -91,9 +91,6 @@ class transport extends roleParent {
         if (creep.memory.keeperLairID === 'none') {
             creep.memory.keeperLairID = undefined;
         }
-        if (super.returnEnergy(creep)) {
-            return;
-        }
         if (creep.memory.roadConstruct === undefined) {
             creep.memory.roadConstruct = 10;
         }
@@ -115,10 +112,10 @@ class transport extends roleParent {
         if (super._movement.runAway(creep)) {
             return;
         }
-        super.calcuateStats(creep);
+        /*super.calcuateStats(creep);
         if (creep.room.name == 'E27S75' || creep.room.name == 'E37S75' && creep.carryTotal !== 0) {
             super._constr.toRepairWall(creep);
-        }
+        } */
         if (super.doTask(creep)) {
             return;
         }

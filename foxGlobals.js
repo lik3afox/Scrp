@@ -11,7 +11,7 @@ var console = require('market');
 module.exports = {
     RETREAT: COLOR_BROWN, // Flag that certain creeps use to defend too.
     DEFEND: COLOR_RED, // Everyone will defend to this.
-    WAYPOINT: COLOR_ORANGE, // Before Rally creeps will stop by this.
+    PARTY: COLOR_ORANGE, // Before Rally creeps will stop by this.
     ATTACK: COLOR_GREEN, // All creeps go to it
     RISK: COLOR_GREY, // NOt certain if it's in use
     RALLY: COLOR_YELLOW, // If this flag has a name on it will create an party

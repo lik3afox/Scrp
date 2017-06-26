@@ -26,7 +26,10 @@ var classLevels = [
     //10
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK],
     // Boosted fighter is level 11
-    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK]
+    [TOUGH, TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, TOUGH, ATTACK, TOUGH, ATTACK, ATTACK,
+        ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+    ]
 ];
 
 var boost = [RESOURCE_LEMERGIUM_OXIDE];
@@ -62,8 +65,8 @@ function doAttack(creep) {
     var bads;
     switch (creep.room.name) {
         case "E18S64":
-            var E18S64targets = ['58ca9687c9da56fb47768663', '58efba5cd63a0941a119c94f'];
-            for ( a in E18S64targets) {
+            var E18S64targets = ['594b6b86c48f3ee4074cb8a5', '58efba5cd63a0941a119c94f'];
+            for (a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
                     if (creep.pos.isNearTo(target)) {
@@ -72,34 +75,33 @@ function doAttack(creep) {
                     }
                 }
             }
-             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
             if (bads.length > 0)
                 creep.attack(bads[0]);
 
             break;
 
-        case "E15S63":
-    //        var E16S63targets = [];
-//            for (var i in E16S63targets) {
-                target = Game.getObjectById('590e45817f0a72187ae0ceb6');
-                if (target !== null) {
-                    if (creep.pos.isNearTo(target)) {
-                    creep.say(creep.attack(target)+'zz');
-                        
-                        break;
-                    }
-                } 
-  //          }
-             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+        case "E16S63":
+            //        var E16S63targets = [];
+            //            for (var i in E16S63targets) {
+            target = Game.getObjectById('58ca959dcdd55c4f68fe22be');
+            if (target !== null) {
+                if (creep.pos.isNearTo(target)) {
+                    creep.attack(target);
+                    break;
+                }
+            }
+            //          }
+            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
             if (bads.length > 0) {
                 creep.attack(bads[0]);
                 break;
-            } 
-            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES,1);
+            }
+            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
             if (bads.length > 0) {
                 creep.attack(bads[0]);
                 break;
-            } 
+            }
 
 
     }
@@ -217,7 +219,7 @@ class fighterClass extends roleParent {
         if (super.isPowerParty(creep)) {
             if (creep.room.name == 'E34S80') {
                 enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3, {
-                    filter: object => (object.owner.username != 'NobodysNightmare' && object.owner.username != 'admon' && object.owner.username != 'lolzor')
+                    filter: object => (object.owner.username != 'zeekner' && object.owner.username != 'admon' && object.owner.username != 'lolzor')
                 });
                 if (enemy.length > 0) {
                     enemy = creep.pos.findClosestByRange(enemy);
@@ -240,28 +242,30 @@ class fighterClass extends roleParent {
             }
         }
 
-        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3);
+        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 1);
 
         enemy = _.filter(enemy,
             function(object) {
-                return (object.owner.username != 'daboross' && object.owner.username != 'NobodysNightmare' && object.owner.username != 'admon' && object.owner.username != 'lolzor');
+                return (object.owner.username != 'daboross' && object.owner.username != 'baj' && object.owner.username != 'admon' && object.owner.username != 'zeekner' && !object.pos.lookForStructure(STRUCTURE_RAMPART));
             }
         );
 
-        //movement.flagMovement(creep);
-        creep.say(enemy.length, true);
+        //creep.say(enemy.length, true);
         //return;
-
+        creep.say(creep.memory.party);
         if (enemy.length > 0) {
             enemy = creep.pos.findClosestByRange(enemy);
             creep.attack(enemy);
         } else {
             doAttack(creep);
-            if (creep.hits > creep.hitsMax - 400) {
-                if (!movement.flagMovement(creep)) {}
-            }
-            creep.heal(creep);
         }
+        /*        if (creep.hits !== creep.hitsMax && creep.memory.roleID !== 0) {
+                    if (super.edgeRun(creep)) {
+                        return;
+                    }
+                } */
+        movement.flagMovement(creep);
+
     }
 }
 

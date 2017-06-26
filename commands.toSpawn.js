@@ -73,6 +73,7 @@ function getStack(spawn) {
     // Here we return the stack that is wanted 
     //    console.log('getting stack',spawn.memory.currentStack)
     //    console.log(spawn.memory.create.length,spawn.memory.warCreate.length,spawn.memory.expandCreate );
+    var rampart = 'rampartD' + spawn.room.name;
     if (spawn.memory.alphaSpawn) {
 
         spawn.memory.currentStack = 'create';
@@ -80,8 +81,7 @@ function getStack(spawn) {
         if (spawn.memory.create.length === 0 && spawn.memory.warCreate.length > 0) {
             spawn.memory.currentStack = 'war';
         }
-
-        if (spawn.memory.create.length === 0 && spawn.memory.expandCreate.length > 0 && spawn.memory.warCreate.length === 0) {
+        if (Game.flags[rampart] === undefined && spawn.memory.create.length === 0 && spawn.memory.expandCreate.length > 0 && spawn.memory.warCreate.length === 0) {
             spawn.memory.currentStack = 'expand';
         }
 
@@ -106,7 +106,7 @@ function getStack(spawn) {
                     alpha.memory.currentStack = 'war';
                 }
 
-                if (alpha.memory.create.length === 0 && alpha.memory.expandCreate.length > 0 && alpha.memory.warCreate.length === 0) {
+                if (Game.flags[rampart] === undefined && alpha.memory.create.length === 0 && alpha.memory.expandCreate.length > 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length === 0) {
                     alpha.memory.currentStack = 'expand';
                 }
 
@@ -179,6 +179,12 @@ class SpawnInteract {
     }
 
     static addToWarStack(newCreep) {
+        console.log("WARSTACK");
+        console.log("WARSTACK");
+        console.log("WARSTACK");
+        console.log("WARSTACK");
+        console.log("WARSTACK");
+        console.log(newCreep.room);
         // for now it will only created at homeEmpire.
         for (var i in Game.spawns) {
             if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == newCreep.room) {
@@ -186,7 +192,7 @@ class SpawnInteract {
                 newCreep.memory.parent = Game.spawns[i].id;
                 if (Game.spawns[i].memory.warCreate !== undefined)
                     Game.spawns[i].memory.warCreate.push(newCreep);
-                //                console.log(Game.spawns[i], 'adding to stack', Game.spawns[i].name, creep);
+                //                                console.log(Game.spawns[i], 'adding to stack', Game.spawns[i].name, creep);
             }
 
         }
@@ -418,7 +424,34 @@ class SpawnInteract {
         //            console.log(STACK.length, STACK[0].build.length, STACK[0].name, spawn.canCreateCreep(STACK[0].build), getCost(test), spawn.room.energyCapacityAvailable);
 
         //        }
-        if (spawn.memory.notSpawner === true) return;
+
+        /*       if(spawn.memory.currentStack == 'War') {
+            // Trash Idea - can't built complicated 3 50 parts units at once.
+                    // We get all the spawns in the room.
+                    // Make sure they are not spawning.
+                    // Once they are not spawning we push 3 of the warSTACK on them.
+                    var spawns = _.filter(Game.spawns,function(o){return o.room.name == spawn.room.name ; });
+                    var spawning = false;
+                    for(var e in spawns){
+                        if(spawns[e].spawning !== null) spawning = true;
+                    }
+                    if(!spawning) {
+                        if(STACK[0] !== undefined && spawns[0] !== undefined){
+                            let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
+                        }
+                        if(STACK[1] !== undefined&& spawns[1] !== undefined){
+                            let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
+                        }
+                        if(STACK[2] !== undefined&& spawns[2] !== undefined){
+                            let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
+                        }
+                    } else {
+                        console.log("waiting for spawn Stopping before war create");
+                        // return;
+                    }
+
+                } */
+        //        if (spawn.memory.notSpawner === true) return;
         if (STACK.length > 0) {
             // Creation here.
 

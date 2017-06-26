@@ -105,7 +105,7 @@ var upgradeModule = [
 
 
 var empireModules = [
-    ['nuker', require('role.nuker'), 1, 4],
+    ['nuker', require('role.nuker'), 0, 4],
     ['harvester', require('role.harvester'), 2, 2],
     ['first', require('role.first'), 2, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7],
@@ -121,7 +121,7 @@ var spawn2Module = [
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['linker', require('role.linker'), 1, 3],
     //    ['homeDefender', require('role.defender2'), 1, 6],
-    ['nuker', require('role.nuker'), 1, 4],
+    ['nuker', require('role.nuker'), 0, 4],
     ['scientist', require('role.scientist'), 0, 4],
     //        ['builder',    require('role.builder'), 3, 5],
 
@@ -135,7 +135,7 @@ var spawn3Module = [
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['minHarvest', require('role.mineral'), 1, 6],
-    ['nuker', require('role.nuker'), 1, 4],
+    ['nuker', require('role.nuker'), 0, 4],
     ['wallwork', require('role.wallworker'), 1, 5]
 ];
 var spawn4Module = [ // Room E26S77 Spawn 5
@@ -143,7 +143,7 @@ var spawn4Module = [ // Room E26S77 Spawn 5
     ['linker', require('role.linker'), 1, 3],
     ['minHarvest', require('role.mineral'), 1, 4],
     ['scientist', require('role.scientist'), 0, 4],
-    ['nuker', require('role.nuker'), 1, 4],
+    ['nuker', require('role.nuker'), 0, 4],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['harvester', require('role.harvester'), 1, 2]
@@ -165,7 +165,7 @@ var spawn5Module = [
 var spawn6Module = [ // Spawn11 Room E28S77
 
     ['first', require('role.first'), 1, 4],
-    ['nuker', require('role.nuker'), 1, 4],
+    ['nuker', require('role.nuker'), 0, 4],
     ['minHarvest', require('role.mineral'), 1, 4],
     ['linker', require('role.linker'), 1, 3],
     ['scientist', require('role.scientist'), 0, 4],

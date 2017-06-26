@@ -18,8 +18,11 @@ var demoParty = [
     ['thief', require('army.thief'), 1, 3],
 
 ];
+var scienceParty = [
+    ['scientist', require('role.scientist'), 1, 3]
+];
 var engineerParty = [
-    ['engineer', require('army.engineer'), 2, 5],
+    ['engineer', require('army.engineer'), 1, 5],
 ];
 var engineer2Party = [
     ['engineer', require('army.engineer'), 1, 5],
@@ -60,14 +63,39 @@ var mageParty = [
 var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
-    ['ranger', require('army.ranger'), 5, 1],
-    //    ['fighter', require('army.fighter'), 0, 11],
-    //    ['demolisher', require('army.demolisher'), 0, 2],
-    ['healer', require('army.healer'), 2, 6] // Healer    
+    ['ranger', require('army.ranger'), 0, 1],
+    ['fighter', require('army.fighter'), 0, 11],
+    ['demolisher', require('army.demolisher'), 0, 2],
+    ['healer', require('army.healer'), 1, 7] // Healer    
 ];
 var warParty2 = [
+    ['first', require('role.first'), 0, 4],
+    ['scientist', require('role.scientist'), 1, 3],
+    ['ranger', require('army.ranger'), 0, 1],
+    ['fighter', require('army.fighter'), 0, 11],
+    ['demolisher', require('army.demolisher'), 0, 2],
+    ['scout', require('army.scout'), 0, 0],
+    ['healer', require('army.healer'), 0, 6] // Healer    
+];
+var warParty3 = [
+    ['first', require('role.first'), 0, 4],
+    ['ranger', require('army.ranger'), 0, 1],
+    ['fighter', require('army.fighter'), 0, 11],
+    ['demolisher', require('army.demolisher'), 0, 2],
+    ['healer', require('army.healer'), 0, 6], // Healer    
+    ['scientist', require('role.scientist'), 0, 3]
+];
+var warParty4 = [
+    ['first', require('role.first'), 0, 4],
+    ['scientist', require('role.scientist'), 0, 3],
+    ['ranger', require('army.ranger'), 0, 1],
+    ['healer', require('army.healer'), 0, 6], // Healer    
+    ['fighter', require('army.fighter'), 0, 11],
+    ['demolisher', require('army.demolisher'), 0, 2]
+];
+var warParty5 = [
     //    ['first', require('role.first'), 0, 4],
-    //    ['scientist', require('role.scientist'), 0, 3],
+    ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 1],
     ['fighter', require('army.fighter'), 0, 11],
     ['demolisher', require('army.demolisher'), 0, 2],
@@ -79,7 +107,7 @@ var scoutParty = [
     ['scout', require('army.scout'), 1, 0]
 ];
 var testParty = [
-    ['scout', require('army.scout'), 4, 0]
+    ['scout', require('army.scout'), 1, 1]
 ];
 
 var controlParty = [
@@ -126,6 +154,7 @@ var _level = 3;
 
 var spawn = require('commands.toSpawn');
 
+
 function getCurrentParty(flag) {
     // Powerflags do not use this to create they will do it themselves.
 
@@ -148,8 +177,13 @@ function getCurrentParty(flag) {
         case 'warparty2':
             return warParty2;
         case 'warparty1':
-        case 'warparty3':
             return warParty;
+        case 'warparty4':
+            return warParty4;
+        case 'warparty5':
+            return warParty5;
+        case 'warparty3':
+            return warParty3;
 
         case 'demo':
             return demoParty;
@@ -186,6 +220,8 @@ function getCurrentParty(flag) {
 
         case 'engineer':
             return engineerParty;
+        case 'science':
+            return scienceParty;
 
         case 'fighter':
             return fighterParty;
@@ -234,9 +270,14 @@ function getSpawnCreating(flag) {
     switch (flag.name) {
         //    case 'scout2' :
         case 'warparty1':
-            return 'E38S72';
+            return 'E35S83';
         case 'warparty2':
             return 'E23S75';
+        case 'warparty3':
+            return 'E26S73';
+        case 'warparty5':
+        case 'warparty4':
+            return 'E28S71';
 
         case 'warparty3':
         case 'demo':
@@ -254,7 +295,7 @@ function getSpawnCreating(flag) {
             return 'E35S73';
         case 'mule':
         case 'thief':
-            return 'E35S73';
+            return 'E37S75';
 
         case 'upgradeRoom':
             return 'E27S75';
@@ -266,6 +307,8 @@ function getSpawnCreating(flag) {
         case 'test':
         case 'control':
         case 'engineer2':
+        case 'scienceParty':
+
             return returnClosestRoom(flag.pos.roomName);
         case 'thief2':
             return 'E37S75';
@@ -296,7 +339,7 @@ function getSpawnCreating(flag) {
             return returnClosestRoom(flag.pos.roomName);
         default:
         case 'scout':
-            return 'E35S73';
+            return 'E35S83';
 
             //      return 'E26S73';
     }
@@ -389,6 +432,30 @@ function getCost(module) {
     return total;
 }
 
+function getFormationFromFlag(creep, flag) {
+    if (flag.memory.formation === undefined) return;
+    for (var a in flag.memory.formation) {
+        let info = flag.memory.formation[a];
+        //    info.role,info.posistion,info.number;
+        if (info.role !== 'none') {
+            let count = _.filter(Game.creeps, function(o) {
+                return o.memory.role === info.role && o.memory.posistion === info.posistion;
+            });
+            //            console.log(info.number, info.);
+            console.log(count.length, info.number);
+            if (count.length <= info.number) {
+                creep.say('REPORTING');
+                console.log('Creep has reported in will goto role Party:', flag.name, ' getting Posistion:', info.posistion);
+                creep.memory.party = flag.name;
+                return info.posistion;
+            } else {
+                console.log('UNIT REPORTING IN FOR DUTY, DOES NOT HAVE ASSIGNED SPOT', creep, creep.pos, creep.memory.role, creep.memory.party);
+                return undefined;
+            }
+        }
+    }
+}
+
 class partyInteract {
 
     // So first thing is that a named Yellow flag needs to be placed first. 
@@ -414,9 +481,14 @@ class partyInteract {
             if (crps.length > 0) {
                 let total = 0;
                 for (var o in crps) {
-                    total++;
-                    if (crps[o].memory.formationPos === undefined)
+                    if (Game.flags[crps[o].memory.role] !== undefined && crps[o].memory.formationPos === undefined) {
+
+                        crps[o].memory.formationPos = getFormationFromFlag(crps[o], Game.flags[crps[o].memory.role]);
+
+                    } else if (crps[o].memory.formationPos === undefined) {
+                        total++;
                         crps[o].memory.formationPos = total;
+                    }
                 }
             }
         }
@@ -446,18 +518,28 @@ class partyInteract {
 
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
                     //Add to stack 
+                    var waypoint = true;
+                    var wayPart = ['warparty2', 'warparty3', 'warparty4', 'warparty5'];
+                    if (_.contains(wayPart, flag.name)) {
+
+                        waypoint = false;
+                    }
                     let rando = Math.floor(Math.random() * flag.name.length);
                     var death = false;
-                    if (currentParty[e][_name] == 'first') death = true;
+                    if (currentParty[e][_name] == 'first' || currentParty[e][_name] == 'scientist') death = true;
                     var build = currentParty[e][_require].levels(currentParty[e][_level]);
+                    var home = getSpawnCreating(flag);
                     let temp = {
                         build: build,
-                        spawn: getSpawnCreating(flag),
+                        room: home, // This will return a room, and that room will add to alphaSpawn warstack.
+
+                        spawn: home,
                         name: currentParty[e][_name] + '!' + flag.name[rando],
                         //                name: currentParty[e][_name]+,
                         memory: {
                             role: currentParty[e][_name],
                             home: 'default',
+                            waypoint: waypoint,
                             party: flag.name,
                             parent: 'default',
                             reportDeath: death,

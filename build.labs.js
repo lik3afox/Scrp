@@ -80,6 +80,7 @@ var maxMinerals = {
     'X': 125000,
 
     'G': 30000,
+    'GH': 30000,
     'UL': 10000,
     'ZK': 10000,
     'OH': 30000,
@@ -100,7 +101,8 @@ var maxMinerals = {
     'XLHO2': 100000,
     'XLH2O': 100000,
     'XKHO2': 100000,
-    'XKH2O': 100000
+    'XKH2O': 100000,
+
 
 
 };
@@ -196,8 +198,11 @@ function labDo(roomName, created, labz, laby) {
     let lab1 = getCached(labs[created - 1].id);
     let lab2 = getCached(labs[labz - 1].id);
     let lab3 = getCached(labs[laby - 1].id);
-    lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
-    lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
+    if (lab1 !== null && lab2 !== null && lab3 !== null) {
+
+        lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
+        lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
+    }
 
 
 
@@ -490,12 +495,12 @@ var XGHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'OH',
+    resource: 'H',
     amount: 2500,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'H',
+    resource: 'OH',
     amount: 2700,
     emptied: false
 }, {
@@ -505,12 +510,12 @@ var XGHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'X',
+    resource: 'LH',
     amount: 2700,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LH',
+    resource: 'X',
     amount: 2700,
     emptied: false
 }, {
@@ -579,31 +584,73 @@ var XLHO2 = [{
 }];
 
 function labMode(roomName, mode, labs) {
+    var a;
     switch (mode) {
         case 'muster':
             Game.rooms[roomName].memory.labMode = 'muster';
-            for (var a in muster) {
-                if (labs[a] !== undefined)
-                    muster[a].id = labs[a].id;
+            for (a in muster) {
+                //         if (labs[a] !== undefined)
+                //             if (labs[a] !== undefined)
+                muster[a].id = labs[a].id;
             }
 
             return muster;
+        case 'XGHO2':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (var e in XGHO2) {
+                //        if (labs[e] !== undefined)
+                XGHO2[e].id = labs[e].id;
+            }
+
+            return XGHO2;
+        case 'XUHO2':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (a in XUHO2) {
+                //            if (labs[a] !== undefined)
+
+                XUHO2[a].id = labs[a].id;
+            }
+
+            return XUHO2;
         case 'XZH2O':
             Game.rooms[roomName].memory.labMode = mode;
-            for (var e in XZH2O) {
-                XZH2O[e].id = labs[e].id;
+            for (a in XZH2O) {
+                //              if (labs[a] !== undefined)
+
+                XZH2O[a].id = labs[a].id;
             }
 
             return XZH2O;
+        case 'XKHO2':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (var z in XKHO2) {
+                //                if (labs[z] !== undefined)
+                XKHO2[z].id = labs[z].id;
+            }
+
+            return XKHO2;
 
         case 'XZHO2':
             Game.rooms[roomName].memory.labMode = mode;
             for (var b in XZHO2) {
+                //       if (labs[b] !== undefined)
+
                 XZHO2[b].id = labs[b].id;
             }
 
             return XZHO2;
+        case 'XLHO2':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (var m in XLHO2) {
+                //       if (labs[m] !== undefined)
+
+                XLHO2[m].id = labs[m].id;
+            }
+
+            return XLHO2;
         default:
+
+        case 'light':
             var count = {};
             for (var c in labs) {
                 if (count[c] === undefined) {
@@ -626,19 +673,31 @@ var E33S76WarMix = [
     [9, 7, 6],
     [10, 7, 6]
 ];
+var E29S79WarMix = [
+    [3, 1, 2],
+    [4, 2, 5],
+    [6, 3, 5],
+    [9, 8, 6],
+    [10, 8, 6]
+];
 
 
 function getLabMixes(roomName) {
     if (Memory.war) {
         var newMixes = [];
         switch (roomName) {
+            case 'E29S79':
+                return E29S79WarMix;
+
             case 'E33S76':
-            case 'E26S77':
-                return E33S76WarMix;
-            case 'E38S72':
-            case 'E23S75':
+            case 'E29S79':
             case 'E28S71':
+            case 'E23S75':
+                return E33S76WarMix;
+            case 'E35S83':
             case 'E26S73':
+
+                //            case 'E27S75':
 
                 return []; // Mustering rooms.
             default:
@@ -658,20 +717,24 @@ function setLabs(roomName, labs) {
         }; */
 
     switch (roomName) {
-        case 'E26S77':
+        case 'E29S79':
             return labMode(roomName, 'XZHO2', labs);
+            //        case 'E26S77':
+            //            return labMode(roomName, 'XZHO2', labs);
         case 'E26S73':
-        case 'E38S72':
+            return labMode(roomName, 'muster', labs); //
         case 'E28S71':
-            return labMode(roomName, 'muster', labs);
+            return labMode(roomName, 'XKHO2', labs);
         case 'E33S76':
-            return labMode(roomName, 'XZH2O', labs);
+            return labMode(roomName, 'XKH2O', labs);
         case 'E23S75':
 
-            return labMode(roomName, 'muster', labs);
+            return labMode(roomName, 'XZH2O', labs);
         case 'E35S83':
-            return labMode(roomName, 'light', labs);
+            return labMode(roomName, 'muster', labs);
 
+        case 'E28S73':
+            return labMode(roomName, 'light', labs);
         default:
             return labs;
     }

@@ -78,6 +78,28 @@ function getBads(creep) {
     return bads;
 }
 
+function createWayPoint(creep) {
+    let task = {};
+    task.options = {
+        reusePath: rePath,
+        ignoreRoads: false,
+        visualizePathStyle: {
+            fill: 'transparent',
+            stroke: '#ff0',
+            lineStyle: 'dashed',
+            strokeWidth: 0.15,
+            opacity: 0.5
+        }
+    };
+    task.pos = new RoomPosition(zzz.pos.x, zzz.pos.y, zzz.pos.roomName);
+    task.order = "moveTo";
+    task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+    if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
+    task.energyPickup = true;
+    task.rangeHappy = 1;
+    creep.memory.task.push(task);
+}
+
 class transport extends roleParent {
     static rebuildMe(creep) {
         super.rebuildMe(creep);

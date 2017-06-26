@@ -234,7 +234,17 @@ class StructureInteract {
 
         var dEnergy = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
         if (dEnergy.length === 0) return false;
-        creep.pickup(dEnergy[0]);
+        if (dEnergy.length > 1) {
+            for (var e in dEnergy) {
+                if (dEnergy.resourceType != RESOURCE_ENERGY) {
+                    creep.pickup(dEnergy[e]);
+                    return true;
+                }
+            }
+        } else {
+            creep.pickup(dEnergy[0]);
+
+        }
         return true;
     }
 

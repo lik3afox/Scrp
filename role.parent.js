@@ -150,6 +150,8 @@ function getDeathSpot(roomName) {
             return new RoomPosition(18, 28, roomName);
         case "E28S73":
             return new RoomPosition(21, 41, roomName);
+        case "E23S75":
+            return new RoomPosition(30, 35, roomName);
         default:
             return;
     }
@@ -219,6 +221,25 @@ class baseParent {
     static getStat(creep) {
 
     }
+
+    static edgeRun(creep) {
+        switch (creep.room.name) {
+            case 'E16S63':
+                if (creep.pos.x >= 48) creep.move(RIGHT);
+                if (creep.pos.x <= 2) creep.move(LEFT);
+                if (creep.pos.y >= 48) creep.move(BOTTOM);
+                if (creep.pos.y <= 2) creep.move(TOP);
+                return true;
+            case 'E17S63':
+                if (Game.flags.Flag8 !== undefined) {
+                    creep.moveTo(Game.flags.Flag8);
+                } else {
+                    console.log('nEED ESCAPE FLAG');
+                }
+                return true;
+
+        }
+    }
     static sayWhat(creep) {
         switch (creep.saying) {
             case "ty":
@@ -247,6 +268,8 @@ class baseParent {
         if (Thetasks.length === 0) {
             return false;
         }
+        if (Thetasks.length > 2)
+            console.log(creep, creep.pos, Thetasks.length);
 
         let task = Thetasks[0];
         //        console.log(creep, 'Doing task', task.order, task.options, creep.pos);
@@ -359,7 +382,7 @@ class baseParent {
                         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
                     });
                     if (badz.length === 0) {
-                        if (task.energyPickup ) {//!creep.isHome
+                        if (task.energyPickup) { //!creep.isHome
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
                                 if (creep.moveMe(tmp2, task.options) == OK) {
                                     if (task.count) {
@@ -585,7 +608,7 @@ class baseParent {
         */
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1400) return false;
+        if (creep.ticksToLive < 1300) return false;
 
         if (creep.memory.boostNeeded === undefined) {
             creep.memory.boostNeeded = boosted;
@@ -684,7 +707,7 @@ class baseParent {
                                 var o = keys.length;
                                 while (o--) {
                                     var e = keys[o];
-//                                    console.log(e, keys[o], o);
+                                    //                                    console.log(e, keys[o], o);
                                     if (Game.flags[e].room !== undefined && Game.flags[e].room.name == creep.room.name) {
                                         creep.memory.runFromKeeper = new RoomPosition(Game.flags[e].pos.x, Game.flags[e].pos.y, Game.flags[e].pos.roomName);
                                         creep.moveTo(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
@@ -869,6 +892,7 @@ class baseParent {
     }
 
     static moveToSignControl(creep) {
+        if (Memory.war) return false;
         if (creep.room.controller === undefined) return false;
         if (creep.room.controller.sign === undefined || creep.room.controller.sign.text != sign) {
             creep.say('resign');

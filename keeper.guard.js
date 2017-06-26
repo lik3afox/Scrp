@@ -22,7 +22,8 @@ function getHostiles(creep) {
     }
     let returned = creep.pos.findInRange(FIND_HOSTILE_CREEPS, range);
     returned = _.filter(returned, function(o) {
-        return o.owner.username !== 'ponka'; });
+        return o.owner.username !== 'ponka' && o.owner.username !== 'art999';
+    });
     return returned;
 
 }
@@ -192,7 +193,8 @@ class roleGuard extends roleParent {
             return;
         }
 
-        if (creep.memory.goalPos === undefined) {
+        if (creep.memory.goalPos === undefined && Game.flags[creep.memory.party] !== undefined) {
+
             creep.memory.goalPos = new RoomPosition(Game.flags[creep.memory.party].pos.x, Game.flags[creep.memory.party].pos.y, Game.flags[creep.memory.party].pos.roomName);
         }
 

@@ -46,7 +46,7 @@ var groupOne = [
     '58aff827090180496c7848fb', // Spawn 3
     '58b11106554d4c1333aed29b', // spawn 4
     '58af4822278c0725a7ad4642', // spawn 2
-    //    '58c074ead62936ed5e2bce0b', // E27S75
+    '58c074ead62936ed5e2bce0b', // E27S75
     '5934fa72604c7e190610993f', // E23S75
     '58fae20240468f2a39d50830', // E38S72
     '58d97b7b8c94aa185ccaf659', //E35S83
@@ -199,12 +199,14 @@ class scientistRole extends roleParent {
 
         changeParent(creep);
         if (creep.saying == 'raiders') {
-            creep.memory.distance += 40;
+            if (creep.memory.party === undefined)
+                creep.memory.distance += 40;
             creep.say('suck', true);
             return;
         }
         if (creep.saying == 'suck') {
-            creep.memory.distance += 35;
+            if (creep.memory.party === undefined)
+                creep.memory.distance += 35;
             creep.say('balls', true);
             return;
         }

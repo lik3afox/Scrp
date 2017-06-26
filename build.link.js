@@ -21,7 +21,7 @@ var _links = [
     // E23S75
     '593da1f5694770f664e2df0b',
     // Spawn room E37S75
-    '592b1d484bc45519161537ef', '592b3ffa429df6134a992506',
+    '592b1d484bc45519161537ef', '592b3ffa429df6134a992506', '594a882f332f7c6ef1dfe57a',
     // E33S76
     '5949a8128a497d010b6c1e4a'
 ];
@@ -193,7 +193,7 @@ class buildLink {
         //return total;'5924524129c65d152e19c40c', 
         //        sendEnergy([''], '59243d3f403da5a97dea664a');
 
-        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc'], '5924524129c65d152e19c40c');
+        sendEnergy(['592c9b9dbc84a408e80d9aee', '59346fe0b9ec62526a4218dc', '594a882f332f7c6ef1dfe57a'], '5924524129c65d152e19c40c');
         sendEnergy('5949a8128a497d010b6c1e4a', '59346fe0b9ec62526a4218dc');
         //        ''
         sendEnergy('5924524129c65d152e19c40c', '59243d3f403da5a97dea664a');

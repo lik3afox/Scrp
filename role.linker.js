@@ -689,6 +689,7 @@ function upSpawnTransfer(creep) {
 
     let zz = new RoomPosition(8, 34, 'E27S75');
     if (!creep.pos.isEqualTo(zz)) creep.moveTo(zz);
+
     if (creep.memory.towerID === undefined) {
         let finded = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -712,7 +713,7 @@ function upSpawnTransfer(creep) {
             ccSpawn.wantRenew(creep);
         }
     } else {
-        let zzz = Game.getObjectById(creep.memory.renewSpawnID);
+        let zzz = creep.room.storage; //Game.getObjectById(creep.memory.renewSpawnID);
         //        let yyy = Game.getObjectById(creep.memory.towerID);
         //      if (zzz.energy < 100) {
         if (zzz !== null)
@@ -988,9 +989,7 @@ function spawn2Room(creep) {
         case 0:
             gotoz = creep.room.terminal;
             goto = Game.getObjectById('58b128380aac12d30a19c037');
-            if (gotoz !== undefined && gotoz.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
-                if (creep.withdraw(gotoz, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
-            } else if (goto !== null && _.sum(goto.store) > 400) {
+            if (goto !== null && _.sum(goto.store) > 400) {
                 if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto, { reusePath: 20 });
                 }
@@ -999,6 +998,13 @@ function spawn2Room(creep) {
                 if (goto !== null && goto.energy !== 0) {
                     if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(goto, { reusePath: 20 });
+                    }
+                } else {
+                    goto = creep.room.terminal;
+                    if (goto !== undefined && goto.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
+                        if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            //                            creep.moveTo(17, 27);
+                        }
                     }
                 }
             }
@@ -1105,8 +1111,8 @@ class roleLinker extends roleParent {
         }
 
 
-        if (creep.room.name != "W4S93z" && creep.room.name != "E38S72" && creep.room.name != 'E33S76')
-            constr.pickUpEnergy(creep);
+        //     if (creep.room.name != "W4S93z" && creep.room.name != "E38S72" && creep.room.name != 'E33S76')
+        constr.pickUpEnergy(creep);
 
         if (super.returnEnergy(creep)) return;
 

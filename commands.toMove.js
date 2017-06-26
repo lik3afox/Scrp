@@ -15,9 +15,46 @@ function getTotalFlag() {
 
 var portalID = '5881eb5de8d5a7884c0ac723';
 
-function moveToWayFlag(creep) {
+function createWayPointTask(creep, pos) {
+    let task = {};
+    task.options = {
+        reusePath: 100,
+        visualizePathStyle: {
+            fill: 'transparent',
+            stroke: '#ff0',
+            lineStyle: 'dashed',
+            strokeWidth: 0.15,
+            opacity: 0.5
+        }
+    };
+    task.pos = pos;
+    task.order = "moveTo";
+    if (creep.memory.task === undefined) {
+        creep.memory.task = [];
+    }
+    creep.memory.task.push(task);
+}
+
+function createWayPath(creep) {
     // Returns false if no flag or not at flag - 
-    // return true only when the creep.memory.waypoint = true; 
+    // return true only when the creep.memory.waypoint = true;
+    if (creep.memory.task !== undefined && creep.memory.task.length === 0)
+        if (creep.memory.party !== undefined && creep.room.name == creep.memory.home) {
+            switch (creep.memory.party) {
+                case 'warparty2':
+                case 'warparty3':
+                case 'warparty4':
+                case 'warparty5':
+                    // Push tasks to move
+                    createWayPointTask(creep, new RoomPosition(17, 9, 'E21S70'));
+                    createWayPointTask(creep, new RoomPosition(11, 38, 'E19S66'));
+                    createWayPointTask(creep, new RoomPosition(20, 18, 'E17S65'));
+                    createWayPointTask(creep, new RoomPosition(4, 32, 'E17S62'));
+                    return true;
+            }
+        }
+    return false;
+    /*
     var wayflag;
     for (var e in Game.flags) {
         if (Game.flags[e].color == FLAG.WAYPOINT) {
@@ -40,7 +77,7 @@ function moveToWayFlag(creep) {
       creep.moveTo(temp);
     } else {
         
-    } */
+    } 
     creep.say('way' + creep.moveTo(wayflag, { reusePath: 40, ignoreRoads: true }));
     //    creep.moveTo(wayflag);
 
@@ -54,7 +91,7 @@ function moveToWayFlag(creep) {
         creep.memory.waypoint = true;
     }
 
-    return creep.memory.waypoint;
+    return creep.memory.waypoint; */
 }
 
 function getRetreatFlag(creep) {
@@ -213,7 +250,7 @@ function moveToRallyFlag(creep) {
     if (moveToPos !== undefined) {
         if (creep.room.name == moveToPos.roomName) {
             if (!creep.pos.isEqualTo(moveToPos))
-                creep.moveMe(moveToPos, { ignoreRoads: true, swampCost: 1 });
+                creep.moveMe(moveToPos, { ignoreRoads: true, swampCost: 1, maxOpts: 100, reusePath: 2 });
         } else {
             if (!creep.pos.isEqualTo(moveToPos))
                 creep.moveMe(moveToPos, { reusePath: 50 });
@@ -479,19 +516,10 @@ class MoveInteract {
     }
 
     static flagMovement(creep) {
-
-
-        // Defend Flag has highest prority. 
-        //    if(!moveToDefendFlag(creep)) {
         // Then waypoint flag
-        if (moveToWayFlag(creep)) {
-            // Then rally flag
-            if (!moveToRallyFlag(creep)) {
-                moveToAttackFlag(creep);
-            }
+        if (!createWayPath(creep)) {
+            if (!moveToRallyFlag(creep)) {}
         }
-        //  }
-
     }
 
 

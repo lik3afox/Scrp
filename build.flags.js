@@ -23,7 +23,7 @@
         });
 
         flag.room.visual.circle(flag.pos.x, flag.pos.y, { radius: 15, opacity: 0.15, fill: 'ff0000' });
-
+        console.log(hostiles.length, 'WHATF');
         if (hostiles.length === 0) {
             flag.remove();
         } else {
@@ -193,6 +193,20 @@
                         //                    console.log('defend flag @', flag.pos);
                         if (Memory.showInfo > 1)
                             defendTotal++;
+                        break;
+
+                    case FLAG.PARTY:
+                        if (flag.memory.formation === undefined) {
+                            flag.memory.formation = [];
+                        }
+                        if (flag.memory.formation.length === 0) {
+                            var Party = {
+                                role: 'none',
+                                posistion: 1,
+                                number: 1
+                            };
+                            flag.memory.formation.push(Party);
+                        }
                         break;
 
                     case FLAG.GUARD:

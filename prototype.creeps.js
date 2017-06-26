@@ -7,6 +7,10 @@ function getCached(id) {
     return linksCache[id];
 }
 
+RoomPosition.prototype.lookForStructure = function(structureType) {
+    let structures = this.lookFor(LOOK_STRUCTURES);
+    return _.find(structures, { structureType: structureType });
+};
 module.exports = function() {
     Object.defineProperty(Creep.prototype, "isHome", {
         configurable: true,

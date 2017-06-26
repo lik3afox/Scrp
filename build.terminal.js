@@ -134,17 +134,19 @@ function needEnergy(terminal) {
                 console.log(ORDER_SELL, RESOURCE_POWER, amount, 45000, terminal.room.name, 'current average price for power', qq);
             }
         } else if (terminal.room.terminal.store[RESOURCE_POWER] > 75000) {
-            var order = _.filter(Game.market.orders, function(o) {
-                return o.resourceType == RESOURCE_POWER && o.roomName == terminal.room.name && Game.time - o.created > 30000;
-            });
-            if (order.length > 0) {
-                console.log('switching average of order');
-                let amount = getAverageMineralPrice(RESOURCE_POWER, false);
-                if (amount !== undefined) {
+            /*
+                        var order = _.filter(Game.market.orders, function(o) {
+                            return o.resourceType == RESOURCE_POWER && o.roomName == terminal.room.name && Game.time - o.created > 30000;
+                        });
+                        if (order.length > 0) {
+                            console.log('switching average of order');
+                            let amount = getAverageMineralPrice(RESOURCE_POWER, false);
+                            if (amount !== undefined) {
 
-                    Game.market.changeOrderPrice(order[0].id, amount);
-                }
-            }
+                                Game.market.changeOrderPrice(order[0].id, amount);
+                            }
+                        }
+                        */
         }
     }
 }
@@ -647,7 +649,7 @@ function doDebt() {
     var debtAmount = Debt.amount;
     var giver = getMostTerminal(Debt.type);
 
-    var transferAmount = 1000;
+    var transferAmount = Debt.increment;
     if (giver === undefined) {
         console.log('ERROR in DEBT', Debt.type, Debt.room, Debt.amount);
         return false;
@@ -778,7 +780,6 @@ class roleTerminal {
         makeMineralOrder();
         cleanUpOrders();
         Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
-        doDebt(); // Send energy to a target
 
         //            Memory.termRun = 10;
         for (var e in terminals) {
@@ -811,10 +812,12 @@ class roleTerminal {
                     if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
                         if (!shareEnergy(terminal)) { // Moves energy around
                             if (Memory.terminalTarget !== undefined && Memory.terminalTarget != 'none') {
-                                newTradeEnergy(terminal);
+                                //                                newTradeEnergy(terminal);
                                 //                                  tradeEnergy(terminal);
                                 //                                }
                             }
+                        } else {
+                            newTradeEnergy(terminal);
                         }
                         //                        tradeEnergy(terminal);
                         //                        newTradeEnergy(terminal);
@@ -824,6 +827,9 @@ class roleTerminal {
             }
 
         }
+
+        doDebt(); // Send energy to a target
+
     }
 
 

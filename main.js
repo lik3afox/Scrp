@@ -170,21 +170,21 @@
         bads = _.filter(bads, function(creep) {
             return creep.owner.username !== 'Invader';
         });
-        if (bads.length > 0)
+        if (bads.length > 0 && bads.owner !== undefined)
             console.log('Bad guys found @', room, 'from:', bads.owner.username);
 
         room.memory.alert = true; // This will force walls/ramparts to start looking at damage.
         // Determine Room Type - If the walls are next to entrace or not. 
-        var roomDefense;
-        if (roomDefense !== undefined) {
-            // Do close to exit defense
-        } else {
-            // DO normal defense
-        }
-        var report = analyzeHostiles(bads); // Here we get a report of the bads.
+        /*        var roomDefense;
+                if (roomDefense !== undefined) {
+                    // Do close to exit defense
+                } else {
+                    // DO normal defense
+                } */
+        //      var report = analyzeHostiles(bads); // Here we get a report of the bads.
 
         // Create defend party
-        var defendParty = createParty(report);
+        //        var defendParty = createParty(report);
 
     }
 
@@ -259,9 +259,9 @@
         //        safemodeCheck(Game.spawns.Spawn1);
         if (Memory.doFlag === undefined) Memory.doFlag = 1;
         Memory.doFlag--;
-        if (Memory.doFlag === 0) {
-            Memory.doFlag = 2;
+        if (Memory.doFlag < 0) {
             flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
+            Memory.doFlag = 2;
         }
         // for creeps.
 
@@ -313,6 +313,7 @@
                 if (Game.spawns[title].memory.alphaSpawn) {
                     Game.spawns[title].memory.checkCount--;
                 }
+                //                if (Game.bucket > 1000) {
                 if ((Game.spawns[title].spawning === null)) {
                     if (Game.spawns[title].memory.alphaSpawn) {
 
@@ -361,6 +362,7 @@
                         align: RIGHT
                     });
                 }
+                //                }
                 if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
                     let spawn = Game.spawns[title];
                     let spawnStats = {
@@ -397,12 +399,15 @@
             Memory.marketRunCounter = 10;
             market.run();
         }
-        observer.run();
-        Memory.totalPowerProcessed = 0;
+        //        Memory.totalPowerProcessed = 0;
         power.run();
+        observer.run();
         globalCreep();
         doUpgradeRooms();
         memoryStatsUpdate();
+        var twn = Game.getObjectById('58ca959dcdd55c4f68fe22be');
+        if (twn !== null)
+            console.log(twn.hits, 'left');
         //        speedTest();
         //    whoWorksFor('5836b81b8b8b9619519f178d');
         /*5836b8308b8b9619519f19fa
@@ -412,6 +417,21 @@
             }
         } */
 
+        /*
+                var twn = Game.getObjectById('58c8bbce6caaa767129ed296');
+                var tgt = Game.getObjectById('595011c4714af6656b8819c9');
+                if (twn !== null && tgt !== null)
+                    if (tgt.hits == tgt.hitsMax) {
+                        twn.attack(tgt);
+                    } */
+        /*var nuke = Game.getObjectById('58f6cad2d61015d119c60e23');
+        if(nuke.cooldown === undefined || nuke.cooldown === 0)
+            nuke.launchNuke(new RoomPosition(20
+,30, 'E18S64')); */
+        /*      var nuke = Game.getObjectById('58b8846bb286c56d754d0161');
+        if (nuke.cooldown === undefined || nuke.cooldown === 0)
+            nuke.launchNuke(new RoomPosition(27, 23, 'E16S63'));
+*/
 
         if (Game.spawns.Spawn1 !== undefined) {
             let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);

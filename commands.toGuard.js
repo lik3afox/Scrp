@@ -127,12 +127,28 @@ function findParty(flag) {
             for (var e in Game.spawns) {
 
                 let spawnz = Game.spawns[e];
+
                 for (var u in spawnz.memory.warCreate) {
-                    if (currentParty[a][_name] == spawnz.memory.warCreate[u].memory.role &&
-                        spawnz.memory.warCreate[u].memory.party == flag.name) {
-                        total[currentParty[a][_name]]++;
+                    if (spawnz.memory.warCreate[u] === undefined) {
+                        console.log('error', spawnz.memory.warCreate[u], spawnz);
+                    } else {
+                        if (currentParty[a][_name] == spawnz.memory.warCreate[u].memory.role &&
+                            spawnz.memory.warCreate[u].memory.party == flag.name) {
+                            total[currentParty[a][_name]]++;
+                        }
                     }
                 }
+                for (var z in spawnz.memory.expandCreate) {
+                    if (spawnz.memory.expandCreate[z] === undefined) {
+                        console.log('error', spawnz.memory.expandCreate[z], spawnz);
+                    } else {
+                        if (currentParty[a][_name] == spawnz.memory.expandCreate[z].memory.role &&
+                            spawnz.memory.expandCreate[z].memory.party == flag.name) {
+                            total[currentParty[a][_name]]++;
+                        }
+                    }
+                }
+
             }
 
         }
@@ -158,11 +174,13 @@ class partyInteract {
         for (var e in currentParty) {
             for (var i in totalParty) {
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
+
                     let home = getSpawnCreating(flag);
                     let temp = {
                         build: currentParty[e][_require].levels(currentParty[e][_level]),
                         room: home, // This will return a room, and that room will add to alphaSpawn warstack.
                         name: undefined,
+                        party: flag.name,
                         memory: {
                             role: currentParty[e][_name],
                             home: home,
@@ -170,18 +188,19 @@ class partyInteract {
                             parent: 'default'
                         }
                     };
-                    var spawn = _.filter(Game.spawns, function(sp) {
-                        return sp.room.name == temp.room && sp.memory.alphaSpawn;
-                    });
-                    if (spawn.length > 0) {
-                        console.log('using new');
-                        temp.parent = spawn[0].id;
-                        spawn[0].memory.expandCreate.unshift(temp);
-                    } else {
-                        console.log('using old');
-                        let toSpawn = require('commands.toSpawn');
-                        toSpawn.addToWarStack(temp);
-                    }
+                    /*                    var spawn = _.filter(Game.spawns, function(sp) {
+                                            return sp.room.name == temp.room && sp.memory.alphaSpawn;
+                                        }); */
+                    /*                    if (spawn.length > 0) {
+                                            console.log('using new');
+                                            temp.parent = spawn[0].id;
+                                            spawn[0].memory.expandCreate.unshift(temp);
+                                        } else { */
+                    console.log('using old', totalParty[i], currentParty[e][_number]);
+                    let toSpawn = require('commands.toSpawn');
+                    //                    console.log( )
+                    toSpawn.addToWarStack(temp);
+                    //                  }
 
                     //                    toSpawn.
 
