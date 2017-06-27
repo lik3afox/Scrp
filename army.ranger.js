@@ -6,6 +6,10 @@ var classLevels = [
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
         RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+    ],
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
+        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
     ]
 
 ];
@@ -47,7 +51,8 @@ function rangeAttack(creep, targets) {
                     creep.rangedMassAttack();
                 } else {
 
-                    creep.rangedAttack(clost);
+                    creep.rangedMassAttack();
+                    //                    creep.rangedAttack(clost);
                 }
                 creep.say('pewpew', true);
             }
@@ -61,7 +66,8 @@ function doAttack(creep) {
     var a;
     switch (creep.room.name) {
         case "E18S64":
-            var E18S64targets = ['594b6b86c48f3ee4074cb8a5', '594ef7bdd73cce6432e3b586', '58be88cc436155731968483e', '58d9bd5f8f81ea7c04bda21f'];
+
+            var E18S64targets = ['59506a753d55600158180666', '594ef7bdd73cce6432e3b586', '58be88cc436155731968483e', '58d9bd5f8f81ea7c04bda21f'];
             var badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
             bads = _.filter(badz, function(o) {
                 return o.getActiveBodyparts(ATTACK) === 0;
@@ -84,7 +90,7 @@ function doAttack(creep) {
                 creep.rangedMassAttack();
 
             } else {
-                var clost = creep.pos.findClosestByRange(bad2s);
+                var clost = creep.pos.findClosestByRange(badz);
                 if (clost !== undefined) {
                     if (creep.pos.inRangeTo(clost, 3)) {
                         if (creep.pos.isNearTo(clost)) {
@@ -92,7 +98,8 @@ function doAttack(creep) {
                             creep.rangedMassAttack();
                         } else {
 
-                            creep.rangedAttack(clost);
+                            creep.rangedMassAttack();
+                            //                            creep.rangedAttack(clost);
                         }
                         creep.say('pewpew', true);
                     }
@@ -101,7 +108,7 @@ function doAttack(creep) {
             break;
 
         case "E16S63":
-            rangeAttack(creep, ['58c8bbce6caaa767129ed296']);
+            rangeAttack(creep, ['59511202d6fb6910572a40b5']);
 
 
             break;
@@ -120,6 +127,7 @@ function doAttack(creep) {
                     if (creep.pos.inRangeTo(bads[0], 3)) {
                         creep.rangedAttack(bads[0]);
                         creep.say('pewpew', true);
+                        return true;
                     }
                 }
             }
@@ -144,14 +152,14 @@ class rangerClass extends roleParent {
     }
 
     static run(creep) {
-        if (creep.memory.level == 1)
+        if (creep.memory.level >= 1)
             if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XKHO2'])) {
                 return;
             }
         if (super.returnEnergy(creep)) {
             return;
         }
-
+  if (super.goToPortal(creep)) return;
         if (creep.pos.isNearTo(Game.flags.kill)) {
             creep.memory.waypoint = false;
         }
@@ -160,14 +168,23 @@ class rangerClass extends roleParent {
             return;
         }
 
+if(!doAttack(creep) ) {
+if(creep.room.name =='W5S34'){
+     var roads = creep.pos.findInRange(FIND_STRUCTURES,3);
+              console.log("ROD",roads.length);
+              roads = _.filter(roads,function(o){return o.structureType == STRUCTURE_ROAD || o.structureType == STRUCTURE_CONTAINER;});
+              console.log("ROD",roads.length);
+              console.log( creep.rangedAttack(roads[0]) );
+}        
+}
+            
         creep.say(creep.memory.party);
-
         //      creep.heal(creep);
         //var defendFlag = movement.
-        //      var enemy = creep.pos.findInRange(FIND_HOSTILE_CREEPS,3);
+/*              */
         //      if(enemy.length > 0) {
         //      } 
-        doAttack(creep);
+
         //else   { 
         if (creep.hits !== creep.hitsMax) {
             if (super.edgeRun(creep)) {

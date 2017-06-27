@@ -82,6 +82,9 @@ function doAttack(creep) {
             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
             if (bads.length > 0)
                 creep.attack(bads[0]);
+            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+            if (bads.length > 0)
+                creep.attack(bads[0]);
 
             break;
 
@@ -217,13 +220,13 @@ class fighterClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-
+  if (super.goToPortal(creep)) return;
         //   if(super.boosted(creep,boost)) { return;}
         var enemy;
         if (super.isPowerParty(creep)) {
             if (creep.room.name == 'E34S80') {
                 enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3, {
-                    filter: object => (object.owner.username != 'zeekner' && object.owner.username != 'admon' && object.owner.username != 'lolzor')
+                    filter: object => (object.owner.username != 'zeekner' && object.owner.username != 'admon' && object.owner.username != 'baj')
                 });
                 if (enemy.length > 0) {
                     enemy = creep.pos.findClosestByRange(enemy);
@@ -240,7 +243,7 @@ class fighterClass extends roleParent {
             if (powerAction(creep))
                 return;
         }
-        if (creep.memory.level == 11) {
+        if (creep.memory.level >= 11) {
             if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XUH2O'])) {
                 return;
             }
@@ -261,8 +264,17 @@ class fighterClass extends roleParent {
             enemy = creep.pos.findClosestByRange(enemy);
             creep.attack(enemy);
         } else {
-            doAttack(creep);
-        }
+
+if(creep.room.name =='W5S34'){
+              var roads = creep.pos.findInRange(FIND_STRUCTURES,1);
+              roads = _.filter(roads,function(o){return o.structureType == STRUCTURE_ROAD|| o.structureType == STRUCTURE_CONTAINER;});
+              if(roads.length > 0) {
+              console.log( creep.attack(roads[0]) );        
+              } else {
+                doAttack(creep);
+              }    
+}
+        } 
         /*        if (creep.hits !== creep.hitsMax && creep.memory.roleID !== 0) {
                     if (super.edgeRun(creep)) {
                         return;

@@ -141,7 +141,7 @@ class healerClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-
+  if (super.goToPortal(creep)) return;
         //  if(super.boosted(creep,boost)) { return;}   
 
         if (super.isPowerParty(creep)) {
@@ -155,7 +155,7 @@ class healerClass extends roleParent {
         }
         // creep.say('drugs'+creep.memory.level);
 
-        if (creep.memory.level == 6) {
+        if (creep.memory.level >= 6) {
             if (super.boosted(creep, ['XZHO2', 'XLHO2', 'XGHO2'])) {
                 return;
             }
@@ -163,26 +163,27 @@ class healerClass extends roleParent {
         //  creep.heal(creep);
         var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 5);
         hurtz = _.filter(hurtz, function(object) {
-            return object.hits < object.hitsMax;
+            return object.hits < object.hitsMax  && (object.owner.username == 'likeafox' || object.owner.username == 'Baj');
         }).sort((a, b) => a.hits - b.hits);
-
 
         //return;
         if (hurtz[0] !== undefined) {
             if (creep.heal(hurtz[0]) == ERR_NOT_IN_RANGE) {
                 creep.rangedHeal(hurtz[0]);
-                creep.memory.lastHealed = hurtz[0].id;
                 creep.rangedMassAttack();
+                creep.memory.lastHealed = hurtz[0].id;
             }
             if (creep.pos.inRangeTo(hurtz[0], 3) && !creep.pos.isNearTo(hurtz[0])) {}
         } else if (creep.hits < creep.hitsMax) {
             creep.heal(creep);
+            creep.rangedMassAttack();
             creep.memory.lastHealed = creep.id;
         } else {
             // heal last
             var last = Game.getObjectById(creep.memory.lastHealed);
             if (last !== null) {
                 creep.heal(last);
+                creep.rangedMassAttack();
             }
         }
         movement.flagMovement(creep);

@@ -867,6 +867,7 @@ class baseParent {
         //    console.log(creep.room.name , Game.flags['portal'].pos.roomName );
         //  console.log(creep.memory.throughPortal);
         if (creep.memory.throughPortal) return false;
+        if(creep.memory.throughPortal === undefined) return false;
         creep.moveMe(Game.flags.portal, { reusePath: 40 });
         //    creep.say(creep.room.name == Game.flags['portal'].pos.roomName);
         if (creep.room.name == Game.flags.portal.pos.roomName) {

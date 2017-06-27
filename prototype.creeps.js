@@ -205,13 +205,14 @@ module.exports = function() {
     Creep.prototype.healOther = function(range) {
         var hurtz;
         if (range !== undefined) {
-            hurtz = this.pos.findInRange(FIND_MY_CREEPS, range);
+            hurtz = this.pos.findInRange(FIND_CREEPS, range);
         } else {
-            hurtz = this.room.find(FIND_MY_CREEPS);
+            hurtz = this.room.find(FIND_CREEPS);
         }
 
+
         hurtz = _.filter(hurtz, function(object) {
-            return object.hits < object.hitsMax;
+            return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'baj') ;
         });
         hurtz.sort((a, b) => a.hits - b.hits);
         if (hurtz.length > 0) {

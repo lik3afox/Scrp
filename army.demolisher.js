@@ -19,8 +19,8 @@ var roleParent = require('role.parent');
 function doAttack(creep) {
     let target;
     switch (creep.room.name) {
-        case "E16S63":
-            var E18S64targets = ['58ca959dcdd55c4f68fe22be'];
+        case "E18S64":
+            var E18S64targets = ['59506a753d55600158180666'];
             for (var a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
@@ -62,13 +62,19 @@ class demolisherClass extends roleParent {
         } else {
             creep.memory.death = true;
         }
-        if (creep.memory.level == 2) {
+        if (creep.memory.level >= 2) {
             if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XZH2O'])) {
                 return;
             }
         }
 
+var target = Game.getObjectById('59506a753d55600158180666');
+if(target !== null) {
+    creep.dismantle(target);
+}else {
         doAttack(creep);
+
+}
         //        console.log(creep.room.name, creep.hits, Game.flags.warparty5.pos, Game.flags.warparty5);
         /*        if (creep.hits < 4500) {
                     super.edgeRun(creep);

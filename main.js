@@ -405,7 +405,7 @@
         globalCreep();
         doUpgradeRooms();
         memoryStatsUpdate();
-        var twn = Game.getObjectById('58ca959dcdd55c4f68fe22be');
+        var twn = Game.getObjectById('59506a753d55600158180666');
         if (twn !== null)
             console.log(twn.hits, 'left');
         //        speedTest();

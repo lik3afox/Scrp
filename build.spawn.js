@@ -1093,9 +1093,11 @@ class theSpawn {
                 }
                 var type = allModule.length;
                 while (type--) {
-                    if (Game.creeps[name].memory.role == 'wallworker') {
-                        Game.creeps[name].memory.role = 'upbuilder';
+
+                    if(Game.creeps[name].memory.party == 'warparty1')  {
+                        Game.creeps[name].memory.throughPortal = true;
                     }
+
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
                         if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }

@@ -585,11 +585,11 @@ class StructureInteract {
             if (creep.repair(target) == OK) {
                 if (target.hits < creep.memory.wallTargetHp - 750) {
                     if (target.structureType == STRUCTURE_WALL) {
-                        console.log('Wall Getting Damage');
+                        console.log('Wall Getting Damage', target.pos);
                         //creep.room.createConstructionSite(target.x, target.y, STRUCTURE_RAMPART);
                     }
                     if (target.structureType == STRUCTURE_RAMPART) {
-                        console.log('Rampart Getting Damage');
+                        console.log('Rampart Getting Damage', target.pos);
                         //   creep.room.createConstructionSite(target.x, target.y, STRUCTURE_WALL);
                     }
                 }

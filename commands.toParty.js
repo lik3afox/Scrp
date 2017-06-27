@@ -35,7 +35,7 @@ var thief2Party = [
 ];
 
 var muleParty = [
-    ['mule', require('army.mule'), 1, 1]
+    ['mule', require('army.mule'), 0, 1]
 ];
 
 // Has 
@@ -64,11 +64,11 @@ var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 1],
-    ['fighter', require('army.fighter'), 0, 11],
+    ['fighter', require('army.fighter'), 0, 13],
     ['demolisher', require('army.demolisher'), 0, 2],
-    ['healer', require('army.healer'), 1, 7] // Healer    
+    ['healer', require('army.healer'), 0, 7] // Healer    
 ];
-var warParty2 = [
+var warParty3 = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 1, 3],
     ['ranger', require('army.ranger'), 0, 1],
@@ -77,12 +77,12 @@ var warParty2 = [
     ['scout', require('army.scout'), 0, 0],
     ['healer', require('army.healer'), 0, 6] // Healer    
 ];
-var warParty3 = [
+var warParty2 = [
     ['first', require('role.first'), 0, 4],
-    ['ranger', require('army.ranger'), 0, 1],
-    ['fighter', require('army.fighter'), 0, 11],
-    ['demolisher', require('army.demolisher'), 0, 2],
-    ['healer', require('army.healer'), 0, 6], // Healer    
+    ['ranger', require('army.ranger'), 0, 2],
+    ['fighter', require('army.fighter'), 4, 10],
+    ['demolisher', require('army.demolisher'), 1, 1],
+    ['healer', require('army.healer'), 2, 5], // Healer    
     ['scientist', require('role.scientist'), 0, 3]
 ];
 var warParty4 = [
@@ -433,6 +433,7 @@ function getCost(module) {
 }
 
 function getFormationFromFlag(creep, flag) {
+    if(creep.memory.party == 'warparty1') return;
     if (flag.memory.formation === undefined) return;
     for (var a in flag.memory.formation) {
         let info = flag.memory.formation[a];
@@ -443,7 +444,7 @@ function getFormationFromFlag(creep, flag) {
             });
             //            console.log(info.number, info.);
             console.log(count.length, info.number);
-            if (count.length <= info.number) {
+            if (count.length < info.number) {
                 creep.say('REPORTING');
                 console.log('Creep has reported in will goto role Party:', flag.name, ' getting Posistion:', info.posistion);
                 creep.memory.party = flag.name;
