@@ -144,7 +144,7 @@ var rampartParty = [ // This is what currently si in effect, but
 
 // This is a rampart dude that is placed and will always go to that location. 
 var soloGuard = [
-    ['rampartGuard', require('army.rampartGuard'), 1, 1]
+    ['rampartGuard', require('army.rampartGuard'), 1, 0]
 ];
 // This party is created and sent to the red flag when done. 
 
@@ -615,7 +615,9 @@ class partyInteract {
                     //Add to stack 
                     let rando = Math.floor(Math.random() * flag.name.length);
                     var death = false;
-                    if (currentParty[e][_name] == 'first' || currentParty[e][_name] == 'scientist') death = true;
+                    if (currentParty[e][_name] == 'first' || currentParty[e][_name] == 'scientist' || currentParty[e][_name] == 'wallwork') {
+                        death = true;
+                    }
                     var build = currentParty[e][_require].levels(currentParty[e][_level]);
                     var home = getSpawnCreating(flag);
                     let temp = {

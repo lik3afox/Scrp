@@ -280,23 +280,25 @@ class settler extends roleParent {
 
             } else {
                 //                }
-                let task = {};
-                task.options = {
-                    reusePath: 10,
-                    ignoreRoads: false,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#ff0',
-                        lineStyle: 'dotted',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                };
-                task.pos = _source.pos;
-                task.order = "moveTo";
-                task.enemyWatch = true;
-                task.rangeHappy = 1;
-                creep.memory.task.push(task);
+                if (_source !== null && _source.pos !== null) {
+                    let task = {};
+                    task.options = {
+                        reusePath: 10,
+                        ignoreRoads: false,
+                        visualizePathStyle: {
+                            fill: 'transparent',
+                            stroke: '#ff0',
+                            lineStyle: 'dotted',
+                            strokeWidth: 0.15,
+                            opacity: 0.5
+                        }
+                    };
+                    task.pos = _source.pos;
+                    task.order = "moveTo";
+                    task.enemyWatch = true;
+                    task.rangeHappy = 1;
+                    creep.memory.task.push(task);
+                }
                 creep.moveMe(_source, { reusePath: 49 });
                 //                creep.say(_source);
             }

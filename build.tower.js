@@ -163,31 +163,39 @@ function defendRoom(towers, hostiles) {
         // Random attack targets
         // Until one of them gets below toughness hp
         let focusTarget = analyzedBads(hostiles);
+        var whatToDo = Math.floor(Math.random() * 2);
         var toughNess;
         if (!focusTarget) {
             e = towers.length;
+            focusTarget = hostiles[zz];
             while (e--) {
-                if (towers[e].energy > 0) {
+                if (towers[e].energy > 100) {
                     if (hostiles.length > 1) {
-                        let zz = Math.floor(Math.random() * hostiles.length);
-                        //                        let focus = Game.getObjectById('58fd0a6a344ac64d3b4ac231');
-                        //                      if (focus != null) {
-                        //                        towers[e].attack(focus);
-                        //                  } else {
-                        if (hostiles[zz].getActiveBodyparts(HEAL) > 0 && hostiles[zz].getActiveBodyparts(ATTACK) === 0)
+                        if (whatToDo === 0) {
+                            let zz = Math.floor(Math.random() * hostiles.length);
+                            if (hostiles[zz].getActiveBodyparts(HEAL) > 0 && hostiles[zz].getActiveBodyparts(ATTACK) === 0)
+                                toughNess = getBoostTough(hostiles[zz].body);
+                            if (toughNess === 0) {
+                                showTowerRange(towers[e]);
+                                towers[e].attack(hostiles[zz]);
+                            }
+
+                        } else if (whatToDo === 1) {
+                            let zz = Math.floor(Math.random() * hostiles.length);
                             toughNess = getBoostTough(hostiles[zz].body);
-                        if (toughNess === 0) {
-                            showTowerRange(towers[e]);
-                            towers[e].attack(hostiles[zz]);
+                            if (toughNess === 0) {
+                                showTowerRange(towers[e]);
+                                towers[e].attack(focusTarget);
+                            }
+
                         }
-                        //                }
                     }
                 }
             }
         } else {
             e = towers.length;
             while (e--) {
-                if (towers[e].energy > 0) {
+                if (towers[e].energy > 100) {
                     toughNess = getBoostTough(hostiles[zz].body);
                     if (toughNess === 0) {
                         showTowerRange(towers[e]);
@@ -351,12 +359,18 @@ function repairRampart(towers) {
         }).sort((a, b) => a.hits - b.hits);
         towers[0].room.memory.towerRepairID = targets[0].id;
     }
+    if (_.isArray(towers)) {
 
-    let target = Game.getObjectById(towers[0].room.memory.towerRepairID);
-    if (target !== null) {
-        for (var a in towers) {
-            towers[a].repair(target);
+        let target = Game.getObjectById(towers[0].room.memory.towerRepairID);
+        if (target !== null) {
+            for (var a in towers) {
+                towers[a].repair(target);
+            }
         }
+    } else {
+
+        let target = Game.getObjectById(towers[0].room.memory.towerRepairID);
+        towers.repair(target);
     }
 }
 
@@ -393,7 +407,7 @@ class roleTower {
             let zz = Game.flags[named];
             if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
                 // SO we should just repair and make it longer
-                if (zz.memory.invaderTimed > 500) {
+                if (zz.memory.invaderTimed > 1000) {
                     repairRampart(towers);
                     return;
                 }

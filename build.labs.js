@@ -314,12 +314,12 @@ var XUH2O = [{
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
-    amount: 500,
+    amount: 1,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
-    amount: 500,
+    amount: 1,
     emptied: true
 }];
 
@@ -367,12 +367,12 @@ var XKHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'XKHO2',
-    amount: 500,
+    amount: 1,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XKHO2',
-    amount: 500,
+    amount: 1,
     emptied: true
 }];
 
@@ -420,12 +420,12 @@ var XZHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'XZHO2',
-    amount: 500,
+    amount: 1,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XZHO2',
-    amount: 500,
+    amount: 1,
     emptied: true
 }];
 
@@ -473,12 +473,12 @@ var XZH2O = [{
 }, {
     id: 'getReplaced',
     resource: 'XZH2O',
-    amount: 500,
+    amount: 1,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XZH2O',
-    amount: 500,
+    amount: 1,
     emptied: true
 }];
 
@@ -526,12 +526,12 @@ var XGHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'XGHO2',
-    amount: 500,
+    amount: 1,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XGHO2',
-    amount: 500,
+    amount: 1,
     emptied: true
 }];
 var E33S76WarMix = [
@@ -585,12 +585,12 @@ var XLHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'XLHO2',
-    amount: 500,
+    amount: 1,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XLHO2',
-    amount: 500,
+    amount: 1,
     emptied: true
 }];
 
@@ -707,6 +707,7 @@ function getLabMixes(roomName) {
             case 'E28S71':
             case 'E23S75':
             case 'E26S73':
+            case 'W4S93':
                 return E33S76WarMix;
             case 'E35S83':
 
@@ -721,6 +722,7 @@ function getLabMixes(roomName) {
     }
 }
 
+
 function setLabs(roomName, labs) {
     /*    var warLab = {
             id: lab.id,
@@ -730,6 +732,8 @@ function setLabs(roomName, labs) {
         }; */
 
     switch (roomName) {
+        case 'W4S93':
+            return labMode(roomName, 'XZHO2', labs);
         case 'E29S79':
             return labMode(roomName, 'XZHO2', labs);
             //        case 'E26S77':

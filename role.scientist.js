@@ -63,7 +63,7 @@ var roleParent = require('role.parent');
 var labsBuild = require('build.labs');
 
 function mineralContainerEmpty(creep) {
-    if (creep.memory.containsGood) return false;
+    //    if (creep.memory.containsGood) return false;
     let contains = creep.room.find(FIND_STRUCTURES);
     contains = _.filter(contains, function(o) {
         return o.structureType == STRUCTURE_CONTAINER;
@@ -75,8 +75,7 @@ function mineralContainerEmpty(creep) {
         var z = keys.length;
         while (z--) {
             a = keys[z];
-            if (a != RESOURCE_ENERGY && contains[e].store[a] > creep.stats.carry) {
-                //            console.log(contains[e])
+            if (a != RESOURCE_ENERGY && contains[e].store[a] > creep.stats('carry')) {
                 if (creep.pos.isNearTo(contains[e])) {
                     creep.withdraw(contains[e], a);
                 } else {
@@ -156,7 +155,7 @@ function labNeedReducing(creep) {
     while (e--) {
         let lab = Game.getObjectById(theplans[e].id);
         if (theplans[e].emptied && lab.room.name == creep.room.name) {
-            if (lab.mineralAmount > theplans[e].amount) {
+            if (lab.mineralAmount >= creep.stats('carry') + 5) {
                 if (creep.pos.isNearTo(lab)) {
                     creep.withdraw(lab, lab.mineralType);
                     return true;
@@ -196,8 +195,16 @@ class scientistRole extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
+        if (!creep.memory.party) {
+            changeParent(creep);
+        } else {
+            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].room !== undefined &&
+                creep.room.name !== Game.flags[creep.memory.party].room.name) {
+                creep.suicide();
+            }
+        }
 
-        changeParent(creep);
+
         if (creep.saying == 'raiders') {
             if (creep.memory.party === undefined)
                 creep.memory.distance += 40;

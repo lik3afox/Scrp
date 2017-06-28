@@ -89,12 +89,16 @@ module.exports = function() {
             */
             switch (stat) {
                 case 'mining':
-                    let zz = this.memory.stats[stat] = _.filter(this.body, { type: WORK }).length * 2;
+                    let zz = this.memory.stats[stat] = this.getActiveBodyparts(CARRY) * 2;
                     return zz;
                 case 'heal':
                 case 'healing':
-                    let zzz = this.memory.stats[stat] = _.filter(this.body, { type: HEAL }).length;
+                    let zzz = this.memory.stats[stat] = this.getActiveBodyparts(HEAL) * 12;
                     return zzz;
+                case 'carry':
+                    let zzzz = this.memory.stats[stat] = this.getActiveBodyparts(CARRY) * 50;
+
+                    return zzzz;
                 default:
                     console.log('requested stat not existant');
                     break;
