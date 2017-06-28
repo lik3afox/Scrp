@@ -1,20 +1,4 @@
-var allies;
-
-function scanHostileBelowToughness(target) {
-    // What we want from scanbody, an list of tough parts that are enhanced
-
-    //    let target = Game.getObjectById(creepid);
-    let body = target.body;
-    let toughness = 0;
-    var e = body.length;
-    while (e--) {
-        //     console.log(body[e].type,body[e].boost);
-        if (body[e].type == TOUGH && body[e].boost !== undefined) {
-            toughness++;
-        }
-    }
-    if (toughness === 0) return false;
-    // after getting the  # of toughs, then multiple that by 100.
+function scanHostileBelowToughness(target, toughness) {
 
     if (target.hits < (target.hitsMax - (toughness * 100))) {
         return true;
@@ -22,13 +6,149 @@ function scanHostileBelowToughness(target) {
     return false;
 }
 
+
+function getBoostTough(body) {
+    let toughness = 0;
+    var e = body.length;
+    while (e--) {
+        if (body[e].type == TOUGH && body[e].boost !== undefined) {
+            toughness++;
+        }
+    }
+    return toughness;
+}
+
+function scanIfNoHealer(target) {
+    let zzz = target.pos.findInRange(FIND_CREEPS, 3);
+    zzz = _.filter(zzz, function(o) {
+        return !_.contains(fox.friends, o.owner.username);
+    });
+    if (zzz > 0) {
+        return true;
+    }
+    return false;
+}
+
+function getCreepDamage(target, allies) {
+    var total = 0;
+    var damage;
+    var e;
+    _.forEach(allies, function(o) {
+        if (o.pos.isNearTo(target)) {
+            for (e in o.body) {
+                if (o.body[e].type === ATTACK) {
+                    damage = 30;
+                    if (o.body[e].boost !== undefined) {
+                        damage *= BOOSTS.attack[o.body[e].boost].attack;
+                    }
+                    total += damage;
+                }
+                if (o.body[e].type === RANGED_ATTACK) {
+                    damage = 10;
+                    if (o.body[e].boost !== undefined) {
+                        damage *= BOOSTS.ranged_attack[o.body[e].boost].rangedAttack;
+                    }
+                    total += damage;
+                }
+
+            }
+        } else if (o.pos.getRangeTo(target) <= 3) {
+            for (e in o.body) {
+                if (o.body[e].type === RANGED_ATTACK) {
+                    damage = 10;
+                    if (o.body[e].boost !== undefined) {
+                        damage *= BOOSTS.ranged_attack[o.body[e].boost].rangedAttack;
+                    }
+                    total += damage;
+                }
+
+            }
+        }
+    });
+    return total;
+}
+
+function getTowerDamage(target, towers) {
+    var totalDamage = 0;
+    for (var e in towers) {
+        var range = target.pos.getRangeTo(towers[e]);
+        if (range <= 5) {
+            totalDamage += 600;
+        } else if (range >= 20) {
+            totalDamage += 150;
+        } else {
+            range -= 5;
+            var damage = 150 + 30 * range;
+            //            console.log(totalDamage, target.pos, damage, range, "Yo");
+            totalDamage += damage;
+        }
+        //      showTowerRange(towers[e]);
+    }
+    return totalDamage;
+}
+
+function getBoostTough(body) {
+    let toughness = 0;
+    var e = body.length;
+    while (e--) {
+        if (body[e].type == TOUGH && body[e].boost !== undefined) {
+            toughness++;
+        }
+    }
+    return toughness;
+}
+
+function calcuateDamage(body, amount) {
+    var toughType;
+    for (var a in body) {
+        if (body[a].boost !== undefined && body[a].type == TOUGH) {
+            return amount * BOOST.tough[body[a].boost].damage;
+        }
+    }
+    return amount;
+}
+
+function estimateDamageAndAttack(target, allies, towers) {
+    var totalDamage = 0;
+    totalDamage += getTowerDamage(target, towers);
+    totalDamage += getCreepDamage(target, allies);
+    //    totalDamage += getRangedDamage(target, allies);
+    var totalToughHp = getBoostTough(target.body) * 100;
+    var damageTotal = calcuateDamage(target.body, totalDamage);
+    var currentLossHp = creep.hitsMax - creep.hits;
+    if (damageTotal + currentLossHp < totalToughHp) return false;
+
+    console.log(target, totalToughHp, damageTotal, damageTotal > totalToughHp);
+    target.room.visual.text(calcuateDamage(target.body, totalDamage), target.pos, { color: 'green', font: 0.8 });
+
+    var e;
+    for (e in towers) {
+        towers[e].attack(target);
+    }
+    for (e in allies) {
+        if (allies[e].getActiveBodyparts(ATTACK) > 0) {
+            allies[e].attack(target);
+        }
+        if (allies[e].getActiveBodyparts(RANGED_ATTACK) > 0) {
+            allies[e].rangedAttack(target);
+        }
+    }
+    return true;
+}
+
 // This function should do one of two things - return false/undefined means that no focus.
 // or a bad guy that has less hp than his toughness parts, so he takes more damage.
 function analyzedBads(hostiles) {
     var e = hostiles.length;
     while (e--) {
-        if (scanHostileBelowToughness(hostiles[e])) {
-            return hostiles[e];
+        var toughNess = getBoostTough(hostiles[e].body);
+        if (toughNess > 0) {
+            if (scanHostileBelowToughness(hostiles[e])) {
+                return hostiles[e];
+            }
+            if (scanIfNoHealer(hostiles[e])) {
+                return hostiles[e];
+            }
         }
     }
     return false;
@@ -36,35 +156,59 @@ function analyzedBads(hostiles) {
 
 function defendRoom(towers, hostiles) {
     if (hostiles.length === 0) return false;
-
-    // Random attack targets
-    // Until one of them gets below toughness hp
-    let focusTarget = analyzedBads(hostiles);
     var e;
-    if (!focusTarget) {
-        e = towers.length;
-        while (e--) {
-            if (towers[e].energy > 0) {
-                let zz = Math.floor(Math.random() * hostiles.length);
-                //                let zzz = Game.getObjectById('58fd0a6a344ac64d3b4ac231');
-                //            if(zzz != undefined) {
-                //              towers[e].attack(zzz);
-                //                }else {
-                showTowerRange(towers[e]);
-                towers[e].attack(hostiles[zz]);
-                //          }
+    if (hostiles[0].owner.username !== 'Invader') {
+
+
+        // Random attack targets
+        // Until one of them gets below toughness hp
+        let focusTarget = analyzedBads(hostiles);
+        var toughNess;
+        if (!focusTarget) {
+            e = towers.length;
+            while (e--) {
+                if (towers[e].energy > 0) {
+                    if (hostiles.length > 1) {
+                        let zz = Math.floor(Math.random() * hostiles.length);
+                        //                        let focus = Game.getObjectById('58fd0a6a344ac64d3b4ac231');
+                        //                      if (focus != null) {
+                        //                        towers[e].attack(focus);
+                        //                  } else {
+                        if (hostiles[zz].getActiveBodyparts(HEAL) > 0 && hostiles[zz].getActiveBodyparts(ATTACK) === 0)
+                            toughNess = getBoostTough(hostiles[zz].body);
+                        if (toughNess === 0) {
+                            showTowerRange(towers[e]);
+                            towers[e].attack(hostiles[zz]);
+                        }
+                        //                }
+                    }
+                }
+            }
+        } else {
+            e = towers.length;
+            while (e--) {
+                if (towers[e].energy > 0) {
+                    toughNess = getBoostTough(hostiles[zz].body);
+                    if (toughNess === 0) {
+                        showTowerRange(towers[e]);
+                        towers[e].attack(focusTarget);
+                    }
+                }
             }
         }
+        return true;
+
+
     } else {
         e = towers.length;
         while (e--) {
             if (towers[e].energy > 0) {
+                let zz = Math.floor(Math.random() * hostiles.length);
                 showTowerRange(towers[e]);
-                towers[e].attack(focusTarget);
+                towers[e].attack(hostiles[zz]);
             }
         }
     }
-    return true;
 }
 
 function healRoom(towers, hurt) {
@@ -219,6 +363,7 @@ function repairRampart(towers) {
 
 
 var constr = require('commands.toStructure');
+var fox = require('foxGlobals');
 //var towerSafe =  ['zolox','admon84']
 class roleTower {
     /*
@@ -238,7 +383,7 @@ class roleTower {
             //                showTowerRange(towers);  
             var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
             hostiles = _.filter(hostiles, function(o) {
-                return o.owner.username != 'zolox';
+                return !_.contains(fox.friends, o.owner.username);
             });
             //        if(hostiles.length > 0) {
             // Here we need to find a rampartFlag in the room
@@ -248,21 +393,30 @@ class roleTower {
             let zz = Game.flags[named];
             if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
                 // SO we should just repair and make it longer
-                if (zz.memory.invaderTimed > 375) {
+                if (zz.memory.invaderTimed > 500) {
                     repairRampart(towers);
                     return;
                 }
             }
             //      }
-            var hurt = Game.rooms[roomName].find(FIND_MY_CREEPS);
-            hurt = _.filter(hurt, function(thisCreep) {
+            var mycreeps = Game.rooms[roomName].find(FIND_MY_CREEPS);
+            var hurt = _.filter(mycreeps, function(thisCreep) {
                 return thisCreep.hits < thisCreep.hitsMax;
             });
             //        showTowerRange(towers);
-
             if (!defendRoom(towers, hostiles)) {
                 if (!healRoom(towers, hurt)) {
                     repairRoom(towers);
+                }
+            }
+            if (hostiles.length > 0) {
+                if (roomName == 'E35S83') {
+                    for (var e in hostiles) {
+                        if (estimateDamageAndAttack(hostiles[e], mycreeps, towers)) {
+                            console.log("KILLING", hostiles[e]);
+                            return;
+                        }
+                    }
                 }
             }
 

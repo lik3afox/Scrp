@@ -126,7 +126,8 @@ class transportz extends roleParent {
                     visualizePathStyle: pathVis
                 };
                 task.pos = Game.getObjectById(creep.memory.parent).pos;
-                task.order = "keeperMoveTo";
+                task.order = "moveTo";
+                task.enemyWatch = true;
                 task.room = true;
                 creep.memory.task.push(task);
 

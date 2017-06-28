@@ -22,7 +22,8 @@ var classLevels = [
         MOVE, ATTACK, ATTACK,
         ATTACK, MOVE, ATTACK,
         MOVE, ATTACK
-    ]
+    ],
+    [MOVE, ATTACK, RANGED_ATTACK, MOVE]
 
 ];
 //var boost = [RESOURCE_LEMERGIUM_OXIDE];
@@ -42,10 +43,12 @@ class fighterClass extends roleParent {
 
         creep.say('fight');
         if (super.returnEnergy(creep)) {
-            return; }
+            return;
+        }
         super.calcuateStats(creep);
         if (super.doTask(creep)) {
-            return; }
+            return;
+        }
 
         //   if(super.boosted(creep,boost)) { return;}
         var enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3);

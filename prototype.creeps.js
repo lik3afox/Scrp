@@ -212,7 +212,7 @@ module.exports = function() {
 
 
         hurtz = _.filter(hurtz, function(object) {
-            return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'baj') ;
+            return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'baj');
         });
         hurtz.sort((a, b) => a.hits - b.hits);
         if (hurtz.length > 0) {
@@ -244,10 +244,17 @@ module.exports = function() {
     };
 
     Creep.prototype.runFrom = function(badguy, options) {
+
         if (_.isArray(badguy)) {
             let target = this.pos.findClosestByRange(badguy);
             badguy = target;
         }
+        console.log(badguy.pos, badguy, this.pos);
+
+        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
+        console.log('runfrom', this.pos.getDirectionTo(result.path[0]), result.length);
+        //this.move(this.pos.getDirectionTo(result.path[0]))
+        //        this.move(this.pos.getDirectionTo(result.path[0]));
         var direction = this.pos.getDirectionTo(badguy);
         direction = direction + 4;
         if (direction > 8)

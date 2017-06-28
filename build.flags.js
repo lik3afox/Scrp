@@ -1,6 +1,6 @@
     var party = require('commands.toParty');
     var FLAG = require('foxGlobals');
-    var delayBetweenScan = 5;
+    var delayBetweenScan = 3;
 
     /*
     function getRoomFlag(creep) {
@@ -44,6 +44,16 @@
             }
         }
 
+    }
+
+    function removeRA(flag) {
+        let bads = flag.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+        bads = _.filter(bads, function(o) {
+            return !_.contains(FLAG.friends, o.owner.username);
+        });
+        if (bads.length === 0) {
+            flag.remove();
+        }
     }
 
     function rampartThings(flag) {
@@ -169,7 +179,7 @@
             if (Memory.clearFlag === undefined) Memory.clearFlag = 500;
             Memory.clearFlag--;
             if (Memory.clearFlag < 0) {
-                Memory.clearFlag = 250;
+                Memory.clearFlag = 50;
                 clearFlagMemory();
             }
             //    var    start  = Game.cpu.getUsed(); // start counting. 
@@ -235,6 +245,10 @@
                         if (flag.secondaryColor == COLOR_PURPLE) {
                             rampartThings(flag);
                         }
+                        if (flag.secondaryColor == COLOR_WHITE) {
+                            removeRA(flag);
+                        }
+
 
                         if (rally !== undefined) {
                             if (rally.memory.rallyCreateCount === undefined) {

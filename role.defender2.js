@@ -26,6 +26,7 @@ var classLevels = [
         RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL
     ]
 ];
+var fox = require('foxGlobals');
 
 function attackCreep(creep, bads) {
     //      creep.say('attk');
@@ -91,9 +92,15 @@ function restingSpot(creep) {
             return false;
     }
 }
+var fox = require('foxGlobals');
 
 function getHostiles(creep) {
-    return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+    //!_.contains(fox.friends, creep.owner.username);
+    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+    bads = _.filter(bads, function(o) {
+        return !_.contains(fox.friends, o.owner.username);
+    });
+    return bads;
 }
 
 function lootRun(creep) {

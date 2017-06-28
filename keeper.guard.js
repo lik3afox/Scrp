@@ -9,6 +9,8 @@ var classLevels = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, M
 var boost = [RESOURCE_LEMERGIUM_OXIDE, 'KO'];
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
+var fox = require('foxGlobals');
+
 
 function getHostiles(creep) {
     let range = 5;
@@ -22,7 +24,7 @@ function getHostiles(creep) {
     }
     let returned = creep.pos.findInRange(FIND_HOSTILE_CREEPS, range);
     returned = _.filter(returned, function(o) {
-        return o.owner.username !== 'ponka' && o.owner.username !== 'art999';
+        return !_.contains(fox.friends, o.owner.username);
     });
     return returned;
 

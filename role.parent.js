@@ -135,6 +135,7 @@ function getParts(creep) {
     let carryParts = _.filter(creep.body, { type: CARRY }).length;
 
 }
+var fox = require('foxGlobals');
 
 function getDeathSpot(roomName) {
     switch (roomName) {
@@ -373,14 +374,25 @@ class baseParent {
 
             case "moveTo":
                 creep.say('T:move');
+
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
+                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
+                    if (creep.room.name == task.pos.roomName) {
+                        orderComplete = true;
+                    }
+                } else if (creep.pos.inRangeTo(tmp2, task.rangeHappy)) {
+                    orderComplete = true;
+                } else if (task.energyPickup && creep.carryTotal == creep.carryCapacity) {
+                    orderComplete = true;
+                }
                 if (task.enemyWatch) {
                     let zzz = ['W4S94'];
-                    let rng = _.indexOf(zzz, creep.room.name) >= 0 ? 6 : 4;
+                    let rng = _.indexOf(zzz, creep.room.name) >= 0 ? 6 : 5;
                     let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, rng);
                     badz = _.filter(badz, function(object) {
-                        return (object.owner.username != 'zolox' && object.owner.username != 'admon');
+                        return !_.contains(fox.friends, object.owner.username) && object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(RANGED_ATTACK) > 0;
                     });
+
                     if (badz.length === 0) {
                         if (task.energyPickup) { //!creep.isHome
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
@@ -401,7 +413,15 @@ class baseParent {
                         if (creep.memory._move !== undefined) {
                             creep.memory._move.time++;
                         }
-                        //                        creep.runFrom(badz);
+
+                        if (badz[0].owner.username !== 'Source Keeper' && badz[0].owner.username !== 'Invader') {
+                            var close = creep.pos.findClosestByRange(badz);
+                            var rnz = creep.pos.getRangeTo(close);
+                            creep.say(rnz);
+                            if (rnz == 4)
+                            // you can also use an array of targets, and it'll attempt to stay away from all of them
+                                creep.runFrom(close);
+                        }
                     }
                 } else if (task.energyPickup) {
                     if (!constr.moveToPickUpEnergyIn(creep, 7)) {
@@ -419,15 +439,6 @@ class baseParent {
                     }
                 }
 
-                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
-                    if (creep.room.name == task.pos.roomName) {
-                        orderComplete = true;
-                    }
-                } else if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
-                    orderComplete = true;
-                } else if (task.energyPickup && creep.carryTotal == creep.carryCapacity) {
-                    orderComplete = true;
-                }
                 break;
 
             case "attack":
@@ -744,8 +755,9 @@ class baseParent {
                 } */
         var stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
         stay = _.filter(stay, function(o) {
-            return o.owner.username !== 'ponka';
+            return !_.contains(fox.friends, o.owner.username) && (o.getActiveBodyparts(ATTACK) > 0 || o.getActiveBodyparts(RANGED_ATTACK) > 0);
         });
+
 
         if (stay.length === 0) return false;
         var close = creep.pos.findInRange(stay, 4);
@@ -867,7 +879,7 @@ class baseParent {
         //    console.log(creep.room.name , Game.flags['portal'].pos.roomName );
         //  console.log(creep.memory.throughPortal);
         if (creep.memory.throughPortal) return false;
-        if(creep.memory.throughPortal === undefined) return false;
+        if (creep.memory.throughPortal === undefined) return false;
         creep.moveMe(Game.flags.portal, { reusePath: 40 });
         //    creep.say(creep.room.name == Game.flags['portal'].pos.roomName);
         if (creep.room.name == Game.flags.portal.pos.roomName) {

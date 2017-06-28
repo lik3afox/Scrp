@@ -69,17 +69,21 @@ function doAttack(creep) {
     var bads;
     switch (creep.room.name) {
         case "E18S64":
-            var E18S64targets = ['594b6b86c48f3ee4074cb8a5', '58efba5cd63a0941a119c94f'];
-            for (a in E18S64targets) {
-                target = Game.getObjectById(E18S64targets[a]);
-                if (target !== null) {
-                    if (creep.pos.isNearTo(target)) {
-                        creep.attack(target);
-                        break;
-                    }
-                }
-            }
+            /*            var E18S64targets = ['594b6b86c48f3ee4074cb8a5', '58efba5cd63a0941a119c94f'];
+                        for (a in E18S64targets) {
+                            target = Game.getObjectById(E18S64targets[a]);
+                            if (target !== null) {
+                                if (creep.pos.isNearTo(target)) {
+                                    creep.attack(target);
+                                    break;
+                                }
+                            }
+                        } */
             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+            bads = _.filter(bads, function(o) {
+                return !_.contains(fox.friends, o.owner.username);
+            });
+            console.log(bads.length);
             if (bads.length > 0)
                 creep.attack(bads[0]);
             bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
@@ -87,28 +91,6 @@ function doAttack(creep) {
                 creep.attack(bads[0]);
 
             break;
-
-        case "E16S63":
-            //        var E16S63targets = [];
-            //            for (var i in E16S63targets) {
-            target = Game.getObjectById('58ca959dcdd55c4f68fe22be');
-            if (target !== null) {
-                if (creep.pos.isNearTo(target)) {
-                    creep.attack(target);
-                    break;
-                }
-            }
-            //          }
-            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
-            if (bads.length > 0) {
-                creep.attack(bads[0]);
-                break;
-            }
-            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-            if (bads.length > 0) {
-                creep.attack(bads[0]);
-                break;
-            }
 
 
     }
@@ -205,6 +187,8 @@ function powerAction(creep) {
 
 }
 
+var fox = require('foxGlobals');
+
 class fighterClass extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
@@ -220,13 +204,13 @@ class fighterClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-  if (super.goToPortal(creep)) return;
+        if (super.goToPortal(creep)) return;
         //   if(super.boosted(creep,boost)) { return;}
         var enemy;
         if (super.isPowerParty(creep)) {
             if (creep.room.name == 'E34S80') {
                 enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3, {
-                    filter: object => (object.owner.username != 'zeekner' && object.owner.username != 'admon' && object.owner.username != 'baj')
+                    filter: o => (!_.contains(fox.friends, o.owner.username))
                 });
                 if (enemy.length > 0) {
                     enemy = creep.pos.findClosestByRange(enemy);
@@ -253,7 +237,7 @@ class fighterClass extends roleParent {
 
         enemy = _.filter(enemy,
             function(object) {
-                return (object.owner.username != 'daboross' && object.owner.username != 'baj' && object.owner.username != 'admon' && object.owner.username != 'zeekner' && !object.pos.lookForStructure(STRUCTURE_RAMPART));
+                return (!_.contains(fox.friends, object.owner.username) && !object.pos.lookForStructure(STRUCTURE_RAMPART));
             }
         );
 
@@ -265,16 +249,8 @@ class fighterClass extends roleParent {
             creep.attack(enemy);
         } else {
 
-if(creep.room.name =='W5S34'){
-              var roads = creep.pos.findInRange(FIND_STRUCTURES,1);
-              roads = _.filter(roads,function(o){return o.structureType == STRUCTURE_ROAD|| o.structureType == STRUCTURE_CONTAINER;});
-              if(roads.length > 0) {
-              console.log( creep.attack(roads[0]) );        
-              } else {
-                doAttack(creep);
-              }    
-}
-        } 
+            doAttack(creep);
+        }
         /*        if (creep.hits !== creep.hitsMax && creep.memory.roleID !== 0) {
                     if (super.edgeRun(creep)) {
                         return;

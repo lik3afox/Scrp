@@ -5,7 +5,7 @@
     // 1 Remove Visual and Low Grafana stats (Low Grafana means no calculations)
     // 1 Bare Visual
 
-
+    var fox = require('foxGlobals');
     var _showJobs = true;
     var _creepsReport = false;
     var flag = require('build.flags');
@@ -43,15 +43,14 @@
         }
     }
 
-
+    var HardD = ['E35S83'];
 
     function rampartCheck(spawn) {
 
 
         var targets = spawn.room.find(FIND_HOSTILE_CREEPS);
         targets = _.filter(targets, function(object) {
-            return (object.owner.username != 'Invader' && object.owner.username != 'zolox' && object.owner.username != 'admon');
-            //            filter: object => (object.owner.username != 'Invader')
+            return (object.owner.username != 'Invader' && !_.contains(fox.friends, o.owner.username));
         });
 
         if (targets.length === 0) return;
@@ -69,9 +68,20 @@
                     console.log('lets place a flag here for defense');
                     spawn.room.createFlag(nearRampart[0].pos, named, COLOR_YELLOW, COLOR_PURPLE);
                 } else {
-
-                    Game.flags[named].setPosition(nearRampart[0].pos);
-                    break;
+                    console.log('extra rampart is available for guy');
+                    var named2 = 'RA2' + spawn.room.name;
+                    if (Game.flags[named2] === undefined && Game.flags[named].invaderTimed !== undefined &&
+                        Game.flags[named].invaderTimed > 250) {
+                        spawn.room.createFlag(nearRampart[0].pos, named2, COLOR_YELLOW, COLOR_WHITE);
+                    } else {
+                        if (_.contains(HardD, spawn.room.name)) {
+                            var named3 = 'RA3' + spawn.room.name;
+                            if (Game.flags[named3] === undefined &&
+                                Game.flags[named].invaderTimed > 500) {
+                                spawn.room.createFlag(nearRampart[0].pos, named3, COLOR_YELLOW, COLOR_WHITE);
+                            }
+                        }
+                    }
                 }
 
             }
@@ -126,7 +136,7 @@
     function safemodeCheck(spawn) {
         var targets = spawn.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
         targets = _.filter(targets, function(object) {
-            return (object.owner.username != 'Invader' && object.owner.username != 'zolox');
+            return (object.owner.username != 'Invader' && !_.contains(fox.friends, object.owner.username));
         });
         //    console.log('testin safemode',spawn.room.controller.safeModeCooldown);
         if (targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
@@ -158,22 +168,45 @@
         // 2/3 melee, 1 repair, 1 range
     }
 
+    function isBoost(body) {
+        for (var e in body) {
+            //            console.log(body[e].boost, body[e].boost);
+            if (body[e].boost !== undefined)
+                return true;
+        }
+        return false;
+    }
+
     function analyzeHostiles(bads) {
+        var report = {};
+        var boost = 0;
+        for (var e in bads) {
+            var bad = bads[e];
+            if (isBoost(bad.body)) {
+                boost++;
+            }
+        }
+        console.log(boost, ':boost ', bads.length, ':Bad guys found @', bads[0].room, 'from:', bads[0].owner.username);
         return {};
     }
 
     var loaded = Game.time;
-    var ALLIES = ['admon', 'zolox', 'Yilmas', 'Baj', 'Zeekner', 'Vlahn', 'Regnare'];
+
+    //    var ALLIES = foxy.friends;
 
     function doRoomReport(room) {
         bads = room.find(FIND_HOSTILE_CREEPS);
         bads = _.filter(bads, function(creep) {
-            return creep.owner.username !== 'Invader';
+            return (!_.contains(fox.friends, creep.owner.username));
         });
-        if (bads.length > 0 && bads.owner !== undefined)
-            console.log('Bad guys found @', room, 'from:', bads.owner.username);
+        var numBads = bads.length;
+        if (numBads > 0 && bads[0].owner.username !== 'Invader') {
+            var report = analyzeHostiles(bads); // Here we get a report of the bads.
+            room.memory.alert = true; // This will force walls/ramparts to start looking at damage.
 
-        room.memory.alert = true; // This will force walls/ramparts to start looking at damage.
+        } else {
+            room.memory.alert = false;
+        }
         // Determine Room Type - If the walls are next to entrace or not. 
         /*        var roomDefense;
                 if (roomDefense !== undefined) {
@@ -181,7 +214,7 @@
                 } else {
                     // DO normal defense
                 } */
-        //      var report = analyzeHostiles(bads); // Here we get a report of the bads.
+
 
         // Create defend party
         //        var defendParty = createParty(report);
@@ -273,13 +306,14 @@
         var t = keys.length;
         var title;
         while (t--) { // Start of spawn Loop
-
-            if (Memory.war) {
-                if (Game.spawns[title] !== undefined && Game.spawns[title].room !== undefined)
-                    doRoomReport(Game.spawns[title].room);
-            }
             title = keys[t];
             if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
+
+                if (Memory.war) {
+                    if (Game.spawns[title].memory.alphaSpawn) {
+                        doRoomReport(Game.spawns[title].room);
+                    }
+                }
 
                 //                safemodeCheck(Game.spawns[title]);
 

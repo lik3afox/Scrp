@@ -9,6 +9,7 @@ var containers = require('commands.toContainer');
 var console = require('market');
 
 module.exports = {
+    friends: ['admon', 'Baj', 'Zeekner', 'ponka', 'ART999'],
     RETREAT: COLOR_BROWN, // Flag that certain creeps use to defend too.
     DEFEND: COLOR_RED, // Everyone will defend to this.
     PARTY: COLOR_ORANGE, // Before Rally creeps will stop by this.
@@ -30,7 +31,7 @@ font: 0.5}
 //  Game.market.deal('58765c84289f0256300749e8', 1000, "E26S73");
 /*      let expansions = spawn.room.find(FIND_STRUCTURES, {
             filter: object => (object.structureType == STRUCTURE_CONTAINER &&
-            					spawn.pos.isNearBy(object))
+                                spawn.pos.isNearBy(object))
             });
 */ //containers.sort((a, b) => a.hits - b.hits);
 //Game.market.deal('58765c84289f0256300749e8', 5000, "E26S73"); 

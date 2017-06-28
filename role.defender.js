@@ -56,7 +56,7 @@ function attackCreep(creep, bads) {
 
     } else if (distance < 4) {
 
-        var targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+        var targets = creep.pos.findInRange(bads, 3);
 
         // Ranged attack.
         if (targets.length > 2) {
@@ -73,18 +73,20 @@ function attackCreep(creep, bads) {
         creep.moveTo(enemy, { maxRooms: 1 });
     }
 }
+var fox = require('foxGlobals');
 
 function getHostiles(creep) {
     //    flag.isAreaSafe(creep,4) // looking for bad hostiles.
     //    flag.getBadInArea(creep,4)
     //    flag.getClosestBad(creep);
-    for (var e in Game.flags) {
-        if (creep.room.name == Game.flags[e].pos.roomName && Game.flags[e].color == COLOR_BLUE) {
-            return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
-                filter: object => (object.owner.username != 'zolox')
-            });
-        }
-    }
+    /*    for (var e in Game.flags) {
+            if (creep.room.name == Game.flags[e].pos.roomName && Game.flags[e].color == COLOR_BLUE) {
+                return creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4, {
+                    filter: object =>
+                        return false;
+                });
+            }
+        } */
     return creep.room.find(FIND_HOSTILE_CREEPS);
 }
 

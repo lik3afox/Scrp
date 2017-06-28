@@ -29,12 +29,6 @@ class scoutClass extends roleParent {
         }
 
         if (creep.room.name == 'E43S92') {
-            var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 10);
-            if (bads.length !== 0) {
-                creep.moveTo(14, 10);
-            } else {
-                creep.moveTo(15, 10);
-            }
 
         }
         if (creep.hits !== creep.hitsMax) {

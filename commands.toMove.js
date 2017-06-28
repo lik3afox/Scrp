@@ -42,8 +42,8 @@ function createWayPath(creep) {
         if (creep.memory.party !== undefined && creep.room.name == creep.memory.home) {
             switch (creep.memory.party) {
                 case 'warparty1':
-                creep.memory.throughPortal = false;
-                break;
+                    creep.memory.throughPortal = false;
+                    break;
                 case 'warparty2':
 
                 case 'warparty3':
@@ -51,9 +51,9 @@ function createWayPath(creep) {
                 case 'warparty5':
                     // Push tasks to move
                     createWayPointTask(creep, new RoomPosition(17, 9, 'E21S70'));
-//                    createWayPointTask(creep, new RoomPosition(11, 38, 'E19S66'));
-//                    createWayPointTask(creep, new RoomPosition(20, 18, 'E17S65'));
-//                    createWayPointTask(creep, new RoomPosition(4, 32, 'E17S62'));
+                    //                    createWayPointTask(creep, new RoomPosition(11, 38, 'E19S66'));
+                    //                    createWayPointTask(creep, new RoomPosition(20, 18, 'E17S65'));
+                    //                    createWayPointTask(creep, new RoomPosition(4, 32, 'E17S62'));
                     return true;
             }
         }
@@ -521,9 +521,9 @@ class MoveInteract {
 
     static flagMovement(creep) {
         // Then waypoint flag
-        if (!createWayPath(creep)) {
-            if (!moveToRallyFlag(creep)) {}
-        }
+        //        if (!createWayPath(creep)) {
+        if (!moveToRallyFlag(creep)) {}
+        //      }
     }
 
 

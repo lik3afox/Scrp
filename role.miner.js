@@ -56,14 +56,13 @@ function doWork(creep) {
             //    && creep.room.name != 'E25S74'&& creep.room.name != 'E26S74'&& creep.room.name != 'E25S75'
             //)&& 
             contain.hits < contain.hitsMax - 25000) || (contain.hits < 50000)) {
-        if (!creep.pos.isNearTo(contain)) {
-        }
+        if (!creep.pos.isNearTo(contain)) {}
 
         let rep = creep.repair(contain);
         if (rep == ERR_NOT_IN_RANGE) {
             creep.say('m2w');
 
-//            creep.moveTo(contain);
+            //            creep.moveTo(contain);
         } else if (rep == OK) {
             return true;
         }
@@ -75,14 +74,14 @@ function doWork(creep) {
             }
         } else {
             //          creep.say('m');
-        	switch(creep.memory.goal) {
-        		case '5836b8268b8b9619519f18b1':
-        			creep.moveTo(33,34);
-        		break;
-        		default:
-		            creep.moveTo(contain);
-        		break;
-        	}
+            switch (creep.memory.goal) {
+                case '5836b8268b8b9619519f18b1':
+                    creep.moveTo(33, 34);
+                    break;
+                default:
+                    creep.moveTo(contain);
+                    break;
+            }
 
         }
         // Deposit
@@ -254,15 +253,51 @@ class settler extends roleParent {
 
         } else {
 
-            if (!super.guardRoom(creep)) {
+            //            if (!super.guardRoom(creep)) {
 
-                if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.memory.distance++;
-                //if(_source != undefined) console.log( creep.room.name,  _source.room.name)
-                if (_source !== null && creep.room.name == _source.room.name) {
-                    creep.moveMe(_source, { reusePath: 10 });
-                } else {
-                    creep.moveMe(_source, { reusePath: 49 });
-                }
+            if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.memory.distance++;
+            //if(_source != undefined) console.log( creep.room.name,  _source.room.name)
+            if (_source !== null && creep.room.name == _source.room.name) {
+
+                let task = {};
+                task.options = {
+                    reusePath: 10,
+                    ignoreRoads: false,
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#ff0',
+                        lineStyle: 'dotted',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                };
+                task.pos = _source.pos;
+                task.order = "moveTo";
+                task.enemyWatch = true;
+                task.rangeHappy = 1;
+                creep.memory.task.push(task);
+                //                creep.moveMe(_source, { reusePath: 10 });
+
+            } else {
+                //                }
+                let task = {};
+                task.options = {
+                    reusePath: 10,
+                    ignoreRoads: false,
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#ff0',
+                        lineStyle: 'dotted',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                };
+                task.pos = _source.pos;
+                task.order = "moveTo";
+                task.enemyWatch = true;
+                task.rangeHappy = 1;
+                creep.memory.task.push(task);
+                creep.moveMe(_source, { reusePath: 49 });
                 //                creep.say(_source);
             }
 

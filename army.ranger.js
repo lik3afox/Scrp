@@ -16,13 +16,15 @@ var classLevels = [
 var boost = [RESOURCE_LEMERGIUM_OXIDE, 'KO'];
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
+var fox = require('foxGlobals');
+
 //STRUCTURE_POWER_BANK:
 
 function rangeAttack(creep, targets) {
     var E18S64targets = targets;
     var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
     bads = _.filter(bads, function(o) {
-        return !o.pos.lookForStructure(STRUCTURE_RAMPART);
+        return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(fox.friends, o.owner.username);
     });
     if (bads.length === 0) {
 
@@ -68,10 +70,7 @@ function doAttack(creep) {
         case "E18S64":
 
             var E18S64targets = ['59506a753d55600158180666', '594ef7bdd73cce6432e3b586', '58be88cc436155731968483e', '58d9bd5f8f81ea7c04bda21f'];
-            var badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
-            bads = _.filter(badz, function(o) {
-                return o.getActiveBodyparts(ATTACK) === 0;
-            });
+
 
             if (badz.length === 0) {
 
@@ -116,7 +115,7 @@ function doAttack(creep) {
         default:
             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
             bads = _.filter(bads, function(o) {
-                return o.owner.username != 'daboross' && o.owner.username != 'baj';
+                return !_.contains(fox.friends, o.owner.username);
             });
 
             if (bads.length > 2) {
@@ -159,7 +158,7 @@ class rangerClass extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
-  if (super.goToPortal(creep)) return;
+        if (super.goToPortal(creep)) return;
         if (creep.pos.isNearTo(Game.flags.kill)) {
             creep.memory.waypoint = false;
         }
@@ -168,20 +167,22 @@ class rangerClass extends roleParent {
             return;
         }
 
-if(!doAttack(creep) ) {
-if(creep.room.name =='W5S34'){
-     var roads = creep.pos.findInRange(FIND_STRUCTURES,3);
-              console.log("ROD",roads.length);
-              roads = _.filter(roads,function(o){return o.structureType == STRUCTURE_ROAD || o.structureType == STRUCTURE_CONTAINER;});
-              console.log("ROD",roads.length);
-              console.log( creep.rangedAttack(roads[0]) );
-}        
-}
-            
+        if (!doAttack(creep)) {
+            if (creep.room.name == 'W5S34') {
+                var roads = creep.pos.findInRange(FIND_STRUCTURES, 3);
+                console.log("ROD", roads.length);
+                roads = _.filter(roads, function(o) {
+                    return o.structureType == STRUCTURE_ROAD || o.structureType == STRUCTURE_CONTAINER;
+                });
+                console.log("ROD", roads.length);
+                console.log(creep.rangedAttack(roads[0]));
+            }
+        }
+
         creep.say(creep.memory.party);
         //      creep.heal(creep);
         //var defendFlag = movement.
-/*              */
+        /*              */
         //      if(enemy.length > 0) {
         //      } 
 

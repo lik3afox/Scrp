@@ -263,6 +263,11 @@ var muster = [{
     resource: 'XKHO2',
     amount: 2700,
     emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'UH',
+    amount: 2700,
+    emptied: false
 }];
 
 // Attack
@@ -309,12 +314,12 @@ var XUH2O = [{
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
-    amount: 1,
+    amount: 500,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
-    amount: 1,
+    amount: 500,
     emptied: true
 }];
 
@@ -362,12 +367,12 @@ var XKHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'XKHO2',
-    amount: 1,
+    amount: 500,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XKHO2',
-    amount: 1,
+    amount: 500,
     emptied: true
 }];
 
@@ -415,12 +420,12 @@ var XZHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'XZHO2',
-    amount: 1,
+    amount: 500,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XZHO2',
-    amount: 1,
+    amount: 500,
     emptied: true
 }];
 
@@ -468,12 +473,12 @@ var XZH2O = [{
 }, {
     id: 'getReplaced',
     resource: 'XZH2O',
-    amount: 1,
+    amount: 500,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XZH2O',
-    amount: 1,
+    amount: 500,
     emptied: true
 }];
 
@@ -521,12 +526,12 @@ var XGHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'XGHO2',
-    amount: 1,
+    amount: 500,
     emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XGHO2',
-    amount: 1,
+    amount: 500,
     emptied: true
 }];
 var E33S76WarMix = [
@@ -579,13 +584,13 @@ var XLHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LGHO2',
-    amount: 1,
+    resource: 'XLHO2',
+    amount: 500,
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'LGHO2',
-    amount: 1,
+    resource: 'XLHO2',
+    amount: 500,
     emptied: true
 }];
 
@@ -601,6 +606,14 @@ function labMode(roomName, mode, labs) {
             }
 
             return muster;
+        case 'XKH2O':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (a in XKH2O) {
+                //        if (labs[e] !== undefined)
+                XKH2O[a].id = labs[a].id;
+            }
+
+            return XKH2O;
         case 'XGHO2':
             Game.rooms[roomName].memory.labMode = mode;
             for (var e in XGHO2) {
@@ -726,7 +739,7 @@ function setLabs(roomName, labs) {
         case 'E28S71':
             return labMode(roomName, 'XKHO2', labs);
         case 'E33S76':
-            return labMode(roomName, 'XKH2O', labs);
+            return labMode(roomName, 'XZHO2', labs);
         case 'E23S75':
 
             return labMode(roomName, 'XZH2O', labs);

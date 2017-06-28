@@ -156,7 +156,7 @@ function labNeedReducing(creep) {
     while (e--) {
         let lab = Game.getObjectById(theplans[e].id);
         if (theplans[e].emptied && lab.room.name == creep.room.name) {
-            if (lab.mineralAmount > 601) {
+            if (lab.mineralAmount > theplans[e].amount) {
                 if (creep.pos.isNearTo(lab)) {
                     creep.withdraw(lab, lab.mineralType);
                     return true;
