@@ -59,29 +59,19 @@
     function rampartThings(flag) {
         if (flag.memory.invaderTimed === undefined) flag.memory.invaderTimed = 0;
         if (flag.memory.alert === undefined || !flag.memory.alert) {
-            //        let roomCreeps = _.filter(Game.creeps,function(z){z.room.name == flag.room.name});
-            let roomCreeps = _.filter(Game.creeps, function(n) {
-                return n.room.name == flag.room.name;
-            });
-            //        console.log(roomCreeps.length, 'trea');
-            var a = roomCreeps.length;
-            while (a--) {
-                roomCreeps[a].memory.rampartDefense = true;
-            }
-            flag.memory.alert = true;
+            flag.memory.alert = true; 
         }
 
         if (flag.memory.alert) {
             // Look for creeps
             let bads = flag.room.find(FIND_HOSTILE_CREEPS);
+                bads = _.filter(bads, function(object) {
+                   return (object.owner.username != 'Invader' && !_.contains(FLAG.friends, object.owner.username));
+                }); 
+
             if (bads.length === 0) {
                 flag.memory.invaderTimed = undefined;
                 flag.memory.alert = undefined;
-                let roomCreeps = _.filter(Game.creeps, { filter: z => z.room.name == flag.room.name });
-                var o = roomCreeps.length;
-                while (o--) {
-                    roomCreeps[o].memory.rampartDefense = false;
-                }
                 flag.room.memory.towerRepairID = undefined;
                 flag.remove();
             }

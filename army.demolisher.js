@@ -23,7 +23,7 @@ var fox = require('foxGlobals');
 function doAttack(creep) {
     let target;
     switch (creep.room.name) {
-        case "E18S64":
+        /*case "E18S64":
             var E18S64targets = ['59506a753d55600158180666'];
             for (var a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
@@ -42,15 +42,15 @@ function doAttack(creep) {
                 creep.dismantle(bads[0]);
                 return true;
             }
-            return false;
-        default:
+            return false; */
+/*        default:
             bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
             if (bads.length > 0) {
                 creep.dismantle(bads[0]);
                 break;
             }
 
-            break;
+            break; */
     }
     return false;
 }
@@ -87,7 +87,6 @@ class demolisherClass extends roleParent {
         /*        if (creep.hits < 4500) {
                     super.edgeRun(creep);
                 } */
-        console.log(this.hits, this.hitsMax);
         if (!doAttack(creep))
             if (!creep.killBase()) {
                 movement.flagMovement(creep);

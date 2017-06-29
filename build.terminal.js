@@ -82,7 +82,7 @@ function shareEnergy(terminal) {
     for (var e in terminals) {
         let storage = Game.getObjectById(terminals[e]).room.storage;
         if (storage !== null && storage.store[RESOURCE_ENERGY] < 800000) {
-            if (storage.store[RESOURCE_ENERGY] < currentLow) {
+            if (storage.store[RESOURCE_ENERGY] < currentLow && terminal.total !== 300000) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
             }
@@ -811,11 +811,8 @@ class roleTerminal {
                 if (zz > 299000) {
                     if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
                         if (!shareEnergy(terminal)) { // Moves energy around
-                            if (Memory.terminalTarget !== undefined && Memory.terminalTarget != 'none') {
                                 //                                newTradeEnergy(terminal);
-                                //                                  tradeEnergy(terminal);
-                                //                                }
-                            }
+                                                                  tradeEnergy(terminal);
                         } else {
                             newTradeEnergy(terminal);
                         }
@@ -823,6 +820,7 @@ class roleTerminal {
                         //                        newTradeEnergy(terminal);
                         tradeMineral(terminal);
                     }
+                    newTradeEnergy(terminal);
                 }
             }
 

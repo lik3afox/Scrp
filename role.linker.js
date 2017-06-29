@@ -447,9 +447,19 @@ function spawn9Room(creep) {
             }
             //creep.say('hi')
             goto = Game.getObjectById('58dfbad7836eeb30dd91e1a3');
-            if (goto !== null) {
+            if (goto !== null && goto.energy !== 0) {
                 creep.withdraw(goto, RESOURCE_ENERGY);
+            }else {
+                  let str = creep.room.terminal;
+
+            goto = Game.getObjectById('590f2337820b9efc44a15794');
+            if (goto !== null && goto.energy === 0) {
+                    if (str.store[RESOURCE_ENERGY] > 20000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000)
+                        if (creep.withdraw(str, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveMe(str, {                                reusePath: 20                            });
+                        }
             }
+        }
 
             break;
         case 1:

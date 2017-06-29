@@ -196,6 +196,16 @@ class healerClass extends roleParent {
             movement.flagMovement(creep);
         }
 
+        var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+        site = _.filter(site,function(o){
+            return !o.pos.lookForStructure(STRUCTURE_RAMPART);
+        });
+        creep.say(site.length);
+        if(site.length>0){
+            creep.moveTo(site[0]);
+        }
+
+
         /*        let zz = Game.getObjectById('595082872cf123870e614e0d');
         if (zz !== null && zz.hits > zz.hitsMax - 5) {
             if (creep.pos.isNearTo(zz))

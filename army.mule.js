@@ -73,7 +73,7 @@ class muleClass extends roleParent {
             } else {
                 let zz = Game.getObjectById(creep.memory.parent);
                 if (zz !== null) {
-                    console.log(creep.moveTo(zz, { reusePath: 50 }));
+                    creep.moveTo(zz, { reusePath: 50 });
 
                 }
             }

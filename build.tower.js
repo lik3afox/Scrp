@@ -21,7 +21,7 @@ function getBoostTough(body) {
 function scanIfNoHealer(target) {
     let zzz = target.pos.findInRange(FIND_CREEPS, 3);
     zzz = _.filter(zzz, function(o) {
-        return !_.contains(fox.friends, o.owner.username);
+        return !_.contains(fox.friends, o.owner.username) && o.getActiveBodyparts(HEAL) > 0;
     });
     if (zzz > 0) {
         return true;
@@ -102,7 +102,7 @@ function calcuateDamage(body, amount) {
     var toughType;
     for (var a in body) {
         if (body[a].boost !== undefined && body[a].type == TOUGH) {
-            return amount * BOOST.tough[body[a].boost].damage;
+            return amount * BOOSTS.tough[body[a].boost].damage;
         }
     }
     return amount;
@@ -112,27 +112,25 @@ function estimateDamageAndAttack(target, allies, towers) {
     var totalDamage = 0;
     totalDamage += getTowerDamage(target, towers);
     totalDamage += getCreepDamage(target, allies);
-    //    totalDamage += getRangedDamage(target, allies);
     var totalToughHp = getBoostTough(target.body) * 100;
     var damageTotal = calcuateDamage(target.body, totalDamage);
     var currentLossHp = target.hitsMax - target.hits;
     if (damageTotal + currentLossHp < totalToughHp) return false;
 
-    console.log(target, totalToughHp, damageTotal, damageTotal > totalToughHp);
+    console.log('est damage', target, totalToughHp, damageTotal, damageTotal > totalToughHp);
     target.room.visual.text(calcuateDamage(target.body, totalDamage), target.pos, { color: 'green', font: 0.8 });
-
-    var e;
-    for (e in towers) {
-        towers[e].attack(target);
-    }
-    for (e in allies) {
-        if (allies[e].getActiveBodyparts(ATTACK) > 0) {
-            allies[e].attack(target);
+        var e;
+        for (e in towers) {
+            towers[e].attack(target);
         }
-        if (allies[e].getActiveBodyparts(RANGED_ATTACK) > 0) {
-            allies[e].rangedAttack(target);
-        }
-    }
+        for (e in allies) {
+            if (allies[e].getActiveBodyparts(ATTACK) > 0) {
+                allies[e].attack(target);
+            }
+            if (allies[e].getActiveBodyparts(RANGED_ATTACK) > 0) {
+                allies[e].rangedAttack(target);
+            }
+        } 
     return true;
 }
 
@@ -165,31 +163,36 @@ function defendRoom(towers, hostiles) {
         let focusTarget = analyzedBads(hostiles);
         var whatToDo = Math.floor(Math.random() * 2);
         var toughNess;
+
+
+        // Here is the test for troll healer
+        var towerTroll = _.filter(hostiles,function(o){
+            return  (o.getActiveBodyparts(TOUGH) > 0 && o.getActiveBodyparts(HEAL) > 0 && o.getActiveBodyparts(ATTACK) === 0 &&o.getActiveBodyparts(WORK) === 0 && o.getActiveBodyparts(RANGED_ATTACK) === 0);
+        });
+        if(towerTroll.length === hostiles.length) return false;
+
         if (!focusTarget) {
             e = towers.length;
-            focusTarget = hostiles[zz];
+            if(whatToDo === 1) {
+                focusTarget = hostiles[Math.floor(Math.random() * hostiles.length)];
+            }
+            if(whatToDo === 2) {
+                focusTarget = hostiles.sort((a, b) => a.hits - b.hits);
+                focusTarget = focusTarget[0];
+            }
             while (e--) {
                 if (towers[e].energy > 100) {
-                    if (hostiles.length > 1) {
                         if (whatToDo === 0) {
                             let zz = Math.floor(Math.random() * hostiles.length);
-                            if (hostiles[zz].getActiveBodyparts(HEAL) > 0 && hostiles[zz].getActiveBodyparts(ATTACK) === 0)
-                            //                      toughNess = getBoostTough(hostiles[zz].body);
-                            //                    if (toughNess === 0) {
                                 showTowerRange(towers[e]);
-                            towers[e].attack(hostiles[zz]);
-                            //                      }
-
+                                towers[e].attack(hostiles[zz]);
                         } else if (whatToDo === 1) {
-                            let zz = Math.floor(Math.random() * hostiles.length);
-                            //                        toughNess = getBoostTough(hostiles[zz].body);
-                            //                            if (toughNess === 0) {
                             showTowerRange(towers[e]);
                             towers[e].attack(focusTarget);
-                            //                          }
-
+                        } else {
+                            showTowerRange(towers[e]);
+                            towers[e].attack(focusTarget);
                         }
-                    }
                 }
             }
         } else {
@@ -393,6 +396,21 @@ class roleTower {
             return o.structureType == STRUCTURE_TOWER;
         });
 
+    if (Memory.towerTarget === undefined) {
+        Memory.towerTarget = 'none';
+    }
+    if (Memory.towerTarget !== 'none') {
+        let zzz = Game.getObjectById(Memory.towerTarget);
+//        console.log(zzz,zzz.roomName,towers[0].room.name,Memory.towerTarget);
+        if (zzz !== null && zzz.room.name == towers[0].room.name) {
+           var a = towers.length;
+            while (a--) {
+                towers[a].attack(zzz);
+            }
+            return true;
+        }
+    }
+
         if (towers.length > 0) {
             //                showTowerRange(towers);  
             var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
@@ -408,7 +426,12 @@ class roleTower {
             if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
                 // SO we should just repair and make it longer
                 if (zz.memory.invaderTimed > 1000) {
-                    repairRampart(towers);
+                    for (var bad in hostiles) {
+                        if (!estimateDamageAndAttack(hostiles[bad], mycreeps, towers)) {
+                            repairRampart(towers);
+                        }
+                    }
+
                     return;
                 }
             }
@@ -424,12 +447,10 @@ class roleTower {
                 }
             }
             if (hostiles.length > 0) {
-                if (roomName == 'E35S83') {
-                    for (var e in hostiles) {
-                        if (estimateDamageAndAttack(hostiles[e], mycreeps, towers)) {
-                            console.log("KILLING", hostiles[e]);
-                            return;
-                        }
+                for (var e in hostiles) {
+                    if (estimateDamageAndAttack(hostiles[e], mycreeps, towers)) {
+                        console.log("KILLING", hostiles[e]);
+                        return;
                     }
                 }
             }

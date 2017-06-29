@@ -107,16 +107,22 @@ function getHostiles(creep) {
     var tgt;
     if(creep.memory.playerTargetId !== undefined)
         tgt = Game.getObjectById(creep.memory.playerTargetId);
+
     if (tgt === null || tgt === undefined) {
         creep.memory.playerTargetId = null;
         let bads = creep.room.find(FIND_HOSTILE_CREEPS);
+        bads = _.filter(bads, function(o) {
+            return !_.contains(fox.friends, o.owner.username) ;
+        });
         let player = _.filter(bads, function(o) {
-            return !_.contains(fox.friends, o.owner.username) && o.owner.username !== 'Invader' && o.owner.username !== 'Source Keeper';
+            return o.owner.username !== 'Invader' && o.owner.username !== 'Source Keeper';
         });
         if (player.length > 0) {
             creep.memory.playerTargetId = player[0].id;
             return player;
         }
+
+
         return creep.pos.findInRange(bads, range);
     } else {
 

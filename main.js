@@ -49,39 +49,68 @@
 
 
         var targets = spawn.room.find(FIND_HOSTILE_CREEPS);
-        targets = _.filter(targets, function(object) {
-            return (object.owner.username != 'Invader' && !_.contains(fox.friends, o.owner.username));
-        });
-
+                targets = _.filter(targets, function(object) {
+                   return (object.owner.username != 'Invader' && !_.contains(fox.friends, object.owner.username));
+                }); 
+        //var www = spawn.room.find(FIND_CREEPS);
+        /*www = _.filter(targets,function(o){
+            return (object.owner.username != 'likeafox');
+        }); */
         if (targets.length === 0) return;
         var e = targets.length;
+        var named2 = 'RA2' + spawn.room.name;
+        var named = 'rampartD' + spawn.room.name;
+        var named3 = 'RA3' + spawn.room.name;
+
         while (e--) {
 
             let nearRampart = targets[e].pos.findInRange(FIND_STRUCTURES, 1, {
                 filter: object => (object.structureType == 'rampart')
             });
-
             if (nearRampart.length > 0) {
-
-                var named = 'rampartD' + spawn.room.name;
-                if (Game.flags[named] === undefined) {
-                    console.log('lets place a flag here for defense');
-                    spawn.room.createFlag(nearRampart[0].pos, named, COLOR_YELLOW, COLOR_PURPLE);
-                } else {
-                    console.log('extra rampart is available for guy');
-                    var named2 = 'RA2' + spawn.room.name;
-                    if (Game.flags[named2] === undefined && Game.flags[named].invaderTimed !== undefined &&
-                        Game.flags[named].invaderTimed > 250) {
-                        spawn.room.createFlag(nearRampart[0].pos, named2, COLOR_YELLOW, COLOR_WHITE);
+                for (var a in nearRampart) {
+                    if (Game.flags[named] === undefined) {
+                        console.log('lets place a flag here for defense');
+                        spawn.room.createFlag(nearRampart[a].pos, named, COLOR_YELLOW, COLOR_PURPLE);
                     } else {
-                        if (_.contains(HardD, spawn.room.name)) {
-                            var named3 = 'RA3' + spawn.room.name;
-                            if (Game.flags[named3] === undefined &&
-                                Game.flags[named].invaderTimed > 500) {
-                                spawn.room.createFlag(nearRampart[0].pos, named3, COLOR_YELLOW, COLOR_WHITE);
+                        // It exists,but does it have any bad guys? If not then relocatie
+                        if (Game.flags[named] !== undefined) {
+                            var neat = Game.flags[named].pos.findInRange(targets, 1);
+                            if (neat.length === 0) {
+                                if ((Game.flags[named2] === undefined ||
+                                        (Game.flags[named2] !== undefined && !Game.flags[named2].pos.isEqualTo(nearRampart[a].pos)) &&
+
+                                        (Game.flags[named3] === undefined ||
+                                            (Game.flags[named3] !== undefined && !Game.flags[named3].pos.isEqualTo(nearRampart[a].pos))))) {
+                                    Game.flags[named].setPosition(nearRampart[a].pos);
+                                }
                             }
                         }
+
+
+
+
+                        if (Game.flags[named2] === undefined) {
+                            console.log('extra rampart is available for guy');
+                            //        console.log(Game.flags[named2] , Game.flags[named].memory.invaderTimed,Game.flags[named].memory.invaderTimed );
+                            if (Game.flags[named].memory.invaderTimed !== undefined &&
+                                Game.flags[named].memory.invaderTimed > 15) {
+                                //                        console.log(nearRampart[a].pos,Game.flags[named].pos);
+                                if (!nearRampart[a].pos.isEqualTo(Game.flags[named].pos))
+                                    spawn.room.createFlag(nearRampart[a].pos, named2, COLOR_YELLOW, COLOR_WHITE);
+                            }
+                        } else {
+                            if (_.contains(HardD, spawn.room.name)) {
+                                if (Game.flags[named3] === undefined &&
+                                    Game.flags[named].memory.invaderTimed > 500) {
+                                    spawn.room.createFlag(nearRampart[a].pos, named3, COLOR_YELLOW, COLOR_WHITE);
+                                }
+                            }
+                        }
+
+
                     }
+
                 }
 
             }
@@ -196,9 +225,9 @@
 
     function doRoomReport(room) {
         bads = room.find(FIND_HOSTILE_CREEPS);
-        bads = _.filter(bads, function(creep) {
-            return (!_.contains(fox.friends, creep.owner.username));
-        });
+                bads = _.filter(bads, function(creep) {
+                    return (!_.contains(fox.friends, creep.owner.username));
+                }); 
         var numBads = bads.length;
         if (numBads > 0 && bads[0].owner.username !== 'Invader') {
             var report = analyzeHostiles(bads); // Here we get a report of the bads.
@@ -299,7 +328,6 @@
         }
         // for creeps.
 
-        rampartCheck(Game.spawns.Spawn1);
         var total = 0;
         spawnsDo.runCreeps();
         var spawnReport = {};
@@ -315,6 +343,7 @@
                         doRoomReport(Game.spawns[title].room);
                     }
                 }
+                rampartCheck(Game.spawns[title]);
 
                 //                safemodeCheck(Game.spawns[title]);
 

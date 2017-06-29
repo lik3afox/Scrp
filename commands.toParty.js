@@ -277,12 +277,13 @@ function getCurrentParty(flag) {
         if (flag.memory.spawn) return smallPowerParty;
         //        if (flag.memory.spawn) return bigPowerParty;
     }
+
     if (flag.name.substr(0, 5) == 'rampa') {
         return rampartParty;
     }
     if (flag.name.substr(0, 2) == 'RA') {
         return soloGuard;
-    }
+    } 
     if (flag.memory.musterType !== 'none') {
         switch (flag.memory.musterType) {
             case 'oneFight':

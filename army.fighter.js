@@ -255,12 +255,12 @@ class fighterClass extends roleParent {
             if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XUH2O'])) {
                 return;
             }
-        }
+        }/*
         if (creep.memory.level == 10) {
             if (super.boosted(creep, ['XUH2O'])) {
                 return;
             }
-        }
+        }  */
 
         enemy = creep.pos.findInRange(creep.room.hostilesHere(), 7);
 
