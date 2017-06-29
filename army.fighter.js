@@ -117,6 +117,7 @@ function doAttack(creep) {
 
 
     }
+    return false;
 }
 
 
@@ -255,13 +256,13 @@ class fighterClass extends roleParent {
                 return;
             }
         }
-        /*        if (creep.memory.level == 10) {
-                    if (super.boosted(creep, ['XUH2O'])) {
-                        return;
-                    }
-                }*/
+        if (creep.memory.level == 10) {
+            if (super.boosted(creep, ['XUH2O'])) {
+                return;
+            }
+        }
 
-        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 1);
+        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 7);
 
         enemy = _.filter(enemy,
             function(object) {
@@ -275,7 +276,11 @@ class fighterClass extends roleParent {
         var kill;
         if (enemy.length > 0) {
             enemy = creep.pos.findClosestByRange(enemy);
-            creep.attackMove(enemy);
+            if (creep.pos.isNearTo(enemy)) {
+                creep.attackMove(enemy);
+            } else {
+                creep.moveTo(enemy);
+            }
         } else {
 
             if (!doAttack(creep))

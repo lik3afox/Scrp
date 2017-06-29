@@ -87,10 +87,12 @@ class demolisherClass extends roleParent {
         /*        if (creep.hits < 4500) {
                     super.edgeRun(creep);
                 } */
+        console.log(this.hits, this.hitsMax);
         if (!doAttack(creep))
-            if (!creep.killBase())
+            if (!creep.killBase()) {
                 movement.flagMovement(creep);
-        return;
+                return;
+            }
     }
 }
 

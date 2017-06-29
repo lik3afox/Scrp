@@ -438,6 +438,13 @@ function healMovement(creep) {
             return true;
         }
     }
+    if (Game.flags.drainer !== undefined && Game.flags.drainer.room !== undefined) {
+        if (!creep.pos.isNearTo(Game.flags.drainer) && creep.hits !== creep.hitsMax) {
+            creep.moveTo(Game.flags.drainer, { maxOpts: 50 });
+            return true;
+        }
+    }
+
     return false;
 }
 

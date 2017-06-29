@@ -260,7 +260,16 @@ module.exports = function() {
     var fox = require('foxGlobals');
 
     Creep.prototype.killBase = function(options) {
-        if (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.friends, this.room.controller.owner.username)) return false;
+        //        if (this.hits !== this.hitsMax) return false;
+        if (this.room.controller === undefined) {
+            return false;
+        }
+        if (this.room.controller !== undefined && this.room.controller.owner !== undefined &&
+
+            _.contains(fox.friends, this.room.controller.owner.username)) return false;
+        if (this.memory.role == 'demolisher') {
+            console.log(this.room.controller);
+        }
         var struc = this.room.find(FIND_HOSTILE_STRUCTURES);
         /*
                     var close;
@@ -320,6 +329,7 @@ module.exports = function() {
 
         }
         close = Game.getObjectById(this.memory.targetID);
+        console.log(this.hits, this.hitsMax);
         if (close !== null) {
             if (this.pos.isNearTo(close)) {
                 if (this.getActiveBodyparts(ATTACK) > 0) {
@@ -328,7 +338,7 @@ module.exports = function() {
                     this.dismantle(close);
                 }
                 return true;
-            } else {
+            } else if (this.hits == this.hitsMax) {
                 this.moveTo(close, options);
                 return true;
             }
