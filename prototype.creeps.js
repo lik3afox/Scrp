@@ -264,6 +264,9 @@ module.exports = function() {
         if (this.room.controller === undefined) {
             return false;
         }
+        if (this.room.controller.owner === undefined) {
+            return false;
+        }
         if (this.room.controller !== undefined && this.room.controller.owner !== undefined &&
 
             _.contains(fox.friends, this.room.controller.owner.username)) return false;

@@ -11,7 +11,7 @@
 // Mostly works with spawn.
 
 var classLevels = [
-    [CARRY, MOVE, CARRY, MOVE,WORK], // 300
+    [CARRY, MOVE, CARRY, MOVE, WORK], // 300
 
     [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, CARRY, MOVE], // 550
 
@@ -136,6 +136,7 @@ function goToMovePath(creep, patrol) {
 
 function moveOnPath(creep) {
     var patrol;
+    if (creep.room.memory.alert) return false;
     switch (creep.room.name) {
         case "E28S77":
             patrol = [
