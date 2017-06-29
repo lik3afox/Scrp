@@ -115,7 +115,7 @@ function estimateDamageAndAttack(target, allies, towers) {
     //    totalDamage += getRangedDamage(target, allies);
     var totalToughHp = getBoostTough(target.body) * 100;
     var damageTotal = calcuateDamage(target.body, totalDamage);
-    var currentLossHp = creep.hitsMax - creep.hits;
+    var currentLossHp = target.hitsMax - target.hits;
     if (damageTotal + currentLossHp < totalToughHp) return false;
 
     console.log(target, totalToughHp, damageTotal, damageTotal > totalToughHp);
@@ -174,19 +174,19 @@ function defendRoom(towers, hostiles) {
                         if (whatToDo === 0) {
                             let zz = Math.floor(Math.random() * hostiles.length);
                             if (hostiles[zz].getActiveBodyparts(HEAL) > 0 && hostiles[zz].getActiveBodyparts(ATTACK) === 0)
-                                toughNess = getBoostTough(hostiles[zz].body);
-                            if (toughNess === 0) {
+                            //                      toughNess = getBoostTough(hostiles[zz].body);
+                            //                    if (toughNess === 0) {
                                 showTowerRange(towers[e]);
-                                towers[e].attack(hostiles[zz]);
-                            }
+                            towers[e].attack(hostiles[zz]);
+                            //                      }
 
                         } else if (whatToDo === 1) {
                             let zz = Math.floor(Math.random() * hostiles.length);
-                            toughNess = getBoostTough(hostiles[zz].body);
-                            if (toughNess === 0) {
-                                showTowerRange(towers[e]);
-                                towers[e].attack(focusTarget);
-                            }
+                            //                        toughNess = getBoostTough(hostiles[zz].body);
+                            //                            if (toughNess === 0) {
+                            showTowerRange(towers[e]);
+                            towers[e].attack(focusTarget);
+                            //                          }
 
                         }
                     }
@@ -196,7 +196,7 @@ function defendRoom(towers, hostiles) {
             e = towers.length;
             while (e--) {
                 if (towers[e].energy > 100) {
-                    toughNess = getBoostTough(hostiles[zz].body);
+                    toughNess = getBoostTough(hostiles[e].body);
                     if (toughNess === 0) {
                         showTowerRange(towers[e]);
                         towers[e].attack(focusTarget);

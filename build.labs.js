@@ -500,12 +500,12 @@ var XGHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
+    resource: 'OH',
     amount: 2500,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'OH',
+    resource: 'XUH2O',
     amount: 2700,
     emptied: false
 }, {
@@ -515,12 +515,12 @@ var XGHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LH',
+    resource: 'X',
     amount: 2700,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'X',
+    resource: 'LH',
     amount: 2700,
     emptied: false
 }, {
@@ -698,24 +698,17 @@ var E29S79WarMix = [
 function getLabMixes(roomName) {
     if (Memory.war) {
         var newMixes = [];
-        switch (roomName) {
-            case 'E29S79':
+        switch (Game.rooms[roomName].memory.labMode) {
+            case 'XXZHO2':
                 return E29S79WarMix;
-
-            case 'E33S76':
-            case 'E29S79':
-            case 'E28S71':
-            case 'E23S75':
-            case 'E26S73':
-            case 'W4S93':
-                return E33S76WarMix;
-            case 'E35S83':
-
-                //            case 'E27S75':
-
-                return []; // Mustering rooms.
-            default:
+            case 'light':
+            case undefined:
                 return Game.rooms[roomName].memory.labMix;
+            default:
+
+                return E33S76WarMix;
+                /*            default:
+                                return Game.rooms[roomName].memory.labMix;*/
         }
     } else {
         return Game.rooms[roomName].memory.labMix;
@@ -738,21 +731,22 @@ function setLabs(roomName, labs) {
             return labMode(roomName, 'XXZHO2', labs);
             //        case 'E26S77':
             //            return labMode(roomName, 'XZHO2', labs);
-        case 'E26S73':
-            return labMode(roomName, 'XLHO2', labs); //
+            //        case 'E26S73':
+            //            return labMode(roomName, 'XLHO2', labs); //
         case 'E28S71':
             return labMode(roomName, 'XKHO2', labs);
         case 'E33S76':
-            return labMode(roomName, 'XXZHO2', labs);
+            return labMode(roomName, 'XZH2O', labs);
         case 'E23S75':
-            return labMode(roomName, 'muster', labs);
+            //return labMode(roomName, 'muster', labs);
 
-//            return labMode(roomName, 'XZH2O', labs);
+            return labMode(roomName, 'XGHO2', labs);
         case 'E35S83':
             return labMode(roomName, 'muster', labs);
-
-
         case 'E28S73':
+            return labMode(roomName, 'XXZHO2', labs);
+
+
         case 'E27S75':
         case 'E26S77':
             return labMode(roomName, 'light', labs);

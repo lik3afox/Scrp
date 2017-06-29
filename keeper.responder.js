@@ -13,26 +13,45 @@ RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE, HEA
 var classLevels = [
     // lv 0 - 5500 50 parts
     [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
-        RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, 
-         ATTACK, ATTACK, ATTACK,
+        RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+        ATTACK, ATTACK, ATTACK,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-        HEAL, MOVE, HEAL, HEAL, HEAL, HEAL,ATTACK, ATTACK,RANGED_ATTACK, RANGED_ATTACK
+        HEAL, MOVE, HEAL, HEAL, HEAL, HEAL, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK
     ]
 ];
 
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var boost = [];
+var fox = require('foxGlobals');
 
 function getHostiles(creep) {
-    let range = 4;
+    let range = 15;
     let zzz = creep.pos.findInRange(creep.room.hostilesHere(), range);
-    //    let sources = creep.pos.findInRange(zzz, 3);
-    //    if (sources.length > 0)   return zzz;
-    /*    zzz = _.filter(zzz, function(o) {
-            return o.owner.username !== 'Source Keeper';
-        });*/
-    return zzz;
+    if (creep.memory.playerCreepId !== undefined) {
+        let plzy = Game.getObjectById(creep.memory.playerCreepId);
+        if (plzy === null) {
+            creep.memory.playerCreepId = undefined;
+        } else {
+            return [plzy];
+        }
+
+    } else {
+        let players = _.filter(zzz, function(object) {
+            return !_.contains(fox.friends, object.owner.username) && object.owner.username !== 'Invader' && object.owner.username !== 'Source Keeper';
+        });
+        if (players.length > 0) {
+            creep.memory.playerCreepId = players[0].id;
+            return [players];
+        }
+
+        zzz = _.filter(zzz, function(object) {
+            return object.owner.username == 'Invader' || object.owner.username == 'Source Keeper';
+        });
+
+        return zzz;
+    }
+    return [];
 }
 /*
 function attackCreep(creep, bads) {
@@ -201,7 +220,8 @@ function attackCreep(creep, bads) {
     }
 
     let enemy = creep.pos.findClosestByRange(bads);
-    if (enemy.owner.username == 'Source Keeper') {
+
+    if (enemy !== null && enemy.owner !== null && enemy.owner.username == 'Source Keeper') {
         SKAttack(creep, bads);
     } else {
         invasionAttack(creep, bads);

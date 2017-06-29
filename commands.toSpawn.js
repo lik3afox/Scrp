@@ -69,6 +69,14 @@ function getCost(module) {
     return total;
 }
 
+function waitForAllSpawn(roomName) {
+    var spwns = _.filter(spwns, function(o) {
+        return o.room.name === roomName && o.spawning === null;
+    });
+    console.log(spwns);
+
+}
+
 function getStack(spawn) {
     // Here we return the stack that is wanted 
     //    console.log('getting stack',spawn.memory.currentStack)
@@ -90,6 +98,7 @@ function getStack(spawn) {
             case 'create':
                 return spawn.memory.create;
             case 'war':
+                waitForAllSpawn(spawn.roomName);
                 return spawn.memory.warCreate;
             case 'expand':
                 return spawn.memory.expandCreate;

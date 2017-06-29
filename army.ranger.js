@@ -3,7 +3,7 @@
 
 var classLevels = [
     [MOVE, RANGED_ATTACK],
-    [RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+    [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
 
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
         RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
@@ -70,42 +70,8 @@ function doAttack(creep) {
     var a;
     switch (creep.room.name) {
         case "E18S64":
+            rangeAttack(creep, ['59511202d6fb6910572a40b5']);
 
-            var E18S64targets = ['59506a753d55600158180666', '594ef7bdd73cce6432e3b586', '58be88cc436155731968483e', '58d9bd5f8f81ea7c04bda21f'];
-
-
-            if (badz.length === 0) {
-
-                for (a in E18S64targets) {
-                    target = Game.getObjectById(E18S64targets[a]);
-                    if (target !== null) {
-                        if (creep.pos.isNearTo(target)) {
-                            creep.rangedMassAttack();
-                            return true;
-                        } else if (creep.pos.inRangeTo(target, 3)) {
-                            creep.rangedAttack(target);
-                            return true;
-                        }
-                    }
-                }
-                creep.rangedMassAttack();
-
-            } else {
-                var clost = creep.pos.findClosestByRange(badz);
-                if (clost !== undefined) {
-                    if (creep.pos.inRangeTo(clost, 3)) {
-                        if (creep.pos.isNearTo(clost)) {
-                            //creep.rangedAttack(bads[0]);
-                            creep.rangedMassAttack();
-                        } else {
-
-                            creep.rangedMassAttack();
-                            //                            creep.rangedAttack(clost);
-                        }
-                        creep.say('pewpew', true);
-                    }
-                }
-            }
             break;
 
         case "E16S63":

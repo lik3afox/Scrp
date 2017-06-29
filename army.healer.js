@@ -141,7 +141,7 @@ class healerClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-  if (super.goToPortal(creep)) return;
+        if (super.goToPortal(creep)) return;
         //  if(super.boosted(creep,boost)) { return;}   
 
         if (super.isPowerParty(creep)) {
@@ -163,7 +163,7 @@ class healerClass extends roleParent {
         //  creep.heal(creep);
         var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 5);
         hurtz = _.filter(hurtz, function(object) {
-            return object.hits < object.hitsMax  && (object.owner.username == 'likeafox' || object.owner.username == 'Baj');
+            return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'Baj');
         }).sort((a, b) => a.hits - b.hits);
 
         //return;
@@ -173,20 +173,28 @@ class healerClass extends roleParent {
                 creep.rangedMassAttack();
                 creep.memory.lastHealed = hurtz[0].id;
             }
-            if (creep.pos.inRangeTo(hurtz[0], 3) && !creep.pos.isNearTo(hurtz[0])) {}
+            if (creep.pos.isNearTo(hurtz[0])) {
+
+            } else {
+                creep.moveTo(hurtz[0]);
+            }
+            /*if (creep.pos.inRangeTo(hurtz[0], 3) && !creep.pos.isNearTo(hurtz[0])) {
+
+            }*/
         } else if (creep.hits < creep.hitsMax) {
             creep.heal(creep);
             creep.rangedMassAttack();
             creep.memory.lastHealed = creep.id;
+            movement.flagMovement(creep);
         } else {
             // heal last
             var last = Game.getObjectById(creep.memory.lastHealed);
             if (last !== null) {
                 creep.heal(last);
-                creep.rangedMassAttack();
+                //                creep.rangedMassAttack();
             }
+            movement.flagMovement(creep);
         }
-        movement.flagMovement(creep);
 
         /*        let zz = Game.getObjectById('595082872cf123870e614e0d');
         if (zz !== null && zz.hits > zz.hitsMax - 5) {

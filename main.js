@@ -288,8 +288,9 @@
         var report;
         var doSpawnChecks = false;
 
-        //    console.log('********************START REPORT****************************');
-        //        safemodeCheck(Game.spawns.Spawn1);
+        if (Memory.stopRemoteMining === undefined) {
+            Memory.stopRemoteMining = [];
+        }
         if (Memory.doFlag === undefined) Memory.doFlag = 1;
         Memory.doFlag--;
         if (Memory.doFlag < 0) {

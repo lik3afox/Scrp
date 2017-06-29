@@ -75,19 +75,28 @@ var warParty = [
 var warParty2 = [
     ['first', require('role.first'), 0, 4],
     ['ranger', require('army.ranger'), 0, 3],
-    ['fighter', require('army.fighter'), 1, 12],
-    ['demolisher', require('army.demolisher'), 1, 3],
-    ['healer', require('army.healer'), 1, 6], // Healer    
+    ['fighter', require('army.fighter'), 0, 12],
+    ['demolisher', require('army.demolisher'), 0, 3],
+    ['healer', require('army.healer'), 0, 6], // Healer    
     ['scientist', require('role.scientist'), 0, 3]
 ];
 var warParty3 = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 2],
-    ['fighter', require('army.fighter'), 0, 10],
-    ['demolisher', require('army.demolisher'), 1, 2],
+    ['fighter', require('army.fighter'), 1, 10],
+    ['demolisher', require('army.demolisher'), 1, 1],
     ['scout', require('army.scout'), 0, 0],
     ['healer', require('army.healer'), 1, 5] // Healer    
+];
+var warParty33 = [
+    ['first', require('role.first'), 0, 4],
+    ['scientist', require('role.scientist'), 0, 3],
+    ['ranger', require('army.ranger'), 0, 2],
+    ['fighter', require('army.fighter'), 1, 10],
+    ['demolisher', require('army.demolisher'), 2, 1],
+    ['scout', require('army.scout'), 0, 0],
+    ['healer', require('army.healer'), 0, 5] // Healer    
 ];
 var warParty4 = [
     ['first', require('role.first'), 0, 4],
@@ -100,10 +109,10 @@ var warParty4 = [
 var warParty5 = [
     //    ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
-    ['ranger', require('army.ranger'), 1, 1],
+    ['ranger', require('army.ranger'), 0, 1],
     ['fighter', require('army.fighter'), 1, 11],
-    ['demolisher', require('army.demolisher'), 0, 2],
-    ['healer', require('army.healer'), 0, 6] // Healer    
+    ['demolisher', require('army.demolisher'), 1, 2],
+    ['healer', require('army.healer'), 1, 6] // Healer    
 ];
 // ID: 5836bb2241230b6b7a5b9a1f 8,6 e24s76
 
@@ -136,7 +145,7 @@ var upgradeRoomParty = [
 ];
 
 var soloFighter = [
-['fighter', require('army.fighter'), 1, 10]
+    ['fighter', require('army.fighter'), 1, 10]
 ];
 // Every base already has a wall repairer
 // Also have it so the upgrader also repairs the wall
@@ -162,107 +171,6 @@ var _level = 3;
 
 var spawn = require('commands.toSpawn');
 
-
-function getCurrentParty(flag) {
-    // Powerflags do not use this to create they will do it themselves.
-
-    if (flag.name.substr(0, 5) == 'power') {
-        if (flag.memory.spawn) return smallPowerParty;
-        //        if (flag.memory.spawn) return bigPowerParty;
-    }
-    if (flag.name.substr(0, 5) == 'rampa') {
-        return rampartParty;
-    }
-    if (flag.name.substr(0, 2) == 'RA') {
-        return soloGuard;
-    }
-    switch (flag.name) {
-        case 'oneFight':
-            return soloFighter;
-
-        case 'test':
-            return testParty;
-
-        case 'upgradeRoom':
-            return upgradeRoomParty;
-        case 'warparty2':
-            return warParty2;
-        case 'warparty1':
-            return warParty;
-        case 'warparty4':
-            return warParty4;
-        case 'warparty5':
-            return warParty5;
-        case 'warparty3':
-            return warParty3;
-
-        case 'demo':
-            return demoParty;
-
-        case 'mule':
-            return muleParty;
-
-        case 'kill':
-        case 'kill2':
-            return killParty;
-
-        case 'upgrade':
-            return upgradeParty;
-
-        case '2upgrade':
-            return upgrade2Party;
-
-        case '3upgrade':
-            return upgrade2Party;
-
-        case 'scout':
-        case 'scout2':
-
-            return scoutParty;
-
-        case 'mage':
-            return mageParty;
-        case 'engineer2':
-            return engineer2Party;
-
-        case 'rampartDefender':
-            return rampartParty;
-
-        case 'engineer':
-            return engineerParty;
-        case 'science':
-            return scienceParty;
-
-        case 'fighter':
-            return fighterParty;
-
-        case 'demolish':
-            return demolishParty;
-
-
-        case 'control':
-            return controlParty;
-
-        case 'recontrol':
-            return recontrolParty;
-
-        case 'thief2':
-            return thief2Party;
-        case 'thief':
-            return thiefParty;
-
-        case 'thief3':
-        case 'thief4':
-        case 'thief5':
-            return thief2Party;
-
-
-        default:
-            return basicParty;
-
-    }
-}
-
 function getSpawnCreating(flag) {
     if (flag.name.substr(0, 5) == 'power') {
         if (flag.memory.spawn)
@@ -276,17 +184,20 @@ function getSpawnCreating(flag) {
     if (flag.name.substr(0, 2) == 'RA') {
         return flag.room.name;
     }
+    if (flag.memory.musterRoom != 'none') {
+        return flag.memory.musterRoom;
+    }
 
     switch (flag.name) {
         //    case 'scout2' :
         case 'warparty1':
             return 'E35S83';
         case 'warparty2':
-            return 'E23S75';
+            return 'E28S71';
         case 'warparty3':
             return 'E26S73';
         case 'warparty5':
-            return 'E28S71';
+            return 'E23S75';
 
         case 'warparty3':
         case 'demo':
@@ -355,6 +266,191 @@ function getSpawnCreating(flag) {
             //      return 'E26S73';
     }
 
+
+}
+
+
+function getCurrentParty(flag) {
+    // Powerflags do not use this to create they will do it themselves.
+
+    if (flag.name.substr(0, 5) == 'power') {
+        if (flag.memory.spawn) return smallPowerParty;
+        //        if (flag.memory.spawn) return bigPowerParty;
+    }
+    if (flag.name.substr(0, 5) == 'rampa') {
+        return rampartParty;
+    }
+    if (flag.name.substr(0, 2) == 'RA') {
+        return soloGuard;
+    }
+    if (flag.memory.musterType !== 'none') {
+        switch (flag.memory.musterType) {
+            case 'oneFight':
+                return soloFighter;
+            case 'test':
+                return testParty;
+            case 'warparty33':
+                return warParty33;
+            case 'upgradeRoom':
+                return upgradeRoomParty;
+            case 'warparty2':
+                return warParty2;
+            case 'warparty1':
+                return warParty;
+            case 'warparty4':
+                return warParty4;
+            case 'warparty5':
+                return warParty5;
+            case 'warparty3':
+                return warParty3;
+
+            case 'demo':
+                return demoParty;
+
+            case 'mule':
+                return muleParty;
+
+            case 'kill':
+            case 'kill2':
+                return killParty;
+
+            case 'upgrade':
+                return upgradeParty;
+
+            case '2upgrade':
+                return upgrade2Party;
+
+            case '3upgrade':
+                return upgrade2Party;
+
+            case 'scout':
+            case 'scout2':
+
+                return scoutParty;
+
+            case 'mage':
+                return mageParty;
+            case 'engineer2':
+                return engineer2Party;
+
+            case 'rampartDefender':
+                return rampartParty;
+
+            case 'engineer':
+                return engineerParty;
+            case 'science':
+                return scienceParty;
+
+            case 'fighter':
+                return fighterParty;
+
+            case 'demolish':
+                return demolishParty;
+
+
+            case 'control':
+                return controlParty;
+
+            case 'recontrol':
+                return recontrolParty;
+
+            case 'thief2':
+                return thief2Party;
+            case 'thief':
+                return thiefParty;
+
+            case 'thief3':
+            case 'thief4':
+            case 'thief5':
+                return thief2Party;
+        }
+    } else {
+        switch (flag.name) {
+            case 'oneFight':
+                return soloFighter;
+
+            case 'test':
+                return testParty;
+
+            case 'upgradeRoom':
+                return upgradeRoomParty;
+            case 'warparty2':
+                return warParty2;
+            case 'warparty1':
+                return warParty;
+            case 'warparty4':
+                return warParty4;
+            case 'warparty5':
+                return warParty5;
+            case 'warparty3':
+                return warParty3;
+
+            case 'demo':
+                return demoParty;
+
+            case 'mule':
+                return muleParty;
+
+            case 'kill':
+            case 'kill2':
+                return killParty;
+
+            case 'upgrade':
+                return upgradeParty;
+
+            case '2upgrade':
+                return upgrade2Party;
+
+            case '3upgrade':
+                return upgrade2Party;
+
+            case 'scout':
+            case 'scout2':
+
+                return scoutParty;
+
+            case 'mage':
+                return mageParty;
+            case 'engineer2':
+                return engineer2Party;
+
+            case 'rampartDefender':
+                return rampartParty;
+
+            case 'engineer':
+                return engineerParty;
+            case 'science':
+                return scienceParty;
+
+            case 'fighter':
+                return fighterParty;
+
+            case 'demolish':
+                return demolishParty;
+
+
+            case 'control':
+                return controlParty;
+
+            case 'recontrol':
+                return recontrolParty;
+
+            case 'thief2':
+                return thief2Party;
+            case 'thief':
+                return thiefParty;
+
+            case 'thief3':
+            case 'thief4':
+            case 'thief5':
+                return thief2Party;
+
+
+            default:
+                return basicParty;
+
+        }
+    }
 
 }
 
@@ -444,28 +540,30 @@ function getCost(module) {
 }
 
 function getFormationFromFlag(creep, flag) {
-    if (creep.memory.party == 'warparty1') return;
-    if (flag.memory.formation === undefined) return;
+    if (creep.memory.party == 'warparty1') return -1;
+    if (flag.memory.formation === undefined) return -1;
+    console.log(flag.memory.formation.length, 'k');
     for (var a in flag.memory.formation) {
         let info = flag.memory.formation[a];
+        console.log(a, info.role, creep.memory.role);
         //    info.role,info.posistion,info.number;
-        if (info.role !== 'none') {
+        if (info.role !== 'none' && creep.memory.role == info.role) {
             let count = _.filter(Game.creeps, function(o) {
-                return o.memory.role === info.role && o.memory.posistion === info.posistion;
+                return o.memory.role === info.role && o.memory.formationPos === info.posistion && o.memory.party == flag.name;
             });
-            //            console.log(info.number, info.);
-            //            console.log(count.length, info.number);
+            console.log(count.length, info.number);
+            if (count.length) {
+                console.log(count[0]);
+            }
             if (count.length < info.number) {
                 creep.say('REPORTING');
                 console.log('Creep has reported in will goto role Party:', flag.name, ' getting Posistion:', info.posistion);
                 creep.memory.party = flag.name;
                 return info.posistion;
-            } else {
-                console.log('UNIT REPORTING IN FOR DUTY, DOES NOT HAVE ASSIGNED SPOT', creep, creep.pos, creep.memory.role, creep.memory.party);
-                return undefined;
             }
         }
     }
+    return -1;
 }
 
 function createWayPointTask(creep, pos) {
@@ -481,7 +579,7 @@ function createWayPointTask(creep, pos) {
         }
     };
     task.pos = pos;
-    task.order = "moveTo";
+    task.order = "groupMoveTo";
     if (creep.memory.task === undefined) {
         creep.memory.task = [];
     }
@@ -493,25 +591,39 @@ function createWayPath(creep, path) {
     // return true only when the creep.memory.waypoint = true;
     if (path === undefined) {
         if (creep.memory.task !== undefined && creep.memory.task.length === 0)
-            switch (creep.memory.party) {
-                case 'warparty1':
-                    creep.memory.throughPortal = false;
-                    break;
-                case 'warparty2':
-                    creep.memory.party = 'warparty4';
-                    break;
+            if (Game.flags[creep.memory.party].memory.nextFlag === 'none') {
+                switch (creep.memory.party) {
+                    case 'warparty1':
+                        creep.memory.throughPortal = false;
+                        break;
+                    case 'warparty2':
+                        //                    creep.memory.party = 'warparty4';
+                        break;
 
-                case 'warparty3':
-                    createWayPointTask(creep, new RoomPosition(17, 9, 'E21S70'));
-                    creep.memory.party = 'warparty4';
-                    break;
-                case 'warparty4':
-                break;
-                case 'warparty5':
-                    // Push tasks to move
-                    createWayPointTask(creep, new RoomPosition(17, 9, 'E21S70'));
-                    return true;
+                    case 'warparty3':
+                        createWayPointTask(creep, new RoomPosition(17, 9, 'E21S70'));
+                        creep.memory.party = 'warparty2';
+                        break;
+                    case 'warparty4':
+                        break;
+                    case 'warparty5':
+                        // Push tasks to move
+                        createWayPointTask(creep, new RoomPosition(17, 9, 'E21S70'));
+                        return true;
+                }
+
+            } else {
+                // see if there are any wayPaths
+                if (Game.flags[creep.memory.party].memory.wayPath !== undefined)
+                    for (var e in Game.flags[creep.memory.party].memory.wayPath) {
+                        var o = Game.flags[creep.memory.party].memory.wayPath[e];
+                        if (o.roomName !== 'none')
+                            createWayPointTask(creep, new RoomPosition(o.x, o.y, o.roomName));
+                    }
+                    // set the flag
+                creep.memory.party = Game.flags[creep.memory.party].memory.nextFlag;
             }
+
         return false;
     }
 
@@ -546,6 +658,19 @@ class partyInteract {
         if (flag.memory.rallyFlag === undefined) {
             flag.memory.rallyFlag = false; // This needs to be set true in order for creeps to rally then portal.
         }
+        if (flag.memory.nextFlag === undefined) {
+            flag.memory.nextFlag = 'none';
+        }
+        if (flag.memory.assignmentFlag === undefined) {
+            flag.memory.assignmentFlag = false;
+        }
+        if (flag.memory.musterRoom === undefined) {
+            flag.memory.musterRoom = 'none';
+        }
+        if (flag.memory.musterType === undefined) {
+            flag.memory.musterType = 'none';
+        }
+
         if (flag.memory.wayPath === undefined) {
             flag.memory.wayPath = [];
             var test = {
@@ -558,7 +683,60 @@ class partyInteract {
         }
         if (flag.room !== undefined) {
             console.log(flag.name);
-            if (flag.name == 'warparty3' || flag.name == 'warparty2' || flag.memory.rallyFlag) {
+            var o;
+            var a;
+
+
+            if (flag.memory.assignmentFlag) {
+                if (flag.memory.rallyFlag) {
+                    let crps = flag.pos.findInRange(FIND_MY_CREEPS, 5);
+                    crps = _.filter(crps, function(o) {
+                        return o.memory.party == flag.name;
+                    });
+                    if (crps.length < flag.memory.totalNumber) {
+                        return; // Don't know if this will work.
+                    }
+                }
+
+                let crps = flag.pos.findInRange(FIND_MY_CREEPS, 5, { filter: o => o.memory.party == flag.name });
+                if (crps.length > 0) {
+                    let total = 0;
+                    var rallyFlags = _.filter(Game.flags, function(o) {
+                        return o.color == COLOR_ORANGE;
+                    });
+                    if (rallyFlags.length > 0) {
+
+                        for (o in crps) {
+                            console.log('yaaaa');
+                            for (a in rallyFlags) {
+                                console.log('booy', rallyFlags[a]);
+                                //                                if (crps[o].memory.formationPos === undefined) {
+                                console.log(crps[o], rallyFlags[a]);
+                                crps[o].memory.formationPos = getFormationFromFlag(crps[o], rallyFlags[a]);
+                                console.log('!!', crps[o].memory.formationPos);
+                                //                              }
+                            }
+                        }
+
+                    } else {
+                        for (o in crps) {
+
+                            var flagName = crps[o].memory.role;
+                            if (Game.flags[flagName] !== undefined && crps[o].memory.formationPos === undefined) {
+
+                                crps[o].memory.formationPos = getFormationFromFlag(crps[o], Game.flags[flagName]);
+                                if (crps[o].memory.formationPos >= 0) {
+                                    break;
+                                }
+                            } else if (crps[o].memory.formationPos === undefined) {
+                                total++;
+                                crps[o].memory.formationPos = total;
+                            }
+                        }
+                    }
+
+                }
+            } else if (flag.memory.rallyFlag) {
                 let crps = flag.pos.findInRange(FIND_MY_CREEPS, 5);
                 crps = _.filter(crps, function(o) {
                     return o.memory.party == flag.name;
@@ -577,28 +755,21 @@ class partyInteract {
                         healID = heal[0].id;
                     }
                     // we will then give them the path. then send them on there way.
-                    for (var a in crps) {
+                    for (a in crps) {
                         var creep = crps[a];
-                        creep.memory.leaderID = healID;
+                        creep.memory.healerID = healID;
                         createWayPath(creep);
                     }
 
                 }
-            } else if(flag.name == 'warparty4'){
-
-                let crps = flag.pos.findInRange(FIND_MY_CREEPS, 5, { filter: o => o.memory.party == flag.name });
-                if (crps.length > 0) {
-                    let total = 0;
-                    for (var o in crps) {
-                        if (Game.flags[crps[o].memory.role] !== undefined && crps[o].memory.formationPos === undefined) {
-
-                            crps[o].memory.formationPos = getFormationFromFlag(crps[o], Game.flags[crps[o].memory.role]);
-
-                        } else if (crps[o].memory.formationPos === undefined) {
-                            total++;
-                            crps[o].memory.formationPos = total;
-                        }
-                    }
+            } else if (flag.memory.rallyFlag) {
+                let crps = flag.pos.findInRange(FIND_MY_CREEPS, 5);
+                crps = _.filter(crps, function(o) {
+                    return o.memory.party == flag.name;
+                });
+                for (var b in crps) {
+                    var creepz = crps[b];
+                    createWayPath(creepz);
                 }
             }
 
@@ -613,7 +784,7 @@ class partyInteract {
         var totalParty = findParty(flag);
         var currentParty = getCurrentParty(flag);
         //        console.log('here',totalParty.length);
-
+        //        console.log(Game.flags.stage2.memory.wayPath.length);
         for (var e in currentParty) {
             for (var i in totalParty) {
                 //          console.log(currentParty[e][_name],i,totalParty[i] , currentParty[e][_number],totalParty[i] < currentParty[e][_number]);

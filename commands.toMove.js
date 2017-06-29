@@ -254,7 +254,7 @@ function moveToRallyFlag(creep) {
     if (moveToPos !== undefined) {
         if (creep.room.name == moveToPos.roomName) {
             if (!creep.pos.isEqualTo(moveToPos))
-                creep.moveMe(moveToPos, { ignoreRoads: true, swampCost: 1, maxOpts: 100, reusePath: 2 });
+                creep.moveMe(moveToPos, { ignoreRoads: true, maxOpts: 100, reusePath: 2 });
         } else {
             if (!creep.pos.isEqualTo(moveToPos))
                 creep.moveMe(moveToPos, { reusePath: 50 });
@@ -420,13 +420,25 @@ function getFormationPos(creep) {
         let yy = Game.flags[creep.memory.party].pos;
         let xxx = dif.x + yy.x;
         let yyy = dif.y + yy.y;
-        if(xxx < 1) xxx = 1;
-        if(xxx > 49) xxx = 49;
-        if(yyy < 1) yyy = 1;
-        if(yyy > 49) yyy = 49;
+        if (xxx < 1) xxx = 1;
+        if (xxx > 49) xxx = 49;
+        if (yyy < 1) yyy = 1;
+        if (yyy > 49) yyy = 49;
         zz = new RoomPosition(xxx, yyy, yy.roomName);
     }
     return zz;
+}
+
+function healMovement(creep) {
+    if (creep.memory.healerID === undefined) return false;
+    var healer = Game.getObjectById(creep.memory.healerID);
+    if (healer !== null) {
+        if (!creep.pos.isNearTo(healer) && creep.hits !== creep.hitsMax) {
+            creep.moveTo(healer, { maxOpts: 50 });
+            return true;
+        }
+    }
+    return false;
 }
 
 class MoveInteract {
@@ -528,9 +540,11 @@ class MoveInteract {
     static flagMovement(creep) {
         // Then waypoint flag
         //        if (!createWayPath(creep)) {
-        if (!moveToRallyFlag(creep)) {}
-        //      }
+        if (!healMovement(creep))
+            if (!moveToRallyFlag(creep)) {}
+            //      }
     }
+
 
 
     static moveToDefendFlag(creep, bades) {

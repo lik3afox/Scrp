@@ -247,16 +247,119 @@ module.exports = function() {
         this.heal(this);
     };
 
+    Creep.prototype.attackMove = function(badguy, options) {
+
+        if (_.isArray(badguy)) {
+            let target = this.pos.findClosestByRange(badguy);
+            badguy = target;
+        }
+        var direction = this.pos.getDirectionTo(badguy);
+        var moveStatus = this.move(direction, options);
+        this.attack(badguy);
+    };
+    var fox = require('foxGlobals');
+
+    Creep.prototype.killBase = function(options) {
+        if (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.friends, this.room.controller.owner.username)) return false;
+        var struc = this.room.find(FIND_HOSTILE_STRUCTURES);
+        /*
+                    var close;
+
+                    if (test2.length !== 0) {
+                        close = this.pos.findClosestByRange(bads);
+
+                        if (this.pos.isNearTo(close)) {
+                            this.attack(close);
+                        } else {
+                            this.moveTo(close, options);
+                        }
+                        return;
+                    }
+                    // This is something is on a rampart.
+                    if (test.length !== 0) {
+                        close = this.pos.findClosestByRange(bads);
+
+                        if (this.pos.isNearTo(close)) {
+                            this.attack(close);
+                        } else {
+                            this.moveTo(close, options);
+                        }
+                        return;
+                    } */
+        if (this.memory.targetID === undefined) {
+
+
+            var test2 = _.filter(struc, function(o) {
+                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+            }); // This is something is not on a rampart
+            if (test2.length !== 0) {
+                this.memory.targetID = this.pos.findClosestByRange(test2).id;
+            } else {
+                var test = _.filter(struc, function(o) {
+                    return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && o.pos.lookForStructure(STRUCTURE_RAMPART);
+                });
+                if (test.length !== 0) {
+                    this.memory.targetID = this.pos.findClosestByRange(test).id;
+                } else {
+                    bads = _.filter(struc, function(o) {
+                        return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_CONTROLLER;
+                    }); // these are the ramparts
+                    if (bads.length > 0) {
+                        this.memory.targetID = this.pos.findClosestByRange(bads).id;
+                    } else {
+                        bads = _.filter(struc, function(o) {
+                            return o.structureType !== STRUCTURE_CONTROLLER;
+                        }); // these are the ramparts
+                        if (bads.length > 0) {
+                            this.memory.targetID = this.pos.findClosestByRange(bads).id;
+                        }
+                    }
+                }
+            }
+
+
+        }
+        close = Game.getObjectById(this.memory.targetID);
+        if (close !== null) {
+            if (this.pos.isNearTo(close)) {
+                if (this.getActiveBodyparts(ATTACK) > 0) {
+                    this.attack(close);
+                } else {
+                    this.dismantle(close);
+                }
+                return true;
+            } else {
+                this.moveTo(close, options);
+                return true;
+            }
+        } else {
+            this.memory.targetID = undefined;
+        }
+        return false;
+    };
+
+    Creep.prototype.dragHealer = function(options) {
+        if (this.memory.healerID !== undefined) {
+            heal = Game.getObjectById(this.memory.healerID);
+            if (this.memory.healerID === null) {
+                this.memory.healerID = undefined;
+            } else {
+                this.move(heal.pos.getDirectionTo(this), options);
+            }
+        }
+    };
+
+
     Creep.prototype.runFrom = function(badguy, options) {
 
         if (_.isArray(badguy)) {
             let target = this.pos.findClosestByRange(badguy);
             badguy = target;
         }
-        console.log(badguy.pos, badguy, this.pos);
+        //console.log(badguy.pos, badguy, this.pos);
 
-        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
-        console.log('runfrom', this.pos.getDirectionTo(result.path[0]), result.length);
+        //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
+        //        console.log('runfrom', this.pos.getDirectionTo(result.path[0]), result.length);
         //this.move(this.pos.getDirectionTo(result.path[0]))
         //        this.move(this.pos.getDirectionTo(result.path[0]));
         var direction = this.pos.getDirectionTo(badguy);
@@ -349,7 +452,7 @@ module.exports = function() {
         }
         this.memory.position = this.pos;
         if (this.memory.stuckCount > 0)
-            this.say('St' + this.memory.stuckCount, true);
+            this.say('St' + this.memory.stuckCount);
         if (stuck) {
             this.memory.stuckCount++;
 
@@ -380,7 +483,7 @@ module.exports = function() {
         }
 
 
-        if (this.memory.role == 'transport' || this.memory.role == 'xtransport') {
+        if (this.memory.role == 'transport' || this.memory.role == 'xtransport' || this.memory.party !== undefined) {
             if (this.room.name != this.memory.home)
                 options.ignoreCreeps = true;
             if (this.room.name == 'E35S84' || this.room.name == 'E35S74')

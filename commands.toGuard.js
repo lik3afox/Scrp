@@ -38,7 +38,7 @@ function getSpawnCreating(flag) {
             return 'E26S77';
         case 'Flag28':
             return 'E26S77';
-//        case 'Flag53':
+            //        case 'Flag53':
         case 'Flag58':
         case 'Flag8':
 
@@ -50,7 +50,7 @@ function getSpawnCreating(flag) {
         case 'Flag39':
         case 'Flag41':
         case 'Flag53':
-case 'Flag60':
+        case 'Flag60':
             return 'E35S83';
         case 'Flag56':
         case 'Flag55':
@@ -76,35 +76,46 @@ case 'Flag60':
 }
 // E36S75
 function getCurrentParty(flag) {
-    switch (flag.name) {
-        case 'Flag39':
-        case 'E36S75':
-        case 'Flag56':
-        case 'Flag57':
-        case 'Flag58':
-        case 'Flag55':
-        case 'Flag8':
-        case 'Flag18':
-        case 'Flag20':
-        case 'Flag11':
-        case 'Flag26':
-        case 'Flag34':
-        case 'E36S74':
-        case 'Flag8':
-        case 'Flag28':
-        case 'Flag51':
-        case 'Flag52':
-            return guardParty;
-        case 'Flag7':
-        case 'Flag43':
-        case 'Flag60':
-        case 'Flag53':
-            return invasionParty;
-        case 'Flag41':
-        case 'Flag40':
-            return shooterParty;
-        default:
-            return guardParty;
+    if (flag.memory.musterType !== 'none') {
+        switch (flag.memory.musterType) {
+            case 'guard':
+                return guardParty;
+            case 'invasion':
+                return invasionParty;
+            case 'shooter':
+                return shooterParty;
+        }
+    } else {
+        switch (flag.name) {
+            case 'E36S75':
+            case 'Flag56':
+            case 'Flag57':
+            case 'Flag58':
+            case 'Flag55':
+            case 'Flag8':
+            case 'Flag18':
+            case 'Flag20':
+            case 'Flag11':
+            case 'Flag26':
+            case 'Flag34':
+            case 'E36S74':
+            case 'Flag8':
+            case 'Flag28':
+            case 'Flag51':
+            case 'Flag52':
+                return guardParty;
+            case 'Flag7':
+            case 'Flag43':
+            case 'Flag60':
+            case 'Flag39':
+            case 'Flag53':
+                return invasionParty;
+            case 'Flag41':
+            case 'Flag40':
+                return shooterParty;
+            default:
+                return guardParty;
+        }
     }
 }
 
@@ -169,7 +180,9 @@ class partyInteract {
         if (flag.room !== undefined && flag.room.memory !== undefined && flag.room.memory.guardRoom === undefined) {
             flag.room.memory.guardRoom = true;
         }
-
+        if (flag.memory.musterType === undefined) {
+            flag.memory.musterType = 'none';
+        }
         var totalParty = findParty(flag);
         var currentParty = getCurrentParty(flag);
 

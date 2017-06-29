@@ -373,6 +373,7 @@ class baseParent {
 
 
             case "moveTo":
+            case "groupMoveTo":
                 creep.say('T:move');
 
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);

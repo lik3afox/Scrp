@@ -24,7 +24,7 @@ var classLevels = [
     //9
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK],
     //10
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK],
+    [ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     // Boosted fighter is level 11
     [TOUGH, TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, TOUGH, ATTACK, TOUGH, ATTACK, ATTACK,
         ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
@@ -68,44 +68,52 @@ function doAttack(creep) {
     var a;
     var bads;
     switch (creep.room.name) {
-        case "E18S64":
-            /*            var E18S64targets = ['594b6b86c48f3ee4074cb8a5', '58efba5cd63a0941a119c94f'];
-                        for (a in E18S64targets) {
-                            target = Game.getObjectById(E18S64targets[a]);
-                            if (target !== null) {
-                                if (creep.pos.isNearTo(target)) {
-                                    creep.attack(target);
-                                    break;
-                                }
-                            }
-                        } */
-            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
-            bads = _.filter(bads, function(o) {
-                return !_.contains(fox.friends, o.owner.username);
-            });
-            console.log(bads.length);
-            if (bads.length > 0)
-                creep.attack(bads[0]);
-            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-            if (bads.length > 0)
-                creep.attack(bads[0]);
-
-            break;
+        /*  case "E18S64":
+              /*            var E18S64targets = ['594b6b86c48f3ee4074cb8a5', '58efba5cd63a0941a119c94f'];
+                          for (a in E18S64targets) {
+                              target = Game.getObjectById(E18S64targets[a]);
+                              if (target !== null) {
+                                  if (creep.pos.isNearTo(target)) {
+                                      creep.attack(target);
+                                      break;
+                                  }
+                              }
+                          } 
+              bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+              bads = _.filter(bads, function(o) {
+                  return !_.contains(fox.friends, o.owner.username);
+              });
+              if (bads.length > 0) {
+                  creep.attackMove(bads[0]);
+                  return true;
+              }
+              bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+              bads = _.filter(bads, function(o) {
+                  return !_.contains(fox.friends, o.owner.username);
+              });
+              if (bads.length > 0) {
+                  creep.attackMove(bads[0]);
+                  return true;
+              } 
+              return false;*/
         case "E21S73":
             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
             bads = _.filter(bads, function(o) {
                 return !_.contains(fox.friends, o.owner.username);
             });
-            if (bads.length > 0){
+            if (bads.length > 0) {
 
-                creep.attack(bads[0]);
+                creep.attackMove(bads[0]);
                 break;
             }
 
             bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+            bads = _.filter(bads, function(o) {
+                return bads.structureType != STRUCTURE_WALL;
+            });
             if (bads.length > 0)
-                creep.attack(bads[0]);
-        break;
+                creep.attackMove(bads[0]);
+            break;
 
 
     }
@@ -247,6 +255,11 @@ class fighterClass extends roleParent {
                 return;
             }
         }
+        /*        if (creep.memory.level == 10) {
+                    if (super.boosted(creep, ['XUH2O'])) {
+                        return;
+                    }
+                }*/
 
         enemy = creep.pos.findInRange(creep.room.hostilesHere(), 1);
 
@@ -258,20 +271,24 @@ class fighterClass extends roleParent {
 
         //creep.say(enemy.length, true);
         //return;
-        creep.say(creep.memory.party);
+        //        creep.say(creep.memory.party);
+        var kill;
         if (enemy.length > 0) {
             enemy = creep.pos.findClosestByRange(enemy);
-            creep.attack(enemy);
+            creep.attackMove(enemy);
         } else {
 
-            doAttack(creep);
+            if (!doAttack(creep))
+                if (!creep.killBase())
+                    movement.flagMovement(creep);
+
         }
         /*        if (creep.hits !== creep.hitsMax && creep.memory.roleID !== 0) {
                     if (super.edgeRun(creep)) {
                         return;
                     }
                 } */
-        movement.flagMovement(creep);
+
 
     }
 }
