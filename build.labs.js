@@ -377,7 +377,7 @@ var XKHO2 = [{
 }];
 
 // MOVE
-var XZHO2 = [{
+var XXZHO2 = [{
     id: 'getReplaced',
     resource: 'Z',
     amount: 2700,
@@ -394,12 +394,12 @@ var XZHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'OH',
+    resource: 'XUH2O',
     amount: 2700,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
+    resource: 'OH',
     amount: 2700,
     emptied: false
 }, {
@@ -649,15 +649,15 @@ function labMode(roomName, mode, labs) {
 
             return XKHO2;
 
-        case 'XZHO2':
+        case 'XXZHO2':
             Game.rooms[roomName].memory.labMode = mode;
-            for (var b in XZHO2) {
+            for (var b in XXZHO2) {
                 //       if (labs[b] !== undefined)
 
-                XZHO2[b].id = labs[b].id;
+                XXZHO2[b].id = labs[b].id;
             }
 
-            return XZHO2;
+            return XXZHO2;
         case 'XLHO2':
             Game.rooms[roomName].memory.labMode = mode;
             for (var m in XLHO2) {
@@ -690,8 +690,8 @@ var E29S79WarMix = [
     [3, 1, 2],
     //    [4, 2, 5],
     [6, 3, 5],
-    [9, 8, 6],
-    [10, 8, 6]
+    [9, 7, 6],
+    [10, 7, 6]
 ];
 
 
@@ -733,9 +733,9 @@ function setLabs(roomName, labs) {
 
     switch (roomName) {
         case 'W4S93':
-            return labMode(roomName, 'XZHO2', labs);
+            return labMode(roomName, 'XXZHO2', labs);
         case 'E29S79':
-            return labMode(roomName, 'XZHO2', labs);
+            return labMode(roomName, 'XXZHO2', labs);
             //        case 'E26S77':
             //            return labMode(roomName, 'XZHO2', labs);
         case 'E26S73':
@@ -743,10 +743,11 @@ function setLabs(roomName, labs) {
         case 'E28S71':
             return labMode(roomName, 'XKHO2', labs);
         case 'E33S76':
-            return labMode(roomName, 'XZHO2', labs);
+            return labMode(roomName, 'XXZHO2', labs);
         case 'E23S75':
+            return labMode(roomName, 'muster', labs);
 
-            return labMode(roomName, 'XZH2O', labs);
+//            return labMode(roomName, 'XZH2O', labs);
         case 'E35S83':
             return labMode(roomName, 'muster', labs);
 

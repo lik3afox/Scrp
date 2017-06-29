@@ -5,6 +5,7 @@
 // This module is where the require counts and what really determines the behavior.
 // The role (1) here will be linked to the require run.
 var allModule = [
+    ['skinvader', require('army.skinvader')],
     ['recontroller', require('army.recontroller')],
     ['ranger', require('army.ranger')],
     ['demolisher', require('army.demolisher')],

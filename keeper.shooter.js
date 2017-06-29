@@ -26,6 +26,8 @@ var classLevels = [
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var boost = [];
+var fox = require('foxGlobals');
+
 
 function getPartyFlag(creep) {
     for (var e in Game.flags) {
@@ -96,13 +98,30 @@ function analyzeSourceKeeper(creep) {
 
 function getHostiles(creep) {
     let range = 10;
-    if (creep.room.name == 'E24S75' || creep.room.name == 'E26S76') {
-        range = 12;
+    if (creep.room.name == 'E24S75' || creep.room.name == 'E26S76'|| creep.room.name == 'E35S84' ) {
+        range = 14;
     }
     if (creep.room.name == 'E26S74') {
         range = 10;
     }
-    return creep.pos.findInRange(creep.room.hostilesHere(), range);
+    var tgt;
+    if(creep.memory.playerTargetId !== undefined)
+        tgt = Game.getObjectById(creep.memory.playerTargetId);
+    if (tgt === null || tgt === undefined) {
+        creep.memory.playerTargetId = null;
+        let bads = creep.room.find(FIND_HOSTILE_CREEPS);
+        let player = _.filter(bads, function(o) {
+            return !_.contains(fox.friends, o.owner.username) && o.owner.username !== 'Invader' && o.owner.username !== 'Source Keeper';
+        });
+        if (player.length > 0) {
+            creep.memory.playerTargetId = player[0].id;
+            return player;
+        }
+        return creep.pos.findInRange(bads, range);
+    } else {
+
+        return  [tgt];
+    }
 
 }
 
@@ -223,7 +242,6 @@ class roleGuard extends roleParent {
         if (creep.memory.keeperLair) {
 
             let bads = getHostiles(creep);
-
             if (bads.length > 0) {
                 attackCreep(creep, bads);
             } else {
@@ -254,7 +272,7 @@ class roleGuard extends roleParent {
 
                 creep.memory.keeperLair = creep.room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_KEEPER_LAIR } });
                 creep.memory.goTo = super
-.analyzeSourceKeeper(creep);
+                    .analyzeSourceKeeper(creep);
 
             }
             if (!movement.moveToDefendFlag(creep)) {

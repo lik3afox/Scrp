@@ -1,9 +1,9 @@
 // Designed to kill sourcekeepers - lvl is high for this guy. 
 // needed for this is :     4.140K
 
-var classLevels = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+var classLevels = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
     ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-    ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL
+    ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL, MOVE, MOVE, MOVE
 ];
 
 var boost = [RESOURCE_LEMERGIUM_OXIDE, 'KO'];
@@ -15,17 +15,44 @@ var fox = require('foxGlobals');
 function getHostiles(creep) {
     let range = 5;
     if (creep.room.name == 'E34S84' || creep.room.name == 'W4S94') range = 6;
-    if (creep.room.name == 'E25S74' || creep.room.name == 'E35S74') {
+    if (creep.room.name == 'E25S74' || creep.room.name == 'E35S74' || creep.room.name == 'E35S84') {
         range = 8;
     }
     var rng10 = ['E24S75', 'E26S76', 'E36S74', 'E24S74', 'E34S74'];
     if (_.contains(rng10, creep.room.name)) {
         range = 10;
     }
-    let returned = creep.pos.findInRange(FIND_HOSTILE_CREEPS, range);
+/*
+    let bads = creep.room.find(FIND_HOSTILE_CREEPS );
+
+    let player = _.filter(bads,function(o) {
+        return !_.contains(fox.friends, o.owner.username)&& o.owner.username !== 'Invader'&& o.owner.username !== 'Source Keeper' ;
+    } );
+    if(player.length > 0){
+        return player;
+    }
+
+    let returned = creep.pos.findInRange(bads, range);
+
     returned = _.filter(returned, function(o) {
-        return !_.contains(fox.friends, o.owner.username);
-    });
+        return !_.contains(fox.friends, o.owner.username) ;
+    }); */
+    let tgt = Game.getObjectById(creep.memory.playerTargetId);
+    if (tgt === null) {
+        creep.memory.playerTargetId = null;
+        let bads = creep.room.find(FIND_HOSTILE_CREEPS);
+        let player = _.filter(bads, function(o) {
+            return !_.contains(fox.friends, o.owner.username) && o.owner.username !== 'Invader' && o.owner.username !== 'Source Keeper';
+        });
+        if (player.length > 0) {
+            creep.memory.playerTargetId = player[0].id;
+            return player;
+        }
+        return creep.pos.findInRange(bads, range);
+    } else {
+        return [tgt];
+    }
+
     return returned;
 
 }

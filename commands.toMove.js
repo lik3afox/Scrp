@@ -418,7 +418,13 @@ function getFormationPos(creep) {
     let zz;
     if (Game.flags[creep.memory.party] !== undefined) {
         let yy = Game.flags[creep.memory.party].pos;
-        zz = new RoomPosition(dif.x + yy.x, dif.y + yy.y, yy.roomName);
+        let xxx = dif.x + yy.x;
+        let yyy = dif.y + yy.y;
+        if(xxx < 1) xxx = 1;
+        if(xxx > 49) xxx = 49;
+        if(yyy < 1) yyy = 1;
+        if(yyy > 49) yyy = 49;
+        zz = new RoomPosition(xxx, yyy, yy.roomName);
     }
     return zz;
 }

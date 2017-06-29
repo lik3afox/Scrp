@@ -3,7 +3,7 @@
 // These will need to be added to the allreport.
 var allParty = [
     ['healer', require('army.healer'), 1, 1], // Healer
-    ['ranger', require('army.ranger'), 3, 1], // Focused attack.
+    ['ranger', require('army.ranger'), 3, 2], // Focused attack.
     ['demolisher', require('army.demolisher'), 1, 1]
 ];
 
@@ -38,6 +38,10 @@ var muleParty = [
     ['mule', require('army.mule'), 7, 1]
 ];
 
+var skInvade = [
+    ['skinvader', require('army.skinvader'), 7, 1]
+];
+
 // Has 
 /*
 var defendParty = [
@@ -63,41 +67,41 @@ var mageParty = [
 var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
-    ['ranger', require('army.ranger'), 0, 1],
+    ['ranger', require('army.ranger'), 0, 2],
     ['fighter', require('army.fighter'), 0, 12],
     ['demolisher', require('army.demolisher'), 0, 2],
     ['healer', require('army.healer'), 0, 7] // Healer    
 ];
 var warParty2 = [
     ['first', require('role.first'), 0, 4],
-    ['ranger', require('army.ranger'), 0, 2],
-    ['fighter', require('army.fighter'), 0, 10],
-    ['demolisher', require('army.demolisher'), 0, 1],
-    ['healer', require('army.healer'), 0, 5], // Healer    
+    ['ranger', require('army.ranger'), 0, 3],
+    ['fighter', require('army.fighter'), 1, 12],
+    ['demolisher', require('army.demolisher'), 1, 3],
+    ['healer', require('army.healer'), 1, 6], // Healer    
     ['scientist', require('role.scientist'), 0, 3]
 ];
 var warParty3 = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
-    ['ranger', require('army.ranger'), 0, 1],
-    ['fighter', require('army.fighter'), 1, 10],
-    ['demolisher', require('army.demolisher'), 1, 1],
+    ['ranger', require('army.ranger'), 0, 2],
+    ['fighter', require('army.fighter'), 0, 10],
+    ['demolisher', require('army.demolisher'), 1, 2],
     ['scout', require('army.scout'), 0, 0],
     ['healer', require('army.healer'), 1, 5] // Healer    
 ];
 var warParty4 = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
-    ['ranger', require('army.ranger'), 0, 1],
-    ['healer', require('army.healer'), 0, 6], // Healer    
-    ['fighter', require('army.fighter'), 0, 11],
+    ['ranger', require('army.ranger'), 2, 1],
+    ['healer', require('army.healer'), 0, 5], // Healer    
+    ['fighter', require('army.fighter'), 0, 10],
     ['demolisher', require('army.demolisher'), 0, 2]
 ];
 var warParty5 = [
     //    ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
-    ['ranger', require('army.ranger'), 0, 1],
-    ['fighter', require('army.fighter'), 0, 11],
+    ['ranger', require('army.ranger'), 1, 1],
+    ['fighter', require('army.fighter'), 1, 11],
     ['demolisher', require('army.demolisher'), 0, 2],
     ['healer', require('army.healer'), 0, 6] // Healer    
 ];
@@ -131,6 +135,9 @@ var upgradeRoomParty = [
     ['Aupgrader', require('army.upgrader'), 2, 6]
 ];
 
+var soloFighter = [
+['fighter', require('army.fighter'), 1, 10]
+];
 // Every base already has a wall repairer
 // Also have it so the upgrader also repairs the wall
 // If there's a mineral harvest - have him repair too.
@@ -170,6 +177,9 @@ function getCurrentParty(flag) {
         return soloGuard;
     }
     switch (flag.name) {
+        case 'oneFight':
+            return soloFighter;
+
         case 'test':
             return testParty;
 
@@ -198,7 +208,6 @@ function getCurrentParty(flag) {
 
         case 'upgrade':
             return upgradeParty;
-
 
         case '2upgrade':
             return upgrade2Party;
@@ -277,17 +286,18 @@ function getSpawnCreating(flag) {
         case 'warparty3':
             return 'E26S73';
         case 'warparty5':
-        case 'warparty4':
             return 'E28S71';
 
         case 'warparty3':
         case 'demo':
             return 'E33S76';
-
+        case 'warparty4':
+            return 'E38S72';
 
         case '2upgrade':
             return 'E23S75';
-
+        case 'oneFight':
+            return 'E23S75';
             // case 'rampartDefender' :
             //    case 'upgrade':
             //      return 'E27S75';
@@ -488,13 +498,15 @@ function createWayPath(creep, path) {
                     creep.memory.throughPortal = false;
                     break;
                 case 'warparty2':
+                    creep.memory.party = 'warparty4';
                     break;
 
                 case 'warparty3':
                     createWayPointTask(creep, new RoomPosition(17, 9, 'E21S70'));
-                    creep.memory.party = 'warparty2';
+                    creep.memory.party = 'warparty4';
                     break;
                 case 'warparty4':
+                break;
                 case 'warparty5':
                     // Push tasks to move
                     createWayPointTask(creep, new RoomPosition(17, 9, 'E21S70'));
@@ -546,7 +558,7 @@ class partyInteract {
         }
         if (flag.room !== undefined) {
             console.log(flag.name);
-            if (flag.name == 'warparty3' || flag.memory.rallyFlag) {
+            if (flag.name == 'warparty3' || flag.name == 'warparty2' || flag.memory.rallyFlag) {
                 let crps = flag.pos.findInRange(FIND_MY_CREEPS, 5);
                 crps = _.filter(crps, function(o) {
                     return o.memory.party == flag.name;
@@ -568,17 +580,12 @@ class partyInteract {
                     for (var a in crps) {
                         var creep = crps[a];
                         creep.memory.leaderID = healID;
-                        console.log("hadfsa");
-                        // This will force them on there way, will also change there party name.
-                        //                  if (flag.memory.wayPath[0].roomName !== 'none') {
-                        //                        createWayPath(creep, flag.memory.wayPath);
-                        //                      } else {
                         createWayPath(creep);
-                        //                        }
                     }
 
                 }
-            } else {
+            } else if(flag.name == 'warparty4'){
+
                 let crps = flag.pos.findInRange(FIND_MY_CREEPS, 5, { filter: o => o.memory.party == flag.name });
                 if (crps.length > 0) {
                     let total = 0;

@@ -91,6 +91,21 @@ function doAttack(creep) {
                 creep.attack(bads[0]);
 
             break;
+        case "E21S73":
+            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+            bads = _.filter(bads, function(o) {
+                return !_.contains(fox.friends, o.owner.username);
+            });
+            if (bads.length > 0){
+
+                creep.attack(bads[0]);
+                break;
+            }
+
+            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+            if (bads.length > 0)
+                creep.attack(bads[0]);
+        break;
 
 
     }
