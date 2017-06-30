@@ -29,20 +29,22 @@ function doTask(tasks) {
                 for (var e in task.options) {
                     if (e == 'room') target = task.options[e];
                 }
-                var distance = Game.map.getRoomLinearDistance(ob.room.name, target);
-                //        console.log(target,"distance:",distance,ob,"doing the task of",task.order,"for "+task.options.timed+ "longer")
-                if (distance <= 10) {
-                    if (ob.observeRoom(target) == OK) {
+                if (ob !== null) {
+                    var distance = Game.map.getRoomLinearDistance(ob.room.name, target);
+                    //        console.log(target,"distance:",distance,ob,"doing the task of",task.order,"for "+task.options.timed+ "longer")
+                    if (distance <= 10) {
+                        if (ob.observeRoom(target) == OK) {
+                            task.options.timed--;
+                            if (task.options.timed === 0) {
+                                tasks.shift();
+                            }
+                            return;
+                        }
+                    } else {
                         task.options.timed--;
                         if (task.options.timed === 0) {
                             tasks.shift();
                         }
-                        return;
-                    }
-                } else {
-                    task.options.timed--;
-                    if (task.options.timed === 0) {
-                        tasks.shift();
                     }
                 }
             }

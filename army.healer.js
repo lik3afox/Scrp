@@ -124,7 +124,7 @@ function returnClosestSpawn(roomName) {
     }
     return spawn;
 }
-
+var doMove;
 //STRUCTURE_POWER_BANK:
 class healerClass extends roleParent {
     static levels(level) {
@@ -133,6 +133,7 @@ class healerClass extends roleParent {
     }
 
     static run(creep) {
+        doMove = false;
         if (super.sayWhat(creep)) return;
         super.calcuateStats(creep);
         if (super.returnEnergy(creep)) {
@@ -185,7 +186,7 @@ class healerClass extends roleParent {
             creep.heal(creep);
             creep.rangedMassAttack();
             creep.memory.lastHealed = creep.id;
-            movement.flagMovement(creep);
+            doMove = true;
         } else {
             // heal last
             var last = Game.getObjectById(creep.memory.lastHealed);
@@ -193,16 +194,19 @@ class healerClass extends roleParent {
                 creep.heal(last);
                 //                creep.rangedMassAttack();
             }
-            movement.flagMovement(creep);
+            doMove = true;
         }
 
         var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-        site = _.filter(site,function(o){
+        site = _.filter(site, function(o) {
             return !o.pos.lookForStructure(STRUCTURE_RAMPART);
         });
         creep.say(site.length);
-        if(site.length>0){
-            creep.moveTo(site[0]);
+        if (site.length > 0) {
+            var zzz = creep.pos.findClosestByRange(site);
+            creep.moveTo(zzz);
+        } else if (doMove) {
+            movement.flagMovement(creep);
         }
 
 

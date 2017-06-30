@@ -270,10 +270,10 @@ module.exports = function() {
         if (this.room.controller !== undefined && this.room.controller.owner !== undefined &&
 
             _.contains(fox.friends, this.room.controller.owner.username)) return false;
-/*        if (this.memory.role == 'demolisher') {
-            console.log(this.room.controller);
-        } */
-        var struc = this.room.find(FIND_HOSTILE_STRUCTURES);
+        /*        if (this.memory.role == 'demolisher') {
+                    console.log(this.room.controller);
+                } */
+        var struc = this.room.find(FIND_STRUCTURES);
         /*
                     var close;
 
@@ -332,7 +332,7 @@ module.exports = function() {
 
         }
         close = Game.getObjectById(this.memory.targetID);
-//        console.log(this.hits, this.hitsMax);
+        //        console.log(this.hits, this.hitsMax);
         if (close !== null) {
             if (this.pos.isNearTo(close)) {
                 if (this.getActiveBodyparts(ATTACK) > 0) {
