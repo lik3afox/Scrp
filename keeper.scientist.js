@@ -85,9 +85,9 @@ class mineralRole extends roleParent {
 
         var _goal = movement.getRoomPos(creep.memory.goal);
         let min = Game.getObjectById(creep.memory.goal);
-   //     if (creep.room.name == 'W5S94') {
-//            console.log(min, min !== null ? min.mineralAmount : 0, carry);
- //       }
+        //     if (creep.room.name == 'W5S94') {
+        //            console.log(min, min !== null ? min.mineralAmount : 0, carry);
+        //       }
         if (min !== null && min.mineralAmount === 0 && carry === 0) {
             creep.memory.death = true;
         }
@@ -98,19 +98,7 @@ class mineralRole extends roleParent {
 
         // He's not in 5 spaces of his goal. so he needs to move there. 
         if (creep.memory.goHome) {
-            if (creep.room.name == 'E33S76zz') {
-                if (creep.pos.isNearTo(creep.room.storage)) {
-                    for (var e in creep.carry) {
-                        creep.transfer(creep.room.storage, e);
-                    }
-                } else {
-                    creep.say('tt');
-                    creep.moveTo(creep.room.storage, {
-                        reusePath: 30
-                    });
-                    return;
-                }
-            } else if (creep.room.terminal !== undefined && creep.room.controller.owner !== undefined) {
+            if (creep.room.terminal !== undefined && creep.room.controller.owner !== undefined) {
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     for (var a in creep.carry) {
                         creep.transfer(creep.room.terminal, a);
@@ -135,14 +123,35 @@ class mineralRole extends roleParent {
                     return;
                 }
             } else if (creep.room.name != creep.memory.home) {
-                //                  creep.say('home');
+                creep.say('home');
+
+                if(creep.memory.containerID === undefined) {
+                    var contain = creep.room.find(FIND_STRUCTURES);
+                    contain = _.filter(contain,function(o){
+                        return o.structureType == STRUCTURE_CONTAINER;
+                    });
+                    creep.memory.containerID = creep.pos.findClosestByRange(contain).id;
+                }
+                // Let's find  container in the room and move to it.
+                var contin = Game.getObjectById( creep.memory.containerID );
                 if (!super.guardRoom(creep)) {
-                    if (creep.memory.goal == '5836bb2241230b6b7a5b9a35z' || creep.memory.goal == '5836bb2241230b6b7a5b9a35' || creep.memory.goal == '5836bb2241230b6b7a5b9a33z') {
-                        //                        if (!super.goToFocusFlag(creep)) {
-                        super._movement.moveHome(creep);
-                        //                        }
+                    if(contin === null) {
+                        if (creep.memory.goal == '5836bb2241230b6b7a5b9a35z' || creep.memory.goal == '5836bb2241230b6b7a5b9a35' || creep.memory.goal == '5836bb2241230b6b7a5b9a33z') {
+                            super._movement.moveHome(creep);
+                        } else {
+                            super._movement.moveHome(creep);
+                        }
                     } else {
-                        super._movement.moveHome(creep);
+                        if(contin.total === 2000){
+                            creep.memory.containerID = undefined;
+                        }
+                        if(creep.pos.isNearTo(contin)) {
+                            for( var bb in creep.carry) {
+                                creep.transfer(contin,bb);
+                            }
+                        } else {
+                            creep.moveTo(contin,{reusePath:15});
+                        }
                     }
                 }
                 return;

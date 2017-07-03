@@ -1053,7 +1053,8 @@ class baseParent {
     }
 
     static depositNonEnergy(creep) {
-        if (creep.room.terminal === undefined && creep.room.storage === undefined) return false;
+        if (creep.room.terminal === undefined && creep.room.storage === undefined || creep.room.controller.owner === undefined ||
+            creep.room.controller.owner !== 'likeafox') return false;
 
         let target;
         if (creep.room.terminal !== undefined && creep.room.controller !== undefined && creep.room.controller.level >= 6) {

@@ -6,6 +6,7 @@
 // The role (1) here will be linked to the require run.
 var allModule = [
     ['harass', require('keeper.harass')],
+    ['assistant', require('role.assistant')],
     ['troll', require('army.troll')],
     ['recontroller', require('army.recontroller')],
     ['ranger', require('army.ranger')],
@@ -99,9 +100,11 @@ var upgradeModule = [
     ['harvester', require('role.harvester'), 1, 2],
     ['first', require('role.first'), 1, 1],
     ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['builder', require('role.builder'), 0, 5],
     ['scientist', require('role.scientist'), 0, 4],
-    ['wallwork', require('role.wallworker'), 2, 5],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+    
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['linker', require('role.linker'), 1, 10]
 ];
 
@@ -112,7 +115,10 @@ var empireModules = [
     ['first', require('role.first'), 2, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['linker', require('role.linker'), 1, 4],
-    ['minHarvest', require('role.mineral'), 1, 5],
+
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+
     ['scientist', require('role.scientist'), 0, 4],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['homeDefender', require('role.defender2'), 1, 6]
@@ -136,7 +142,8 @@ var spawn3Module = [
     ['first', require('role.first'), 2, 2],
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['minHarvest', require('role.mineral'), 1, 6],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['nuker', require('role.nuker'), 0, 4],
     ['wallwork', require('role.wallworker'), 1, 5]
 ];
@@ -158,7 +165,9 @@ var spawn5Module = [
     ['linker', require('role.linker'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 5],
     ['wallwork', require('role.wallworker'), 1, 5],
-    ['minHarvest', require('role.mineral'), 1, 5],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+
     ['harvester', require('role.harvester'), 2, 2]
 
 
@@ -168,7 +177,8 @@ var spawn6Module = [ // Spawn11 Room E28S77
 
     ['first', require('role.first'), 1, 4],
     ['nuker', require('role.nuker'), 0, 4],
-    ['minHarvest', require('role.mineral'), 1, 4],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 3],
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
@@ -278,7 +288,8 @@ var E38S72Module = [
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['upgrader', require('role.upgrader'), 0, 5],
-    ['minHarvest', require('role.mineral'), 1, 3],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['harvester', require('role.harvester'), 2, 2]
 ];
 
@@ -1017,8 +1028,11 @@ class theSpawn {
             totalCreeps = addFromCreateStack(totalCreeps, currentModule[type][_name], spawn);
             let min = Game.getObjectById(spawn.room.memory.mineralID);
             let nuke = getNuke(spawn);
+            var alertProhib = ['minHarvest','assistant','nuker'];
 
-            if ((currentModule[type][_name] == 'minHarvest') && (min !== null) && (min.mineralAmount === 0)) {} else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {} else {
+            if ((currentModule[type][_name] == 'minHarvest'||currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {} else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {} else if(
+                spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name]) ){
+            } else {
 
                 // If totalCreeps is less than require through currentModule then.
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {

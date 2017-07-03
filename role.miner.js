@@ -70,7 +70,9 @@ function doWork(creep) {
         if (creep.pos.isNearTo(contain)) {
             if (contain.store != contain.storeCapacity) {
                 //            creep.say('t');
-                creep.transfer(contain, RESOURCE_ENERGY);
+                for(var e in creep.carry){
+                    creep.transfer(contain, e);
+                }
             }
         } else {
             //          creep.say('m');
@@ -294,8 +296,8 @@ class settler extends roleParent {
                             strokeWidth: 0.15,
                             opacity: 0.5
                         }
-                    };
-                    task.pos = _source.pos;
+                    }; 
+                   task.pos = _source.pos;
                     task.order = "moveTo";
                     task.enemyWatch = true;
                     task.rangeHappy = 1;

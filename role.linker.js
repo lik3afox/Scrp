@@ -1050,14 +1050,14 @@ function spawn1Room(creep) {
         case 0:
 
             let goto = Game.getObjectById('58b4aadfd7bddc4460e23ff7');
-            let goto2 = Game.getObjectById('58afd5afe6b54f9d2738d242');
+            let goto2 = Game.getObjectById('595a736200d3867e11c7e0bc');
             if (goto !== null && goto.total > 1000) {
                 if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto, {
                         reusePath: 20
                     });
                 }
-            } else if (goto2.energy > 0) {
+            } else if (goto2 !== null && goto2.energy > 0) {
 
                 if (goto2 !== null && creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto2, {

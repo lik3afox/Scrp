@@ -120,13 +120,13 @@ class buildLink {
         total = 0;
         // Spawn 1
 
-        sendEnergy('58b4cd8ee974380f1de2f9f7', '58afd5afe6b54f9d2738d242', 700);
-        sendEnergy('58afe9e63c5e431f63d27903', '58afd5afe6b54f9d2738d242');
+        sendEnergy('58b4cd8ee974380f1de2f9f7', '595a736200d3867e11c7e0bc', 700);
+        sendEnergy('58afe9e63c5e431f63d27903', '595a736200d3867e11c7e0bc');
 
 
         sendEnergy('58b001ce20048565118f241c', '58b4df8c5da64e904b11a6fc');
         sendEnergy('58b4df8c5da64e904b11a6fc', '58b4ce36d29202cf03ebf22a');
-        sendEnergy('58b4ce36d29202cf03ebf22a', '58afd5afe6b54f9d2738d242');
+        sendEnergy('58b4ce36d29202cf03ebf22a', '595a736200d3867e11c7e0bc');
 
         // Spawn 3
         sendEnergy(['58b094643386e27ab8eb8cb0', '58b087634b99972008ac7457'], '58b0ad8777b2837790268120', 700);

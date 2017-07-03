@@ -98,6 +98,15 @@ function shareEnergy(terminal) {
 }
 
 function needEnergy(terminal) {
+var always = ['E28S71','E38S72','W4S93'];
+if(_.contains(always, terminal.room.name) ) {
+        if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
+            let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
+            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, 'ALWAYS ORDER NEEDS TO BE ALWYS');
+        }
+}
+
+
     if (terminal.store[RESOURCE_ENERGY] < 1000 || terminal.room.storage.store[RESOURCE_ENERGY] < 1000) {
         var highestEnergy;
         var currentHigh = 0;
@@ -785,7 +794,7 @@ class roleTerminal {
         for (var e in terminals) {
             let terminal = Game.getObjectById(terminals[e]);
             if (terminal !== null) {
-                if (!Memory.war)
+                if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
                     newTradeEnergy(terminal);
                 //          focusEnergy(terminal); Removed
                 //            forEveryTerminal(terminal);

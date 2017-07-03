@@ -154,13 +154,10 @@ function whereDoIPut(creep, have) {
     let labs = returnLabs(creep.room.name);
     for (var i in labs) {
         let real = getCached(labs[i].id);
-        if (real !== null && labs[i].resource == have && real.pos.roomName == creep.room.name && real.mineralAmount < labs[i].amount) {
+
+        if (!labs[i].emptied && real !== null && labs[i].resource == have && real.pos.roomName == creep.room.name && real.mineralAmount < labs[i].amount ) {
             return labs[i].id;
         }
-        /*        if(real != undefined && labs[i].resource == have && real.pos.roomName == creep.room.name 
-                    && real.mineralType == undefined) {
-                    return labs[i].id;
-                } */
 
         if (real !== null && have == RESOURCE_ENERGY && real.pos.roomName == creep.room.name) {
             if (real.energy < real.energyCapacity) {
@@ -231,42 +228,42 @@ function labReady(roomName, labz) {
 var muster = [{
     id: 'getReplaced',
     resource: 'LH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XGHO2',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XZH2O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XLHO2',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XZHO2',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XKHO2',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'UH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }];
 
@@ -754,18 +751,14 @@ function labMode(roomName, mode, labs) {
     var a;
     switch (mode) {
         case 'muster':
-            Game.rooms[roomName].memory.labMode = 'muster';
+            Game.rooms[roomName].memory.labMode = mode;
             for (a in muster) {
-                //         if (labs[a] !== undefined)
-                //             if (labs[a] !== undefined)
                 muster[a].id = labs[a].id;
             }
-
             return muster;
         case 'XUH2O':
             Game.rooms[roomName].memory.labMode = mode;
             for (a in XUH2O) {
-                //        if (labs[e] !== undefined)
                 XUH2O[a].id = labs[a].id;
             }
 
@@ -925,11 +918,13 @@ function setLabs(roomName, labs) {
             amount: lab.resource,
             resource: lab.resource
         }; */
-    if (roomName == 'E37S75') {
-        console.log('hersz?');
-    }
+//if(roomName == 'E35S83') console.log("does it get here88");    
 
     switch (roomName) {
+        case 'E35S83':
+        let zz = labMode(roomName, 'muster', labs);
+            return zz;
+
         case 'E28S71':
         case 'E29S79':
             return labMode(roomName, 'XLHO2', labs);
@@ -938,16 +933,18 @@ function setLabs(roomName, labs) {
             return labMode(roomName, 'XGHO2', labs);
 
         case 'E37S75':
-            //            return labMode(roomName, 'XUH2O', labs);
+                       return labMode(roomName, 'XUH2O', labs);
         case 'E26S73':
             return labMode(roomName, 'XUH2O', labs); //
 
-        case 'E35S83':
+
         case 'E33S76':
             return labMode(roomName, 'XKHO2', labs);
 
         case 'E35S73':
+
             return labMode(roomName, 'XZH2O', labs);
+
         case 'E28S73':
             return labMode(roomName, 'XXZHO2', labs);
 
@@ -967,6 +964,11 @@ function setLabs(roomName, labs) {
 }
 
 function returnLabs(roomName) {
+    if( Game.rooms[roomName] === undefined){
+        console.log(roomName, 'return labs failure',roomName.pos.roomName);
+      return false;
+        
+    } 
     if (Game.rooms[roomName].memory.labs === undefined) {
         switch (roomName) {
             case "E23S75":
@@ -987,19 +989,18 @@ function returnLabs(roomName) {
                     id: lab.id,
                     emptied: lab.emptied,
                     amount: lab.amount,
+                    mineralType: lab.resource,
                     resource: lab.resource
                 };
                 warLabs.push(warLab);
             }
             //return ;
-            let zz = setLabs(roomName, warLabs);
-            if (roomName == 'E37S75') {
 
-                console.log(zz.length);
-                console.log(roomName, 'WHAT');
-            }
-            return setLabs(roomName, warLabs);
+            let zz = setLabs(roomName, warLabs);
+
+            return zz;
         } else {
+
             return Game.rooms[roomName].memory.labs;
         }
 
@@ -1070,7 +1071,8 @@ function updateRoomMember(roomName) {
 class buildLab {
 
     static getPlans(roomName) {
-        return returnLabs(roomName);
+let zzz = returnLabs(roomName);
+        return zzz;
     }
 
     static getLabs(creep) {
@@ -1078,12 +1080,12 @@ class buildLab {
 
         let labs = returnLabs(creep.room.name);
         for (var i in labs) {
-            if (labs[i].id != 'none') {
-                let test = getCached(labs[i].id);
-                if (test !== null && test.room.name == creep.room.name) {
+                let test = Game.getObjectById(labs[i].id);
+                if(test !== null && test.pos.roomName !== creep.room.name) {
+                    console.log('WTF why this not in the same room?',test,test.pos,test.id,creep,creep.pos.roomName);
+                } else if (test !== null) {
                     returned.push(test);
                 }
-            }
         }
         //        let vs = creep.room.find(FIND_STRUCTURES,{filter: {structureType: STRUCTURE_LAB}});
         //        console.log( returned.length, returned[0],vs.length,vs[0] );
@@ -1213,7 +1215,7 @@ class buildLab {
 
         }
 
-
+        linksCache = [];
 
 
 

@@ -26,7 +26,14 @@ function getHostiles(creep) {
     bads = _.filter(bads, function(o) {
         return !_.contains(fox.friends, o.owner.username);
     });
-    return bads;
+    if(bads.length > 0){
+        if(bads[0].owner.username == 'Source Keeper') {
+            return creep.pos.findInRange(bads,4);
+        } else {
+            return bads;
+        }
+    }
+    return [];
 }
 
 function attackCreep(creep, bads) {
@@ -48,23 +55,30 @@ function attackCreep(creep, bads) {
         } else {
             creep.rangedAttack(enemy);
         }
-    } else if (distance < 4) {
-
-        var targets = creep.pos.findInRange(bads, 3);
-        creep.rangedAttack(enemy);
+    } 
+    if (distance < 4) {
+    //    creep.rangedAttack(enemy);
+    if(enemy.owner.username !== 'Source Keeper')
         creep.moveToEdge();
-
     } else if (distance >= 4) {
-        if (!creep.memory.getaway) {
-            creep.moveMe(enemy, { maxRooms: 1 });
+        if (!creep.memory.run) {
+            if(enemy.owner.username !== 'Source Keeper')
+                creep.moveMe(enemy, { maxRooms: 1 });
         }
-
     }
 
 }
 
 function moveCreep(creep) {
-    movement.flagMovement(creep);
+    if(creep.room.name !== Game.flags[creep.memory.party].pos.roomName){
+        movement.flagMovement(creep);
+    } else {
+        var bads = getHostiles(creep);
+        let enemy = creep.pos.findClosestByRange(bads);
+        if(!creep.pos.inRangeTo(enemy,2) && creep.hits !== creep.hitsMax)
+            creep.moveTo(enemy,{reusePath:7});
+
+    }
 }
 
 

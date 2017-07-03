@@ -348,6 +348,8 @@ function getCurrentParty(flag) {
                 return harass;
             case 'lowFFH':
                 return lowFFH;
+            case 'lowFH':
+                return lowFFH;
             case 'demo':
                 return demoParty;
 
@@ -418,8 +420,6 @@ function getCurrentParty(flag) {
 
             case 'upgradeRoom':
                 return upgradeRoomParty;
-            case 'warparty2':
-                return warParty2;
             case 'warparty1':
                 return warParty;
             case 'warparty4':

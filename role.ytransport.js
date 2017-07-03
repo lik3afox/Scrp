@@ -186,11 +186,18 @@ class transport extends roleParent {
 
                             if (containerz.length > 0) {
                                 for (var o in containerz) {
+
                                     if ((containerz[o].store[RESOURCE_ENERGY] * 0.75) > targetAmount) {
                                         target = containerz[o].id;
                                         targetAmount = containerz[o].store[RESOURCE_ENERGY];
                                         //            isDropped = true;
                                     }
+
+                                    if(containerz[o].total !== 0 && containerz[o].store[RESOURCE_ENERGY] === 0){
+                                        target = containerz[o].id;
+                                        break;
+                                    }
+
                                 }
                             }
                         }
@@ -215,7 +222,9 @@ class transport extends roleParent {
                                 if (creep.pos.isNearTo(target)) {
 
                                     if (target.structureType === STRUCTURE_CONTAINER) {
-                                        creep.withdraw(target, RESOURCE_ENERGY);
+                                        for(var b in target.store) {
+                                            creep.withdraw(target, b);
+                                        }
                                         creep.memory.gotoID = undefined;
                                     } else {
                                         creep.pickup(target);

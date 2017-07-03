@@ -34,8 +34,7 @@ var classLevels = [
         CARRY, CARRY, MOVE,
         CARRY, CARRY, MOVE
     ]
-    //[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY],
-    //    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY] // 50/3750
+    
 
 ];
 
@@ -87,15 +86,6 @@ function mineralContainerEmpty(creep) {
     }
 }
 
-function getPlan(lab) {
-    var theplans = labsBuild.getPlans(lab.room.name);
-    var i = theplans.length;
-    while (i--) {
-        if (lab.id == theplans[i].id) {
-            return theplans[i];
-        }
-    }
-}
 
 function getGroup(creep) {
     let id = creep.id;
@@ -243,7 +233,8 @@ class scientistRole extends roleParent {
             if (_labs.length > 0 && _.sum(creep.carry) === 0) { // If there are labs. 
                 var i = _labs.length;
                 while (i--) { // go through them
-                    var plan = getPlan(_labs[i]); // get the plans
+
+                    var plan = labsBuild.getPlans(_labs[i].pos.roomName); // get the plans
 
                     if ((plan.resource != _labs[i].mineralType) && (_labs[i].mineralAmount > 0)) {
                         if (creep.pos.isNearTo(_labs[i])) {
@@ -289,8 +280,7 @@ class scientistRole extends roleParent {
                                     /*if (creep.memory.party !== undefined) {
                                         creep.moveTo(Game.flags[creep.memory.party]);
                                     } */
-                                    if (creep.room.name == 'E35S75')
-                                        console.log('fuck gh');
+                                    if(creep.room.name != 'E35S83')
                                     creep.say('raiders', true);
                                     creep.memory.distance++;
                                     //                          doDeath(creep);

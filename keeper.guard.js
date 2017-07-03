@@ -1,9 +1,9 @@
 // Designed to kill sourcekeepers - lvl is high for this guy. 
 // needed for this is :     4.140K
 
-var classLevels = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+var classLevels = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
     ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-    ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL, MOVE, MOVE, MOVE
+    ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL
 ];
 
 var boost = [RESOURCE_LEMERGIUM_OXIDE, 'KO'];
@@ -174,6 +174,20 @@ function moveCreep(creep) {
 
         let rmPos = new RoomPosition(creep.memory.keeperLair[creep.memory.goTo].pos.x, creep.memory.keeperLair[creep.memory.goTo].pos.y, creep.memory.keeperLair[creep.memory.goTo].pos.roomName);
         if (!creep.pos.isNearTo(gota)) {
+            if(creep.room.name == 'E24S74'){
+            creep.moveMe(rmPos, {
+                reusePath: 7,
+                maxRooms:1,
+                ignoreRoads: (creep.room.name == 'W4S94'),
+                visualizePathStyle: {
+                    fill: 'transparent',
+                    stroke: '#bf0',
+                    lineStyle: 'dashed',
+                    strokeWidth: 0.15,
+                    opacity: 0.5
+                }
+            });
+        } else {
             creep.moveMe(rmPos, {
                 reusePath: 7,
                 ignoreRoads: (creep.room.name == 'W4S94'),
@@ -185,6 +199,9 @@ function moveCreep(creep) {
                     opacity: 0.5
                 }
             });
+
+        }
+
         } else {
             creep.say('zZzZz');
         }

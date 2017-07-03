@@ -39,7 +39,7 @@ var fox = require('foxGlobals');
 function getHostiles(creep) {
     let range = 15;
     let zzz = creep.pos.findInRange(creep.room.hostilesHere(), range);
-    if (creep.room.name == 'E35S84');
+    if (creep.room.name == 'E35S76') return [];
 
     if (creep.memory.playerCreepId !== undefined) {
         let plzy = Game.getObjectById(creep.memory.playerCreepId);
@@ -255,9 +255,9 @@ function attackCreep(creep, bads) {
     let enemy = creep.pos.findClosestByRange(bads);
     ///    console.log(enemy.is)
     if (enemy !== null) {
-        console.log(enemy.isNPC, 'isnpc', creep.pos);
+/*        console.log(enemy.isNPC, 'isnpc', creep.pos);
         console.log(enemy.isEnemy, 'isEnemy');
-        console.log(enemy.isFriend, 'isnpc');
+        console.log(enemy.isFriend, 'isnpc'); */
     }
     if (enemy !== null && enemy.owner !== null && enemy.owner.username == 'Source Keeper') {
         SKAttack(creep, bads);
@@ -274,7 +274,7 @@ function attackCreep(creep, bads) {
 
 function moveCreep(creep) {
     let pflag = Game.flags[creep.memory.party];
-    if (!creep.pos.isEqualTo(pflag)) {
+    if (!creep.pos.inRangeTo(pflag,5)) {
         creep.moveMe(pflag);
         creep.countDistance();
     } else {
@@ -340,19 +340,16 @@ class roleGuard extends roleParent {
         super.rebirth(creep);
 
         let bads = getHostiles(creep);
-        //        if (creep.room.name == 'E35S84')
-        //            console.log(bads);
-        if (creep.room.name == 'E35S83') {
-            console.log('Yeaah', bads.length);
-        }
+
         if (bads.length > 0) {
             attackCreep(creep, bads);
-            //            if()
-            if (_.contains(E35S75, creep.room.name) && !movement.moveToDefendFlag(creep)) {
+        } else {
+            if (!movement.moveToDefendFlag(creep)) {
                 creep.selfHeal();
                 moveCreep(creep);
             }
         }
+            //            if()
     }
 
 

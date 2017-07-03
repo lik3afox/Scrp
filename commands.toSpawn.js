@@ -188,12 +188,7 @@ class SpawnInteract {
     }
 
     static addToWarStack(newCreep) {
-        console.log("WARSTACK");
-        console.log("WARSTACK");
-        console.log("WARSTACK");
-        console.log("WARSTACK");
-        console.log("WARSTACK");
-        console.log(newCreep.room);
+        console.log("WARSTACK",newCreep.room);
         // for now it will only created at homeEmpire.
         for (var i in Game.spawns) {
             if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == newCreep.room) {

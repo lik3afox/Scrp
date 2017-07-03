@@ -179,6 +179,8 @@ class transportz extends roleParent {
                     }
 
                     if (targetAmount < 200) { // If the energy on the gound is now. then
+                        //var min = Game.getObjectById(creep.room.memory.mineralID);
+
                         var containerz = creep.room.find(FIND_STRUCTURES, {
                             filter: (structure) => {
                                 return (structure.structureType === STRUCTURE_CONTAINER);
@@ -187,13 +189,20 @@ class transportz extends roleParent {
 
                         if (containerz.length > 0) {
                             for (let a in containerz) {
+
                                 if ((containerz[a].store[RESOURCE_ENERGY] * 0.75) > targetAmount) {
                                     target = containerz[a].id;
                                     targetAmount = containerz[a].store[RESOURCE_ENERGY];
                                     //            isDropped = true;
                                 }
+                                if(containerz[a].total !== 0 && containerz[a].store[RESOURCE_ENERGY] === 0){
+                                    target = containerz[a].id;
+                                    break;
+                                }
+
                             }
                         }
+
                     }
 
                     creep.memory.gotoID = target;
@@ -211,8 +220,11 @@ class transportz extends roleParent {
                         if (creep.pos.isNearTo(target)) {
 
                             if (target.structureType === STRUCTURE_CONTAINER) {
-                                creep.withdraw(target, RESOURCE_ENERGY);
+                                for(var b in target.store) {
+                                    creep.withdraw(target, b);
+                                }
                                 creep.memory.gotoID = undefined;
+
                             } else {
                                 creep.pickup(target);
                                 creep.memory.gotoID = undefined;
