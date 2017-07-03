@@ -30,7 +30,7 @@ var focusMin; // = 'XGH2O'
 var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amount: 500 }];
 
 // This is when you cannot change.
-var prohibited = ['KO', 'GH', 'LO', 'UO', 'LH', 'G', 'OH', 'GO', 'GH2O', 'GHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGH2O', 'XGHO2', 'XZH2O', 'XLHO2', 'XKHO2', 'XKH2O', 'XZHO2'];
+var prohibited = ['X', 'KO', 'GH', 'LO', 'UO', 'LH', 'G', 'OH', 'GO', 'GH2O', 'GHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGH2O', 'XGHO2', 'XZH2O', 'XLHO2', 'XKHO2', 'XKH2O', 'XZHO2'];
 
 var maxEnergyTrans = 5000;
 
@@ -811,8 +811,8 @@ class roleTerminal {
                 if (zz > 299000) {
                     if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
                         if (!shareEnergy(terminal)) { // Moves energy around
-                                //                                newTradeEnergy(terminal);
-                                                                  tradeEnergy(terminal);
+                            //                                newTradeEnergy(terminal);
+                            tradeEnergy(terminal);
                         } else {
                             newTradeEnergy(terminal);
                         }

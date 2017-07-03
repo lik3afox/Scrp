@@ -22,6 +22,7 @@ class scoutClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
+        if (creep.room.name == 'E35S75') creep.suicide();
         creep.memory.waypoint = true;
 
         if (creep.memory.customPoint === undefined) {
@@ -41,9 +42,14 @@ class scoutClass extends roleParent {
         console.log('scout reporting in', creep.pos);
         if (super.goToPortal(creep)) return;
         creep.say('sc');
-        if (!super.moveToSignControl(creep)) {
-            if (!super.avoidArea(creep)) {
-                movement.flagMovement(creep);
+        if (creep.room.name == 'E35S83') {
+            creep.moveToEdge();
+
+        } else {
+            if (!super.moveToSignControl(creep)) {
+                if (!super.avoidArea(creep)) {
+                    movement.flagMovement(creep);
+                }
             }
         }
     }

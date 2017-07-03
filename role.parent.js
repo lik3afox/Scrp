@@ -224,22 +224,36 @@ class baseParent {
     }
 
     static edgeRun(creep) {
+
+        if (Game.flags.siege !== undefined && creep.room.name == Game.flags.siege.pos.roomName) {
+            if (creep.pos.x >= 48) creep.move(RIGHT);
+            if (creep.pos.x <= 2) creep.move(LEFT);
+            if (creep.pos.y >= 48) creep.move(BOTTOM);
+            if (creep.pos.y <= 2) creep.move(TOP);
+            return true;
+        }
+
+        if (Game.flags.siege !== undefined && Game.flags.drainer !== undefined) {
+            creep.moveTo(Game.flags.drainer.pos);
+            return true;
+        }
         switch (creep.room.name) {
-            case 'E16S63':
+            case 'E15S63':
                 if (creep.pos.x >= 48) creep.move(RIGHT);
                 if (creep.pos.x <= 2) creep.move(LEFT);
                 if (creep.pos.y >= 48) creep.move(BOTTOM);
                 if (creep.pos.y <= 2) creep.move(TOP);
                 return true;
-            case 'E17S63':
-                if (Game.flags.Flag8 !== undefined) {
-                    creep.moveTo(Game.flags.Flag8);
+            case 'E15S64':
+                if (Game.flags.drainer !== undefined) {
+                    creep.moveTo(Game.flags.drainer.pos);
                 } else {
                     console.log('nEED ESCAPE FLAG');
                 }
                 return true;
 
         }
+        return false;
     }
     static sayWhat(creep) {
         switch (creep.saying) {
@@ -345,6 +359,27 @@ class baseParent {
                 if (_.sum(creep.carry) === 0) {
                     orderComplete = true;
                 }
+                break;
+
+            case "portalTo":
+
+                var str = creep.room.find(FIND_STRUCTURES);
+                var portal = _.filter(str, function(o) {
+                    return o.structureType == STRUCTURE_PORTAL;
+                });
+                portal = creep.pos.findClosestByRange(portal);
+                /*                console.log('hah', portal.length);
+                                for (var bb in portal) {
+                                    console.log(portal[bb].pos);
+                                } */
+                creep.moveTo(portal);
+                if (creep.memory.portalDestination === undefined)
+                    creep.memory.portalDestination = str.destination;
+                if (creep.room.name == creep.memory.portalDestination) {
+                    orderComplete = true;
+                    creep.memory.portalDestination = undefined;
+                }
+
                 break;
 
             case "keeperMoveTo":

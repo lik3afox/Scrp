@@ -1,98 +1,146 @@
-// Designed to kill sourcekeepers - lvl is high for this guy. 
-// needed for this is :     4.420K
+// Back line
+// Designed for shooting 
 
-// only 1 level and 
-//MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,
-
-var classLevels = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-    MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-    WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
-    ATTACK, ATTACK, ATTACK,
-    HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL
+var classLevels = [
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL]
 ];
-
-var testLevel = [TOUGH,
-    MOVE,
-    WORK,
-    ATTACK,
-    HEAL
-];
-// These need to be in the lab or else this creep isn't good enough :/
-//var boost = ['ZO',RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE,RESOURCE_CATALYZED_GHODIUM_ALKALIDE,RESOURCE_UTRIUM_ACID];
-var boost = ['XLHO2', 'XUH2O', 'XZHO2', 'XGHO2'];
-/*
-warinternal [4:18 PM] 
-@likeafox they can't attack and heal, but they can ranged, heal, and move at the same time
-*/
-var roleParent = require('role.parent');
 var movement = require('commands.toMove');
-//var flags = require('build.flags');
+var roleParent = require('role.parent');
+var fox = require('foxGlobals');
 
+//STRUCTURE_POWER_BANK:
 
-class roleGuard extends roleParent {
-    static levels(level) {
-        if (level > classLevels.length) level = classLevels.length;
-        return classLevels;
-    }
+function rangeAttack(creep, targets) {
+    var E18S64targets = targets;
+    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+    bads = _.filter(bads, function(o) {
+        return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(fox.friends, o.owner.username);
+    });
+    if (bads.length === 0) {
 
-    static run(creep) {
-        creep.say('fight');
-        if (super.returnEnergy(creep)) {
-            return;
-        }
-        if (super.boosted(creep, boost)) {
-            return;
-        }
-        //E27S81  spawn 58b6e108e5da646c1eb6c6e6
-        // Wall   58bcaa7d2c6316d758cf9efd
-        // Towers  58bc6d52bb2aee1d0c8e3315   58c9c9f7f26e3bce72b17dd9
-        var E27S81 = ['58bcaa7d2c6316d758cf9efd', '58bc6d52bb2aee1d0c8e3315', '58b6e108e5da646c1eb6c6e6', '58c9c9f7f26e3bce72b17dd9'];
-        /*
-        E27S83 Spawn  58a9fdba731af3b5728739e6
-        wall    58ab2f9c898ac10cb8279d45
-        tower    58ac6458424ed8ae2d458199   58b1db117f77053560a6b350
-
-
-        E26S83  spawn  58ac35a404c9964832f5e469
-
-
-        */
-        var E27S83 = ['58ac6458424ed8ae2d458199', '58a9fdba731af3b5728739e6', '58b1db117f77053560a6b350', '58ab2fa6942916376a3da166'];
-        var E26S83 = ['58ae0750941231640dfdc503', '58b98340caf98c611b7ee2b8', '58ac35a404c9964832f5e469'];
-
-        if (creep.hits < creep.hitsMax - 400) {
-            creep.heal(creep);
-        }
-
-        if (creep.room.name == 'E27S81' && creep.room.controller.safemode === undefined) {
-            creep.say('here I am');
-
-            let target;
-            for (var e in E27S71) {
-                target = Game.getObjectById(E27S71[e]);
-                if (target !== null) {
-                    if (creep.dismantle(target) == ERR_NOT_IN_RANGE) {}
-                    creep.moveTo(target);
-                    return;
+        for (var a in E18S64targets) {
+            target = Game.getObjectById(E18S64targets[a]);
+            if (target !== null) {
+                if (creep.pos.isNearTo(target)) {
+                    creep.rangedMassAttack();
+                    creep.say('nice');
+                    return true;
+                } else if (creep.pos.inRangeTo(target, 3)) {
+                    creep.rangedAttack(target);
+                    creep.say('nice');
+                    return true;
                 }
             }
         }
+        creep.rangedMassAttack();
 
-        var enemy = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+    } else {
+        var clost = creep.pos.findClosestByRange(bads);
+        if (clost !== undefined) {
+            if (creep.pos.inRangeTo(clost, 3)) {
+                if (creep.pos.isNearTo(clost)) {
+                    //creep.rangedAttack(bads[0]);
+                    creep.rangedMassAttack();
+                } else {
 
-        if (enemy.length > 0) {
-            enemy = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-            if (creep.attack(enemy) == ERR_NOT_IN_RANGE) {
-                creep.say('ahh');
-                creep.moveTo(enemy);
+                    creep.rangedMassAttack();
+                    //                    creep.rangedAttack(clost);
+                }
+                creep.say('pewpew', true);
             }
+        }
+    }
+}
+
+function doAttack(creep) {
+    let target;
+    var bads;
+    var a;
+    switch (creep.room.name) {
+
+        default: bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+        bads = _.filter(bads, function(o) {
+            return !_.contains(fox.friends, o.owner.username);
+        });
+
+        if (bads.length > 2) {
+            creep.rangedMassAttack();
+
         } else {
-            movement.flagMovement(creep);
-            creep.heal(creep);
+            if (bads[0] !== undefined) {
+                if (creep.pos.inRangeTo(bads[0], 3)) {
+                    creep.rangedAttack(bads[0]);
+                    creep.say('pewpew', true);
+                    return true;
+                }
+            }
+        }
+        break;
+
+    }
+    return false;
+}
+
+function getDefendFlag() {
+    for (var a in Game.flags) {
+        if (Game.flags[a].color == COLOR_RED) {
+            return Game.flags[a];
+        }
+    }
+    return false;
+}
+class rangerClass extends roleParent {
+    static levels(level) {
+        if (level > classLevels.length) level = classLevels.length;
+        return classLevels[level];
+    }
+
+    static run(creep) {
+
+        if (super.returnEnergy(creep)) {
+            return;
         }
 
+        if (super.goToPortal(creep)) return;
+        if (creep.pos.isNearTo(Game.flags.kill)) {
+            creep.memory.waypoint = false;
+        }
+
+        if (super.doTask(creep)) {
+            return;
+        }
+
+        if (!doAttack(creep)) {
+            if (creep.room.name == 'W5S34') {
+                var roads = creep.pos.findInRange(FIND_STRUCTURES, 3);
+                console.log("ROD", roads.length);
+                roads = _.filter(roads, function(o) {
+                    return o.structureType == STRUCTURE_ROAD || o.structureType == STRUCTURE_CONTAINER;
+                });
+                console.log("ROD", roads.length);
+                console.log(creep.rangedAttack(roads[0]));
+            }
+        }
+
+        creep.say(creep.memory.party);
+        //      creep.heal(creep);
+        //var defendFlag = movement.
+        /*              */
+        //      if(enemy.length > 0) {
+        //      } 
+
+        //else   { 
+        if (creep.hits !== creep.hitsMax) {
+            if (super.edgeRun(creep)) {
+                return;
+            }
+        }
+
+
+        movement.flagMovement(creep);
+        //          }
     }
 
 
 }
-module.exports = roleGuard;
+module.exports = rangerClass;

@@ -17,6 +17,17 @@ var classLevels = [
         ATTACK, ATTACK, ATTACK,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
         HEAL, MOVE, HEAL, HEAL, HEAL, HEAL, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK
+    ],
+    [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+        RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+        MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, HEAL,
+        MOVE, HEAL, HEAL, HEAL, HEAL,
+        ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
+        ATTACK, ATTACK, ATTACK, ATTACK, ATTACK
     ]
 ];
 
@@ -28,17 +39,24 @@ var fox = require('foxGlobals');
 function getHostiles(creep) {
     let range = 15;
     let zzz = creep.pos.findInRange(creep.room.hostilesHere(), range);
+    if (creep.room.name == 'E35S84');
+
     if (creep.memory.playerCreepId !== undefined) {
         let plzy = Game.getObjectById(creep.memory.playerCreepId);
         if (plzy === null) {
             creep.memory.playerCreepId = undefined;
+            zzz = _.filter(zzz, function(object) {
+                return object.owner.username == 'Invader' || object.owner.username == 'Source Keeper';
+            });
+
+            return zzz;
         } else {
             return [plzy];
         }
 
     } else {
         let players = _.filter(zzz, function(object) {
-            return !_.contains(fox.friends, object.owner.username) && object.owner.username !== 'Invader' && object.owner.username !== 'Source Keeper';
+            return !_.contains(fox.friends, object.owner.username) || object.owner.username !== 'Invader' || object.owner.username !== 'Source Keeper';
         });
         if (players.length > 0) {
             creep.memory.playerCreepId = players[0].id;
@@ -141,6 +159,19 @@ function getRangeAttacker(bads) {
 }
 
 function invasionAttack(creep, bads) {
+    let distance = creep.pos.getRangeTo(enemy);
+    //    var targets = creep.pos.findInRange(bads, 3);
+    if (creep.pos.isNearTo(enemy)) {
+        creep.rangedMassAttack();
+        creep.attackMove(enemy);
+    } else {
+        creep.selfHeal();
+        creep.moveTo(enemy);
+        creep.rangedAttack(enemy);
+    }
+}
+
+function invasionAttack(creep, bads) {
     //    let enemy = creep.pos.findClosestByRange(bads);
     if (creep.hits > 3000) {
         let enemy = getRangeAttacker(bads);
@@ -161,7 +192,9 @@ function invasionAttack(creep, bads) {
         }
     } else {
         creep.selfHeal();
-        creep.runFrom(bads);
+        if (bads.length > 0)
+            if (bads[0] !== undefined && bads[0].owner.username === 'Invader')
+                creep.runFrom(bads);
     }
 }
 
@@ -220,10 +253,19 @@ function attackCreep(creep, bads) {
     }
 
     let enemy = creep.pos.findClosestByRange(bads);
-
+    ///    console.log(enemy.is)
+    if (enemy !== null) {
+        console.log(enemy.isNPC, 'isnpc', creep.pos);
+        console.log(enemy.isEnemy, 'isEnemy');
+        console.log(enemy.isFriend, 'isnpc');
+    }
     if (enemy !== null && enemy.owner !== null && enemy.owner.username == 'Source Keeper') {
         SKAttack(creep, bads);
-    } else {
+    }
+    /*else if (enemy.owner.username != 'Invader' && enemy.owner.username != "Source Keeper" && !_.contains(FLAG.friends, enemy.owner.username)) {
+           //        playerAttack(creep, bads);
+       }*/
+    else {
         invasionAttack(creep, bads);
     }
 
@@ -232,7 +274,7 @@ function attackCreep(creep, bads) {
 
 function moveCreep(creep) {
     let pflag = Game.flags[creep.memory.party];
-    if (!creep.pos.inRangeTo(pflag, 5)) {
+    if (!creep.pos.isEqualTo(pflag)) {
         creep.moveMe(pflag);
         creep.countDistance();
     } else {
@@ -242,6 +284,7 @@ function moveCreep(creep) {
 }
 
 var E25S75 = ['E24S74', 'E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E24S76', 'E25S76', 'E26S76'];
+var E35S75 = ['E34S74', 'E35S74', 'E36S74', 'E34S75', 'E35S75', 'E36S75', 'E34S76', 'E35S76', 'E36S76'];
 
 function analyzeMining(creep) {
     if (_.contains(E25S75, creep.room.name)) {
@@ -297,15 +340,17 @@ class roleGuard extends roleParent {
         super.rebirth(creep);
 
         let bads = getHostiles(creep);
-
+        //        if (creep.room.name == 'E35S84')
+        //            console.log(bads);
+        if (creep.room.name == 'E35S83') {
+            console.log('Yeaah', bads.length);
+        }
         if (bads.length > 0) {
             attackCreep(creep, bads);
-        } else {
-            if (!movement.moveToDefendFlag(creep)) {
-                if (!creep.healOther()) {
-                    creep.selfHeal();
-                    moveCreep(creep);
-                }
+            //            if()
+            if (_.contains(E35S75, creep.room.name) && !movement.moveToDefendFlag(creep)) {
+                creep.selfHeal();
+                moveCreep(creep);
             }
         }
     }

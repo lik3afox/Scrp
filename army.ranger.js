@@ -55,8 +55,8 @@ function rangeAttack(creep, targets) {
                     creep.rangedMassAttack();
                 } else {
 
-                    creep.rangedMassAttack();
-                    //                    creep.rangedAttack(clost);
+                    //creep.rangedMassAttack();
+                    creep.rangedAttack(clost);
                 }
                 creep.say('pewpew', true);
             }
@@ -69,18 +69,27 @@ function doAttack(creep) {
     var bads;
     var a;
     switch (creep.room.name) {
-        case "E18S64":
-            rangeAttack(creep, ['59511202d6fb6910572a40b5']);
+        case "E52S67":
+            rangeAttack(creep, ['588587458b65791f39f134c1']);
 
             break;
 
-        case "E16S63":
+        case "E52S64":
+            rangeAttack(creep, ['58a53db570b153574ac9cc5c', '5944cdbf65bb7e35247611a4']);
+            break;
+        case "E52S64":
             rangeAttack(creep, ['59511202d6fb6910572a40b5']);
 
 
             break;
 
         default:
+            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.wallTarget !== 'none') {
+                rangeAttack(creep, [Game.flags[creep.memory.party].memory.wallTarget]);
+                break;
+            }
+            rangeAttack(creep, ['59511202d6fb6910572a40b5']);
+
             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
             bads = _.filter(bads, function(o) {
                 return !_.contains(fox.friends, o.owner.username);
@@ -91,7 +100,9 @@ function doAttack(creep) {
 
             } else {
                 if (bads[0] !== undefined) {
-                    if (creep.pos.inRangeTo(bads[0], 3)) {
+                    if (creep.pos.isNearTo(bads[0])) {
+                        creep.rangedMassAttack();
+                    } else if (creep.pos.inRangeTo(bads[0], 3)) {
                         creep.rangedAttack(bads[0]);
                         creep.say('pewpew', true);
                         return true;
@@ -119,7 +130,7 @@ class rangerClass extends roleParent {
     }
 
     static run(creep) {
-        if (creep.memory.level >= 1)
+        if (creep.memory.level >= 2)
             if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XKHO2'])) {
                 return;
             }
@@ -148,18 +159,13 @@ class rangerClass extends roleParent {
         }
 
         creep.say(creep.memory.party);
-        //      creep.heal(creep);
-        //var defendFlag = movement.
-        /*              */
-        //      if(enemy.length > 0) {
-        //      } 
 
-        //else   { 
-        if (creep.hits !== creep.hitsMax) {
-            if (super.edgeRun(creep)) {
-                return;
-            }
-        }
+
+        /*        if (creep.hits !== creep.hitsMax) {
+                    if (super.edgeRun(creep)) {
+                        return;
+                    }
+                }*/
 
 
         movement.flagMovement(creep);

@@ -12,12 +12,7 @@ RoomPosition.prototype.lookForStructure = function(structureType) {
     return _.find(structures, { structureType: structureType });
 };
 module.exports = function() {
-    Object.defineProperty(Creep.prototype, "isHome", {
-        configurable: true,
-        get: function() {
-            return this.room.name == this.memory.home;
-        },
-    });
+
 
     Object.defineProperty(Creep.prototype, "carryTotal", {
         configurable: true,
@@ -44,7 +39,52 @@ module.exports = function() {
             }
         },
     });
+    Object.defineProperty(Creep.prototype, "isHome", {
+        configurable: true,
+        get: function() {
+            if (this.memory.home !== undefined)
+                return this.room.name == this.memory.home;
+            return false;
+        },
+    });
+    Object.defineProperty(Creep.prototype, 'isNPC', {
+        configurable: true,
+        get: function() {
 
+            return this.owner.username !== 'Invader' || this.owner.username !== 'Source Keeper';
+
+        }
+    });
+
+    Object.defineProperty(Creep.prototype, 'isFriend', {
+        configurable: true,
+        get: function() {
+            return _.contains(fox.friends, this.owner.username);
+        }
+    });
+    Object.defineProperty(Creep.prototype, 'isEnemy', {
+        configurable: true,
+        get: function() {
+            return _.contains(fox.enemies, this.owner.username);
+            //            return this.owner.username !== 'Invader' && this.owner.username !== 'Source Keeper' && !_.contains(fox.friends, this.owner.username);
+        }
+    });
+    Object.defineProperty(Creep.prototype, 'isAtEdge', {
+        configurable: true,
+        get: function() {
+            return (this.pos.x === 0 || this.pos.x === 49 || this.pos.y === 0 || this.pos.y === 49);
+        }
+    });
+
+    Object.defineProperty(Creep.prototype, 'isNearEdge', {
+        configurable: true,
+        get: function() {
+            return (this.pos.x <= 1 || this.pos.x >= 48 || this.pos.y <= 1 || this.pos.y >= 48);
+        }
+    });
+
+    /*
+     */
     Object.defineProperty(Room.prototype, 'powerspawn', {
         configurable: true,
         get: function() {
@@ -111,7 +151,7 @@ module.exports = function() {
     Creep.prototype.defendFlags = function() {
         if (redFlags === undefined) {
             redFlags = _.filter(Game.flags, function(f) {
-                return f.color == COLOR_RED;
+                return f.color == COLOR_RED || f.color == COLOR_RED && f.secondaryColor == COLOR_WHITE;
             });
         }
         return redFlags;
@@ -257,6 +297,33 @@ module.exports = function() {
         var moveStatus = this.move(direction, options);
         this.attack(badguy);
     };
+
+    Creep.prototype.moveInside = function(options) {
+
+        if (creep.x > 47) {
+            if (creep.x !== 47)
+                creep.move(LEFT);
+
+        } else if (creep.x < 3) {
+            if (creep.x !== 3)
+                creep.move(RIGHT);
+
+        } else if (creep.y > 47) {
+            if (creep.y !== 47)
+                creep.move(TOP);
+
+        } else if (creep.y < 3) {
+            if (creep.y !== 3)
+                creep.move(BOTTOM);
+
+        } else {
+            return false;
+        }
+
+        var direction = this.pos.getDirectionTo(badguy);
+        var moveStatus = this.move(direction, options);
+    };
+
     var fox = require('foxGlobals');
 
     Creep.prototype.killBase = function(options) {
@@ -302,7 +369,7 @@ module.exports = function() {
 
 
             var test2 = _.filter(struc, function(o) {
-                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_ROAD && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
             }); // This is something is not on a rampart
             if (test2.length !== 0) {
                 this.memory.targetID = this.pos.findClosestByRange(test2).id;
@@ -341,7 +408,7 @@ module.exports = function() {
                     this.dismantle(close);
                 }
                 return true;
-            } else if (this.hits == this.hitsMax) {
+            } else /*if (this.hits == this.hitsMax)*/ {
                 this.moveTo(close, options);
                 return true;
             }
@@ -428,6 +495,29 @@ module.exports = function() {
 
     };
 
+    //    var fox = require('foxGlobals');
+
+    Creep.prototype.moveToEdge = function(options) {
+        var Exits = [FIND_EXIT_TOP,
+            FIND_EXIT_RIGHT,
+            FIND_EXIT_BOTTOM,
+            FIND_EXIT_LEFT
+        ];
+        var closest = 100;
+        var exited;
+
+        for (var e in Exits) {
+            const exit = this.pos.findClosestByRange(Exits[e]);
+            var distance = this.pos.getRangeTo(exit);
+            if (distance < closest) {
+                closest = distance;
+                exited = exit;
+            }
+        }
+        if (exited !== undefined) {
+            this.moveTo(exited);
+        }
+    };
 
     Creep.prototype.moveMe = function(target, options, xxx) {
 

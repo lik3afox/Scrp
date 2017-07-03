@@ -237,6 +237,7 @@ class scientistRole extends roleParent {
                 }
             }
         } else {
+
             var _labs = labsBuild.getLabs(creep);
 
             if (_labs.length > 0 && _.sum(creep.carry) === 0) { // If there are labs. 
@@ -285,7 +286,11 @@ class scientistRole extends roleParent {
                                     creep.moveMe(creep.room.terminal);
 
                                 } else {
-
+                                    /*if (creep.memory.party !== undefined) {
+                                        creep.moveTo(Game.flags[creep.memory.party]);
+                                    } */
+                                    if (creep.room.name == 'E35S75')
+                                        console.log('fuck gh');
                                     creep.say('raiders', true);
                                     creep.memory.distance++;
                                     //                          doDeath(creep);

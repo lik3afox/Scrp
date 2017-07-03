@@ -16,31 +16,56 @@
 
         // = _.filter(flag.room.hostileInRoom(),function(o){return o.owner.username == 'Invader'} ) ;
         // FIND_HOSTILE_CREEPS //flag.room.hostileInRoom()
-        var hostiles = flag.room.find(FIND_HOSTILE_CREEPS);
+        var hostiles;
+        var creeps;
+        if (flag.secondaryColor == COLOR_RED) {
+            hostiles = flag.room.find(FIND_HOSTILE_CREEPS);
 
-        hostiles = _.filter(hostiles, function(o) {
-            return o.owner.username == 'Invader';
-        });
+            hostiles = _.filter(hostiles, function(o) {
+                return o.owner.username == 'Invader';
+            });
 
-        flag.room.visual.circle(flag.pos.x, flag.pos.y, { radius: 15, opacity: 0.15, fill: 'ff0000' });
-        if (hostiles.length === 0) {
-            flag.remove();
-        } else {
-            flag.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);
-        }
+            flag.room.visual.circle(flag.pos.x, flag.pos.y, { radius: 15, opacity: 0.15, fill: 'ff0000' });
+            if (hostiles.length === 0) {
+                flag.remove();
+            } else {
+                flag.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);
+            }
 
-        //  let temp = [];
-        //    for (var e in hostiles) {
-        //    temp.push(hostiles[e].id);
-        //  }
-        //    flag.memory.hostilesID = temp;
-        flag.room.memory.invasionFlag = flag.name;
+            //  let temp = [];
+            //    for (var e in hostiles) {
+            //    temp.push(hostiles[e].id);
+            //  }
+            //    flag.memory.hostilesID = temp;
+            flag.room.memory.invasionFlag = flag.name;
 
-        var creeps = flag.pos.findInRange(FIND_MY_CREEPS, 15);
-        if (creeps.length > 0) {
-            for (var a in creeps) {
-                creeps[a].memory.runAway = true;
-                creeps[a].memory.runFrom = flag.name;
+            creeps = flag.pos.findInRange(FIND_MY_CREEPS, 15);
+            if (creeps.length > 0) {
+                for (var a in creeps) {
+                    creeps[a].memory.runAway = true;
+                    creeps[a].memory.runFrom = flag.name;
+                }
+            }
+        } else if (flag.secondaryColor == COLOR_WHITE) {
+            hostiles = flag.room.find(FIND_HOSTILE_CREEPS);
+            hostiles = _.filter(hostiles, function(o) {
+                return o.owner.username != 'Invader' && o.owner.username != "Source Keeper" && !_.contains(FLAG.friends, o.owner.username);
+            });
+            flag.room.visual.circle(flag.pos.x, flag.pos.y, { radius: 15, opacity: 0.15, fill: 'ff0000' });
+            if (hostiles.length === 0) {
+                flag.remove();
+            } else {
+                flag.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);
+            }
+
+            //            flag.room.memory.invasionFlag = flag.name;
+
+            creeps = flag.pos.findInRange(FIND_MY_CREEPS, 15);
+            if (creeps.length > 0) {
+                for (var b in creeps) {
+                    creeps[b].memory.runAway = true;
+                    creeps[b].memory.runFrom = flag.name;
+                }
             }
         }
 
@@ -59,15 +84,15 @@
     function rampartThings(flag) {
         if (flag.memory.invaderTimed === undefined) flag.memory.invaderTimed = 0;
         if (flag.memory.alert === undefined || !flag.memory.alert) {
-            flag.memory.alert = true; 
+            flag.memory.alert = true;
         }
 
         if (flag.memory.alert) {
             // Look for creeps
             let bads = flag.room.find(FIND_HOSTILE_CREEPS);
-                bads = _.filter(bads, function(object) {
-                   return (object.owner.username != 'Invader' && !_.contains(FLAG.friends, object.owner.username));
-                }); 
+            bads = _.filter(bads, function(object) {
+                return (object.owner.username != 'Invader' && !_.contains(FLAG.friends, object.owner.username));
+            });
 
             if (bads.length === 0) {
                 flag.memory.invaderTimed = undefined;
@@ -197,6 +222,60 @@
                     case FLAG.PARTY:
                         if (flag.memory.formation === undefined) {
                             flag.memory.formation = [];
+                        }
+                        if (flag.memory.wallTarget === undefined) {
+                            flag.memory.wallTarget = 'none';
+                        }
+                        if (flag.memory.wallTarget !== 'none') {
+                            if (flag.room !== undefined) { // Only do this if room is visable. 
+                                var target = Game.getObjectById(flag.memory.wallTarget);
+                                //                                console.log('wall trying to find, ', target, target.hits, target.pos);
+                                if (target === null) {
+                                    var struc = flag.room.find(FIND_STRUCTURES);
+                                    var bads;
+
+                                    var test2 = _.filter(struc, function(o) {
+                                        return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+                                    }); // This is something is not on a 
+
+                                    if (test2.length !== 0) {
+                                        var close = flag.pos.findClosestByRange(test2);
+                                        flag.memory.wallTarget = close.id;
+                                        flag.setPosition(close.pos);
+                                    }
+                                    /*
+                                    var struc = creep.room.find(FIND_STRUCTURES);
+                                    var bads; 
+
+                                    var test2 = _.filter(struc, function(o) {
+                                        return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+                                    }); // This is something is not on a 
+
+                                    if (test2.length !== 0) {
+                                        flag.memory.wallTarget = flag.pos.findClosestByRange(test2).id;
+                                    } else {
+                                        var test = _.filter(struc, function(o) {
+                                            return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && o.pos.lookForStructure(STRUCTURE_RAMPART);
+                                        });
+                                        if (test.length !== 0) {
+                                            flag.memory.wallTarget = flag.pos.findClosestByRange(test).id;
+                                        } else {
+                                            bads = _.filter(struc, function(o) {
+                                                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_CONTROLLER;
+                                            }); // these are the ramparts
+                                            if (bads.length > 0) {
+                                                flag.memory.wallTarget = flag.pos.findClosestByRange(bads).id;
+                                            } 
+                                        }
+                                    }
+*/
+                                    // thing is dead and get a new target.
+                                } else {
+                                    console.log('attacking', target, 'hp:', target.hits);
+                                    // Thing is still alive
+                                }
+                            }
+
                         }
                         if (flag.memory.formation.length === 0) {
                             var Party = {

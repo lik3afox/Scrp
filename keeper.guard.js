@@ -22,22 +22,24 @@ function getHostiles(creep) {
     if (_.contains(rng10, creep.room.name)) {
         range = 10;
     }
-/*
-    let bads = creep.room.find(FIND_HOSTILE_CREEPS );
+    /*
+        let bads = creep.room.find(FIND_HOSTILE_CREEPS );
 
-    let player = _.filter(bads,function(o) {
-        return !_.contains(fox.friends, o.owner.username)&& o.owner.username !== 'Invader'&& o.owner.username !== 'Source Keeper' ;
-    } );
-    if(player.length > 0){
-        return player;
-    }
+        let player = _.filter(bads,function(o) {
+            return !_.contains(fox.friends, o.owner.username)&& o.owner.username !== 'Invader'&& o.owner.username !== 'Source Keeper' ;
+        } );
+        if(player.length > 0){
+            return player;
+        }
 
-    let returned = creep.pos.findInRange(bads, range);
+        let returned = creep.pos.findInRange(bads, range);
 
-    returned = _.filter(returned, function(o) {
-        return !_.contains(fox.friends, o.owner.username) ;
-    }); */
+        returned = _.filter(returned, function(o) {
+            return !_.contains(fox.friends, o.owner.username) ;
+        }); */
     let tgt = Game.getObjectById(creep.memory.playerTargetId);
+    if (creep.room.name == 'E35S84')
+        console.log(tgt, 'tgt');
     if (tgt === null) {
         creep.memory.playerTargetId = null;
         let bads = creep.room.find(FIND_HOSTILE_CREEPS);

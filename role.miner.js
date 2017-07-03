@@ -139,6 +139,10 @@ class settler extends roleParent {
 
     static run(creep) {
         super.calcuateStats(creep);
+        if (movement.runAway(creep)) return;
+        if (super.returnEnergy(creep)) return;
+
+
         if (super.doTask(creep)) {
             return;
         }
@@ -160,8 +164,6 @@ class settler extends roleParent {
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
         if (creep.memory.level > 2) super.rebirth(creep);
-        if (super.returnEnergy(creep)) return;
-        if (movement.runAway(creep)) return;
         if (super.keeperWatch(creep)) {
             return;
         }

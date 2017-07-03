@@ -124,6 +124,24 @@ function returnClosestSpawn(roomName) {
     }
     return spawn;
 }
+
+function healParty(creep) {
+    if (creep.memory.partyID === undefined || creep.memory.partyID.length === 0) return false;
+    for (var a in creep.memory.partyID) {
+        var needed = Game.getObjectById(creep.memory.partyID[a]);
+        if (needed !== null)
+            if (needed.hits < needed.hitsMax) {
+                if (creep.pos.inRangeTo(needed, 3)) {
+                    creep.heal(needed);
+                    creep.memory.lastHealed = needed.id;
+                } else {
+                    creep.moveTo(needed);
+                }
+                return true;
+            }
+    }
+    return false;
+}
 var doMove;
 //STRUCTURE_POWER_BANK:
 class healerClass extends roleParent {
@@ -157,58 +175,76 @@ class healerClass extends roleParent {
         // creep.say('drugs'+creep.memory.level);
 
         if (creep.memory.level >= 6) {
-            if (super.boosted(creep, ['XZHO2', 'XLHO2', 'XGHO2'])) {
+            if (super.boosted(creep, ['XLHO2', 'XGHO2', 'XZHO2'])) {
                 return;
             }
         }
         //  creep.heal(creep);
-        var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 5);
+        var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 7);
         hurtz = _.filter(hurtz, function(object) {
             return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'Baj');
         }).sort((a, b) => a.hits - b.hits);
 
         //return;
         if (hurtz[0] !== undefined) {
+            creep.say('1');
             if (creep.heal(hurtz[0]) == ERR_NOT_IN_RANGE) {
                 creep.rangedHeal(hurtz[0]);
                 creep.rangedMassAttack();
                 creep.memory.lastHealed = hurtz[0].id;
             }
+
             if (creep.pos.isNearTo(hurtz[0])) {
 
             } else {
-                creep.moveTo(hurtz[0]);
+                if (!hurtz[0].pos.isEqualTo(creep)) {
+                    creep.moveTo(hurtz[0]);
+                } else {
+
+                    movement.flagMovement(creep);
+                }
             }
             /*if (creep.pos.inRangeTo(hurtz[0], 3) && !creep.pos.isNearTo(hurtz[0])) {
 
             }*/
         } else if (creep.hits < creep.hitsMax) {
+            creep.say('2');
             creep.heal(creep);
             creep.rangedMassAttack();
-            creep.memory.lastHealed = creep.id;
             doMove = true;
-        } else {
+            movement.flagMovement(creep);
+        } else if (!healParty(creep)) {
             // heal last
+            creep.say('3');
             var last = Game.getObjectById(creep.memory.lastHealed);
             if (last !== null) {
                 creep.heal(last);
-                //                creep.rangedMassAttack();
+                creep.rangedMassAttack();
+                if (last.id !== creep.id) {
+                    creep.moveTo(last);
+                }
             }
             doMove = true;
-        }
-
-        var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-        site = _.filter(site, function(o) {
-            return !o.pos.lookForStructure(STRUCTURE_RAMPART);
-        });
-        creep.say(site.length);
-        if (site.length > 0) {
-            var zzz = creep.pos.findClosestByRange(site);
-            creep.moveTo(zzz);
-        } else if (doMove) {
             movement.flagMovement(creep);
         }
 
+        if (creep.room.name == 'E18S64') {
+            var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+            site = _.filter(site, function(o) {
+                return !o.pos.lookForStructure(STRUCTURE_RAMPART);
+            });
+            creep.say(site.length);
+            if (site.length > 0) {
+                var zzz = creep.pos.findClosestByRange(site);
+                creep.moveTo(zzz);
+            } else if (doMove) {
+                movement.flagMovement(creep);
+            }
+        }
+        if (creep.room.name == 'E24S74') doMove = true;
+        if (doMove) {
+            movement.flagMovement(creep);
+        }
 
         /*        let zz = Game.getObjectById('595082872cf123870e614e0d');
         if (zz !== null && zz.hits > zz.hitsMax - 5) {
@@ -218,22 +254,22 @@ class healerClass extends roleParent {
         } * /
         creep.say(creep.memory.party);
         //  if(hurtz[0] == undefined)
+*/
 
-
-        /*        if (creep.room.name == 'E18S64') {
-                    creep.selfHeal();
-                    var spn = Game.getObjectById('594fc84a66235f5268eb6c6a');
-                    if (spn !== null) {
-                        creep.moveTo(spn);
-                        return;
-                    }
-                    var tar = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-                    if (tar.length > 0) {
-                        let clost = creep.pos.findClosestByRange(tar);
-                        creep.moveTo(clost);
-                        return;
-                    }
-                } */
+        if (creep.room.name == 'E18S64') {
+            creep.selfHeal();
+            var spn = Game.getObjectById('594fc84a66235f5268eb6c6a');
+            if (spn !== null) {
+                creep.moveTo(spn);
+                return;
+            }
+            var tar = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+            if (tar.length > 0) {
+                let clost = creep.pos.findClosestByRange(tar);
+                creep.moveTo(clost);
+                return;
+            }
+        }
 
     }
 }

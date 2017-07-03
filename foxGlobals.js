@@ -9,7 +9,8 @@ var containers = require('commands.toContainer');
 var console = require('market');
 
 module.exports = {
-    friends: ['admon', 'Baj', 'Zeekner', 'ponka', 'ART999', 'zolox', 'NobodysNightmare', 'Vlahn', 'Power Bank','Issacar','likeafox'],
+    friends: ['admon', 'Baj', 'Zeekner', 'ponka', 'ART999', 'zolox', 'NobodysNightmare', 'Vlahn', 'Power Bank', 'Issacar', 'likeafox', 'daboross'],
+    enemies: ['Atavus', 'Trepidimous'],
     RETREAT: COLOR_BROWN, // Flag that certain creeps use to defend too.
     DEFEND: COLOR_RED, // Everyone will defend to this.
     PARTY: COLOR_ORANGE, // Before Rally creeps will stop by this.

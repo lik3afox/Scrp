@@ -90,34 +90,34 @@ function doAttack(creep) {
             return false;
 
 
-            /*  case "E18S64":
-                  /*            var E18S64targets = ['594b6b86c48f3ee4074cb8a5', '58efba5cd63a0941a119c94f'];
-                              for (a in E18S64targets) {
-                                  target = Game.getObjectById(E18S64targets[a]);
-                                  if (target !== null) {
-                                      if (creep.pos.isNearTo(target)) {
-                                          creep.attack(target);
-                                          break;
-                                      }
-                                  }
-                              } 
-                  bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
-                  bads = _.filter(bads, function(o) {
-                      return !_.contains(fox.friends, o.owner.username);
-                  });
-                  if (bads.length > 0) {
-                      creep.attackMove(bads[0]);
-                      return true;
-                  }
-                  bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-                  bads = _.filter(bads, function(o) {
-                      return !_.contains(fox.friends, o.owner.username);
-                  });
-                  if (bads.length > 0) {
-                      creep.attackMove(bads[0]);
-                      return true;
-                  } 
-                  return false;*/
+        case "E52S64xx":
+            var E18S64targets = ['58002212f0b1ee20417fcf65'];
+            for (a in E18S64targets) {
+                target = Game.getObjectById(E18S64targets[a]);
+                if (target !== null) {
+                    if (creep.pos.isNearTo(target)) {
+                        creep.attack(target);
+                        break;
+                    }
+                }
+            }
+            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+            bads = _.filter(bads, function(o) {
+                return !_.contains(fox.friends, o.owner.username);
+            });
+            if (bads.length > 0) {
+                creep.attackMove(bads[0]);
+                return true;
+            }
+            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+            bads = _.filter(bads, function(o) {
+                return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL;
+            });
+            if (bads.length > 0) {
+                creep.attackMove(bads[0]);
+                return true;
+            }
+            return false;
         case "E21S73":
             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
             bads = _.filter(bads, function(o) {
@@ -136,7 +136,29 @@ function doAttack(creep) {
             if (bads.length > 0)
                 creep.attackMove(bads[0]);
             break;
+        default:
+            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.wallTarget !== 'none') {
+                E18S64targets = [Game.flags[creep.memory.party].memory.wallTarget];
+                for (var b in E18S64targets) {
+                    target = Game.getObjectById(E18S64targets[b]);
+                    if (target !== null) {
+                        if (creep.pos.isNearTo(target)) {
+                            creep.attack(target);
+                            return true;
+                        }
+                    }
+                }
+            }
 
+            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+            bads = _.filter(bads, function(o) {
+                return !_.contains(fox.friends, o.owner.username);
+            });
+            if (bads.length > 0) {
+                creep.attack(bads[0]);
+            }
+
+            break;
 
     }
     return false;
@@ -274,7 +296,7 @@ class fighterClass extends roleParent {
                 return;
         }
         if (creep.memory.level >= 11) {
-            if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XUH2O'])) {
+            if (super.boosted(creep, ['XGHO2', 'XUH2O', 'XZHO2'])) {
                 return;
             }
         }
@@ -285,7 +307,7 @@ class fighterClass extends roleParent {
                     }
                 }  */
 
-        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 7);
+        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 1);
 
         enemy = _.filter(enemy,
             function(object) {
@@ -302,23 +324,68 @@ class fighterClass extends roleParent {
             if (creep.pos.isNearTo(enemy)) {
                 creep.attackMove(enemy);
             } else {
-                creep.moveTo(enemy);
+                if (Game.flags.siege === undefined || Game.flags.siege.pos.roomName !== creep.room.name)
+                    creep.moveTo(enemy);
             }
         } else {
 
             if (!doAttack(creep))
-                if (creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
-                    creep.killBase();
+
+                if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+                    if (Game.flags.siege !== undefined && Game.flags.siege.pos.roomName === creep.room.name) {
+                        //                        movement.flagMovement(creep);
+                        creep.say('kill');
+                        creep.killBase();
+                    } else {
+                        if (creep.room.name == 'E52S67' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+                            creep.killBase();
+                        } else {
+
+                            movement.flagMovement(creep);
+                        }
+                    }
+                } else {
+                    if (creep.room.name == 'E52S67' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+                        creep.killBase();
+                    } else {
+
+                        movement.flagMovement(creep);
+                    }
+
                 }
 
-            movement.flagMovement(creep);
-
         }
-        /*        if (creep.hits !== creep.hitsMax && creep.memory.roleID !== 0) {
-                    if (super.edgeRun(creep)) {
-                        return;
+
+        if (creep.room.name == 'E15S63') {
+            if (creep.pos.y == 49 && creep.hits === creep.hitsMax) {
+                creep.move(TOP);
+            }
+            if (creep.pos.y == 48) {
+                var bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+                creep.attack(bads[0]);
+                console.log('does damage?', bads[0].hits);
+                creep.move(BOTTOM);
+            }
+        }
+        if (creep.hits !== creep.hitsMax && creep.room.name == 'E15S64') {
+            if (creep.pos.y === 0)
+                creep.move(BOTTOM);
+        }
+        /*
+                if (creep.hits !== creep.hitsMax && creep.room.name == 'E15S64') {
+                    if (Game.flags.drainer !== undefined) {
+                        creep.moveTo(Game.flags.drainer.pos);
+                    } else {
+                        console.log('nEED ESCAPE FLAG');
                     }
                 } */
+
+        /*
+                        if (creep.hits !== creep.hitsMax) {
+                            if (super.edgeRun(creep)) {
+                                return;
+                            }
+                        }  */
 
 
     }

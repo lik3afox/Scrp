@@ -64,26 +64,59 @@ var mageParty = [
     ['mage', require('army.mage'), 1, 0]
 ];
 
+var trollParty = [
+    ['troll', require('army.troll'), 1, 0]
+];
+
+var twoRange = [
+    ['ranger', require('army.ranger'), 2, 2]
+];
+var lowFFH = [
+    ['fighter', require('army.fighter'), 2, 10],
+    ['healer', require('army.healer'), 1, 5] // Healer    
+];
+
 var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 2],
-    ['fighter', require('army.fighter'), 0, 12],
+    ['fighter', require('army.fighter'), 2, 12],
     ['demolisher', require('army.demolisher'), 0, 2],
-    ['healer', require('army.healer'), 0, 7] // Healer    
+    ['healer', require('army.healer'), 1, 7] // Healer    
+];
+var fightHealer = [
+    ['fighter', require('army.fighter'), 1, 11],
+    ['healer', require('army.healer'), 1, 6]
 ];
 var warParty2 = [
     ['first', require('role.first'), 0, 4],
     ['ranger', require('army.ranger'), 0, 3],
-    ['fighter', require('army.fighter'), 0, 12],
-    ['demolisher', require('army.demolisher'), 0, 3],
-    ['healer', require('army.healer'), 0, 6], // Healer    
+    ['fighter', require('army.fighter'), 0, 11],
+    ['demolisher', require('army.demolisher'), 2, 2],
+    ['healer', require('army.healer'), 1, 6], // Healer    
+    ['scientist', require('role.scientist'), 0, 3]
+];
+var warParty22 = [
+    ['first', require('role.first'), 0, 4],
+    ['ranger', require('army.ranger'), 1, 2],
+    ['fighter', require('army.fighter'), 0, 11],
+    ['demolisher', require('army.demolisher'), 1, 2],
+    ['healer', require('army.healer'), 1, 6], // Healer    
     ['scientist', require('role.scientist'), 0, 3]
 ];
 var warParty3 = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 2],
+    ['fighter', require('army.fighter'), 1, 10],
+    ['demolisher', require('army.demolisher'), 1, 1],
+    ['scout', require('army.scout'), 0, 0],
+    ['healer', require('army.healer'), 1, 5] // Healer    
+];
+var warParty333 = [
+    ['first', require('role.first'), 0, 4],
+    ['scientist', require('role.scientist'), 0, 3],
+    ['ranger', require('army.ranger'), 0, 1],
     ['fighter', require('army.fighter'), 1, 10],
     ['demolisher', require('army.demolisher'), 1, 1],
     ['scout', require('army.scout'), 0, 0],
@@ -162,6 +195,9 @@ var rampartParty = [ // This is what currently si in effect, but
 var soloGuard = [
     ['rampartGuard', require('army.rampartGuard'), 1, 0]
 ];
+var harass = [
+    ['harass', require('keeper.harass'), 1, 0]
+];
 // This party is created and sent to the red flag when done. 
 
 var _name = 0;
@@ -192,10 +228,6 @@ function getSpawnCreating(flag) {
         //    case 'scout2' :
         case 'warparty1':
             return 'E35S83';
-        case 'warparty2':
-            return 'E28S71';
-        case 'warparty3':
-            return 'E26S73';
         case 'warparty5':
             return 'E23S75';
 
@@ -283,11 +315,17 @@ function getCurrentParty(flag) {
     }
     if (flag.name.substr(0, 2) == 'RA') {
         return soloGuard;
-    } 
+    }
     if (flag.memory.musterType !== 'none') {
         switch (flag.memory.musterType) {
+            case 'warparty333':
+                return warParty333;
+            case 'fightHealer':
+                return fightHealer;
             case 'oneFight':
                 return soloFighter;
+            case 'troll':
+                return trollParty;
             case 'test':
                 return testParty;
             case 'warparty33':
@@ -296,6 +334,8 @@ function getCurrentParty(flag) {
                 return upgradeRoomParty;
             case 'warparty2':
                 return warParty2;
+            case 'warparty22':
+                return warParty22;
             case 'warparty1':
                 return warParty;
             case 'warparty4':
@@ -304,7 +344,10 @@ function getCurrentParty(flag) {
                 return warParty5;
             case 'warparty3':
                 return warParty3;
-
+            case 'harass':
+                return harass;
+            case 'lowFFH':
+                return lowFFH;
             case 'demo':
                 return demoParty;
 
@@ -593,6 +636,7 @@ function createWayPath(creep, path) {
     if (path === undefined) {
         if (creep.memory.task !== undefined && creep.memory.task.length === 0)
             if (Game.flags[creep.memory.party].memory.nextFlag === 'none') {
+                console.log('are portal playing here?');
                 switch (creep.memory.party) {
                     case 'warparty1':
                         creep.memory.throughPortal = false;
@@ -618,7 +662,15 @@ function createWayPath(creep, path) {
                 if (Game.flags[creep.memory.party].memory.wayPath !== undefined)
                     for (var e in Game.flags[creep.memory.party].memory.wayPath) {
                         var o = Game.flags[creep.memory.party].memory.wayPath[e];
-                        if (o.roomName !== 'none')
+                        console.log(o.throughPortal, 'Playing with portals?');
+                        if (o.throughPortal) {
+                            let task = {};
+                            task.pos = null;
+                            task.order = "portalTo";
+                            creep.memory.task.push(task);
+                        }
+
+                        if (o.roomName !== 'none' && o.roomName !== 'portal')
                             createWayPointTask(creep, new RoomPosition(o.x, o.y, o.roomName));
                     }
                     // set the flag
@@ -703,18 +755,18 @@ class partyInteract {
                 if (crps.length > 0) {
                     let total = 0;
                     var rallyFlags = _.filter(Game.flags, function(o) {
-                        return o.color == COLOR_ORANGE;
+                        return o.color == COLOR_ORANGE && Game.map.getRoomLinearDistance(flag.pos.roomName, o.pos.roomName) <= 1;
                     });
                     if (rallyFlags.length > 0) {
 
                         for (o in crps) {
                             console.log('yaaaa');
                             for (a in rallyFlags) {
-                                console.log('booy', rallyFlags[a]);
+                                //                                console.log('booy', rallyFlags[a]);
                                 //                                if (crps[o].memory.formationPos === undefined) {
-                                console.log(crps[o], rallyFlags[a]);
+                                //                              console.log(crps[o], rallyFlags[a]);
                                 crps[o].memory.formationPos = getFormationFromFlag(crps[o], rallyFlags[a]);
-                                console.log('!!', crps[o].memory.formationPos);
+                                //                           console.log('!!', crps[o].memory.formationPos);
                                 //                              }
                             }
                         }
@@ -726,6 +778,7 @@ class partyInteract {
                             if (Game.flags[flagName] !== undefined && crps[o].memory.formationPos === undefined) {
 
                                 crps[o].memory.formationPos = getFormationFromFlag(crps[o], Game.flags[flagName]);
+                                console.log(getFormationFromFlag(crps[o], Game.flags[flagName]), 'getting this pos');
                                 if (crps[o].memory.formationPos >= 0) {
                                     break;
                                 }
@@ -744,7 +797,7 @@ class partyInteract {
                 });
                 //               if (crps.length > 0)
                 //                    console.log(crps.length, flag.memory.totalNumber, crps[0].memory.party, flag.name);
-                if (crps.length === flag.memory.totalNumber) {
+                if (crps.length >= flag.memory.totalNumber || crps.length === flag.memory.totalNumber) {
                     // Once they are all here. 
                     // Set leaderID
                     // This will be the healer. duh
@@ -755,10 +808,16 @@ class partyInteract {
                     if (heal.length > 0) {
                         healID = heal[0].id;
                     }
+                    var partyz = [];
+                    for (var z in crps) {
+                        partyz.push(crps[z].id);
+                    }
+                    console.log(partyz.length);
                     // we will then give them the path. then send them on there way.
                     for (a in crps) {
                         var creep = crps[a];
                         creep.memory.healerID = healID;
+                        creep.memory.partyID = partyz;
                         createWayPath(creep);
                     }
 

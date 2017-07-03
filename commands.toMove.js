@@ -420,9 +420,9 @@ function getFormationPos(creep) {
         let yy = Game.flags[creep.memory.party].pos;
         let xxx = dif.x + yy.x;
         let yyy = dif.y + yy.y;
-        if (xxx < 1) xxx = 1;
+        if (xxx < 0) xxx = 0;
         if (xxx > 49) xxx = 49;
-        if (yyy < 1) yyy = 1;
+        if (yyy < 0) yyy = 0;
         if (yyy > 49) yyy = 49;
         zz = new RoomPosition(xxx, yyy, yy.roomName);
     }
@@ -431,19 +431,30 @@ function getFormationPos(creep) {
 
 function healMovement(creep) {
     if (creep.memory.healerID === undefined) return false;
+    if (creep.hits === creep.hitsMax) return false;
     var healer = Game.getObjectById(creep.memory.healerID);
     if (healer !== null) {
         if (!creep.pos.isNearTo(healer) && creep.hits !== creep.hitsMax) {
-            creep.moveTo(healer, { maxOpts: 50 });
+            var towers = creep.room.find(FIND_STRUCTURES);
+            if (creep.pos.getRangeTo(healer) >= 3 || creep.hits < 4500) {
+                creep.moveTo(healer, { maxOpts: 50 });
+            }
+            //            if (towers.length >= 5 || creep.hits < 4500)
+            //                if()
+
             return true;
+
         }
     }
+    //    var range = creep.pos.getRangeTo(healer);
+    //    if ()
     if (Game.flags.drainer !== undefined && Game.flags.drainer.room !== undefined) {
         if (!creep.pos.isNearTo(Game.flags.drainer) && creep.hits !== creep.hitsMax) {
             creep.moveTo(Game.flags.drainer, { maxOpts: 50 });
             return true;
         }
     }
+
 
     return false;
 }
@@ -555,7 +566,6 @@ class MoveInteract {
 
 
     static moveToDefendFlag(creep, bades) {
-
         var guardRooms = ['E26S75', 'E25S74', 'E25S75', 'E25S76', 'E26S74', 'E26S76', 'E35S84', 'E35S74'];
         var E26S76 = ['E26S75', 'E26S76', 'E25S76'];
         var E26S75 = ['E25S75', 'E26S74', 'E26S76'];
@@ -581,7 +591,6 @@ class MoveInteract {
             'E24S76', 'E25S76', 'E26S76'
         ]; // No, acutally what happens is that all creeps come and help kill range 
         // This is for responders
-
 
 
         /*
@@ -747,7 +756,6 @@ class MoveInteract {
 
 
             }
-            creep.say(maxDistance);
             if (distance <= maxDistance) {
                 let zz = new RoomPosition(flagz[e].pos.x, flagz[e].pos.y, flagz[e].pos.roomName);
                 let xx = creep.moveTo(zz, { reusePath: 40 });
@@ -845,6 +853,17 @@ class MoveInteract {
             creep.memory.checkForBadScan = Math.ceil(Math.random() * 9) + 3;
 
             var bads = creep.room.find(FIND_HOSTILE_CREEPS);
+            var player = _.filter(bads, function(o) {
+                return o.owner.username != 'Invader' && o.owner.username != "Source Keeper" && !_.contains(FLAG.friends, o.owner.username);
+            });
+
+            if (player.length > 0) {
+                var flagName = player[0].owner.username + player[0].pos.roomName;
+                if (Game.flags[flagName] === undefined) {
+                    creep.room.createFlag(player[0].pos.x, player[0].pos.y, flagName, FLAG.DEFEND, COLOR_WHITE);
+                }
+            }
+
             bads = _.filter(bads, function(o) {
                 return o.owner.username == 'Invader';
             });

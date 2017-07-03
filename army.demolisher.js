@@ -22,35 +22,69 @@ var fox = require('foxGlobals');
 
 function doAttack(creep) {
     let target;
+    var E18S64targets;
     switch (creep.room.name) {
-        /*case "E18S64":
-            var E18S64targets = ['59506a753d55600158180666'];
+        case "E56S69":
+            E18S64targets = ['5812412f7c14175b3153f70f'];
             for (var a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
                     if (creep.pos.isNearTo(target)) {
-                        creep.dismantle(target);
-                        break;
+                        console.log(creep.dismantle(target));
+                        return true;
                     }
                 }
             }
             bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
             bads = _.filter(bads, function(o) {
-                return !_.contains(fox.friends, o.owner.username);
+                return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL;
             });
             if (bads.length > 0) {
                 creep.dismantle(bads[0]);
                 return true;
             }
-            return false; */
-/*        default:
-            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-            if (bads.length > 0) {
-                creep.dismantle(bads[0]);
-                break;
+            return false;
+        case "E52S67":
+            return false;
+        default:
+            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.wallTarget !== 'none') {
+                E18S64targets = [Game.flags[creep.memory.party].memory.wallTarget];
+                for (var b in E18S64targets) {
+                    target = Game.getObjectById(E18S64targets[b]);
+                    if (target !== null) {
+                        if (creep.pos.isNearTo(target)) {
+                            creep.dismantle(target);
+                            //          return true;
+                        }
+                    }
+                }
+                bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+                bads = _.filter(bads, function(o) {
+                    return !_.contains(fox.friends, o.owner.username);
+                });
+                if (bads.length > 0) {
+                    creep.dismantle(bads[0]);
+                    //                  return true;
+                }
+            } else {
+                bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+                bads = _.filter(bads, function(o) {
+                    return !_.contains(fox.friends, o.owner.username);
+                });
+                if (bads.length > 0) {
+                    creep.dismantle(bads[0]);
+                    //                    return true;
+                }
             }
+            return false;
+            /*        default:
+                        bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+                        if (bads.length > 0) {
+                            creep.dismantle(bads[0]);
+                            break;
+                        }
 
-            break; */
+                        break; */
     }
     return false;
 }
@@ -87,11 +121,17 @@ class demolisherClass extends roleParent {
         /*        if (creep.hits < 4500) {
                     super.edgeRun(creep);
                 } */
-        if (!doAttack(creep))
-            if (!creep.killBase()) {
-                movement.flagMovement(creep);
-                return;
-            }
+        if (creep.room.name == Game.flags[creep.memory.party].pos.roomName && (creep.room.name == 'E52S64' || creep.room.name == 'E52S67')) {
+            creep.killBase();
+        } else if (!doAttack(creep)) {
+            movement.flagMovement(creep);
+        } else {
+            movement.flagMovement(creep);
+        }
+        /*        var target = Game.getObjectById('588587458b65791f39f134c1');
+                if (target !== null)
+                    creep.dismantle(target); */
+
     }
 }
 

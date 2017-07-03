@@ -8,6 +8,9 @@ var shooterParty = [
 var invasionParty = [
     ['responder', require('keeper.responder'), 1, 0]
 ];
+var playerParty = [
+    ['responder', require('keeper.responder'), 1, 1]
+];
 
 
 var _name = 0;
@@ -84,6 +87,8 @@ function getCurrentParty(flag) {
                 return invasionParty;
             case 'shooter':
                 return shooterParty;
+            case 'player':
+                return playerParty;
         }
     } else {
         switch (flag.name) {
