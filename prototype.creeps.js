@@ -501,7 +501,9 @@ module.exports = function() {
             console.log('Give me an array', this);
         }
         if (this.saying !== undefined) {
-            this.say(lyrics[_.indexOf(lyrics, this.saying) + 1], public);
+            var word = _.indexOf(lyrics, this.saying) + 1;
+            if (word >= lyrics.length) word = 0;
+            this.say(lyrics[word], public);
         }
     };
     Creep.prototype.runFrom = function(badguy, options) {

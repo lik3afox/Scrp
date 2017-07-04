@@ -746,6 +746,59 @@ var XLHO2 = [{
     emptied: true
 }];
 
+// MOVE
+var G = [{
+    id: 'getReplaced',
+    resource: 'U',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'UL',
+    amount: 1,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'K',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UL',
+    amount: 1,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'ZK',
+    amount: 1,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'L',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'ZK',
+    amount: 1,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'Z',
+    amount: 2500,
+    emptied: false
+}];
+
 function labMode(roomName, mode, labs) {
     var a;
     switch (mode) {
@@ -882,6 +935,15 @@ var E29S79WarMix = [
     [6, 5, 3],
     [9, 7, 6]
 ];
+var gMix = [
+    [4, 2, 6],
+    [2, 1, 8],
+    [5, 1, 8],
+    [6, 3, 10],
+    [7, 5, 9],
+    [9, 3, 10]
+
+];
 
 var oneWarMix = [
     [1, 4, 7],
@@ -906,6 +968,8 @@ function getLabMixes(roomName) {
             case 'light':
             case undefined:
                 return Game.rooms[roomName].memory.labMix;
+            case 'G':
+                return gMix;
             default:
 
                 return E33S76WarMix;
