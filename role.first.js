@@ -332,7 +332,6 @@ class roleFirst extends roleParent {
             creep.say('zZz');
             return;
         }
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
@@ -340,8 +339,10 @@ class roleFirst extends roleParent {
             return false;
         }
         this.rebirth(creep);
+
         if (creep.memory.roleID === 0)
             if (super._power.getPowerToSpawn(creep)) return;
+
         if (super.depositNonEnergy(creep)) return;
 
         if (creep.memory.deposit === undefined) { creep.memory.deposit = false; }
@@ -356,7 +357,7 @@ class roleFirst extends roleParent {
                 creep.moveTo(zzz);
             return;
         }
-        if (creep.carry.energy < 50) {
+        if (creep.carry.energy === 0) {
             creep.memory.deposit = false;
         }
         //            console.log(creep.room.storage.total);

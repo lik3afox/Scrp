@@ -496,6 +496,54 @@ module.exports = function() {
     };
 
     //    var fox = require('foxGlobals');
+    Creep.prototype.sing = function(lyrics, public) {
+        if (!_.isArray(lyrics)) {
+            console.log('Give me an array', this);
+        }
+        if (this.saying !== undefined) {
+            this.say(lyrics[_.indexOf(lyrics, this.saying) + 1], public);
+        }
+    };
+    Creep.prototype.runFrom = function(badguy, options) {
+
+        if (_.isArray(badguy)) {
+            let target = this.pos.findClosestByRange(badguy);
+            badguy = target;
+        }
+        //console.log(badguy.pos, badguy, this.pos);
+
+        //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
+        //        console.log('runfrom', this.pos.getDirectionTo(result.path[0]), result.length);
+        //this.move(this.pos.getDirectionTo(result.path[0]))
+        //        this.move(this.pos.getDirectionTo(result.path[0]));
+        var direction = this.pos.getDirectionTo(badguy);
+        direction = direction + 4;
+        if (direction > 8)
+            direction = direction - 8;
+        var moveStatus = this.move(direction, options);
+        this.say('><', true);
+    };
+
+    function getExitDirection(direction) {
+        switch (direction) {
+            case TOP:
+                return [FIND_EXIT_TOP];
+            case TOP_RIGHT:
+                return [FIND_EXIT_TOP, FIND_EXIT_RIGHT];
+            case RIGHT:
+                return [FIND_EXIT_RIGHT];
+            case BOTTOM_RIGHT:
+                return [FIND_EXIT_RIGHT, FIND_EXIT_BOTTOM];
+            case BOTTOM:
+                return [FIND_EXIT_BOTTOM];
+            case BOTTOM_LEFT:
+                return [FIND_EXIT_BOTTOM, FIND_EXIT_LEFT];
+            case LEFT:
+                return [FIND_EXIT_LEFT];
+            case TOP_LEFT:
+                return [FIND_EXIT_TOP, FIND_EXIT_LEFT];
+        }
+    }
 
     Creep.prototype.moveToEdge = function(options) {
         var Exits = [FIND_EXIT_TOP,

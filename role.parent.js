@@ -841,7 +841,12 @@ class baseParent {
     }
 
     static keeperFind(creep) {
-            keeperFindAt(creep.pos.x, creep.pos.y, creep);
+            if (creep.memory.keeperLairID !== undefined) return;
+            let target = Game.getObjectById(creep.memory.goal);
+            if (target !== null) {
+                keeperFindAt(target.pos.x, target.pos.y, creep);
+            }
+            //            keeperFindAt(creep.pos.x, creep.pos.y, creep);
         }
         /*
             static rebuildMe(creep) {
@@ -1053,28 +1058,30 @@ class baseParent {
     }
 
     static depositNonEnergy(creep) {
-        if (creep.room.terminal === undefined && creep.room.storage === undefined || creep.room.controller.owner === undefined ||
-            creep.room.controller.owner !== 'likeafox') return false;
 
-        let target;
-        if (creep.room.terminal !== undefined && creep.room.controller !== undefined && creep.room.controller.level >= 6) {
-            target = creep.room.terminal;
-        } else {
-            target = creep.room.storage;
-        }
-        //  if(creep.carry[RESOURCE_ENERGY] > 0) return false;
-        var keys = Object.keys(creep.carry);
-        var p = keys.length;
-        while (p--) {
-            var e = keys[p];
-            if (e != RESOURCE_ENERGY && creep.carry[e] > 0) {
-                creep.say('has chzzburger');
-                if (creep.pos.isNearTo(target)) {
-                    creep.transfer(target, e);
-                } else {
-                    creep.moveTo(target);
+        if (creep.room.controller === undefined || creep.room.controller.owner !== 'likeafox') return false;
+        if (creep.room.terminal === undefined && creep.room.storage === undefined) return false;
+        if (creep.carryTotal > 0 && creep.carry[RESOURCE_ENERGY] === 0) {
+            let target;
+            if (creep.room.terminal !== undefined && creep.room.controller !== undefined && creep.room.controller.level >= 6) {
+                target = creep.room.terminal;
+            } else {
+                target = creep.room.storage;
+            }
+
+            var keys = Object.keys(creep.carry);
+            var p = keys.length;
+            while (p--) {
+                var e = keys[p];
+                if (e != RESOURCE_ENERGY && creep.carry[e] > 0) {
+                    creep.say('has chzzburger');
+                    if (creep.pos.isNearTo(target)) {
+                        creep.transfer(target, e);
+                    } else {
+                        creep.moveTo(target);
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         return false;

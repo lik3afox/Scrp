@@ -103,7 +103,7 @@ var upgradeModule = [
     ['scientist', require('role.scientist'), 0, 4],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
-    
+
     ['wallwork', require('role.wallworker'), 1, 5],
     ['linker', require('role.linker'), 1, 10]
 ];
@@ -132,8 +132,8 @@ var spawn2Module = [
     ['nuker', require('role.nuker'), 0, 4],
     ['scientist', require('role.scientist'), 0, 4],
     //        ['builder',    require('role.builder'), 3, 5],
-
-    ['minHarvest', require('role.mineral'), 1, 5],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5]
 ];
 var spawn3Module = [
@@ -143,6 +143,7 @@ var spawn3Module = [
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['minHarvest', require('role.mineral'), 1, 7],
+
     ['assistant', require('role.assistant'), 1, 0],
     ['nuker', require('role.nuker'), 0, 4],
     ['wallwork', require('role.wallworker'), 1, 5]
@@ -150,7 +151,9 @@ var spawn3Module = [
 var spawn4Module = [ // Room E26S77 Spawn 5
     ['first', require('role.first'), 2, 2],
     ['linker', require('role.linker'), 1, 3],
-    ['minHarvest', require('role.mineral'), 1, 4],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+
     ['scientist', require('role.scientist'), 0, 4],
     ['nuker', require('role.nuker'), 0, 4],
     ['wallwork', require('role.wallworker'), 1, 5],
@@ -192,7 +195,8 @@ var spawn6Module = [ // Spawn11 Room E28S77
 var E35S83Module = [ // Spawn11 Room E28S77
 
     ['first', require('role.first'), 2, 3],
-    ['minHarvest', require('role.mineral'), 1, 4],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 2, 3],
     ['builder', require('role.builder'), 0, 5],
     ['upbuilder', require('role.upbuilder'), 1, 7],
@@ -212,7 +216,8 @@ var E35S73Module = [ // Spawn11 Room E28S77
     ['linker', require('role.linker'), 1, 4],
     //        ['builder',    require('role.builder'),1, 5],
     ['scientist', require('role.scientist'), 0, 3],
-    ['minHarvest', require('role.mineral'), 1, 4],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['nuker', require('role.nuker'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['wallwork', require('role.wallworker'), 1, 5],
@@ -230,7 +235,8 @@ var E23S75Module = [
     ['first', require('role.first'), 2, 3],
     ['builder', require('role.builder'), 0, 5],
     ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['minHarvest', require('role.mineral'), 1, 3],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['scientist', require('role.wallworker'), 0, 3],
     ['linker', require('role.linker'), 1, 3],
@@ -244,7 +250,8 @@ var E33S76Module = [
     ['linker', require('role.linker'), 1, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['scientist', require('role.wallworker'), 0, 3],
-    ['minHarvest', require('role.mineral'), 1, 3],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2]
 ];
@@ -256,14 +263,16 @@ var W4S93Module = [
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['scientist', require('role.wallworker'), 0, 3],
-    ['minHarvest', require('role.mineral'), 1, 3],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['harvester', require('role.harvester'), 2, 2]
 ];
 
 var E38W75Module = [ // E37S75
     ['first', require('role.first'), 2, 5],
     ['linker', require('role.linker'), 1, 3],
-    ['harvester', require('role.harvester'), 1, 2],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['scientist', require('role.scientist'), 0, 3],
     ['wallwork', require('role.wallworker'), 2, 5],
     ['nuker', require('role.nuker'), 1, 3],
@@ -1028,11 +1037,10 @@ class theSpawn {
             totalCreeps = addFromCreateStack(totalCreeps, currentModule[type][_name], spawn);
             let min = Game.getObjectById(spawn.room.memory.mineralID);
             let nuke = getNuke(spawn);
-            var alertProhib = ['minHarvest','assistant','nuker'];
+            var alertProhib = ['minHarvest', 'assistant', 'nuker'];
 
-            if ((currentModule[type][_name] == 'minHarvest'||currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {} else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {} else if(
-                spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name]) ){
-            } else {
+            if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {} else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {} else if (
+                spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {} else {
 
                 // If totalCreeps is less than require through currentModule then.
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
@@ -1157,7 +1165,7 @@ class theSpawn {
 
         for (var ie in spawn.memory.roadsTo) {
             if (spawn.memory.roadsTo[ie] === null) {
-                console.log(spawn, spawn.pos);
+                console.log(spawn, spawn.pos, 'Expand Check Fail');
                 return;
             }
             let xp = spawn.memory.roadsTo[ie].expLevel;
@@ -1167,13 +1175,12 @@ class theSpawn {
             if (spawn.memory.roadsTo[ie].expLevel > 0) {
                 if (source === null) {
                     if (spawn.memory.roadsTo[ie].sourcePos !== undefined) {
-                        console.log(source, spawn.memory.roadsTo[ie].source, spawn, ie);
                         let obser = require('build.observer');
                         obser.reqestRoom(spawn.memory.roadsTo[ie].sourcePos.roomName, 5);
                     }
                 } else {
                     if (source.room === undefined) {
-                        console.log('HEREASD');
+                        console.log('ERROR source.room not available:checkexpand', spawn.pos);
                     }
                 }
             }

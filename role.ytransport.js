@@ -160,41 +160,54 @@ class transport extends roleParent {
                     // Then assigns it to memory.
                     if (creep.memory.gotoID === undefined) {
 
-
                         let target; // This is where you want to go. 
                         let targetAmount = 0;
                         let isDropped = true;
-                        var tmp = creep.room.find(FIND_DROPPED_RESOURCES);
 
+                        var containerz = creep.room.find(FIND_STRUCTURES);
+                        containerz = _.filter(containerz, function(structure) {
+                            return (structure.structureType === STRUCTURE_CONTAINER);
+                        });
+
+
+                        if (containerz.length > 0) {
+                            for (var o in containerz) {
+                                for (var e in containerz[o].store) {
+                                    if (e !== RESOURCE_ENERGY && containerz[o].store[e] > 0) {
+                                        target = containerz[o].id;
+                                        break;
+                                    }
+                                }
+                                if (target !== undefined) break;
+                            }
+                        }
+
+
+                        var tmp = creep.room.find(FIND_DROPPED_RESOURCES);
                         if (tmp.length === 0) {
                             isDropped = false;
                         } else {
-                            for (var e in tmp) {
-                                if (tmp[e].amount > targetAmount && tmp[e].amount >= 100) {
-                                    targetAmount = tmp[e].amount;
-                                    target = tmp[e].id;
+                            for (var eee in tmp) {
+                                if (tmp[eee].amount > targetAmount && tmp[eee].amount >= 100) {
+                                    targetAmount = tmp[eee].amount;
+                                    target = tmp[eee].id;
                                 }
                             }
                         }
 
+
                         if (targetAmount < 200) { // If the energy on the gound is now. then
-                            var containerz = creep.room.find(FIND_STRUCTURES, {
-                                filter: (structure) => {
-                                    return (structure.structureType === STRUCTURE_CONTAINER);
-                                }
-                            });
-
                             if (containerz.length > 0) {
-                                for (var o in containerz) {
+                                for (var oo in containerz) {
 
-                                    if ((containerz[o].store[RESOURCE_ENERGY] * 0.75) > targetAmount) {
-                                        target = containerz[o].id;
-                                        targetAmount = containerz[o].store[RESOURCE_ENERGY];
+                                    if ((containerz[oo].store[RESOURCE_ENERGY] * 0.75) > targetAmount) {
+                                        target = containerz[oo].id;
+                                        targetAmount = containerz[oo].store[RESOURCE_ENERGY];
                                         //            isDropped = true;
                                     }
 
-                                    if(containerz[o].total !== 0 && containerz[o].store[RESOURCE_ENERGY] === 0){
-                                        target = containerz[o].id;
+                                    if (containerz[oo].total !== 0 && containerz[oo].store[RESOURCE_ENERGY] === 0) {
+                                        target = containerz[oo].id;
                                         break;
                                     }
 
@@ -222,7 +235,7 @@ class transport extends roleParent {
                                 if (creep.pos.isNearTo(target)) {
 
                                     if (target.structureType === STRUCTURE_CONTAINER) {
-                                        for(var b in target.store) {
+                                        for (var b in target.store) {
                                             creep.withdraw(target, b);
                                         }
                                         creep.memory.gotoID = undefined;

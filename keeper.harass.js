@@ -18,67 +18,58 @@ var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var fox = require('foxGlobals');
 
-
-
-
 function getHostiles(creep) {
     let bads = creep.room.find(FIND_HOSTILE_CREEPS);
-    bads = _.filter(bads, function(o) {
-        return !_.contains(fox.friends, o.owner.username);
+
+
+    var players = _.filter(bads, function(o) {
+        return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper';
     });
-    if(bads.length > 0){
-        if(bads[0].owner.username == 'Source Keeper') {
-            return creep.pos.findInRange(bads,4);
-        } else {
-            return bads;
-        }
-    }
-    return [];
+
+    var sk = _.filter(bads, function(o) {
+        return (o.owner.username == 'Invader' || o.owner.username == 'Source Keeper') && creep.pos.inRangeTo(o, 3);
+    });
+    if (sk.length > 0) return sk;
+
+    return players;
 }
 
 function attackCreep(creep, bads) {
 
     if (bads.length === 0) {
+        moveCreep(creep);
         creep.memory.needed = undefined;
         return true;
     }
-    if (creep.hits < creep.memory.runAwayLimit) {
-        creep.memory.run = true;
-    }
-
     let enemy = creep.pos.findClosestByRange(bads);
-
     let distance = creep.pos.getRangeTo(enemy);
+
     if (bads.length == 2) {
-        if (creep.pos.isNearTo(enemy)) {
-            creep.rangedMassAttack();
-        } else {
-            creep.rangedAttack(enemy);
-        }
-    } 
-    if (distance < 4) {
-    //    creep.rangedAttack(enemy);
-    if(enemy.owner.username !== 'Source Keeper')
-        creep.moveToEdge();
+        creep.rangedMassAttack();
+
+    } else if (distance === 1) {
+        creep.rangedMassAttack();
+    } else if (distance < 4) {
+        creep.rangedAttack(enemy);
     } else if (distance >= 4) {
-        if (!creep.memory.run) {
-            if(enemy.owner.username !== 'Source Keeper')
-                creep.moveMe(enemy, { maxRooms: 1 });
+
+    }
+
+    if (creep.memory.run) {
+        creep.moveToEdge();
+    } else {
+        if (distance < 3) {
+            creep.runFrom(enemy);
+        } else if (distance >= 4) {
+            creep.moveTo(enemy);
         }
     }
+
 
 }
 
 function moveCreep(creep) {
-    if(creep.room.name !== Game.flags[creep.memory.party].pos.roomName){
-        movement.flagMovement(creep);
-    } else {
-        var bads = getHostiles(creep);
-        let enemy = creep.pos.findClosestByRange(bads);
-        if(!creep.pos.inRangeTo(enemy,2) && creep.hits !== creep.hitsMax)
-            creep.moveTo(enemy,{reusePath:7});
-
-    }
+    movement.flagMovement(creep);
 }
 
 
@@ -92,7 +83,7 @@ class roleGuard extends roleParent {
 
     static run(creep) {
         if (creep.memory.runAwayLimit === undefined) {
-            creep.memory.runAwayLimit = 3000;
+            creep.memory.runAwayLimit = 4000;
         }
 
         if (super.returnEnergy(creep)) {
@@ -101,19 +92,22 @@ class roleGuard extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-        if (creep.memory.run) {
-            creep.moveToEdge();
-            if (creep.hits == creep.hitsMax) {
-                creep.memory.run = false;
-            }
-        } else {
-            moveCreep(creep);
-        }
         creep.selfHeal();
+
+        // Attack stuff.
         let bads = getHostiles(creep);
-        if (bads.length > 0) {
-            attackCreep(creep, bads);
+        attackCreep(creep, bads);
+
+        if (creep.hits < creep.memory.runAwayLimit) {
+            creep.memory.run = true;
         }
+        if (creep.memory.run === undefined) {
+            creep.memory.run = false;
+        }
+        if (creep.hits == creep.hitsMax) {
+            creep.memory.run = false;
+        }
+        // Move stuff.
     }
 
 }

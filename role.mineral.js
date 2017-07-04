@@ -8,7 +8,7 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
-    [MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY]
+    [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY]
 
 ];
 
@@ -62,7 +62,7 @@ class mineralRole extends roleParent {
             let extract = Game.getObjectById(creep.memory.extractID);
             if (extract !== null) {
                 cdNeed = extract.cooldown;
-                if (cdNeed === 0)
+                if (cdNeed === 0) {
                     if (creep.harvest(minz) == OK) {
                         if (creep.memory.mineralContainID === undefined) {
                             let stru = creep.pos.findInRange(FIND_STRUCTURES, 5);
@@ -76,6 +76,9 @@ class mineralRole extends roleParent {
                             }
                         }
                     }
+                } else {
+                    creep.sing(['I', 'love', 'you']);
+                }
 
             }
         } else if (!isNear && carry < creep.carryCapacity - 49) {
@@ -84,7 +87,7 @@ class mineralRole extends roleParent {
             //let contain;
             //if(creep.memory.mineralContainID != undefined && creep.memory.mineralContainID != 'none') 
             let contain = Game.getObjectById(creep.memory.mineralContainID);
-            if (contain === null || contain === undefined || creep.memory.level !==7) {
+            if (contain === null || contain === undefined || creep.memory.level !== 7) {
 
                 if (creep.room.name == 'E33S76z') {
                     super._containers.moveToStorage(creep);

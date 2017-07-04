@@ -586,19 +586,19 @@ function getCost(module) {
 function getFormationFromFlag(creep, flag) {
     if (creep.memory.party == 'warparty1') return -1;
     if (flag.memory.formation === undefined) return -1;
-    console.log(flag.memory.formation.length, 'k');
+    //    console.log(flag.memory.formation.length, 'k');
     for (var a in flag.memory.formation) {
         let info = flag.memory.formation[a];
-        console.log(a, info.role, creep.memory.role);
+        //      console.log(a, info.role, creep.memory.role);
         //    info.role,info.posistion,info.number;
         if (info.role !== 'none' && creep.memory.role == info.role) {
             let count = _.filter(Game.creeps, function(o) {
                 return o.memory.role === info.role && o.memory.formationPos === info.posistion && o.memory.party == flag.name;
             });
-            console.log(count.length, info.number);
-            if (count.length) {
-                console.log(count[0]);
-            }
+            //            console.log(count.length, info.number);
+            /*            if (count.length) {
+                            console.log(count[0]);
+                        } */
             if (count.length < info.number) {
                 creep.say('REPORTING');
                 console.log('Creep has reported in will goto role Party:', flag.name, ' getting Posistion:', info.posistion);
@@ -702,7 +702,7 @@ class partyInteract {
                     }
                 }
             }
-            console.log(flag.memory.totalNumber);
+            //            console.log(flag.memory.totalNumber);
             flag.memory.totalNumber = totalParty;
         }
         if (flag.memory.portal === undefined) {
@@ -735,7 +735,7 @@ class partyInteract {
             flag.memory.wayPath.push(test);
         }
         if (flag.room !== undefined) {
-            console.log(flag.name);
+            //            console.log(flag.name);
             var o;
             var a;
 
@@ -760,7 +760,7 @@ class partyInteract {
                     if (rallyFlags.length > 0) {
 
                         for (o in crps) {
-                            console.log('yaaaa');
+                            //                            console.log('yaaaa');
                             for (a in rallyFlags) {
                                 //                                console.log('booy', rallyFlags[a]);
                                 //                                if (crps[o].memory.formationPos === undefined) {
@@ -777,9 +777,9 @@ class partyInteract {
                             var flagName = crps[o].memory.role;
                             if (Game.flags[flagName] !== undefined && crps[o].memory.formationPos === undefined) {
 
-                                crps[o].memory.formationPos = getFormationFromFlag(crps[o], Game.flags[flagName]);
-                                console.log(getFormationFromFlag(crps[o], Game.flags[flagName]), 'getting this pos');
-                                if (crps[o].memory.formationPos >= 0) {
+                                var newFormation = getFormationFromFlag(crps[o], Game.flags[flagName]);
+                                if (newFormation > -1) {
+                                    crps[o].memory.formationPos = newFormation;
                                     break;
                                 }
                             } else if (crps[o].memory.formationPos === undefined) {
@@ -812,7 +812,7 @@ class partyInteract {
                     for (var z in crps) {
                         partyz.push(crps[z].id);
                     }
-                    console.log(partyz.length);
+                    //                    console.log(partyz.length);
                     // we will then give them the path. then send them on there way.
                     for (a in crps) {
                         var creep = crps[a];

@@ -384,7 +384,7 @@ class StructureInteract {
         zclose = _.filter(zlose, function(object) {
             return (((object.structureType != STRUCTURE_WALL) && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax));
         });
-        console.log(close.length, zlose.length);
+        //        console.log(close.length, zlose.length);
         if (close.length > 0) {
             creep.say('cre');
             creep.repair(close[0]);

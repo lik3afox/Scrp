@@ -26,7 +26,7 @@ var classLevels = [
     [MOVE, ATTACK, RANGED_ATTACK, MOVE]
 
 ];
-//var boost = ['UH'];
+var boost = ['XUH2O'];
 var movement = require('commands.toMove');
 
 var roleParent = require('role.parent');
@@ -49,8 +49,11 @@ class fighterClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-        //        if(creep.ticksToLive<500)
-        //   if(super.boosted(creep,boost)) { return;}
+        if (creep.ticksToLive < 1000 && Game.flags[creep.memory.party] !== undefined)
+            if (super.boosted(creep, boost)) {
+                return;
+            }
+
         var enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3);
 
         if (enemy.length > 0) {

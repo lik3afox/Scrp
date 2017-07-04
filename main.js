@@ -70,7 +70,7 @@
             if (nearRampart.length > 0) {
                 for (var a in nearRampart) {
                     if (Game.flags[named] === undefined) {
-                        console.log('lets place a flag here for defense');
+                        //                        console.log('lets place a flag here for defense');
                         spawn.room.createFlag(nearRampart[a].pos, named, COLOR_YELLOW, COLOR_PURPLE);
                     } else {
                         // It exists,but does it have any bad guys? If not then relocatie
@@ -140,13 +140,13 @@
                     let sci2 = _.filter(Game.spawns[e].memory.create, function(o) {
                         return o.memory.role == 'scientist';
                     });
-                    if (sci2.length !== 0)
-                        console.log('sci spawns', sci2.length);
+                    //                   if (sci2.length !== 0)
+                    //                        console.log('sci spawns', sci2.length);
                     total += sci2.length;
                 }
             }
 
-            console.log('Did a test for scientist found:' + total);
+            //            console.log('Did a test for scientist found:' + total);
             if (total < scientist) {
                 let temp = {
                     build: [MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, ],

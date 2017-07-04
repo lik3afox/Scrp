@@ -98,13 +98,13 @@ function shareEnergy(terminal) {
 }
 
 function needEnergy(terminal) {
-var always = ['E28S71','E38S72','W4S93'];
-if(_.contains(always, terminal.room.name) ) {
+    var always = ['E28S71', 'E38S72', 'W4S93'];
+    if (_.contains(always, terminal.room.name)) {
         if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
             let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
             console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, 'ALWAYS ORDER NEEDS TO BE ALWYS');
         }
-}
+    }
 
 
     if (terminal.store[RESOURCE_ENERGY] < 1000 || terminal.room.storage.store[RESOURCE_ENERGY] < 1000) {
@@ -228,12 +228,16 @@ function newTradeEnergy(terminal) {
         // profit / 1 energy + cost    
 
         //console.log( profit/(1+temp), target.price/(1+target.cost),target.price,temp );
-        if (profit / (1 + temp) > target.price / (1 + target.cost) && Orders[e].roomName != 'E24S72' && Orders[e].roomName != 'E22S77') {
-            target.id = Orders[e].id;
-            target.cost = temp;
-            target.amount = Orders[e].amount;
-            target.price = Orders[e].price;
-            target.room = Orders[e].roomName;
+        if (Game.rooms[Orders[e].roomName] !== undefined) {
+            console.log('trying to buy own energy');
+        } else {
+            if (profit / (1 + temp) > target.price / (1 + target.cost) && Orders[e].roomName != 'E24S72' && Orders[e].roomName != 'E22S77') {
+                target.id = Orders[e].id;
+                target.cost = temp;
+                target.amount = Orders[e].amount;
+                target.price = Orders[e].price;
+                target.room = Orders[e].roomName;
+            }
         }
     }
     let trans = EnergyNum; // (Math.floor(eTotal / (1 + target.cost)));
@@ -603,7 +607,7 @@ function getMostTerminal(mineralz, target) {
     let highest = 0;
     var bested;
     var e;
-    var mineral = mineralz.toLowerCase();
+    var mineral = mineralz; // = mineralz.toLowerCase();
     if (target === undefined) {
         e = terminals.length;
         while (e--) {
@@ -661,10 +665,13 @@ function doDebt() {
     var transferAmount = Debt.increment;
     if (giver === undefined) {
         console.log('ERROR in DEBT', Debt.type, Debt.room, Debt.amount);
+
+        Memory.debts.push(Memory.debts.shift());
         return false;
     }
-    if (giver.store[Debt.type] < transferAmount * 3) {
-        console.log('Error in Debt, not enough funds');
+    if (giver.store[Debt.type] < transferAmount * 10) {
+        console.log('Error in Debt, not enough funds', giver.store[Debt.type], transferAmount * 10);
+        Memory.debts.push(Memory.debts.shift());
         return false;
     }
 
@@ -675,13 +682,21 @@ function doDebt() {
     }
     if (Debt.amount <= 0) {
         console.log(result, 'Debt COMPLETED!!', Debt.room, Debt.type);
-        Memory.debts.unshift();
+        if (Debt.repeat) {
+            var zz = Memory.debts.shift();
+            zz.amount = zz.maxAmount;
+            Memory.debts.push(zz);
+        } else {
+            Memory.debts.shift();
+        }
     } else {
         console.log(result, 'Debt Sending', Debt.room, 'sending:', Debt.type, 'From:', giver.room.name, 'Amount:', transferAmount, 'Debt@', Debt.amount);
 
     }
     return true;
 }
+
+
 
 function getMinerals(terminal, needed) {
     for (var e in needed) {

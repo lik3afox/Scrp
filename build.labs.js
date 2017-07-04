@@ -94,14 +94,14 @@ var maxMinerals = {
     'KO': 30000,
     'KH': 30000,
 
-    'XUHO2': 100000,
-    'XUH2O': 100000,
-    'XZHO2': 100000,
-    'XZH2O': 100000,
-    'XLHO2': 100000,
-    'XLH2O': 100000,
-    'XKHO2': 100000,
-    'XKH2O': 100000,
+    'XUHO2': 45000,
+    'XUH2O': 45000,
+    'XZHO2': 45000,
+    'XZH2O': 45000,
+    'XLHO2': 45000,
+    'XLH2O': 45000,
+    'XKHO2': 45000,
+    'XKH2O': 45000,
 
 
 
@@ -127,11 +127,11 @@ function whatDoIget(creep) {
             //           if (creep.room.name == 'E35S73')
             //                console.log('lab works ', currentLab.energy, currentLab.energyCapacity, i, labs[i].id);
 
-            if (currentLab !== null && currentLab.energy < currentLab.energyCapacity && currentLab.room.name == creep.room.name) {
+            if (currentLab !== null && currentLab.energy < currentLab.energyCapacity && currentLab.room.name == creep.room.name && !labs[i].emptied) {
                 return RESOURCE_ENERGY;
             }
             if (currentLab !== null && currentLab.mineralAmount < labs[i].amount && currentLab.room.name == creep.room.name &&
-                creep.room.terminal.store[labs[i].resource] > 0) {
+                creep.room.terminal.store[labs[i].resource] > 0 && !labs[i].emptied) {
                 return labs[i].resource;
             }
         }
@@ -155,7 +155,7 @@ function whereDoIPut(creep, have) {
     for (var i in labs) {
         let real = getCached(labs[i].id);
 
-        if (!labs[i].emptied && real !== null && labs[i].resource == have && real.pos.roomName == creep.room.name && real.mineralAmount < labs[i].amount ) {
+        if (!labs[i].emptied && real !== null && labs[i].resource == have && real.pos.roomName == creep.room.name && real.mineralAmount < labs[i].amount) {
             return labs[i].id;
         }
 
@@ -189,7 +189,7 @@ function labDo(roomName, created, labz, laby) {
     //    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
     if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
-        //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
+        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
         return false;
     }
     let lab1 = getCached(labs[created - 1].id);
@@ -267,46 +267,46 @@ var muster = [{
     emptied: false
 }];
 
-// Attack
+// AttackXUHO2
 var XUH2O = [{
     id: 'getReplaced',
     resource: 'U',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'UH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'OH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'UH2O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'X',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -316,8 +316,8 @@ var XUH2O = [{
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
-    amount: 1,
-    emptied: true
+    amount: 2500,
+    emptied: false
 }];
 // Attack
 var LH = [{
@@ -338,7 +338,7 @@ var LH = [{
 }, {
     id: 'getReplaced',
     resource: 'L',
-    amount: 2700,
+    amount: 2400,
     emptied: true
 }, {
     id: 'getReplaced',
@@ -353,7 +353,7 @@ var LH = [{
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -367,50 +367,50 @@ var LH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'LH',
-    amount: 1,
-    emptied: true
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
 }];
 // Attack
 var UH = [{
     id: 'getReplaced',
     resource: 'UH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'UH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'UH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'U',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'UH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'UH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'UH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -419,50 +419,50 @@ var UH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'UH',
-    amount: 1,
-    emptied: true
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
 }];
 
 var XZHO2 = [{
     id: 'getReplaced',
     resource: 'Z',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'ZH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'OH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'ZH2O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'X',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -471,51 +471,51 @@ var XZHO2 = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XZHO2',
-    amount: 1,
-    emptied: true
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
 }];
 
 // Range Attack
 var XKHO2 = [{
     id: 'getReplaced',
     resource: 'K',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'KO',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'OH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'KHO2',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'X',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -524,51 +524,51 @@ var XKHO2 = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XKHO2',
-    amount: 1,
-    emptied: true
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
 }];
 
 // MOVE
 var XXZHO2 = [{
     id: 'getReplaced',
     resource: 'Z',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'ZO',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'OH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'ZHO2',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'X',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -577,26 +577,26 @@ var XXZHO2 = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XZHO2',
-    amount: 1,
-    emptied: true
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
 }];
 
 // DISMANTLE
 var XZH2O = [{
     id: 'getReplaced',
     resource: 'Z',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'ZH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -606,22 +606,22 @@ var XZH2O = [{
 }, {
     id: 'getReplaced',
     resource: 'O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'ZH2O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'X',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -630,26 +630,26 @@ var XZH2O = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XZH2O',
-    amount: 1,
-    emptied: true
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
 }];
 
 // TOUGH
 var XGHO2 = [{
     id: 'getReplaced',
     resource: 'G',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'GO',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -659,22 +659,22 @@ var XGHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'GHO2',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'X',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -683,57 +683,56 @@ var XGHO2 = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XGHO2',
-    amount: 1,
-    emptied: true
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
 }];
 var E33S76WarMix = [
     [3, 1, 2],
     [4, 2, 5],
     [6, 3, 4],
-    [9, 7, 6],
-    [10, 7, 6]
+    [9, 7, 6]
 ];
 // HAL
 var XLHO2 = [{
     id: 'getReplaced',
     resource: 'L',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'O',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LO',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'OH',
-    amount: 2500,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'H',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LHO2',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'X',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'LH',
-    amount: 2700,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -805,6 +804,15 @@ function labMode(roomName, mode, labs) {
             }
 
             return XKHO2;
+        case 'XZHO2':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (var bbb in XZHO2) {
+                //       if (labs[b] !== undefined)
+
+                XZHO2[bbb].id = labs[bbb].id;
+            }
+
+            return XZHO2;
 
         case 'XXZHO2':
             Game.rooms[roomName].memory.labMode = mode;
@@ -872,8 +880,7 @@ var E29S79WarMix = [
     [3, 1, 2],
     [5, 4, 2],
     [6, 5, 3],
-    [9, 7, 6],
-    [10, 7, 6]
+    [9, 7, 6]
 ];
 
 var oneWarMix = [
@@ -918,45 +925,44 @@ function setLabs(roomName, labs) {
             amount: lab.resource,
             resource: lab.resource
         }; */
-//if(roomName == 'E35S83') console.log("does it get here88");    
+    //if(roomName == 'E35S83') console.log("does it get here88");    
 
     switch (roomName) {
-        case 'E35S83':
-        let zz = labMode(roomName, 'muster', labs);
-            return zz;
+        /*        case 'E35S83':
+                let zz = labMode(roomName, 'muster', labs);
+                    return zz;*/
 
         case 'E28S71':
         case 'E29S79':
             return labMode(roomName, 'XLHO2', labs);
+
         case 'E38S72':
         case 'W4S93':
             return labMode(roomName, 'XGHO2', labs);
 
         case 'E37S75':
-                       return labMode(roomName, 'XUH2O', labs);
         case 'E26S73':
-            return labMode(roomName, 'XUH2O', labs); //
+            return labMode(roomName, 'XUH2O', labs);
 
 
         case 'E33S76':
+        case 'E38S72':
             return labMode(roomName, 'XKHO2', labs);
 
         case 'E35S73':
-
             return labMode(roomName, 'XZH2O', labs);
 
         case 'E28S73':
             return labMode(roomName, 'XXZHO2', labs);
-
         case 'E23S75':
             return labMode(roomName, 'XZHO2', labs);
 
-        case 'E38S72':
-            return labMode(roomName, 'muster', labs);
+
         case 'E27S75':
         case 'E26S77':
             return labMode(roomName, 'light', labs);
         default:
+            Game.rooms[roomName].memory.labMode = undefined;
             return labs;
     }
     //    console.log('2', labs.length);
@@ -964,19 +970,16 @@ function setLabs(roomName, labs) {
 }
 
 function returnLabs(roomName) {
-    if( Game.rooms[roomName] === undefined){
-        console.log(roomName, 'return labs failure',roomName.pos.roomName);
-      return false;
-        
-    } 
+    if (Game.rooms[roomName] === undefined) {
+        console.log(roomName, 'return labs failure', roomName.pos.roomName);
+        return false;
+
+    }
     if (Game.rooms[roomName].memory.labs === undefined) {
         switch (roomName) {
-            case "E23S75":
-                return allLabs;
 
-            default:
-                console.log('Room not available,return empty room', roomName);
-                return [];
+            default: console.log('Room not available,return empty room', roomName);
+            return [];
         }
     } else {
         if (Memory.war) {
@@ -995,9 +998,7 @@ function returnLabs(roomName) {
                 warLabs.push(warLab);
             }
             //return ;
-
             let zz = setLabs(roomName, warLabs);
-
             return zz;
         } else {
 
@@ -1070,25 +1071,24 @@ function updateRoomMember(roomName) {
 //5836bb2241230b6b7a5b9a4d E35S75 43,15
 class buildLab {
 
-    static getPlans(roomName) {
-let zzz = returnLabs(roomName);
+    static getPlans(roomName) { // returns the acutal plans.
+        let zzz = returnLabs(roomName);
         return zzz;
     }
 
-    static getLabs(creep) {
+    static getLabs(roomName) { // Returns the object of the labs.
         let returned = [];
 
-        let labs = returnLabs(creep.room.name);
+        let labs = returnLabs(roomName);
+
         for (var i in labs) {
-                let test = Game.getObjectById(labs[i].id);
-                if(test !== null && test.pos.roomName !== creep.room.name) {
-                    console.log('WTF why this not in the same room?',test,test.pos,test.id,creep,creep.pos.roomName);
-                } else if (test !== null) {
-                    returned.push(test);
-                }
+            let test = Game.getObjectById(labs[i].id);
+            if (test !== null && test.pos.roomName !== roomName) {
+                console.log('WTF why this not in the same room?', test, test.pos, test.id, roomName);
+            } else if (test !== null) {
+                returned.push(test);
+            }
         }
-        //        let vs = creep.room.find(FIND_STRUCTURES,{filter: {structureType: STRUCTURE_LAB}});
-        //        console.log( returned.length, returned[0],vs.length,vs[0] );
         return returned;
     }
 
@@ -1261,7 +1261,15 @@ let zzz = returnLabs(roomName);
         // 
         // RESOURCE_KEANIUM RESOURCE_OXYGEN
     static moveToTransfer(creep) {
-        let What = whatDoIHave(creep);
+        let What;
+        if (creep.carryTotal !== 0) {
+            What = whatDoIHave(creep);
+        } else {
+            for (var a in creep.carry) {
+                if (creep.carry[a] > 0)
+                    What = a;
+            }
+        }
         let Where = whereDoIPut(creep, What);
         creep.say('m');
         //    console.log(Where,'58b231304f9ae14589af186d');

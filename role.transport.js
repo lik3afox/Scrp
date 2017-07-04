@@ -128,6 +128,7 @@ class transport extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
+        if (super.depositNonEnergy(creep)) return;
 
         if (link.stayDeposit(creep)) {
             constr.pickUpEnergy(creep);
@@ -137,7 +138,6 @@ class transport extends roleParent {
             return;
         }
 
-        if (super.depositNonEnergy(creep)) return;
         if (super.returnEnergy(creep)) {
             return;
         }
@@ -163,7 +163,7 @@ class transport extends roleParent {
 
         if (creep.memory.gohome) {
             creep.countDistance();
-            if (creep.memory.linkID !== undefined) {
+            if (creep.memory.linkID !== undefined && creep.carry[RESOURCE_ENERGY] > 0) {
 
                 let goal = Game.getObjectById(creep.memory.linkID);
                 if (goal !== null) {
@@ -282,18 +282,24 @@ class transport extends roleParent {
                         creep.memory.workContain = contain.id;
                     }
                 }
-
+                super.keeperFind(creep);
                 let contain = Game.getObjectById(creep.memory.workContain);
                 if (contain !== null) {
                     if (contain.total > 100) {
                         if (creep.pos.isNearTo(contain)) {
                             var keyz = Object.keys(contain.store);
                             var a = keyz.length;
+                            var withDraw;
                             while (a--) {
-                                if (creep.withdraw(contain, keyz[a]) == OK) {
-                                    super.keeperFind(creep);
-                                }
+                                if (a === RESOURCE_ENERGY)
+                                    withDraw = creep.withdraw(contain, keyz[a]);
                             }
+                            if (withDraw !== OK)
+                                while (a--) {
+                                    if (a !== RESOURCE_ENERGY)
+                                        withDraw = creep.withdraw(contain, keyz[a]);
+                                }
+
                         } else {
                             creep.moveTo(contain, { maxOps: 50 });
                         }

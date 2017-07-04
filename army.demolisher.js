@@ -30,7 +30,7 @@ function doAttack(creep) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
                     if (creep.pos.isNearTo(target)) {
-                        console.log(creep.dismantle(target));
+                        creep.dismantle(target);
                         return true;
                     }
                 }

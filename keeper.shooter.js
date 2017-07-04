@@ -305,9 +305,9 @@ class roleGuard extends roleParent {
                     creep.memory.run = false;
                 }
             } else {
-                if (bads.length) {
-                    console.log(bads[0].isAtEdge, creep.isNearEdge);
-                }
+                //             if (bads.length) {
+                //                    console.log(bads[0].isAtEdge, creep.isNearEdge);
+                //               }
                 //              if (bads.length > 0 && !bads[0].isAtEdge && !creep.isNearEdge) {
                 if (!movement.moveToDefendFlag(creep)) {
                     moveCreep(creep);

@@ -32,14 +32,14 @@ function getHostiles(creep) {
             return player;
         }
 
-        let returned = creep.pos.findInRange(bads, range);
+         */
+    /*    let returned = creep.pos.findInRange(bads, range);
 
         returned = _.filter(returned, function(o) {
-            return !_.contains(fox.friends, o.owner.username) ;
+            return !_.contains(fox.friends, o.owner.username);
         }); */
     let tgt = Game.getObjectById(creep.memory.playerTargetId);
-    if (creep.room.name == 'E35S84')
-        console.log(tgt, 'tgt');
+    //        console.log(tgt, 'tgt');
     if (tgt === null) {
         creep.memory.playerTargetId = null;
         let bads = creep.room.find(FIND_HOSTILE_CREEPS);
@@ -55,7 +55,7 @@ function getHostiles(creep) {
         return [tgt];
     }
 
-    return returned;
+    //    return returned;
 
 }
 
@@ -174,33 +174,33 @@ function moveCreep(creep) {
 
         let rmPos = new RoomPosition(creep.memory.keeperLair[creep.memory.goTo].pos.x, creep.memory.keeperLair[creep.memory.goTo].pos.y, creep.memory.keeperLair[creep.memory.goTo].pos.roomName);
         if (!creep.pos.isNearTo(gota)) {
-            if(creep.room.name == 'E24S74'){
-            creep.moveMe(rmPos, {
-                reusePath: 7,
-                maxRooms:1,
-                ignoreRoads: (creep.room.name == 'W4S94'),
-                visualizePathStyle: {
-                    fill: 'transparent',
-                    stroke: '#bf0',
-                    lineStyle: 'dashed',
-                    strokeWidth: 0.15,
-                    opacity: 0.5
-                }
-            });
-        } else {
-            creep.moveMe(rmPos, {
-                reusePath: 7,
-                ignoreRoads: (creep.room.name == 'W4S94'),
-                visualizePathStyle: {
-                    fill: 'transparent',
-                    stroke: '#bf0',
-                    lineStyle: 'dashed',
-                    strokeWidth: 0.15,
-                    opacity: 0.5
-                }
-            });
+            if (creep.room.name == 'E24S74') {
+                creep.moveMe(rmPos, {
+                    reusePath: 7,
+                    maxRooms: 1,
+                    ignoreRoads: (creep.room.name == 'W4S94'),
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#bf0',
+                        lineStyle: 'dashed',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                });
+            } else {
+                creep.moveMe(rmPos, {
+                    reusePath: 7,
+                    ignoreRoads: (creep.room.name == 'W4S94'),
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#bf0',
+                        lineStyle: 'dashed',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                });
 
-        }
+            }
 
         } else {
             creep.say('zZzZz');

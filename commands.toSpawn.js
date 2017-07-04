@@ -73,7 +73,7 @@ function waitForAllSpawn(roomName) {
     var spwns = _.filter(spwns, function(o) {
         return o.room.name === roomName && o.spawning === null;
     });
-    console.log(spwns);
+    //    console.log(spwns);
 
 }
 
@@ -188,7 +188,7 @@ class SpawnInteract {
     }
 
     static addToWarStack(newCreep) {
-        console.log("WARSTACK",newCreep.room);
+        console.log("WARSTACK", newCreep.room);
         // for now it will only created at homeEmpire.
         for (var i in Game.spawns) {
             if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == newCreep.room) {

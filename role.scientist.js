@@ -34,7 +34,7 @@ var classLevels = [
         CARRY, CARRY, MOVE,
         CARRY, CARRY, MOVE
     ]
-    
+
 
 ];
 
@@ -144,15 +144,14 @@ function labNeedReducing(creep) {
     var e = theplans.length;
     while (e--) {
         let lab = Game.getObjectById(theplans[e].id);
-        if (lab !== null && theplans[e].emptied && lab.room.name == creep.room.name) {
-            if (lab.mineralAmount >= creep.stats('carry') + 5) {
-                if (creep.pos.isNearTo(lab)) {
-                    creep.withdraw(lab, lab.mineralType);
-                    return true;
-                } else {
-                    creep.moveMe(lab.pos);
-                    return true;
-                }
+        if (lab !== null && theplans[e].emptied && lab.room.name == creep.room.name && lab.mineralAmount >= 500) {
+            creep.say('redo');
+            if (creep.pos.isNearTo(lab)) {
+                creep.withdraw(lab, lab.mineralType);
+                return true;
+            } else {
+                creep.moveMe(lab.pos);
+                return true;
             }
         }
     }
@@ -228,7 +227,7 @@ class scientistRole extends roleParent {
             }
         } else {
 
-            var _labs = labsBuild.getLabs(creep);
+            var _labs = labsBuild.getLabs(creep.room.name);
 
             if (_labs.length > 0 && _.sum(creep.carry) === 0) { // If there are labs. 
                 var i = _labs.length;
@@ -236,7 +235,9 @@ class scientistRole extends roleParent {
 
                     var plan = labsBuild.getPlans(_labs[i].pos.roomName); // get the plans
 
-                    if ((plan.resource != _labs[i].mineralType) && (_labs[i].mineralAmount > 0)) {
+                    if (plan[i].id == _labs[i].id && (plan[i].resource != _labs[i].mineralType) && (_labs[i].mineralAmount > 0)) {
+                        creep.say('clear');
+
                         if (creep.pos.isNearTo(_labs[i])) {
                             // need to check if the lab has mineral type wanted.
                             if (creep.withdraw(_labs[i], _labs[i].mineralType) == OK) {
@@ -252,21 +253,18 @@ class scientistRole extends roleParent {
                 if (!labsBuild.getFromTerminal(creep)) {
                     //if(creep.room.name == 'E23S75') console.log(labsBuild.getFromTerminal(creep));
                     let otherThings = false;
-                    if (creep.room.name !== 'E33S76') {
-                        var keys = Object.keys(creep.room.storage.store);
-                        var n = keys.length;
-                        while (n--) {
-                            var e = keys[n];
-                            if (e != RESOURCE_ENERGY && creep.room.storage.store[e]) {
-                                otherThings = true;
-                                if (creep.pos.isNearTo(creep.room.storage)) {
-                                    creep.withdraw(creep.room.storage, e);
-                                } else {
-                                    creep.moveMe(creep.room.storage);
-                                }
+                    var keys = Object.keys(creep.room.storage.store);
+                    var n = keys.length;
+                    while (n--) {
+                        var e = keys[n];
+                        if (e != RESOURCE_ENERGY && creep.room.storage.store[e]) {
+                            otherThings = true;
+                            if (creep.pos.isNearTo(creep.room.storage)) {
+                                creep.withdraw(creep.room.storage, e);
+                            } else {
+                                creep.moveMe(creep.room.storage);
                             }
                         }
-
                     }
 
                     if (!otherThings) {
@@ -277,10 +275,6 @@ class scientistRole extends roleParent {
                                     creep.moveMe(creep.room.terminal);
 
                                 } else {
-                                    /*if (creep.memory.party !== undefined) {
-                                        creep.moveTo(Game.flags[creep.memory.party]);
-                                    } */
-                                    if(creep.room.name != 'E35S83')
                                     creep.say('raiders', true);
                                     creep.memory.distance++;
                                     //                          doDeath(creep);
