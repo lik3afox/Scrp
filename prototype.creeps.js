@@ -497,14 +497,13 @@ module.exports = function() {
 
     //    var fox = require('foxGlobals');
     Creep.prototype.sing = function(lyrics, public) {
-        if (!_.isArray(lyrics)) {
-            console.log('Give me an array', this);
-        }
-        if (this.saying !== undefined) {
-            var word = _.indexOf(lyrics, this.saying) + 1;
-            if (word >= lyrics.length) word = 0;
-            this.say(lyrics[word], public);
-        }
+        /*        if (!_.isArray(lyrics)) {
+                    console.log('Give me an array', this);
+                }
+                if (this.saying !== undefined) { */
+        var word = _.indexOf(lyrics, this.saying) + 1;
+        this.say(lyrics[word >= lyrics.length ? 0 : word], public);
+        //        }
     };
     Creep.prototype.runFrom = function(badguy, options) {
 

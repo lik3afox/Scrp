@@ -110,15 +110,22 @@ function changeParent(creep) {
     if (creep.memory.scientistID === undefined) { creep.memory.scientistID = 2; }
     if (creep.ticksToLive > (3 * creep.body.length) + creep.memory.distance) return false;
     let noScientist = false;
+    let zz = Game.getObjectById(spawnGroup[creep.memory.scientistID]);
+
     do {
         creep.memory.scientistID++;
         let zzz = _.filter(Game.creeps, function(o) {
             return o.memory.role == 'scientist' && o.memory.scientistID == creep.memory.scientistID;
         });
-        if (zzz.length === 0) noScientist = true;
+        let create = zz.memory.create;
+
+        let bbb = _.filter(create, function(o) {
+            return o.memory.role == 'scientist' && o.memory.scientistID == creep.memory.scientistID;
+        });
+
+        if (zzz.length === 0 && bbb.length === 0) noScientist = true;
     } while (noScientist);
 
-    let zz = Game.getObjectById(spawnGroup[creep.memory.scientistID]);
     //console.log(zz)
     if (zz !== null && zz.room.name == 'E27S75') {
         if (zz === null || zz.room.controller.level === null || zz.room.controller.level < 7) creep.memory.scientistID++;
