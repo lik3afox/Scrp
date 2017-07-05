@@ -164,9 +164,14 @@ class thiefClass extends roleParent {
             let target;
             let getting;
             //            if(!){
-            if (creep.room.name == 'E37S79z') {
+            if (creep.room.name == 'E35S83') {
                 creep.say('E38');
-                super._constr.moveToPickUpEnergy(creep);
+                var bads = creep.room.find(FIND_HOSTILE_CREEPS);
+                if (bads.length > 0) {
+                    creep.moveTo(Game.flags[creep.memory.party]);
+                } else {
+                    super._constr.moveToPickUpEnergy(creep);
+                }
                 return;
             } else {
                 target = creep.room.storage;

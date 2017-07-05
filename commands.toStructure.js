@@ -566,6 +566,22 @@ class StructureInteract {
     static moveToRepairWall(creep) {
 
         if (creep.memory.wallTargetID === undefined) {
+            var sz;
+            if (creep.room.name == 'E35S83') {
+
+                creep.memory.wallTargetID = '58fd71f2cc42f0c708bbb4d4';
+                sz = Game.getObjectById(creep.memory.wallTargetID);
+                if (sz.hits > 31000000) {
+                    creep.memory.wallTargetID = '58fe06b4bbab1afe568fa4d5';
+                } else {
+                    return creep.memory.wallTargetID;
+                }
+                sz = Game.getObjectById(creep.memory.wallTargetID);
+                if (sz.hits < 31000000) {
+                    return creep.memory.wallTargetID;
+                }
+            }
+
             let targets = creep.room.find(FIND_STRUCTURES);
             targets = _.filter(targets,
                 function(object) {
@@ -576,6 +592,7 @@ class StructureInteract {
             if (targets.length > 0) {
                 creep.memory.wallTargetID = targets[0].id;
             }
+
         }
 
 

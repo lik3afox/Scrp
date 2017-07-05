@@ -11,7 +11,7 @@ var _links = [
     '58c4c2337a92cc7169fb0aeb', '58d4a16e13994446731e4986',
     '58bb7684b591b9fc7d0a9df2', '58df611bbeb92e3de67dff2f',
     // Spawn room 6
-    '58baf3bdefbd256c113625e9',
+    '58baf3bdefbd256c113625e9', '595c6868b5dd826b00dba4f0',
     //E35S73
     '58e292aa2748ce6edec91dbe', '58ed5954cc4792513b19b417', '58eee4540c9a49987f234952',
     // Spawn room E38S72
@@ -165,13 +165,13 @@ class buildLink {
 
         sendEnergy('58c49bac27df0e3f02785e8a', '58c48ff96b89238f10ad2947', 700);
 
-        sendEnergy('58eee4540c9a49987f234952', '58eee114743f77b04e3256d0');
-        sendEnergy('58eee114743f77b04e3256d0', '58eedea95b45f6e068ea87e8');
-        sendEnergy('58eedea95b45f6e068ea87e8', '58eedc1a80a4c309ac4ae283');
-        sendEnergy('58eedc1a80a4c309ac4ae283', '58eeda269b7d1b581c9cf311');
+        sendEnergy('595c6868b5dd826b00dba4f0', '595c62d912ef4b0357754666');
+        sendEnergy('595c62d912ef4b0357754666', '595c5cff8f61b25768b0bdd8');
+        sendEnergy('595c5cff8f61b25768b0bdd8', '595c5a78bb4b85342f2d7b90');
+        sendEnergy('595c5a78bb4b85342f2d7b90', '58eeda269b7d1b581c9cf311');
 
 
-        sendEnergy('58e18b53126491cc353cbfef', '58eeda269b7d1b581c9cf311', 600);
+        sendEnergy('595c5f9eed5318210b4dd7f4', '58eeda269b7d1b581c9cf311', 600);
 
         //zolox skID: 
 

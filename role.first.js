@@ -347,7 +347,7 @@ class roleFirst extends roleParent {
 
         if (creep.memory.deposit === undefined) { creep.memory.deposit = false; }
 
-        if (!creep.memory.deposit && creep.carry.energy > creep.carryCapacity - 75) {
+        if (!creep.memory.deposit && creep.carryTotal > creep.carryCapacity - 75) {
             creep.memory.deposit = true;
             //spawn.newTarget(creep);
         }

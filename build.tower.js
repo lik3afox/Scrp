@@ -71,16 +71,18 @@ function getCreepDamage(target, allies) {
 function getTowerDamage(target, towers) {
     var totalDamage = 0;
     for (var e in towers) {
-        var range = target.pos.getRangeTo(towers[e]);
-        if (range <= 5) {
-            totalDamage += 600;
-        } else if (range >= 20) {
-            totalDamage += 150;
-        } else {
-            range -= 5;
-            var damage = 150 + 30 * range;
-            //            console.log(totalDamage, target.pos, damage, range, "Yo");
-            totalDamage += damage;
+        if (towers[e].energy > 10) {
+            var range = target.pos.getRangeTo(towers[e]);
+            if (range <= 5) {
+                totalDamage += 600;
+            } else if (range >= 20) {
+                totalDamage += 150;
+            } else {
+                range -= 5;
+                var damage = 150 + 30 * range;
+                //            console.log(totalDamage, target.pos, damage, range, "Yo");
+                totalDamage += damage;
+            }
         }
         //      showTowerRange(towers[e]);
     }
@@ -108,6 +110,17 @@ function calcuateDamage(body, amount) {
     return amount;
 }
 
+function findAttacker(enemies) {
+    for (var e in enemies) {
+        for (var a in enemies[e].body) {
+            if (enemies[e].body[a].type == ATTACK || enemies[e].body[a].type == RANGED_ATTACK)
+                return true;
+
+        }
+    }
+    return false;
+}
+
 function estimateDamageAndAttack(target, allies, towers) {
     var totalDamage = 0;
     totalDamage += getTowerDamage(target, towers);
@@ -115,6 +128,7 @@ function estimateDamageAndAttack(target, allies, towers) {
     var totalToughHp = getBoostTough(target.body) * 100;
     var damageTotal = calcuateDamage(target.body, totalDamage);
     var currentLossHp = target.hitsMax - target.hits;
+    target.room.visual.text(calcuateDamage(target.body, totalDamage), target.pos, { color: 'green', font: 0.8 });
     if (damageTotal + currentLossHp < totalToughHp) return false;
 
     console.log('est damage', target, totalToughHp, damageTotal, damageTotal > totalToughHp);
@@ -155,7 +169,16 @@ function analyzedBads(hostiles) {
 function defendRoom(towers, hostiles) {
     if (hostiles.length === 0) return false;
     var e;
-    if (hostiles[0].owner.username !== 'Invader') {
+    if (towers[0].room.controller.safeMode !== undefined) {
+        e = towers.length;
+        while (e--) {
+            if (towers[e].energy > 0) {
+                let zz = Math.floor(Math.random() * hostiles.length);
+                showTowerRange(towers[e]);
+                towers[e].attack(hostiles[zz]);
+            }
+        }
+    } else if (hostiles[0].owner.username !== 'Invader') {
 
 
         // Random attack targets
@@ -173,9 +196,6 @@ function defendRoom(towers, hostiles) {
 
         if (!focusTarget) {
             e = towers.length;
-            if (whatToDo === 1) {
-                focusTarget = hostiles[Math.floor(Math.random() * hostiles.length)];
-            }
             if (whatToDo === 2) {
                 focusTarget = hostiles.sort((a, b) => a.hits - b.hits);
                 if (focusTarget.length > 1) {
@@ -186,6 +206,9 @@ function defendRoom(towers, hostiles) {
             }
             while (e--) {
                 if (towers[e].energy > 100) {
+                    if (whatToDo === 1) {
+                        focusTarget = hostiles[Math.floor(Math.random() * hostiles.length)];
+                    }
                     if (whatToDo === 0) {
                         let zz = Math.floor(Math.random() * hostiles.length);
                         showTowerRange(towers[e]);
@@ -372,13 +395,15 @@ function repairRampart(towers) {
         let target = Game.getObjectById(towers[0].room.memory.towerRepairID);
         if (target !== null) {
             for (var a in towers) {
-                towers[a].repair(target);
+                if (towers[a].energy > 400)
+                    towers[a].repair(target);
             }
         }
     } else {
 
         let target = Game.getObjectById(towers[0].room.memory.towerRepairID);
-        towers.repair(target);
+        if (towers.energy > 400)
+            towers.repair(target);
     }
 }
 
@@ -426,37 +451,58 @@ class roleTower {
             // Here we need to find a rampartFlag in the room
             // IF we find one, we should look at the timer of how long it's been there.
             //  spawn.room.createFlag(nearRampart[0].pos, named, COLOR_PURPLE);
-            var named = 'rampartD' + roomName;
-            let zz = Game.flags[named];
-            if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
-                // SO we should just repair and make it longer
-                for (var bad in hostiles) {
-                    if (estimateDamageAndAttack(hostiles[bad], mycreeps, towers)) {
-                        return;
-                    }
-                }
-                if (zz.memory.invaderTimed > 450) {
-                    repairRampart(towers);
-                }
-            }
+            /*            var named = 'rampartD' + roomName;
+                        let zz = Game.flags[named];
+                        if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
+                            // SO we should just repair and make it longer
+                            for (var bad in hostiles) {
+                                if (estimateDamageAndAttack(hostiles[bad], mycreeps, towers)) {
+                                    return;
+                                }
+                            }
+                            if (zz.memory.invaderTimed > 350) {
+                                repairRampart(towers);
+                            }
+                        } */
             //      }
             var mycreeps = Game.rooms[roomName].find(FIND_MY_CREEPS);
             var hurt = _.filter(mycreeps, function(thisCreep) {
                 return thisCreep.hits < thisCreep.hitsMax;
             });
-            if (Game.rooms[roomName].memory.alert) {
+
+            var named = 'rampartD' + roomName;
+            let zz = Game.flags[named];
+            if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
+                // SO we should just repair and make it longer
                 if (!healRoom(towers, hurt)) {
-                    if (!defendRoom(towers, hostiles)) {
+                    for (var bad in hostiles) {
+                        if (estimateDamageAndAttack(hostiles[bad], mycreeps, towers)) {
+                            return;
+                        }
+                    }
+                    if (zz.memory.invaderTimed > 350) {
+                        repairRampart(towers);
+                    }
+                }
+            } else {
+                if (!defendRoom(towers, hostiles)) {
+                    if (!healRoom(towers, hurt)) {
                         repairRoom(towers);
                     }
                 }
+            }
 
-            }
-            if (!defendRoom(towers, hostiles)) {
-                if (!healRoom(towers, hurt)) {
-                    repairRoom(towers);
-                }
-            }
+            /*            if (Game.rooms[roomName].memory.alert && Game.rooms[roomName].controller.safeMode !== undefined) {
+
+                            if (!healRoom(towers, hurt)) {
+                                if (!defendRoom(towers, hostiles)) {
+                                    repairRoom(towers);
+                                }
+                            }
+
+                        } */
+
+
             if (hostiles.length > 0) {
                 for (var e in hostiles) {
                     if (estimateDamageAndAttack(hostiles[e], mycreeps, towers)) {

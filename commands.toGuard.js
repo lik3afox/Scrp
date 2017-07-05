@@ -208,19 +208,19 @@ class partyInteract {
                             parent: 'default'
                         }
                     };
-                    /*                    var spawn = _.filter(Game.spawns, function(sp) {
-                                            return sp.room.name == temp.room && sp.memory.alphaSpawn;
-                                        }); */
-                    /*                    if (spawn.length > 0) {
-                                            console.log('using new');
-                                            temp.parent = spawn[0].id;
-                                            spawn[0].memory.expandCreate.unshift(temp);
-                                        } else { */
-                    console.log('using old', totalParty[i], currentParty[e][_number]);
-                    let toSpawn = require('commands.toSpawn');
-                    //                    console.log( )
-                    toSpawn.addToWarStack(temp);
-                    //                  }
+                    var spawn = _.filter(Game.spawns, function(sp) {
+                        return sp.room.name == temp.room && sp.memory.alphaSpawn;
+                    });
+                    if (spawn.length > 0) {
+                        console.log('using new');
+                        temp.parent = spawn[0].id;
+                        spawn[0].memory.expandCreate.unshift(temp);
+                    } else {
+                        console.log('using old', totalParty[i], currentParty[e][_number]);
+                        let toSpawn = require('commands.toSpawn');
+                        //                    console.log( )
+                        //                    toSpawn.addToWarStack(temp);
+                    }
 
                     //                    toSpawn.
 

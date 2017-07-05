@@ -187,7 +187,7 @@ var soloFighter = [
 var rampartParty = [ // This is what currently si in effect, but 
     // Rampart Will be range,repair,tower,and other things needed that is not attack.
     ['tower', require('role.tower'), 1, 0],
-    ['wallwork', require('role.wallworker'), 1, 5],
+    ['wallwork', require('role.wallworker'), 2, 5],
     ['rampartGuard', require('army.rampartGuard'), 1, 0]
 ];
 

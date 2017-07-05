@@ -61,11 +61,14 @@
         var named2 = 'RA2' + spawn.room.name;
         var named = 'rampartD' + spawn.room.name;
         var named3 = 'RA3' + spawn.room.name;
-
+        var structures = spawn.room.find(FIND_STRUCTURES);
         while (e--) {
 
-            let nearRampart = targets[e].pos.findInRange(FIND_STRUCTURES, 1, {
-                filter: object => (object.structureType == 'rampart')
+            /*            let nearRampart = targets[e].pos.findInRange(FIND_STRUCTURES, 1, {
+                            filter: object => (object.structureType == 'rampart')
+                        });  */
+            let nearRampart = _.filter(structures, function(o) {
+                return o.structureType == 'rampart' && o.pos.isNearTo(targets[e]);
             });
             if (nearRampart.length > 0) {
                 for (var a in nearRampart) {
@@ -98,13 +101,40 @@
                                 //                        console.log(nearRampart[a].pos,Game.flags[named].pos);
                                 if (!nearRampart[a].pos.isEqualTo(Game.flags[named].pos))
                                     spawn.room.createFlag(nearRampart[a].pos, named2, COLOR_YELLOW, COLOR_WHITE);
+                            } else {
+                                if (!nearRampart[a].pos.isEqualTo(Game.flags[named].pos))
+                                    spawn.room.createFlag(nearRampart[a].pos, named2, COLOR_YELLOW, COLOR_WHITE);
                             }
                         } else {
                             if (_.contains(HardD, spawn.room.name)) {
-                                if (Game.flags[named3] === undefined &&
-                                    Game.flags[named].memory.invaderTimed > 500) {
-                                    spawn.room.createFlag(nearRampart[a].pos, named3, COLOR_YELLOW, COLOR_WHITE);
+                                // First we look for walls below 2 mil
+                                // If any are there
+                                // We see if any flags are on the ramparts next to it.
+                                // If there isn't place a flag.
+                                weakWalls = _.filter(structures, function(o) {
+                                    return o.structureType == STRUCTURE_WALL && o.hits < 2000000;
+                                });
+                                if (weakWalls.length > 0) {
+                                    if (Game.flags[named3] === undefined) {
+                                        for (var ee in weakWalls) {
+                                            var wall = weakWalls[ee];
+                                            let closeRamps = _.filter(structures, function(o) {
+                                                return o.structureType == 'rampart' && o.pos.isNearTo(wall);
+                                            });
+                                            for (var eee in closeRamps) {
+                                                if (!closeRamps[eee].pos.isEqualTo(Game.flags[named2]) && !closeRamps[eee].pos.isEqualTo(Game.flags[named])) {
+                                                    spawn.room.createFlag(nearRampart[a].pos, named3, COLOR_YELLOW, COLOR_WHITE);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
+
+                                //                                  Game.flags[named].memory.invaderTimed > 500) {
+
+
+                                //                                }
+
                             }
                         }
 
@@ -236,6 +266,32 @@
         } else {
             room.memory.alert = false;
         }
+
+        var goods = room.find(FIND_MY_CREEPS);
+        if (goods.length <= 3) {
+            for (var i in goods) {
+                if (goods[i].memory.role == 'linker') {
+                    goods[i].memory.role = 'first';
+                }
+            }
+            var spwns = room.find(FIND_STRUCTURES);
+            spwns = _.filter(spwns, function(o) {
+                return o.structureType == STRUCTURE_SPAWN;
+            });
+            if (spwns.length > 0) {
+                if (!spwns[0].spawning && room.energyAvailable === 300) {
+                    spwns[0].createCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir', {
+                        role: 'first',
+                        home: spwns[0].pos.roomName,
+                        parent: "none",
+                        level: 3
+                    });
+                }
+            }
+
+        }
+
+
         // Determine Room Type - If the walls are next to entrace or not. 
         /*        var roomDefense;
                 if (roomDefense !== undefined) {
@@ -472,7 +528,7 @@
                 market.run();
             }
         }
-        var twn = Game.getObjectById('59506a753d55600158180666');
+        var twn = Game.getObjectById('58fd71f2cc42f0c708bbb4d4');
         if (twn !== null)
             console.log(twn.hits, 'left');
         //        speedTest();

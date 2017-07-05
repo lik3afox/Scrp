@@ -129,7 +129,7 @@ class roleUpbuilder extends roleParent {
         }
 
 
-        if (Memory.war && creep.ticksToLive < 1300) {
+        if (Memory.war && creep.ticksToLive < 1300 || creep.room.memory.alert) {
             require('role.wallworker').run(creep);
             return;
         }

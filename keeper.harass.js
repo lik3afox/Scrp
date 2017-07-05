@@ -59,7 +59,7 @@ function attackCreep(creep, bads) {
         creep.moveToEdge();
     } else {
         if (distance < 3) {
-            creep.runFrom(enemy);
+            creep.moveTo(Game.flags[creep.memory.party]);
         } else if (distance >= 4) {
             creep.moveTo(enemy);
         }

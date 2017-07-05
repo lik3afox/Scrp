@@ -121,7 +121,7 @@ class demolisherClass extends roleParent {
         /*        if (creep.hits < 4500) {
                     super.edgeRun(creep);
                 } */
-        if (creep.room.name == Game.flags[creep.memory.party].pos.roomName && (creep.room.name == 'E52S64' || creep.room.name == 'E52S67')) {
+        if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName && (creep.room.name == 'E52S64' || creep.room.name == 'E52S67')) {
             creep.killBase();
         } else if (!doAttack(creep)) {
             movement.flagMovement(creep);

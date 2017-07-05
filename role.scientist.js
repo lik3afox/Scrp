@@ -145,6 +145,7 @@ function changeParent(creep) {
         creep.suicide();
     }
 }
+var constr = require('commands.toStructure');
 
 function labNeedReducing(creep) {
     var theplans = labsBuild.getPlans(creep.room.name);
@@ -174,7 +175,6 @@ class scientistRole extends roleParent {
     }
 
     static run(creep) {
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
@@ -182,15 +182,12 @@ class scientistRole extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
+        constr.pickUpEnergy(creep);
 
 
         if (creep.memory.distance === undefined) creep.memory.distance = 0;
         //        super.rebirth(creep);
         //        if(Game.cpu.bucket < 3000 && creep.room.name !='E26S73') return;
-
-        if (super.returnEnergy(creep)) {
-            return;
-        }
         if (!creep.memory.party) {
             changeParent(creep);
         } else {

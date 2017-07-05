@@ -293,9 +293,11 @@ module.exports = function() {
             let target = this.pos.findClosestByRange(badguy);
             badguy = target;
         }
-        var direction = this.pos.getDirectionTo(badguy);
-        var moveStatus = this.move(direction, options);
-        this.attack(badguy);
+        if (this.attack(badguy) === OK) {
+            var direction = this.pos.getDirectionTo(badguy);
+            var moveStatus = this.move(direction, options);
+
+        }
     };
 
     Creep.prototype.moveInside = function(options) {

@@ -655,7 +655,7 @@ class baseParent {
         */
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1300) return false;
+        if (creep.ticksToLive < 1000) return false;
 
         if (creep.memory.boostNeeded === undefined) {
             creep.memory.boostNeeded = boosted;
@@ -1059,31 +1059,32 @@ class baseParent {
 
     static depositNonEnergy(creep) {
 
-        if (creep.room.controller === undefined || creep.room.controller.owner !== 'likeafox') return false;
+        //        if (creep.room.controller !== undefined && creep.room.controller.owner !== 'likeafox') return false;
         if (creep.room.terminal === undefined && creep.room.storage === undefined) return false;
-        if (creep.carryTotal > 0 && creep.carry[RESOURCE_ENERGY] === 0) {
-            let target;
-            if (creep.room.terminal !== undefined && creep.room.controller !== undefined && creep.room.controller.level >= 6) {
-                target = creep.room.terminal;
-            } else {
-                target = creep.room.storage;
-            }
 
-            var keys = Object.keys(creep.carry);
-            var p = keys.length;
-            while (p--) {
-                var e = keys[p];
-                if (e != RESOURCE_ENERGY && creep.carry[e] > 0) {
-                    creep.say('has chzzburger');
-                    if (creep.pos.isNearTo(target)) {
-                        creep.transfer(target, e);
-                    } else {
-                        creep.moveTo(target);
-                    }
-                    return true;
+        //        if (creep.carryTotal > 0 && creep.carry[RESOURCE_ENERGY] === 0) {
+        let target;
+        if (creep.room.terminal !== undefined && creep.room.controller !== undefined && creep.room.controller.level >= 6) {
+            target = creep.room.terminal;
+        } else {
+            target = creep.room.storage;
+        }
+
+        var keys = Object.keys(creep.carry);
+        var p = keys.length;
+        while (p--) {
+            var e = keys[p];
+            if (e != RESOURCE_ENERGY && creep.carry[e] > 0) {
+                creep.say('has chzzburger');
+                if (creep.pos.isNearTo(target)) {
+                    creep.transfer(target, e);
+                } else {
+                    creep.moveTo(target);
                 }
+                return true;
             }
         }
+        //      }
         return false;
     }
 

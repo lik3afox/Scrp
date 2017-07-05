@@ -203,7 +203,7 @@ var E35S83Module = [ // Spawn11 Room E28S77
     ['nuker', require('role.nuker'), 1, 4],
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 0, 4],
-    ['wallwork', require('role.wallworker'), 1, 5],
+    ['wallwork', require('role.wallworker'), 2, 5],
     ['harvester', require('role.harvester'), 2, 2]
 
 

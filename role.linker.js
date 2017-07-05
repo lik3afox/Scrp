@@ -510,11 +510,10 @@ function spawn8Room(creep) {
             //             require('commands.toStructure').pickUpEnergy(creep);
             //                            if (_.sum(goto.store) > 100) {
             //                if(goto.energy != 0 && goto2.store[RESOURCE_ENERGY]<1000 ) {
-            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(goto, {
-                    reusePath: 20
-                });
-            }
+            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
+            creep.moveTo(8, 20, {
+                reusePath: 20
+            });
             /*          }else if(goto2.store[RESOURCE_ENERGY]>500 ) {
                 if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto2, {

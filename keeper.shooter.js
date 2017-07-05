@@ -110,6 +110,13 @@ function getHostiles(creep) {
         tgt = Game.getObjectById(creep.memory.playerTargetId);
 
     if (tgt === null || tgt === undefined) {
+
+        tgt = Game.getObjectById(creep.memory.skID);
+        if (tgt !== null) {
+            return [tgt];
+        } else {
+            creep.memory.skID = undefined;
+        }
         creep.memory.playerTargetId = undefined;
 
         let bads = creep.room.find(FIND_HOSTILE_CREEPS);
@@ -127,10 +134,11 @@ function getHostiles(creep) {
             return !_.contains(fox.friends, o.owner.username) && creep.pos.inRangeTo(o, range);
         });
 
-
         var close = creep.pos.findClosestByRange(bads);
-        if (close !== null)
+        if (close !== null) {
+            creep.memory.skID = close.id;
             return [close];
+        }
         return [];
     } else {
         let bads = creep.room.find(FIND_HOSTILE_CREEPS);
@@ -163,14 +171,15 @@ function attackCreep(creep, bads) {
 
     creep.selfHeal(creep);
     let distance = creep.pos.getRangeTo(enemy);
-    /*    if (bads.length == 2) {
-            if (creep.pos.isNearTo(enemy)) {
-                creep.rangedMassAttack();
-            } else {
-                creep.moveMe(enemy);
-                creep.rangedAttack(enemy);
-            }
-        } else*/
+    if (bads.length > 2) {
+        if (creep.pos.isNearTo(enemy)) {
+            creep.rangedMassAttack();
+        } else {
+            creep.moveMe(enemy);
+            creep.rangedAttack(enemy);
+        }
+        return;
+    }
     if (distance < 4) {
 
         var targets = creep.pos.findInRange(bads, 3);
@@ -309,13 +318,14 @@ class roleGuard extends roleParent {
                 //                    console.log(bads[0].isAtEdge, creep.isNearEdge);
                 //               }
                 //              if (bads.length > 0 && !bads[0].isAtEdge && !creep.isNearEdge) {
-                if (!movement.moveToDefendFlag(creep)) {
-                    moveCreep(creep);
-                } else { // So if it has to move to a defend flag - it's seen an invader in the room.
-                    if (creep.memory.goTo !== undefined)
-                        creep.memory.goTo = undefined;
-                }
-                //                }
+                if (bads.length === 0)
+                    if (!movement.moveToDefendFlag(creep)) {
+                        moveCreep(creep);
+                    } else { // So if it has to move to a defend flag - it's seen an invader in the room.
+                        if (creep.memory.goTo !== undefined)
+                            creep.memory.goTo = undefined;
+                    }
+                    //                }
             }
 
             if (bads.length > 0) {
@@ -327,6 +337,7 @@ class roleGuard extends roleParent {
 
             let bads = getHostiles(creep);
             if (bads.length > 0) {
+                creep.say(bads.length);
                 attackCreep(creep, bads);
             } else {
                 creep.selfHeal();
