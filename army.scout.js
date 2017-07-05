@@ -22,6 +22,12 @@ class scoutClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
+        var zz = ['!Never', '!gonna', 'give', 'you!',
+            'up',
+            '@Never', '@gonna', 'let', 'you@',
+            'down',
+            '#Never', '#gonna', 'run', 'around', 'and', 'desert', 'you#'
+        ];
         if (creep.room.name == 'E35S75') creep.suicide();
         creep.memory.waypoint = true;
 
@@ -41,7 +47,7 @@ class scoutClass extends roleParent {
 
         console.log('scout reporting in', creep.pos);
         if (super.goToPortal(creep)) return;
-        creep.say('sc');
+//        creep.say('sc');
         if (creep.room.name == 'E35S83') {
             creep.moveToEdge();
 
@@ -52,6 +58,8 @@ class scoutClass extends roleParent {
                 }
             }
         }
+        creep.sing(zz, true);
+
     }
 }
 

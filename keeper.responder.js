@@ -188,7 +188,8 @@ function invasionAttack(creep, bads) {
         } else {
             creep.selfHeal();
             creep.moveTo(enemy);
-            creep.rangedAttack(enemy);
+            creep.rangedMassAttack();
+//            creep.rangedAttack(enemy);
         }
     } else {
         creep.selfHeal();

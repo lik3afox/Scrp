@@ -16,7 +16,7 @@ class trollClass extends roleParent {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         var build = classLevels[level];
         let attk = Math.floor(Math.random() * 5) + 1;
-        let rnge = Math.floor(Math.random() * (5 - attk)) + 1;
+        let rnge = 5-attk;
         //        let work = Math.floor(Math.random() * (5 - attk - rnge));
 
         let a;
@@ -73,7 +73,10 @@ class trollClass extends roleParent {
                         return true;
                     }
                 } */
-        if (creep.hits === creep.hitsMax) {
+            if (creep.getActiveBodyparts(RANGED_ATTACK) > 0) {
+                creep.rangedMassAttack();
+            }
+/*        if (creep.hits === creep.hitsMax) {
             if (creep.getActiveBodyparts(ATTACK) > 0) {
                 bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
                 bads = _.filter(bads, function(o) {
@@ -84,9 +87,9 @@ class trollClass extends roleParent {
                     return true;
                 }
             }
-        } else {
+        } else {*/
             creep.heal(creep);
-        }
+//        }
 
         if (creep.room.name == 'E18S64') {
             var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);

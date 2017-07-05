@@ -1018,8 +1018,11 @@ function setLabs(roomName, labs) {
 
         case 'E28S73':
             return labMode(roomName, 'XXZHO2', labs);
+
         case 'E23S75':
-            return labMode(roomName, 'XZHO2', labs);
+//            return labMode(roomName, 'XZHO2', labs);
+            return labMode(roomName, 'muster', labs);
+
         case 'E35S83':
             return labMode(roomName, 'muster', labs);
 
