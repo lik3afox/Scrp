@@ -160,8 +160,8 @@ class transport extends roleParent {
 
         if (creep.room.name != 'E28S77' && creep.room.name != 'E27S74' && creep.room.storage === null)
             constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
-
         if (creep.memory.gohome) {
+
             creep.countDistance();
             if (creep.memory.linkID !== undefined && creep.carry[RESOURCE_ENERGY] > 0) {
 
@@ -225,6 +225,7 @@ class transport extends roleParent {
                 }
             }
         } else { // IF not going home. 
+            
             let rng = 4;
             let _goal = Game.getObjectById(creep.memory.goal);
             if (creep.room.name == 'E27S74') rng = 3;
@@ -260,7 +261,7 @@ class transport extends roleParent {
                         while (z--) {
                             var o = keys[z];
                             if (creep.withdraw(zzz, o) == OK) {
-                                super.keeperFind(creep);
+//                                super.keeperFind(creep);
                             }
                         }
                     } else if (creep.pos.isEqualTo(zzz)) {
@@ -290,15 +291,19 @@ class transport extends roleParent {
                             var keyz = Object.keys(contain.store);
                             var a = keyz.length;
                             var withDraw;
+
                             while (a--) {
-                                if (a === RESOURCE_ENERGY)
+                                if (keyz[a] === RESOURCE_ENERGY)
                                     withDraw = creep.withdraw(contain, keyz[a]);
                             }
-                            if (withDraw !== OK)
+
+                            if (withDraw !== OK) {
+                            a = keyz.length;
                                 while (a--) {
-                                    if (a !== RESOURCE_ENERGY)
+                                    if (keyz[a] !== RESOURCE_ENERGY)
                                         withDraw = creep.withdraw(contain, keyz[a]);
                                 }
+                            }
 
                         } else {
                             creep.moveTo(contain, { maxOps: 50 });

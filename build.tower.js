@@ -443,7 +443,7 @@ class roleTower {
         }
 
         if (towers.length > 0) {
-            //                showTowerRange(towers);  
+                            showTowerRange(towers);  
             var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
             hostiles = _.filter(hostiles, function(o) {
                 return !_.contains(fox.friends, o.owner.username);
