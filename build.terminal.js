@@ -433,7 +433,7 @@ function tradeEnergy(terminal) {
         console.log("Max Energy Trade", whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost));
     }
 
-    var amountSending = terminal.store[RESOURCE_ENERGY] * 0.075;
+    var amountSending = terminal.store[RESOURCE_ENERGY] * 0.05;
     var rando = Math.floor(Math.random() * Memory.debts.length);
     var result = terminal.send(RESOURCE_ENERGY, amountSending, Memory.debts[rando].room, 'End');
     console.log('LUCKY ROOM', Memory.debts[rando].room, 'gets energy:', amountSending, 'from this room', terminal.room);
