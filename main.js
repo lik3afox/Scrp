@@ -193,13 +193,25 @@
     }
 
     function safemodeCheck(spawn) {
-        var targets = spawn.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+        if (spawn.room.controller.level !== 8) return;
+        var targets = spawn.room.find(FIND_HOSTILE_CREEPS, 1);
         targets = _.filter(targets, function(object) {
             return (object.owner.username != 'Invader' && !_.contains(fox.friends, object.owner.username));
         });
-        //    console.log('testin safemode',spawn.room.controller.safeModeCooldown);
-        if (targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
-            spawn.room.controller.activateSafeMode();
+        if (targets.length > 1) {
+            var ramp = spawn.room.find(FIND_STRUCTURES);
+            ramp = _.filter(ramp, function(o) {
+                return (o.structureType === STRUCTURE_RAMPART || o.structureType === STRUCTURE_WALL) && o.hits < 500000;
+            });
+            if (ramp.length > 1) {
+                if (targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
+                    spawn.room.controller.activateSafeMode();
+                    if (Game.flags.safemode === undefined) {
+                        spawm.room.createFlag(25, 25, 'safemode', COLOR_YELLOW, COLOR_YELLOW);
+                    }
+                }
+            }
+
         }
     }
 
@@ -394,7 +406,7 @@
 
                     //                safemodeCheck(Game.spawns[title]);
 
-                    //        safemodeCheck(Game.spawns[title]);
+                    safemodeCheck(Game.spawns[title]);
 
                     ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
 
@@ -518,9 +530,9 @@
                 market.run();
             }
         }
-        var twn = Game.getObjectById('58fd71f2cc42f0c708bbb4d4');
-        if (twn !== null)
-            console.log(twn.hits, 'left');
+        /*        var twn = Game.getObjectById('58fd71f2cc42f0c708bbb4d4');
+                if (twn !== null)
+                    console.log(twn.hits, 'left'); */
         //        speedTest();
         //    whoWorksFor('5836b81b8b8b9619519f178d');
         /*5836b8308b8b9619519f19fa

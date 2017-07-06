@@ -95,10 +95,18 @@
             });
 
             if (bads.length === 0) {
-                flag.memory.invaderTimed = undefined;
-                flag.memory.alert = undefined;
-                flag.room.memory.towerRepairID = undefined;
-                flag.remove();
+
+                if (flag.memory.invadeDelay === undefined)
+                    flag.memory.invadeDelay = 2000;
+
+                if (flag.memory.invadeDelay < 0) {
+                    flag.memory.invadeDelay = undefined;
+                    flag.memory.invaderTimed = undefined;
+                    flag.memory.alert = undefined;
+                    flag.room.memory.towerRepairID = undefined;
+                    flag.remove();
+                }
+
             }
         }
         flag.memory.invaderTimed++;

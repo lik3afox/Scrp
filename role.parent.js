@@ -655,7 +655,11 @@ class baseParent {
         */
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1000) return false;
+        if (creep.memory.role === 'rampartGuard') {
+            if (creep.ticksToLive < 750) return false;
+        } else {
+            if (creep.ticksToLive < 1400) return false;
+        }
 
         if (creep.memory.boostNeeded === undefined) {
             creep.memory.boostNeeded = boosted;
@@ -1112,11 +1116,13 @@ class baseParent {
         }
 
         if (creep.memory.distance !== undefined) distance = creep.memory.distance;
-
+        //      if (creep.memory.role == 'guard')
+        //            creep.say('here?');
         if (creep.ticksToLive < ((3 * creep.body.length) + distance)) {
-            creep.memory.reportDeath = true;
+            creep.say('herezzz');
             let spawnsDo = require('build.spawn');
             spawnsDo.reportDeath(creep);
+            creep.memory.reportDeath = true;
             return true;
         }
         return false;

@@ -42,6 +42,10 @@ var skInvade = [
     ['skinvader', require('army.skinvader'), 7, 1]
 ];
 
+var safemode = [
+    ['wallwork', require('role.wallworker'), 3, 5]
+];
+
 // Has 
 /*
 var defendParty = [
@@ -262,7 +266,7 @@ function getSpawnCreating(flag) {
         case 'control':
         case 'engineer2':
         case 'science':
-
+        case 'safemode':
             return returnClosestRoom(flag.pos.roomName);
         case 'thief2':
             return 'E37S75';
@@ -320,6 +324,8 @@ function getCurrentParty(flag) {
         switch (flag.memory.musterType) {
             case 'warparty333':
                 return warParty333;
+            case 'safemode':
+                return safemode;
             case 'fightHealer':
                 return fightHealer;
             case 'oneFight':
@@ -414,7 +420,8 @@ function getCurrentParty(flag) {
         switch (flag.name) {
             case 'oneFight':
                 return soloFighter;
-
+            case 'safemode':
+                return safemode;
             case 'test':
                 return testParty;
 

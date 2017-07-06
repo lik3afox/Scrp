@@ -185,7 +185,7 @@ function moveOnPath(creep) {
 
             goToMovePath(creep, patrol);
             return true;
-        case "E28S73":
+        case "E28S73xx":
 
             patrol = [
                 [15, 28],

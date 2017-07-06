@@ -99,10 +99,12 @@ function shareEnergy(terminal) {
 
 function needEnergy(terminal) {
     var always = ['E28S71', 'E38S72', 'W4S93'];
-    if (_.contains(always, terminal.room.name)) {
-        if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
-            let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
-            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, 'ALWAYS ORDER NEEDS TO BE ALWYS');
+    if (Game.market.credits > 150000) {
+        if (_.contains(always, terminal.room.name)) {
+            if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
+                let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
+                console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, 'ALWAYS ORDER NEEDS TO BE ALWYS');
+            }
         }
     }
 
@@ -396,39 +398,45 @@ function newTradeEnergy(terminal) {
 function tradeEnergy(terminal) {
 
     // Below here we're selling energy.
+    if (!Memory.war) {
+        let eTotal = terminal.store[RESOURCE_ENERGY];
+        let targetRoom = terminal.pos.roomName;
+        //    if (Memory.termReport) console.log(terminal, 'has ', eTotal, targetRoom);
+        let Orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_ENERGY });
+        let target = { price: 0.0001, id: undefined, cost: 1000, amount: 1, room: undefined, trans: 1 };
+        let EnergyNum = 100;
 
-    let eTotal = terminal.store[RESOURCE_ENERGY];
-    let targetRoom = terminal.pos.roomName;
-    //    if (Memory.termReport) console.log(terminal, 'has ', eTotal, targetRoom);
-    let Orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_ENERGY });
-    let target = { price: 0.0001, id: undefined, cost: 1000, amount: 1, room: undefined, trans: 1 };
-    let EnergyNum = 100;
+        for (var e in Orders) {
+            let temp = (Game.market.calcTransactionCost(EnergyNum, targetRoom, Orders[e].roomName) / EnergyNum);
+            let profit = Orders[e].price;
+            // so far this only calcuates the distance - and the closest is best so far. 
+            // What htis logic below is
+            // profit / 1 energy + cost    
 
-    for (var e in Orders) {
-        let temp = (Game.market.calcTransactionCost(EnergyNum, targetRoom, Orders[e].roomName) / EnergyNum);
-        let profit = Orders[e].price;
-        // so far this only calcuates the distance - and the closest is best so far. 
-        // What htis logic below is
-        // profit / 1 energy + cost    
-
-        //console.log( profit/(1+temp), target.price/(1+target.cost),target.price,temp );
-        if (profit / (1 + temp) > target.price / (1 + target.cost) && Orders[e].roomName != 'E24S72' && Orders[e].roomName != 'E22S77') {
-            target.id = Orders[e].id;
-            target.cost = temp;
-            target.amount = Orders[e].amount;
-            target.price = Orders[e].price;
-            target.room = Orders[e].roomName;
+            //console.log( profit/(1+temp), target.price/(1+target.cost),target.price,temp );
+            if (profit / (1 + temp) > target.price / (1 + target.cost) && Orders[e].roomName != 'E24S72' && Orders[e].roomName != 'E22S77') {
+                target.id = Orders[e].id;
+                target.cost = temp;
+                target.amount = Orders[e].amount;
+                target.price = Orders[e].price;
+                target.room = Orders[e].roomName;
+            }
         }
-    }
-    let trans = (Math.floor(eTotal / (1 + target.cost)));
-    if (trans > target.amount) trans = target.amount;
-    if (trans > maxEnergyTrans) trans = maxEnergyTrans;
-    if (target.price == 0.01) {
-        trans = trans * 0.5;
+        let trans = (Math.floor(eTotal / (1 + target.cost)));
+        if (trans > target.amount) trans = target.amount;
+        if (trans > maxEnergyTrans) trans = maxEnergyTrans;
+        if (target.price == 0.01) {
+            trans = trans * 0.5;
+        }
+
+        let whatHappened = Game.market.deal(target.id, trans, targetRoom);
+        console.log("Max Energy Trade", whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost));
     }
 
-    let whatHappened = Game.market.deal(target.id, trans, targetRoom);
-    console.log(whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost));
+    var amountSending = terminal.store[RESOURCE_ENERGY] * 0.075;
+    var rando = Math.floor(Math.random() * Memory.debts.length);
+    var result = terminal.send(RESOURCE_ENERGY, amountSending, Memory.debts[rando].room, 'End');
+    console.log('LUCKY ROOM', Memory.debts[rando].room, 'gets energy:', amountSending, 'from this room', terminal.room);
 
     /*    if (Memory.sellingHistory === undefined) { Memory.sellingHistory = []; }
 
@@ -633,6 +641,21 @@ function getMostTerminal(mineralz, target) {
     }
 
 }
+//UH, GO, LO, ZO
+function giveInviso() {
+    var mins = ['XGHO2', 'XUH2O', 'XLHO2', 'XZHO2', 'XZH2O', 'XKHO2'];
+    var minAmount = 44999;
+    if (Memory.stats.totalMinerals.X > 30000 && Memory.stats.totalMinerals.O > 30000 && Memory.stats.totalMinerals.H > 30000) {
+        for (var e in mins) {
+            if (Memory.stats.totalMinerals[mins[e]] > minAmount && Memory.stats.totalMinerals[mins[e]] - minAmount > 100) {
+                var sending = Memory.stats.totalMinerals[mins[e]] - minAmount;
+                var sender = getMostTerminal(mins[e]);
+                var result = sender.send(mins[e], sending, 'W22S88', 'inviso');
+                console.log(result, mins[e], sending, 'W22S88', 'Inviso', sender.pos.roomName, sender.store[mins[e]]);
+            }
+        }
+    }
+}
 
 function doDebt() {
 
@@ -663,20 +686,26 @@ function doDebt() {
     var giver = getMostTerminal(Debt.type);
 
     var transferAmount = Debt.increment;
+
     if (giver === undefined) {
         console.log('ERROR in DEBT', Debt.type, Debt.room, Debt.amount);
 
         Memory.debts.push(Memory.debts.shift());
         return false;
     }
-    if (giver.store[Debt.type] < transferAmount * 10) {
-        console.log('Error in Debt, not enough funds', giver.store[Debt.type], transferAmount * 10);
-        Memory.debts.push(Memory.debts.shift());
-        return false;
+    if (Debt.type !== RESOURCE_ENERGY) {
+
+    } else {
+        if (giver.store[Debt.type] < transferAmount * 10) {
+            console.log('Error in Debt, not enough funds', giver.store[Debt.type], transferAmount * 10);
+            Memory.debts.push(Memory.debts.shift());
+            return false;
+        }
+
     }
 
+    var result = giver.send(Debt.type, transferAmount, Debt.room, 'Debt@' + Debt.amount);
 
-    var result = giver.send(RESOURCE_ENERGY, transferAmount, Debt.room, 'Debt@' + Debt.amount);
     if (result == OK) {
         Debt.amount -= transferAmount;
     }
@@ -691,7 +720,6 @@ function doDebt() {
         }
     } else {
         console.log(result, 'Debt Sending', Debt.room, 'sending:', Debt.type, 'From:', giver.room.name, 'Amount:', transferAmount, 'Debt@', Debt.amount);
-
     }
     return true;
 }
@@ -752,7 +780,7 @@ function makeMineralOrder() {
             amount = getAverageMineralPrice(e, true);
             //            console.log(amount, anyLikeOrder(e, "E28S71"), e);
             if (amount !== undefined && !anyLikeOrder(e, "E28S71")) {
-                let qq = Game.market.createOrder(ORDER_BUY, e, amount, 50000, "E28S71");
+                let qq = Game.market.createOrder(ORDER_BUY, e, amount, 25000, "E28S71");
                 console.log('Created Buy Order for ', e, 'amount:', amount, qq);
             }
         }
@@ -851,7 +879,7 @@ class roleTerminal {
         }
 
         doDebt(); // Send energy to a target
-
+        giveInviso();
     }
 
 

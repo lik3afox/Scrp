@@ -1577,12 +1577,12 @@ class theSpawn {
                 case "guard":
                 case "shooter":
                 case "responder":
-                    if (spawn.memory.warCreate === undefined) spawn.memory.warCreate = [];
-                    spawn.memory.warCreate.push(rebuildCreep(creep));
+                    console.log(spawn.memory.expandCreate.length, 'before');
+                    spawn.memory.expandCreate.unshift(rebuildCreep(creep));
+                    console.log(spawn.memory.expandCreate.length, 'before');
                     break;
                 case "fighter":
                 case "healer":
-                    if (spawn.memory.warCreate === undefined) spawn.memory.warCreate = [];
                     spawn.memory.warCreate.unshift(rebuildCreep(creep));
                     break;
             }

@@ -636,7 +636,6 @@ module.exports = function() {
             };
         }
 
-
         if (this.memory.role == 'transport' || this.memory.role == 'xtransport' || this.memory.party !== undefined) {
             if (this.room.name != this.memory.home)
                 options.ignoreCreeps = true;

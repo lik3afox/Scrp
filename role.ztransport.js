@@ -195,7 +195,7 @@ class transportz extends roleParent {
                                     targetAmount = containerz[a].store[RESOURCE_ENERGY];
                                     //            isDropped = true;
                                 }
-                                if(containerz[a].total !== 0 && containerz[a].store[RESOURCE_ENERGY] === 0){
+                                if (containerz[a].total !== 0 && containerz[a].store[RESOURCE_ENERGY] === 0) {
                                     target = containerz[a].id;
                                     break;
                                 }
@@ -210,7 +210,7 @@ class transportz extends roleParent {
                 }
 
 
-                if (!super._constr.moveToPickUpEnergyIn(creep, 5)) {
+                if (!super._constr.moveToPickUpEnergyIn(creep, 4)) {
                     let target = Game.getObjectById(creep.memory.gotoID);
                     if (target !== null) {
 
@@ -220,7 +220,7 @@ class transportz extends roleParent {
                         if (creep.pos.isNearTo(target)) {
 
                             if (target.structureType === STRUCTURE_CONTAINER) {
-                                for(var b in target.store) {
+                                for (var b in target.store) {
                                     creep.withdraw(target, b);
                                 }
                                 creep.memory.gotoID = undefined;

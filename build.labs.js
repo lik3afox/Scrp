@@ -94,14 +94,14 @@ var maxMinerals = {
     'KO': 30000,
     'KH': 30000,
 
-    'XUHO2': 45000,
-    'XUH2O': 45000,
-    'XZHO2': 45000,
-    'XZH2O': 45000,
-    'XLHO2': 45000,
-    'XLH2O': 45000,
-    'XKHO2': 45000,
-    'XKH2O': 45000,
+    'XUHO2': 45099,
+    'XUH2O': 45099,
+    'XZHO2': 45099,
+    'XZH2O': 45099,
+    'XLHO2': 45099,
+    'XLH2O': 45099,
+    'XKHO2': 45099,
+    'XKH2O': 45099,
 
 
 
@@ -183,7 +183,7 @@ function labDo(roomName, created, labz, laby) {
         return false;
     }
     if (labs[created - 1] === undefined || labs[labz - 1] === undefined || labs[laby - 1] === undefined) {
-        console.log('undefined Lab');
+        console.log('undefined Lab', roomName);
         return false;
     }
     //    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
@@ -431,12 +431,12 @@ var XZHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'H',
+    resource: 'O',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'ZH',
+    resource: 'ZO',
     amount: 2400,
     emptied: false
 }, {
@@ -446,12 +446,12 @@ var XZHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'O',
+    resource: 'H',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'ZH2O',
+    resource: 'ZHO2',
     amount: 2400,
     emptied: false
 }, {
@@ -1020,8 +1020,8 @@ function setLabs(roomName, labs) {
             return labMode(roomName, 'XXZHO2', labs);
 
         case 'E23S75':
-//            return labMode(roomName, 'XZHO2', labs);
-            return labMode(roomName, 'muster', labs);
+            return labMode(roomName, 'XZHO2', labs);
+            //            return labMode(roomName, 'muster', labs);
 
         case 'E35S83':
             return labMode(roomName, 'muster', labs);

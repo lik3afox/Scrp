@@ -93,10 +93,17 @@ class fighterClass extends roleParent {
         if (creep.ticksToLive < 1250 && bads.length === 0) {
             creep.memory.death = true;
         }
+
         if (creep.memory.boostFighting) {
             if (bads.length === 0) {
-                creep.say('death:(');
-                creep.memory.death = true;
+                // Lets wait 100 ticks then kill self.
+                if (creep.memory.countDown === undefined)
+                    creep.memory.countDown = 50;
+                creep.memory.countDown--;
+                if (creep.memory.countDown < 0) {
+                    creep.say('death:(');
+                    creep.memory.death = true;
+                }
                 //                here we will decide to kill this dude.
             }
         }
@@ -114,14 +121,16 @@ class fighterClass extends roleParent {
                     return;
                 }
 
-            } else if (enemy.length === 2 && zzz === 1) {
-                if (creep.pos.isNearTo(enemy)) {
-                    creep.attackMove(enemy);
-                } else {
-                    creep.moveTo(enemy);
-                    return;
-                }
-            } else {
+            }
+            /*else if (enemy.length === 2 && zzz === 1) {
+                           if (creep.pos.isNearTo(enemy)) {
+                               creep.attackMove(enemy);
+                           } else {
+                               creep.moveTo(enemy);
+                               return;
+                           }
+                       }*/
+            else {
                 if (creep.attack(enemy) == ERR_NOT_IN_RANGE) {
                     //                creep.say('ahh', enemy);
                 }

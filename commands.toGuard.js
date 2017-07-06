@@ -113,8 +113,8 @@ function getCurrentParty(flag) {
             case 'Flag43':
             case 'Flag60':
             case 'Flag39':
-            case 'Flag53':
                 return invasionParty;
+            case 'Flag53':
             case 'Flag41':
             case 'Flag40':
                 return shooterParty;
@@ -213,11 +213,11 @@ class partyInteract {
                     });
                     if (spawn.length > 0) {
                         console.log('using new');
-                        temp.parent = spawn[0].id;
+                        temp.memory.parent = spawn[0].id;
                         spawn[0].memory.expandCreate.unshift(temp);
                     } else {
-                        console.log('using old', totalParty[i], currentParty[e][_number]);
-                        let toSpawn = require('commands.toSpawn');
+                        //                      console.log('using old', totalParty[i], currentParty[e][_number]);
+                        //                        let toSpawn = require('commands.toSpawn');
                         //                    console.log( )
                         //                    toSpawn.addToWarStack(temp);
                     }
