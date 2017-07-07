@@ -397,6 +397,7 @@
                 title = keys[t];
                 if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
 
+
                     if (Memory.war) {
                         if (Game.spawns[title].memory.alphaSpawn) {
                             doRoomReport(Game.spawns[title].room);
@@ -415,6 +416,9 @@
                     }
 
                     if (Game.spawns[title].memory.alphaSpawn) {
+                        //                      var constr = require('commands.toStructure');
+                        //                        console.log(Game.spawns[title].pos.roomName);
+                        //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
 
                         totalSpawn++;
                         tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
@@ -509,7 +513,6 @@
 
         Memory.stats.rooms = spawnReport;
         link.run();
-
         //        Memory.totalPowerProcessed = 0;
         if (Game.cpu.bucket > 250) {
             power.run();

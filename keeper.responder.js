@@ -189,13 +189,13 @@ function invasionAttack(creep, bads) {
             creep.selfHeal();
             creep.moveTo(enemy);
             creep.rangedMassAttack();
-//            creep.rangedAttack(enemy);
+            //            creep.rangedAttack(enemy);
         }
     } else {
         creep.selfHeal();
         creep.rangedAttack(bads[0]);
         if (bads.length > 0)
-            if (bads[0] !== undefined && bads[0].owner.username === 'Invader')
+            if (bads[0] !== undefined && bads[0].owner !== undefined && bads[0].owner.username === 'Invader')
                 creep.runFrom(bads);
     }
 }
@@ -257,9 +257,9 @@ function attackCreep(creep, bads) {
     let enemy = creep.pos.findClosestByRange(bads);
     ///    console.log(enemy.is)
     if (enemy !== null) {
-/*        console.log(enemy.isNPC, 'isnpc', creep.pos);
-        console.log(enemy.isEnemy, 'isEnemy');
-        console.log(enemy.isFriend, 'isnpc'); */
+        /*        console.log(enemy.isNPC, 'isnpc', creep.pos);
+                console.log(enemy.isEnemy, 'isEnemy');
+                console.log(enemy.isFriend, 'isnpc'); */
     }
     if (enemy !== null && enemy.owner !== null && enemy.owner.username == 'Source Keeper') {
         SKAttack(creep, bads);
@@ -276,7 +276,7 @@ function attackCreep(creep, bads) {
 
 function moveCreep(creep) {
     let pflag = Game.flags[creep.memory.party];
-    if (!creep.pos.inRangeTo(pflag,5)) {
+    if (!creep.pos.inRangeTo(pflag, 5)) {
         creep.moveMe(pflag);
         creep.countDistance();
     } else {
@@ -345,15 +345,15 @@ class roleGuard extends roleParent {
 
         if (bads.length > 0) {
             attackCreep(creep, bads);
-        }  else {
+        } else {
             if (!movement.moveToDefendFlag(creep)) {
                 creep.selfHeal();
                 moveCreep(creep);
             }
         }
 
-        
-            //            if()
+
+        //            if()
     }
 
 

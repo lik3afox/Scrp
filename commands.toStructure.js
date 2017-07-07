@@ -375,6 +375,40 @@ class StructureInteract {
         //    }
     }
 
+    static takeSnapShot(roomName) {
+        var matrix;
+        if (Game.rooms[roomName] === undefined) return false;
+        if (Game.rooms[roomName].memory.snapshot === undefined) {
+            Game.rooms[roomName].memory.snapshot = [];
+            var strucs = Game.rooms[roomName].find(FIND_STRUCTURES);
+            for (var e in strucs) {
+                matrix = {
+                    x: strucs[e].pos.x,
+                    y: strucs[e].pos.y,
+                    type: strucs[e].structureType
+                };
+                Game.rooms[roomName].memory.snapshot.push(matrix);
+            }
+            console.log('Created SnapShot for room', roomName, '# of entries:', strucs.length);
+        }
+    }
+
+    static checkSnapShot(roomName) {
+        if (Game.rooms[roomName] === undefined) return false;
+        if (Game.rooms[roomName].memory.snapshot === undefined) return false;
+        var snapShot = Game.rooms[roomName].memory.snapshot;
+        for (var e in snapShot) {
+            var location = new RoomPosition(snapShot[e].x, snapShot[e].y, roomName);
+            if (!_.find(location.lookFor(LOOK_STRUCTURES), { structureType: snapShot[e].type })) {
+                Game.rooms[roomName].createConstructionSite(location.x, location.y, snapShot[e].type);
+                console.log('will place createConstructionSite', location.x, location.y, snapShot[e].type);
+            }
+        }
+        //let structures = this.lookFor(LOOK_STRUCTURES);
+        //return _.find(structures, { structureType: structureType });
+
+    }
+
     static doCloseRepair(creep) {
         let close = creep.pos.findInRange(FIND_STRUCTURES, 3, {
             filter: object => (((object.structureType != STRUCTURE_WALL) && (object.structureType != STRUCTURE_RAMPART)) && (object.hits < object.hitsMax))

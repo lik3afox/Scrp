@@ -97,6 +97,22 @@ function shareEnergy(terminal) {
     return true;
 }
 
+function adjustOldPrices() {
+
+    var order = _.filter(Game.market.orders, function(o) {
+        return Game.time - o.created > 30000;
+    });
+    if (order.length > 0) {
+        for (var e in order) {
+            let amount = getAverageMineralPrice(order[e].resourceType, false);
+            if (amount !== undefined) {
+                console.log('switching average of order', order[e].id, 'too', amount);
+                Game.market.changeOrderPrice(order[e].id, amount);
+            }
+        }
+    }
+}
+
 function needEnergy(terminal) {
     var always = ['E28S71', 'E38S72', 'W4S93'];
     if (Game.market.credits > 150000) {
@@ -479,7 +495,16 @@ function orderExist(resource, room, sellingPoint) {
     for (var e in Game.market.orders) {
         let order = Game.market.orders[e];
         //        if (Memory.termReport) console.log(order.resourceType, resource, order.roomName, room, sellingPoint, order.price);
-        if (order.resourceType == resource && order.roomName == room && sellingPoint == order.price) return true;
+        if (room === undefined) {
+            if (order.resourceType == resource) return true;
+        } else {
+            if (sellingPoint === undefined) {
+                if (order.resourceType == resource && order.roomName == room) return true;
+            } else {
+
+                if (order.resourceType == resource && order.roomName == room && sellingPoint == order.price) return true;
+            }
+        }
     }
     return false;
 }
@@ -499,47 +524,72 @@ function anyLikeOrder(resource, room) {
 
 
 
-function tradeMineral(terminal) {
+function tradeMineral() {
     // First lets find what I have most of
     let target = { resource: undefined, amount: 0 };
 
     let total = 0;
+    for (var e in Memory.stats.totalMinerals) {
+        if (e == 'K' || e == 'U' || e == 'Z' || e == 'L') {
+            if (Memory.stats.totalMinerals[e] > 300000) {
 
-    for (var e in terminal.store) {
-        if (e != RESOURCE_ENERGY) {
-            total += terminal.store[e];
-            if (terminal.store[e] > target.amount && !anyLikeOrder(e, terminal.pos.roomName)) {
-                target.resource = e;
-                target.amount = terminal.store[e];
+                let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: e });
+                let sellingPoint = 1000;
+                for (var vv in Orders) {
+                    if (Orders[vv].price < sellingPoint) {
+                        sellingPoint = Orders[vv].price;
+                    }
+                }
+
+                var termin = getMostTerminal(e);
+                var amount = termin.store[e] * 0.33;
+
+                if (sellingPoint >= 0.01 && !orderExist(e)) {
+                    let whatHappened = Game.market.createOrder(ORDER_SELL, e, sellingPoint, amount, termin.pos.roomName);
+                    console.log(whatHappened, 'selling:', e, '@', sellingPoint, 'For:', amount, '@', termin.pos.roomName);
+                    //                    console.log('Made order for minerals:', target.resource, target.amount, sellingPoint, whatHappened);
+                    return true;
+                }
             }
         }
     }
-    if (total < 150000) return;
-
-    let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: target.resource });
-    let sellingPoint = 1000;
-    for (var o in Orders) {
-        if (Orders[o].price < sellingPoint) {
-            sellingPoint = Orders[o].price;
+    //    Memory.stats.totalMinerals[];
+    /*
+        for (var e in terminal.store) {
+            if (e != RESOURCE_ENERGY) {
+                total += terminal.store[e];
+                if (terminal.store[e] > target.amount && !anyLikeOrder(e, terminal.pos.roomName)) {
+                    target.resource = e;
+                    target.amount = terminal.store[e];
+                }
+            }
         }
-    }
-    //    console.log(ORDER_SELL, target.resource, sellingPoint, Math.floor((target.amount * 0.1)), terminal.pos.roomName, orderExist(target.resource, terminal.pos.roomName, sellingPoint));
+        if (total < 150000) return; */
+    /*
+        let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: target.resource });
+        let sellingPoint = 1000;
+        for (var o in Orders) {
+            if (Orders[o].price < sellingPoint) {
+                sellingPoint = Orders[o].price;
+            }
+        }
+        //    console.log(ORDER_SELL, target.resource, sellingPoint, Math.floor((target.amount * 0.1)), terminal.pos.roomName, orderExist(target.resource, terminal.pos.roomName, sellingPoint));
 
-    if (sellingPoint <= 0.01) return;
-    if (orderExist(target.resource, terminal.pos.roomName, sellingPoint)) return;
-    let whatHappened = Game.market.createOrder(ORDER_SELL, target.resource, sellingPoint, Math.floor((target.amount * 0.05)), terminal.pos.roomName);
-    //if(Memory.termReport )
-    console.log('Made order for minerals:', target.resource, target.amount, sellingPoint, whatHappened);
-    // then find what the lowest sell order is
-    // Then set it to that price. 
-    // 
+        if (sellingPoint <= 0.01) return;
+        if (orderExist(target.resource, terminal.pos.roomName, sellingPoint)) return;
+        let whatHappened = Game.market.createOrder(ORDER_SELL, target.resource, sellingPoint, Math.floor((target.amount * 0.05)), terminal.pos.roomName);
+        //if(Memory.termReport )
+        console.log('Made order for minerals:', target.resource, target.amount, sellingPoint, whatHappened);
+        // then find what the lowest sell order is
+        // Then set it to that price. 
+        // */
 }
 
 function cleanUpOrders() {
     if (Game.market.orders.length === 0) return;
     for (var e in Game.market.orders) {
         let order = Game.market.orders[e];
-        if (!order.active && Game.time - order.created > 30000 && order.remainingAmount === 0) {
+        if (!order.active && Game.time - order.created > 15000 && order.remainingAmount === 0) {
             Game.market.cancelOrder(order.id);
 
         }
@@ -829,8 +879,8 @@ class roleTerminal {
 
         //        focusMinerals(focusID, focusMin);
 
-        makeMineralOrder();
         cleanUpOrders();
+        adjustOldPrices();
         Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
 
         //            Memory.termRun = 10;
@@ -870,7 +920,6 @@ class roleTerminal {
                         }
                         //                        tradeEnergy(terminal);
                         //                        newTradeEnergy(terminal);
-                        tradeMineral(terminal);
                     }
                     newTradeEnergy(terminal);
                 }
@@ -880,6 +929,9 @@ class roleTerminal {
 
         doDebt(); // Send energy to a target
         giveInviso();
+        tradeMineral();
+        makeMineralOrder();
+
     }
 
 
