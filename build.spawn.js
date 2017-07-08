@@ -274,7 +274,7 @@ var E38W75Module = [ // E37S75
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['scientist', require('role.scientist'), 0, 3],
-    ['wallwork', require('role.wallworker'), 2, 5],
+    ['wallwork', require('role.wallworker'), 3, 5],
     ['nuker', require('role.nuker'), 1, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7]

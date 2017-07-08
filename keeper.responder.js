@@ -193,7 +193,8 @@ function invasionAttack(creep, bads) {
         }
     } else {
         creep.selfHeal();
-        creep.rangedAttack(bads[0]);
+        let enemy = getRangeAttacker(bads);
+        creep.rangedAttack(enemy);
         if (bads.length > 0)
             if (bads[0] !== undefined && bads[0].owner !== undefined && bads[0].owner.username === 'Invader')
                 creep.runFrom(bads);
@@ -347,7 +348,7 @@ class roleGuard extends roleParent {
             attackCreep(creep, bads);
         } else {
             if (!movement.moveToDefendFlag(creep)) {
-                creep.selfHeal();
+                //     creep.selfHeal();
                 moveCreep(creep);
             }
         }

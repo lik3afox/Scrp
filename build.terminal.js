@@ -104,12 +104,12 @@ function adjustOldPrices() {
     });
     if (order.length > 0) {
         for (var e in order) {
-            if(order[e].resourceType !== RESOURCE_ENERGY) {
-            let amount = getAverageMineralPrice(order[e].resourceType, false);
-            if (amount !== undefined) {
-                console.log('switching average of order', order[e].id, 'too', amount);
-                Game.market.changeOrderPrice(order[e].id, amount);
-            }
+            if (order[e].resourceType !== RESOURCE_ENERGY) {
+                let amount = getAverageMineralPrice(order[e].resourceType, false);
+                if (amount !== undefined) {
+                    console.log('switching average of order', order[e].id, 'too', amount);
+                    Game.market.changeOrderPrice(order[e].id, amount);
+                }
             }
         }
     }
@@ -544,7 +544,7 @@ function tradeMineral() {
                 }
 
                 var termin = getMostTerminal(e);
-                var amount = termin.store[e] * 0.33;
+                var amount = termin.store[e] * 0.75;
 
                 if (sellingPoint >= 0.01 && !orderExist(e)) {
                     let whatHappened = Game.market.createOrder(ORDER_SELL, e, sellingPoint, amount, termin.pos.roomName);
@@ -930,7 +930,7 @@ class roleTerminal {
         }
 
         doDebt(); // Send energy to a target
-        giveInviso();
+        //        giveInviso();
         tradeMineral();
         makeMineralOrder();
 

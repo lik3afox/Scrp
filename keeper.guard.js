@@ -86,10 +86,13 @@ function attackCreep(creep, bads) {
 
         // Ranged attack.
         if (bads.length === 1) {
-                   creep.rangedAttack(enemy);
-               } 
+            creep.rangedAttack(enemy);
+        } else {
+            creep.rangedMassAttack();
+        }
         creep.selfHeal();
         creep.moveTo(enemy, { ignoreRoads: true });
+        return;
     } else if (distance >= 4) {
         creep.selfHeal();
         creep.moveTo(enemy, { ignoreRoads: true });

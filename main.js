@@ -257,7 +257,13 @@
                 boost++;
             }
         }
+        if (Memory.testing === undefined) {
+            var message = _.toString(boost + ':boost ' + bads.length + ':Bad guys found @' + bads[0].room + 'from:' + bads[0].owner.username);
+            Game.notify(message);
+            Memory.testing = 1;
+        }
         console.log(boost, ':boost ', bads.length, ':Bad guys found @', bads[0].room, 'from:', bads[0].owner.username);
+        if (bads.length > 0 && !_.contains(fox.friends, bads[0].owner.username)) {}
         return {};
     }
 
@@ -277,6 +283,11 @@
 
         } else {
             room.memory.alert = false;
+        }
+
+        var nuke = room.find(FIND_NUKES);
+        if (nuke.length > 0) {
+            Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:' + launchRoomName);
         }
 
         var goods = room.find(FIND_MY_CREEPS);
@@ -529,7 +540,7 @@
             if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
             Memory.marketRunCounter--;
             if (Memory.marketRunCounter <= 0) {
-                Memory.marketRunCounter = 10;
+                Memory.marketRunCounter = 5;
                 market.run();
             }
         }

@@ -225,7 +225,7 @@ class transport extends roleParent {
                 }
             }
         } else { // IF not going home. 
-            
+
             let rng = 4;
             let _goal = Game.getObjectById(creep.memory.goal);
             if (creep.room.name == 'E27S74') rng = 3;
@@ -261,12 +261,12 @@ class transport extends roleParent {
                         while (z--) {
                             var o = keys[z];
                             if (creep.withdraw(zzz, o) == OK) {
-//                                super.keeperFind(creep);
+                                //                                super.keeperFind(creep);
                             }
                         }
-                    }  /*else if(creep.pos.isEqualTo(zzz)) {
+                    } else if (creep.pos.isNearTo(_goal)) {
                         creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
-                    }*/
+                    }
 
                 } else if (_goal !== null && creep.pos.inRangeTo(_goal, rng)) {
 
@@ -298,7 +298,7 @@ class transport extends roleParent {
                             }
 
                             if (withDraw !== OK) {
-                            a = keyz.length;
+                                a = keyz.length;
                                 while (a--) {
                                     if (keyz[a] !== RESOURCE_ENERGY)
                                         withDraw = creep.withdraw(contain, keyz[a]);
