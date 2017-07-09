@@ -283,7 +283,9 @@ class transport extends roleParent {
                         creep.memory.workContain = contain.id;
                     }
                 }
+
                 super.keeperFind(creep);
+
                 let contain = Game.getObjectById(creep.memory.workContain);
                 if (contain !== null) {
                     if (contain.total > 100) {
@@ -311,10 +313,14 @@ class transport extends roleParent {
                     } else if (creep.pos.isNearTo(_goal)) {
                         creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     } else {
-                        creep.say('zZzZ');
+                        creep.say('zZzZ',true);
                     }
                 } else {
+                    if (creep.pos.isNearTo(contain)) {
+                        creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
+                    } else {
                     creep.say('zZzZ');
+                    }
                 }
 
 
@@ -339,7 +345,7 @@ class transport extends roleParent {
                 task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
                 if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
                 task.energyPickup = true;
-                task.rangeHappy = 1;
+                task.rangeHappy = 2;
                 creep.memory.task.push(task);
 
 

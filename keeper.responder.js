@@ -183,13 +183,15 @@ function invasionAttack(creep, bads) {
             creep.attack(enemy);
         } else if (targets.length > 1) {
             creep.selfHeal();
-            creep.moveTo(enemy);
             creep.rangedMassAttack();
-        } else {
+        } else if(distance < 4) {
             creep.selfHeal();
             creep.moveTo(enemy);
             creep.rangedMassAttack();
             //            creep.rangedAttack(enemy);
+        } else if (distance >= 4){
+            creep.selfHeal();
+            creep.moveTo(enemy);
         }
     } else {
         creep.selfHeal();

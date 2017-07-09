@@ -48,16 +48,11 @@ class scoutClass extends roleParent {
         console.log('scout reporting in', creep.pos);
         if (super.goToPortal(creep)) return;
 //        creep.say('sc');
-        if (creep.room.name == 'E35S83') {
-            creep.moveToEdge();
-
-        } else {
             if (!super.moveToSignControl(creep)) {
                 if (!super.avoidArea(creep)) {
                     movement.flagMovement(creep);
                 }
             }
-        }
         creep.sing(zz, true);
 
     }

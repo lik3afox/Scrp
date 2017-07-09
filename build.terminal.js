@@ -702,8 +702,8 @@ function giveInviso() {
             if (Memory.stats.totalMinerals[mins[e]] > minAmount && Memory.stats.totalMinerals[mins[e]] - minAmount > 100) {
                 var sending = Memory.stats.totalMinerals[mins[e]] - minAmount;
                 var sender = getMostTerminal(mins[e]);
-                var result = sender.send(mins[e], sending, 'W22S88', 'inviso');
-                console.log(result, mins[e], sending, 'W22S88', 'Inviso', sender.pos.roomName, sender.store[mins[e]]);
+                var result = sender.send(mins[e], sending, 'W17S87', 'inviso');
+                console.log(result, mins[e], sending, 'W17S87', 'Inviso', sender.pos.roomName, sender.store[mins[e]]);
             }
         }
     }

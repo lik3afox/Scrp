@@ -102,6 +102,7 @@ var maxMinerals = {
     'XLH2O': 45099,
     'XKHO2': 45099,
     'XKH2O': 45099,
+    'XGHO2': 45099,
 
 
 

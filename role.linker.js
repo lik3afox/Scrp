@@ -95,7 +95,9 @@ function takeFromTerminalForStorage(creep) {
     if (creep.room.terminal === undefined || creep.room.storage === undefined) return false;
     var goto = creep.room.terminal;
     if (goto !== undefined && goto.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
-        if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
+        if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(goto);
+        }
     }
 }
 

@@ -295,9 +295,9 @@ function getSpawnCreating(flag) {
             return 'E35S73';
         case 'scout':
             return returnClosestRoom(flag.pos.roomName);
-        default:
-        case 'scout':
-            return 'E35S83';
+    //    default:
+  //      case 'scout':
+//            return 'E35S83';
 
             //      return 'E26S73';
     }

@@ -425,6 +425,7 @@ class baseParent {
                 creep.say('T:move');
 
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
+                
                 if (task.rangeHappy === undefined || task.rangeHappy === 0) {
                     if (creep.room.name == task.pos.roomName) {
                         orderComplete = true;
@@ -434,6 +435,7 @@ class baseParent {
                 } else if (task.energyPickup && creep.carryTotal == creep.carryCapacity) {
                     orderComplete = true;
                 }
+
                 if (task.enemyWatch) {
                     let zzz = ['W4S94'];
                     let rng = _.indexOf(zzz, creep.room.name) >= 0 ? 6 : 5;
