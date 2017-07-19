@@ -69,10 +69,10 @@ var newbModLevel = [
         ['first', require('role.first'), 2, 1],
 
         //        ['defender',    require('role.defender'), 1, 0],
-        //['upbuilder',    require('role.upbuilder'), 2, 1],
-        ['repairer', require('role.repairer'), 1, 1],
-        ['upgrader', require('role.upgrader'), 1, 1],
-        ['builder', require('role.builder'), 2, 2],
+        ['upbuilder',    require('role.upbuilder'), 2, 1],
+//        ['repairer', require('role.repairer'), 1, 1],
+        ['upgrader', require('role.upgrader'), 2, 1],
+//        ['builder', require('role.builder'), 2, 2],
         ['harvester', require('role.harvester'), 2, 1]
     ],
 

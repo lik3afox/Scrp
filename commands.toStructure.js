@@ -35,33 +35,26 @@ function getRepair(creep) {
 //   7   8
 
 var buildOnLevel = [
-    [
-        [1, 2, STRUCTURE_TOWER],
-        [1, 2, STRUCTURE_TOWER]
-    ],
-    [
-        [1, 2, STRUCTURE_TOWER],
-        [1, 2, STRUCTURE_TOWER]
-    ],
+    [],
     // Building into lv 2
     // 5 extensions
     [
-        [-2, -2, STRUCTURE_EXTENSION],
-        [2, 2, STRUCTURE_EXTENSION],
-        [-2, 2, STRUCTURE_EXTENSION],
-        [2, -2, STRUCTURE_EXTENSION],
-        [-3, 2, STRUCTURE_EXTENSION]
+        [-2, 0, STRUCTURE_EXTENSION],
+        [-3, 0, STRUCTURE_EXTENSION],
+        [-4, 0, STRUCTURE_EXTENSION],
+        [-5, 0, STRUCTURE_EXTENSION],
+        [-6, 0, STRUCTURE_EXTENSION]
     ],
     // Building into lv 3
     // 1 tower
     // 5 extensions
     [
-        [1, -1, STRUCTURE_TOWER],
-        [0, -4, STRUCTURE_EXTENSION],
-        [-3, -2, STRUCTURE_EXTENSION],
-        [-3, -4, STRUCTURE_EXTENSION],
-        [0, -1, STRUCTURE_EXTENSION],
-        [2, -2, STRUCTURE_EXTENSION]
+        [-1, -3, STRUCTURE_TOWER],
+        [-2, -3, STRUCTURE_EXTENSION],
+        [-3, -3, STRUCTURE_EXTENSION],
+        [-4, -3, STRUCTURE_EXTENSION],
+        [-5, -3, STRUCTURE_EXTENSION],
+        [-6, -3, STRUCTURE_EXTENSION]
 
     ],
     // Level 4 

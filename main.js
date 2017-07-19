@@ -408,6 +408,10 @@
                 title = keys[t];
                 if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
 
+                    if(Game.spawns[title].name == 'W38S94'){
+                         spawnsDo.checkBuild(Game.spawns[title]);
+                    }
+
 
                     if (Memory.war) {
                         if (Game.spawns[title].memory.alphaSpawn) {
