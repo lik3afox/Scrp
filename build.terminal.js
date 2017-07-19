@@ -106,7 +106,7 @@ function adjustOldPrices() {
         for (var e in order) {
             if (order[e].resourceType !== RESOURCE_ENERGY) {
                 let amount = getAverageMineralPrice(order[e].resourceType, false);
-                if (amount !== undefined) {
+                if (amount !== undefined && amount < order[e].price) {
                     console.log('switching average of order', order[e].id, 'too', amount);
                     Game.market.changeOrderPrice(order[e].id, amount);
                 }
@@ -117,7 +117,7 @@ function adjustOldPrices() {
 
 function needEnergy(terminal) {
     var always = ['E28S71', 'E38S72', 'W4S93'];
-    if (Game.market.credits > 150000) {
+    if (Game.market.credits > 15000000) { // Disabled currently
         if (_.contains(always, terminal.room.name)) {
             if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
                 let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
@@ -591,7 +591,7 @@ function cleanUpOrders() {
     if (Game.market.orders.length === 0) return;
     for (var e in Game.market.orders) {
         let order = Game.market.orders[e];
-        if (!order.active && Game.time - order.created > 15000 && order.remainingAmount === 0) {
+        if (!order.active && Game.time - order.created > 15000 && order.remainingAmount <= 1) {
             Game.market.cancelOrder(order.id);
 
         }
@@ -699,11 +699,11 @@ function giveInviso() {
     var minAmount = 44999;
     if (Memory.stats.totalMinerals.X > 30000 && Memory.stats.totalMinerals.O > 30000 && Memory.stats.totalMinerals.H > 30000) {
         for (var e in mins) {
-            if (Memory.stats.totalMinerals[mins[e]] > minAmount && Memory.stats.totalMinerals[mins[e]] - minAmount > 100) {
-                var sending = Memory.stats.totalMinerals[mins[e]] - minAmount;
+            if (Memory.stats.totalMinerals[mins[e]] > minAmount) {
+                var sending = Memory.stats.totalMinerals[mins[e]] - minAmount < 100 ? 100 :Memory.stats.totalMinerals[mins[e]] - minAmount ;
                 var sender = getMostTerminal(mins[e]);
-                var result = sender.send(mins[e], sending, 'W17S87', 'inviso');
-                console.log(result, mins[e], sending, 'W17S87', 'Inviso', sender.pos.roomName, sender.store[mins[e]]);
+                var result = sender.send(mins[e], sending, 'E13S72', 'inviso');
+                console.log(result, mins[e], sending, 'E13S72', 'Inviso', sender.pos.roomName, sender.store[mins[e]]);
             }
         }
     }
@@ -892,7 +892,7 @@ class roleTerminal {
                 if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
                     newTradeEnergy(terminal);
                 //          focusEnergy(terminal); Removed
-                //            forEveryTerminal(terminal);
+                            forEveryTerminal(terminal);
                 terminal.room.memory.didOrder = false;
                 let needed = labs.neededMinerals(terminal.pos.roomName);
                 getMinerals(terminal, needed);
@@ -930,7 +930,7 @@ class roleTerminal {
         }
 
         doDebt(); // Send energy to a target
-        //        giveInviso();
+//        giveInviso();
         tradeMineral();
         makeMineralOrder();
 

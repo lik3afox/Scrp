@@ -251,6 +251,7 @@ function moveCreep(creep) {
             let rmPos = new RoomPosition(creep.memory.keeperLair[creep.memory.goTo].pos.x, creep.memory.keeperLair[creep.memory.goTo].pos.y, creep.memory.keeperLair[creep.memory.goTo].pos.roomName);
             creep.moveMe(rmPos, {
                 reusePath: 7,
+                maxRooms:1,
                 ignoreRoads: true,
                 visualizePathStyle: {
                     fill: 'transparent',
@@ -291,6 +292,9 @@ class roleGuard extends roleParent {
             return;
         }
 
+        if(creep.room.name == 'E35S84' && creep.memory.goTo == 1) {
+            creep.memory.goTo = 2;
+        }
 
         if (creep.memory.goalPos === undefined) {
             for (var e in Game.flags) {

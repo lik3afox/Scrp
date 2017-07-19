@@ -24,14 +24,15 @@ class hackerClass extends roleParent {
         //      var target = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES,2);
         //{filter: {structureType: STRUCTURE_WALL}}
         //console.log('acon',Game.flags.control , creep.pos.roomName , Game.flags.control.pos.roomName);
-        if (Game.flags.control !== undefined && creep.pos.roomName == Game.flags.control.pos.roomName) {
+        if (Game.flags[creep.memory.party] !== undefined &&  creep.pos.roomName == Game.flags[creep.memory.party].pos.roomName) {
+//            if(creep.room.controller !== undefined) {
             let what = creep.claimController(creep.room.controller);
-            creep.say(what);
+            creep.say(what+'h');
 
             switch (what) {
                 case OK:
                     // case 0 is when it's claimed.
-                    Game.flags.control.remove();
+                    Game.flags[creep.memory.party].remove();
                     break;
 
                 case ERR_NOT_IN_RANGE:
@@ -47,15 +48,14 @@ class hackerClass extends roleParent {
 
                     break;
             }
-            /*if ( == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
-            } */
+    //        } else {
+  //              movement.flagMovement(creep);
+//            }
         } else {
 
 
             //      if(!super.guardRoom(creep)  ) {
             if (!super.avoidArea(creep))
-
                 movement.flagMovement(creep);
         }
         //      }

@@ -79,7 +79,7 @@ var maxMinerals = {
     'H': 125000,
     'X': 125000,
 
-    'G': 30000,
+    'G': 100000,
     'GH': 30000,
     'UL': 10000,
     'ZK': 10000,
@@ -803,6 +803,13 @@ var G = [{
 function labMode(roomName, mode, labs) {
     var a;
     switch (mode) {
+        case 'G':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (a in G) {
+                G[a].id = labs[a].id;
+            }
+            return G;
+        
         case 'muster':
             Game.rooms[roomName].memory.labMode = mode;
             for (a in muster) {
@@ -1000,9 +1007,13 @@ function setLabs(roomName, labs) {
         case 'E28S71':
         case 'E29S79':
             return labMode(roomName, 'XLHO2', labs);
+        case 'W4S93':
+            return labMode(roomName, 'G', labs);
+        case 'E35S83':
+            return labMode(roomName, 'G', labs);
+            
 
         case 'E38S72':
-        case 'W4S93':
             return labMode(roomName, 'XGHO2', labs);
 
         case 'E37S75':
@@ -1024,8 +1035,6 @@ function setLabs(roomName, labs) {
             return labMode(roomName, 'XZHO2', labs);
             //            return labMode(roomName, 'muster', labs);
 
-        case 'E35S83':
-            return labMode(roomName, 'muster', labs);
 
 
         case 'E27S75':

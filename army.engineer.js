@@ -44,6 +44,7 @@ class engineerClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
+           if(super.boosted(creep,['LH'])) { return;}
         if (super.goToPortal(creep)) return;
         //        spawn.wantRenew(creep);
         if (super.depositNonEnergy(creep)) return;
@@ -106,7 +107,7 @@ class engineerClass extends roleParent {
                 }
 
             } else {
-                if (creep.room.name == 'E33S76') {
+                if (creep.room.name == 'E37S83') {
                     if (!super._constr.moveToPickUpEnergy(creep, 300)) {
                         if (!super._containers.moveToWithdraw(creep)) {
                             let zz = Game.getObjectById('588371768b6b60986f18d1d8');

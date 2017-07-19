@@ -307,7 +307,7 @@ class fighterClass extends roleParent {
                     }
                 }  */
 
-        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 1);
+        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3);
 
         enemy = _.filter(enemy,
             function(object) {

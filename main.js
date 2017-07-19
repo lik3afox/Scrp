@@ -540,7 +540,7 @@
             if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
             Memory.marketRunCounter--;
             if (Memory.marketRunCounter <= 0) {
-                Memory.marketRunCounter = 5;
+                Memory.marketRunCounter = 10;
                 market.run();
             }
         }

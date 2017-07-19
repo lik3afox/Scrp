@@ -4,7 +4,7 @@
 
 
 function getConstruction(creep) {
-    return creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+    return creep.room.find(FIND_CONSTRUCTION_SITES);
 }
 
 function clearAllConstruction(creep) {

@@ -35,7 +35,7 @@ var thief2Party = [
 ];
 
 var muleParty = [
-    ['mule', require('army.mule'), 7, 1]
+    ['mule', require('army.mule'), 4, 1]
 ];
 
 var skInvade = [
@@ -79,14 +79,18 @@ var lowFFH = [
     ['fighter', require('army.fighter'), 2, 10],
     ['healer', require('army.healer'), 1, 5] // Healer    
 ];
+var lowFFH = [
+    ['fighter', require('army.fighter'), 2, 10],
+    ['healer', require('army.healer'), 1, 5] // Healer    
+];
 
 var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 2],
-    ['fighter', require('army.fighter'), 2, 12],
+    ['fighter', require('army.fighter'), 2, 11],
     ['demolisher', require('army.demolisher'), 0, 2],
-    ['healer', require('army.healer'), 1, 7] // Healer    
+    ['healer', require('army.healer'), 1, 6] // Healer    
 ];
 var fightHealer = [
     ['fighter', require('army.fighter'), 1, 11],
@@ -230,12 +234,13 @@ function getSpawnCreating(flag) {
 
     switch (flag.name) {
         //    case 'scout2' :
+           case 'Flag61':
+            return 'W4S93';
         case 'warparty1':
             return 'E35S83';
         case 'warparty5':
             return 'E23S75';
 
-        case 'warparty3':
         case 'demo':
             return 'E33S76';
         case 'warparty4':
@@ -252,15 +257,16 @@ function getSpawnCreating(flag) {
         case 'thief5':
             return 'E35S73';
         case 'mule':
+            return 'E35S83';
         case 'thief':
-            return 'E37S75';
+            return 'E35S83';
 
         case 'upgradeRoom':
             return 'E27S75';
             //            return 'E26S73';
 
         case 'engineer':
-            return 'E23S75';
+            return 'E35S83';
         case 'recontrol':
         case 'test':
         case 'control':
@@ -418,6 +424,9 @@ function getCurrentParty(flag) {
         }
     } else {
         switch (flag.name) {
+            case 'Flag61':
+                return warparty3;
+
             case 'oneFight':
                 return soloFighter;
             case 'safemode':

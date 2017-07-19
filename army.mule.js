@@ -57,7 +57,16 @@ class muleClass extends roleParent {
                             creep.moveTo(creep.room.storage, { reusePath: 20 });
                         }
                     } else {
-                        if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {
+/*                    	if (creep.pos.isNearTo(Game.flags[creep.memory.party].pos)) {
+            	        	var stru = creep.room.find(FIND_STRUCTURES);
+        	            	stru = _.filter(stru, function(o) {
+    	                		return o.structureType == STRUCTURE_CONTAINER && o.pos.isNearTo(creep);
+	                    	});
+	                    	creep.say(stru.length);
+                	    	if(stru.length > 0){
+                    		console.log( 	creep.transfer(stru[0],RESOURCE_ENERGY) );
+                    		}
+                    	} else*/ if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {
                             creep.drop(RESOURCE_ENERGY);
                         } else {
                             creep.moveTo(Game.flags[creep.memory.party], { reusePath: 20 });

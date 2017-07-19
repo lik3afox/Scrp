@@ -228,7 +228,7 @@ class healerClass extends roleParent {
             movement.flagMovement(creep);
         }
 
-        if (creep.room.name == 'E18S64') {
+        if (creep.room.name == 'W15S87') {
             var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
             site = _.filter(site, function(o) {
                 return !o.pos.lookForStructure(STRUCTURE_RAMPART);
@@ -241,7 +241,7 @@ class healerClass extends roleParent {
                 movement.flagMovement(creep);
             }
         }
-        if (creep.room.name == 'E24S74') doMove = true;
+        
         if (doMove) {
             movement.flagMovement(creep);
         }

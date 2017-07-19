@@ -9,7 +9,7 @@ var containers = require('commands.toContainer');
 var console = require('market');
 
 module.exports = {
-    friends: ['admon','ART999','o4kapuk', 'Baj', 'Zeekner', 'ponka', 'zolox', 'NobodysNightmare', 'Vlahn', 'Power Bank', 'Issacar', 'likeafox', 'daboross'],
+    friends: ['Totalschaden','omnomwombat','InvisoBlack','weaves','admon','ART999','o4kapuk', 'Baj', 'Zeekner', 'ponka', 'zolox', 'NobodysNightmare', 'Vlahn', 'Power Bank', 'likeafox', 'daboross'],
     enemies: ['Atavus', 'Trepidimous'],
     RETREAT: COLOR_BROWN, // Flag that certain creeps use to defend too.
     DEFEND: COLOR_RED, // Everyone will defend to this.
