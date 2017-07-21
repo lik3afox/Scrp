@@ -47,6 +47,7 @@ var E33S76 = '5923a6cbf9f4ceb75afbc831';
 var E23S75 = '5934fa72604c7e190610993f';
 var upgradeSpawn = '58c074ead62936ed5e2bce0b';
 var E37S75 = '58f793ad1f64b8d842dc0c16';
+var W38S94 = '596fb419be36016cb7dc44b2';
 
 
 function clearTerminal(creep) {
@@ -128,6 +129,43 @@ function eitherOr(creep, containz1, containz2) {
 
 }
 
+function W38S94Room(creep) {
+    let goto;
+    switch (creep.memory.roleID) {
+
+        case 0:
+            goto = Game.getObjectById('597074b43b77e93dea38d677');
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+        case 1:
+            goto = Game.getObjectById('59708a50a4dc411b03fcf4f1');
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+
+
+    }
+
+}
+
+function  W38S94Transfer(creep) {
+    switch (creep.memory.roleID) {
+        //        case 1:
+        default: 
+        moveToAndDrop(creep,new RoomPosition(14,16,creep.room.name));
+//        toStorageOrTerminal(creep);
+        break;
+    }
+}
 
 function E37S75Room(creep) {
     let goto;
@@ -147,9 +185,6 @@ function E37S75Room(creep) {
     }
 
 }
-
-
-
 
 function E37S75Transfer(creep) {
     switch (creep.memory.roleID) {
@@ -1061,7 +1096,7 @@ class roleLinker extends roleParent {
         }
 
 
-        //     if (creep.room.name != "W4S93z" && creep.room.name != "E38S72" && creep.room.name != 'E33S76')
+             if ( creep.room.name != 'W38S94')
         constr.pickUpEnergy(creep);
 
         if (super.returnEnergy(creep)) return;
@@ -1121,6 +1156,10 @@ class roleLinker extends roleParent {
                 case E37S75:
                     E37S75Room(creep);
                     break;
+                case W38S94:
+                    W38S94Room(creep);
+                    break;
+//Room                    
                 case spawn2:
                     spawn2Room(creep);
                     break;
@@ -1173,8 +1212,12 @@ class roleLinker extends roleParent {
                 case W4S93:
                     W4S93Transfer(creep);
                     break;
+
                 case E33S76:
                     E33S76Transfer(creep);
+                    break;
+                case W38S94:
+                    W38S94Transfer(creep);
                     break;
                 default:
                     containers.moveToStorage(creep);

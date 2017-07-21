@@ -257,6 +257,14 @@ var E33S76Module = [
     ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2]
 ];
+var W38S94Module = [
+    ['first', require('role.first'), 2, 2],
+    ['linker', require('role.linker'), 2, 3],
+//    ['upgrader', require('role.upgrader'), 2, 2],
+//    ['repairer', require('role.repairer'), 1, 1],
+
+    ['harvester', require('role.harvester'), 2, 2]
+];
 
 var W4S93Module = [
     ['first', require('role.first'), 2, 2],
@@ -805,6 +813,10 @@ function getCurrentModule(spawn) {
     if (spawn.name == 'W4S93') {
         return W4S93Module;
     }
+    if (spawn.name == 'W38S94') {
+        return W38S94Module;
+    }
+
     if (spawn.name == 'Spawn39') {
         return E21S78Module;
     }
@@ -1125,7 +1137,7 @@ class theSpawn {
                     }
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 'scientisxxt') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.

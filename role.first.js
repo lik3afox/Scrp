@@ -252,7 +252,19 @@ function moveOnPath(creep) {
 }
 
 function getEnergy(creep) {
-    if (creep.room.name == "E27S75") {
+    if (creep.room.name == 'W38S94xx') {
+        if (!constr.moveToPickUpEnergy(creep, 200)) {
+            if (!containers.withdrawFromStorage(creep)) {
+                if (!containers.withdrawFromTerminal(creep)) {
+                    if (!containers.moveToWithdraw(creep)) {
+                        if (!sources.moveToWithdraw(creep)) {}
+                    }
+                    //                      }
+                }
+            }
+        }
+
+    } else if (creep.room.name == "E27S75") {
         let tgt = Game.getObjectById('58c15b77dae08a9e411bb197');
         if (tgt !== null && creep.withdraw(tgt, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(tgt);
@@ -277,7 +289,7 @@ function getEnergy(creep) {
             if (!containers.withdrawFromStorage(creep)) {
                 if (!containers.withdrawFromTerminal(creep)) {
                     if (!containers.moveToWithdraw(creep)) {
-                        if (!sources.moveToWithdraw(creep)) {}
+//                        if (!sources.moveToWithdraw(creep)) {}
                     }
                     //                      }
                 }

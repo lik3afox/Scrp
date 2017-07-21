@@ -83,7 +83,7 @@ class buildObserver {
             doTask(Memory.observerTask);
             return;
         }
-        if (Memory.war) return;
+        if (!Memory.war) return;
         //        console.log(Memory.observerNum, roomsObserve[Memory.observerNum], Game.rooms[roomsObserve[Memory.observerNum]]);
         if (Memory.observerNum > roomsObserve.length - 1) Memory.observerNum = 0;
         let target = roomsObserve[Memory.observerNum];
@@ -111,7 +111,8 @@ class buildObserver {
 
                 for (var o in observers) {
                     let stru = getCached(observers[o]);
-                    stru.observeRoom(target);
+                    if(stru !== null)
+                        stru.observeRoom(target);
                 }
 
             }

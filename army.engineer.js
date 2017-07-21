@@ -39,12 +39,15 @@ class engineerClass extends roleParent {
         if (creep.saying == 'zZz') {
             return;
         }
-
+        if (creep.room.name == 'W35S95') {
+            creep.memory.party = 'Flag62';
+        }
 
         if (super.doTask(creep)) {
             return;
         }
-           if(super.boosted(creep,['LH'])) { return;}
+
+        if (super.boosted(creep, ['LH'])) { return; }
         if (super.goToPortal(creep)) return;
         //        spawn.wantRenew(creep);
         if (super.depositNonEnergy(creep)) return;
@@ -56,6 +59,7 @@ class engineerClass extends roleParent {
         } else {
             isThere = true;
         }
+        if (creep.room.name == 'E35S85') isThere = false;
 
         if (!isThere) {
             if (!super.avoidArea(creep)) {
@@ -82,26 +86,29 @@ class engineerClass extends roleParent {
             if (creep.carry.energy < (creep.stats('mining') + 1)) {
                 creep.memory.building = false;
                 creep.say('harvesting');
-
-                //               if (!super._constr.moveToPickUpEnergy(creep)) {
-                //                if (!super._containers.withdrawFromStorage(creep)) {
-                //                      if (!super._containers.moveToWithdraw(creep)) {
-                //      if (!super._containers.moveToWithdraw(creep))
-                //                    super._sources.moveToWithdraw(creep);
-                //                  }
-                //                        creep.say('zZzZ')
-                //                  }
-                //            }
+                /*
+                                               if (!super._constr.moveToPickUpEnergy(creep)) {
+                                //                if (!super._containers.withdrawFromStorage(creep)) {
+                                                      if (!super._containers.moveToWithdraw(creep)) {
+                                //      if (!super._containers.moveToWithdraw(creep))
+                                //                    super._sources.moveToWithdraw(creep);
+                                                  }
+                                //                        creep.say('zZzZ')
+                                //                  }
+                                            }
+                                            return; */
             }
 
 
             if (creep.memory.building) {
                 if (!constr.moveToBuild(creep)) {
-                    if (!super._containers.moveToStorage(creep)) {
+                    //                  if (!spawn.moveToTransfer(creep)) {
+//                    if (!super._containers.moveToStorage(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(creep.room.controller);
                         }
-                    }
+  //                  }
+                    //                  }
                 } else {
                     constr.doCloseRoadRepair(creep);
                 }
@@ -120,14 +127,14 @@ class engineerClass extends roleParent {
                         }
                     }
                 } else {
-                    //if (!super._constr.moveToPickUpEnergy(creep, 300)) {
-                    if (!super._containers.moveToWithdraw(creep)) {
-                        if (!super._containers.withdrawFromTerminal(creep)) {
-                            //           if (!super._containers.moveToWithdraw(creep))
-                            super._sources.moveToWithdraw(creep);
-                            //                  }
+                    if (!super._constr.moveToPickUpEnergy(creep)) {
+//                        if (!super._containers.moveToWithdraw(creep)) {
+  //                          if (!super._containers.withdrawFromTerminal(creep)) {
+                                //           if (!super._containers.moveToWithdraw(creep))
+        //                        super._sources.moveToWithdraw(creep);
+      //                      }
                             //                        creep.say('zZzZ')
-                        }
+    //                    }
                     }
 
                 }

@@ -24,33 +24,41 @@ class hackerClass extends roleParent {
         //      var target = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES,2);
         //{filter: {structureType: STRUCTURE_WALL}}
         //console.log('acon',Game.flags.control , creep.pos.roomName , Game.flags.control.pos.roomName);
-        if (Game.flags[creep.memory.party] !== undefined &&  creep.pos.roomName == Game.flags[creep.memory.party].pos.roomName) {
-//            if(creep.room.controller !== undefined) {
-            let what = creep.claimController(creep.room.controller);
-            creep.say(what+'h');
+        if (Game.flags[creep.memory.party] !== undefined && creep.pos.roomName == Game.flags[creep.memory.party].pos.roomName) {
+            if (creep.room.controller !== undefined) {
+                let what;
+                if (creep.getActiveBodyparts(CLAIM) >= 5) {
+                    what = creep.attackController(creep.room.controller);
+                    creep.say(what + 'a');
+                } else {
+                    what = creep.claimController(creep.room.controller);
+                    creep.say(what + 'c');
+                }
 
-            switch (what) {
-                case OK:
-                    // case 0 is when it's claimed.
-                    Game.flags[creep.memory.party].remove();
-                    break;
+                switch (what) {
+                    case OK:
+                        // case 0 is when it's claimed.
+                        if (creep.getActiveBodyparts(CLAIM) < 5) {
+                            Game.flags[creep.memory.party].remove();
+                        }
+                        break;
 
-                case ERR_NOT_IN_RANGE:
+                    case ERR_NOT_IN_RANGE:
 
-                    creep.moveTo(creep.room.controller);
-                    break;
-
-                default:
-
-                    if (creep.attackController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(creep.room.controller);
-                    }
+                        break;
 
-                    break;
+                    default:
+
+                        if (creep.attackController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(creep.room.controller);
+                        }
+
+                        break;
+                }
+            }  else {
+                movement.flagMovement(creep);
             }
-    //        } else {
-  //              movement.flagMovement(creep);
-//            }
         } else {
 
 

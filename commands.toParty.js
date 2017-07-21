@@ -35,7 +35,7 @@ var thief2Party = [
 ];
 
 var muleParty = [
-    ['mule', require('army.mule'), 4, 1]
+    ['mule', require('army.mule'), 2, 1]
 ];
 
 var skInvade = [
@@ -167,6 +167,9 @@ var testParty = [
 var controlParty = [
     ['Acontroller', require('army.controller'), 1, 0]
 ];
+var controlAttackParty = [
+    ['Acontroller', require('army.controller'), 1, 1]
+];
 var recontrolParty = [
     ['recontroller', require('army.recontroller'), 1, 0]
 ];
@@ -257,7 +260,7 @@ function getSpawnCreating(flag) {
         case 'thief5':
             return 'E35S73';
         case 'mule':
-            return 'E35S83';
+            return 'E38S72';
         case 'thief':
             return 'E35S83';
 
@@ -328,6 +331,8 @@ function getCurrentParty(flag) {
     }
     if (flag.memory.musterType !== 'none') {
         switch (flag.memory.musterType) {
+            case 'attackController':
+                return controlAttackParty;
             case 'warparty333':
                 return warParty333;
             case 'safemode':

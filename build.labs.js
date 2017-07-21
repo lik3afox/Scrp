@@ -94,15 +94,15 @@ var maxMinerals = {
     'KO': 30000,
     'KH': 30000,
 
-    'XUHO2': 45099,
-    'XUH2O': 45099,
-    'XZHO2': 45099,
-    'XZH2O': 45099,
-    'XLHO2': 45099,
-    'XLH2O': 45099,
-    'XKHO2': 45099,
-    'XKH2O': 45099,
-    'XGHO2': 45099,
+    'XUHO2': 100000,
+    'XUH2O': 100000,
+    'XZHO2': 100000,
+    'XZH2O': 100000,
+    'XLHO2': 100000,
+    'XLH2O': 100000,
+    'XKHO2': 100000,
+    'XKH2O': 100000,
+    'XGHO2': 100000,
 
 
 
@@ -965,7 +965,7 @@ var oneWarMix = [
 ];
 
 function getLabMixes(roomName) {
-    if (Memory.war) {
+   // if (Memory.war) {
         var newMixes = [];
         switch (Game.rooms[roomName].memory.labMode) {
             case 'UH':
@@ -984,9 +984,9 @@ function getLabMixes(roomName) {
                 /*            default:
                                 return Game.rooms[roomName].memory.labMix;*/
         }
-    } else {
-        return Game.rooms[roomName].memory.labMix;
-    }
+//    } else {
+  //      return Game.rooms[roomName].memory.labMix;
+    //}
 }
 
 
@@ -1061,7 +1061,7 @@ function returnLabs(roomName) {
             return [];
         }
     } else {
-        if (Memory.war) {
+     //   if (Memory.war) {
             var currentLabs = Game.rooms[roomName].memory.labs;
             var warLabs = [];
             //            var e = currentLabs.length;
@@ -1079,10 +1079,10 @@ function returnLabs(roomName) {
             //return ;
             let zz = setLabs(roomName, warLabs);
             return zz;
-        } else {
+    //    } else {
 
-            return Game.rooms[roomName].memory.labs;
-        }
+  //          return Game.rooms[roomName].memory.labs;
+//        }
 
 
     }

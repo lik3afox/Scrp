@@ -99,8 +99,9 @@
                     flag.memory.invadeDelay = 2000;
 
                 if (flag.memory.invadeDelay < 0) {
-                    var constr = require('commands.toStructure');
-                    constr.checkSnapShot(flag.pos.roomName);
+//                    var constr = require('commands.toStructure');
+//                    constr.checkSnapShot(flag.pos.roomName);
+
                     flag.memory.invadeDelay = undefined;
                     flag.memory.invaderTimed = undefined;
                     flag.memory.alert = undefined;

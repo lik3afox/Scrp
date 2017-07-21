@@ -216,7 +216,8 @@
     }
 
     function doUpgradeRooms() { //5836b82d8b8b9619519f19be
-        if (Memory.war) return;
+        if (Memory.war) 
+            return;
         let spwns = ['58c074ead62936ed5e2bce0b']; //,''
         if (Game.flags.recontrol !== undefined) return;
         var e = spwns.length;
@@ -413,6 +414,7 @@
                     }
 
 
+
                     if (Memory.war) {
                         if (Game.spawns[title].memory.alphaSpawn) {
                             doRoomReport(Game.spawns[title].room);
@@ -533,7 +535,9 @@
             power.run();
             observer.run();
             globalCreep();
-            doUpgradeRooms();
+
+//            doUpgradeRooms();
+
             memoryStatsUpdate();
             if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
             Memory.labsRunCounter--;
