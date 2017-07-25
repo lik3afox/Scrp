@@ -68,7 +68,7 @@ function getSpawnCreating(flag) {
             return 'E33S76';
 
         case 'Flag7':
-            return 'E26S73';
+            return 'E23S75';
         case 'Flag8':
             return 'E33S76';
 

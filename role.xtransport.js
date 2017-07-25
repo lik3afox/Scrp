@@ -242,6 +242,9 @@ class transport extends roleParent {
                         let contain = Game.getObjectById(creep.memory.workContain);
                         if (contain !== null) {
                             if (creep.pos.isNearTo(contain)) {
+                                if(creep.pos.isEqualTo(contain)) {
+                                    creep.moveTo(29,29,{maxOps:50});
+                                }
                                 if (_.sum(contain.store) > 0) {
                                     for (var e in contain.store) {
                                         if (creep.withdraw(contain, e) === OK) {
@@ -252,6 +255,7 @@ class transport extends roleParent {
                                 } else {
                                     creep.say('zZzZ');
                                 }
+                                
                             } else {
                                 creep.moveMe(contain);
                             }

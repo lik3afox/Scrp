@@ -203,7 +203,7 @@ var E35S83Module = [ // Spawn11 Room E28S77
     ['nuker', require('role.nuker'), 1, 4],
     ['scientist', require('role.scientist'), 0, 4],
     ['upbuilder', require('role.upbuilder'), 0, 4],
-    ['wallwork', require('role.wallworker'), 2, 5],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2]
 
 
@@ -259,10 +259,9 @@ var E33S76Module = [
 ];
 var W38S94Module = [
     ['first', require('role.first'), 2, 2],
-    ['linker', require('role.linker'), 2, 3],
-//    ['upgrader', require('role.upgrader'), 2, 2],
-//    ['repairer', require('role.repairer'), 1, 1],
-
+    ['linker', require('role.linker'), 2, 4],
+    ['homeDefender', require('role.defender2'), 1, 4],
+    ['wallwork', require('role.wallworker'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2]
 ];
 
@@ -284,7 +283,7 @@ var E38W75Module = [ // E37S75
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['scientist', require('role.scientist'), 0, 3],
-    ['wallwork', require('role.wallworker'), 3, 5],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['nuker', require('role.nuker'), 1, 3],
     ['minHarvest', require('role.mineral'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 7]

@@ -23,7 +23,9 @@ var _links = [
     // Spawn room E37S75
     '592b1d484bc45519161537ef', '592b3ffa429df6134a992506', '594a882f332f7c6ef1dfe57a',
     // E33S76
-    '5949a8128a497d010b6c1e4a'
+    '5949a8128a497d010b6c1e4a',
+    // W38S94
+    '59760a1a8c239e6e379eea9d'
 ];
 
 var gameCache = [];
@@ -208,6 +210,8 @@ class buildLink {
 
 
         sendEnergy(['59437ada633ad90d033e741c', '59408dd58b64951171f89b71'], '593d6e902c4a79a70901fac1', 700);
+
+        sendEnergy('59760a1a8c239e6e379eea9d', '5975ab815f3e7568bdb7ef14',700);
 
         gameCache = []; // cleaning up cache for this tick.
     }

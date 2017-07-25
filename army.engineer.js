@@ -50,7 +50,7 @@ class engineerClass extends roleParent {
         if (super.boosted(creep, ['LH'])) { return; }
         if (super.goToPortal(creep)) return;
         //        spawn.wantRenew(creep);
-        if (super.depositNonEnergy(creep)) return;
+//        if (super.depositNonEnergy(creep)) return;
 
         let isThere = false;
         if (creep.memory.renewSpawnID === undefined) {
@@ -77,6 +77,9 @@ class engineerClass extends roleParent {
                     creep.memory.renewSpawnID = finded[0].id;
                 }
             }
+            if(creep.name == 'engineer!r'){
+                creep.drop('GO')
+            }
 
 
             if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
@@ -101,7 +104,7 @@ class engineerClass extends roleParent {
 
 
             if (creep.memory.building) {
-                if (!constr.moveToBuild(creep)) {
+             //   if (!constr.moveToBuild(creep)) {
                     //                  if (!spawn.moveToTransfer(creep)) {
 //                    if (!super._containers.moveToStorage(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -109,9 +112,9 @@ class engineerClass extends roleParent {
                         }
   //                  }
                     //                  }
-                } else {
-                    constr.doCloseRoadRepair(creep);
-                }
+               // } else {
+                 //   constr.doCloseRoadRepair(creep);
+            //    }
 
             } else {
                 if (creep.room.name == 'E37S83') {
@@ -127,14 +130,14 @@ class engineerClass extends roleParent {
                         }
                     }
                 } else {
-                    if (!super._constr.moveToPickUpEnergy(creep)) {
+         //           if (!super._constr.moveToPickUpEnergy(creep)) {
 //                        if (!super._containers.moveToWithdraw(creep)) {
-  //                          if (!super._containers.withdrawFromTerminal(creep)) {
+                            if (!super._containers.withdrawFromStorage(creep)) {
                                 //           if (!super._containers.moveToWithdraw(creep))
         //                        super._sources.moveToWithdraw(creep);
       //                      }
                             //                        creep.say('zZzZ')
-    //                    }
+           //             }
                     }
 
                 }
