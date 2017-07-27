@@ -120,8 +120,8 @@ function needEnergy(terminal) {
     if (Game.market.credits > 15000000) { // Disabled currently
         if (_.contains(always, terminal.room.name)) {
             if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
-                let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
-                console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, 'ALWAYS ORDER NEEDS TO BE ALWYS');
+         //       let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
+           //     console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, 'ALWAYS ORDER NEEDS TO BE ALWYS');
             }
         }
     }
@@ -150,8 +150,8 @@ function needEnergy(terminal) {
 
     if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
         if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
-            let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
-            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
+  //          let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
+//            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
         }
     }
 
@@ -643,7 +643,9 @@ function giveMinerals(terminal, mineral, amount) {
 function energyCheck(terminal) {
     if (terminal.store[RESOURCE_ENERGY] > 20000) return false;
     if (terminal.total < 299000) return false;
-    console.log(terminal, 'in', terminal.pos, 'has less than 20000 energy');
+
+// First lets get the most mineral in this terminal.
+
     let mostMineral;
     let most = 0;
     for (var e in terminal.store) {
@@ -653,12 +655,32 @@ function energyCheck(terminal) {
         }
     }
 
-    let zz = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: e });
-    zz.sort((a, b) => a.price - b.price);
+// Then lets get the lowest terminal.
+    var lowestStore;
+    var currentLow = 1000000;
+    for (var v in terminals) {
+        let storage = Game.getObjectById(terminals[v]);
+        if (storage !== null && storage.total < currentLow) {
+                lowestStore = storage;
+                currentLow = storage.total;
+        }
+    }
+    if (lowestStore === undefined) return false;
 
-    //let bb = Game.market.deal(zz[0].id, 100, terminal.room.name);
-    console.log('Sold 100 mineral', mostMineral, zz[0].price * 100);
+    let bb = terminal.send(mostMineral,3000,lowestStore.room.name,'too much');
+    console.log(terminal.room.name,'this terminal is full with less than 20000 energy',mostMineral,lowestStore.room.name,'result:',bb);
+
+//Game.rooms.E28S71.terminal.send('O', 15000, 'E5N7', 'trade');
+//    let zz = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: e });
+//    zz.sort((a, b) => a.price - b.price);
+
+//    let bb = Game.market.deal(zz[0].id, 2000, terminal.room.name);
+//    console.log('Sold 100 mineral', mostMineral, zz[0].price * 2000,zz);
+
     //Game.market.deal('57cd2b12cda69a004ae223a3', 1000, "W1N1");   
+
+//    }
+
 
     return false;
 }
@@ -832,8 +854,9 @@ function makeMineralOrder() {
             amount = getAverageMineralPrice(e, true);
             //            console.log(amount, anyLikeOrder(e, "E28S71"), e);
             if (amount !== undefined && !anyLikeOrder(e, "E28S71")) {
-                let qq = Game.market.createOrder(ORDER_BUY, e, amount, 25000, "E28S71");
-                console.log('Created Buy Order for ', e, 'amount:', amount, qq);
+//                let qq = Game.market.createOrder(ORDER_BUY, e, amount, 25000, "E28S71");
+  //              console.log('Created Buy Order for ', e, 'amount:', amount, qq);
+  console.log('wants mineral but forced failure');
             }
         }
     }
@@ -913,7 +936,6 @@ class roleTerminal {
                 needEnergy(terminal);
 
                 if (zz > 299000) {
-                    if (!energyCheck(terminal)) { // See if anyone is full but has less than 20k energy : fulfilles ORDER_BUY's
                         if (!shareEnergy(terminal)) { // Moves energy around
                             //                                newTradeEnergy(terminal);
                             tradeEnergy(terminal);
@@ -922,11 +944,11 @@ class roleTerminal {
                         }
                         //                        tradeEnergy(terminal);
                         //                        newTradeEnergy(terminal);
-                    }
+//                    }
                     newTradeEnergy(terminal);
                 }
             }
-
+        energyCheck(terminal);
         }
 
         doDebt(); // Send energy to a target

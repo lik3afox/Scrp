@@ -320,7 +320,166 @@ var XUH2O = [{
     amount: 2500,
     emptied: false
 }];
-// Attack
+
+var XGH2O = [{
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 2400,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
+}];
+
+
+var GH2O = [{
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 2400,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
+}];
+
+
+var GH = [{
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 2400,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XUH2O',
+    amount: 2500,
+    emptied: false
+}];
+
+// Repair
 var LH = [{
     id: 'getReplaced',
     resource: 'LH',
@@ -809,6 +968,26 @@ function labMode(roomName, mode, labs) {
                 G[a].id = labs[a].id;
             }
             return G;
+
+        case 'GH':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (a in GH) {
+                GH[a].id = labs[a].id;
+            }
+            return GH;
+
+        case 'GH2O':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (a in GH2O) {
+                GH2O[a].id = labs[a].id;
+            }
+            return GH2O;
+        case 'XGH2O':
+            Game.rooms[roomName].memory.labMode = mode;
+            for (a in XGH2O) {
+                XGH2O[a].id = labs[a].id;
+            }
+            return XGH2O;
         
         case 'muster':
             Game.rooms[roomName].memory.labMode = mode;
@@ -970,6 +1149,9 @@ function getLabMixes(roomName) {
         switch (Game.rooms[roomName].memory.labMode) {
             case 'UH':
             case 'LH':
+            case 'GH':
+            case 'XGH2O':
+            case 'GH2O':
                 return Game.rooms[roomName].memory.labMix;
             case 'XXZHO2':
                 return E29S79WarMix;
@@ -1005,6 +1187,8 @@ function setLabs(roomName, labs) {
                     return zz;*/
 
         case 'E28S71':
+            return labMode(roomName, 'XKHO2', labs);
+
         case 'E29S79':
             return labMode(roomName, 'XLHO2', labs);
         case 'W4S93':
@@ -1017,11 +1201,14 @@ function setLabs(roomName, labs) {
             return labMode(roomName, 'XGHO2', labs);
 
         case 'E37S75':
+            return labMode(roomName, 'XZH2O', labs);
+            
         case 'E26S73':
             return labMode(roomName, 'XUH2O', labs);
 
 
         case 'E33S76':
+
         case 'E38S72':
             return labMode(roomName, 'XKHO2', labs);
 

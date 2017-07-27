@@ -77,9 +77,6 @@ class engineerClass extends roleParent {
                     creep.memory.renewSpawnID = finded[0].id;
                 }
             }
-            if(creep.name == 'engineer!r'){
-                creep.drop('GO')
-            }
 
 
             if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
