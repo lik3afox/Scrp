@@ -136,10 +136,14 @@ function W38S94Room(creep) {
         case 0:
             goto = Game.getObjectById('5975ab815f3e7568bdb7ef14');
             //             require('commands.toStructure').pickUpEnergy(creep);
-            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(goto, {
-                    reusePath: 20 //,ignoreCreeps:true
-                });
+            if (goto !== null && goto.energy > 0 ) {
+                if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(goto, {
+                        reusePath: 20 //,ignoreCreeps:true
+                    });
+                }
+            } else {
+            takeFromTerminalForStorage(creep);
             }
             break;
         case 1:
@@ -157,21 +161,21 @@ function W38S94Room(creep) {
 
 }
 
-function  W38S94Transfer(creep) {
+function W38S94Transfer(creep) {
     switch (creep.memory.roleID) {
         //        case 1:
-        default: 
-        let zz = creep.room.storage;
-        if(zz === undefined){
-        moveToAndDrop(creep,new RoomPosition(14,16,creep.room.name));
-        } else {
-            if(creep.pos.isNearTo(zz)){
-                creep.transfer(zz,RESOURCE_ENERGY);
-            } else {
-                creep.moveTo(zz);
-            }
-        }
-//        toStorageOrTerminal(creep);
+        default: toStorageOrTerminal(creep);
+        /*        let zz = creep.room.storage;
+                if(zz === undefined){
+                moveToAndDrop(creep,new RoomPosition(14,16,creep.room.name));
+                } else {
+                    if(creep.pos.isNearTo(zz)){
+                        creep.transfer(zz,RESOURCE_ENERGY);
+                    } else {
+                        creep.moveTo(zz);
+                    }
+                }*/
+        //        toStorageOrTerminal(creep);
         break;
     }
 }
@@ -458,7 +462,7 @@ function E38S72Transfer(creep) {
     switch (creep.memory.roleID) {
 
         default:
-        //console.log( creep.room.powerspawn.energyCapacity)
+            //console.log( creep.room.powerspawn.energyCapacity)
             if (creep.room.powerspawn.energy < creep.room.powerspawn.energyCapacity - 1000) {
                 if (creep.pos.isNearTo(creep.room.powerspawn)) {
                     creep.transfer(creep.room.powerspawn, RESOURCE_ENERGY);
@@ -468,9 +472,9 @@ function E38S72Transfer(creep) {
             } else {
                 toStorageOrTerminal(creep);
             }
-            //            containers.moveToStorage(creep);
+        //            containers.moveToStorage(creep);
 
-            //        moveToAndDrop(creep,new RoomPosition(38,34,'E38S72'))
+        //        moveToAndDrop(creep,new RoomPosition(38,34,'E38S72'))
         break;
     }
 }
@@ -598,7 +602,7 @@ function spawn8Room(creep) {
 
                 }
 
-                //            }
+            //            }
 
             break;
         case 2:
@@ -1071,12 +1075,12 @@ function spawn1Room(creep) {
 function s1Transfer(creep) {
     switch (creep.memory.roleID) {
         default: if (creep.memory.renewSpawnID !== undefined) {
-                let spawnz = Game.getObjectById(creep.memory.renewSpawnID);
-                if (spawnz !== null && spawnz.energy < 50) {
-                    creep.transfer(spawnz, RESOURCE_ENERGY);
-                    return;
-                }
+            let spawnz = Game.getObjectById(creep.memory.renewSpawnID);
+            if (spawnz !== null && spawnz.energy < 50) {
+                creep.transfer(spawnz, RESOURCE_ENERGY);
+                return;
             }
+        }
         toStorageOrTerminal(creep);
         break;
     }
@@ -1105,8 +1109,8 @@ class roleLinker extends roleParent {
         }
 
 
-             if ( creep.room.name != 'W38S94')
-        constr.pickUpEnergy(creep);
+        if (creep.room.name != 'W38S94')
+            constr.pickUpEnergy(creep);
 
         if (super.returnEnergy(creep)) return;
 
@@ -1168,7 +1172,7 @@ class roleLinker extends roleParent {
                 case W38S94:
                     W38S94Room(creep);
                     break;
-//Room                    
+                    //Room                    
                 case spawn2:
                     spawn2Room(creep);
                     break;

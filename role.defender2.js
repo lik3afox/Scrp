@@ -86,6 +86,8 @@ function restingSpot(creep) {
             return new RoomPosition(38, 27, creep.memory.home);
         case 'W4S93':
             return new RoomPosition(3, 38, creep.memory.home);
+        case 'W38S94' :
+            return new RoomPosition(11, 16, creep.memory.home);
 
 
         default:
@@ -183,9 +185,9 @@ class roleNewDefender extends roleParent {
             creep.say('zZz');
             return;
         }
-        if (rampartDefense(creep)) {
-            return;
-        }
+    //    if (rampartDefense(creep)) {
+  //          return;
+//        }
 
         if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
 
@@ -200,6 +202,7 @@ class roleNewDefender extends roleParent {
             var ccSpawn = require('commands.toSpawn');
             ccSpawn.wantRenew(creep);
         }
+        
         super._constr.pickUpNonEnergy(creep);
 
         // If no defend flag then

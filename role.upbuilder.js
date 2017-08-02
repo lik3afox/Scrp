@@ -136,11 +136,26 @@ class roleUpbuilder extends roleParent {
         if (!Memory.war) {
             if (creep.ticksToLive > 1450 && creep.room.controller.level == 8) {
                 let zz;
-                if (creep.room.name == 'E37S75') {
-                    zz = super.boosted(creep, ['XGH2O']);
-                } else {
-                    zz = super.boosted(creep, ['GH']);
+                switch (creep.room.name) {
+                    case 'W4S93':
+                    case 'E37S75':
+
+                        zz = super.boosted(creep, ['GH2O']);
+                        break;
+                    case 'E38S72':
+                    case 'E23S75':
+                        zz = super.boosted(creep, ['XGH2O']);
+                        break;
+                    case 'E26S73':
+                    case 'E28S71':
+                        zz = super.boosted(creep, ['GH']);
+                        break;
                 }
+//                if (creep.room.name == 'E37S75') {
+  //                  zz = super.boosted(creep, ['XGH2O']);
+    //            } else if (creep.room.name != 'E29S79' && creep.room.name == 'E33S76') {
+      //              zz = super.boosted(creep, ['GH', 'GH2O', 'XGH2O']);
+        //        }
                 if (zz) {
                     return;
                 }

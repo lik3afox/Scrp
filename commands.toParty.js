@@ -201,6 +201,10 @@ var rampartParty = [ // This is what currently si in effect, but
     ['wallwork', require('role.wallworker'), 2, 5],
     ['rampartGuard', require('army.rampartGuard'), 1, 0]
 ];
+var towerParty = [ // This is what currently si in effect, but 
+    // Rampart Will be range,repair,tower,and other things needed that is not attack.
+    ['tower', require('role.tower'), 1, 0]
+];
 
 // This is a rampart dude that is placed and will always go to that location. 
 var soloGuard = [
@@ -302,6 +306,7 @@ function getSpawnCreating(flag) {
             return 'E28S73';
         case 'upgrade':
             return 'E35S73';
+            case 'tower':
         case 'scout':
             return returnClosestRoom(flag.pos.roomName);
     //    default:
@@ -347,6 +352,8 @@ function getCurrentParty(flag) {
                 return testParty;
             case 'warparty33':
                 return warParty33;
+            case 'tower':
+            return towerParty;
             case 'upgradeRoom':
                 return upgradeRoomParty;
             case 'warparty2':

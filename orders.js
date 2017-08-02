@@ -14,13 +14,14 @@ Game.rooms.E29S79.terminal.send(RESOURCE_POWER, 10000, 'E37S75', 'trade');
 Game.rooms.E23S75.terminal.send(RESOURCE_ENERGY, 15000, 'E33S76', 'trade');
 
 
+
 Game.rooms.E33S76.terminal.send('X', 10000, 'E42S83', 'trade');
 
 Game.rooms.E28S71.terminal.send('X', 15000, 'E5N7', 'trade');
 Game.rooms.E28S71.terminal.send('O', 15000, 'E5N7', 'trade');
 Game.rooms.W4S93.terminal.send('H', 8000, 'E5N7', 'trade');
 
-Game.market.cancelOrder('589a4c6230c9ccee528ba498');
+Game.market.cancelOrder('59804da1bf322312de922a2e');
 
 var cost = Game.market.calcTransactionCost(10000, 'E28S73', 'E28S71');
 

@@ -259,14 +259,16 @@ var E33S76Module = [
 ];
 var W38S94Module = [
     ['first', require('role.first'), 2, 2],
-    ['linker', require('role.linker'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
+    ['upbuilder', require('role.upbuilder'), 0, 4],
+    ['upgrader', require('role.upgrader'), 3, 4],
     ['homeDefender', require('role.defender2'), 1, 4],
     ['wallwork', require('role.wallworker'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2]
 ];
 
 var W4S93Module = [
-    ['first', require('role.first'), 2, 2],
+    ['first', require('role.first'), 2, 4],
     ['linker', require('role.linker'), 1, 3],
     ['homeDefender', require('role.defender2'), 1, 6],
     ['upbuilder', require('role.upbuilder'), 1, 7],
@@ -279,6 +281,7 @@ var W4S93Module = [
 
 var E38W75Module = [ // E37S75
     ['first', require('role.first'), 2, 5],
+    ['harvester', require('role.harvester'), 1, 2],
     ['linker', require('role.linker'), 1, 3],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
@@ -1136,7 +1139,7 @@ class theSpawn {
                     }
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'scientisxxt') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.

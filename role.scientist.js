@@ -52,8 +52,10 @@ var groupOne = [
     '58f793ad1f64b8d842dc0c16', // E37S75
     '58dc1eb90c1c7697092ce5c2', // E35S73
     '5923a6cbf9f4ceb75afbc831', // E33S76
+    '596fb419be36016cb7dc44b2', //W38S94
     '59090e6f771e5d03793d20b4' // W4S93
     //,'58c074ead62936ed5e2bce0b' // E27S75
+
 ];
 
 var groupTwo = [];

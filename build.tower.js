@@ -243,7 +243,8 @@ function defendRoom(towers, hostiles) {
         while (e--) {
             if (towers[e].energy > 0) {
                 let zz = Math.floor(Math.random() * hostiles.length);
-                showTowerRange(towers[e]);
+
+//                showTowerRange(towers[e]);
                 towers[e].attack(hostiles[zz]);
             }
         }
@@ -506,9 +507,12 @@ class roleTower {
 
             if (hostiles.length > 0) {
                 for (var e in hostiles) {
+                    if(hostiles[e].owner.usename !== 'Invader'){
                     if (estimateDamageAndAttack(hostiles[e], mycreeps, towers)) {
-                        console.log("KILLING", hostiles[e]);
+                        console.log("KILLING", hostiles[e].room.name);
                         return;
+                    }
+                        
                     }
                 }
             }

@@ -184,7 +184,7 @@ class StructureInteract {
         if (_.sum(creep.carry) == creep.carryCapacity) return false;
         var stuff = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5);
         //      console.log(stuff.length);
-        //        stuff = _.filter(stuff,{filter:o => o.resourceType != RESOURCE_ENERGY});
+                stuff = _.filter(stuff,{filter:o => o.resourceType != RESOURCE_ENERGY});
         //     let workparts = _.filter(stuff,function(n) {return n.resourceType != RESOURCE_ENERGY});
         //     console.log(stuff.length,workparts.length);
         if (stuff.length === 0) return false;
