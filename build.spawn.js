@@ -1593,9 +1593,7 @@ class theSpawn {
                 case "guard":
                 case "shooter":
                 case "responder":
-                    console.log(spawn.memory.expandCreate.length, 'before');
                     spawn.memory.expandCreate.unshift(rebuildCreep(creep));
-                    console.log(spawn.memory.expandCreate.length, 'before');
                     break;
                 case "fighter":
                 case "healer":

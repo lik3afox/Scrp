@@ -134,22 +134,31 @@ class roleUpbuilder extends roleParent {
             return;
         }
         if (!Memory.war) {
-            if (creep.ticksToLive > 1450 && creep.room.controller.level == 8) {
+            if (creep.ticksToLive > 1420 && creep.room.controller.level == 8) {
                 let zz;
                 switch (creep.room.name) {
-                    case 'W4S93':
-                    case 'E37S75':
+  //                  case 'W4S93':
+//                    case 'E37S75':
 
-                        zz = super.boosted(creep, ['GH2O']);
-                        break;
+          //              zz = super.boosted(creep, ['GH2O']);
+        //                break;
                     case 'E38S72':
                     case 'E23S75':
+                    case 'E28S73':
+                    case 'E28S71':
+                    case 'E26S73':
+                    case 'E23S75':
+                    case 'E38S72':
+                    case 'E35S83':
+                    case 'E37S75':
+                    case 'E35S73':
+                    case 'E33S76':
+                    case 'W4S93':
+                    
                         zz = super.boosted(creep, ['XGH2O']);
                         break;
-                    case 'E26S73':
-                    case 'E28S71':
-                        zz = super.boosted(creep, ['GH']);
-                        break;
+//                        zz = super.boosted(creep, ['GH']);
+  //                      break;
                 }
 //                if (creep.room.name == 'E37S75') {
   //                  zz = super.boosted(creep, ['XGH2O']);

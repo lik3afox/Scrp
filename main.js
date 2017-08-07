@@ -216,7 +216,7 @@
     }
 
     function doUpgradeRooms() { //5836b82d8b8b9619519f19be
-        if (Memory.war) 
+        if (Memory.war)
             return;
         let spwns = ['58c074ead62936ed5e2bce0b']; //,''
         if (Game.flags.recontrol !== undefined) return;
@@ -404,60 +404,62 @@
         var keys = Object.keys(Game.spawns);
         var t = keys.length;
         var title;
-        if (Game.cpu.bucket > 500)
-            while (t--) { // Start of spawn Loop
-                title = keys[t];
-                if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
+        while (t--) { // Start of spawn Loop
+            title = keys[t];
+            if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
 
-                    if(Game.spawns[title].name == 'W38S94'){
-                         spawnsDo.checkBuild(Game.spawns[title]);
-                    }
-
-
-
-                    if (Memory.war) {
-                        if (Game.spawns[title].memory.alphaSpawn) {
-                            doRoomReport(Game.spawns[title].room);
-                        }
-                    }
+                if (Game.cpu.bucket > 500) {
                     rampartCheck(Game.spawns[title]);
-
-                    //                safemodeCheck(Game.spawns[title]);
-
                     safemodeCheck(Game.spawns[title]);
-
                     ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
-
                     if (Game.spawns[title].memory.newSpawn === undefined) {
                         spawnsDo.checkNewSpawn(Game.spawns[title]);
                     }
 
-                    if (Game.spawns[title].memory.alphaSpawn) {
-                        //                      var constr = require('commands.toStructure');
-                        //                        console.log(Game.spawns[title].pos.roomName);
-                        //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
 
-                        totalSpawn++;
-                        tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
+                }
 
-                        if (Game.spawns[title].memory.roadsTo.length === 0) {
-                            var BUILD = {
-                                source: 'xxxx',
-                                sourcePos: new RoomPosition(5, 5, 'S25W55'),
-                                miner: false,
-                                transport: false,
-                                expLevel: 0
-                            };
-                            Game.spawns[title].memory.roadsTo.push(BUILD);
-                        }
+                if (Game.spawns[title].name == 'W38S94') {
+                    spawnsDo.checkBuild(Game.spawns[title]);
+                }
 
+
+
+                //                  if (Memory.war) {
+                if (Game.spawns[title].memory.alphaSpawn) {
+                    //                 doRoomReport(Game.spawns[title].room);
+                }
+                //                    }
+
+                //                safemodeCheck(Game.spawns[title]);
+
+                if (Game.spawns[title].memory.alphaSpawn) {
+                    //                      var constr = require('commands.toStructure');
+                    //                        console.log(Game.spawns[title].pos.roomName);
+                    //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
+
+                    totalSpawn++;
+                    tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
+
+                    if (Game.spawns[title].memory.roadsTo.length === 0) {
+                        var BUILD = {
+                            source: 'xxxx',
+                            sourcePos: new RoomPosition(5, 5, 'S25W55'),
+                            miner: false,
+                            transport: false,
+                            expLevel: 0
+                        };
+                        Game.spawns[title].memory.roadsTo.push(BUILD);
                     }
 
-                    let anySpawn = false;
-                    if (Game.spawns[title].memory.alphaSpawn) {
-                        Game.spawns[title].memory.checkCount--;
-                    }
-                    //                if (Game.bucket > 1000) {
+                }
+
+                let anySpawn = false;
+                if (Game.spawns[title].memory.alphaSpawn) {
+                    Game.spawns[title].memory.checkCount--;
+                }
+                //                if (Game.bucket > 1000) {
+                if (Game.cpu.bucket > 500)
                     if ((Game.spawns[title].spawning === null)) {
                         if (Game.spawns[title].memory.alphaSpawn) {
 
@@ -491,42 +493,42 @@
                         //                      Game.spawns[title].deadCheck();
 
                     } else if (Game.spawns[title].memory.alphaSpawn && Game.spawns[title].memory.checkCount < -25) {
-                        let zz = spawnsDo.spawnCount(Game.spawns[title].id);
-                        spawnsDo.checkModules(Game.spawns[title], zz);
-                        spawnsDo.checkExpand(Game.spawns[title], zz); // Checks roads and expansions to.
-                        Game.spawns[title].memory.checkCount = countCheck;
-                    } else {
-                        Game.spawns[title].memory.lastSpawn = 0;
-                        let spawn = Game.spawns[title];
-                        spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
-                            color: '#97c39a ',
-                            stroke: '#000000 ',
-                            strokeWidth: 0.123,
-                            font: 0.5,
-                            align: RIGHT
-                        });
-                    }
-                    //                }
-                    if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
-                        let spawn = Game.spawns[title];
-                        let spawnStats = {
-                            storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
-                            terminalEnergy: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.store[RESOURCE_ENERGY],
-                            terminalTotal: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.total,
-                            parts: spawn.memory.TotalBuild,
-                            creepNumber: spawn.memory.totalCreep,
-                            energy: spawn.room.energyAvailable,
-                            maxEnergy: spawn.room.energyCapacityAvailable,
-                            controllerLevel: spawn.room.controller.level,
-                            createQ: spawn.memory.create.length,
-                            warQ: spawn.memory.warCreate.length,
-                            expandQ: spawn.memory.expandCreate.length
-                        };
-                        spawnReport[Game.spawns[title].room.name] = spawnStats;
-
-                    }
+                    let zz = spawnsDo.spawnCount(Game.spawns[title].id);
+                    spawnsDo.checkModules(Game.spawns[title], zz);
+                    spawnsDo.checkExpand(Game.spawns[title], zz); // Checks roads and expansions to.
+                    Game.spawns[title].memory.checkCount = countCheck;
+                } else {
+                    Game.spawns[title].memory.lastSpawn = 0;
+                    let spawn = Game.spawns[title];
+                    spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
+                        color: '#97c39a ',
+                        stroke: '#000000 ',
+                        strokeWidth: 0.123,
+                        font: 0.5,
+                        align: RIGHT
+                    });
                 }
-            } // End of Spawns Loops
+                //                }
+                if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
+                    let spawn = Game.spawns[title];
+                    let spawnStats = {
+                        storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
+                        terminalEnergy: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.store[RESOURCE_ENERGY],
+                        terminalTotal: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.total,
+                        parts: spawn.memory.TotalBuild,
+                        creepNumber: spawn.memory.totalCreep,
+                        energy: spawn.room.energyAvailable,
+                        maxEnergy: spawn.room.energyCapacityAvailable,
+                        controllerLevel: spawn.room.controller.level,
+                        createQ: spawn.memory.create.length,
+                        warQ: spawn.memory.warCreate.length,
+                        expandQ: spawn.memory.expandCreate.length
+                    };
+                    spawnReport[Game.spawns[title].room.name] = spawnStats;
+
+                }
+            }
+        } // End of Spawns Loops
 
         Memory.stats.rooms = spawnReport;
         link.run();
@@ -536,22 +538,22 @@
             observer.run();
             globalCreep();
 
-//            doUpgradeRooms();
+            //            doUpgradeRooms();
 
-            memoryStatsUpdate();
+            //            memorSmtatsUpdate();
             if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
             Memory.labsRunCounter--;
             if (Memory.labsRunCounter <= 0) {
                 Memory.labsRunCounter = 10;
                 labs.run();
             }
+        }
             if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
             Memory.marketRunCounter--;
             if (Memory.marketRunCounter <= 0) {
                 Memory.marketRunCounter = 10;
                 market.run();
             }
-        }
         /*        var twn = Game.getObjectById('58fd71f2cc42f0c708bbb4d4');
                 if (twn !== null)
                     console.log(twn.hits, 'left'); */

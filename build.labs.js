@@ -199,7 +199,7 @@ function labDo(roomName, created, labz, laby) {
     //    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
     if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
-        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
+//        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
         return false;
     }
     let lab1 = getCached(labs[created - 1].id);
@@ -326,7 +326,7 @@ var XUH2O = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
+    resource: 'XGH2O',
     amount: 2500,
     emptied: false
 }];
@@ -374,8 +374,8 @@ var XGH2O = [{
 }, {
     id: 'getReplaced',
     resource: 'XGH2O',
-    amount: 1,
-    emptied: true
+    amount: 2500,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
@@ -426,9 +426,9 @@ var GH2O = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'GH2O',
-    amount: 1,
-    emptied: true
+    resource: 'XGH2O',
+    amount: 2500,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
@@ -478,9 +478,9 @@ var OH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'OH',
-    amount: 1,
-    emptied: true
+    resource: 'XGH2O',
+    amount: 2700,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
@@ -531,9 +531,9 @@ var GH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'GH',
-    amount: 1,
-    emptied: true
+    resource: 'XGH2O',
+    amount: 2500,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
@@ -1009,9 +1009,9 @@ var UL = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'UL',
-    amount: 1,
-    emptied: true
+    resource: 'XGH2O',
+    amount: 2500,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
@@ -1062,9 +1062,9 @@ var ZK = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'ZK',
-    amount: 1,
-    emptied: true
+    resource: 'XGH2O',
+    amount: 2500,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
@@ -1114,9 +1114,9 @@ var G = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'G',
-    amount: 1,
-    emptied: true
+    resource: 'XGH2O',
+    amount: 2500,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'XUH2O',
@@ -1382,8 +1382,8 @@ var oneWarMix = [
     [3, 4, 7],
     [5, 4, 7],
     [6, 4, 7],
-    [8, 4, 7],
-    [9, 4, 7]
+    [8, 4, 7]
+//    [9, 4, 7]
 ];
 
 function getLabMixes(roomName) {

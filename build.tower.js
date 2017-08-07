@@ -179,7 +179,8 @@ function defendRoom(towers, hostiles) {
             }
         }
         return;
-    } else if (hostiles[0].owner.username !== 'Invader') {
+    } 
+    /*else if (hostiles[0].owner.username !== 'Invader') {
 
 
         // Random attack targets
@@ -238,16 +239,19 @@ function defendRoom(towers, hostiles) {
         return true;
 
 
-    } else {
+    }*/ 
+    else {
         e = towers.length;
         while (e--) {
-            if (towers[e].energy > 0) {
+           if (towers[e].energy > 0) {
                 let zz = Math.floor(Math.random() * hostiles.length);
 
 //                showTowerRange(towers[e]);
                 towers[e].attack(hostiles[zz]);
+
             }
         }
+        return true;
     }
 }
 
@@ -487,6 +491,7 @@ class roleTower {
                     }
                 }
             } else {
+//                console.log(towers.length,hostiles.length);
                 if (!defendRoom(towers, hostiles)) {
                     if (!healRoom(towers, hurt)) {
                         repairRoom(towers);

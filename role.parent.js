@@ -1083,7 +1083,7 @@ class baseParent {
 
         //        if (creep.carryTotal > 0 && creep.carry[RESOURCE_ENERGY] === 0) {
         let target;
-        if (creep.room.terminal !== undefined && creep.room.controller !== undefined && creep.room.controller.level >= 6) {
+        if (creep.room.terminal !== undefined && creep.room.terminal.total !== 300000 && creep.room.controller !== undefined && creep.room.controller.level >= 6) {
             target = creep.room.terminal;
         } else {
             target = creep.room.storage;
