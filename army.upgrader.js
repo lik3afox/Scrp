@@ -13,7 +13,7 @@ var classLevels = [
     [MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY],
     //5
     [CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, WORK,
-        CARRY, CARRY
+        CARRY
     ],
     //6
     [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY, CARRY],
@@ -53,7 +53,7 @@ class upgraderzClass extends roleParent {
         }
 
         //if(creep.memory.roleID == 0) creep.moveTo(9,32)
-        if (creep.room.name == 'E23S75') {
+      /*  if (creep.room.name == 'E23S75') {
             let zz = super.boosted(creep, ['XGH2O']);
             if (zz) {
                 return;
@@ -66,7 +66,7 @@ class upgraderzClass extends roleParent {
                     return;
                 }
             }
-        }
+        } */
 
         let isThere = false;
         if (creep.memory.renewSpawnID === undefined) {

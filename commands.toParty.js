@@ -22,7 +22,7 @@ var scienceParty = [
     ['scientist', require('role.scientist'), 1, 3]
 ];
 var engineerParty = [
-    ['engineer', require('army.engineer'), 1, 5],
+    ['engineer', require('army.engineer'), 2, 5],
 ];
 var engineer2Party = [
     ['engineer', require('army.engineer'), 1, 5],
@@ -185,7 +185,7 @@ var upgrade2Party = [
     ['Aupgrader', require('army.upgrader'), 3, 6]
 ];
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 2, 6]
+    ['Aupgrader', require('army.upgrader'), 4, 5]
 ];
 
 var soloFighter = [
@@ -273,7 +273,8 @@ function getSpawnCreating(flag) {
             //            return 'E26S73';
 
         case 'engineer':
-            return 'E35S83';
+//            return returnClosestRoom(flag.pos.roomName);
+            return 'W38S94';
         case 'recontrol':
         case 'test':
         case 'control':

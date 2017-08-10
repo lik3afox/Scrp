@@ -724,7 +724,9 @@ function upspawnRoom(creep) {
         creep.withdraw(zlinks, RESOURCE_ENERGY);
     } else {
         if (creep.room.controller.level < 4) {
-            constr.pickUpEnergy(creep);
+            if(!constr.pickUpEnergy(creep)){
+                creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+            }
         } else {
             //containers.withdrawFromStorage(creep);
             creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
@@ -743,7 +745,7 @@ function upSpawnTransfer(creep) {
 
     let zz = new RoomPosition(8, 34, 'E27S75');
     if (!creep.pos.isEqualTo(zz)) creep.moveTo(zz);
-
+/*
     if (creep.memory.towerID === undefined) {
         let finded = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -753,7 +755,7 @@ function upSpawnTransfer(creep) {
         if (finded.length > 0) {
             creep.memory.towerID = finded[0].id;
         }
-    }
+    } */
 
     if (creep.memory.renewSpawnID === undefined) {
         let finded = creep.room.find(FIND_STRUCTURES, {
@@ -767,7 +769,7 @@ function upSpawnTransfer(creep) {
             ccSpawn.wantRenew(creep);
         }
     } else {
-        let zzz = creep.room.storage; //Game.getObjectById(creep.memory.renewSpawnID);
+        let zzz = Game.getObjectById(creep.memory.renewSpawnID);
         //        let yyy = Game.getObjectById(creep.memory.towerID);
         //      if (zzz.energy < 100) {
         if (zzz !== null)

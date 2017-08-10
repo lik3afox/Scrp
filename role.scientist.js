@@ -39,21 +39,30 @@ var classLevels = [
 ];
 
 var groupOne = [
-    '58b4b98952bcc31f7967fb57', //E29S79
-    '58b765651d11996760a39d15', //E28S77
-    '58af2ceb751600062cd0c58d', // Spawn 1
-    '58aff827090180496c7848fb', // Spawn 3
-    '58b11106554d4c1333aed29b', // spawn 4
+    '58af2ceb751600062cd0c58d', // Spawn 1 // XUH
+    '58b11106554d4c1333aed29b', // spawn 4 // LH
+
+    '58b4b98952bcc31f7967fb57', //E29S79 // OH 
+    '58aff827090180496c7848fb', // Spawn 3 // GH
+
+    '58dc1eb90c1c7697092ce5c2', // E35S73 - ZK
+    '58d97b7b8c94aa185ccaf659', //E35S83 - UL
+    '5923a6cbf9f4ceb75afbc831', // E33S76 - G
+    
+    '58b765651d11996760a39d15', //E28S77 // GG - Solo
+
     '58af4822278c0725a7ad4642', // spawn 2
-    '58c074ead62936ed5e2bce0b', // E27S75
-    '5934fa72604c7e190610993f', // E23S75
+
+    '58f793ad1f64b8d842dc0c16', // E37S75 // GH20
+    '59090e6f771e5d03793d20b4', // W4S93  GH20
+
+    '5934fa72604c7e190610993f', // E23S75 // XGH20
     '58fae20240468f2a39d50830', // E38S72
-    '58d97b7b8c94aa185ccaf659', //E35S83
-    '58f793ad1f64b8d842dc0c16', // E37S75
-    '58dc1eb90c1c7697092ce5c2', // E35S73
-    '5923a6cbf9f4ceb75afbc831', // E33S76
-    '596fb419be36016cb7dc44b2', //W38S94
-    '59090e6f771e5d03793d20b4' // W4S93
+
+//    '58c074ead62936ed5e2bce0b', // E27S75
+
+    '596fb419be36016cb7dc44b2' //W38S94 // Growing
+
     //,'58c074ead62936ed5e2bce0b' // E27S75
 
 ];

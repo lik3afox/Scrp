@@ -88,8 +88,8 @@ var maxMinerals = {
     'H': 125000,
     'X': 125000,
 
-    'G': 100000,
-    'GH': 30000,
+    'G': 10000,
+    'GH': 50000,
     'UL': 30000,
     'ZK': 30000,
     'OH': 30000,
@@ -355,7 +355,7 @@ var XGH2O = [{
     id: 'getReplaced',
     resource: 'XGH2O',
     amount: 1,
-    emptied: false
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XGH2O',
@@ -408,7 +408,7 @@ var GH2O = [{
     id: 'getReplaced',
     resource: 'GH2O',
     amount: 1,
-    emptied: false
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'GH2O',
@@ -566,7 +566,7 @@ var LH = [{
     id: 'getReplaced',
     resource: 'LH',
     amount: 1,
-    emptied: false
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'LH',
@@ -1442,10 +1442,10 @@ function setLabs(roomName, labs) {
             return labMode(roomName, 'XGH2O', labs);
 
         case 'E29S79':
+        case 'E28S71':
             return labMode(roomName, 'OH', labs);
 
         case 'E26S73':
-        case 'E28S71':
             return labMode(roomName, 'GH', labs);
 
         case 'E35S73':

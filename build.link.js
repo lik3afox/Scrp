@@ -25,7 +25,7 @@ var _links = [
     // E33S76
     '5949a8128a497d010b6c1e4a',
     // W38S94
-    '59760a1a8c239e6e379eea9d'
+    '59760a1a8c239e6e379eea9d','5988037f8c27b90b80aee42e'
 ];
 
 var gameCache = [];
@@ -211,7 +211,7 @@ class buildLink {
 
         sendEnergy(['59437ada633ad90d033e741c', '59408dd58b64951171f89b71'], '593d6e902c4a79a70901fac1', 700);
 
-        sendEnergy(['59760a1a8c239e6e379eea9d','597f0bc66f61b74d1fcc7fc0'], '5975ab815f3e7568bdb7ef14',700);
+        sendEnergy(['59760a1a8c239e6e379eea9d','597f0bc66f61b74d1fcc7fc0','5988037f8c27b90b80aee42e'], '5975ab815f3e7568bdb7ef14',700);
 
         gameCache = []; // cleaning up cache for this tick.
     }

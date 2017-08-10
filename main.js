@@ -151,7 +151,7 @@
 
 
     function globalCreep() {
-        var scientist = 2;
+        var scientist = 1;
         if (Memory.scientistCheck === undefined) Memory.scientistCheck = 250;
         Memory.scientistCheck--;
         if (Memory.scientistCheck < 0) {
@@ -227,7 +227,7 @@
             if (control.level < 7) return;
             if (spawn === null) return;
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
-            if (control.level >= 7 && control.progress > 10900000) {
+            if (control.level >= 7 && control.progress > 10900000 || control.level === 8) {
                 if (Game.flags.recontrol === undefined) {
                     spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
                 }
@@ -415,13 +415,11 @@
                     if (Game.spawns[title].memory.newSpawn === undefined) {
                         spawnsDo.checkNewSpawn(Game.spawns[title]);
                     }
-
-
                 }
 
-                if (Game.spawns[title].name == 'W38S94') {
-                    spawnsDo.checkBuild(Game.spawns[title]);
-                }
+    //            if (Game.spawns[title].name == 'W38S94') {
+  //                  spawnsDo.checkBuild(Game.spawns[title]);
+//                }
 
 
 
@@ -458,7 +456,10 @@
                 if (Game.spawns[title].memory.alphaSpawn) {
                     Game.spawns[title].memory.checkCount--;
                 }
-                //                if (Game.bucket > 1000) {
+                    if ((Game.spawns[title].spawning === null)) {
+                        ccSpawn.renewCreep(Game.spawns[title]);
+                    }
+
                 if (Game.cpu.bucket > 500)
                     if ((Game.spawns[title].spawning === null)) {
                         if (Game.spawns[title].memory.alphaSpawn) {
@@ -487,7 +488,6 @@
                             Game.spawns[title].memory.lastSpawn = 0;
                         Game.spawns[title].memory.lastSpawn++;
 
-                        ccSpawn.renewCreep(Game.spawns[title]);
 
                         // This function is to make sure this spawn hasn't failed. 
                         //                      Game.spawns[title].deadCheck();
@@ -532,13 +532,13 @@
 
         Memory.stats.rooms = spawnReport;
         link.run();
-        //        Memory.totalPowerProcessed = 0;
+                Memory.totalPowerProcessed = 0;
+            doUpgradeRooms();
         if (Game.cpu.bucket > 250) {
             power.run();
             observer.run();
             globalCreep();
 
-            //            doUpgradeRooms();
 
             //            memorSmtatsUpdate();
             if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;

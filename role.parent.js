@@ -1081,7 +1081,7 @@ class baseParent {
         //        if (creep.room.controller !== undefined && creep.room.controller.owner !== 'likeafox') return false;
         if (creep.room.terminal === undefined && creep.room.storage === undefined) return false;
 
-        //        if (creep.carryTotal > 0 && creep.carry[RESOURCE_ENERGY] === 0) {
+        if (creep.carryTotal === 0) return false;
         let target;
         if (creep.room.terminal !== undefined && creep.room.terminal.total !== 300000 && creep.room.controller !== undefined && creep.room.controller.level >= 6) {
             target = creep.room.terminal;
