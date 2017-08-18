@@ -163,7 +163,8 @@ class roleUpbuilder extends roleParent {
         if (creep.memory.upgrading === undefined) {
             creep.memory.upgrading = true;
         }
-        if (creep.memory.upgrading && creep.carry.energy < 51) {
+            creep.memory.upgrading = true;
+        if (creep.memory.upgrading && creep.carry.energy < 2) {
             //            creep.memory.upgrading = false;
             super._constr.pickUpEnergy(creep);
             creep.memory.wallTargetID = undefined;
@@ -173,24 +174,25 @@ class roleUpbuilder extends roleParent {
                 let link = Game.getObjectById('59243d3f403da5a97dea664a');
                 if (creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     creep.moveTo(link);
-            } else if (creep.room.name == 'E29S79xx') {
-                let link = Game.getObjectById('58d5773ea599843615337062');
-                if (link !== null && link.energy !== 0) {
-                    if (creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        creep.moveTo(link);
-                }
             } else if (creep.pos.isNearTo(creep.room.storage)) {
                 creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
                 //                super._containers.withdrawFromStorage(creep);
-            } else if (creep.carry.energy === 0) {
-
+            } else /* if (creep.carry.energy === 0) */ {
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
-
                     if (super._containers.withdrawFromTerminal(creep))
-                        if (!containers.moveToWithdraw(creep)) {}
+                        if (!containers.moveToWithdraw(creep)) {
+                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
+
+                            }
+
+                        }
                 } else {
                     if (!super._containers.withdrawFromStorage(creep))
-                        if (!containers.moveToWithdraw(creep)) {}
+                        if (!containers.moveToWithdraw(creep)) {
+                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
+
+                            }
+                        }
 
                 }
             }
@@ -201,14 +203,13 @@ class roleUpbuilder extends roleParent {
                     creep.memory.constructionID = strucs.id;
             }
 
-
+            //    return;
         }
 
 
-        if (creep.carry.energy > creep.carryCapacity - 30) {
+        if (creep.carry.energy > creep.carryCapacity - 4) {
             creep.memory.upgrading = true;
             creep.say('upgrading');
-
         }
         if (rampartDefense(creep)) {
             return;

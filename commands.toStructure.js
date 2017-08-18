@@ -27,138 +27,41 @@ function getRepair(creep) {
         filter: object => (object.hits < object.hitsMax)
     }).sort((a, b) => a.hits - b.hits);
 }
-//[x,y,Type]
-//   1   3
-// 4 x x x 2
-//   x   x
-// 5 x x x 6
-//   7   8
 
 var buildOnLevel = [
-    [],
-    // Building into lv 2
-    // 5 extensions
-    [
-        [-2, 0, STRUCTURE_EXTENSION],
-        [-3, 0, STRUCTURE_EXTENSION],
-        [-4, 0, STRUCTURE_EXTENSION],
-        [-5, 0, STRUCTURE_EXTENSION],
-        [-6, 0, STRUCTURE_EXTENSION]
-    ],
-    // Building into lv 3
-    // 1 tower
-    // 5 extensions
-    [
-        [-1, -3, STRUCTURE_TOWER],
-        [-2, -3, STRUCTURE_EXTENSION],
-        [-3, -3, STRUCTURE_EXTENSION],
-        [-4, -3, STRUCTURE_EXTENSION],
-        [-5, -3, STRUCTURE_EXTENSION],
-        [-6, -3, STRUCTURE_EXTENSION]
-
-    ],
-    // Level 4 
-    // 10 extensions
-    // Storage
-    [ //  [ 0,-1,STRUCTURE_STORAGE]
-
-        /*  [-3, 2,STRUCTURE_EXTENSION],
-    [-3,-2,STRUCTURE_EXTENSION],
-    [-4, 0,STRUCTURE_EXTENSION],
-    [ 4, 0,STRUCTURE_EXTENSION],
-    [-2,-4,STRUCTURE_EXTENSION],
-    [ 2,-4,STRUCTURE_EXTENSION],
-    [-4, 2,STRUCTURE_EXTENSION],
-    [-4, -2,STRUCTURE_EXTENSION],
-    [ 4, -2,STRUCTURE_EXTENSION],
-    [ 4, 2,STRUCTURE_EXTENSION]
-*/
-    ] /* */
-    // level 5
-    // 10 extensions
-    // 2 links
-    // 1 tower
-    /*
-    [   [ 1, 1,STRUCTURE_TOWER],
-
-        [6, -5,STRUCTURE_LINK], 
-        [-9, 2,STRUCTURE_LINK],
-
-        [-3, -3,STRUCTURE_EXTENSION],
-        [-5,-1 ,STRUCTURE_EXTENSION],
-        [-6, 0,STRUCTURE_EXTENSION],
-        [-5, 1,STRUCTURE_EXTENSION],
-        [-3, 3,STRUCTURE_EXTENSION],
-        [-3, 5,STRUCTURE_EXTENSION],
-        [-1, 5,STRUCTURE_EXTENSION],
-        [1, 5,STRUCTURE_EXTENSION],
-        [0, 6,STRUCTURE_EXTENSION],
-        [2, 4,STRUCTURE_EXTENSION]
-
-       ], 
-    // level 6
-    // 10 extensisons
-    // 1 link
-    // 1 extractor
-    // 3 labs
-    // terminal     33,27
-    [   
-    [ -7, -13,STRUCTURE_LINK],
-
-        [1, 7,STRUCTURE_EXTENSION],
-        [2, 6,STRUCTURE_EXTENSION],
-
-        [3,5,STRUCTURE_EXTENSION],
-    [4,4,STRUCTURE_EXTENSION],
-    [5,3,STRUCTURE_EXTENSION],
-    [3,3,STRUCTURE_EXTENSION],
-    [5,1,STRUCTURE_EXTENSION],
-    [-6,2,STRUCTURE_EXTENSION],
-    [-5,3,STRUCTURE_EXTENSION],
-    [ 1, -5,STRUCTURE_EXTENSION],
-    [ 3, -1,STRUCTURE_EXTENSION]
-
-       ]*/
-    // level 7
-    // 10 extensions
-    // 1 spawn
-    // 1 link
-    // 1 tower
-    // 3 labs
-
-
-    // level 8 
-    // 10 extensions
-    // 1 spawn
-    // 3 towers
-    // 2 links
-    // 4 labs
-    // 1 observer
-    // 1 power spawn
-
-
+    {"name":"E18S36","shard":"shard1","rcl":"2","buildings":{"extension":{"pos":[{"x":35,"y":18},{"x":35,"y":19},{"x":35,"y":20},{"x":36,"y":20},{"x":36,"y":21}]},"spawn":{"pos":[{"x":36,"y":23}]}}},
+    {"name":"E18S36","shard":"shard1","rcl":"3","buildings":{"extension":{"pos":[{"x":32,"y":17},{"x":33,"y":17},{"x":34,"y":17},{"x":35,"y":17},{"x":32,"y":18},{"x":35,"y":18},{"x":35,"y":19},{"x":35,"y":20},{"x":36,"y":20},{"x":36,"y":21}]},"tower":{"pos":[{"x":34,"y":23}]},"spawn":{"pos":[{"x":36,"y":23}]}}},
+    {"name":"E18S36","shard":"shard1","rcl":"4","buildings":{"extension":{"pos":[{"x":30,"y":17},{"x":32,"y":17},{"x":33,"y":17},{"x":34,"y":17},{"x":35,"y":17},{"x":30,"y":18},{"x":31,"y":18},{"x":32,"y":18},{"x":35,"y":18},{"x":33,"y":19},{"x":35,"y":19},{"x":30,"y":20},{"x":31,"y":20},{"x":32,"y":20},{"x":33,"y":20},{"x":35,"y":20},{"x":36,"y":20},{"x":34,"y":21},{"x":36,"y":21},{"x":34,"y":22}]},"tower":{"pos":[{"x":34,"y":23}]},"spawn":{"pos":[{"x":36,"y":23}]},"storage":{"pos":[{"x":38,"y":25}]}}}
 ];
-/*, // There is no zero level.
 
-// Things built once controller level 2
-// 5 structures - 
-[ [1,1,STRUCTURE_EXTENSION],
-[-1,1,STRUCTURE_EXTENSION]
-], // Level 1 doesn't do anything. 
-
-
-// Controller level 3
-// 5 structures
-// 1 tower.
-
-] */
-
-function build(spawn, level) {
-    //    if(level+1 > buildOnLevel.length) return;
-    if (spawn.name == 'UpgradeSpawn') return;
-    for (var e in buildOnLevel[level]) {
-
-        spawn.room.createConstructionSite(buildOnLevel[level][e][0] + spawn.pos.x, buildOnLevel[level][e][1] + spawn.pos.y, buildOnLevel[level][e][2]);
+function build(controller) {
+    for (var e in buildOnLevel) {
+        if (buildOnLevel[e].name == controller.pos.roomName && buildOnLevel[e].rcl == controller.level) {
+            var lvlBuild = buildOnLevel[e].buildings;
+            for (var a in lvlBuild) {
+                for (var i in lvlBuild[a]) {
+                    var pos = lvlBuild[a][i].pos;
+                    for (var o in lvlBuild[a][i]) {
+                        var posLook = controller.room.lookAt(lvlBuild[a][i][o].x, lvlBuild[a][i][o].y);
+                        var makeConSite = true;
+                        for (var z in posLook) {
+                            if (posLook[z].type == 'structure') {
+                                if (posLook[z].structure.structureType == a) {
+                                    makeConSite = false;
+                                }
+                            }
+                            if (posLook[z].type == 'constructionSite') {
+                                makeConSite = false;
+                            }
+                        }
+                        if (makeConSite) {
+                            console.log(a, lvlBuild[a][i].length, a, lvlBuild[a][i][o].x, lvlBuild[a][i][o].y, makeConSite);
+                            controller.room.createConstructionSite(lvlBuild[a][i][o].x, lvlBuild[a][i][o].y, a);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -184,7 +87,7 @@ class StructureInteract {
         if (_.sum(creep.carry) == creep.carryCapacity) return false;
         var stuff = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 5);
         //      console.log(stuff.length);
-                stuff = _.filter(stuff,{filter:o => o.resourceType != RESOURCE_ENERGY});
+        stuff = _.filter(stuff, { filter: o => o.resourceType != RESOURCE_ENERGY });
         //     let workparts = _.filter(stuff,function(n) {return n.resourceType != RESOURCE_ENERGY});
         //     console.log(stuff.length,workparts.length);
         if (stuff.length === 0) return false;
@@ -447,55 +350,55 @@ class StructureInteract {
         return false;
     }
     static doCloseRoadBuild(creep) {
-            if (creep.memory.closeRoadBuildTimer === undefined) {
-                creep.memory.closeRoadBuildTimer = 0;
-            }
-            creep.memory.closeRoadBuildTimer--;
-            if (creep.memory.closeRoadBuildTimer < 0) {
-                let zbuild = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3);
-                if (zbuild.length === 0) {
-                    creep.memory.closeRoadBuildTimer = 4;
-                    return false;
-                }
-                creep.build(zbuild[0]);
-            }
-            return false;
+        if (creep.memory.closeRoadBuildTimer === undefined) {
+            creep.memory.closeRoadBuildTimer = 0;
         }
-        /*
-            static attackPowerbank(creep) {
-                if (creep.memory.powerbankID === undefined) {
-                    let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
+        creep.memory.closeRoadBuildTimer--;
+        if (creep.memory.closeRoadBuildTimer < 0) {
+            let zbuild = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3);
+            if (zbuild.length === 0) {
+                creep.memory.closeRoadBuildTimer = 4;
+                return false;
+            }
+            creep.build(zbuild[0]);
+        }
+        return false;
+    }
+    /*
+        static attackPowerbank(creep) {
+            if (creep.memory.powerbankID === undefined) {
+                let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
 
-                    creep.memory.powerbankID = find[0].id;
-                }
+                creep.memory.powerbankID = find[0].id;
+            }
 
-                let powerbank = Game.getObjectById(creep.memory.powerbankID);
+            let powerbank = Game.getObjectById(creep.memory.powerbankID);
 
-                if (powerbank !== null) {
-                    //        if(creep.pos.isNearTo(powerbank)) {
-                    //              creep.attack(powerbank);
-                    //            } else {
+            if (powerbank !== null) {
+                //        if(creep.pos.isNearTo(powerbank)) {
+                //              creep.attack(powerbank);
+                //            } else {
+                creep.say(creep.moveTo(powerbank));
+                //      }
+            }
+        } 
+        static dismantlePowerbank(creep) {
+            if (creep.memory.powerbankID === undefined) {
+                let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
+
+                creep.memory.powerbankID = find[0].id;
+            }
+
+            let powerbank = Game.getObjectById(creep.memory.powerbankID);
+
+            if (powerbank !== null) {
+                if (creep.pos.isNearTo(powerbank)) {
+                    creep.say(creep.dismantle(powerbank));
+                } else {
                     creep.say(creep.moveTo(powerbank));
-                    //      }
                 }
-            } 
-            static dismantlePowerbank(creep) {
-                if (creep.memory.powerbankID === undefined) {
-                    let find = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
-
-                    creep.memory.powerbankID = find[0].id;
-                }
-
-                let powerbank = Game.getObjectById(creep.memory.powerbankID);
-
-                if (powerbank !== null) {
-                    if (creep.pos.isNearTo(powerbank)) {
-                        creep.say(creep.dismantle(powerbank));
-                    } else {
-                        creep.say(creep.moveTo(powerbank));
-                    }
-                }
-            }*/
+            }
+        }*/
 
     static doCloseBuild(creep) {
 

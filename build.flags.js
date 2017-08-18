@@ -208,7 +208,7 @@
             Memory.clearFlag--;
             if (Memory.clearFlag < 0) {
                 Memory.clearFlag = 50;
-                clearFlagMemory();
+//                clearFlagMemory();
             }
             //    var    start  = Game.cpu.getUsed(); // start counting. 
 
@@ -351,8 +351,8 @@
                 //        console.log(  (Game.cpu.getUsed() - start ), ' after', flag.color,flag.secondaryColor); start = Game.cpu.getUsed();
             }
             if (Memory.showInfo > 1) {
-                Memory.stats.powerPartyNum = powerTotal;
-                Memory.stats.defendFlagNum = defendTotal;
+//                Memory.stats.powerPartyNum = powerTotal;
+ //               Memory.stats.defendFlagNum = defendTotal;
             } else {
                 Memory.stats.powerPartyNum = undefined;
                 Memory.stats.defendFlagNum = undefined;

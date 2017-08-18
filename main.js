@@ -368,6 +368,8 @@
     module.exports.loop = blackMagic(function() {
         var start = Game.cpu.getUsed();
 
+        if(Memory.stats === undefined) Memory.stats = {};
+
         if (Memory.war === undefined) Memory.war = true;
 
         if (Memory.showInfo === undefined) Memory.showInfo = 5;
@@ -417,15 +419,11 @@
                     }
                 }
 
-    //            if (Game.spawns[title].name == 'W38S94') {
-  //                  spawnsDo.checkBuild(Game.spawns[title]);
-//                }
-
-
+                spawnsDo.checkBuild(Game.spawns[title]);
 
                 //                  if (Memory.war) {
                 if (Game.spawns[title].memory.alphaSpawn) {
-                    //                 doRoomReport(Game.spawns[title].room);
+//                    doRoomReport(Game.spawns[title].room);
                 }
                 //                    }
 
@@ -509,7 +507,7 @@
                     });
                 }
                 //                }
-                if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
+/*                if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
                     let spawn = Game.spawns[title];
                     let spawnStats = {
                         storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
@@ -526,18 +524,18 @@
                     };
                     spawnReport[Game.spawns[title].room.name] = spawnStats;
 
-                }
+                }*/
             }
         } // End of Spawns Loops
 
         Memory.stats.rooms = spawnReport;
-        link.run();
+//        link.run();
                 Memory.totalPowerProcessed = 0;
-            doUpgradeRooms();
+//            doUpgradeRooms();
         if (Game.cpu.bucket > 250) {
-            power.run();
-            observer.run();
-            globalCreep();
+//            power.run();
+//            observer.run();
+//            globalCreep();
 
 
             //            memorSmtatsUpdate();
@@ -545,61 +543,15 @@
             Memory.labsRunCounter--;
             if (Memory.labsRunCounter <= 0) {
                 Memory.labsRunCounter = 10;
-                labs.run();
+//                labs.run();
             }
         }
             if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
             Memory.marketRunCounter--;
             if (Memory.marketRunCounter <= 0) {
                 Memory.marketRunCounter = 10;
-                market.run();
+  //              market.run();
             }
-        /*        var twn = Game.getObjectById('58fd71f2cc42f0c708bbb4d4');
-                if (twn !== null)
-                    console.log(twn.hits, 'left'); */
-        //        speedTest();
-        //    whoWorksFor('5836b81b8b8b9619519f178d');
-        /*5836b8308b8b9619519f19fa
-        for(var e in Game.constructionSites) {
-            if(Game.constructionSites[e].pos.roomName == 'W4S95'){
-                Game.constructionSites[e].remove();
-            }
-        } */
-        /*        var crp = Game.getObjectById('5956e1731a4e2f06d9a9b1c3');
-
-                var badWalls = Game.rooms.E21S72.find(FIND_STRUCTURES);
-                badWalls = _.filter(badWalls, function(o) {
-                    return o.pos.roomName == 'E21S72';
-                });
-                console.log('badwalls', badWalls.length);
-                _.forEach(badWalls, function(o) {
-                    console.log(o);
-                    o.destroy();
-                    //o.destory();
-                }); */
-        /*
-
-        _.forEach(badWalls, function(o){
-            console.log(o);
-            o.destroy();
-            //o.destory();
-        });
-        */
-        /*
-                var twn = Game.getObjectById('58c8bbce6caaa767129ed296');
-                var tgt = Game.getObjectById('595011c4714af6656b8819c9');
-                if (twn !== null && tgt !== null)
-                    if (tgt.hits == tgt.hitsMax) {
-                        twn.attack(tgt);
-                    } */
-        /*var nuke = Game.getObjectById('58f6cad2d61015d119c60e23');
-        if(nuke.cooldown === undefined || nuke.cooldown === 0)
-            nuke.launchNuke(new RoomPosition(20
-,30, 'E18S64')); */
-        /*      var nuke = Game.getObjectById('58b8846bb286c56d754d0161');
-        if (nuke.cooldown === undefined || nuke.cooldown === 0)
-            nuke.launchNuke(new RoomPosition(27, 23, 'E16S63'));
-*/
 
         if (Game.spawns.Spawn1 !== undefined) {
             let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);

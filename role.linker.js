@@ -29,25 +29,8 @@ var containers = require('commands.toContainer');
 var links = require('build.link');
 var constr = require('commands.toStructure');
 
+var spawn1 = '5996084f638c7a7cc5c8cbaa';
 
-var link = '585817a0c9b2061567d02260';
-
-var spawn1 = '58af2ceb751600062cd0c58d';
-var spawn2 = '58af4822278c0725a7ad4642';
-var spawn3 = '58aff827090180496c7848fb';
-var spawn4 = '58b11106554d4c1333aed29b';
-var spawn5 = '58b4b98952bcc31f7967fb57';
-var spawn6 = '58b765651d11996760a39d15';
-var spawn7 = '58cc2556716771fd581ce04c';
-var spawn8 = '58d97b7b8c94aa185ccaf659';
-var spawn9 = '58dc1eb90c1c7697092ce5c2';
-var E38S72 = '58fae20240468f2a39d50830';
-var W4S93 = '59090e6f771e5d03793d20b4';
-var E33S76 = '5923a6cbf9f4ceb75afbc831';
-var E23S75 = '5934fa72604c7e190610993f';
-var upgradeSpawn = '58c074ead62936ed5e2bce0b';
-var E37S75 = '58f793ad1f64b8d842dc0c16';
-var W38S94 = '596fb419be36016cb7dc44b2';
 
 
 function clearTerminal(creep) {
@@ -129,6 +112,56 @@ function eitherOr(creep, containz1, containz2) {
 
 }
 
+function W36S97Room(creep) {
+    let goto;
+    switch (creep.memory.roleID) {
+
+        case 0:
+            goto = Game.getObjectById('59965493e0744e5c371ff200');
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null ) {
+                if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(goto, {
+                        reusePath: 20 //,ignoreCreeps:true
+                    });
+                }
+            } else {
+//            takeFromTerminalForStorage(creep);
+            }
+            break;
+        case 1:
+            goto = Game.getObjectById('5994f0eb0b9c471429061ada');
+            //             require('commands.toStructure').pickUpEnergy(creep);
+            if (goto !== null && creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto, {
+                    reusePath: 20 //,ignoreCreeps:true
+                });
+            }
+            break;
+
+
+    }
+
+}
+
+function W36S97Transfer(creep) {
+    switch (creep.memory.roleID) {
+        //        case 1:
+        default:// toStorageOrTerminal(creep);
+                let zz = Game.getObjectBydId('59964e118626e94667b54b40');//creep.room.storage;
+                if(zz === null){
+                //moveToAndDrop(creep,new RoomPosition(14,16,creep.room.name));
+                } else {
+                    if(creep.pos.isNearTo(zz)){
+                        creep.transfer(zz,RESOURCE_ENERGY);
+                    } else {
+                        creep.moveTo(zz);
+                    }
+                }
+        //        toStorageOrTerminal(creep);
+        break;
+    }
+}
 function W38S94Room(creep) {
     let goto;
     switch (creep.memory.roleID) {
@@ -1050,25 +1083,28 @@ function s2Transfer(creep) {
 function spawn1Room(creep) {
     switch (creep.memory.roleID) {
         case 0:
-            let goto = Game.getObjectById('58b4aadfd7bddc4460e23ff7');
-            let goto2 = Game.getObjectById('595a736200d3867e11c7e0bc');
-            if (goto !== null && goto.total > 1000) {
+            let goto = Game.getObjectById('59965493e0744e5c371ff200');
+            if (goto !== null ) {
                 if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto, {
                         reusePath: 20
                     });
                 }
-            } else if (goto2 !== null && goto2.energy > 0) {
-
-                if (goto2 !== null && creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            } 
+//                takeFromTerminalForStorage(creep);
+//            }
+            break;
+        case 1:
+            let goto2 = Game.getObjectById('59964e118626e94667b54b40');
+            if (goto2 !== null ) {
+                if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(goto2, {
                         reusePath: 20
                     });
                 }
-
-            } else {
-                takeFromTerminalForStorage(creep);
-            }
+            } 
+//                takeFromTerminalForStorage(creep);
+//            }
             break;
     }
 }
@@ -1076,14 +1112,18 @@ function spawn1Room(creep) {
 
 function s1Transfer(creep) {
     switch (creep.memory.roleID) {
-        default: if (creep.memory.renewSpawnID !== undefined) {
-            let spawnz = Game.getObjectById(creep.memory.renewSpawnID);
-            if (spawnz !== null && spawnz.energy < 50) {
-                creep.transfer(spawnz, RESOURCE_ENERGY);
-                return;
-            }
-        }
-        toStorageOrTerminal(creep);
+        default: 
+                let zz = creep.room.storage;
+                if(zz === null){
+                //moveToAndDrop(creep,new RoomPosition(14,16,creep.room.name));
+                } else {
+                    if(creep.pos.isNearTo(zz)){
+                        creep.transfer(zz,RESOURCE_ENERGY);
+                    } else {
+                        creep.moveTo(zz);
+                    }
+                }        
+//        toStorageOrTerminal(creep);
         break;
     }
 
@@ -1128,114 +1168,17 @@ class roleLinker extends roleParent {
         // Here are the withdrawing from.
         if (!creep.memory.full) {
             switch (creep.memory.parent) {
-                case upgradeSpawn:
-                    upspawnRoom(creep);
-                    break;
-
-                case spawn3:
-                    spawn3Room(creep);
-                    break;
                 case spawn1:
                     spawn1Room(creep);
                     break;
-                case spawn4:
-                    spawn4Room(creep);
-                    break;
-                case spawn5:
-                    spawn5Room(creep);
-                    break;
-                case spawn6:
-                    spawn6Room(creep);
-                    break;
-                case spawn7:
-                    spawn7Room(creep);
-                    break;
-                case spawn8:
-                    spawn8Room(creep);
-                    break;
-                case spawn9:
-                    spawn9Room(creep);
-                    break;
-                case E38S72:
-                    E38S72Room(creep);
-                    break;
-                case W4S93:
-                    W4S93Room(creep);
-                    break;
-                case E33S76:
-                    E33S76Room(creep);
-                    break;
-                case E23S75:
-                    E23S75Room(creep);
-                    break;
-                case E37S75:
-                    E37S75Room(creep);
-                    break;
-                case W38S94:
-                    W38S94Room(creep);
-                    break;
-                    //Room                    
-                case spawn2:
-                    spawn2Room(creep);
-                    break;
+
             }
             // If empty
         } else if (creep.memory.full) {
 
             switch (creep.memory.parent) {
-                case upgradeSpawn:
-                    upSpawnTransfer(creep);
-                    break;
-
-                case spawn3:
-                    s3Transfer(creep);
-                    break;
-                case spawn4:
-                    s4Transfer(creep);
-                    break;
-                case E23S75:
-                    E23S75Transfer(creep);
-                    break;
-                case spawn1:
+                 case spawn1:
                     s1Transfer(creep);
-                    break;
-                case spawn7:
-                    s7Transfer(creep);
-                    break;
-                case E37S75:
-                    E37S75Transfer(creep);
-                    break;
-
-                case spawn2:
-                    s2Transfer(creep);
-                    break;
-                case spawn5:
-                    s5Transfer(creep);
-                    break;
-                case spawn6:
-                    s6Transfer(creep);
-                    break;
-                case spawn8:
-                    s8Transfer(creep);
-                    break;
-                case spawn9:
-                    s9Transfer(creep);
-                    break;
-                case E38S72:
-                    E38S72Transfer(creep);
-                    break;
-                case W4S93:
-                    W4S93Transfer(creep);
-                    break;
-
-                case E33S76:
-                    E33S76Transfer(creep);
-                    break;
-                case W38S94:
-                    W38S94Transfer(creep);
-                    break;
-                default:
-                    containers.moveToStorage(creep);
                     break;
 
             }

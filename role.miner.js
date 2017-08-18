@@ -25,7 +25,7 @@ var boost = ['UO'];
 function buildContainer(creep) {
     // this is called because it doesn't find a container.
 
-    let isBuilt = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 5, {
+    let isBuilt = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3, {
         filter: object => (object.structureType == STRUCTURE_CONTAINER)
     });
     // If you find a construction site
@@ -180,7 +180,7 @@ class settler extends roleParent {
 
             if (_.sum(creep.carry) >= creep.carryCapacity - 15 && _source.energy !== 0) {
                 if (creep.memory.workContainer === undefined) {
-                    let range = 7;
+                    let range = 4;
                     if (creep.room.name == 'E27S74') range = 2;
 
                     let isContainer = creep.pos.findInRange(FIND_STRUCTURES, range, {

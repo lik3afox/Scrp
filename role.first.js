@@ -152,99 +152,6 @@ function moveOnPath(creep) {
             ];
             goToMovePath(creep, patrol);
             return true;
-        case "E26S73":
-            patrol = [
-                [33, 23],
-                [25, 31],
-                [28, 34],
-                [31, 31],
-                [35, 35],
-                [40, 30]
-            ];
-            goToMovePath(creep, patrol);
-            return true;
-
-        case "E27S75":
-            patrol = [
-                [10, 30],
-                [19, 34],
-                [19, 26]
-            ];
-            goToMovePath(creep, patrol);
-            return true;
-        case "E38S72":
-            patrol = [
-                [23, 20],
-                [26, 18],
-                [37, 29],
-                [37, 32],
-                [35, 34],
-                [35, 33],
-                [30, 27]
-            ];
-
-            goToMovePath(creep, patrol);
-            return true;
-        case "E28S73xx":
-
-            patrol = [
-                [15, 28],
-                [19, 30],
-                [21, 34],
-                [18, 38],
-                [19, 40],
-                [19, 43],
-                [19, 45],
-                [14, 41],
-                [13, 36],
-                [14, 29]
-            ];
-            goToMovePath(creep, patrol);
-            return true;
-
-        case "E26S77":
-            goToMovePath(creep, [
-                [13, 26],
-                [13, 28],
-                [11, 28],
-                [3, 36],
-                [2, 37],
-                [2, 36],
-                [5, 22],
-                [11, 26]
-            ]);
-            return true;
-        case "E37S75":
-            goToMovePath(creep, [
-                [11, 31],
-                [25, 17],
-                [27, 20],
-                [13, 34]
-            ]);
-            return true;
-        case "E35S73":
-            goToMovePath(creep, [
-                [36, 37],
-                [34, 39],
-                [31, 43],
-                [35, 46],
-                [39, 42],
-                [43, 46],
-                [46, 43],
-                [44, 41],
-                [46, 39],
-                [44, 37],
-                [45, 36],
-                [43, 34],
-                [44, 33],
-                [43, 32],
-                [42, 33],
-                [41, 32],
-                [40, 33],
-                [37, 31],
-                [35, 33]
-            ]);
-            return true;
         default:
             creep.memory.patrolpath = undefined;
             return false;
@@ -252,7 +159,7 @@ function moveOnPath(creep) {
 }
 
 function getEnergy(creep) {
-    if (creep.room.name == 'W38S94xx') {
+    if (creep.room.name == 'xx') {
         if (!constr.moveToPickUpEnergy(creep, 200)) {
             if (!containers.withdrawFromStorage(creep)) {
                 if (!containers.withdrawFromTerminal(creep)) {
@@ -264,7 +171,7 @@ function getEnergy(creep) {
             }
         }
 
-    } else if (creep.room.name == "E27S75") {
+    } else if (creep.room.name == "xx") {
         let tgt = Game.getObjectById('58c15b77dae08a9e411bb197');
         if (tgt !== null && creep.withdraw(tgt, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(tgt);
@@ -272,8 +179,7 @@ function getEnergy(creep) {
 
         }
 
-    } else if (creep.room.name == 'E35S83' ||
-        creep.room.name == 'E37S75') {
+    } else if (creep.room.name == 'xx') {
         //                    if(!constr.moveToPickUpEnergy(creep,creep.carryCapacity-75)){
         if (!containers.withdrawFromTerminal(creep)) {
             if (!containers.withdrawFromStorage(creep)) {}
@@ -284,18 +190,18 @@ function getEnergy(creep) {
         if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
             creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
         } else {
-            //                        if(!constr.moveToPickUpEnergy(creep,200)){
-            //                            if(!containers.moveToWithdraw(creep)) {
+            //if(!constr.moveToPickUpEnergy(creep,50)){
             if (!containers.withdrawFromStorage(creep)) {
+                                        if(!containers.moveToWithdraw(creep)) {
                 if (!containers.withdrawFromTerminal(creep)) {
                     if (!containers.moveToWithdraw(creep)) {
-//                        if (!sources.moveToWithdraw(creep)) {}
+                        if (!sources.moveToWithdraw(creep)) {}
                     }
                     //                      }
                 }
             }
         }
-        //                   } 
+                           } 
 
     }
 }
@@ -359,7 +265,7 @@ class roleFirst extends roleParent {
 
         if (creep.memory.deposit === undefined) { creep.memory.deposit = false; }
 
-        if (!creep.memory.deposit && creep.carryTotal > creep.carryCapacity - 75) {
+        if (!creep.memory.deposit && creep.carryTotal > creep.carryCapacity - 5) {
             creep.memory.deposit = true;
             //spawn.newTarget(creep);
         }
@@ -372,21 +278,6 @@ class roleFirst extends roleParent {
         if (creep.carry.energy === 0) {
             creep.memory.deposit = false;
         }
-        //            console.log(creep.room.storage.total);
-
-        /*if(creep.room.name == 'E38S72' && creep.memory.roleID == 0 ){
-            creep.moveTo(38,35);
-            if(_.sum(creep.carry) == 0){
-                var stuff = creep.pos.findInRange(FIND_DROPPED_RESOURCES,5);
-                creep.pickup(stuff[0]);
-            } else {
-                for(var e in creep.carry) {
-                 creep.say(  creep.transfer(creep.room.terminal,e )  ) ;
-                 break;
-                }
-            }
-            return;
-        } */
 
         if (!creep.memory.deposit) {
 

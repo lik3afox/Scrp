@@ -131,6 +131,9 @@ module.exports = function() {
                 case 'mining':
                     let zz = this.memory.stats[stat] = this.getActiveBodyparts(CARRY) * 2;
                     return zz;
+                case 'upgrading':
+                    let aa = this.memory.stats[stat] = this.getActiveBodyparts(CARRY);
+                    return aa;
                 case 'heal':
                 case 'healing':
                     let zzz = this.memory.stats[stat] = this.getActiveBodyparts(HEAL) * 12;

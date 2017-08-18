@@ -54,12 +54,19 @@ function moveToWithdraw(creep) {
     }
 
     if (creep.pos.isNearTo(source)) {
-        if (creep.memory.sourceID == '5836b80b8b8b9619519f15ae') {
-            var zzz = new RoomPosition(12, 14, 'E23S75');
+        if (creep.memory.sourceID == '5982ff21b097071b4adc22xx24') {
+            var zzz = new RoomPosition(33, 29, 'W36S97');
             if (!creep.pos.isEqualTo(zzz)) {
                 creep.moveTo(zzz);
             }
         }
+        if (creep.memory.sourceID == '58dbc3d98283ff5308a3e2a4') {
+            var zzzz = new RoomPosition(7, 44, 'W36S97');
+            if (!creep.pos.isEqualTo(zzzz)) {
+                creep.moveTo(zzzz);
+            }
+        }
+
         if (creep.harvest(source) == OK) {
             creep.memory.isThere = true;
             creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
@@ -128,7 +135,7 @@ class roleHarvester extends roleParent {
         super.calcuateStats(creep);
 
         //        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
-        creep.pickUpEnergy();
+//        creep.pickUpEnergy();
 
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
@@ -142,7 +149,9 @@ class roleHarvester extends roleParent {
             if (super.depositNonEnergy(creep)) return;
             if (!link.deposit(creep)) {
                 if (!depositSpawn(creep)) {
-                    depositContain(creep);
+                    if(!depositContain(creep)) {
+                        creep.drop(RESOURCE_ENERGY);
+                    }
                 }
             }
         }

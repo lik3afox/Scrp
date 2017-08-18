@@ -185,7 +185,7 @@ var upgrade2Party = [
     ['Aupgrader', require('army.upgrader'), 3, 6]
 ];
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 4, 5]
+    ['Aupgrader', require('army.upgrader'), 2, 6]
 ];
 
 var soloFighter = [

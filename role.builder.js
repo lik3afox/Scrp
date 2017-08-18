@@ -49,8 +49,8 @@ class roleBuilder extends roleParent {
         if (_.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.building = true;
         }
-
-        if (creep.carry.energy < 51) {
+        creep.say(creep.stats('upgrading'));
+        if (creep.carry.energy < 4) {
 
             if (creep.room.name == 'E28S73' && creep.memory.roleID === 0) {
                 creep.moveTo(21, 43);

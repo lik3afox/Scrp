@@ -30,7 +30,7 @@ var focusMin; // = 'XGH2O'
 var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amount: 500 }];
 
 // This is when you cannot change.
-var prohibited = [ 'KO', 'GH', 'LO', 'UO', 'LH', 'G', 'OH', 'GO', 'GH2O', 'GHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGH2O', 'XGHO2', 'XZH2O', 'XLHO2', 'XKHO2', 'XKH2O', 'XZHO2'];
+var prohibited = ['KO', 'GH', 'LO', 'UO', 'LH', 'G', 'OH', 'GO', 'GH2O', 'GHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGH2O', 'XGHO2', 'XZH2O', 'XLHO2', 'XKHO2', 'XKH2O', 'XZHO2'];
 
 var maxEnergyTrans = 5000;
 
@@ -76,7 +76,7 @@ function shareEnergy(terminal) {
 
     // When full, From this terminal, we will send energy to another.
     // Lets check here in all the storages to see if that room's storage level is at.
-    if(terminal.store[RESOURCE_ENERGY] < 21000) return false;
+    if (terminal.store[RESOURCE_ENERGY] < 21000) return false;
     var lowestStore;
     var currentLow = 1000000;
     for (var e in terminals) {
@@ -117,16 +117,16 @@ function adjustOldPrices() {
 
 function needEnergy(terminal) {
 
-/*    var always = ['E28S71', 'E38S72', 'W4S93'];
-    if (Game.market.credits > 15000000) { // Disabled currently
-        if (_.contains(always, terminal.room.name)) {
-            if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
-                //       let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
-                //     console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, 'ALWAYS ORDER NEEDS TO BE ALWYS');
+    /*    var always = ['E28S71', 'E38S72', 'W4S93'];
+        if (Game.market.credits > 15000000) { // Disabled currently
+            if (_.contains(always, terminal.room.name)) {
+                if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
+                    //       let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
+                    //     console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, 'ALWAYS ORDER NEEDS TO BE ALWYS');
+                }
             }
         }
-    }
-*/
+    */
 
     if (terminal.store[RESOURCE_ENERGY] < 1000 || terminal.room.storage.store[RESOURCE_ENERGY] < 1000) {
         var highestEnergy;
@@ -148,37 +148,37 @@ function needEnergy(terminal) {
     //   console(terminal.room.storage.store[RESOURCE_ENERGY]);
     // This terminal if below 100k will make a order if none exist.
     // Find the highest terminal that's level 8 and get energy from it.
-/*
-    if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
-        if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
-            //          let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
-            //            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
-        }
-    }
-
-    if (terminal.room.terminal.store[RESOURCE_POWER] > 45000) {
-        if (!anyLikeOrder(RESOURCE_POWER, terminal.room.name)) {
-            let amount = getAverageMineralPrice(RESOURCE_POWER, false);
-            if (amount !== undefined) {
-                let qq = Game.market.createOrder(ORDER_SELL, RESOURCE_POWER, amount, 40000, terminal.room.name);
-                console.log(ORDER_SELL, RESOURCE_POWER, amount, 45000, terminal.room.name, 'current average price for power', qq);
+    /*
+        if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
+            if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
+                //          let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
+                //            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
             }
-        } else if (terminal.room.terminal.store[RESOURCE_POWER] > 75000) {
-            
-                        var order = _.filter(Game.market.orders, function(o) {
-                            return o.resourceType == RESOURCE_POWER && o.roomName == terminal.room.name && Game.time - o.created > 30000;
-                        });
-                        if (order.length > 0) {
-                            console.log('switching average of order');
-                            let amount = getAverageMineralPrice(RESOURCE_POWER, false);
-                            if (amount !== undefined) {
-
-                                Game.market.changeOrderPrice(order[0].id, amount);
-                            }
-                        }
-                        
         }
-    } */
+
+        if (terminal.room.terminal.store[RESOURCE_POWER] > 45000) {
+            if (!anyLikeOrder(RESOURCE_POWER, terminal.room.name)) {
+                let amount = getAverageMineralPrice(RESOURCE_POWER, false);
+                if (amount !== undefined) {
+                    let qq = Game.market.createOrder(ORDER_SELL, RESOURCE_POWER, amount, 40000, terminal.room.name);
+                    console.log(ORDER_SELL, RESOURCE_POWER, amount, 45000, terminal.room.name, 'current average price for power', qq);
+                }
+            } else if (terminal.room.terminal.store[RESOURCE_POWER] > 75000) {
+                
+                            var order = _.filter(Game.market.orders, function(o) {
+                                return o.resourceType == RESOURCE_POWER && o.roomName == terminal.room.name && Game.time - o.created > 30000;
+                            });
+                            if (order.length > 0) {
+                                console.log('switching average of order');
+                                let amount = getAverageMineralPrice(RESOURCE_POWER, false);
+                                if (amount !== undefined) {
+
+                                    Game.market.changeOrderPrice(order[0].id, amount);
+                                }
+                            }
+                            
+            }
+        } */
 
 
 }
@@ -435,13 +435,14 @@ function tradeEnergy(terminal) {
             // profit / 1 energy + cost    
 
             //console.log( profit/(1+temp), target.price/(1+target.cost),target.price,temp );
-            if (profit / (1 + temp) > target.price / (1 + target.cost) && Orders[e].roomName != 'E24S72' && Orders[e].roomName != 'E22S77') {
-                target.id = Orders[e].id;
-                target.cost = temp;
-                target.amount = Orders[e].amount;
-                target.price = Orders[e].price;
-                target.room = Orders[e].roomName;
-            }
+            if (Orders[e].amount !== 1)
+                if (profit / (1 + temp) > target.price / (1 + target.cost) && Orders[e].roomName != 'E24S72' && Orders[e].roomName != 'E22S77') {
+                    target.id = Orders[e].id;
+                    target.cost = temp;
+                    target.amount = Orders[e].amount;
+                    target.price = Orders[e].price;
+                    target.room = Orders[e].roomName;
+                }
         }
         let trans = (Math.floor(eTotal / (1 + target.cost)));
         if (trans > target.amount) trans = target.amount;
@@ -454,10 +455,10 @@ function tradeEnergy(terminal) {
         console.log("Max Energy Trade", whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost));
     }
 
-  //  var amountSending = terminal.store[RESOURCE_ENERGY] * 0.05;
- //   var rando = Math.floor(Math.random() * Memory.debts.length);
-//    var result = terminal.send(RESOURCE_ENERGY, amountSending, Memory.debts[rando].room, 'End');
-//    console.log('LUCKY ROOM', Memory.debts[rando].room, 'gets energy:', amountSending, 'from this room', terminal.room);
+    //  var amountSending = terminal.store[RESOURCE_ENERGY] * 0.05;
+    //   var rando = Math.floor(Math.random() * Memory.debts.length);
+    //    var result = terminal.send(RESOURCE_ENERGY, amountSending, Memory.debts[rando].room, 'End');
+    //    console.log('LUCKY ROOM', Memory.debts[rando].room, 'gets energy:', amountSending, 'from this room', terminal.room);
 
     /*    if (Memory.sellingHistory === undefined) { Memory.sellingHistory = []; }
 
@@ -538,17 +539,17 @@ function tradeMineral() {
         if (e == 'K' || e == 'U' || e == 'Z' || e == 'L') {
             if (Memory.stats.totalMinerals[e] > 200000) {
 
-//                let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: e });
-                let sellingPoint =  getAverageMineralPrice(e, false); //= 1000;
-/*                for (var vv in Orders) {
-                    if (Orders[vv].price < sellingPoint) {
-                        sellingPoint = Orders[vv].price;
-                    }
-                }*/
+                //                let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: e });
+                let sellingPoint = getAverageMineralPrice(e, false); //= 1000;
+                /*                for (var vv in Orders) {
+                                    if (Orders[vv].price < sellingPoint) {
+                                        sellingPoint = Orders[vv].price;
+                                    }
+                                }*/
 
                 var termin = getMostTerminal(e);
                 var amount = termin.store[e] * 0.75;
-//                if (e == 'K') console.log('YEAAAH', sellingPoint, orderExist(e),);
+                //                if (e == 'K') console.log('YEAAAH', sellingPoint, orderExist(e),);
 
                 if (sellingPoint >= 0.01 && !orderExist(e)) {
                     let whatHappened = Game.market.createOrder(ORDER_SELL, e, sellingPoint, amount, termin.pos.roomName);
@@ -649,33 +650,44 @@ function sellMineral(terminal) {
 
     let mostMineral;
     let most = 0;
+    let mostAmount;
+    let noSell = [''];
     for (var e in terminal.store) {
-        if ( terminal.store[e] > most && e !== RESOURCE_ENERGY) {
+        //      if(_.contains(noSell,e)) {
+
+        //        }
+        if (terminal.store[e] > 1000 && terminal.store[e] > most && e !== RESOURCE_ENERGY) {
             mostMineral = e;
             most = terminal.store[e];
         }
+
     }
 
-        let zz = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: mostMineral });
-        zz.sort((a, b) => b.price - a.price);
-        var sellAmount = 2000;
-        var target;
-        for(var zzz in zz) {
-        	if(zz[zzz].amount > 100) {
-        		target = zz[zzz];
-        		break;
-        	}
+    let zz = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: mostMineral });
+    zz.sort((a, b) => b.price - a.price);
+    var sellAmount = 2000;
+    var target;
+    for (var zzz in zz) {
+        if (zz[zzz].amount > 100) {
+            target = zz[zzz];
+            break;
         }
-//        console.log(zz[0].amount , sellAmount);
-if(target !== undefined) {
-        if(target.amount < sellAmount) {
-        	sellAmount = target.amount;
+    }
+    //        console.log(zz[0].amount , sellAmount);
+    if (target !== undefined) {
+        if (target.amount < sellAmount) {
+            sellAmount = target.amount;
+        }
+        if (most < sellAmount) {
+            sellAmount = most;
         }
         let cc = Game.market.deal(target.id, sellAmount, terminal.room.name);
-//        console.log(zz[0].id,zz[0].price , sellAmount, terminal.room.name,mostMineral);
-        console.log('Sold',sellAmount,'mineral', mostMineral, target.price  ,terminal.room.name,cc);
-}
+        //        console.log(zz[0].id,zz[0].price , sellAmount, terminal.room.name,mostMineral);
+        console.log('Sold', sellAmount, target.amount, 'mineral', mostMineral, target.price, terminal.room.name, cc);
+        return true;
+    }
 
+    return false;
 }
 
 function energyCheck(terminal) {
@@ -705,15 +717,15 @@ function energyCheck(terminal) {
     }
     if (lowestStore === undefined) return false;
 
-//    let bb = terminal.send(mostMineral, 3000, lowestStore.room.name, 'too much');
-//    console.log(terminal.room.name, 'this terminal is full with less than 20000 energy', mostMineral, lowestStore.room.name, 'result:', bb);
+    //    let bb = terminal.send(mostMineral, 3000, lowestStore.room.name, 'too much');
+    //    console.log(terminal.room.name, 'this terminal is full with less than 20000 energy', mostMineral, lowestStore.room.name, 'result:', bb);
 
     //Game.rooms.E28S71.terminal.send('O', 15000, 'E5N7', 'trade');
-      //  let zz = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: e });
+    //  let zz = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: e });
     //    zz.sort((a, b) => a.price - b.price);
 
-  //      let cc = Game.market.deal(zz[0].id, 2000, terminal.room.name);
-//        console.log('Sold 100 mineral', mostMineral, zz[0].price * 2000,cc);
+    //      let cc = Game.market.deal(zz[0].id, 2000, terminal.room.name);
+    //        console.log('Sold 100 mineral', mostMineral, zz[0].price * 2000,cc);
 
     //Game.market.deal('57cd2b12cda69a004ae223a3', 1000, "W1N1");   
 
@@ -871,9 +883,9 @@ function getAverageMineralPrice(resource, buy) {
     } else {
         if (zz[1].price !== 0.01)
             bb += zz[1].price;
-        if ( zz[2].price !== 0.01)
+        if (zz[2].price !== 0.01)
             bb += zz[2].price;
-        if ( zz[3].price !== 0.01)
+        if (zz[3].price !== 0.01)
             bb += zz[3].price;
         if (zz[0].price !== 0.01)
             bb += zz[0].price;
@@ -981,25 +993,23 @@ class roleTerminal {
 
                 let zz = terminal.total;
                 needEnergy(terminal);
+                if (!newTradeEnergy(terminal)) {
 
-                if (zz > 299000) {
-                    if (!shareEnergy(terminal)) { // Moves energy around
-                    	sellMineral(terminal);
-                        //                                newTradeEnergy(terminal);
-                   //     tradeEnergy(terminal);
-                    } else {
-                    //    newTradeEnergy(terminal);
-                                            tradeEnergy(terminal);
+                    if (zz > 299000) {
+                        if (!shareEnergy(terminal)) { // Moves energy around
+                            if (!sellMineral(terminal)) {
+                                tradeEnergy(terminal);
+                            }
+                        } else {
+                            tradeEnergy(terminal);
+                        }
                     }
-                    //                        newTradeEnergy(terminal);
-                    //                    }
-                 //   newTradeEnergy(terminal);
                 }
             }
             energyCheck(terminal);
         }
 
-     //   doDebt(); // Send energy to a target
+        //   doDebt(); // Send energy to a target
         //        giveInviso();
         tradeMineral();
         makeMineralOrder();

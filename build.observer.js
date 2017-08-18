@@ -94,9 +94,11 @@ class buildObserver {
             // Then we observer
             for (var e in observers) {
                 let stru = getCached(observers[e]);
+                if(stru !== undefined) {
                 var distance = Game.map.getRoomLinearDistance(stru.room.name, target);
                 if (distance <= 10) {
                     stru.observeRoom(target);
+                }
                 }
             }
         } else {
