@@ -26,7 +26,7 @@ var classLevels = [
 
     [CARRY, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK, MOVE, CARRY, CARRY, MOVE],
     // Level 3
-    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK, MOVE,
+    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE,
         CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE, WORK, CARRY, CARRY, MOVE
     ],
 
@@ -146,6 +146,7 @@ class transport extends roleParent {
         }
 
         shouldDie(creep);
+//        creep.memory.reportDeath = true;
         super.deathWatch(creep);
         if (creep.memory.gohome === undefined) { creep.memory.gohome = false; }
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }
@@ -161,6 +162,16 @@ class transport extends roleParent {
         if (creep.room.name != 'E28S77' && creep.room.name != 'E27S74' && creep.room.storage === null)
             constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
         if (creep.memory.gohome) {
+
+
+if(creep.room.controller.level === 1) {
+    console.log(creep.room.controller.ticksToDowngrade);
+    if( creep.room.controller.ticksToDowngrade < 1000) {
+        if(creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE ) {
+            creep.moveTo(creep.room.controller);
+        }
+    }
+}
 
             creep.countDistance();
             if (creep.memory.linkID !== undefined && creep.carry[RESOURCE_ENERGY] > 0) {

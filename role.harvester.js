@@ -24,6 +24,17 @@ var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
 var link = require('build.link');
 
+function restingSpot(creep) {
+    switch (creep.memory.sourceID) {
+        case '5982ff21b097071b4adc2224':
+            return new RoomPosition(33, 29, creep.memory.home);
+
+
+        default:
+            return false;
+    }
+}
+
 function moveToWithdraw(creep) {
 
     let source = Game.getObjectById(creep.memory.sourceID);
@@ -53,34 +64,43 @@ function moveToWithdraw(creep) {
         }
     }
 
-    if (creep.pos.isNearTo(source)) {
-        if (creep.memory.sourceID == '5982ff21b097071b4adc22xx24') {
-            var zzz = new RoomPosition(33, 29, 'W36S97');
-            if (!creep.pos.isEqualTo(zzz)) {
-                creep.moveTo(zzz);
-            }
-        }
-        if (creep.memory.sourceID == '58dbc3d98283ff5308a3e2a4') {
-            var zzzz = new RoomPosition(7, 44, 'W36S97');
-            if (!creep.pos.isEqualTo(zzzz)) {
-                creep.moveTo(zzzz);
-            }
-        }
 
-        if (creep.harvest(source) == OK) {
-            creep.memory.isThere = true;
-            creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
-                color: 'white',
-                align: LEFT,
-                font: 0.6,
-                strokeWidth: 0.75
-            });
+    let rest = restingSpot(creep); // If this has an assign spot in a room.
+    if (rest) {
+        let mom = rest;
+        if (creep.pos.isEqualTo(mom)) {
+            if (creep.harvest(source) == OK) {
+                creep.memory.isThere = true;
+                creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
+                    color: 'white',
+                    align: LEFT,
+                    font: 0.6,
+                    strokeWidth: 0.75
+                });
+            }
+        } else {
+            creep.moveTo(mom);
         }
+        return false;
     } else {
-        creep.moveMe(source);
-        creep.memory.distance++;
+        if (creep.pos.isNearTo(source)) {
+            if (creep.harvest(source) == OK) {
+                creep.memory.isThere = true;
+                creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
+                    color: 'white',
+                    align: LEFT,
+                    font: 0.6,
+                    strokeWidth: 0.75
+                });
+            }
+        } else {
+            creep.moveMe(source);
+            creep.memory.distance++;
+        }
         return false;
     }
+
+
 
     return true;
 }
@@ -98,7 +118,7 @@ function depositSpawn(creep) {
 
 function depositContain(creep) {
     var conta;
-//    if (creep.room.name == 'E29S79') console.log(creep.memory.containerID);
+    //    if (creep.room.name == 'E29S79') console.log(creep.memory.containerID);
     if (creep.memory.containerID === undefined) {
         let contain = creep.pos.findInRange(FIND_STRUCTURES, 1, {
             filter: (structure) => {
@@ -135,7 +155,7 @@ class roleHarvester extends roleParent {
         super.calcuateStats(creep);
 
         //        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
-//        creep.pickUpEnergy();
+        //        creep.pickUpEnergy();
 
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
@@ -149,7 +169,7 @@ class roleHarvester extends roleParent {
             if (super.depositNonEnergy(creep)) return;
             if (!link.deposit(creep)) {
                 if (!depositSpawn(creep)) {
-                    if(!depositContain(creep)) {
+                    if (!depositContain(creep)) {
                         creep.drop(RESOURCE_ENERGY);
                     }
                 }

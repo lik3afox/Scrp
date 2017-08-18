@@ -99,19 +99,13 @@ var newbModLevel = [
 ]; // 
 
 
-var empireModules = [
-//    ['nuker', require('role.nuker'), 0, 4],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['first', require('role.first'), 2, 3],
-    ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['linker', require('role.linker'), 1, 4],
-
-    ['minHarvest', require('role.mineral'), 1, 7],
-    ['assistant', require('role.assistant'), 1, 0],
-
-    ['scientist', require('role.scientist'), 0, 5],
-    ['wallwork', require('role.wallworker'), 1, 2],
-    ['homeDefender', require('role.defender2'), 1, 6]
+var Mod_E18S36 = [
+        ['first', require('role.first'), 2, 2],
+        ['harvester', require('role.harvester'), 2, 2],
+        ['wallwork', require('role.wallworker'), 1, 2],
+        ['upbuilder', require('role.upbuilder'), 4, 4],
+        ['linker', require('role.linker'), 2, 3],
+    	['homeDefender', require('role.defender2'), 1, 3]
 ];
 
 
@@ -141,7 +135,7 @@ var expansionModule = [
     // The transport here will be designed for 1 square away - 
     [ // 1300 Energy Max.
         ['miner', require('role.miner'), 1, 3], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 2], // Gather and move - just carry 
+        ['transport', require('role.transport'), 1, 3], // Gather and move - just carry 
         ['controller', require('role.controller'), 1, 4]
     ],
 
@@ -563,6 +557,10 @@ function getCurrentModule(spawn) {
 
     if (spawn === null || spawn === undefined) return;
     var currentModuleLevel = getModuleLevel(spawn);
+    switch(spawn.pos.roomName) {
+    	case 'E18S36':
+    	return Mod_E18S36;
+    }
     return newbModLevel[currentModuleLevel];
 }
 
@@ -867,10 +865,6 @@ if(Memory.creeps === undefined) return false;
                 }
                 var type = allModule.length;
                 while (type--) {
-
-                    if (Game.creeps[name].memory.party == 'warparty1') {
-                        Game.creeps[name].memory.throughPortal = true;
-                    }
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
                         if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }

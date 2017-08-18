@@ -507,7 +507,7 @@
                     });
                 }
                 //                }
-/*                if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
+                if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
                     let spawn = Game.spawns[title];
                     let spawnStats = {
                         storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
@@ -524,7 +524,7 @@
                     };
                     spawnReport[Game.spawns[title].room.name] = spawnStats;
 
-                }*/
+                }
             }
         } // End of Spawns Loops
 

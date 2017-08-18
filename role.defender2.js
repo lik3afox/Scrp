@@ -72,22 +72,8 @@ function attackCreep(creep, bads) {
 
 function restingSpot(creep) {
     switch (creep.memory.home) {
-        case 'E35S73':
-            return new RoomPosition(41, 37, creep.memory.home);
-        case 'E26S73':
-            return new RoomPosition(30, 30, creep.memory.home);
-        case 'E28S73':
-            return new RoomPosition(23, 41, creep.memory.home);
-        case 'E28S77':
-            return new RoomPosition(13, 10, creep.memory.home);
-        case 'E35S83':
-            return new RoomPosition(9, 17, creep.memory.home);
-        case 'E38S72':
-            return new RoomPosition(38, 27, creep.memory.home);
-        case 'W4S93':
-            return new RoomPosition(3, 38, creep.memory.home);
-        case 'W38S94' :
-            return new RoomPosition(11, 16, creep.memory.home);
+        case 'E18S36':
+            return new RoomPosition(37, 23, creep.memory.home);
 
 
         default:

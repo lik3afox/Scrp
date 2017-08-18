@@ -118,21 +118,12 @@ module.exports = function() {
             this.memory.stats = {};
         }
         if (this.memory.stats[stat] === undefined) {
-            /*
-        let wParts = _.filter(creep.body, { type: WORK }).length;
-        let mParts = _.filter(creep.body, { type: MOVE }).length;
-        let hParts = _.filter(creep.body, { type: HEAL }).length;
-        let rParts = _.filter(creep.body, { type: RANGED_ATTACK }).length;
-        let aParts = _.filter(creep.body, { type: ATTACK }).length;
-        let cParts = _.filter(creep.body, { type: CARRY }).length;
-        let cost = getCost(creep.body);
-            */
             switch (stat) {
                 case 'mining':
-                    let zz = this.memory.stats[stat] = this.getActiveBodyparts(CARRY) * 2;
+                    let zz = this.memory.stats[stat] = this.getActiveBodyparts(WORK) * 2;
                     return zz;
                 case 'upgrading':
-                    let aa = this.memory.stats[stat] = this.getActiveBodyparts(CARRY);
+                    let aa = this.memory.stats[stat] = this.getActiveBodyparts(WORK);
                     return aa;
                 case 'heal':
                 case 'healing':
