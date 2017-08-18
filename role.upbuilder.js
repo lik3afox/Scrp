@@ -171,8 +171,8 @@ class roleUpbuilder extends roleParent {
         if (creep.memory.upgrading === undefined) {
             creep.memory.upgrading = true;
         }
-            creep.memory.upgrading = true;
-        if (creep.memory.upgrading && creep.carry.energy <= creep.stats('upgrading') ) {
+        creep.memory.upgrading = true;
+        if (creep.memory.upgrading && creep.carry.energy <= creep.stats('upgrading')) {
             //            creep.memory.upgrading = false;
             super._constr.pickUpEnergy(creep);
             creep.memory.wallTargetID = undefined;
@@ -215,7 +215,7 @@ class roleUpbuilder extends roleParent {
         }
 
 
-        if (creep.carry.energy > creep.stats('upgrading') ) {
+        if (creep.carry.energy > creep.stats('upgrading')) {
             creep.memory.upgrading = true;
             creep.say('upgrading');
         }
@@ -227,14 +227,14 @@ class roleUpbuilder extends roleParent {
             var spawn = require('commands.toSpawn');
             var number = 0;
 
-  //          var strucs = Game.getObjectById(creep.memory.constructionID);
+            var strucs = Game.getObjectById(creep.memory.constructionID);
 
-//            if (strucs !== null) {
-        //        if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
-      //              creep.moveTo(strucs);
-    //            }
-  //          } else {
-//                creep.memory.constructionID = undefined;
+            if (strucs !== null) {
+                if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(strucs);
+                }
+            } else {
+                creep.memory.constructionID = undefined;
                 switch (creep.upgradeController(creep.room.controller)) {
                     case ERR_NOT_IN_RANGE:
                         if (creep.room.name == 'E28S73') {
@@ -249,7 +249,7 @@ class roleUpbuilder extends roleParent {
                         creep.say('⚡');
                         break;
                 }
-//            }
+            }
 
         }
 
