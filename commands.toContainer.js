@@ -7,7 +7,7 @@ function getNonEmptyContain(creep) {
     return creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
             return ((structure.structureType == STRUCTURE_STORAGE ||
-                structure.structureType == STRUCTURE_CONTAINER) && (_.sum(structure.store) > 0));
+                structure.structureType == STRUCTURE_CONTAINER));
         }
     });
 }

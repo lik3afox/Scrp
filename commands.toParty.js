@@ -22,10 +22,10 @@ var scienceParty = [
     ['scientist', require('role.scientist'), 1, 3]
 ];
 var engineerParty = [
-    ['engineer', require('army.engineer'), 2, 5],
+    ['engineer', require('army.engineer'), 1  , 4],
 ];
 var engineer2Party = [
-    ['engineer', require('army.engineer'), 1, 5],
+    ['engineer', require('army.engineer'), 2  , 4],
 ];
 var thiefParty = [
     ['thief', require('army.thief'), 3, 3],
@@ -93,8 +93,12 @@ var warParty = [
     ['healer', require('army.healer'), 1, 6] // Healer    
 ];
 var fightHealer = [
-    ['fighter', require('army.fighter'), 1, 11],
-    ['healer', require('army.healer'), 1, 6]
+    ['fighter', require('army.fighter'), 1, 4],
+    ['healer', require('army.healer'), 1, 4]
+];
+var fight2Healer = [
+    ['fighter', require('army.fighter'), 1, 4],
+    ['healer', require('army.healer'), 2, 4]
 ];
 var warParty2 = [
     ['first', require('role.first'), 0, 4],
@@ -242,72 +246,45 @@ function getSpawnCreating(flag) {
     switch (flag.name) {
         //    case 'scout2' :
            case 'Flag61':
-            return 'W4S93';
         case 'warparty1':
-            return 'E35S83';
         case 'warparty5':
-            return 'E23S75';
 
+        case 'engineer3':
         case 'demo':
-            return 'E33S76';
         case 'warparty4':
-            return 'E38S72';
 
         case '2upgrade':
-            return 'E23S75';
         case 'oneFight':
-            return 'E23S75';
-            // case 'rampartDefender' :
-            //    case 'upgrade':
-            //      return 'E27S75';
         case '3upgrade':
         case 'thief5':
-            return 'E35S73';
         case 'mule':
-            return 'E38S72';
         case 'thief':
-            return 'E35S83';
 
         case 'upgradeRoom':
-            return 'E27S75';
-            //            return 'E26S73';
 
-        case 'engineer':
-//            return returnClosestRoom(flag.pos.roomName);
-            return 'W38S94';
         case 'recontrol':
         case 'test':
-        case 'control':
         case 'engineer2':
+        case 'engineer3':
         case 'science':
         case 'safemode':
-            return returnClosestRoom(flag.pos.roomName);
+//            return returnClosestRoom(flag.pos.roomName);
         case 'thief2':
-            return 'E37S75';
         case 'thief3':
         case 'thief5':
-            return 'E28S71';
-
         case 'upgrade':
-            return 'E23S75';
-
         case 'thief2':
-            return 'E35S83';
         case 'thief4':
-
-            return 'E28S77';
-            //      return 'E35S73';
-
-
         case 'engineer':
+        case 'mage':
         case 'engineer2':
-            return 'E28S73';
+        case 'control':
+            return 'E18S36';
+//            return 'E24S37';
 
         case 'fighter':
-            return 'E28S73';
         case 'upgrade':
-            return 'E35S73';
-            case 'tower':
+        case 'tower':
         case 'scout':
             return returnClosestRoom(flag.pos.roomName);
     //    default:
@@ -345,6 +322,10 @@ function getCurrentParty(flag) {
                 return safemode;
             case 'fightHealer':
                 return fightHealer;
+                
+            case 'fight2Healer':
+                return fight2Healer;
+                
             case 'oneFight':
                 return soloFighter;
             case 'troll':
@@ -402,6 +383,8 @@ function getCurrentParty(flag) {
             case 'mage':
                 return mageParty;
             case 'engineer2':
+                return engineer2Party;
+            case 'engineer3':
                 return engineer2Party;
 
             case 'rampartDefender':
@@ -485,6 +468,7 @@ function getCurrentParty(flag) {
             case 'mage':
                 return mageParty;
             case 'engineer2':
+            case 'engineer3':
                 return engineer2Party;
 
             case 'rampartDefender':

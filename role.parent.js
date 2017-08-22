@@ -139,32 +139,8 @@ var fox = require('foxGlobals');
 
 function getDeathSpot(roomName) {
     switch (roomName) {
-        case "E38S72":
-            return new RoomPosition(37, 34, roomName);
-        case "E29S79":
-            return new RoomPosition(23, 28, roomName);
-        case "E35S83":
-            return new RoomPosition(7, 21, roomName);
-        case "E26S73":
-            return new RoomPosition(37, 21, roomName);
-        case "E28S71":
-            return new RoomPosition(18, 28, roomName);
-        case "E28S73":
-            return new RoomPosition(21, 41, roomName);
-        case "E28S77":
-            return new RoomPosition(13, 13, roomName);
-        case "E26S77":
-            return new RoomPosition(13, 28, roomName);
-        case "E23S75":
-            return new RoomPosition(30, 35, roomName);
-        case "E37S75":
-            return new RoomPosition(13, 24, roomName);
-        case "E35S73":
-            return new RoomPosition(40, 39, roomName);
-        case "E33S76":
-            return new RoomPosition(32, 9, roomName);
-        case "W4S93":
-            return new RoomPosition(5, 37, roomName);
+        case "E18S36":
+            return new RoomPosition(37, 24, roomName);
 
         default:
             return;
@@ -425,7 +401,7 @@ class baseParent {
                 creep.say('T:move');
 
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
-                
+
                 if (task.rangeHappy === undefined || task.rangeHappy === 0) {
                     if (creep.room.name == task.pos.roomName) {
                         orderComplete = true;
@@ -470,7 +446,7 @@ class baseParent {
                             var rnz = creep.pos.getRangeTo(close);
                             creep.say(rnz);
                             if (rnz == 4)
-                            // you can also use an array of targets, and it'll attempt to stay away from all of them
+                                // you can also use an array of targets, and it'll attempt to stay away from all of them
                                 creep.runFrom(close);
                         }
                     }
@@ -478,15 +454,23 @@ class baseParent {
                     if (!constr.moveToPickUpEnergyIn(creep, 7)) {
                         if (creep.moveMe(tmp2, task.options) == OK) {
                             if (task.count) {
-                                creep.countDistance();
+                                if (this.memory.distance === undefined) {
+                                    this.memory.distance = 0;
+
+                                }
+                                this.memory.distance++;
                             }
                         }
                     }
                 } else {
                     if (creep.moveMe(tmp2, task.options) == OK) {
                         if (task.count) {
-                            creep.countDistance();
-                        }
+                            if (this.memory.distance === undefined) {
+                                    this.memory.distance = 0;
+
+                                }
+                                this.memory.distance++;
+                            }
                     }
                 }
 
@@ -661,13 +645,13 @@ class baseParent {
         return movement;
     }
     static get _power() {
-            return power;
-        }
-        /*
-        static get _() {
-          return;
-        } 
-        */
+        return power;
+    }
+    /*
+    static get _() {
+      return;
+    } 
+    */
 
     static boosted(creep, boosted) {
         if (creep.memory.role === 'rampartGuard') {
@@ -860,30 +844,30 @@ class baseParent {
     }
 
     static keeperFind(creep) {
-            if (creep.memory.keeperLairID !== undefined) return;
-            let target = Game.getObjectById(creep.memory.goal);
-            if (target !== null) {
-                keeperFindAt(target.pos.x, target.pos.y, creep);
-            }
-            //            keeperFindAt(creep.pos.x, creep.pos.y, creep);
+        if (creep.memory.keeperLairID !== undefined) return;
+        let target = Game.getObjectById(creep.memory.goal);
+        if (target !== null) {
+            keeperFindAt(target.pos.x, target.pos.y, creep);
         }
-        /*
-            static rebuildMe(creep) {
-                    let temp = {
-                                    build:creep.levels(creep.memory.level),
-                                    name: undefined,
-                                    memory:{
-                                        role: creep.memory.role,
-                                        home: creep.memory.home,
-                                        parent: creep.memory.parent,
-                                        goal: creep.memory.goal,
-                                        level: creep.memory.level,
-                                        party: creep.memory.party
-                                    }
+        //            keeperFindAt(creep.pos.x, creep.pos.y, creep);
+    }
+    /*
+        static rebuildMe(creep) {
+                let temp = {
+                                build:creep.levels(creep.memory.level),
+                                name: undefined,
+                                memory:{
+                                    role: creep.memory.role,
+                                    home: creep.memory.home,
+                                    parent: creep.memory.parent,
+                                    goal: creep.memory.goal,
+                                    level: creep.memory.level,
+                                    party: creep.memory.party
                                 }
+                            }
 
-                return temp;
-            } */
+            return temp;
+        } */
 
     static returnEnergy(creep) {
         if (creep.memory.death === undefined) {
@@ -1235,10 +1219,10 @@ class baseParent {
     }
 
     static avoidArea(creep) {
-        var detect = 7;
+        var detect = 10;
 
-        if (creep.room.name == 'E26S75') {
-            detect = 4;
+        if (creep.room.name == 'E25S36') {
+            detect = 25;
         }
 
         let greyflag = creep.pos.findInRange(FIND_FLAGS, detect);

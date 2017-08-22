@@ -529,7 +529,7 @@
         } // End of Spawns Loops
 
         Memory.stats.rooms = spawnReport;
-//        link.run();
+        link.run();
                 Memory.totalPowerProcessed = 0;
 //            doUpgradeRooms();
         if (Game.cpu.bucket > 250) {
@@ -543,7 +543,7 @@
             Memory.labsRunCounter--;
             if (Memory.labsRunCounter <= 0) {
                 Memory.labsRunCounter = 10;
-//                labs.run();
+                labs.run();
             }
         }
             if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;

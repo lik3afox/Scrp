@@ -2,7 +2,7 @@ function use() { "use strict"; }
 var total = 0;
 var _links = [
     // Spawn 1 room
-    
+    '5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb'
 ];
 
 var gameCache = [];
@@ -98,7 +98,7 @@ class buildLink {
 
         total = 0;
         // Spawn 1
-        sendEnergy(['5992f5023f97bb727fb7f8dc'], '5992b270c299945f91f62b1c', 700);
+        sendEnergy(['5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb'], '5997883fab58151efecc98e0', 700);
         gameCache = []; // cleaning up cache for this tick.
     }
 

@@ -11,7 +11,7 @@ var classLevels = [
 
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, HEAL],
 //4 THis is \built for lv 6 labs.
-    [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+    [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK],
 
     //5
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, HEAL, HEAL],
@@ -149,6 +149,15 @@ function doAttack(creep) {
                     }
                 }
             }
+            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+            bads = _.filter(bads, function(o) {
+                return !_.contains(fox.friends, o.owner.username);
+            });
+            if (bads.length > 0) {
+                creep.attack(bads[0]);
+                return true;
+            }
+
 
             bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
             bads = _.filter(bads, function(o) {
@@ -295,6 +304,12 @@ class fighterClass extends roleParent {
             if (powerAction(creep))
                 return;
         }
+        if (creep.memory.level == 4 ) {
+            if (super.boosted(creep, ['XUH2O', 'XGHO2'])) {
+                return;
+            }
+        }
+
         if (creep.memory.level >= 11) {
             if (super.boosted(creep, ['XGHO2', 'XUH2O', 'XZHO2'])) {
                 return;
@@ -307,7 +322,7 @@ class fighterClass extends roleParent {
                     }
                 }  */
 
-        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 3);
+        enemy = creep.pos.findInRange(creep.room.hostilesHere(), 1);
 
         enemy = _.filter(enemy,
             function(object) {
@@ -322,10 +337,11 @@ class fighterClass extends roleParent {
         if (enemy.length > 0) {
             enemy = creep.pos.findClosestByRange(enemy);
             if (creep.pos.isNearTo(enemy)) {
-                creep.attackMove(enemy);
+                creep.attack(enemy);
             } else {
                 if (Game.flags.siege === undefined || Game.flags.siege.pos.roomName !== creep.room.name)
-                    creep.moveTo(enemy);
+                            movement.flagMovement(creep);
+//                    creep.moveTo(enemy);
             }
         } else {
 

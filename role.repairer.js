@@ -10,7 +10,7 @@
 
 var classLevels = [
     [WORK, WORK, CARRY, MOVE],
-    [CARRY, CARRY, WORK, MOVE, WORK, WORK, MOVE, MOVE], // 500
+    [CARRY,  WORK, MOVE,CARRY, WORK, WORK, MOVE, MOVE], // 500
     [WORK, CARRY, CARRY, CARRY, CARRY, MOVE, CARRY, CARRY, WORK, CARRY, CARRY, MOVE], // 700
     [WORK, CARRY, CARRY, CARRY, CARRY, MOVE, CARRY, CARRY, WORK, CARRY, CARRY, MOVE], // 700
     [WORK, CARRY, CARRY, CARRY, CARRY, MOVE, CARRY, CARRY, WORK, CARRY, CARRY, MOVE], // 700
@@ -72,11 +72,13 @@ class roleRepairer extends roleParent {
 
         } else {
             creep.say('harvest');
-            constr.pickUpEnergy(creep);
+            if(!constr.moveToPickUpEnergy(creep)) {
             if (!containers.withdrawFromStorage(creep)) {
                 if (!containers.moveToWithdraw(creep)) {
                     sources.moveToWithdraw(creep);
                 }
+            }
+
             }
         }
     }

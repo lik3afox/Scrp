@@ -155,7 +155,7 @@ class roleHarvester extends roleParent {
         super.calcuateStats(creep);
 
         //        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
-        //        creep.pickUpEnergy();
+                creep.pickUpEnergy();
 
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }

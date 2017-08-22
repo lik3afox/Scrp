@@ -277,6 +277,7 @@ class settler extends roleParent {
                 };
                 task.pos = _source.pos;
                 task.order = "moveTo";
+                task.count = true;
                 task.enemyWatch = true;
                 task.rangeHappy = 1;
                 creep.memory.task.push(task);

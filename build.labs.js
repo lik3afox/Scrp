@@ -1,5 +1,4 @@
-var labRooms = ['E23S75', 'E33S76', 'W4S93', 'E28S73', 'E35S73', 'E35S83', 'E29S79', 'E28S77', 'E26S77', 'E37S75', 'E28S71', 'E27S75', 'E26S73', 'E38S72'
-,'W38S94'];
+var labRooms = ['E18S36'];
 
 /*
 RESOURCE_ENERGY: "energy",

@@ -6,6 +6,7 @@ var classLevels = [
     [HEAL, MOVE, MOVE, MOVE], // 200
     [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
+
     [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL],
     [MOVE, HEAL,
         MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE,
@@ -173,8 +174,13 @@ class healerClass extends roleParent {
                 return;
         }
         // creep.say('drugs'+creep.memory.level);
+        if (creep.memory.level == 4) {
+            if (super.boosted(creep, ['XLHO2', 'XGHO2'])) {
+                return;
+            }
+        }
 
-        if (creep.memory.level >= 6) {
+        if (creep.memory.level == 6) {
             if (super.boosted(creep, ['XLHO2', 'XGHO2', 'XZHO2'])) {
                 return;
             }
@@ -193,17 +199,19 @@ class healerClass extends roleParent {
                 creep.rangedMassAttack();
                 creep.memory.lastHealed = hurtz[0].id;
             }
+                doMove = true;
 
-            if (creep.pos.isNearTo(hurtz[0])) {
+      //      if (creep.pos.isNearTo(hurtz[0])) {
 
-            } else {
-                if (!hurtz[0].pos.isEqualTo(creep)) {
-                    creep.moveTo(hurtz[0]);
-                } else {
-
-                    movement.flagMovement(creep);
-                }
-            }
+    //        } else {
+//                if (!hurtz[0].pos.isEqualTo(creep)) {
+//                    creep.moveTo(hurtz[0]);
+//                } 
+                //else {
+//  doMove = true;
+//                    movement.flagMovement(creep);
+//                }
+  //          }
             /*if (creep.pos.inRangeTo(hurtz[0], 3) && !creep.pos.isNearTo(hurtz[0])) {
 
             }*/
@@ -212,7 +220,7 @@ class healerClass extends roleParent {
             creep.heal(creep);
             creep.rangedMassAttack();
             doMove = true;
-            movement.flagMovement(creep);
+//            movement.flagMovement(creep);
         } else if (!healParty(creep)) {
             // heal last
             creep.say('3');
@@ -221,13 +229,13 @@ class healerClass extends roleParent {
                 creep.heal(last);
                 creep.rangedMassAttack();
                 if (last.id !== creep.id) {
-                    creep.moveTo(last);
+//                    creep.moveTo(last);
                 }
             }
             doMove = true;
-            movement.flagMovement(creep);
+//            movement.flagMovement(creep);
         }
-
+/*
         if (creep.room.name == 'W15S87') {
             var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
             site = _.filter(site, function(o) {
@@ -240,7 +248,7 @@ class healerClass extends roleParent {
             } else if (doMove) {
                 movement.flagMovement(creep);
             }
-        }
+        } */
         
         if (doMove) {
             movement.flagMovement(creep);
@@ -256,7 +264,7 @@ class healerClass extends roleParent {
         //  if(hurtz[0] == undefined)
 */
 
-        if (creep.room.name == 'E18S64') {
+/*        if (creep.room.name == 'E18S64') {
             creep.selfHeal();
             var spn = Game.getObjectById('594fc84a66235f5268eb6c6a');
             if (spn !== null) {
@@ -269,7 +277,7 @@ class healerClass extends roleParent {
                 creep.moveTo(clost);
                 return;
             }
-        }
+        } */
 
     }
 }

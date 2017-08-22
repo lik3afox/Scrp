@@ -2,6 +2,7 @@
 // Designed for shooting 
 
 var classLevels = [
+[TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,HEAL,HEAL,HEAL],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL]
 ];
 var movement = require('commands.toMove');
@@ -9,48 +10,6 @@ var roleParent = require('role.parent');
 var fox = require('foxGlobals');
 
 //STRUCTURE_POWER_BANK:
-
-function rangeAttack(creep, targets) {
-    var E18S64targets = targets;
-    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
-    bads = _.filter(bads, function(o) {
-        return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(fox.friends, o.owner.username);
-    });
-    if (bads.length === 0) {
-
-        for (var a in E18S64targets) {
-            target = Game.getObjectById(E18S64targets[a]);
-            if (target !== null) {
-                if (creep.pos.isNearTo(target)) {
-                    creep.rangedMassAttack();
-                    creep.say('nice');
-                    return true;
-                } else if (creep.pos.inRangeTo(target, 3)) {
-                    creep.rangedAttack(target);
-                    creep.say('nice');
-                    return true;
-                }
-            }
-        }
-        creep.rangedMassAttack();
-
-    } else {
-        var clost = creep.pos.findClosestByRange(bads);
-        if (clost !== undefined) {
-            if (creep.pos.inRangeTo(clost, 3)) {
-                if (creep.pos.isNearTo(clost)) {
-                    //creep.rangedAttack(bads[0]);
-                    creep.rangedMassAttack();
-                } else {
-
-                    creep.rangedMassAttack();
-                    //                    creep.rangedAttack(clost);
-                }
-                creep.say('pewpew', true);
-            }
-        }
-    }
-}
 
 function doAttack(creep) {
     let target;
@@ -63,10 +22,7 @@ function doAttack(creep) {
             return !_.contains(fox.friends, o.owner.username);
         });
 
-        if (bads.length > 2) {
-            creep.rangedMassAttack();
-
-        } else {
+        if (bads.length === 1) {
             if (bads[0] !== undefined) {
                 if (creep.pos.inRangeTo(bads[0], 3)) {
                     creep.rangedAttack(bads[0]);
@@ -74,6 +30,8 @@ function doAttack(creep) {
                     return true;
                 }
             }
+        } else {
+            creep.rangedMassAttack();
         }
         break;
 
@@ -100,6 +58,9 @@ class rangerClass extends roleParent {
         if (super.returnEnergy(creep)) {
             return;
         }
+            if (super.boosted(creep, ['XKHO2', 'XGHO2','XLHO2'])) {
+                return;
+            }
 
         if (super.goToPortal(creep)) return;
         if (creep.pos.isNearTo(Game.flags.kill)) {
@@ -123,7 +84,7 @@ class rangerClass extends roleParent {
         }
 
         creep.say(creep.memory.party);
-        //      creep.heal(creep);
+        creep.heal(creep);
         //var defendFlag = movement.
         /*              */
         //      if(enemy.length > 0) {

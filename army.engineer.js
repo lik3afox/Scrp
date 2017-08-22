@@ -5,7 +5,7 @@ var classLevels = [
     [MOVE, MOVE, MOVE, WORK, MOVE, MOVE, WORK, WORK, WORK, CARRY],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, CARRY, CARRY], // 850
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, CARRY, CARRY],
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY],
+    [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY],
     [MOVE, WORK, CARRY, MOVE, WORK, MOVE, WORK, CARRY, MOVE, WORK,
         MOVE, WORK, CARRY, MOVE, WORK, MOVE, WORK, CARRY, MOVE, WORK,
         MOVE, WORK, CARRY, MOVE, WORK, MOVE, WORK, CARRY, MOVE, WORK,
@@ -86,8 +86,9 @@ class engineerClass extends roleParent {
             if (creep.carry.energy < (creep.stats('mining') + 1)) {
                 creep.memory.building = false;
                 creep.say('harvesting');
+                super._constr.pickUpEnergy(creep);
                 /*
-                                               if (!super._constr.moveToPickUpEnergy(creep)) {
+                                               if (!super._constr.pickUpEnergy(creep)) {
                                 //                if (!super._containers.withdrawFromStorage(creep)) {
                                                       if (!super._containers.moveToWithdraw(creep)) {
                                 //      if (!super._containers.moveToWithdraw(creep))
@@ -101,22 +102,22 @@ class engineerClass extends roleParent {
 
 
             if (creep.memory.building) {
-//                                      if (!spawn.moveToTransfer(creep)) {
+                                      if (!spawn.moveToTransfer(creep)) {
                 if (!constr.moveToBuild(creep)) {
 //                    if (!super._containers.moveToStorage(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(creep.room.controller);
                         }
   //                  }
-  //                                    }
+                                      }
                 } else {
                     constr.doCloseRoadRepair(creep);
                 }
 
             } else {
-                if (creep.room.name == 'E37S83') {
+                if (creep.room.name == 'E23xxS38') {
                     if (!super._constr.moveToPickUpEnergy(creep, 300)) {
-                        if (!super._containers.moveToWithdraw(creep)) {
+//                        if (!super._containers.moveToWithdraw(creep)) {
                             let zz = Game.getObjectById('588371768b6b60986f18d1d8');
                             if (zz !== null)
                                 if (creep.pos.isNearTo(zz)) {
@@ -124,20 +125,20 @@ class engineerClass extends roleParent {
                                 } else {
                                     creep.moveMe(zz);
                                 }
-                        }
+  //                      }
                     }
                 } else {
-         //           if (!super._constr.moveToPickUpEnergy(creep)) {
-//                        if (!super._containers.moveToWithdraw(creep)) {
-                            if (!super._containers.withdrawFromStorage(creep)) {
+//                    if (!super._constr.moveToPickUpEnergy(creep),100) {
+                        if (!super._containers.moveToWithdraw(creep)) {
+//                            if (!super._containers.withdrawFromStorage(creep)) {
                                 //           if (!super._containers.moveToWithdraw(creep))
                                 super._sources.moveToWithdraw(creep);
-      //                      }
+                            }
                             //                        creep.say('zZzZ')
-           //             }
-                    }
+                        }
+  //                  }
 
-                }
+          //      }
             }
 
             /*else {

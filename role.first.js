@@ -159,7 +159,7 @@ function moveOnPath(creep) {
 }
 
 function getEnergy(creep) {
-    if (creep.room.name == 'xx') {
+    if (creep.room.name == 'E17S34' || creep.room.name == 'E2xx3S38') {
         if (!constr.moveToPickUpEnergy(creep, 200)) {
             if (!containers.withdrawFromStorage(creep)) {
                 if (!containers.withdrawFromTerminal(creep)) {
@@ -171,36 +171,38 @@ function getEnergy(creep) {
             }
         }
 
-    } else if (creep.room.name == "xx") {
-        let tgt = Game.getObjectById('58c15b77dae08a9e411bb197');
-        if (tgt !== null && creep.withdraw(tgt, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(tgt);
-            creep.say('E28');
-
-        }
-
-    } else if (creep.room.name == 'xx') {
+    } else if (creep.room.name == "E23xxS38"||creep.room.name == "Exx23S38") {
+                    if (!containers.moveToWithdraw(creep)) {
+            if(constr.moveToPickUpEnergy(creep)){
+            }
+//                        if (!sources.moveToWithdraw(creep)) {}
+                    }
+    } else if (creep.room.name == 'E18S36') {
         //                    if(!constr.moveToPickUpEnergy(creep,creep.carryCapacity-75)){
-        if (!containers.withdrawFromTerminal(creep)) {
+//       if (!containers.withdrawFromTerminal(creep)) {
             if (!containers.withdrawFromStorage(creep)) {}
-        }
+  //      }
         //                    }
 
     } else {
         if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
             creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
         } else {
-            //if(!constr.moveToPickUpEnergy(creep,50)){
+//            if(creep.room.name !== 'E23S38' && !constr.moveToPickUpEnergy(creep,250)){
             if (!containers.withdrawFromStorage(creep)) {
-                                        if(!containers.moveToWithdraw(creep)) {
+//                                        if(!containers.moveToWithdraw(creep)) {
                 if (!containers.withdrawFromTerminal(creep)) {
                     if (!containers.moveToWithdraw(creep)) {
-                        if (!sources.moveToWithdraw(creep)) {}
+
+            if(!constr.moveToPickUpEnergyIn(creep,2)){
+                        if (!sources.moveToWithdraw(creep)) {
+
+                        }
                     }
-                    //                      }
+                                          }
                 }
             }
-        }
+  //      }
                            } 
 
     }
