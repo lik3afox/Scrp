@@ -226,7 +226,7 @@ function E17S45(creep, fill) {
                         creep.moveTo(term);
                     }
                 } else {*/
-                    let goto = Game.getObjectById('599af50ef7512a4ed203ec50');
+                    let goto = Game.getObjectById('599d4b24de5c444ff07248a4');
                     if (goto !== null) {
                         if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(goto, {
@@ -240,7 +240,7 @@ function E17S45(creep, fill) {
                 break;
             case 1:
                 let goto2 = Game.getObjectById('599b0851a7a2e40dcce2f69f');
-                if(goto2.store[RESOURCE_ENERGY] < 1500) goto2 = Game.getObjectById('599af50ef7512a4ed203ec50');
+//                if(goto2.store[RESOURCE_ENERGY] < 1500) goto2 = Game.getObjectById('599af50ef7512a4ed203ec50');
                 if (goto2 !== null) {
                     if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(goto2, {
@@ -344,7 +344,7 @@ function E23S38(creep, fill) {
                         creep.moveTo(term);
                     }
                 } else {*/
-                    let goto = Game.getObjectById('59962ed53274cc53b91bbf49');
+                    let goto = Game.getObjectById('599d511549eaf30b4769db20');
                     if (goto !== null) {
                         if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(goto, {
