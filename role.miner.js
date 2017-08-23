@@ -165,7 +165,7 @@ class settler extends roleParent {
         movement.checkForBadsPlaceFlag(creep);
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
-        if (creep.memory.level > 2) super.rebirth(creep);
+        if (creep.memory.level >= 2) super.rebirth(creep);
         if (super.keeperWatch(creep)) {
             return;
         }
@@ -181,9 +181,9 @@ class settler extends roleParent {
             if (_.sum(creep.carry) >= creep.carryCapacity - 15 && _source.energy !== 0) {
                 if (creep.memory.workContainer === undefined) {
                     let range = 4;
-                    if (creep.room.name == 'E27S74') range = 2;
+                    if (creep.room.name == 'E24S38') range = 2;
 
-                    let isContainer = creep.pos.findInRange(FIND_STRUCTURES, range, {
+                    let isContainer = _source.pos.findInRange(FIND_STRUCTURES, range, {
                         filter: object => (object.structureType == STRUCTURE_CONTAINER)
                     });
                     // Checks for container 
@@ -299,6 +299,7 @@ class settler extends roleParent {
                         }
                     }; 
                    task.pos = _source.pos;
+                task.count = true;
                     task.order = "moveTo";
                     task.enemyWatch = true;
                     task.rangeHappy = 1;

@@ -22,7 +22,7 @@ var scienceParty = [
     ['scientist', require('role.scientist'), 1, 3]
 ];
 var engineerParty = [
-    ['engineer', require('army.engineer'), 1  , 4],
+    ['engineer', require('army.engineer'), 1   , 4],
 ];
 var engineer2Party = [
     ['engineer', require('army.engineer'), 2  , 4],

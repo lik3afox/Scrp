@@ -425,14 +425,22 @@ class baseParent {
                             if (!constr.moveToPickUpEnergyIn(creep, 7)) {
                                 if (creep.moveMe(tmp2, task.options) == OK) {
                                     if (task.count) {
-                                        creep.countDistance();
+                                if (creep.memory.distance === undefined) {
+                                    creep.memory.distance = 0;
+
+                                }
+                                creep.memory.distance++;
                                     }
                                 }
                             }
                         } else {
                             if (creep.moveMe(tmp2, task.options) == OK) {
                                 if (task.count) {
-                                    creep.countDistance();
+                                if (creep.memory.distance === undefined) {
+                                    creep.memory.distance = 0;
+
+                                }
+                                creep.memory.distance++;
                                 }
                             }
                         }

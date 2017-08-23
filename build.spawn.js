@@ -103,8 +103,8 @@ var newbModLevel = [
 var Mod_E18S36 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 0, 3],
-    ['upbuilder', require('role.upbuilder'), 2, 6],
+    ['wallwork', require('role.wallworker'), 1, 2],
+    ['upbuilder', require('role.upbuilder'), 3, 6],
     ['linker', require('role.linker'), 2, 2],
     ['homeDefender', require('role.defender2'), 1, 4]
 ];
@@ -112,49 +112,59 @@ var Mod_E18S36 = [
 var Mod_E17S34 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-        ['wallwork', require('role.wallworker'), 1, 1],
-        ['upbuilder', require('role.upbuilder'), 3, 2],
-        ['linker', require('role.linker'), 2, 2],
+        ['wallwork', require('role.wallworker'), 1, 2],
+        ['upbuilder', require('role.upbuilder'), 1 , 2],
+        ['linker', require('role.linker'), 2, 4],
     //    ['homeDefender', require('role.defender2'), 1, 4]
 ];
 var Mod_E18S32 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-    //    ['wallwork', require('role.wallworker'), 0, 3],
+        ['wallwork', require('role.wallworker'), 1, 2],
         ['upbuilder', require('role.upbuilder'), 2, 2],
-    //    ['linker', require('role.linker'), 2, 2],
+        ['linker', require('role.linker'), 2, 4],
+        ['homeDefender', require('role.defender2'), 1, 2]
+];
+var Mod_E28S37 = [
+    ['first', require('role.first'), 2, 2],
+    ['harvester', require('role.harvester'), 2, 2],
+        ['wallwork', require('role.wallworker'), 1, 2],
+        ['upbuilder', require('role.upbuilder'), 2, 2],
+        ['linker', require('role.linker'), 2, 2],
     //    ['homeDefender', require('role.defender2'), 1, 4]
 ];
 var Mod_E23S38 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-        ['wallwork', require('role.wallworker'), 1, 1],
+        ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 2, 2],
-        ['linker', require('role.linker'), 2, 2]
-    //    ['homeDefender', require('role.defender2'), 1, 4]
+        ['linker', require('role.linker'), 2, 2],
+        ['homeDefender', require('role.defender2'), 1,3]
 ];
 var Mod_E24S37 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-    //    ['wallwork', require('role.wallworker'), 0, 3],
-        ['upbuilder', require('role.upbuilder'), 2, 2],
-        ['linker', require('role.linker'), 2, 2],
-    //    ['homeDefender', require('role.defender2'), 1, 4]
+        ['wallwork', require('role.wallworker'), 1, 2],
+
+        ['upbuilder', require('role.upbuilder'), 1, 2],
+        ['linker', require('role.linker'), 2, 3],
+        ['homeDefender', require('role.defender2'), 1, 3]
 ];
 var Mod_E25S37 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-    //    ['wallwork', require('role.wallworker'), 0, 3],
+        ['wallwork'  , require('role.wallworker'), 1, 2],
+
         ['upbuilder', require('role.upbuilder'), 2, 2],
-    //    ['linker', require('role.linker'), 2, 2],
+        ['linker', require('role.linker'), 2, 3],
     //    ['homeDefender', require('role.defender2'), 1, 4]
 ];
 var Mod_E17S45 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-        ['wallwork', require('role.wallworker'), 1, 1],
-        ['upbuilder', require('role.upbuilder'), 2, 2],
-        ['linker', require('role.linker'), 2, 2],
+        ['wallwork', require('role.wallworker'), 1, 2],
+        ['upbuilder', require('role.upbuilder'), 1, 2],
+        ['linker', require('role.linker'), 2, 4],
     //    ['homeDefender', require('role.defender2'), 1, 4]
 ];
 
@@ -616,6 +626,8 @@ function getCurrentModule(spawn) {
                 return Mod_E17S34;
             case 'E18S32':
                 return Mod_E18S32;
+            case 'E28S37':
+                return Mod_E28S37;
 
             case 'E23S38':
                 return Mod_E23S38;
