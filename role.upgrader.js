@@ -71,7 +71,7 @@ class roleUpgrader extends roleParent {
 
 
 
-        if (creep.carry.energy < 4) {
+        if (creep.carry.energy < creep.stats('upgrading')+1) {
             if (creep.room.name == 'E35S73') {
                 if (creep.memory.roleID == '1') {
                     if (!creep.pos.isEqualTo(new RoomPosition(40, 39, 'E35S73'))) {

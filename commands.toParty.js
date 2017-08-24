@@ -22,10 +22,10 @@ var scienceParty = [
     ['scientist', require('role.scientist'), 1, 3]
 ];
 var engineerParty = [
-    ['engineer', require('army.engineer'), 1   , 4],
+    ['engineer', require('army.engineer'), 1, 4],
 ];
 var engineer2Party = [
-    ['engineer', require('army.engineer'), 2  , 4],
+    ['engineer', require('army.engineer'), 2, 3],
 ];
 var thiefParty = [
     ['thief', require('army.thief'), 3, 3],
@@ -35,7 +35,7 @@ var thief2Party = [
 ];
 
 var muleParty = [
-    ['mule', require('army.mule'), 2, 1]
+    ['mule', require('army.mule'), 3, 1]
 ];
 
 var skInvade = [
@@ -65,7 +65,9 @@ var smallPowerParty = [
 ];
 
 var mageParty = [
-    ['mage', require('army.mage'), 1, 0]
+    ['mage', require('army.mage'), 1, 1]
+    //    ['healer', require('army.healer'), 1, 4] // Healer
+
 ];
 
 var trollParty = [
@@ -93,12 +95,11 @@ var warParty = [
     ['healer', require('army.healer'), 1, 6] // Healer    
 ];
 var fightHealer = [
-    ['fighter', require('army.fighter'), 1, 4],
-    ['healer', require('army.healer'), 1, 4]
+    ['fighter', require('army.fighter'), 1, 11],
+    ['healer', require('army.healer'), 1, 5]
 ];
 var fight2Healer = [
-    ['fighter', require('army.fighter'), 1, 4],
-    ['healer', require('army.healer'), 2, 4]
+    ['fighter', require('army.fighter'), 1, 2],
 ];
 var warParty2 = [
     ['first', require('role.first'), 0, 4],
@@ -215,7 +216,11 @@ var soloGuard = [
     ['rampartGuard', require('army.rampartGuard'), 1, 0]
 ];
 var harass = [
-    ['harass', require('keeper.harass'), 1, 0]
+    ['harass', require('keeper.harass'), 2, 0]
+    
+];
+var harass2 = [
+    ['harass', require('keeper.harass'), 1, 1]
 ];
 // This party is created and sent to the red flag when done. 
 
@@ -244,8 +249,15 @@ function getSpawnCreating(flag) {
     }
 
     switch (flag.name) {
-        //    case 'scout2' :
-           case 'Flag61':
+
+        case 'engineer2':
+            return 'E28S37';
+        case 'mule':
+            return 'E17S34';
+        case 'mule2':
+            return 'E18S32';
+            //    case 'scout2' :
+        case 'Flag61':
         case 'warparty1':
         case 'warparty5':
 
@@ -257,18 +269,17 @@ function getSpawnCreating(flag) {
         case 'oneFight':
         case '3upgrade':
         case 'thief5':
-        case 'mule':
         case 'thief':
 
         case 'upgradeRoom':
 
         case 'recontrol':
         case 'test':
-        case 'engineer2':
+
         case 'engineer3':
         case 'science':
-        case 'safemode':
-//            return returnClosestRoom(flag.pos.roomName);
+        case 'fightHealer':
+            //            return returnClosestRoom(flag.pos.roomName);
         case 'thief2':
         case 'thief3':
         case 'thief5':
@@ -279,17 +290,19 @@ function getSpawnCreating(flag) {
         case 'mage':
         case 'engineer2':
         case 'control':
+        case 'harass':
+        case 'harass2':
             return 'E18S36';
-//            return 'E24S37';
+            //            return 'E28S37';
 
         case 'fighter':
         case 'upgrade':
         case 'tower':
         case 'scout':
             return returnClosestRoom(flag.pos.roomName);
-    //    default:
-  //      case 'scout':
-//            return 'E35S83';
+            //    default:
+            //      case 'scout':
+            //            return 'E35S83';
 
             //      return 'E26S73';
     }
@@ -322,10 +335,10 @@ function getCurrentParty(flag) {
                 return safemode;
             case 'fightHealer':
                 return fightHealer;
-                
+
             case 'fight2Healer':
                 return fight2Healer;
-                
+
             case 'oneFight':
                 return soloFighter;
             case 'troll':
@@ -335,7 +348,7 @@ function getCurrentParty(flag) {
             case 'warparty33':
                 return warParty33;
             case 'tower':
-            return towerParty;
+                return towerParty;
             case 'upgradeRoom':
                 return upgradeRoomParty;
             case 'warparty2':
@@ -350,6 +363,8 @@ function getCurrentParty(flag) {
                 return warParty5;
             case 'warparty3':
                 return warParty3;
+            case 'harass2':
+                return harass2;
             case 'harass':
                 return harass;
             case 'lowFFH':
@@ -360,6 +375,8 @@ function getCurrentParty(flag) {
                 return demoParty;
 
             case 'mule':
+            case 'mule2':
+
                 return muleParty;
 
             case 'kill':
@@ -686,7 +703,7 @@ function createWayPath(creep, path) {
                         if (o.roomName !== 'none' && o.roomName !== 'portal')
                             createWayPointTask(creep, new RoomPosition(o.x, o.y, o.roomName));
                     }
-                    // set the flag
+                // set the flag
                 creep.memory.party = Game.flags[creep.memory.party].memory.nextFlag;
             }
 

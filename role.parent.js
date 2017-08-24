@@ -140,7 +140,7 @@ var fox = require('foxGlobals');
 function getDeathSpot(roomName) {
     switch (roomName) {
         case "E18S36":
-            return new RoomPosition(37, 24, roomName);
+            return new RoomPosition(39, 23, roomName);
 
         default:
             return;
@@ -665,7 +665,7 @@ class baseParent {
         if (creep.memory.role === 'rampartGuard') {
             if (creep.ticksToLive < 750) return false;
         } else {
-            if (creep.ticksToLive < 1400) return false;
+            if (creep.ticksToLive < 1000) return false;
         }
 
         if (creep.memory.boostNeeded === undefined) {
@@ -1227,7 +1227,7 @@ class baseParent {
     }
 
     static avoidArea(creep) {
-        var detect = 10;
+        var detect = 20;
 
         if (creep.room.name == 'E25S36') {
             detect = 25;

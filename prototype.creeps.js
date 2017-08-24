@@ -400,6 +400,8 @@ module.exports = function() {
             if (this.pos.isNearTo(close)) {
                 if (this.getActiveBodyparts(ATTACK) > 0) {
                     this.attack(close);
+                } else if(this.getActiveBodyparts(RANGED_ATTACK) > 0) {
+                    this.rangedMassAttack();
                 } else {
                     this.dismantle(close);
                 }

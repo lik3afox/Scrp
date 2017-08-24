@@ -33,44 +33,11 @@ function getCost(module) {
 
 function getSpawnCreating(flag) {
     switch (flag.name) {
-        case 'Flag18':
-        case 'Flag11':
-        case 'Flag26':
-            return 'E26S73';
-        case 'Flag20':
-            return 'E26S77';
-        case 'Flag28':
-            return 'E26S77';
-            //        case 'Flag53':
-        case 'Flag58':
-        case 'Flag8':
-
-            return 'E23S75';
-        case 'Flag34':
-        case 'E36S74':
-        case 'Flag51':
-            return 'E35S73';
-        case 'Flag39':
-        case 'Flag41':
-        case 'Flag53':
-        case 'Flag60':
-            return 'E35S83';
-        case 'Flag56':
-        case 'Flag55':
-            return 'W4S93';
-        case 'Flag40':
-            return 'E35S73';
-        case 'Flag43':
-        case 'E36S75':
-        case 'Flag52':
-            return 'E37S75';
-        case 'Flag57':
-            return 'E33S76';
-
-        case 'Flag7':
-            return 'E23S75';
-        case 'Flag8':
-            return 'E33S76';
+        case 'Flag13':
+            case 'Flag14':
+            case 'Flag15':
+            case 'Flag16':
+            return 'E18S36';
 
         default:
             return '';
@@ -92,31 +59,14 @@ function getCurrentParty(flag) {
         }
     } else {
         switch (flag.name) {
-            case 'E36S75':
-            case 'Flag56':
-            case 'Flag57':
-            case 'Flag58':
-            case 'Flag55':
-            case 'Flag8':
-            case 'Flag18':
-            case 'Flag20':
-            case 'Flag11':
-            case 'Flag26':
-            case 'Flag34':
-            case 'E36S74':
-            case 'Flag8':
-            case 'Flag28':
-            case 'Flag51':
-            case 'Flag52':
+            case 'Flag13':
+            case 'Flag14':
+            case 'Flag15':
+            case 'Flag16':
                 return guardParty;
-            case 'Flag7':
-            case 'Flag43':
-            case 'Flag60':
-            case 'Flag39':
+            case 'Flag53':
                 return invasionParty;
             case 'Flag53':
-            case 'Flag41':
-            case 'Flag40':
                 return shooterParty;
             default:
                 return guardParty;

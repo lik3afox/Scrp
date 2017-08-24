@@ -180,7 +180,7 @@ class settler extends roleParent {
 
             if (_.sum(creep.carry) >= creep.carryCapacity - 15 && _source.energy !== 0) {
                 if (creep.memory.workContainer === undefined) {
-                    let range = 4;
+                    let range = 2;
                     if (creep.room.name == 'E24S38') range = 2;
 
                     let isContainer = _source.pos.findInRange(FIND_STRUCTURES, range, {

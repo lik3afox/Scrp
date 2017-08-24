@@ -2,7 +2,7 @@ function use() { "use strict"; }
 var total = 0;
 var _links = [
     // Spawn 1 room
-    '5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb'
+    '5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb','599db076d16d032ddc47c76d'
 ];
 
 var gameCache = [];
@@ -101,6 +101,7 @@ class buildLink {
         sendEnergy(['599d2e9d8b56f54f26879246','5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb'], '5997883fab58151efecc98e0', 700);
         sendEnergy(['599d7b1826a1d10fe2916c7a'], '599d4b24de5c444ff07248a4', 700);
         sendEnergy(['599d67c618a08751a7262df9'], '599d511549eaf30b4769db20', 700);
+        sendEnergy(['599db076d16d032ddc47c76d'], '599d9a8849dbcd7a6e95f99b');
 
         gameCache = []; // cleaning up cache for this tick.
     }

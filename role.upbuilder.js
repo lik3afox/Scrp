@@ -226,10 +226,11 @@ class roleUpbuilder extends roleParent {
         if (creep.memory.upgrading) {
             var spawn = require('commands.toSpawn');
             var number = 0;
+            var doNot = ['E28S37'];
 
             var strucs = Game.getObjectById(creep.memory.constructionID);
 
-            if (strucs !== null ) {
+            if (strucs !== null && !_.contains(doNot,creep.room.name) ) {
                 if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(strucs);
                 }

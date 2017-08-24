@@ -159,7 +159,7 @@ function moveOnPath(creep) {
 }
 
 function getEnergy(creep) {
-    if (creep.room.name == 'E17xxS34' || creep.room.name == 'E2xx3S38') {
+    if (creep.room.name == 'E27S34' || creep.room.name == 'E2xx3S38') {
         if (!constr.moveToPickUpEnergy(creep, 200)) {
             if (!containers.withdrawFromStorage(creep)) {
                 if (!containers.withdrawFromTerminal(creep)) {

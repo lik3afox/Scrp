@@ -2,6 +2,8 @@ class SourceInteract {
 
     static moveToWithdraw(creep) {
 
+        if(creep.getActiveBodyparts(WORK) === 0) return false;
+
         let source = Game.getObjectById(creep.memory.sourceID);
         if (source === null || source.energy === 0 || source.energy === undefined) {
             var total = creep.room.find(FIND_SOURCES);
