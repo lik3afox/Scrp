@@ -254,7 +254,7 @@ function moveToRallyFlag(creep) {
     if (moveToPos !== undefined) {
         if (creep.room.name == moveToPos.roomName) {
             if (!creep.pos.isEqualTo(moveToPos))
-                creep.moveMe(moveToPos, { ignoreRoads: true, maxOpts: 100, reusePath: 2 });
+                creep.moveMe(moveToPos, {  maxOpts: 100, reusePath: 2 });
         } else {
             if (!creep.pos.isEqualTo(moveToPos))
                 creep.moveMe(moveToPos, { reusePath: 50 });
@@ -264,9 +264,9 @@ function moveToRallyFlag(creep) {
 
     if (Game.flags[creep.memory.party] === undefined) return false;
     if (creep.room.name == Game.flags[creep.memory.party]) {
-        creep.moveMe(Game.flags[creep.memory.party], { ignoreRoads: true, ignoreCreeps: true });
+        creep.moveMe(Game.flags[creep.memory.party], {  ignoreCreeps: true });
     } else {
-        creep.moveMe(Game.flags[creep.memory.party], { ignoreRoads: true, reusePath: 50 });
+        creep.moveMe(Game.flags[creep.memory.party], {  reusePath: 50 });
     }
     //        creep.moveMe(Game.flags[creep.memory.party],{ignoreRoads: true,reusePath:50});
     creep.say('rally');

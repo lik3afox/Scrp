@@ -283,7 +283,7 @@ if(creep.room.name === 'E11S36' || creep.room.name === 'E12S34' ) {
 
 
             } else {            */
-                    creep.killBase();
+//                    creep.killBase();
 //                }
                 return;
         } 
@@ -311,7 +311,7 @@ if(creep.room.name === 'E11S36' || creep.room.name === 'E12S34' ) {
                         creep.memory.goTo = undefined;
                 }
             }
-        } else  if (creep.room.name != creep.memory.goalPos.roomName) {
+        } else  if (creep.memory.goalPos !== undefined && creep.room.name != creep.memory.goalPos.roomName) {
             let bads = getHostiles(creep);
             if (bads.length > 0) {
                 attackCreep(creep, bads);

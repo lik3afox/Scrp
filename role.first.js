@@ -187,13 +187,13 @@ function getEnergy(creep) {
         if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
             creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
         } else {
-            //            if(creep.room.name !== 'E23S38' && !constr.moveToPickUpEnergy(creep,250)){
             if (!containers.withdrawFromStorage(creep)) {
                 //                                        if(!containers.moveToWithdraw(creep)) {
                 if (!containers.withdrawFromTerminal(creep)) {
                     if (!containers.moveToWithdraw(creep)) {
 
                         if (!constr.moveToPickUpEnergyIn(creep, 2)) {
+                        if(!constr.moveToPickUpEnergy(creep,creep.memory.roleID * 100)){
                             if (!sources.moveToWithdraw(creep)) {
 
                             }
@@ -201,7 +201,7 @@ function getEnergy(creep) {
                     }
                 }
             }
-            //      }
+                  }
         }
 
     }

@@ -102,6 +102,7 @@ class buildLink {
         sendEnergy(['599d7b1826a1d10fe2916c7a'], '599d4b24de5c444ff07248a4', 700);
         sendEnergy(['599d67c618a08751a7262df9'], '599d511549eaf30b4769db20', 700);
         sendEnergy(['599db076d16d032ddc47c76d'], '599d9a8849dbcd7a6e95f99b');
+        sendEnergy(['599e156450b255770346a5cf'], '599e02188f76c44a7e6079c8',700);
 
         gameCache = []; // cleaning up cache for this tick.
     }

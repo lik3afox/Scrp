@@ -289,11 +289,11 @@ function getSpawnCreating(flag) {
         case 'engineer':
         case 'mage':
         case 'engineer2':
-        case 'control':
         case 'harass':
         case 'harass2':
             return 'E18S36';
-            //            return 'E28S37';
+        case 'control':
+                        return 'E25S37';
 
         case 'fighter':
         case 'upgrade':

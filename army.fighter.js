@@ -353,15 +353,15 @@ class fighterClass extends roleParent {
                         creep.say('kill');
                         creep.killBase();
                     } else {
-                        if (creep.room.name == 'E16S33' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
-                            creep.killBase();
+                        if (creep.room.name == 'E11S38' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+                            creep.killBase({maxRooms:1});
                         } else {
 
                             movement.flagMovement(creep);
                         }
                     }
                 } else {
-                    if (creep.room.name == 'E52S67' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+                    if (creep.room.name == 'E11S38' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
                         creep.killBase();
                     } else {
 
