@@ -160,6 +160,15 @@ var Mod_E25S37 = [
         ['linker', require('role.linker'), 2, 3],
     //    ['homeDefender', require('role.defender2'), 1, 4]
 ];
+var Mod_E13S34 = [
+    ['first', require('role.first'), 2, 2],
+    ['harvester', require('role.harvester'), 2, 2],
+//        ['wallwork'  , require('role.wallworker'), 1, 2],
+
+        ['upbuilder', require('role.upbuilder'), 2, 2],
+        ['linker', require('role.linker'), 2, 3],
+    //    ['homeDefender', require('role.defender2'), 1, 4]
+];
 var Mod_E17S45 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
@@ -628,7 +637,7 @@ function getCurrentModule(spawn) {
 
     if (spawn === null || spawn === undefined) return;
     var currentModuleLevel = getModuleLevel(spawn);
-    if (spawn.room.controller.level >= 4) {
+    if (spawn.room.controller.level >= 3) {
         switch (spawn.pos.roomName) {
             case 'E18S36':
                 return Mod_E18S36;
@@ -648,6 +657,8 @@ function getCurrentModule(spawn) {
                 return Mod_E25S37;
             case 'E17S45':
                 return Mod_E17S45;
+            case 'E17S45':
+                return Mod_E13S34;
 
 
         }

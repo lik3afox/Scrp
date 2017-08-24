@@ -686,7 +686,60 @@ function E14S37(creep, fill) {
         }
     }
 }
-
+function E13S34(creep, fill) {
+    if (!fill) {
+        switch (creep.memory.roleID) {
+            case 0:
+/*                var term = creep.room.terminal;
+                if (term !== undefined && term.store[RESOURCE_ENERGY] > 21000) {
+                    if (creep.withdraw(term, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(term);
+                    }
+                } else {*/
+                    let goto = Game.getObjectById('599ee038f0327b2b551df4df');
+                    if (goto !== null) {
+                        if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(goto, {
+                                reusePath: 20
+                            });
+                        }
+                    }
+//                }
+//                takeFromTerminalForStorage(creep);
+                //            }
+                break;
+            case 1:
+                let goto2 = Game.getObjectById('599ee751e3d49719adc79c2e');
+                if (goto2 !== null) {
+                    if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto2, {
+                            reusePath: 20
+                        });
+                    }
+                }
+                //                takeFromTerminalForStorage(creep);
+                //            }
+                break;
+        }
+    } else {
+        switch (creep.memory.roleID) {
+            default: let zz = creep.room.storage;
+            if (zz === undefined) {
+                moveToAndDrop(creep,new RoomPosition(41,17,creep.room.name));
+            } else {
+                if (creep.pos.isNearTo(zz)) {
+                    for (var e in creep.carry) {
+                        creep.transfer(zz, e);
+                    }
+                } else {
+                    creep.moveTo(zz);
+                }
+            }
+            //        toStorageOrTerminal(creep);
+            break;
+        }
+    }
+}
 class roleLinker extends roleParent {
 
     static levels(level) {
@@ -719,6 +772,9 @@ if(creep.room.name !== 'E28S37')
         var goto;
 
             switch (creep.pos.roomName) {
+                case 'E13S34':
+                    E13S34(creep, creep.memory.full);
+                    break;
                 case 'E18S36':
                     E18S36(creep, creep.memory.full);
                     break;
