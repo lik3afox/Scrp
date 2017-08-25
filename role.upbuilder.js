@@ -196,8 +196,9 @@ class roleUpbuilder extends roleParent {
                         }
                 } else {
                     if (!super._containers.withdrawFromStorage(creep))
-                        if (!containers.moveToWithdraw(creep)) {
                             if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
+                        if (!containers.moveToWithdraw(creep)) {
+//                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 
                             }
                         }
@@ -226,7 +227,7 @@ class roleUpbuilder extends roleParent {
         if (creep.memory.upgrading) {
             var spawn = require('commands.toSpawn');
             var number = 0;
-            var doNot = ['E28S37'];
+            var doNot = [];
 
             var strucs = Game.getObjectById(creep.memory.constructionID);
 

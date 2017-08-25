@@ -550,7 +550,7 @@
             Memory.marketRunCounter--;
             if (Memory.marketRunCounter <= 0) {
                 Memory.marketRunCounter = 10;
-  //              market.run();
+                market.run();
             }
 
         if (Game.spawns.Spawn1 !== undefined) {

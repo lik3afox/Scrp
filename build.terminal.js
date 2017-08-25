@@ -17,10 +17,7 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var terminals = ['58b0bd65ad252479508f2eab', '58b31b469e8b37461c88d6f3', '58e174a1be34d67531319d7f', '58e2633bd12e106302dce492',
-    '58b1cbbd08b3b7bd61139e14', '594040ae3058b1431a1d2629', '58bb4e55942e459e3151f9b6', '58bf37b77dfb1e2f42591b87', '58bfb95f87bda510020bb080', '58c48f1b119a7dfa3b53525d',
-    '58f81a437684166367608336', '5902420f523e1c2d5ca6114a', '591365a95128141e7200c235', '59497bc41d25613f756a1eb2', '597ee55a3af56f6ff43c0669'
-];
+var terminals = ['E18S36'];
 
 // If you need to focus all minerals somewhere change it here.
 var focusID; // = '591365a95128141e7200c235';
@@ -963,22 +960,23 @@ class roleTerminal {
         //        focusMinerals(focusID, focusMin);
 
         cleanUpOrders();
-        adjustOldPrices();
-        Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
+//        adjustOldPrices();
+//        Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
 
         //            Memory.termRun = 10;
         for (var e in terminals) {
-            let terminal = Game.getObjectById(terminals[e]);
-            if (terminal !== null) {
-                if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
-                    newTradeEnergy(terminal);
+            let terminal = Game.rooms[terminals[e]].terminal;
+            if (terminal !== undefined) {
+//                if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
+//                    newTradeEnergy(terminal);
                 //          focusEnergy(terminal); Removed
-                forEveryTerminal(terminal);
-                terminal.room.memory.didOrder = false;
-                let needed = labs.neededMinerals(terminal.pos.roomName);
-                getMinerals(terminal, needed);
+//                forEveryTerminal(terminal);
+        //        terminal.room.memory.didOrder = false;
 
-                if (terminal.room.memory.powerSpawnID === undefined) {
+  //              let needed = labs.neededMinerals(terminal.pos.roomName);
+//                getMinerals(terminal, needed);
+
+    /*            if (terminal.room.memory.powerSpawnID === undefined) {
                     let zz = terminal.room.find(FIND_STRUCTURES);
                     zz = _.filter(zz, function(o) {
                         return o.structureType == STRUCTURE_POWER_SPAWN;
@@ -988,31 +986,31 @@ class roleTerminal {
                     } else {
                         terminal.room.memory.powerSpawnID = zz[0].id;
                     }
-                }
+                }*/
 
 
-                let zz = terminal.total;
-                needEnergy(terminal);
-                if (!newTradeEnergy(terminal)) {
+  //              let zz = terminal.total;
+//                needEnergy(terminal);
+            //    if (!newTradeEnergy(terminal)) {
 
-                    if (zz > 299000) {
-                        if (!shareEnergy(terminal)) { // Moves energy around
-                            if (!sellMineral(terminal)) {
-                                tradeEnergy(terminal);
-                            }
-                        } else {
-                            tradeEnergy(terminal);
-                        }
-                    }
-                }
+            //        if (zz > 299000) {
+        //                if (!shareEnergy(terminal)) { // Moves energy around
+            //                if (!sellMineral(terminal)) {
+             //                   tradeEnergy(terminal);
+         //                   }
+             //           } else {
+                       //     tradeEnergy(terminal);
+              //          }
+             //       }
+            //    }
             }
-            energyCheck(terminal);
+  //          energyCheck(terminal);
         }
 
         //   doDebt(); // Send energy to a target
         //        giveInviso();
-        tradeMineral();
-        makeMineralOrder();
+   //     tradeMineral();
+    //    makeMineralOrder();
 
     }
 

@@ -35,7 +35,7 @@ var thief2Party = [
 ];
 
 var muleParty = [
-    ['mule', require('army.mule'), 3, 1]
+    ['mule', require('army.mule'), 6, 1]
 ];
 
 var skInvade = [

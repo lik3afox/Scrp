@@ -2,7 +2,7 @@ function use() { "use strict"; }
 var total = 0;
 var _links = [
     // Spawn 1 room
-    '5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb','599db076d16d032ddc47c76d'
+    '5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb','599db076d16d032ddc47c76d','599f5542b6ef480fb43489c1','599f88a92e6d2935543e1b55'
 ];
 
 var gameCache = [];
@@ -98,11 +98,16 @@ class buildLink {
 
         total = 0;
         // Spawn 1
-        sendEnergy(['599d2e9d8b56f54f26879246','5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb'], '5997883fab58151efecc98e0', 700);
+        sendEnergy(['5997aa2a9ba23f4bc8cae84a','599d2e9d8b56f54f26879246','5999196d0efd617fae40a7eb'], '5997883fab58151efecc98e0',700);
         sendEnergy(['599d7b1826a1d10fe2916c7a'], '599d4b24de5c444ff07248a4', 700);
-        sendEnergy(['599d67c618a08751a7262df9'], '599d511549eaf30b4769db20', 700);
+        sendEnergy(['599d67c618a08751a7262df9','599f88a92e6d2935543e1b55'], '599d511549eaf30b4769db20', 700);
         sendEnergy(['599db076d16d032ddc47c76d'], '599d9a8849dbcd7a6e95f99b');
         sendEnergy(['599e156450b255770346a5cf'], '599e02188f76c44a7e6079c8',700);
+        sendEnergy(['599e2c7f6145822e02a37dd9'], '599e13ba4820ce76f0fb3380',700);
+        sendEnergy(['599e35c1296127177e64c747'], '599e1b793ffb5e7550c34732',700);
+        sendEnergy(['599f5542b6ef480fb43489c1'], '599ef53a7b9d8a11e04396e8',700);
+
+        sendEnergy(['599fd95638a48354454672af'], '599fb7715718b6076387d35f',700);
 
         gameCache = []; // cleaning up cache for this tick.
     }
@@ -142,9 +147,6 @@ class buildLink {
     static stayDeposit(creep) {
 
         if (creep.carry[RESOURCE_ENERGY] === 0) return false;
-        if (creep.room.name != creep.memory.home && creep.room.name != 'E37S75') {
-            return false;
-        }
         let LINK;
 
         if (creep.memory.linkID === undefined) {

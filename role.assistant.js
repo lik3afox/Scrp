@@ -19,7 +19,7 @@ var labsBuild = require('build.labs');
 
 function mineralContainerEmpty(creep) {
     //    if (creep.memory.containsGood) return false;
-    if (creep.memory.mineralContainerID === undefined) {
+    if (creep.memory.mineralContainerID === undefined && creep.room.memory.mineralID !== undefined) {
         var min = Game.getObjectById(creep.room.memory.mineralID);
         let contains = creep.room.find(FIND_STRUCTURES);
         if (min !== null) {
@@ -35,6 +35,7 @@ function mineralContainerEmpty(creep) {
     var a;
 
     var targetContain = Game.getObjectById(creep.memory.mineralContainerID);
+    
     if (targetContain !== null) {
         var keys = Object.keys(targetContain.store);
         var z = keys.length;

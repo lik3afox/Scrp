@@ -159,41 +159,14 @@ function moveOnPath(creep) {
 }
 
 function getEnergy(creep) {
-    if (creep.room.name == 'E27S34' || creep.room.name == 'E2xx3S38') {
-        if (!constr.moveToPickUpEnergy(creep, 200)) {
-            if (!containers.withdrawFromStorage(creep)) {
-                if (!containers.withdrawFromTerminal(creep)) {
-                    if (!containers.moveToWithdraw(creep)) {
-                        if (!sources.moveToWithdraw(creep)) {}
-                    }
-                    //                      }
-                }
-            }
-        }
-
-    } else if (creep.room.name == "E23xxS38" || creep.room.name == "Exx23S38") {
-        if (!containers.moveToWithdraw(creep)) {
-            if (constr.moveToPickUpEnergy(creep)) {}
-            //                        if (!sources.moveToWithdraw(creep)) {}
-        }
-    } else if (creep.room.name == 'E18S36') {
-        //                    if(!constr.moveToPickUpEnergy(creep,creep.carryCapacity-75)){
-        //       if (!containers.withdrawFromTerminal(creep)) {
-        if (!containers.withdrawFromStorage(creep)) {}
-        //      }
-        //                    }
-
+    if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
+        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
     } else {
-        if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
-            creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
-        } else {
-            if (!containers.withdrawFromStorage(creep)) {
-                //                                        if(!containers.moveToWithdraw(creep)) {
-                if (!containers.withdrawFromTerminal(creep)) {
-                    if (!containers.moveToWithdraw(creep)) {
-
-                        if (!constr.moveToPickUpEnergyIn(creep, 2)) {
-                        if(!constr.moveToPickUpEnergy(creep,creep.memory.roleID * 100)){
+        if (!containers.withdrawFromStorage(creep)) {
+            if (!containers.withdrawFromTerminal(creep)) {
+                if (!containers.moveToWithdraw(creep)) {
+                    if (!constr.moveToPickUpEnergyIn(creep, 2)) {
+                        if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 100)) {
                             if (!sources.moveToWithdraw(creep)) {
 
                             }
@@ -201,9 +174,7 @@ function getEnergy(creep) {
                     }
                 }
             }
-                  }
         }
-
     }
 }
 

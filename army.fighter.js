@@ -90,8 +90,8 @@ function doAttack(creep) {
             return false;
 
 
-        case "E52S64xx":
-            var E18S64targets = ['58002212f0b1ee20417fcf65'];
+        case "E23xxS34":
+            var E18S64targets = ['599be9309ab197379b933fb4'];
             for (a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
@@ -353,7 +353,7 @@ class fighterClass extends roleParent {
                         creep.say('kill');
                         creep.killBase();
                     } else {
-                        if (creep.room.name == 'E11S38' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+                        if (creep.room.name == 'E23S34' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
                             creep.killBase({maxRooms:1});
                         } else {
 
