@@ -164,7 +164,7 @@ class transport extends roleParent {
         if (creep.memory.gohome) {
 
 
-if(creep.room.controller.level === 1) {
+if(creep.room.controller !== undefined && creep.room.controller.level === 1) {
 
     if( creep.room.controller.ticksToDowngrade < 3000) {
         if(creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE ) {
