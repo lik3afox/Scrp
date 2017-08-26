@@ -262,7 +262,6 @@ class settler extends roleParent {
             if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.memory.distance++;
             //if(_source != undefined) console.log( creep.room.name,  _source.room.name)
             if (_source !== null && creep.room.name == _source.room.name) {
-
                 let task = {};
                 task.options = {
                     reusePath: 10,
@@ -284,8 +283,9 @@ class settler extends roleParent {
                 //                creep.moveMe(_source, { reusePath: 10 });
 
             } else {
+ var goingTo = movement.getRoomPos(creep.memory.goal);
                 //                }
-                if (_source !== null && _source.pos !== null) {
+                if (_source !== null) {
                     let task = {};
                     task.options = {
                         reusePath: 10,
@@ -299,13 +299,13 @@ class settler extends roleParent {
                         }
                     }; 
                    task.pos = _source.pos;
-                task.count = true;
+                    task.count = true;
                     task.order = "moveTo";
                     task.enemyWatch = true;
                     task.rangeHappy = 1;
                     creep.memory.task.push(task);
                 }
-                creep.moveMe(_source, { reusePath: 49 });
+                creep.moveMe(goingTo, { reusePath: 49 });
                 //                creep.say(_source);
             }
 

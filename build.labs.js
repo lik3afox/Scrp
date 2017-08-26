@@ -18,7 +18,7 @@ RESOURCE_ENERGY: "energy",
     RESOURCE_UTRIUM_LEMERGITE: "UL",
 
     RESOURCE_UTRIUM_HYDRIDE: "UH",
-    RESOURCE_UTRIUM_OXIDE: "UO",
+217    RESOURCE_UTRIUM_OXIDE: "UO",
     RESOURCE_KEANIUM_HYDRIDE: "KH",
     RESOURCE_KEANIUM_OXIDE: "KO",
     RESOURCE_LEMERGIUM_HYDRIDE: "LH",
@@ -55,14 +55,12 @@ E25S75
 */
 var constr = require('commands.toStructure');
 var labmax = 2401;
-var emptyLab = [
-{
+var emptyLab = [{
     id: 'none',
     resource: 'none',
     empted: false,
     amount: 0
-}
-];
+}];
 var allLabs = [{
     id: '59404817f09551065801fb93',
     resource: 'XGH2O',
@@ -187,8 +185,8 @@ function whatDoIHave(creep) {
 
 function labDo(roomName, created, labz, laby) {
     let labs = returnLabs(roomName);
+                console.log('created 0 ', created, labz, laby, roomName);
     if (created === 0) {
-        //        console.log('created 0 ', created, labz, laby, roomName);
         return false;
     }
     if (labs[created - 1] === undefined || labs[labz - 1] === undefined || labs[laby - 1] === undefined) {
@@ -197,10 +195,11 @@ function labDo(roomName, created, labz, laby) {
     }
     //    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
+    if(Memory.stats.totalMinerals !== undefined)
     if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
-//        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
+        //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
         return false;
-    }
+    } 
     let lab1 = getCached(labs[created - 1].id);
     let lab2 = getCached(labs[labz - 1].id);
     let lab3 = getCached(labs[laby - 1].id);
@@ -234,8 +233,7 @@ function labReady(roomName, labz) {
     return false;
 }
 
-var muster = [
-{
+var muster = [{
     id: 'getReplaced',
     resource: 'LH',
     amount: 2400,
@@ -332,39 +330,39 @@ var XUH2O = [{
 
 var XGH2O = [{
     id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'GH2O',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'X',
     amount: 2400,
     emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'XGH2O',
@@ -385,39 +383,39 @@ var XGH2O = [{
 
 var GH2O = [{
     id: 'getReplaced',
-    resource: 'GH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'GH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'GH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'GH',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'GH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'GH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'OH',
     amount: 2400,
     emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'GH2O',
@@ -437,39 +435,39 @@ var GH2O = [{
 
 var OH = [{
     id: 'getReplaced',
-    resource: 'OH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'OH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'OH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'O',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'OH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'OH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'H',
     amount: 2400,
     emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'OH',
@@ -490,19 +488,9 @@ var OH = [{
 
 var GH = [{
     id: 'getReplaced',
-    resource: 'GH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'GH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'GH',
-    amount: 1,
-    emptied: true
+    resource: 'H',
+    amount: 2400,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'G',
@@ -520,9 +508,19 @@ var GH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'H',
-    amount: 2400,
-    emptied: false
+    resource: 'GH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'GH',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'GH',
@@ -543,19 +541,9 @@ var GH = [{
 // Repair
 var LH = [{
     id: 'getReplaced',
-    resource: 'LH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'LH',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'LH',
-    amount: 1,
-    emptied: true
+    resource: 'H',
+    amount: 2400,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'L',
@@ -573,9 +561,19 @@ var LH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'H',
-    amount: 2400,
-    emptied: false
+    resource: 'LH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'LH',
@@ -595,39 +593,39 @@ var LH = [{
 // Attack
 var UH = [{
     id: 'getReplaced',
-    resource: 'UH',
-    amount: 2400,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'UH',
-    amount: 2400,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'UH',
-    amount: 2400,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'U',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'UH',
-    amount: 2400,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'UH',
-    amount: 2400,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'H',
     amount: 2400,
     emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'UH',
+    amount: 2400,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UH',
+    amount: 2400,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UH',
+    amount: 2400,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UH',
+    amount: 2400,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UH',
+    amount: 2400,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'UH',
@@ -968,39 +966,39 @@ var XLHO2 = [{
 }];
 var UL = [{
     id: 'getReplaced',
-    resource: 'UL',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'UL',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'UL',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'U',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'UL',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'UL',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
     resource: 'L',
     amount: 2400,
     emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'UL',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UL',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UL',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UL',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UL',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'UL',
@@ -1021,19 +1019,9 @@ var UL = [{
 
 var ZK = [{
     id: 'getReplaced',
-    resource: 'ZK',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'ZK',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'ZK',
-    amount: 1,
-    emptied: true
+    resource: 'K',
+    amount: 2400,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'Z',
@@ -1051,9 +1039,19 @@ var ZK = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'K',
-    amount: 2400,
-    emptied: false
+    resource: 'ZK',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'ZK',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'ZK',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'ZK',
@@ -1073,19 +1071,9 @@ var ZK = [{
 
 var G = [{
     id: 'getReplaced',
-    resource: 'G',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'G',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'G',
-    amount: 1,
-    emptied: true
+    resource: 'UL',
+    amount: 2400,
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'ZK',
@@ -1103,9 +1091,19 @@ var G = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'UL',
-    amount: 2400,
-    emptied: false
+    resource: 'G',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'G',
@@ -1193,27 +1191,23 @@ function labMode(roomName, mode, labs) {
             }
             return OH;
         case 'UL':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in UL) {
                 UL[a].id = labs[a].id;
             }
             return UL;
         case 'ZK':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in ZK) {
                 ZK[a].id = labs[a].id;
             }
             return ZK;
 
         case 'GG':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in GG) {
                 GG[a].id = labs[a].id;
             }
             return GG;
 
         case 'GH':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in GH) {
                 GH[a].id = labs[a].id;
             }
@@ -1226,27 +1220,23 @@ function labMode(roomName, mode, labs) {
             return GH2O;
 
         case 'XGH2O':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in XGH2O) {
                 XGH2O[a].id = labs[a].id;
             }
             return XGH2O;
-        
+
         case 'muster':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in muster) {
                 muster[a].id = labs[a].id;
             }
             return muster;
         case 'XUH2O':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in XUH2O) {
                 XUH2O[a].id = labs[a].id;
             }
 
             return XUH2O;
         case 'XKH2O':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in XKH2O) {
                 //        if (labs[e] !== undefined)
                 XKH2O[a].id = labs[a].id;
@@ -1254,82 +1244,57 @@ function labMode(roomName, mode, labs) {
 
             return XKH2O;
         case 'XGHO2':
-            Game.rooms[roomName].memory.labMode = mode;
             for (var e in XGHO2) {
-                //        if (labs[e] !== undefined)
                 XGHO2[e].id = labs[e].id;
             }
 
             return XGHO2;
         case 'XUHO2':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in XUHO2) {
-                //            if (labs[a] !== undefined)
-
                 XUHO2[a].id = labs[a].id;
             }
 
             return XUHO2;
         case 'XZH2O':
-            Game.rooms[roomName].memory.labMode = mode;
             for (a in XZH2O) {
-                //              if (labs[a] !== undefined)
-
                 XZH2O[a].id = labs[a].id;
             }
 
             return XZH2O;
         case 'XKHO2':
-            Game.rooms[roomName].memory.labMode = mode;
             for (var z in XKHO2) {
-                //                if (labs[z] !== undefined)
                 XKHO2[z].id = labs[z].id;
             }
 
             return XKHO2;
         case 'XZHO2':
-            Game.rooms[roomName].memory.labMode = mode;
             for (var bbb in XZHO2) {
-                //       if (labs[b] !== undefined)
-
                 XZHO2[bbb].id = labs[bbb].id;
             }
 
             return XZHO2;
 
         case 'XXZHO2':
-            Game.rooms[roomName].memory.labMode = mode;
             for (var b in XXZHO2) {
-                //       if (labs[b] !== undefined)
-
                 XXZHO2[b].id = labs[b].id;
             }
 
             return XXZHO2;
         case 'XLHO2':
-            Game.rooms[roomName].memory.labMode = mode;
             for (var m in XLHO2) {
-                //       if (labs[m] !== undefined)
-
                 XLHO2[m].id = labs[m].id;
             }
 
             return XLHO2;
         case 'UH':
-            Game.rooms[roomName].memory.labMode = mode;
             for (var mm in UH) {
-                //       if (labs[m] !== undefined)
-
                 UH[mm].id = labs[mm].id;
             }
 
             return UH;
 
         case 'LH':
-            Game.rooms[roomName].memory.labMode = mode;
             for (var mmm in LH) {
-                //       if (labs[m] !== undefined)
-
                 LH[mmm].id = labs[mmm].id;
             }
 
@@ -1376,44 +1341,51 @@ var gMix = [
 ];
 
 var oneWarMix = [
-    [1, 4, 7],
-    [2, 4, 7],
-    [3, 4, 7],
-    [5, 4, 7],
-    [6, 4, 7],
-    [8, 4, 7]
-//    [9, 4, 7]
+    [3, 1, 2],
+    [4, 1, 2],
+    [5, 1, 2],
+    [6, 1, 2],
+    [7, 1, 2],
+    [8, 1, 2],
 ];
 
 function getLabMixes(roomName) {
-   // if (Memory.war) {
-        var newMixes = [];
-        switch (Game.rooms[roomName].memory.labMode) {
-            case 'XGH2O':
-//                return Game.rooms[roomName].memory.labMix;
-            case 'LH':
-            case 'OH':
-            case 'GH':
-            case 'G':
-            case 'ZK':
-            case 'UL':
-            case 'GH2O':
+    // if (Memory.war) {
+    var newMixes = [];
+    if(Game.rooms[roomName].memory.labMode === undefined )
+    return [
+                [3, 1, 5],
+                [4, 2, 6],
+            ];
+    switch (Game.rooms[roomName].memory.labMode) {
+        case 'XGH2O':
+            //                return Game.rooms[roomName].memory.labMix;
+        case 'LH':
+        case 'OH':
+        case 'GH':
+        case 'G':
+        case 'ZK':
+        case 'UL':
+        case 'GH2O':
             return oneWarMix;
-            case 'XXZHO2':
-                return E29S79WarMix;
-            case 'light':
-            case undefined:
-                return Game.rooms[roomName].memory.labMix;
-            case 'GG':
-                return gMix;
-            default:
-
-                return E33S76WarMix;
-                /*            default:
-                                return Game.rooms[roomName].memory.labMix;*/
-        }
-//    } else {
-  //      return Game.rooms[roomName].memory.labMix;
+        case 'XXZHO2':
+            return E29S79WarMix;
+        case 'light':
+        case undefined:
+            return Game.rooms[roomName].memory.labMix;
+        case 'GG':
+            return gMix;
+        default:
+            return [
+                [3, 1, 5],
+                [4, 2, 6],
+            ];
+            //     return E33S76WarMix;
+            /*            default:
+                            return Game.rooms[roomName].memory.labMix;*/
+    }
+    //    } else {
+    //      return Game.rooms[roomName].memory.labMix;
     //}
 }
 
@@ -1431,54 +1403,46 @@ function setLabs(roomName, labs) {
         /*        case 'E35S83':
                 let zz = labMode(roomName, 'muster', labs);
                     return zz;*/
+        /*
+                case 'W4S93':
+                case 'E37S75':
+                    return labMode(roomName, 'GH2O', labs);
 
-        case 'W4S93':
-        case 'E37S75':
-            return labMode(roomName, 'GH2O', labs);
+                case 'E38S72':
+                case 'E23S75':
+                    return labMode(roomName, 'XGH2O', labs);
 
-        case 'E38S72':
-        case 'E23S75':
-            return labMode(roomName, 'XGH2O', labs);
+                case 'E29S79':
+                case 'E28S71':
+                    return labMode(roomName, 'OH', labs);
 
-        case 'E29S79':
-        case 'E28S71':
-            return labMode(roomName, 'OH', labs);
+                case 'E26S73':
+                    return labMode(roomName, 'GH', labs);
 
-        case 'E26S73':
-            return labMode(roomName, 'GH', labs);
+                case 'E35S73':
+                    return labMode(roomName, 'ZK', labs);
+                case 'E33S76':
+                    return labMode(roomName, 'UL', labs);
+                case 'E35S83':
+                    return labMode(roomName, 'G', labs);
+                    
+        //            return labMode(roomName, 'G', labs);
+                    
 
-        case 'E35S73':
-            return labMode(roomName, 'ZK', labs);
-        case 'E33S76':
-            return labMode(roomName, 'UL', labs);
-        case 'E35S83':
-            return labMode(roomName, 'G', labs);
-            
-//            return labMode(roomName, 'G', labs);
-            
+        //            return labMode(roomName, 'XGHO2', labs);
+        //            return labMode(roomName, 'XZH2O', labs);
+                    
+        //            return labMode(roomName, 'XUH2O', labs);
+        //        case 'E33S76':
+        //        case 'E38S72':
+        //            return labMode(roomName, 'XKHO2', labs);
+        //            return labMode(roomName, 'XZH2O', labs);
+                    return labMode(roomName, 'XXZHO2', labs);
 
-//            return labMode(roomName, 'XGHO2', labs);
-//            return labMode(roomName, 'XZH2O', labs);
-            
-//            return labMode(roomName, 'XUH2O', labs);
-//        case 'E33S76':
-//        case 'E38S72':
-//            return labMode(roomName, 'XKHO2', labs);
-//            return labMode(roomName, 'XZH2O', labs);
-
-        case 'E28S73':
-            return labMode(roomName, 'XXZHO2', labs);
-
-            //            return labMode(roomName, 'muster', labs);
-
-
-
-        case 'E27S75':
-        case 'E26S77':
-            return labMode(roomName, 'light', labs);
-        default:
-            Game.rooms[roomName].memory.labMode = undefined;
-            return labs;
+                    //            return labMode(roomName, 'muster', labs);
+                    return labMode(roomName, 'light', labs);*/
+        default: Game.rooms[roomName].memory.labMode = undefined;
+        return labs;
     }
     //    console.log('2', labs.length);
     return labs;
@@ -1497,28 +1461,28 @@ function returnLabs(roomName) {
             return [];
         }
     } else {
-     //   if (Memory.war) {
-            var currentLabs = Game.rooms[roomName].memory.labs;
-            var warLabs = [];
+        //   if (Memory.war) {
+        var currentLabs = Game.rooms[roomName].memory.labs;
+        var warLabs = [];
 
-            for (var e in currentLabs) {
-                var lab = currentLabs[e];
-                var warLab = {
-                    id: lab.id,
-                    emptied: lab.emptied,
-                    amount: lab.amount,
-                    mineralType: lab.resource,
-                    resource: lab.resource
-                };
-                warLabs.push(warLab);
-            }
+        for (var e in currentLabs) {
+            var lab = currentLabs[e];
+            var warLab = {
+                id: lab.id,
+                emptied: lab.emptied,
+                amount: lab.amount,
+                mineralType: lab.resource,
+                resource: lab.resource
+            };
+            warLabs.push(warLab);
+        }
 
-            let zz = setLabs(roomName, warLabs);
-            return zz;
-    //    } else {
+        let zz = setLabs(roomName, warLabs);
+        return zz;
+        //    } else {
 
-  //          return Game.rooms[roomName].memory.labs;
-//        }
+        //          return Game.rooms[roomName].memory.labs;
+        //        }
 
 
     }
@@ -1657,55 +1621,55 @@ class buildLab {
 
 
     static requestMineral(boost, body, roomName) {
-            // this function will go through room member and see what lab mats are available/energy
-            // if there is enough, it will then request it 
-            // Game.rooms[roomName].memory.labMinerals - this hold what the room has
-            // Game.rooms[roomName].memory.calledMinearls - this holds what creep in production have called.
-            // Game.rooms[roomName].memory.availableMinerals - this hold what is available for creeps to call.
-            let workparts = _.filter(body, function(n) {
-                return n == WORK;
-            }).length;
-            let moveparts = _.filter(body, function(n) {
-                return n == MOVE;
-            }).length;
-            let attkparts = _.filter(body, function(n) {
-                return n == ATTACK;
-            }).length;
-            let healparts = _.filter(body, function(n) {
-                return n == HEAL;
-            }).length;
-            let mem = Game.rooms[roomName].memory;
+        // this function will go through room member and see what lab mats are available/energy
+        // if there is enough, it will then request it 
+        // Game.rooms[roomName].memory.labMinerals - this hold what the room has
+        // Game.rooms[roomName].memory.calledMinearls - this holds what creep in production have called.
+        // Game.rooms[roomName].memory.availableMinerals - this hold what is available for creeps to call.
+        let workparts = _.filter(body, function(n) {
+            return n == WORK;
+        }).length;
+        let moveparts = _.filter(body, function(n) {
+            return n == MOVE;
+        }).length;
+        let attkparts = _.filter(body, function(n) {
+            return n == ATTACK;
+        }).length;
+        let healparts = _.filter(body, function(n) {
+            return n == HEAL;
+        }).length;
+        let mem = Game.rooms[roomName].memory;
 
 
-            //for(var a in boost) {
-            let minNeeded;
-            if (boost == 'UO' ||
-                boost == 'LH' ||
-                boost == 'ZH' ||
-                boost == 'GH') {
-                minNeeded = workparts * 30;
-            }
-            if (boost == 'LO') {
-                minNeeded = healparts * 30;
-            }
-            if (boost == 'UH') {
-                minNeeded = attkparts * 30;
-            }
-            if (boost == 'ZO') {
-                minNeeded = moveparts * 30;
-            }
-            if ((mem.labMinerals[a] - mem.calledMinerals[a]) >= minNeeded) {
-                //console.log(Game.rooms[roomName].memory.calledMinerals[boost],boost,minNeeded);
-                Game.rooms[roomName].memory.calledMinerals[boost] += minNeeded;
-
-                return true;
-            }
-
-            return false;
-            //}
-
+        //for(var a in boost) {
+        let minNeeded;
+        if (boost == 'UO' ||
+            boost == 'LH' ||
+            boost == 'ZH' ||
+            boost == 'GH') {
+            minNeeded = workparts * 30;
         }
-        /** @param {Creep} creep **/
+        if (boost == 'LO') {
+            minNeeded = healparts * 30;
+        }
+        if (boost == 'UH') {
+            minNeeded = attkparts * 30;
+        }
+        if (boost == 'ZO') {
+            minNeeded = moveparts * 30;
+        }
+        if ((mem.labMinerals[a] - mem.calledMinerals[a]) >= minNeeded) {
+            //console.log(Game.rooms[roomName].memory.calledMinerals[boost],boost,minNeeded);
+            Game.rooms[roomName].memory.calledMinerals[boost] += minNeeded;
+
+            return true;
+        }
+
+        return false;
+        //}
+
+    }
+    /** @param {Creep} creep **/
     static run() {
 
         for (var e in labRooms) {
@@ -1713,7 +1677,7 @@ class buildLab {
             if (Game.rooms[roomName].memory.labs === undefined) {
                 Game.rooms[roomName].memory.labs = returnLabs(roomName);
             }
-            if(Game.rooms[roomName].memory.labs.length === 0)     {
+            if (Game.rooms[roomName].memory.labs.length === 0) {
                 Game.rooms[roomName].memory.labs = emptyLab;
             }
 
@@ -1734,25 +1698,25 @@ class buildLab {
     }
 
     static neededMinerals(roomName) {
-            let mins = [];
-            let labs = returnLabs(roomName);
+        let mins = [];
+        let labs = returnLabs(roomName);
 
-            // Go through the labs in that room,
-            // see what resources it needs,
-            // send back array that has required
-            // Terminal will use this, and then terminal will see if others have what it wants and gets it sent to them.
+        // Go through the labs in that room,
+        // see what resources it needs,
+        // send back array that has required
+        // Terminal will use this, and then terminal will see if others have what it wants and gets it sent to them.
 
-            for (var e in labs) {
-                let lab = getCached(labs[e].id);
-                if (lab !== null) {
-                    //        } && lab.mineralAmount < labs[e].amount) {
-                    let temp = labs[e].resource;
-                    mins.push(temp);
-                }
+        for (var e in labs) {
+            let lab = getCached(labs[e].id);
+            if (lab !== null) {
+                //        } && lab.mineralAmount < labs[e].amount) {
+                let temp = labs[e].resource;
+                mins.push(temp);
             }
-            return _.uniq(mins);
         }
-        /*
+        return _.uniq(mins);
+    }
+    /*
         static needsWork() { // function to see if labwork needs to be done. 
           let labs = returnLabs();
 
@@ -1770,8 +1734,8 @@ class buildLab {
           }
           return false; 
         } */
-        // 
-        // RESOURCE_KEANIUM RESOURCE_OXYGEN
+    // 
+    // RESOURCE_KEANIUM RESOURCE_OXYGEN
     static moveToTransfer(creep) {
         let What;
         if (creep.carryTotal !== 0) {

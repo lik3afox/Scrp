@@ -208,6 +208,9 @@ class roleUpbuilder extends roleParent {
 
             if (creep.memory.constructionID === undefined) {
                 let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+/*                strucs = _.filter(strucs,function(o){
+                    return o.structureType !== STRUCTURE_RAMPART;
+                }); */
                 if (strucs !== null)
                     creep.memory.constructionID = strucs.id;
             }

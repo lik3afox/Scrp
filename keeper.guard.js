@@ -161,15 +161,15 @@ function analyzeSourceKeeper(creep) {
 }
 
 function moveCreep(creep) {
-    if(creep.room.name == 'E11S36xx') {
+    if (creep.room.name == 'E11S36xx') {
         var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-            site = _.filter(site, function(o) {
-                return !o.pos.lookForStructure(STRUCTURE_RAMPART);
-            });
-            if (site.length > 0) {
-                var zzz = creep.pos.findClosestByRange(site);
-                creep.moveTo(zzz);
-            } 
+        site = _.filter(site, function(o) {
+            return !o.pos.lookForStructure(STRUCTURE_RAMPART);
+        });
+        if (site.length > 0) {
+            var zzz = creep.pos.findClosestByRange(site);
+            creep.moveTo(zzz);
+        }
         return;
     }
     if (creep.memory.goTo === undefined) {
@@ -242,7 +242,7 @@ class roleGuard extends roleParent {
             creep.say('zZz');
             return;
         }
-        
+
 
         if (super.doTask(creep)) {
             return;
@@ -252,41 +252,41 @@ class roleGuard extends roleParent {
             return;
         }
         super.rebirth(creep);
-
-        if (super.boosted(creep, boost)) {
-            return;
-        }
+        if (creep.memory.party == 'Flag13')
+            if (super.boosted(creep, boost)) {
+                return;
+            }
 
         if (creep.memory.goalPos === undefined && Game.flags[creep.memory.party] !== undefined) {
 
             creep.memory.goalPos = new RoomPosition(Game.flags[creep.memory.party].pos.x, Game.flags[creep.memory.party].pos.y, Game.flags[creep.memory.party].pos.roomName);
         }
 
-if(creep.room.name === 'E11S36' || creep.room.name === 'E12S34' ) {
+        if (creep.room.name === 'E11S36' || creep.room.name === 'E12S34') {
             creep.selfHeal();
 
             let bads = getHostiles(creep);
             creep.say(bads.length);
 
             if (bads.length > 0) {
-                    attackCreep(creep, bads);
+                attackCreep(creep, bads);
             } else {
-                    creep.killBase();
+                creep.killBase();
 
             }
-          /*      if (creep.hits < 400) {
-                    creep.say('bads');
+            /*      if (creep.hits < 400) {
+                      creep.say('bads');
 
-                } else {
-                    attackCreep(creep, bads);
-                }
+                  } else {
+                      attackCreep(creep, bads);
+                  }
 
 
-            } else {            */
-//                    creep.killBase();
-//                }
-                return;
-        } 
+              } else {            */
+            //                    creep.killBase();
+            //                }
+            return;
+        }
 
         if (creep.memory.keeperLair) {
 
@@ -311,7 +311,7 @@ if(creep.room.name === 'E11S36' || creep.room.name === 'E12S34' ) {
                         creep.memory.goTo = undefined;
                 }
             }
-        } else  if (creep.memory.goalPos !== undefined && creep.room.name != creep.memory.goalPos.roomName) {
+        } else if (creep.memory.goalPos !== undefined && creep.room.name != creep.memory.goalPos.roomName) {
             let bads = getHostiles(creep);
             if (bads.length > 0) {
                 attackCreep(creep, bads);

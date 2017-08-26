@@ -47,8 +47,13 @@ class controllerRole extends roleParent {
             }
 
         } else {
-            if ((temp !== null))
+            if ((temp !== null)) {
+
                 creep.moveMe(temp.pos, { reusePath: 50 });
+            } else {
+                 var goingTo = movement.getRoomPos(creep.memory.goal);
+                creep.moveMe(goingTo, {reusePath:50});
+            }
         }
     }
 }

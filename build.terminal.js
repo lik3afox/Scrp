@@ -17,7 +17,7 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var terminals = ['E18S36'];
+var terminals = ['E18S36','E17S34','E24S37','E23S38','E18S32','E17S45'];
 
 // If you need to focus all minerals somewhere change it here.
 var focusID; // = '591365a95128141e7200c235';
@@ -607,8 +607,8 @@ function giveMinerals(terminal, mineral, amount) {
     let highest = 0;
 
     for (var e in terminals) {
-        if (terminal.id != terminals[e]) {
-            let tmp = Game.getObjectById(terminals[e]);
+        if (terminal.id != Game.rooms[terminals[e]].terminal.id) {
+            let tmp = Game.rooms[terminals[e]].terminal;//Game.getObjectById(terminals[e]);
             if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest && tmp.room.controller.level > 5) {
                 highest = tmp.store[mineral];
                 target = tmp;
@@ -950,6 +950,19 @@ function forEveryTerminal(terminal) {
         }
     }
 }
+
+function focusRoom(terminal) {
+    var target = 'E18S36';
+    if(Game.rooms[target].terminal.total === 300000) return false;
+    if(terminal.store[RESOURCE_ENERGY] < 10000) return false;
+    if(terminal.room.name == 'E18S36') return false;
+    var amount = 3000 ;// terminal.store[RESOURCE_ENERGY] *0.25;
+    var sender = terminal;
+    var result = sender.send(RESOURCE_ENERGY, amount, target, 'Lv7');
+    console.log(sender,amount,terminal.room.name,result);
+    if(result === OK) return true;
+}
+
 class roleTerminal {
 
     /** @param {Creep} creep **/
@@ -964,17 +977,22 @@ class roleTerminal {
 //        Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
 
         //            Memory.termRun = 10;
+        var focus = false;
         for (var e in terminals) {
             let terminal = Game.rooms[terminals[e]].terminal;
             if (terminal !== undefined) {
+                if(!focus)focus = focusRoom(terminal);
+
+                let needed = labs.neededMinerals(terminal.pos.roomName);
+                getMinerals(terminal, needed);
+
+
 //                if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
 //                    newTradeEnergy(terminal);
                 //          focusEnergy(terminal); Removed
 //                forEveryTerminal(terminal);
         //        terminal.room.memory.didOrder = false;
 
-  //              let needed = labs.neededMinerals(terminal.pos.roomName);
-//                getMinerals(terminal, needed);
 
     /*            if (terminal.room.memory.powerSpawnID === undefined) {
                     let zz = terminal.room.find(FIND_STRUCTURES);
