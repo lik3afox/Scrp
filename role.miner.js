@@ -281,8 +281,11 @@ class settler extends roleParent {
                 task.rangeHappy = 1;
                 creep.memory.task.push(task); */
                 let contain = Game.getObjectById(creep.memory.workContainer);
-                if(contain !== null)
+                if(contain !== null) {
                     creep.moveMe(contain, { reusePath: 10 });
+                } else {
+                    creep.moveMe(_source, { reusePath: 10 });
+                }
 
             } else {
  var goingTo = movement.getRoomPos(creep.memory.goal);

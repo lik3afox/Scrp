@@ -44,7 +44,7 @@ class roleBuilder extends roleParent {
         }
 
         //if(creep.room.name == 'E35S83')
-        //          if(super.boosted(creep,['XLH2O'])) { return;}
+        if(super.boosted(creep,['XLH2O'])) { return;}
 
         if (_.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.building = true;

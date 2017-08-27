@@ -48,7 +48,7 @@ var groupOne = [
     '58dc1eb90c1c7697092ce5c2', // E35S73 - ZK
     '58d97b7b8c94aa185ccaf659', //E35S83 - UL
     '5923a6cbf9f4ceb75afbc831', // E33S76 - G
-    
+
     '58b765651d11996760a39d15', //E28S77 // GG - Solo
 
     '58af4822278c0725a7ad4642', // spawn 2
@@ -59,7 +59,7 @@ var groupOne = [
     '5934fa72604c7e190610993f', // E23S75 // XGH20
     '58fae20240468f2a39d50830', // E38S72
 
-//    '58c074ead62936ed5e2bce0b', // E27S75
+    //    '58c074ead62936ed5e2bce0b', // E27S75
 
     '596fb419be36016cb7dc44b2' //W38S94 // Growing
 
@@ -244,48 +244,47 @@ class scientistRole extends roleParent {
 
             var _labs = labsBuild.getLabs(creep.room.name);
 
-            if (_labs.length > 0 && _.sum(creep.carry) === 0) { // If there are labs. 
-                var i = _labs.length;
-                while (i--) { // go through them
+            if (!labNeedReducing(creep))
+                if (_labs.length > 0 ) { // If there are labs. 
+                    var i = _labs.length;
+                    while (i--) { // go through them
 
-                    var plan = labsBuild.getPlans(_labs[i].pos.roomName); // get the plans
+                        var plan = labsBuild.getPlans(_labs[i].pos.roomName); // get the plans
 
-                    if (plan[i].id == _labs[i].id && (plan[i].resource != _labs[i].mineralType) && (_labs[i].mineralAmount > 0)) {
-                        creep.say('clear');
+                        if (plan[i].id == _labs[i].id && (plan[i].resource != _labs[i].mineralType) && (_labs[i].mineralAmount > 0)) {
+                            creep.say('clear');
 
-                        if (creep.pos.isNearTo(_labs[i])) {
-                            // need to check if the lab has mineral type wanted.
-                            if (creep.withdraw(_labs[i], _labs[i].mineralType) == OK) {
-                                creep.memory.putaway = true;
-                            }
-                        } else {
-                            creep.moveMe(_labs[i]);
-                        }
-                        return;
-                    }
-                }
-
-                if (!labsBuild.getFromTerminal(creep)) {
-                    //if(creep.room.name == 'E23S75') console.log(labsBuild.getFromTerminal(creep));
-                    let otherThings = false;
-                    var keys = Object.keys(creep.room.storage.store);
-                    var n = keys.length;
-                    while (n--) {
-                        var e = keys[n];
-                        if (e != RESOURCE_ENERGY && creep.room.storage.store[e]) {
-                            otherThings = true;
-                            if (creep.pos.isNearTo(creep.room.storage)) {
-                                creep.withdraw(creep.room.storage, e);
+                            if (creep.pos.isNearTo(_labs[i])) {
+                                // need to check if the lab has mineral type wanted.
+                                if (creep.withdraw(_labs[i], _labs[i].mineralType) == OK) {
+                                    creep.memory.putaway = true;
+                                }
                             } else {
-                                creep.moveMe(creep.room.storage);
+                                creep.moveMe(_labs[i]);
                             }
+                            return;
                         }
                     }
 
-                    if (!otherThings) {
+                    if (!labsBuild.getFromTerminal(creep)) {
+                        let otherThings = false;
+                        var keys = Object.keys(creep.room.storage.store);
+                        var n = keys.length;
+                        while (n--) {
+                            var e = keys[n];
+                            if (e != RESOURCE_ENERGY && creep.room.storage.store[e]) {
+                                otherThings = true;
+                                if (creep.pos.isNearTo(creep.room.storage)) {
+                                    creep.withdraw(creep.room.storage, e);
+                                } else {
+                                    creep.moveMe(creep.room.storage);
+                                }
+                            }
+                        }
 
-                        if (!mineralContainerEmpty(creep))
-                            if (!labNeedReducing(creep))
+                        if (!otherThings) {
+
+                            if (!mineralContainerEmpty(creep))
                                 if (!creep.pos.isNearTo(creep.room.terminal)) {
                                     creep.moveMe(creep.room.terminal);
 
@@ -295,35 +294,28 @@ class scientistRole extends roleParent {
                                     //                          doDeath(creep);
 
                                 }
+                        }
+
                     }
 
-                }
-
-            } else {
-                if (creep.room.storage !== undefined) {
-                    var keyz = Object.keys(creep.room.storage.store);
-                    var z = keyz.length;
-                    while (z--) {
-                        var a = keyz[z];
-                        if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
-                            if (creep.pos.isNearTo(creep.room.storage)) {
-                                creep.withdraw(creep.room.storage, a);
-                            } else {
-                                creep.moveMe(creep.room.storage);
+                } else {
+                    if (creep.room.storage !== undefined) {
+                        var keyz = Object.keys(creep.room.storage.store);
+                        var z = keyz.length;
+                        while (z--) {
+                            var a = keyz[z];
+                            if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
+                                if (creep.pos.isNearTo(creep.room.storage)) {
+                                    creep.withdraw(creep.room.storage, a);
+                                } else {
+                                    creep.moveMe(creep.room.storage);
+                                }
                             }
                         }
+
                     }
-
                 }
-            }
-
-            //            creep.moveTo(creep.room.terminal);
-
-
         }
-
-
-        //creep.moveTo(creep.room.terminal);
     }
 }
 

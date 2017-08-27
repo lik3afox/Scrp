@@ -17,7 +17,7 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var terminals = ['E18S36','E17S34','E24S37','E23S38','E18S32','E17S45'];
+var terminals = ['E18S36','E17S34','E24S37','E23S38','E18S32','E17S45','E28S37','E25S37'];
 
 // If you need to focus all minerals somewhere change it here.
 var focusID; // = '591365a95128141e7200c235';
@@ -185,17 +185,13 @@ function countTerminals() {
     for (var b in basic) {
         let info = { type: basic[b], amount: 0 };
         for (var e in terminals) {
-            let target = Game.getObjectById(terminals[e]);
+            let target = Game.rooms[terminals[e]].terminal;
             if (target !== null && target.store[basic[b]] > 0) {
                 info.amount += target.store[basic[b]];
             }
         }
-        //if(data[basic[b]] == undefined) data[basic[b]]= 0;
         data[basic[b]] = info.amount;
-        //console.log(basic[b],info.amount);
-        //  data.push(info);
     }
-    //  console.log(data['KH'],"Terminal Count");
     return data;
 }
 
@@ -952,10 +948,11 @@ function forEveryTerminal(terminal) {
 }
 
 function focusRoom(terminal) {
-    var target = 'E18S36';
+    var target = 'E25S37';
+    if(Game.rooms[target].terminal ===undefined) return false;
     if(Game.rooms[target].terminal.total === 300000) return false;
     if(terminal.store[RESOURCE_ENERGY] < 10000) return false;
-    if(terminal.room.name == 'E18S36') return false;
+    if(terminal.room.name == target) return false;
     var amount = 3000 ;// terminal.store[RESOURCE_ENERGY] *0.25;
     var sender = terminal;
     var result = sender.send(RESOURCE_ENERGY, amount, target, 'Lv7');
@@ -974,7 +971,7 @@ class roleTerminal {
 
         cleanUpOrders();
 //        adjustOldPrices();
-//        Memory.stats.totalMinerals = countTerminals(); // reportTerminals(); 
+        Memory.stats.totalMinerals = countTerminals();
 
         //            Memory.termRun = 10;
         var focus = false;
@@ -986,7 +983,7 @@ class roleTerminal {
                 let needed = labs.neededMinerals(terminal.pos.roomName);
                 getMinerals(terminal, needed);
 
-
+             //   break; // Ends looking for stuff.
 //                if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
 //                    newTradeEnergy(terminal);
                 //          focusEnergy(terminal); Removed

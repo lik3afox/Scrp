@@ -11,7 +11,7 @@ Game.rooms.E28S73.terminal.send(RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE, 500, 'E26
 
 Game.rooms.E29S79.terminal.send(RESOURCE_POWER, 10000, 'E37S75', 'trade');
 
-Game.rooms.E23S75.terminal.send(RESOURCE_ENERGY, 15000, 'E33S76', 'trade');
+Game.rooms.E18S36.terminal.send('O', 30000, 'E23S38', 'trade');
 
 
 

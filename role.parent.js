@@ -692,7 +692,7 @@ class baseParent {
                                 creep.memory.boostNeeded.splice(a, 1); // = 'done';
                                 creep.memory.boostedParts = true;
                                 //                            if(creep.memory.calledBoost)
-                                labsBuild.gotMineral(labs[0].mineralType, creep.body, creep.room.name);
+//                                labsBuild.gotMineral(labs[0].mineralType, creep.body, creep.room.name);
 
 
 

@@ -141,11 +141,15 @@ class roleUpbuilder extends roleParent {
             require('role.wallworker').run(creep);
             return;
         }
+
+
         if (!Memory.war) {
             if (creep.ticksToLive > 1420 && creep.room.controller.level == 8) {
                 let zz;
                 switch (creep.room.name) {
-                    case 'E38S72':
+                    case 'E18S36':
+                        zz = super.boosted(creep,['XLH2O']);
+                        break;
                     case 'E23S75':
                     case 'E28S73':
                     case 'E28S71':

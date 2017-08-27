@@ -277,9 +277,7 @@ function getSpawnCreating(flag) {
         case 'test':
 
         case 'engineer3':
-        case 'science':
         case 'fightHealer':
-            //            return returnClosestRoom(flag.pos.roomName);
         case 'thief2':
         case 'thief3':
         case 'thief5':
@@ -293,11 +291,12 @@ function getSpawnCreating(flag) {
         case 'harass2':
             return 'E18S36';
         case 'control':
-                        return 'E25S37';
+            return 'E25S37';
 
         case 'fighter':
         case 'upgrade':
         case 'tower':
+        case 'science':
         case 'scout':
             return returnClosestRoom(flag.pos.roomName);
             //    default:

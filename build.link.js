@@ -3,6 +3,7 @@ var total = 0;
 var _links = [
     // Spawn 1 room
     '599e13ba4820ce76f0fb3380',
+    '59a0d1a0b0eec64f0a3160b5',
     '59a081f1063f4155d29b0c4f','5997aa2a9ba23f4bc8cae84a','5999196d0efd617fae40a7eb','599db076d16d032ddc47c76d','599f5542b6ef480fb43489c1','599f88a92e6d2935543e1b55','59a093c32db27b362b2141a7','59a0a51811339d0b50c91557'
 ];
 
@@ -105,10 +106,11 @@ class buildLink {
         sendEnergy(['599db076d16d032ddc47c76d','59a081f1063f4155d29b0c4f'], '599d9a8849dbcd7a6e95f99b');
         sendEnergy(['599e156450b255770346a5cf','59a093c32db27b362b2141a7'], '599e02188f76c44a7e6079c8',700);
         sendEnergy(['599e2c7f6145822e02a37dd9','59a0a51811339d0b50c91557'], '599e13ba4820ce76f0fb3380',700);
-        sendEnergy(['599e35c1296127177e64c747'], '599e1b793ffb5e7550c34732',700);
+        sendEnergy(['599e35c1296127177e64c747','59a17da37e58813734913135'], '599e1b793ffb5e7550c34732',700);
         sendEnergy(['599f5542b6ef480fb43489c1'], '599ef53a7b9d8a11e04396e8',700);
         sendEnergy(['599fd95638a48354454672af'], '599fb7715718b6076387d35f',700);
         sendEnergy(['59a087a117949d1664063798'], '59a03a667e2fc03c4463fb61',700);
+        sendEnergy(['59a0d1a0b0eec64f0a3160b5'], '59a07c04154ede2fcbe77639');
 
         gameCache = []; // cleaning up cache for this tick.
     }
