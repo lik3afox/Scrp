@@ -200,7 +200,7 @@ class scientistRole extends roleParent {
         //        super.rebirth(creep);
         //        if(Game.cpu.bucket < 3000 && creep.room.name !='E26S73') return;
         if (!creep.memory.party) {
-            changeParent(creep);
+//            changeParent(creep);
         } else {
             if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].room !== undefined &&
                 creep.room.name !== Game.flags[creep.memory.party].room.name) {
@@ -291,8 +291,13 @@ class scientistRole extends roleParent {
                                 } else {
                                     creep.say('raiders', true);
                                     creep.memory.distance++;
-                                    //                          doDeath(creep);
 
+                                    if(Game.flags.SCI !== undefined && Game.flags.SCI.pos.roomName == creep.room.name) {
+                                        Game.flags.SCI.remove();
+                                        console.log("REMOVING FLAG");
+                                    }
+                                    creep.room.memory.labsNeedWork = false;
+                                    // Here we remove the flag if it's in this room.
                                 }
                         }
 

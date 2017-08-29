@@ -3,7 +3,7 @@
 
 var classLevels = [
     [MOVE],
-    [MOVE, MOVE, MOVE, WORK, ATTACK, CARRY, HEAL],
+    [MOVE, MOVE, MOVE, WORK, ATTACK, CARRY, HEAL,RANGED_ATTACK],
     [MOVE],
     [MOVE],
     [MOVE]
@@ -35,9 +35,13 @@ class scoutClass extends roleParent {
             creep.memory.customPoint = false;
         }
 
-        if (creep.room.name == 'E43S92') {
+        if (creep.room.name == 'E18S36') {
+//            if(super.boosted(creep, ['LO','KO'])) {
+  //              return;
+    //        }
 
         }
+
         if (creep.hits !== creep.hitsMax) {
             creep.selfHeal();
             if (super.edgeRun(creep)) {

@@ -252,7 +252,7 @@ class roleGuard extends roleParent {
             return;
         }
         super.rebirth(creep);
-        if (creep.memory.party == 'Flag13')
+        if (creep.memory.party == 'Flag13' || creep.memory.party == 'Flag15')
             if (super.boosted(creep, boost)) {
                 return;
             }

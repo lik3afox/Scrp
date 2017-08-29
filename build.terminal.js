@@ -17,7 +17,8 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var terminals = ['E18S36','E17S34','E24S37','E23S38','E18S32','E17S45','E28S37','E25S37'];
+var terminals = ['E18S36','E17S34','E24S37','E23S38','E18S32','E17S45','E28S37','E25S37','E13S34','E14S37',
+                'E27S34'];
 
 // If you need to focus all minerals somewhere change it here.
 var focusID; // = '591365a95128141e7200c235';
@@ -948,7 +949,7 @@ function forEveryTerminal(terminal) {
 }
 
 function focusRoom(terminal) {
-    var target = 'E25S37';
+    var target = 'E17S45';
     if(Game.rooms[target].terminal ===undefined) return false;
     if(Game.rooms[target].terminal.total === 300000) return false;
     if(terminal.store[RESOURCE_ENERGY] < 10000) return false;

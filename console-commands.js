@@ -16,25 +16,10 @@ function setupCommands() {
         order(type, resourceType, price, totalAmount) {
             console.log('testing');
         }
-        /*    clear(id) {
-              let creep = checkNCreate(id);
-              let task = creep.memory.task;
-              console.log('Clearing Task list')
-              task = [];
-            }*/
-
     };
 
     Game.Order = {
-        /* this hsould be given 
-    target or pos can be optional 
-//        targetID:58b4baa812f4bf357c355244,
-    Game.Order.creep('58e987f98dd21b4f7aa198a7',{
-        order:"attack",
-        pos: new RoomPosition(8,8,'E28S71'),
-        targetID:'58b4baa812f4bf357c355244',
-        options:{reusePath:40}
-      }) */
+
         creep(id, order) {
             let creep = checkNCreate(id);
             creep.memory.task.push(order);

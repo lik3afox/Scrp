@@ -150,7 +150,9 @@ class roleUpbuilder extends roleParent {
                     case 'E18S36':
                         zz = super.boosted(creep,['XLH2O']);
                         break;
-                    case 'E23S75':
+//                    case 'E23S37':
+//                        zz = super.boosted(creep,['GH']);
+//                        break;
                     case 'E28S73':
                     case 'E28S71':
                     case 'E26S73':
@@ -182,10 +184,8 @@ class roleUpbuilder extends roleParent {
             creep.memory.wallTargetID = undefined;
             if (creep.room.name == 'E35S83' || creep.room.name == 'E28S73') {
                 super._containers.withdrawFromTerminal(creep);
-            } else if (creep.room.name == 'E33S76') {
-                let link = Game.getObjectById('59243d3f403da5a97dea664a');
-                if (creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    creep.moveTo(link);
+            } else if (creep.room.name == 'E24Sx33') {
+                constr.moveToPickUpEnergy(creep);
             } else if (creep.pos.isNearTo(creep.room.storage)) {
                 creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
                 //                super._containers.withdrawFromStorage(creep);

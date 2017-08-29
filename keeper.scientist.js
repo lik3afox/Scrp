@@ -44,30 +44,7 @@ class mineralRole extends roleParent {
         memoryCheck(creep);
 
         let carry = _.sum(creep.carry);
-        /*
-                if(creep.memory.keeperLairID != undefined && creep.memory.goal != undefined && creep.memory.ExtractID != undefined ) {
-                    console.log('has it all');
-                        let goal = Game.getObjectById(creep.memory.goal);
-                        if(creep.pos.isNearTo(goal) && carry < creep.carryCapacity - 45 ) {
-                            let sKep = Game.getObjectById(creep.memory.keeperLairID);
-                            if (sKep.ticksToSpawn != undefined && sKep.ticksToSpawn > 15) {
-                                let extract = Game.getObjectById(creep.memory.ExtractID);
-                                if(extract.cooldown == 0) {
-                                    console.log('har');
-                                    creep.harvest(goal);
-                                    return;
-                                }
-                                console.log('skip');
-                                return;
-                            }
-                        }
 
-                } */
-        // needs keeperlairID, need mineralID, need ExtractID, 
-
-        if (super.boosted(creep, boost)) {
-            return;
-        }
         if (super.returnEnergy(creep)) return;
         if (movement.runAway(creep)) return;
 
@@ -167,6 +144,7 @@ class mineralRole extends roleParent {
                 reusePath: 49,
                 visualizePathStyle: visPath
             });
+            
         } else if (!(_goal.roomName == creep.room.name && creep.pos.inRangeTo(_goal.x, _goal.y, 4))) {
 
             if (!super.guardRoom(creep)) {

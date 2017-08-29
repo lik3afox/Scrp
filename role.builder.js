@@ -43,13 +43,13 @@ class roleBuilder extends roleParent {
             return;
         }
 
-        //if(creep.room.name == 'E35S83')
+//        if(creep.room.name == 'E25S37')
         if(super.boosted(creep,['XLH2O'])) { return;}
 
         if (_.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.building = true;
         }
-        creep.say(creep.stats('upgrading'));
+//        creep.say(creep.stats('upgrading'));
         if (creep.carry.energy < 4) {
 
             if (creep.room.name == 'E28S73' && creep.memory.roleID === 0) {

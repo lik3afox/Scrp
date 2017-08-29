@@ -262,29 +262,14 @@ class settler extends roleParent {
             if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.memory.distance++;
             //if(_source != undefined) console.log( creep.room.name,  _source.room.name)
             if (_source !== null && creep.room.name == _source.room.name) {
-             /*   let task = {};
-                task.options = {
-                    reusePath: 10,
-                    ignoreRoads: false,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#ff0',
-                        lineStyle: 'dotted',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                };
-                task.pos = _source.pos;
-                task.order = "moveTo";
-                task.count = true;
-                task.enemyWatch = true;
-                task.rangeHappy = 1;
-                creep.memory.task.push(task); */
                 let contain = Game.getObjectById(creep.memory.workContainer);
                 if(contain !== null) {
-                    creep.moveMe(contain, { reusePath: 10 });
+                    if(creep.memory.goal == '5982ff78b097071b4adc2b4f') {
+                        creep.moveMe(_source, { reusePath: 10 });
+                    } else {
+                        creep.moveMe(contain, { reusePath: 10 });
+                    }
                 } else {
-                    creep.moveMe(_source, { reusePath: 10 });
                 }
 
             } else {

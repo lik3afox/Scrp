@@ -50,6 +50,55 @@ var spawnsCC = require('commands.toSpawn');
 var labsBuild = require('build.labs');
 var power = require('commands.toPower');
 
+function numberOfBody(creep, boost) {
+    let nonBoost = false;
+    var total = 0;
+    let type;
+    switch (boost) {
+        case 'UH':
+        case "UH2O":
+        case "XUH2O":
+            type = ATTACK;
+            break;
+        case 'LO':
+        case "LHO2":
+        case "XLHO2":
+            type = HEAL;
+            break;
+        case 'KO':
+        case "KHO2":
+        case "XKHO2":
+            type = RANGED_ATTACK;
+            break;
+        case 'ZO':
+        case "ZHO2":
+        case "XKHO2":
+            type = MOVE;
+            break;
+        case 'KH':
+        case "KH2O":
+        case "XKH2O":
+            type = CARRY;
+            break;
+        case 'GO':
+        case "GHO2":
+        case "XKHO2":
+            type = TOUGH;
+            break;
+        default:
+            type = WORK;
+            break;
+
+    }
+    var e = creep.body.length;
+    while (e--) {
+        if (creep.body[e].type == type) {
+            total++;
+        }
+    }
+
+    return total;
+}
 // this class will go through and see if this creep has been boosted by this already. 
 function creepParts(creep, boost) {
     let nonBoost = false;
@@ -413,7 +462,7 @@ class baseParent {
                 }
 
                 if (task.enemyWatch) {
-                    let zzz = ['W4S94'];
+                    let zzz = ['E25S36'];
                     let rng = _.indexOf(zzz, creep.room.name) >= 0 ? 6 : 5;
                     let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, rng);
                     badz = _.filter(badz, function(object) {
@@ -422,25 +471,25 @@ class baseParent {
 
                     if (badz.length === 0) {
                         if (task.energyPickup) { //!creep.isHome
-                            if (!constr.moveToPickUpEnergyIn(creep, 7)) {
+                            if (!constr.moveToPickUpEnergyIn(creep, 4)) {
                                 if (creep.moveMe(tmp2, task.options) == OK) {
                                     if (task.count) {
-                                if (creep.memory.distance === undefined) {
-                                    creep.memory.distance = 0;
+                                        if (creep.memory.distance === undefined) {
+                                            creep.memory.distance = 0;
 
-                                }
-                                creep.memory.distance++;
+                                        }
+                                        creep.memory.distance++;
                                     }
                                 }
                             }
                         } else {
                             if (creep.moveMe(tmp2, task.options) == OK) {
                                 if (task.count) {
-                                if (creep.memory.distance === undefined) {
-                                    creep.memory.distance = 0;
+                                    if (creep.memory.distance === undefined) {
+                                        creep.memory.distance = 0;
 
-                                }
-                                creep.memory.distance++;
+                                    }
+                                    creep.memory.distance++;
                                 }
                             }
                         }
@@ -459,7 +508,7 @@ class baseParent {
                         }
                     }
                 } else if (task.energyPickup) {
-                    if (!constr.moveToPickUpEnergyIn(creep, 7)) {
+                    if (!constr.moveToPickUpEnergyIn(creep, 4)) {
                         if (creep.moveMe(tmp2, task.options) == OK) {
                             if (task.count) {
                                 if (this.memory.distance === undefined) {
@@ -474,11 +523,11 @@ class baseParent {
                     if (creep.moveMe(tmp2, task.options) == OK) {
                         if (task.count) {
                             if (this.memory.distance === undefined) {
-                                    this.memory.distance = 0;
+                                this.memory.distance = 0;
 
-                                }
-                                this.memory.distance++;
                             }
+                            this.memory.distance++;
+                        }
                     }
                 }
 
@@ -661,23 +710,44 @@ class baseParent {
     } 
     */
 
-    static boosted(creep, boosted) {
-        if (creep.memory.role === 'rampartGuard') {
-            if (creep.ticksToLive < 750) return false;
-        } else {
-            if (creep.ticksToLive < 1000) return false;
+    static fillLabForBoost(creep) {
+        if (creep.room.memory.boostRequest === undefined || creep.room.memory.boostRequest.length > 0) {
+            require('role.scientist').run(creep);
+            creep.say('boo');
+            return true;
         }
+        return false;
+    }
+
+
+    static boosted(creep, boosted) {
+        if (creep.room.memory.boostRequest === undefined) creep.room.memory.boostRequest = [];
+        if (creep.ticksToLive < 1400) return false;
 
         if (creep.memory.boostNeeded === undefined) {
             creep.memory.boostNeeded = boosted;
         }
 
+
         if (creep.memory.boostNeeded.length > 0 && creep.memory.home == creep.room.name) {
 
             var a = creep.memory.boostNeeded.length;
             while (a--) {
+                var neededMin = numberOfBody(creep, boosted) * 30;
 
-                if (creepParts(creep, boosted)) { // this checks an existanced boost already happened.
+                if (Memory.stats.totalMinerals[boosted[a]] < neededMin) {
+                    creep.memory.boostNeeded.pop();
+                } else if (creepParts(creep, boosted)) { // this checks an existanced boost already happened.
+                    // This makes a request to the room.
+                    if (creep.room.memory.boostRequest.length === 0) {
+                        var need = {
+                            resource: creep.memory.boostNeeded[a],
+                            creepID: creep.id,
+                            timed: 50,
+                            amount: neededMin
+                        };
+                        creep.room.memory.boostRequest.push(need);
+                    }
 
                     let labs = creep.pos.findInRange(FIND_STRUCTURES, 20, {
                         filter: object => (object.structureType == STRUCTURE_LAB &&
@@ -686,16 +756,11 @@ class baseParent {
                     });
                     if (labs.length > 0) {
                         if (creep.pos.isNearTo(labs[0])) {
-                            creep.say('ah!');
                             let zz = labs[0].boostCreep(creep);
+                            creep.say('ah!' + zz);
                             if (zz == OK) {
                                 creep.memory.boostNeeded.splice(a, 1); // = 'done';
-                                creep.memory.boostedParts = true;
-                                //                            if(creep.memory.calledBoost)
-//                                labsBuild.gotMineral(labs[0].mineralType, creep.body, creep.room.name);
-
-
-
+                                creep.room.memory.boostRequest.shift();
                             } else if (zz == -7) {
                                 creep.memory.boostNeeded.splice(a, 1); // = 'done';
                             }
@@ -706,7 +771,12 @@ class baseParent {
                         }
                         return true;
                     } else {
-                        return false;
+                        if (creep.room.memory.boostRequest.length === 0) {
+                            return false;
+                        } else {
+                            // waiting for minerals.
+                            return true;
+                        }
                     }
                 }
             }

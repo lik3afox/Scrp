@@ -250,6 +250,9 @@ class roleFirst extends roleParent {
         if (creep.carry.energy === 0) {
             creep.memory.deposit = false;
         }
+    //    if(creep.memory.roleID === 0 &&  super.fillLabForBoost(creep)){
+  //          return;
+//        }
 
         if (!creep.memory.deposit) {
 

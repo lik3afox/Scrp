@@ -80,6 +80,8 @@ class mineralRole extends roleParent {
                     creep.sing(['I', 'love', 'you']);
                 }
 
+            } else {
+
             }
         } else if (!isNear && carry < creep.carryCapacity - 49) {
             creep.moveMe(minz, { reusePath: 15 });
