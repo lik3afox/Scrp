@@ -118,12 +118,8 @@ function analyzeSourceKeeper(creep) {
         let keeperTarget;
         if (keepers[e] !== null)
             keeperTarget = Game.getObjectById(keepers[e].id);
-        //        let lair = Game.getObjectById(  creep.memory.keeperLair[creep.memory.goTo].id)
-        //        console.log(keeperTarget,keepers[e].id,keeperTarget.ticksToSpawn,e,lowest,":",targetID);
         if (keeperTarget !== null && tempin !== null) {
-            if (keepers[e] !== null && tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76" && creep.room.name != 'E24S75' &&
-                creep.room.name != "E26S76" && creep.room.name != "E35S74" &&
-                creep.room.name != "E25S76" && creep.room.name != "E36S75" && creep.room.name != "E34S76") {
+            if (keepers[e] !== null && tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76") {
                 if (creep.room.name != "E35S84") {
                     if (tempin.mineralAmount !== 0) {
                         if (keeperTarget.ticksToSpawn === undefined) {

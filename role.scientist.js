@@ -209,7 +209,7 @@ class scientistRole extends roleParent {
         }
 
 
-        if (creep.saying == 'raiders') {
+        if (creep.saying == 'raiders' && creep.room.name !== 'E18S36') {
             if (creep.memory.party === undefined)
                 creep.memory.distance += 40;
             creep.say('suck', true);

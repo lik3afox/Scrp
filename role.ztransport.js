@@ -151,6 +151,7 @@ class transportz extends roleParent {
                 };
                 task.pos = goingTo;
                 task.order = "keeperMoveTo";
+                
                 task.happyRange = 0;
                 creep.memory.task.push(task);
             }

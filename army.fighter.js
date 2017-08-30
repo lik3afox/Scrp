@@ -10,11 +10,11 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK],
 
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, HEAL],
-//4 THis is \built for lv 6 labs.
-    [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK],
+    //4 THis is \built for lv 6 labs.
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK],
 
     //5 2570 energy.
-    [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK],
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK],
     //6
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, HEAL, HEAL],
     //7
@@ -78,20 +78,20 @@ function doAttack(creep) {
     var a;
     var bads;
     switch (creep.room.name) {
-        case "E22S78":
+        case "E22xS78":
             bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
             bads = _.filter(bads, function(o) {
                 return !_.contains(fox.friends, o.owner.username);
             });
             if (bads.length > 0) {
-                creep.attackMove(bads[0]);
+                creep.attack(bads[0]);
                 return true;
             }
             return false;
 
 
-        case "E23xxS34":
-            var E18S64targets = ['599be9309ab197379b933fb4'];
+        case "E12S43":
+            var E18S64targets = ['599ae1f89bc4694f39c98f01'];
             for (a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
@@ -106,7 +106,7 @@ function doAttack(creep) {
                 return !_.contains(fox.friends, o.owner.username);
             });
             if (bads.length > 0) {
-                creep.attackMove(bads[0]);
+                creep.attack(bads[0]);
                 return true;
             }
             bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
@@ -114,18 +114,18 @@ function doAttack(creep) {
                 return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL;
             });
             if (bads.length > 0) {
-                creep.attackMove(bads[0]);
+                creep.attack(bads[0]);
                 return true;
             }
             return false;
-        case "E21S73":
+/*        case "E12S43":
             bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
             bads = _.filter(bads, function(o) {
                 return !_.contains(fox.friends, o.owner.username);
             });
             if (bads.length > 0) {
 
-                creep.attackMove(bads[0]);
+                creep.attack(bads[0]);
                 break;
             }
 
@@ -134,8 +134,8 @@ function doAttack(creep) {
                 return bads.structureType != STRUCTURE_WALL;
             });
             if (bads.length > 0)
-                creep.attackMove(bads[0]);
-            break;
+                creep.attack(bads[0]);
+            break; */
         default:
             if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.wallTarget !== 'none') {
                 E18S64targets = [Game.flags[creep.memory.party].memory.wallTarget];
@@ -165,6 +165,13 @@ function doAttack(creep) {
             });
             if (bads.length > 0) {
                 creep.attack(bads[0]);
+            }
+            if (creep.room.controller !== undefined&& creep.room.controller.owner !== undefined && creep.room.controller.owner.username !== 'likeafox') {
+
+                bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
+                if (bads.length > 0) {
+                    creep.attack(bads[0]);
+                }
             }
 
             break;
@@ -311,7 +318,7 @@ class fighterClass extends roleParent {
         }
 
         if (creep.memory.level >= 11) {
-            if (super.boosted(creep, ['XGHO2', 'XUH2O', 'XZHO2'])) {
+            if (super.boosted(creep, ['XGHO2', 'XZHO2', 'XUH2O'])) {
                 return;
             }
         }
@@ -340,21 +347,20 @@ class fighterClass extends roleParent {
                 creep.attack(enemy);
             } else {
                 if (Game.flags.siege === undefined || Game.flags.siege.pos.roomName !== creep.room.name)
-                            movement.flagMovement(creep);
-//                    creep.moveTo(enemy);
+                    movement.flagMovement(creep);
+                //                    creep.moveTo(enemy);
             }
         } else {
-
-            if (!doAttack(creep))
-
+            var killBase = ['E12xS43', 'E15S42'];
+            if (!doAttack(creep)){
                 if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
                     if (Game.flags.siege !== undefined && Game.flags.siege.pos.roomName === creep.room.name) {
                         //                        movement.flagMovement(creep);
                         creep.say('kill');
                         creep.killBase();
                     } else {
-                        if (creep.room.name == 'E23S34' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
-                            creep.killBase({maxRooms:1});
+                        if (_.contains(killBase, creep.room.name) && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+                            creep.killBase({ maxRooms: 1 });
                         } else {
 
                             movement.flagMovement(creep);
@@ -369,6 +375,9 @@ class fighterClass extends roleParent {
                     }
 
                 }
+            } else {
+                        movement.flagMovement(creep);
+            }
 
         }
 

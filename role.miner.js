@@ -170,7 +170,6 @@ class settler extends roleParent {
             return;
         }
 
-
         var _source = Game.getObjectById(creep.memory.goal);
 
         if (_source !== null && (_source.pos.roomName != creep.room.name)) creep.memory.distance++;
@@ -264,16 +263,17 @@ class settler extends roleParent {
             if (_source !== null && creep.room.name == _source.room.name) {
                 let contain = Game.getObjectById(creep.memory.workContainer);
                 if(contain !== null) {
-                    if(creep.memory.goal == '5982ff78b097071b4adc2b4f') {
+                    if(creep.memory.goal == '5982ff78b097071b4adc2b4f' || creep.memory.goal == '5982ff07b097071b4adc1fa3'  ) {
                         creep.moveMe(_source, { reusePath: 10 });
                     } else {
                         creep.moveMe(contain, { reusePath: 10 });
                     }
                 } else {
+                        creep.moveMe(_source, { reusePath: 10 });
                 }
 
             } else {
- var goingTo = movement.getRoomPos(creep.memory.goal);
+                var goingTo = movement.getRoomPos(creep.memory.goal);
                 //                }
                 if (_source !== null) {
                     let task = {};
@@ -296,7 +296,7 @@ class settler extends roleParent {
                     creep.memory.task.push(task);
                 }
                 creep.moveMe(goingTo, { reusePath: 49 });
-                //                creep.say(_source);
+
             }
 
         }

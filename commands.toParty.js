@@ -25,7 +25,7 @@ var engineerParty = [
     ['engineer', require('army.engineer'), 1, 4],
 ];
 var engineer2Party = [
-    ['engineer', require('army.engineer'), 2, 3],
+    ['engineer', require('army.engineer'), 2, 4],
 ];
 var thiefParty = [
     ['thief', require('army.thief'), 3, 3],
@@ -83,21 +83,24 @@ var lowFFH = [
 ];
 var lowFFH = [
     ['fighter', require('army.fighter'), 2, 10],
-    ['healer', require('army.healer'), 1, 5] // Healer    
+    ['healer', require('army.healer'), 1 ,5] // Healer    
 ];
 
 var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 2],
-    ['fighter', require('army.fighter'), 2, 11],
-    ['demolisher', require('army.demolisher'), 0, 2],
-    ['healer', require('army.healer'), 1, 6] // Healer    
-];
-var fightHealer = [
     ['fighter', require('army.fighter'), 1, 11],
-    ['healer', require('army.healer'), 1, 5]
+    ['demolisher', require('army.demolisher'), 1, 3],
+    ['healer', require('army.healer'), 1, 5] // Healer    
 ];
+
+var fightHealer = [
+    ['fighter', require('army.fighter'), 1, 10],
+    ['demolisher', require('army.demolisher'), 1, 2],
+//    ['healer', require('army.healer'), 1, 5]
+];
+
 var fight2Healer = [
     ['fighter', require('army.fighter'), 1, 2],
 ];
@@ -251,7 +254,8 @@ function getSpawnCreating(flag) {
     switch (flag.name) {
 
         case 'engineer2':
-            return 'E28S37';
+            return 'E17S45';
+
         case 'mule':
             return 'E17S34';
         case 'mule2':
@@ -286,12 +290,14 @@ function getSpawnCreating(flag) {
         case 'thief4':
         case 'engineer':
         case 'mage':
-        case 'engineer2':
         case 'harass':
         case 'harass2':
+        case 'warparty1':
+//        case 'control':
             return 'E18S36';
         case 'control':
-            return 'E25S37';
+            return 'E17S45';
+//            return 'E25S37';
 
         case 'fighter':
         case 'upgrade':

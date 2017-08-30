@@ -35,11 +35,14 @@ function getSpawnCreating(flag) {
     switch (flag.name) {
         case 'Flag13':
             case 'Flag14':
-            case 'Flag15':
+            return 'E17S45';
             case 'Flag16':
             case 'Flag17':
             case 'Flag21':
+            case 'Flag22':
             return 'E18S36';
+            case 'Flag15':
+            return 'E25S37';
 
         default:
             return '';
@@ -67,6 +70,7 @@ function getCurrentParty(flag) {
             case 'Flag15':
             case 'Flag16':
             case 'Flag17':
+            case 'Flag22':
             
                 return guardParty;
             case 'Flag53':
@@ -171,14 +175,7 @@ class partyInteract {
                         temp.memory.parent = spawn[0].id;
                         spawn[0].memory.expandCreate.unshift(temp);
                     } else {
-                        //                      console.log('using old', totalParty[i], currentParty[e][_number]);
-                        //                        let toSpawn = require('commands.toSpawn');
-                        //                    console.log( )
-                        //                    toSpawn.addToWarStack(temp);
                     }
-
-                    //                    toSpawn.
-
 
                     totalParty[i]++;
 

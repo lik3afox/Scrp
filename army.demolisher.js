@@ -3,6 +3,7 @@
 // every x = 50x5
 var classLevels = [
     [MOVE, WORK], // 300
+
     [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK],
     // Not boosted
     [
@@ -12,7 +13,9 @@ var classLevels = [
     // Boosted level
 
     [WORK, WORK, WORK, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+    
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+    
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
 ];
 var boost = ['ZH'];
@@ -25,8 +28,8 @@ function doAttack(creep) {
     let target;
     var E18S64targets;
     switch (creep.room.name) {
-        case "E56S69":
-            E18S64targets = ['5812412f7c14175b3153f70f'];
+        case "E12S43":
+            E18S64targets = ['599ae1f89bc4694f39c98f01'];
             for (var a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
@@ -45,10 +48,9 @@ function doAttack(creep) {
                 return true;
             }
             return false;
-        case "E52S67":
-            return false;
+
         default:
-            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.wallTarget !== 'none') {
+/*            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.wallTarget !== undefined) {
                 E18S64targets = [Game.flags[creep.memory.party].memory.wallTarget];
                 for (var b in E18S64targets) {
                     target = Game.getObjectById(E18S64targets[b]);
@@ -67,7 +69,7 @@ function doAttack(creep) {
                     creep.dismantle(bads[0]);
                     //                  return true;
                 }
-            } else {
+            } else { */
                 bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
                 bads = _.filter(bads, function(o) {
                     return !_.contains(fox.friends, o.owner.username);
@@ -76,7 +78,13 @@ function doAttack(creep) {
                     creep.dismantle(bads[0]);
                     //                    return true;
                 }
-            }
+                if(creep.room.controller !== undefined && creep.room.controller.owner !== undefined&& creep.room.controller.owner.username !== 'likeafox'){
+                    bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
+                    if (bads.length > 0) {
+                        creep.dismantle(bads[0]);
+                        //                    return true;
+                    }
+                }
             return false;
             /*        default:
                         bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
@@ -112,8 +120,8 @@ class demolisherClass extends roleParent {
         } else {
             creep.memory.death = true;
         }
-        if (creep.memory.level >= 2) {
-            if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XZH2O'])) {
+        if (creep.memory.level > 2) {
+            if (super.boosted(creep, [ 'XGHO2', 'XZH2O','XZHO2'])) {
                 return;
             }
         }
@@ -122,7 +130,8 @@ class demolisherClass extends roleParent {
         /*        if (creep.hits < 4500) {
                     super.edgeRun(creep);
                 } */
-        if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName && (creep.room.name == 'E52S64' || creep.room.name == 'E52S67')) {
+        var killBase = ['E12S43'];
+        if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName && _.contains(killBase,creep.room.name)) {
             creep.killBase();
         } else if (!doAttack(creep)) {
             movement.flagMovement(creep);

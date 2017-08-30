@@ -193,44 +193,25 @@ class healerClass extends roleParent {
             creep.say('1');
             if (creep.heal(hurtz[0]) == ERR_NOT_IN_RANGE) {
                 creep.rangedHeal(hurtz[0]);
-                creep.rangedMassAttack();
+            } else {
                 creep.memory.lastHealed = hurtz[0].id;
             }
                 doMove = true;
 
-      //      if (creep.pos.isNearTo(hurtz[0])) {
-
-    //        } else {
-//                if (!hurtz[0].pos.isEqualTo(creep)) {
-//                    creep.moveTo(hurtz[0]);
-//                } 
-                //else {
-//  doMove = true;
-//                    movement.flagMovement(creep);
-//                }
-  //          }
-            /*if (creep.pos.inRangeTo(hurtz[0], 3) && !creep.pos.isNearTo(hurtz[0])) {
-
-            }*/
         } else if (creep.hits < creep.hitsMax) {
             creep.say('2');
             creep.heal(creep);
-            creep.rangedMassAttack();
             doMove = true;
-//            movement.flagMovement(creep);
         } else if (!healParty(creep)) {
             // heal last
             creep.say('3');
             var last = Game.getObjectById(creep.memory.lastHealed);
             if (last !== null) {
                 creep.heal(last);
-                creep.rangedMassAttack();
                 if (last.id !== creep.id) {
-//                    creep.moveTo(last);
                 }
             }
             doMove = true;
-//            movement.flagMovement(creep);
         }
 
         if (creep.room.name == 'E11xS36') {

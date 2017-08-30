@@ -365,13 +365,13 @@ module.exports = function() {
 
 
             var test2 = _.filter(struc, function(o) {
-                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_ROAD && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_ROAD&& o.structureType !== STRUCTURE_CONTAINER && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
             }); // This is something is not on a rampart
             if (test2.length !== 0) {
                 this.memory.targetID = this.pos.findClosestByRange(test2).id;
             } else {
                 var test = _.filter(struc, function(o) {
-                    return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && o.pos.lookForStructure(STRUCTURE_RAMPART);
+                    return o.structureType !== STRUCTURE_WALL&& o.structureType !== STRUCTURE_CONTAINER && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && o.pos.lookForStructure(STRUCTURE_RAMPART);
                 });
                 if (test.length !== 0) {
                     this.memory.targetID = this.pos.findClosestByRange(test).id;

@@ -72,7 +72,7 @@ function numberOfBody(creep, boost) {
             break;
         case 'ZO':
         case "ZHO2":
-        case "XKHO2":
+        case "XZHO2":
             type = MOVE;
             break;
         case 'KH':
@@ -82,7 +82,7 @@ function numberOfBody(creep, boost) {
             break;
         case 'GO':
         case "GHO2":
-        case "XKHO2":
+        case "XGHO2":
             type = TOUGH;
             break;
         default:
@@ -463,8 +463,8 @@ class baseParent {
 
                 if (task.enemyWatch) {
                     let zzz = ['E25S36'];
-                    let rng = _.indexOf(zzz, creep.room.name) >= 0 ? 6 : 5;
-                    let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, rng);
+                    let rng = _.indexOf(zzz, creep.room.name) >= 0 ? 6 : 4;
+                    let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
                     badz = _.filter(badz, function(object) {
                         return !_.contains(fox.friends, object.owner.username) && object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(RANGED_ATTACK) > 0;
                     });
@@ -714,7 +714,15 @@ class baseParent {
         if (creep.room.memory.boostRequest === undefined || creep.room.memory.boostRequest.length > 0) {
             require('role.scientist').run(creep);
             creep.say('boo');
+            creep.memory.staySci = 10;
             return true;
+        } else if(creep.memory.staySci > 0){
+            creep.memory.staySci --;
+            if(creep.memory.staySci > 0) {
+            require('role.scientist').run(creep);
+            creep.say('bood');
+                return true;
+            }
         }
         return false;
     }
@@ -733,7 +741,8 @@ class baseParent {
 
             var a = creep.memory.boostNeeded.length;
             while (a--) {
-                var neededMin = numberOfBody(creep, boosted) * 30;
+                console.log('amoutn needed',numberOfBody(creep, boosted[a]));
+                var neededMin = numberOfBody(creep, boosted[a]) * 30;
 
                 if (Memory.stats.totalMinerals[boosted[a]] < neededMin) {
                     creep.memory.boostNeeded.pop();
@@ -755,15 +764,13 @@ class baseParent {
                             object.mineralAmount > 29)
                     });
                     if (labs.length > 0) {
-                        if (creep.pos.isNearTo(labs[0])) {
+                        if (creep.pos.isNearTo(labs[0]) && labs[0].mineralAmount >= neededMin ) {
                             let zz = labs[0].boostCreep(creep);
                             creep.say('ah!' + zz);
                             if (zz == OK) {
                                 creep.memory.boostNeeded.splice(a, 1); // = 'done';
                                 creep.room.memory.boostRequest.shift();
-                            } else if (zz == -7) {
-                                creep.memory.boostNeeded.splice(a, 1); // = 'done';
-                            }
+                            } 
                         } else {
                             creep.say('drugs');
                             creep.moveTo(labs[0]);

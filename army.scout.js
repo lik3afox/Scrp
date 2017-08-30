@@ -22,6 +22,9 @@ class scoutClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
+        if (super.returnEnergy(creep)) {
+            return;
+        }        
         var zz = ['!Never', '!gonna', 'give', 'you!',
             'up',
             '@Never', '@gonna', 'let', 'you@',
@@ -36,9 +39,9 @@ class scoutClass extends roleParent {
         }
 
         if (creep.room.name == 'E18S36') {
-//            if(super.boosted(creep, ['LO','KO'])) {
-  //              return;
-    //        }
+            if(super.boosted(creep, ['XLHO2','XKHO2'])) {
+                return;
+            }
 
         }
 

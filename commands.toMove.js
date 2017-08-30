@@ -592,13 +592,6 @@ class MoveInteract {
         ]; // No, acutally what happens is that all creeps come and help kill range 
         // This is for responders
 
-
-        /*
-                let flagz = _.filter(Game.flags, function(f) {
-                    return f.color == FLAG.DEFEND;
-                });
-
-                console.log(flagz.length); */
         let flagz = creep.defendFlags();
         let targetFlag;
 
@@ -627,117 +620,15 @@ class MoveInteract {
 
             } else if (creep.memory.role == 'guard' || creep.memory.role == 'shooter') {
                 switch (creep.room.name) {
-                    case 'W4S94':
-                        if (_.contains(W4S94, flagz[e].pos.roomName)) {
+                    case 'E25S36':
+      //                  if (_.contains(W4S94, flagz[e].pos.roomName)) {
                             maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
+    //                    } else {
+  //                          maxDistance = 0;
+//                        }
                         break;
                     case 'W5S94':
                         if (_.contains(W5S94, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E34S76':
-                        if (_.contains(E34S76, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-                    case 'E35S76':
-                        if (_.contains(E35S76, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E36S74':
-                        if (_.contains(E36S74, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-                    case 'E36S75':
-                        if (_.contains(E36S75, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-
-                    case 'E34S74':
-                        if (_.contains(E34S74, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E34S84':
-                        if (_.contains(E34S84, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-                    case 'E35S84':
-                        if (_.contains(E35S84, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E25S74':
-                        if (_.contains(E25S74, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E35S74':
-                        if (_.contains(E35S74, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E25S76':
-                        if (_.contains(E25S76, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E26S74':
-                        if (_.contains(E26S74, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E26S75':
-                        if (_.contains(E26S75, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
-
-                    case 'E26S76':
-                        if (_.contains(E26S76, flagz[e].pos.roomName)) {
                             maxDistance = 1;
                         } else {
                             maxDistance = 0;

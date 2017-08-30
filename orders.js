@@ -15,10 +15,10 @@ Game.rooms.E18S36.terminal.send('O', 30000, 'E23S38', 'trade');
 
 
 
-Game.rooms.E33S76.terminal.send('X', 10000, 'E42S83', 'trade');
+Game.rooms.E23S38.terminal.send('X', 10000, 'E7S19', 'trade');
 
 Game.rooms.E28S71.terminal.send('X', 15000, 'E5N7', 'trade');
-Game.rooms.E28S71.terminal.send('O', 15000, 'E5N7', 'trade');
+Game.rooms.E23S38.terminal.send('LO', 1000, 'E18S36', 'trade');
 Game.rooms.W4S93.terminal.send('H', 8000, 'E5N7', 'trade');
 
 Game.market.cancelOrder('59804da1bf322312de922a2e');

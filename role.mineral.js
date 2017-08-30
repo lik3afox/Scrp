@@ -91,31 +91,30 @@ class mineralRole extends roleParent {
             let contain = Game.getObjectById(creep.memory.mineralContainID);
             if (contain === null || contain === undefined || creep.memory.level !== 7) {
 
-                if (creep.room.name == 'E33S76z') {
-                    super._containers.moveToStorage(creep);
-                } else {
                     if (!super._containers.moveToTerminal(creep)) {
                         super._containers.moveToStorage(creep);
-                    }
                 }
             } else {
                 let containTotal = _.sum(contain.store);
-                if (containTotal > contain.storeCapacity - 50) {
+/*                if (containTotal > contain.storeCapacity - 50) {
                     if (!super._containers.moveToTerminal(creep)) {
                         super._containers.moveToStorage(creep);
                     }
 
-                } else {
+                } else {*/
                     var keys = Object.keys(creep.carry);
                     var z = keys.length;
                     while (z--) {
                         var e = keys[z];
                         if (creep.carry[e] > 0) {
-                            creep.say(creep.transfer(contain, e));
+                            if(creep.transfer(contain, e)=== -9 ){
+                                creep.moveTo(contain);
+                            }
+
                             return;
                         }
                     }
-                }
+///                }
             }
         }
 

@@ -153,7 +153,7 @@ function E18S36(creep, fill) {
         switch (creep.memory.roleID) {
             case 0:
                 var term = creep.room.terminal;
-                let goto = Game.getObjectById('5997883fab58151efecc98e0');
+                let goto = Game.getObjectById('59a5c250bcad865bbc88f878');
                 if (goto !== null && goto.energy > 0) {
                     if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(goto, {
@@ -617,15 +617,15 @@ function E14S37(creep, fill) {
                 break;
             case 0:
                 let goto2 = Game.getObjectById('599fb7715718b6076387d35f');
-                if (goto2 !== null) {
+                if (goto2 !== null && goto2.energy > 0) {
                     if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(goto2, {
                             reusePath: 20
                         });
                     }
+                } else {
+                takeFromTerminalForStorage(creep);
                 }
-                //                takeFromTerminalForStorage(creep);
-                //            }
                 break;
         }
     } else {

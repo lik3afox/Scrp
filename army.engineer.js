@@ -47,7 +47,7 @@ class engineerClass extends roleParent {
             return;
         }
 
-        if (super.boosted(creep, ['LH'])) { return; }
+//        if (super.boosted(creep, ['LH'])) { return; }
         if (super.goToPortal(creep)) return;
         //        spawn.wantRenew(creep);
 //        if (super.depositNonEnergy(creep)) return;

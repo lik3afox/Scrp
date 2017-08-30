@@ -1,4 +1,4 @@
-var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E24S37', 'E17S34', 'E27S34', 'E18S32'];
+var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E24S37', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -1296,20 +1296,21 @@ function labDo(roomName, created, labz, laby) {
     let lab3 = getCached(labs[laby - 1].id);
     if (lab1 === null || lab2 === null || lab3 === null) {
         return false;
+    } else {
+        lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
+        lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
     }
 
-    lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
-    lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
     //   if(lab1.room.name == 'E13S34')
     //     console.log('gets here?2');
 
     if (lab1.cooldown !== 0) return false;
     ///       if(lab1.room.name == 'E13S34')
     //   console.log('gets here?');
-    if (lab1.mineralAmount >= 2990 || lab2.mineralAmount < 5 || lab3.mineralAmount < 5) {
-        lab3.room.memory.labsNeedWork = true;
-        return false;
-    }
+        if (lab1.mineralAmount >= 2950 || lab2.mineralAmount < 50 || lab3.mineralAmount < 50) {
+            lab3.room.memory.labsNeedWork = true;
+            return false;
+        }
     if (lab2.mineralType != labs[labz - 1].resource) return false;
     if (lab3.mineralType != labs[laby - 1].resource) return false;
 
@@ -1473,18 +1474,23 @@ function labMode(roomName, mode, labs) {
         if (labs[mmm] !== undefined)
             returned[mmm].id = labs[mmm].id;
     }
-
-    if (Game.rooms[roomName].memory.boostRequest !== undefined && Game.rooms[roomName].memory.boostRequest.length > 0) {
-        Game.rooms[roomName].memory.boostRequest[0].timed--;
-        if (Game.rooms[roomName].memory.boostRequest[0].timed < 0) {
-            Game.rooms[roomName].memory.boostRequest.shift();
-        } else {
-            let zz = Game.rooms[roomName].memory.boostRequest[0].resource;
-            returned[2].resource = zz;
-            returned[2].amount = Game.rooms[roomName].memory.boostRequest[0].amount;
-            returned[2].emptied = false;
+    if(roomName == 'E14S37')
+console.log( returned[2].resource,'b',Game.rooms[roomName].memory.boostRequest.length);
+    if(Game.rooms[roomName].memory.boostRequest !== undefined)
+        if ( Game.rooms[roomName].memory.boostRequest.length > 0) {
+                Game.rooms[roomName].memory.boostRequest[0].timed--;
+            if (Game.rooms[roomName].memory.boostRequest[0].timed < 0) {
+                Game.rooms[roomName].memory.boostRequest.shift();
+            } else {
+                let zz = Game.rooms[roomName].memory.boostRequest[0].resource;
+                console.log(zz,Game.rooms[roomName].memory.boostRequest[0].amount,roomName);
+                returned[2].resource = zz;
+                returned[2].amount = Game.rooms[roomName].memory.boostRequest[0].amount;
+                returned[2].emptied = false;
+            }
         }
-    }
+    if(roomName == 'E14S37')
+console.log( returned[2].resource,'a',Game.rooms[roomName].memory.boostRequest.length);
     return returned;
 }
 
@@ -1703,8 +1709,8 @@ class buildLab {
             }
             if (Game.rooms[roomName].memory.labsNeedWork) {
                 // here we see if the flag to create scientist is there
-                if (Game.flags.SCI === undefined) {
-                    console.log("ADDING FLAG");
+                if (Game.flags.SCI === undefined && roomName !== 'E18S36') {
+                    console.log("ADDING FLAG",roomName);
                     Game.rooms[roomName].createFlag(25, 25, 'SCI', COLOR_YELLOW, COLOR_YELLOW);
                 } else {
 

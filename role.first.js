@@ -222,6 +222,10 @@ class roleFirst extends roleParent {
             creep.say('zZz');
             return;
         }
+        if(creep.memory.roleID === 0 && creep.room.name == 'E25S37' &&  super.fillLabForBoost(creep)){
+            return;
+        }
+        
         if (super.doTask(creep)) {
             return;
         }
@@ -250,9 +254,6 @@ class roleFirst extends roleParent {
         if (creep.carry.energy === 0) {
             creep.memory.deposit = false;
         }
-    //    if(creep.memory.roleID === 0 &&  super.fillLabForBoost(creep)){
-  //          return;
-//        }
 
         if (!creep.memory.deposit) {
 

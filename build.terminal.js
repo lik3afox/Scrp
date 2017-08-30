@@ -844,14 +844,7 @@ function doDebt() {
 
 
 
-function getMinerals(terminal, needed) {
-    for (var e in needed) {
-        if ((needed[e] != 'none' && needed[e] != 'flex') && (terminal.store[needed[e]] === undefined || terminal.store[needed[e]] === 0)) {
-            //            console.log('getting minerals', terminal, needed[e]);
-            giveMinerals(terminal, needed[e]);
-        }
-    }
-}
+
 
 function getAverageMineralPrice(resource, buy) {
     if (buy === undefined) buy = true;
@@ -947,17 +940,37 @@ function forEveryTerminal(terminal) {
         }
     }
 }
+function getMinerals(terminal, needed) {
+//	console.log('getting');
+    for (var e in needed) {
+//    	console.log(terminal.store[needed[e]] ,needed[e]);
+    //    	if(terminal.room.name == 'E18S36'){
+  //      		console.log( terminal.store[needed[e]],needed[e]);
+//        	}
+        if ((needed[e] != 'none' && needed[e] != 'flex') && (terminal.store[needed[e]] === undefined || terminal.store[needed[e]] <=  1000)) {
+            if( terminal.store[needed[e]] === 0 || terminal.store[needed[e]]  === undefined) {
+            giveMinerals(terminal, needed[e]);
+            } else {
+            giveMinerals(terminal, needed[e],1000);
+            }
+        }
+    }
+}
 
 function focusRoom(terminal) {
-    var target = 'E17S45';
+    if(terminal.room.name == 'E18S36'||terminal.room.name == 'E25S37'  ) return false;
+    var target = 'E14S37';
+    if(Game.rooms.E25S37.storage.store[RESOURCE_ENERGY] < 10000) target = 'E25S37';
     if(Game.rooms[target].terminal ===undefined) return false;
     if(Game.rooms[target].terminal.total === 300000) return false;
     if(terminal.store[RESOURCE_ENERGY] < 10000) return false;
-    if(terminal.room.name == target) return false;
+
+    if(terminal.room.name == target && terminal.room.name == 'E25S37') return false;
     var amount = 3000 ;// terminal.store[RESOURCE_ENERGY] *0.25;
     var sender = terminal;
-    var result = sender.send(RESOURCE_ENERGY, amount, target, 'Lv7');
-    console.log(sender,amount,terminal.room.name,result);
+//
+    var result = terminal.send('energy', amount, target);
+    console.log(terminal.room.name,result,amount,terminal,RESOURCE_ENERGY);
     if(result === OK) return true;
 }
 
@@ -969,7 +982,7 @@ class roleTerminal {
         //console.log( checkEnergyProfit(10,.02,1000) );
 
         //        focusMinerals(focusID, focusMin);
-
+console.log('DOING TERMINALS');
         cleanUpOrders();
 //        adjustOldPrices();
         Memory.stats.totalMinerals = countTerminals();
