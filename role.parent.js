@@ -730,7 +730,7 @@ class baseParent {
 
     static boosted(creep, boosted) {
         if (creep.room.memory.boostRequest === undefined) creep.room.memory.boostRequest = [];
-        if (creep.ticksToLive < 1400) return false;
+        if (creep.ticksToLive <  1400) return false;
 
         if (creep.memory.boostNeeded === undefined) {
             creep.memory.boostNeeded = boosted;
@@ -741,7 +741,7 @@ class baseParent {
 
             var a = creep.memory.boostNeeded.length;
             while (a--) {
-                console.log('amoutn needed',numberOfBody(creep, boosted[a]));
+                //console.log('amount needed',numberOfBody(creep, boosted[a]));
                 var neededMin = numberOfBody(creep, boosted[a]) * 30;
 
                 if (Memory.stats.totalMinerals[boosted[a]] < neededMin) {

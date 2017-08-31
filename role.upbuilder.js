@@ -200,8 +200,8 @@ class roleUpbuilder extends roleParent {
                         }
                 } else {
                     if (!super._containers.withdrawFromStorage(creep))
-                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
                         if (!containers.moveToWithdraw(creep)) {
+                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 
                             }

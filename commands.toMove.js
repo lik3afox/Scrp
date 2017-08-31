@@ -636,11 +636,11 @@ class MoveInteract {
                         break;
 
                     default:
-                        if (!_.contains(guardRooms, flagz[e].pos.roomName)) {
-                            maxDistance = 0;
-                        } else {
+      //                  if (!_.contains(guardRooms, flagz[e].pos.roomName)) {
+    //                        maxDistance = 0;
+  //                      } else {
                             maxDistance = 1; //if(distance > 1) return false;
-                        }
+//                        }
                         break;
                 }
 

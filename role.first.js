@@ -222,7 +222,7 @@ class roleFirst extends roleParent {
             creep.say('zZz');
             return;
         }
-        if(creep.memory.roleID === 0 && creep.room.name == 'E25S37' &&  super.fillLabForBoost(creep)){
+        if(creep.memory.roleID === 0 &&  (creep.room.name == 'E25S37'||creep.room.name == 'E17S45' ) &&  super.fillLabForBoost(creep)){
             return;
         }
         

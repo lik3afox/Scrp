@@ -1,4 +1,4 @@
-var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E24S37', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45'];
+var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E24S37', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -86,8 +86,8 @@ var maxMinerals = {
         'X': 125000, */
 
     'OH': 30000,
-    //    'UL': 500,
-    //    'ZK': 500,
+    'UL': 10000,
+    'ZK': 10000,
     'G': 50000,
     'LH': 30000,
     'KO': 30000,
@@ -1122,17 +1122,12 @@ var G = [{
 // MOVE
 var GG = [{
     id: 'getReplaced',
-    resource: 'U',
+    resource: 'UL',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'UL',
-    amount: 1,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'K',
+    resource: 'ZK',
     amount: 2400,
     emptied: false
 }, {
@@ -1142,14 +1137,9 @@ var GG = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'UL',
+    resource: 'G',
     amount: 1,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'ZK',
-    amount: 1,
-    emptied: false
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'G',
@@ -1157,19 +1147,29 @@ var GG = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'L',
-    amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'ZK',
+    resource: 'G',
     amount: 1,
-    emptied: false
+    emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'Z',
-    amount: 2500,
-    emptied: false
+    resource: 'G',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'G',
+    amount: 1,
+    emptied: true
 }];
 
 var E29S79WarMix = [
@@ -1339,6 +1339,9 @@ function labMode(roomName, mode, labs) {
             }
             returned = G;
             break;
+        case 'GG':
+            returned = GG;
+            break;
         case 'OH':
             for (a in OH) {
                 if (labs[a] !== undefined)
@@ -1455,6 +1458,7 @@ function labMode(roomName, mode, labs) {
             }
             return labs;
         default:
+            return labs;
 
         case 'light':
             var count = {};
@@ -1474,8 +1478,8 @@ function labMode(roomName, mode, labs) {
         if (labs[mmm] !== undefined)
             returned[mmm].id = labs[mmm].id;
     }
-    if(roomName == 'E14S37')
-console.log( returned[2].resource,'b',Game.rooms[roomName].memory.boostRequest.length);
+  //  if(roomName == 'E14S37')
+//console.log( returned[2].resource,'b',Game.rooms[roomName].memory.boostRequest.length);
     if(Game.rooms[roomName].memory.boostRequest !== undefined)
         if ( Game.rooms[roomName].memory.boostRequest.length > 0) {
                 Game.rooms[roomName].memory.boostRequest[0].timed--;
@@ -1483,14 +1487,15 @@ console.log( returned[2].resource,'b',Game.rooms[roomName].memory.boostRequest.l
                 Game.rooms[roomName].memory.boostRequest.shift();
             } else {
                 let zz = Game.rooms[roomName].memory.boostRequest[0].resource;
-                console.log(zz,Game.rooms[roomName].memory.boostRequest[0].amount,roomName);
+//                console.log(zz,Game.rooms[roomName].memory.boostRequest[0].amount,roomName);
                 returned[2].resource = zz;
                 returned[2].amount = Game.rooms[roomName].memory.boostRequest[0].amount;
                 returned[2].emptied = false;
             }
         }
-    if(roomName == 'E14S37')
-console.log( returned[2].resource,'a',Game.rooms[roomName].memory.boostRequest.length);
+//    if(roomName == 'E14S37')
+
+//console.log( returned[2].resource,'a',Game.rooms[roomName].memory.boostRequest.length);
     return returned;
 }
 
@@ -1522,7 +1527,7 @@ function getLabMixes(roomName) {
 //labRooms
 function anyroomMakingMineral(type) {
     for (var e in labRooms) {
-        console.log(Game.rooms[labRooms[e]].memory.labMode, labRooms[e], type);
+//        console.log(Game.rooms[labRooms[e]].memory.labMode, labRooms[e], type);
         if (Game.rooms[labRooms[e]].memory.labMode !== undefined && Game.rooms[labRooms[e]].memory.labMode == type) {
             return true;
         }

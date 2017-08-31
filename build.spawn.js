@@ -84,7 +84,7 @@ var newbModLevel = [
         //        ['defender',    require('role.defender'), 1, 1],
         //        ['builder',    require('role.builder'), 0, 1],
         //        ['repairer', require('role.repairer'), 1, 1],
-        ['upbuilder', require('role.upbuilder'), 5, 2],
+        ['upbuilder', require('role.upbuilder'), 6, 2],
         ['upgrader', require('role.upgrader'), 1, 2],
         //        ['linker', require('role.linker'), 2, 3],
         //        ['upbuilder',    require('role.upbuilder'), 5, 2],
@@ -157,12 +157,12 @@ var Mod_E23S38 = [
 var Mod_E24S37 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 2],
+//    ['wallwork', require('role.wallworker'), 1, 2],
         ['minHarvest', require('role.mineral'),2,7],
         ['assistant', require('role.assistant'),1,0],
 
 
-    ['upbuilder', require('role.upbuilder'), 1, 3],
+    ['upbuilder', require('role.upbuilder'), 1, 0],
     ['linker', require('role.linker'), 2, 3],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
@@ -173,14 +173,16 @@ var Mod_E25S37 = [
     ['minHarvest', require('role.mineral'),2 ,7],
     ['assistant', require('role.assistant'),1,0],
 //    ['builder', require('role.builder'), 2, 4],
-    ['upgrader', require('role.upgrader'), 1  , 5],
+    ['upgrader', require('role.upgrader'), 4  , 5],
     ['linker', require('role.linker'), 1, 3],
 ];
 var Mod_E27S34 = [
-    ['first', require('role.first'), 2, 2],
+    ['first', require('role.first'), 2, 4],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 2],
-    ['upbuilder', require('role.upbuilder'), 2, 4],
+
+    ['wallwork', require('role.wallworker'), 1, 6],
+    ['upbuilder', require('role.upbuilder'), 1, 5],
+//    ['upgrader', require('role.upgrader'), 5, 4],
         ['minHarvest', require('role.mineral'),2,7],
         ['assistant', require('role.assistant'),1,0],
     ['linker', require('role.linker'), 1, 3],
@@ -199,7 +201,7 @@ var Mod_E13S34 = [
 var Mod_E17S45 = [
     ['first', require('role.first'), 2, 4],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 6],
     ['minHarvest', require('role.mineral'),2,7],
     ['assistant', require('role.assistant'),1,0],
    
@@ -214,9 +216,9 @@ var Mod_E14S37 = [
         ['minHarvest', require('role.mineral'),2,7],
         ['assistant', require('role.assistant'),1,0],
     ['wallwork', require('role.wallworker'), 1, 2],
-    ['upgrader', require('role.upgrader'), 5  , 5],
+    
     ['upbuilder', require('role.upbuilder'), 1, 4],
-    ['linker', require('role.linker'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
     //        ['homeDefender', require('role.defender2'), 1, 3]
 ];
 
@@ -225,10 +227,34 @@ var Mod_E24S33 = [
     ['harvester', require('role.harvester'), 2, 2],
     //        ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 2, 4],
-    ['linker', require('role.linker'), 2, 4],
+    ['upgrader', require('role.upgrader'), 2, 5],
+    ['linker', require('role.linker'), 1, 4],
             ['homeDefender', require('role.defender2'), 1, 3]
 ];
 
+
+var Mod_E14S43 = [
+    ['first', require('role.first'), 2, 2],
+    ['harvester', require('role.harvester'), 2, 2],
+    ['upbuilder', require('role.upbuilder'), 4, 3],
+//    ['linker', require('role.linker'), 2, 4],
+//    ['homeDefender', require('role.defender2'), 1, 2]
+];
+
+var Mod_E14S47 = [
+    ['first', require('role.first'), 2, 2],
+    ['harvester', require('role.harvester'), 2, 2],
+    ['upbuilder', require('role.upbuilder'), 2, 4],
+//    ['linker', require('role.linker'), 2, 4],
+//    ['homeDefender', require('role.defender2'), 1, 2]
+];
+var Mod_E25S43 = [
+    ['first', require('role.first'), 1, 2],
+    ['harvester', require('role.harvester'), 1, 2],
+    ['upbuilder', require('role.upbuilder'), 3, 4],
+    ['linker', require('role.linker'), 1, 4],
+//    ['homeDefender', require('role.defender2'), 1, 2]
+];
 
 
 var expansionModule = [
@@ -703,7 +729,10 @@ function getCurrentModule(spawn) {
                 return Mod_E13S34;
             case 'E24S33':
                 return Mod_E24S33;
-
+            case 'E14S43':
+                return Mod_E14S43;
+            case 'E25S43':
+                return Mod_E25S43;
             case 'E27S34':
                 return Mod_E27S34;
 

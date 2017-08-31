@@ -22,7 +22,7 @@ var scienceParty = [
     ['scientist', require('role.scientist'), 1, 3]
 ];
 var engineerParty = [
-    ['engineer', require('army.engineer'), 1, 4],
+    ['engineer', require('army.engineer'), 2, 5],
 ];
 var engineer2Party = [
     ['engineer', require('army.engineer'), 2, 4],
@@ -98,7 +98,7 @@ var warParty = [
 var fightHealer = [
     ['fighter', require('army.fighter'), 1, 10],
     ['demolisher', require('army.demolisher'), 1, 2],
-//    ['healer', require('army.healer'), 1, 5]
+    //['healer', require('army.healer'), 1, 5]
 ];
 
 var fight2Healer = [
@@ -252,10 +252,13 @@ function getSpawnCreating(flag) {
     }
 
     switch (flag.name) {
-
+        case 'control':
+            return 'E23S38';
         case 'engineer2':
             return 'E17S45';
-
+        case 'fightHealer':
+        case 'engineer':
+            return 'E25S37';
         case 'mule':
             return 'E17S34';
         case 'mule2':
@@ -281,22 +284,18 @@ function getSpawnCreating(flag) {
         case 'test':
 
         case 'engineer3':
-        case 'fightHealer':
         case 'thief2':
         case 'thief3':
         case 'thief5':
         case 'upgrade':
         case 'thief2':
         case 'thief4':
-        case 'engineer':
         case 'mage':
         case 'harass':
         case 'harass2':
         case 'warparty1':
 //        case 'control':
             return 'E18S36';
-        case 'control':
-            return 'E17S45';
 //            return 'E25S37';
 
         case 'fighter':

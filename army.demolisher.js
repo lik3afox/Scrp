@@ -130,7 +130,7 @@ class demolisherClass extends roleParent {
         /*        if (creep.hits < 4500) {
                     super.edgeRun(creep);
                 } */
-        var killBase = ['E12S43'];
+        var killBase = ['E25S43','E26S41','E27S42','E28S43'];
         if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName && _.contains(killBase,creep.room.name)) {
             creep.killBase();
         } else if (!doAttack(creep)) {

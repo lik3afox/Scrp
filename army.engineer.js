@@ -4,8 +4,8 @@ var classLevels = [
     [WORK, WORK, CARRY, MOVE],
     [MOVE, MOVE, MOVE, WORK, MOVE, MOVE, WORK, WORK, WORK, CARRY],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, CARRY, CARRY], // 850
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY],
-    [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
+    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY],
     [MOVE, WORK, CARRY, MOVE, WORK, MOVE, WORK, CARRY, MOVE, WORK,
         MOVE, WORK, CARRY, MOVE, WORK, MOVE, WORK, CARRY, MOVE, WORK,
         MOVE, WORK, CARRY, MOVE, WORK, MOVE, WORK, CARRY, MOVE, WORK,
@@ -15,14 +15,34 @@ var classLevels = [
 
 ];
 
-
-
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
 var sources = require('commands.toSource');
 var constr = require('commands.toStructure');
 var spawn = require('commands.toSpawn');
 var contain = require('commands.toContainer');
+
+function killWalls(creep) {
+    creep.say('kill Wall');
+    //    if (creep.memory.targetID === undefined) {
+    var struc = creep.room.find(FIND_STRUCTURES);
+    var test2 = _.filter(struc, function(o) {
+        return o.structureType === STRUCTURE_WALL;
+    }); // This is something is not on a rampart
+    creep.say(test2.length);
+    if (test2.length > 0) {
+        let vv = test2[0];
+        if (creep.pos.isNearTo(vv)) {
+            creep.dismantle(vv);
+        } else {
+            creep.moveTo(vv);
+        }
+        //              creep.memory.targetID = test2[0];
+    }
+    //        }
+
+
+}
 //STRUCTURE_POWER_BANK:
 class engineerClass extends roleParent {
     static levels(level) {
@@ -39,18 +59,22 @@ class engineerClass extends roleParent {
         if (creep.saying == 'zZz') {
             return;
         }
-        if (creep.room.name == 'W35S95') {
-            creep.memory.party = 'Flag62';
-        }
 
         if (super.doTask(creep)) {
             return;
         }
 
-//        if (super.boosted(creep, ['LH'])) { return; }
+        if (creep.room.name == 'E25S43') {
+
+            killWalls(creep);
+            return;
+        }
+
+        if (creep.room.name == 'E25Sxx37')
+            if (super.boosted(creep, ['LH'])) { return; }
         if (super.goToPortal(creep)) return;
         //        spawn.wantRenew(creep);
-//        if (super.depositNonEnergy(creep)) return;
+        //        if (super.depositNonEnergy(creep)) return;
 
         let isThere = false;
         if (creep.memory.renewSpawnID === undefined) {
@@ -66,6 +90,7 @@ class engineerClass extends roleParent {
                 movement.flagMovement(creep);
             }
         } else {
+            if (creep.carry.X > 0) creep.drop('X');
 
             creep.say('eng!');
             if (creep.memory.renewSpawnID === undefined) {
@@ -103,118 +128,58 @@ class engineerClass extends roleParent {
 
             if (creep.memory.building) {
                 if (!spawn.moveToTransfer(creep)) {
-                if (!constr.moveToBuild(creep)) {
-//                    if (!super._containers.moveToStorage(creep)) {
+                    if (creep.room.controller.level !== 1) {
+                        if (!constr.moveToBuild(creep)) {
+                            //                    if (!super._containers.moveToStorage(creep)) {
+                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(creep.room.controller);
+                            }
+                            //                  }
+                        }
+                    } else {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(creep.room.controller);
                         }
-  //                  }
-                                      }
+                    }
                 } else {
                     constr.doCloseRoadRepair(creep);
                 }
 
             } else {
-                if (creep.room.name == 'E23xxS38') {
-                    if (!super._constr.moveToPickUpEnergy(creep, 300)) {
-//                        if (!super._containers.moveToWithdraw(creep)) {
-                            let zz = Game.getObjectById('588371768b6b60986f18d1d8');
+                super._constr.pickUpEnergy(creep);
+
+                if (creep.room.name == 'E25xxS43') {
+                    if (!super._constr.moveToPickUpEnergy(creep), 300) {
+                        if (!super._containers.moveToWithdraw(creep)) {
+                            let zz = Game.getObjectById('59a2f9d1a1533f58324ae5db');
                             if (zz !== null)
                                 if (creep.pos.isNearTo(zz)) {
                                     creep.dismantle(zz);
                                 } else {
                                     creep.moveMe(zz);
                                 }
-  //                      }
-                    }
-                } else {
-//                    if (!super._constr.moveToPickUpEnergy(creep),100) {
-                        if (!super._containers.moveToWithdraw(creep)) {
-//                            if (!super._containers.withdrawFromStorage(creep)) {
-                                //           if (!super._containers.moveToWithdraw(creep))
-                                super._sources.moveToWithdraw(creep);
-                            }
-                            //                        creep.say('zZzZ')
                         }
-  //                  }
+                    }
+                    return;
+                } else {
+                    /*                  let zz = Game.getObjectById('59a706eff5b4d253ca80424a');
+                                      if(zz !== null) {
+                                        creep.moveTo(zz);
+                                        creep.pickup(zz);
+                                        return;
+                                      }*/
+                    //                    if (!super._constr.moveToPickUpEnergy(creep),0) { 
+                    if (!super._containers.moveToWithdraw(creep)) {
+                        //                            if (!super._containers.withdrawFromStorage(creep)) {
+                        //           if (!super._containers.moveToWithdraw(creep))
+                        super._sources.moveToWithdraw(creep);
+                        //                          }
+                        //                        creep.say('zZzZ')
+                    }
+                    //                  }
 
-          //      }
+                }
             }
-
-            /*else {
-
-                          // Engineers should build the spawn
-                          // then put energy in the spawn for the first first
-                          // the upgrade
-                          creep.say('yes');
-                          if ((creep.memory.renewSpawnID != 'none' && creep.memory.renewSpawnID != undefined) && creep.ticksToLive < 0) {
-                              //    creep.say(((creep.memory.renewSpawnID != 'none' ) && creep.ticksToLive < 300 )  );
-                              creep.moveTo(Game.getObjectById(creep.memory.renewSpawnID));
-                              creep.say('yesy');
-
-                          } else {
-                              creep.say('yesn');
-
-                              let source;
-                              //constr.pickUpEnergy(creep);
-                              //contain.fromContainer(creep);
-                              //creep.say(vv+'asdf');
-
-                              if (creep.room.name == 'E35S73zz') {
-                                  constr.pickUpEnergy(creep);
-
-                                  let finded = creep.post.findClosestByRange(FIND_STRUCTURES, {
-                                      filter: (structure) => {
-                                          return (structure.energy > 0);
-                                      }
-                                  })
-
-                                  if (creep.pos.isNearTo(finded)) {
-                                      creep.withdraw(finded);
-                                  } else {
-                                      creep.moveTo(finded);
-                                  }
-                              }/* else if (creep.room.name == 'E35S73zz') {
-
-                                  if (!super._constr.moveToPickUpEnergyIn(creep, 12)) {
-                                      creep.say('E35')
-                                      let storage = creep.room.storage;
-                                      if (!super._constr.moveToDismantle(creep, STRUCTURE_RAMPART)) {
-                                          if (storage.store[RESOURCE_ENERGY] != 0) {
-
-                                              if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                                                  creep.moveTo(storage);
-                                              }
-                                          } else if (creep.room.storage.store[RESOURCE_ENERGY] != 0) {
-                                              storage = creep.room.terminal;
-                                              if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                                                  creep.moveTo(storage);
-                                              }
-
-                                          } else {
-                                              super._constr.moveToDismantle(creep, STRUCTURE_RAMPART);
-                                          }
-                                      }
-                                  }
-                                  // return;
-                              }*/
-            /* else {
-
-            //                        if (!super._containers.withdrawFromStorage(creep)) {
-                                        if (!super._constr.moveToPickUpEnergy(creep, 300)) {
-            //                                if (!super._containers.moveToWithdraw(creep)) {
-            //                                    super._sources.moveToWithdraw(creep);
-            //                                }
-                                        }
-            //                        }
-
-                                }
-                                //
-                            }
-
-                            //            sources.moveToWithdraw(creep);
-                        }*/
-
 
         }
     }

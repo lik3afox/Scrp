@@ -61,7 +61,7 @@ class roleUpgrader extends roleParent {
         if (creep.room.controller.level != 8)
             if (super.boosted(creep, ['GH'])) {
                 return;
-            }
+            } 
 
         if (super.returnEnergy(creep)) {
             return;
@@ -70,9 +70,20 @@ class roleUpgrader extends roleParent {
         if (creep.memory.level > 5) super.renew(creep);
 
 
-
+    //    if(creep.ticksToLive == 1000) {
+  //          creep.moveTo(creep.room.controller);
+//        }
+        if(creep.ticksToLive == 750 && creep.pos.y == 25) {
+            creep.moveTo(creep.room.controller);
+        }
+     //   if(creep.ticksToLive == 250) {
+   //         creep.moveTo(creep.room.controller);
+ //       }
+     //   if(creep.ticksToLive == 500) {
+    //        creep.moveTo(creep.room.controller);
+  //      }
         if (creep.carry.energy < creep.stats('upgrading')+1) {
-            if (creep.room.name == 'E35S73') {
+            if (creep.room.name == 'xxx') {
                 if (creep.memory.roleID == '1') {
                     if (!creep.pos.isEqualTo(new RoomPosition(40, 39, 'E35S73'))) {
                         creep.moveTo(40, 39);
@@ -81,15 +92,6 @@ class roleUpgrader extends roleParent {
                 } else {
                     if (!containers.withdrawFromStorage(creep)) {}
                 }
-            } else if (creep.room.name == 'W4S93') {
-                creep.say('rary');
-                let zz = Game.getObjectById('590b3a1614e74057589379e4');
-                if (creep.pos.isNearTo(zz)) {
-                    creep.withdraw(zz, RESOURCE_ENERGY);
-                } else {
-                    creep.moveTo(zz);
-                }
-
             } else {
                 if (!structures.pickUpEnergy(creep)) {
                     if (!containers.fromStorage(creep)) {
@@ -107,48 +109,8 @@ class roleUpgrader extends roleParent {
         }
 
         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-            if (creep.room.name != 'E38S72')
                 creep.moveTo(creep.room.controller);
         }
-        if (creep.room.name == 'E38S72' && creep.memory.roleID === 0) {
-            let zz = new RoomPosition(36, 34, 'E38S72');
-            if (!creep.pos.isEqualTo(zz))
-                creep.moveTo(zz);
-        } else
-        if (creep.room.name == 'E28S73') {
-            let zz = new RoomPosition(23, 42, 'E28S73');
-            if (!creep.pos.isEqualTo(zz))
-                creep.moveTo(zz);
-        } else
-        if (creep.room.name == 'E38S72' && creep.memory.roleID == 1) {
-            let zz = new RoomPosition(40, 35, 'E38S72');
-            if (!creep.pos.isEqualTo(zz))
-                creep.moveTo(zz);
-        } else
-        if (creep.room.name == 'E38S72' && creep.memory.roleID == 4) {
-            let zz = new RoomPosition(39, 35, 'E38S72');
-            if (!creep.pos.isEqualTo(zz))
-                creep.moveTo(zz);
-        } else
-        if (creep.room.name == 'E38S72' && creep.memory.roleID == 5) {
-            let zz = new RoomPosition(38, 35, 'E38S72');
-            if (!creep.pos.isEqualTo(zz))
-                creep.moveTo(zz);
-        } else
-        if (creep.room.name == 'E38S72' && creep.memory.roleID == 2) {
-            let zz = new RoomPosition(38, 34, 'E38S72');
-            if (!creep.pos.isEqualTo(zz))
-                creep.moveTo(zz);
-        } else
-        if (creep.room.name == 'E38S72' && creep.memory.roleID == 3) {
-            let zz = new RoomPosition(37, 34, 'E38S72');
-            if (!creep.pos.isEqualTo(zz))
-                creep.moveTo(zz);
-        }
-
-
-
-
     }
 }
 

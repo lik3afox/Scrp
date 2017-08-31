@@ -97,7 +97,7 @@ function attackCreep(creep, bads) {
         creep.selfHeal();
         creep.moveTo(enemy, { ignoreRoads: true });
     }
-    if (bads.length > 2) {
+    if (bads.length > 3) {
         creep.rangedMassAttack();
     }
 }
@@ -258,7 +258,7 @@ class roleGuard extends roleParent {
             creep.memory.goalPos = new RoomPosition(Game.flags[creep.memory.party].pos.x, Game.flags[creep.memory.party].pos.y, Game.flags[creep.memory.party].pos.roomName);
         }
 
-        if (creep.room.name === 'E11S36' || creep.room.name === 'E12S34') {
+        if (creep.room.name === 'E15S41') {
             creep.selfHeal();
 
             let bads = getHostiles(creep);
@@ -270,17 +270,6 @@ class roleGuard extends roleParent {
                 creep.killBase();
 
             }
-            /*      if (creep.hits < 400) {
-                      creep.say('bads');
-
-                  } else {
-                      attackCreep(creep, bads);
-                  }
-
-
-              } else {            */
-            //                    creep.killBase();
-            //                }
             return;
         }
 

@@ -90,8 +90,8 @@ function doAttack(creep) {
             return false;
 
 
-        case "E12S43":
-            var E18S64targets = ['599ae1f89bc4694f39c98f01'];
+        case "E25xS43":
+            var E18S64targets = ['599e9087932f0f15cf1fa59b'];
             for (a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {
@@ -165,7 +165,9 @@ function doAttack(creep) {
             });
             if (bads.length > 0) {
                 creep.attack(bads[0]);
+                return true;
             }
+            
             if (creep.room.controller !== undefined&& creep.room.controller.owner !== undefined && creep.room.controller.owner.username !== 'likeafox') {
 
                 bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
@@ -351,7 +353,7 @@ class fighterClass extends roleParent {
                 //                    creep.moveTo(enemy);
             }
         } else {
-            var killBase = ['E12xS43', 'E15S42'];
+            var killBase = ['E25S43', 'E15S42','E26S41','E27S42','E28S43'];
             if (!doAttack(creep)){
                 if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
                     if (Game.flags.siege !== undefined && Game.flags.siege.pos.roomName === creep.room.name) {
@@ -361,6 +363,7 @@ class fighterClass extends roleParent {
                     } else {
                         if (_.contains(killBase, creep.room.name) && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
                             creep.killBase({ maxRooms: 1 });
+                            return;
                         } else {
 
                             movement.flagMovement(creep);

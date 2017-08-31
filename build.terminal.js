@@ -17,8 +17,9 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var terminals = ['E18S36','E17S34','E24S37','E23S38','E18S32','E17S45','E28S37','E25S37','E13S34','E14S37',
-                'E27S34'];
+var terminals = ['E18S36', 'E17S34', 'E24S37', 'E23S38', 'E18S32', 'E17S45', 'E28S37', 'E25S37', 'E13S34', 'E14S37',
+    'E27S34'
+];
 
 // If you need to focus all minerals somewhere change it here.
 var focusID; // = '591365a95128141e7200c235';
@@ -605,7 +606,7 @@ function giveMinerals(terminal, mineral, amount) {
 
     for (var e in terminals) {
         if (terminal.id != Game.rooms[terminals[e]].terminal.id) {
-            let tmp = Game.rooms[terminals[e]].terminal;//Game.getObjectById(terminals[e]);
+            let tmp = Game.rooms[terminals[e]].terminal; //Game.getObjectById(terminals[e]);
             if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest && tmp.room.controller.level > 5) {
                 highest = tmp.store[mineral];
                 target = tmp;
@@ -631,6 +632,19 @@ function giveMinerals(terminal, mineral, amount) {
         }
         //        console.log('Sending Minerals:', sender, mineral, amount, targetRoom, sentResult);
         if (sentResult === 0) {
+                terminal.room.visual.text('SENT', terminal.pos.x,terminal.pos.y,{
+                    color: '#97c39a ',
+                    stroke: '#000000 ',
+                    strokeWidth: 0.123,
+                    font: 0.5
+                });
+/*                Game.rooms.targetRoom.visual.text('RECIEVED', terminal.pos.x,terminal.pos.y,{
+                    color: '#97c39a ',
+                    stroke: '#000000 ',
+                    strokeWidth: 0.123,
+                    font: 0.5
+                }); */
+
             return true;
         }
     }
@@ -940,38 +954,48 @@ function forEveryTerminal(terminal) {
         }
     }
 }
+
 function getMinerals(terminal, needed) {
-//	console.log('getting');
+    //  console.log('getting');
     for (var e in needed) {
-//    	console.log(terminal.store[needed[e]] ,needed[e]);
-    //    	if(terminal.room.name == 'E18S36'){
-  //      		console.log( terminal.store[needed[e]],needed[e]);
-//        	}
-        if ((needed[e] != 'none' && needed[e] != 'flex') && (terminal.store[needed[e]] === undefined || terminal.store[needed[e]] <=  1000)) {
-            if( terminal.store[needed[e]] === 0 || terminal.store[needed[e]]  === undefined) {
-            giveMinerals(terminal, needed[e]);
+        //      console.log(terminal.store[needed[e]] ,needed[e]);
+        //      if(terminal.room.name == 'E18S36'){
+        //              console.log( terminal.store[needed[e]],needed[e]);
+        //          }
+        if ((needed[e] != 'none' && needed[e] != 'flex') && (terminal.store[needed[e]] === undefined || terminal.store[needed[e]] <= 1000)) {
+            if (terminal.store[needed[e]] === 0 || terminal.store[needed[e]] === undefined) {
+                giveMinerals(terminal, needed[e]);
             } else {
-            giveMinerals(terminal, needed[e],1000);
+                giveMinerals(terminal, needed[e], 1000);
             }
         }
     }
 }
 
 function focusRoom(terminal) {
-    if(terminal.room.name == 'E18S36'||terminal.room.name == 'E25S37'  ) return false;
-    var target = 'E14S37';
-    if(Game.rooms.E25S37.storage.store[RESOURCE_ENERGY] < 10000) target = 'E25S37';
-    if(Game.rooms[target].terminal ===undefined) return false;
-    if(Game.rooms[target].terminal.total === 300000) return false;
-    if(terminal.store[RESOURCE_ENERGY] < 10000) return false;
+    var target = 'E25S37';
+    if (terminal.room.name == target || terminal.room.name == 'E27S34') return false;
+//    if (Game.rooms.E25S37.storage.store[RESOURCE_ENERGY] < 10000) target = 'E25S37';
+    if (Game.rooms[target].terminal === undefined) return false;
+    if (Game.rooms[target].terminal.total === 300000) return false;
+    if (terminal.store[RESOURCE_ENERGY] < 10000) return false;
 
-    if(terminal.room.name == target && terminal.room.name == 'E25S37') return false;
-    var amount = 3000 ;// terminal.store[RESOURCE_ENERGY] *0.25;
+    if (terminal.room.name == target && terminal.room.name == 'E25S37') return false;
+    var amount = 3000; // terminal.store[RESOURCE_ENERGY] *0.25;
     var sender = terminal;
-//
+    //
     var result = terminal.send('energy', amount, target);
-    console.log(terminal.room.name,result,amount,terminal,RESOURCE_ENERGY);
-    if(result === OK) return true;
+    console.log(terminal.room.name, result, amount, terminal, RESOURCE_ENERGY);
+    if (result === OK) {
+        terminal.room.visual.text('FOCUS', terminal.pos.x, terminal.pos.y, {
+            color: '#97c39a ',
+            stroke: '#000000 ',
+            strokeWidth: 0.123,
+            font: 0.5
+        });
+
+        return true;
+    }
 }
 
 class roleTerminal {
@@ -982,9 +1006,8 @@ class roleTerminal {
         //console.log( checkEnergyProfit(10,.02,1000) );
 
         //        focusMinerals(focusID, focusMin);
-console.log('DOING TERMINALS');
         cleanUpOrders();
-//        adjustOldPrices();
+        //        adjustOldPrices();
         Memory.stats.totalMinerals = countTerminals();
 
         //            Memory.termRun = 10;
@@ -992,54 +1015,54 @@ console.log('DOING TERMINALS');
         for (var e in terminals) {
             let terminal = Game.rooms[terminals[e]].terminal;
             if (terminal !== undefined) {
-                if(!focus)focus = focusRoom(terminal);
+                if (!focus) focus = focusRoom(terminal);
 
                 let needed = labs.neededMinerals(terminal.pos.roomName);
                 getMinerals(terminal, needed);
 
-             //   break; // Ends looking for stuff.
-//                if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
-//                    newTradeEnergy(terminal);
+                //   break; // Ends looking for stuff.
+                //                if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
+                //                    newTradeEnergy(terminal);
                 //          focusEnergy(terminal); Removed
-//                forEveryTerminal(terminal);
-        //        terminal.room.memory.didOrder = false;
+                //                forEveryTerminal(terminal);
+                //        terminal.room.memory.didOrder = false;
 
 
-    /*            if (terminal.room.memory.powerSpawnID === undefined) {
-                    let zz = terminal.room.find(FIND_STRUCTURES);
-                    zz = _.filter(zz, function(o) {
-                        return o.structureType == STRUCTURE_POWER_SPAWN;
-                    });
-                    if (zz.length === 0) {
-                        //      doit = false;
-                    } else {
-                        terminal.room.memory.powerSpawnID = zz[0].id;
-                    }
-                }*/
+                /*            if (terminal.room.memory.powerSpawnID === undefined) {
+                                let zz = terminal.room.find(FIND_STRUCTURES);
+                                zz = _.filter(zz, function(o) {
+                                    return o.structureType == STRUCTURE_POWER_SPAWN;
+                                });
+                                if (zz.length === 0) {
+                                    //      doit = false;
+                                } else {
+                                    terminal.room.memory.powerSpawnID = zz[0].id;
+                                }
+                            }*/
 
 
-  //              let zz = terminal.total;
-//                needEnergy(terminal);
-            //    if (!newTradeEnergy(terminal)) {
+                //              let zz = terminal.total;
+                //                needEnergy(terminal);
+                //    if (!newTradeEnergy(terminal)) {
 
-            //        if (zz > 299000) {
-        //                if (!shareEnergy(terminal)) { // Moves energy around
-            //                if (!sellMineral(terminal)) {
-             //                   tradeEnergy(terminal);
-         //                   }
-             //           } else {
-                       //     tradeEnergy(terminal);
-              //          }
-             //       }
-            //    }
+                //        if (zz > 299000) {
+                //                if (!shareEnergy(terminal)) { // Moves energy around
+                //                if (!sellMineral(terminal)) {
+                //                   tradeEnergy(terminal);
+                //                   }
+                //           } else {
+                //     tradeEnergy(terminal);
+                //          }
+                //       }
+                //    }
             }
-  //          energyCheck(terminal);
+            //          energyCheck(terminal);
         }
 
         //   doDebt(); // Send energy to a target
         //        giveInviso();
-   //     tradeMineral();
-    //    makeMineralOrder();
+        //     tradeMineral();
+        //    makeMineralOrder();
 
     }
 
