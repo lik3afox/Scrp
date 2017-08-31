@@ -73,9 +73,9 @@ class roleUpgrader extends roleParent {
     //    if(creep.ticksToLive == 1000) {
   //          creep.moveTo(creep.room.controller);
 //        }
-        if(creep.ticksToLive == 750 && creep.pos.y == 25) {
-            creep.moveTo(creep.room.controller);
-        }
+    //    if(creep.ticksToLive == 750 && creep.pos.y == 25) {
+  //          creep.moveTo(creep.room.controller);
+//        }
      //   if(creep.ticksToLive == 250) {
    //         creep.moveTo(creep.room.controller);
  //       }
