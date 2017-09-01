@@ -284,7 +284,7 @@ class scientistRole extends roleParent {
 
                         if (!otherThings) {
 
-                            if (!mineralContainerEmpty(creep))
+//                            if (!mineralContainerEmpty(creep))
                                 if (!creep.pos.isNearTo(creep.room.terminal)) {
                                     creep.moveMe(creep.room.terminal);
 

@@ -973,14 +973,14 @@ function getMinerals(terminal, needed) {
 }
 
 function focusRoom(terminal) {
-    var target = 'E25S37';
-    if (terminal.room.name == target || terminal.room.name == 'E27S34') return false;
+    var target = 'E17S34';
+    if (terminal.room.name == target) return false;
 //    if (Game.rooms.E25S37.storage.store[RESOURCE_ENERGY] < 10000) target = 'E25S37';
     if (Game.rooms[target].terminal === undefined) return false;
     if (Game.rooms[target].terminal.total === 300000) return false;
     if (terminal.store[RESOURCE_ENERGY] < 10000) return false;
 
-    if (terminal.room.name == target && terminal.room.name == 'E25S37') return false;
+//    if (terminal.room.name == target && terminal.room.name == 'E25S37') return false;
     var amount = 3000; // terminal.store[RESOURCE_ENERGY] *0.25;
     var sender = terminal;
     //
