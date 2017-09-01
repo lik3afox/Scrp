@@ -1310,6 +1310,9 @@ class baseParent {
             detect = 25;
         }
 
+        if (creep.room.name == 'E23S42') {
+            detect = 35;
+        }
         let greyflag = creep.pos.findInRange(FIND_FLAGS, detect);
         greyflag = _.filter(greyflag, function(structure) {
             return (structure.color == COLOR_GREY);

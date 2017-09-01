@@ -902,6 +902,147 @@ function E25S43(creep, fill) {
     }
 }
 
+function E28S42(creep, fill) {
+    if (!fill) {
+        switch (creep.memory.roleID) {
+            case 0:
+
+                let goto = Game.getObjectById('59a8464243dcbf64d025a89e');
+                if (goto !== null) {
+                    if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto, {
+                            reusePath: 20
+                        });
+                    }
+                }
+                break;
+            case 1:
+                let goto2 = Game.getObjectById('59a841bd7e9fbc3f02a8de54');
+                if (goto2 !== null) {
+                    if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto2, {
+                            reusePath: 20
+                        });
+                    }
+                }
+                //                takeFromTerminalForStorage(creep);
+                //            }
+                break;
+        }
+    } else {
+        switch (creep.memory.roleID) {
+            default: 
+            let zz = creep.room.storage;
+            if (zz === undefined) {
+                moveToAndDrop(creep, new RoomPosition(25, 18, creep.room.name));
+            } else {
+                if (creep.pos.isNearTo(zz)) {
+                    for (var e in creep.carry) {
+                        creep.transfer(zz, e);
+                    }
+                } else {
+                    creep.moveTo(zz);
+                }
+            }
+            //        toStorageOrTerminal(creep);
+            break;
+        }
+    }
+}
+function E14S47(creep, fill) {
+    if (!fill) {
+        switch (creep.memory.roleID) {
+            case 0:
+
+                let goto = Game.getObjectById('59a817c6dd681054087fa331');
+                if (goto !== null) {
+                    if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto, {
+                            reusePath: 20
+                        });
+                    }
+                }
+                break;
+            case 1:
+                let goto2 = Game.getObjectById('59a841bd7e9fbc3f02a8de54');
+                if (goto2 !== null) {
+                    if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto2, {
+                            reusePath: 20
+                        });
+                    }
+                }
+                //                takeFromTerminalForStorage(creep);
+                //            }
+                break;
+        }
+    } else {
+        switch (creep.memory.roleID) {
+            default: 
+            let zz = creep.room.storage;
+            if (zz === undefined) {
+                moveToAndDrop(creep, new RoomPosition(25, 18, creep.room.name));
+            } else {
+                if (creep.pos.isNearTo(zz)) {
+                    for (var e in creep.carry) {
+                        creep.transfer(zz, e);
+                    }
+                } else {
+                    creep.moveTo(zz);
+                }
+            }
+            //        toStorageOrTerminal(creep);
+            break;
+        }
+    }
+}
+function E23S42(creep, fill) {
+    if (!fill) {
+        switch (creep.memory.roleID) {
+            case 0:
+
+                let goto = Game.getObjectById('59a8f85b6dfa6a255c659101');
+                if (goto !== null) {
+                    if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto, {
+                            reusePath: 20
+                        });
+                    }
+                }
+                break;
+            case 1:
+                let goto2 = Game.getObjectById('59a9054e00167a4b78f8332a');
+                if (goto2 !== null) {
+                    if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto2, {
+                            reusePath: 20
+                        });
+                    }
+                }
+                //                takeFromTerminalForStorage(creep);
+                //            }
+                break;
+        }
+    } else {
+        switch (creep.memory.roleID) {
+            default: 
+            let zz = creep.room.storage;
+            if (zz === undefined) {
+                moveToAndDrop(creep, new RoomPosition(25, 18, creep.room.name));
+            } else {
+                if (creep.pos.isNearTo(zz)) {
+                    for (var e in creep.carry) {
+                        creep.transfer(zz, e);
+                    }
+                } else {
+                    creep.moveTo(zz);
+                }
+            }
+            //        toStorageOrTerminal(creep);
+            break;
+        }
+    }
+}
 
 class roleLinker extends roleParent {
 
@@ -921,7 +1062,7 @@ class roleLinker extends roleParent {
         if (creep.room.controller.level != 8 && creep.memory.roleID === 0) {
             creep.room.visual.text(creep.room.controller.progressTotal - creep.room.controller.progress, creep.room.controller.pos.x + 1, creep.room.controller.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: RIGHT });
         }
-        if (creep.room.name !== 'E13S34')
+        if (creep.room.name !== 'E28S42' && creep.room.name !== 'E14S47' )
             constr.pickUpEnergy(creep);
         if (super.returnEnergy(creep)) return;
 
@@ -936,6 +1077,12 @@ class roleLinker extends roleParent {
 
         switch (creep.pos.roomName) {
 
+            case 'E14S47':
+                E14S47(creep, creep.memory.full);
+                break;
+            case 'E28S42':
+                E28S42(creep, creep.memory.full);
+                break;
             case 'E24S33':
                 E24S33(creep, creep.memory.full);
                 break;
@@ -944,6 +1091,9 @@ class roleLinker extends roleParent {
                 break;
             case 'E25S43':
                 E25S43(creep, creep.memory.full);
+                break;
+            case 'E23S42':
+                E23S42(creep, creep.memory.full);
                 break;
                 
             case 'E27S34':

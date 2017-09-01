@@ -618,7 +618,7 @@ function giveMinerals(terminal, mineral, amount) {
     //if(true)              console.log('Sending Minerals:',target.pos.roomName,mineral,amount, 'azz');
     if (target !== undefined) {
         let sender = target.pos.roomName;
-        if (target.store[mineral] < 100) return;
+        if (target.store[mineral] < 2100) return;
         if (amount === undefined) {
             amount = Math.floor(target.store[mineral] * 0.15);
         }

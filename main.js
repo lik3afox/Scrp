@@ -306,6 +306,7 @@
                 if (!spwns[0].spawning && room.energyAvailable === 300) {
                     spwns[0].createCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir', {
                         role: 'first',
+                        roleID:0,
                         home: spwns[0].pos.roomName,
                         parent: "none",
                         level: 3
@@ -423,7 +424,7 @@
 
                 //                  if (Memory.war) {
                 if (Game.spawns[title].memory.alphaSpawn) {
-//                    doRoomReport(Game.spawns[title].room);
+                    doRoomReport(Game.spawns[title].room);
                 }
                 //                    }
 

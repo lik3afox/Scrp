@@ -1,4 +1,4 @@
-var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34'];
+var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34','E24S33'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -1573,9 +1573,9 @@ function analyzeRoomLabs(roomName, labs) {
         //        console.log('for that one we also check to see if any room is currently doing it, and if it"s reaching it max');
         var mineral = Game.rooms[roomName].memory.labMode;
         if (maxMinerals[mineral] === undefined) {
-            Game.rooms[roomName].memory.labMode = undefined;
+//            Game.rooms[roomName].memory.labMode = undefined;
         } else if (Memory.stats.totalMinerals[mineral] >= maxMinerals[mineral]) {
-            Game.rooms[roomName].memory.labMode = undefined;
+//            Game.rooms[roomName].memory.labMode = undefined;
         } else {
             //            console.log('and it"s not ready',Memory.stats.totalMinerals[mineral], maxMinerals[mineral],mineral);
             return Game.rooms[roomName].memory.labMode;

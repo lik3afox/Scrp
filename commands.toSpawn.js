@@ -47,10 +47,12 @@ function getTargets(creep) {
     }
 
     creep.memory.spawnTargets = [];
-    var a = zzz.length;
-    while (a--) {
-        creep.memory.spawnTargets.push(zzz[a].id);
-    }
+  //  if(creep.memory.level > 2) {
+        var a = zzz.length;
+        while (a--) {
+            creep.memory.spawnTargets.push(zzz[a].id);
+        }
+//    }
 
     //        roomCache[creep.room.name] = zzz;
     //       console.log('Setting roomCache', roomCache[creep.room.name].length, creep.room.name);
@@ -250,7 +252,6 @@ class SpawnInteract {
                 goTo = creep.memory.roleID;
             }
         }
-
         if (targets[goTo] === undefined) return false;
         creep.memory.spawnTarget = targets[goTo].id;
 

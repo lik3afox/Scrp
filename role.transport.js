@@ -159,20 +159,22 @@ class transport extends roleParent {
             creep.memory.empty = true;
         }
 
+
         if (creep.room.name != 'E28S77' && creep.room.name != 'E27S74' && creep.room.storage === null)
             constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
+
         if (creep.memory.gohome) {
 
 
-if(creep.room.controller !== undefined && creep.room.controller.level === 1) {
+            if (creep.room.controller !== undefined && creep.room.controller.level === 1) {
 
-    if( creep.room.controller.ticksToDowngrade < 3000) {
-        if(creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE ) {
-            creep.moveTo(creep.room.controller);
-        }
-        return;
-    }
-}
+                if (creep.room.controller.ticksToDowngrade < 3000) {
+                    if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
+                        creep.moveTo(creep.room.controller);
+                    }
+                    return;
+                }
+            }
 
             creep.countDistance();
             if (creep.memory.linkID !== undefined && creep.carry[RESOURCE_ENERGY] > 0) {
@@ -224,7 +226,20 @@ if(creep.room.controller !== undefined && creep.room.controller.level === 1) {
             } else {
 
                 if (!constr.doCloseRoadRepair(creep)) {
-                    constr.doCloseRoadBuild(creep);
+                    if (!constr.doCloseRoadBuild(creep)) {
+                        if (creep.carry[RESOURCE_ENERGY] > creep.carryCapacity - 15) {
+                            //console.log('here we decide to create an road if we aren''t near one');
+                            if (creep.memory.roadCount === undefined) {
+                                creep.memory.roadCount = 0;
+                            }
+                            creep.memory.roadCount--;
+                            if (creep.memory.roadCount < 0) {
+//                                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
+                                creep.memory.roadCount = 1;
+                            }
+
+                        }
+                    }
                 }
 
                 let bads = getBads(creep);
@@ -325,13 +340,13 @@ if(creep.room.controller !== undefined && creep.room.controller.level === 1) {
                     } else if (creep.pos.isNearTo(_goal)) {
                         creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     } else {
-                        creep.say('zZzZ',true);
+                        creep.say('zZzZ', true);
                     }
                 } else {
                     if (creep.pos.isNearTo(contain)) {
                         creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
                     } else {
-                    creep.say('zZzZ');
+                        creep.say('zZzZ');
                     }
                 }
 
