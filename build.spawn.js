@@ -225,7 +225,6 @@ var Mod_E14S37 = [
 var Mod_E24S33 = [
     ['first', require('role.first'), 2, 2],
     ['harvester', require('role.harvester'), 2, 2],
-    //        ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 2, 4],
     ['upgrader', require('role.upgrader'), 2, 5],
     ['linker', require('role.linker'), 1, 4],
@@ -235,25 +234,26 @@ var Mod_E24S33 = [
 
 var Mod_E14S43 = [
     ['first', require('role.first'), 2, 2],
+    ['wallwork', require('role.wallworker'), 1, 1],
     ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 4, 3],
-//    ['linker', require('role.linker'), 2, 4],
-//    ['homeDefender', require('role.defender2'), 1, 2]
+    ['upbuilder', require('role.upbuilder'), 1, 3],
+    ['linker', require('role.linker'), 2, 4],
+    ['homeDefender', require('role.defender2'), 1, 2]
 ];
 
 var Mod_E14S47 = [
-    ['first', require('role.first'), 2, 2],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 2, 4],
+    ['first', require('role.first'), 1, 2],
+    ['harvester', require('role.harvester'), 1, 2],
+    ['upbuilder', require('role.upbuilder'), 1, 4],
 //    ['linker', require('role.linker'), 2, 4],
-//    ['homeDefender', require('role.defender2'), 1, 2]
+    ['homeDefender', require('role.defender2'), 1, 2]
 ];
 var Mod_E25S43 = [
     ['first', require('role.first'), 1, 2],
     ['harvester', require('role.harvester'), 1, 2],
-    ['upbuilder', require('role.upbuilder'), 3, 4],
+    ['upbuilder', require('role.upbuilder'), 0, 4],
     ['linker', require('role.linker'), 1, 4],
-//    ['homeDefender', require('role.defender2'), 1, 2]
+    ['homeDefender', require('role.defender2'), 1, 2]
 ];
 
 
@@ -728,6 +728,7 @@ function getCurrentModule(spawn) {
             case 'E13S34':
                 return Mod_E13S34;
             case 'E24S33':
+
                 return Mod_E24S33;
             case 'E14S43':
                 return Mod_E14S43;
@@ -735,8 +736,10 @@ function getCurrentModule(spawn) {
                 return Mod_E25S43;
             case 'E27S34':
                 return Mod_E27S34;
+            case 'E14S47':
+                return Mod_E14S47;
 
-
+  
         }
     }
     return newbModLevel[currentModuleLevel];

@@ -208,14 +208,13 @@
             Memory.clearFlag--;
             if (Memory.clearFlag < 0) {
                 Memory.clearFlag = 50;
-//                clearFlagMemory();
+                clearFlagMemory();
             }
-            //    var    start  = Game.cpu.getUsed(); // start counting. 
 
             let zFlags = _.filter(Game.flags, function(o) {
                 return o.color != COLOR_WHITE && o.color != COLOR_GREY && o.color != COLOR_CYAN;
             });
-            //console.log(  (Game.cpu.getUsed() - start ), ' afterfilter',zFlags.length); start = Game.cpu.getUsed();
+            
             var e = zFlags.length;
             var flag;
             while (e--) {

@@ -86,11 +86,37 @@ var lowFFH = [
     ['healer', require('army.healer'), 1 ,5] // Healer    
 ];
 
+var lvl3Buster = [
+    ['fighter', require('army.fighter'), 1, 11],
+    ['demolisher', require('army.demolisher'), 1, 3],
+    ['healer', require('army.healer'), 1, 5] // Healer    
+];
+var lvl4Buster = [
+    ['fighter', require('army.fighter'), 1, 4],
+    ['healer', require('army.healer'), 1, 5] // Healer    
+];
+var lvl5Buster = [
+    ['fighter', require('army.fighter'), 1, 11],
+    ['healer', require('army.healer'), 1, 5] // Healer    
+];
+var lvl6Buster = [
+    ['fighter', require('army.fighter'), 1, 11],
+    ['demolisher', require('army.demolisher'), 1, 3],
+    ['healer', require('army.healer'), 1, 5] // Healer    
+];
+
+
+var lvl7Buster = [
+    ['fighter', require('army.fighter'), 1, 11],
+    ['demolisher', require('army.demolisher'), 1, 3],
+    ['healer', require('army.healer'), 1, 5] // Healer    
+];
+
 var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 2],
-    ['fighter', require('army.fighter'), 1, 11],
+//    ['fighter', require('army.fighter'), 1, 11],
     ['demolisher', require('army.demolisher'), 1, 3],
     ['healer', require('army.healer'), 1, 5] // Healer    
 ];
@@ -253,11 +279,12 @@ function getSpawnCreating(flag) {
 
     switch (flag.name) {
         case 'control':
-            return 'E23S38';
+            return 'E25S43';
         case 'engineer2':
             return 'E17S45';
         case 'fightHealer':
         case 'engineer':
+        case 'thief':
             return 'E25S37';
         case 'mule':
             return 'E17S34';
@@ -276,7 +303,6 @@ function getSpawnCreating(flag) {
         case 'oneFight':
         case '3upgrade':
         case 'thief5':
-        case 'thief':
 
         case 'upgradeRoom':
 

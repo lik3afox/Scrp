@@ -91,11 +91,18 @@ function attackCreep(creep, bads) {
             creep.rangedMassAttack();
         }
         creep.selfHeal();
-        creep.moveTo(enemy, { ignoreRoads: true });
+            creep.moveTo(enemy, { ignoreRoads: true });
+
         return;
     } else if (distance >= 4) {
         creep.selfHeal();
+        if (enemy.owner.username === 'Source Keeper') {
+            if (creep.hits == creep.hitsMax) {
+                creep.moveTo(enemy, { ignoreRoads: true });
+            }
+        } else { 
         creep.moveTo(enemy, { ignoreRoads: true });
+        }
     }
     if (bads.length > 3) {
         creep.rangedMassAttack();

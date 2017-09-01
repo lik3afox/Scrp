@@ -118,24 +118,24 @@ function doAttack(creep) {
                 return true;
             }
             return false;
-/*        case "E12S43":
-            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
-            bads = _.filter(bads, function(o) {
-                return !_.contains(fox.friends, o.owner.username);
-            });
-            if (bads.length > 0) {
+            /*        case "E12S43":
+                        bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+                        bads = _.filter(bads, function(o) {
+                            return !_.contains(fox.friends, o.owner.username);
+                        });
+                        if (bads.length > 0) {
 
-                creep.attack(bads[0]);
-                break;
-            }
+                            creep.attack(bads[0]);
+                            break;
+                        }
 
-            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-            bads = _.filter(bads, function(o) {
-                return bads.structureType != STRUCTURE_WALL;
-            });
-            if (bads.length > 0)
-                creep.attack(bads[0]);
-            break; */
+                        bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+                        bads = _.filter(bads, function(o) {
+                            return bads.structureType != STRUCTURE_WALL;
+                        });
+                        if (bads.length > 0)
+                            creep.attack(bads[0]);
+                        break; */
         default:
             if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.wallTarget !== 'none') {
                 E18S64targets = [Game.flags[creep.memory.party].memory.wallTarget];
@@ -167,8 +167,8 @@ function doAttack(creep) {
                 creep.attack(bads[0]);
                 return true;
             }
-            
-            if (creep.room.controller !== undefined&& creep.room.controller.owner !== undefined && creep.room.controller.owner.username !== 'likeafox') {
+
+            if (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && creep.room.controller.owner.username !== 'likeafox') {
 
                 bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
                 if (bads.length > 0) {
@@ -338,51 +338,27 @@ class fighterClass extends roleParent {
                 return (!_.contains(fox.friends, object.owner.username) && !object.pos.lookForStructure(STRUCTURE_RAMPART) && object.owner.username !== 'Source Keeper');
             }
         );
-
-        //creep.say(enemy.length, true);
-        //return;
-        //        creep.say(creep.memory.party);
         var kill;
         if (enemy.length > 0) {
             enemy = creep.pos.findClosestByRange(enemy);
             if (creep.pos.isNearTo(enemy)) {
                 creep.attack(enemy);
-            } else {
-                if (Game.flags.siege === undefined || Game.flags.siege.pos.roomName !== creep.room.name)
-                    movement.flagMovement(creep);
-                //                    creep.moveTo(enemy);
+
             }
         } else {
-            var killBase = ['E25S43', 'E15S42','E26S41','E27S42','E28S43'];
-            if (!doAttack(creep)){
-                if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
-                    if (Game.flags.siege !== undefined && Game.flags.siege.pos.roomName === creep.room.name) {
-                        //                        movement.flagMovement(creep);
-                        creep.say('kill');
-                        creep.killBase();
-                    } else {
-                        if (_.contains(killBase, creep.room.name) && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
-                            creep.killBase({ maxRooms: 1 });
-                            return;
-                        } else {
+            var killBase = ['E15S41', 'E23S44'];
 
-                            movement.flagMovement(creep);
-                        }
-                    }
-                } else {
-                    if (creep.room.name == 'E11S38' && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
-                        creep.killBase();
-                    } else {
-
-                        movement.flagMovement(creep);
-                    }
+            if (_.contains(killBase, creep.room.name) && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+                creep.killBase({ maxRooms: 1 });
+                return;
+            } else {
+                if (!doAttack(creep)) {
 
                 }
-            } else {
-                        movement.flagMovement(creep);
             }
-
         }
+
+        movement.flagMovement(creep);
 
         if (creep.room.name == 'E15S63') {
             if (creep.pos.y == 49 && creep.hits === creep.hitsMax) {

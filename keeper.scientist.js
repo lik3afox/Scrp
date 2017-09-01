@@ -102,34 +102,8 @@ class mineralRole extends roleParent {
             } else if (creep.room.name != creep.memory.home) {
                 creep.say('home');
 
-                if (creep.memory.containerID === undefined) {
-                    var contain = creep.room.find(FIND_STRUCTURES);
-                    contain = _.filter(contain, function(o) {
-                        return o.structureType == STRUCTURE_CONTAINER;
-                    });
-                    creep.memory.containerID = null; //creep.pos.findClosestByRange(contain).id;
-                }
-                // Let's find  container in the room and move to it.
-                var contin = Game.getObjectById(creep.memory.containerID);
                 if (!super.guardRoom(creep)) {
-                    if (contin === null) {
-                        if (creep.memory.goal == '5836bb2241230b6b7a5b9a35z' || creep.memory.goal == '5836bb2241230b6b7a5b9a35' || creep.memory.goal == '5836bb2241230b6b7a5b9a33z') {
                             super._movement.moveHome(creep);
-                        } else {
-                            super._movement.moveHome(creep);
-                        }
-                    } else {
-                        if (contin.total === 2000) {
-                            creep.memory.containerID = undefined;
-                        }
-                        if (creep.pos.isNearTo(contin)) {
-                            for (var bb in creep.carry) {
-                                creep.transfer(contin, bb);
-                            }
-                        } else {
-                            creep.moveTo(contin, { reusePath: 15 });
-                        }
-                    }
                 }
                 return;
             }

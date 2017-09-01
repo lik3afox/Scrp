@@ -17,7 +17,7 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var terminals = ['E18S36', 'E17S34', 'E24S37', 'E23S38', 'E18S32', 'E17S45', 'E28S37', 'E25S37', 'E13S34', 'E14S37',
+var terminals = ['E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E28S37', 'E25S37', 'E13S34', 'E14S37',
     'E27S34'
 ];
 

@@ -40,13 +40,15 @@ function getSpawnCreating(flag) {
 
             case 'Flag13':
             case 'Flag16':
-            case 'Flag26':
             case 'Flag21':
             case 'Flag22':
             return 'E18S36';
             case 'Flag15':
+            
             return 'E25S37';
-
+            case 'Flag26':
+            case 'Flag29':
+            return 'E27S34';
         default:
             return '';
     }
@@ -69,6 +71,7 @@ function getCurrentParty(flag) {
         switch (flag.name) {
             case 'Flag13':
             case 'Flag14':
+            case 'Flag29':
             case 'Flag21':
             case 'Flag15':
             case 'Flag16':

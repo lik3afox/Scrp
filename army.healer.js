@@ -217,7 +217,7 @@ class healerClass extends roleParent {
         if (creep.room.name == 'E11xS36') {
             var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
             site = _.filter(site, function(o) {
-                return !o.pos.lookForStructure(STRUCTURE_RAMPART);
+                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progressTotal - o.progress < 1000;
             });
             creep.say(site.length);
             if (site.length > 0) {

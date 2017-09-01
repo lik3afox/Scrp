@@ -184,8 +184,26 @@ class roleUpbuilder extends roleParent {
             creep.memory.wallTargetID = undefined;
             if (creep.room.name == 'E35S83' || creep.room.name == 'E28S73') {
                 super._containers.withdrawFromTerminal(creep);
-            } else if (creep.room.name == 'E24Sx33') {
-                constr.moveToPickUpEnergy(creep);
+            } else if (creep.room.name == 'E25xS43') {
+
+               if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
+                    if (super._containers.withdrawFromTerminal(creep))
+                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
+                        if (!containers.moveToWithdraw(creep)) {
+
+                            }
+
+                        }
+                } else {
+                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
+                    if (!super._containers.withdrawFromStorage(creep))
+                        if (!containers.moveToWithdraw(creep)) {
+//                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
+
+                            }
+                        }
+
+                }
             } else if (creep.pos.isNearTo(creep.room.storage)) {
                 creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
                 //                super._containers.withdrawFromStorage(creep);
@@ -193,7 +211,7 @@ class roleUpbuilder extends roleParent {
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
                     if (super._containers.withdrawFromTerminal(creep))
                         if (!containers.moveToWithdraw(creep)) {
-                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
+                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level*15))) {
 
                             }
 
@@ -201,7 +219,7 @@ class roleUpbuilder extends roleParent {
                 } else {
                     if (!super._containers.withdrawFromStorage(creep))
                         if (!containers.moveToWithdraw(creep)) {
-                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
+                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID  * (creep.memory.level*15))) {
 //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 
                             }

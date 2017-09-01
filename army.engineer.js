@@ -64,7 +64,7 @@ class engineerClass extends roleParent {
             return;
         }
 
-        if (creep.room.name == 'E25S43') {
+        if (creep.room.name == 'E25xxS43') {
 
             killWalls(creep);
             return;

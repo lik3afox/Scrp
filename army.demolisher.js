@@ -76,7 +76,7 @@ function doAttack(creep) {
                 });
                 if (bads.length > 0) {
                     creep.dismantle(bads[0]);
-                    //                    return true;
+                                  return true;
                 }
                 if(creep.room.controller !== undefined && creep.room.controller.owner !== undefined&& creep.room.controller.owner.username !== 'likeafox'){
                     bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
@@ -126,11 +126,8 @@ class demolisherClass extends roleParent {
             }
         }
 
-        //        console.log(creep.room.name, creep.hits, Game.flags.warparty5.pos, Game.flags.warparty5);
-        /*        if (creep.hits < 4500) {
-                    super.edgeRun(creep);
-                } */
-        var killBase = ['E25S43','E26S41','E27S42','E28S43'];
+        var killBase = ['E15S41','E22S42'];
+
         if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName && _.contains(killBase,creep.room.name)) {
             creep.killBase();
         } else if (!doAttack(creep)) {

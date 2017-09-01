@@ -337,30 +337,18 @@ module.exports = function() {
                     console.log(this.room.controller);
                 } */
         var struc = this.room.find(FIND_STRUCTURES);
-        /*
-                    var close;
 
-                    if (test2.length !== 0) {
-                        close = this.pos.findClosestByRange(bads);
+            var site = this.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+            site = _.filter(site, function(o) {
+                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progress > 2000;
+            });
+            if (site.length > 0) {
+                var zzz = this.pos.findClosestByRange(site);
+                this.moveTo(zzz);
+                return;
+            }
 
-                        if (this.pos.isNearTo(close)) {
-                            this.attack(close);
-                        } else {
-                            this.moveTo(close, options);
-                        }
-                        return;
-                    }
-                    // This is something is on a rampart.
-                    if (test.length !== 0) {
-                        close = this.pos.findClosestByRange(bads);
 
-                        if (this.pos.isNearTo(close)) {
-                            this.attack(close);
-                        } else {
-                            this.moveTo(close, options);
-                        }
-                        return;
-                    } */
         if (this.memory.targetID === undefined) {
 
 

@@ -1,4 +1,4 @@
-var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E24S37', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37'];
+var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -89,6 +89,7 @@ var maxMinerals = {
     'UL': 10000,
     'ZK': 10000,
     'G': 50000,
+    'GG' : 50000,
     'LH': 30000,
     'KO': 30000,
     'LO': 30000,
@@ -1307,7 +1308,11 @@ function labDo(roomName, created, labz, laby) {
     if (lab1.cooldown !== 0) return false;
     ///       if(lab1.room.name == 'E13S34')
     //   console.log('gets here?');
-        if (lab1.mineralAmount >= 2950 || lab2.mineralAmount < 50 || lab3.mineralAmount < 50) {
+//    if(labs[created - 1].resource == 'g')
+//    console.log('bizz',lab2.room.terminal.store[labs[created - 1].resource],labs[created - 1].resource,roomName);
+        if (lab1.mineralAmount >= 2950 || (lab2.mineralAmount < 50 && lab2.room.terminal.store[labs[labz - 1].resource] > 100 ) || 
+            (lab3.mineralAmount < 50 && lab3.room.terminal.store[labs[laby - 1].resource] > 100 ) ) {
+
             lab3.room.memory.labsNeedWork = true;
             return false;
         }
@@ -1350,10 +1355,6 @@ function labMode(roomName, mode, labs) {
             returned = OH;
             break;
         case 'UL':
-            for (a in UL) {
-                if (labs[a] !== undefined)
-                    UL[a].id = labs[a].id;
-            }
             returned = UL;
             break;
         case 'ZK':
@@ -1510,6 +1511,7 @@ function getLabMixes(roomName) {
         case 'KO':
         case 'LO':
         case 'GH2O':
+        case 'GG':
             return oneWarMix;
         case 'XXZHO2':
             return E29S79WarMix;
@@ -1517,7 +1519,6 @@ function getLabMixes(roomName) {
         case undefined:
             return Game.rooms[roomName].memory.labMix;
         case 'G':
-        case 'GG':
             return gMix;
         default:
             return oneWarMix;
