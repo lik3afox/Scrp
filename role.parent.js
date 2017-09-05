@@ -189,7 +189,7 @@ var fox = require('foxGlobals');
 function getDeathSpot(roomName) {
     switch (roomName) {
         case "E18S36":
-            return new RoomPosition(39, 23, roomName);
+            return new RoomPosition(38, 24, roomName);
 
         default:
             return;

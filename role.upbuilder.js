@@ -184,10 +184,10 @@ class roleUpbuilder extends roleParent {
             creep.memory.wallTargetID = undefined;
             if (creep.room.name == 'E35S83' || creep.room.name == 'E28S73') {
                 super._containers.withdrawFromTerminal(creep);
-            } else if (creep.room.name == 'E25xS43') {
+            } else if (creep.room.name == 'x') {
 
                if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
-                    if (super._containers.withdrawFromTerminal(creep))
+//                    if (super._containers.withdrawFromTerminal(creep))
                             if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
                         if (!containers.moveToWithdraw(creep)) {
 
@@ -252,7 +252,7 @@ class roleUpbuilder extends roleParent {
         if (creep.memory.upgrading) {
             var spawn = require('commands.toSpawn');
             var number = 0;
-            var doNot = [];
+            var doNot = [];//'E14S43',
 
             var strucs = Game.getObjectById(creep.memory.constructionID);
 

@@ -186,6 +186,23 @@ class scientistRole extends roleParent {
     }
 
     static run(creep) {
+/*        if(creep.room.name == 'E27S34'){
+            if(creep.carryTotal !== 0) {
+                for(var eee in creep.carry){
+                    creep.transfer(creep.room.storage,eee);
+                }
+                creep.say('hi');
+            } else {
+                let zz = creep.room.terminal;
+                for(var zzz in zz.store){
+//                    console.log(zz,zzz,zz[zzz]);
+                    creep.withdraw(zz,zzz);
+                }
+//                creep.say('bye');
+            }
+            return;
+        } */
+
         if (super.doTask(creep)) {
             return;
         }

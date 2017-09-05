@@ -164,14 +164,6 @@ class roleHarvester extends roleParent {
             return;
         }
         if (creep.memory.level > 1) super.renew(creep);
-if(creep.memory.sourceID == '5982ff6bb097071b4adc298b') {
-    let poss = new RoomPosition(17,6,'E24S37');
-    if(!creep.pos.isEqualTo(poss)) {
-        creep.moveTo(poss);
-        return;
-    }
-    //creep.moveTo(17,6);
-}
 if(creep.memory.sourceID == '5982ff6bb097071b4adc298d') {
     let poss = new RoomPosition(22 ,40,creep.room.name);
     if(!creep.pos.isEqualTo(poss)) {

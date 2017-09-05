@@ -13,8 +13,8 @@ var fox = require('foxGlobals');
 
 
 function getHostiles(creep) {
-    let range = 4;
-    if (creep.room.name == 'E34S84' || creep.room.name == 'W4S94') range = 6;
+    let range = 5;
+    if (creep.room.name == 'E26S35' || creep.room.name == 'W4S94') range = 6;
     if (creep.room.name == 'E11S36') {
         range = 49;
     }
@@ -208,6 +208,7 @@ function moveCreep(creep) {
             } else {
                 creep.moveMe(rmPos, {
                     reusePath: 7,
+                    maxRooms:1,
                     ignoreRoads: (creep.room.name == 'W4S94'),
                     visualizePathStyle: {
                         fill: 'transparent',

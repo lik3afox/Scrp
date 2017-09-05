@@ -1,4 +1,5 @@
-var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34','E24S33'];
+var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34','E24S33'
+,'E14S43','E28S42'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -86,8 +87,8 @@ var maxMinerals = {
         'X': 125000, */
 
     'OH': 30000,
-    'UL': 10000,
-    'ZK': 10000,
+    'UL': 50000,
+    'ZK': 50000,
     'G': 50000,
     'GG' : 50000,
     'LH': 30000,
@@ -114,13 +115,13 @@ var maxMinerals = {
         //    'KH2O': 5000,
 
         'XUHO2': 0, //  Mining
-        'XUH2O': 100000, // Attack
         'XZHO2': 100000, //  Move
         'XZH2O': 100000, // Dismantle
-        'XLHO2': 100000, // Heal
         'XLH2O': 0, // Repair
         'XKHO2': 100000, // Ranged
         'XKH2O': 0, // Carry */
+        'XUH2O': 100000, // Attack
+        'XLHO2': 100000, // Heal
 
 };
 
@@ -216,7 +217,7 @@ var XUH2O = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XGH2O',
+    resource: 'UH2O',
     amount: 2500,
     emptied: false
 }];
@@ -668,7 +669,7 @@ var XZHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'ZHO2',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -688,12 +689,63 @@ var XZHO2 = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
+    resource: 'ZHO2',
     amount: 2500,
     emptied: false
 }];
 
-// Range Attack
+var XZH2O = [{
+    id: 'getReplaced',
+    resource: 'Z',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'ZH',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'none',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XZH2O',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'ZH2O',
+    amount: 2500,
+    emptied: false
+}];
+
 var XKHO2 = [{
     id: 'getReplaced',
     resource: 'K',
@@ -721,7 +773,7 @@ var XKHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'KHO2',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -741,15 +793,14 @@ var XKHO2 = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
+    resource: 'KHO2',
     amount: 2500,
     emptied: false
 }];
 
-// MOVE
-var XXZHO2 = [{
+var XKH2O = [{
     id: 'getReplaced',
-    resource: 'U',
+    resource: 'K',
     amount: 2400,
     emptied: false
 }, {
@@ -759,66 +810,13 @@ var XXZHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'UH',
-    amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'H',
+    resource: 'KH',
     amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
     resource: 'OH',
     amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'UH2O',
-    amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'X',
-    amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'LH',
-    amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 1,
-    emptied: true
-}, {
-    id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 2500,
-    emptied: false
-}];
-
-// DISMANTLE
-var XZH2O = [{
-    id: 'getReplaced',
-    resource: 'Z',
-    amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'H',
-    amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'ZH',
-    amount: 2400,
-    emptied: false
-}, {
-    id: 'getReplaced',
-    resource: 'OH',
-    amount: 2500,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -827,7 +825,7 @@ var XZH2O = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'ZH2O',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -842,12 +840,12 @@ var XZH2O = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'XZH2O',
+    resource: 'XKH2O',
     amount: 1,
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
+    resource: 'KH2O',
     amount: 2500,
     emptied: false
 }];
@@ -871,7 +869,7 @@ var XGHO2 = [{
 }, {
     id: 'getReplaced',
     resource: 'OH',
-    amount: 2500,
+    amount: 2400,
     emptied: false
 }, {
     id: 'getReplaced',
@@ -880,7 +878,7 @@ var XGHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'GHO2',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -899,11 +897,13 @@ var XGHO2 = [{
     amount: 1,
     emptied: true
 }, {
+
     id: 'getReplaced',
-    resource: 'XUH2O',
+    resource: 'GHO2',
     amount: 2500,
     emptied: false
 }];
+
 var E33S76WarMix = [
     [3, 1, 2],
     [4, 2, 5],
@@ -938,7 +938,7 @@ var XLHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LHO2',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -958,9 +958,60 @@ var XLHO2 = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XLHO2',
+    resource: 'LHO2',
+    amount: 2500,
+    emptied: false
+}];
+var XLH2O = [{
+    id: 'getReplaced',
+    resource: 'L',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'H',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'OH',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'none',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'X',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'LH',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'XLH2O',
     amount: 1,
     emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'LH2O',
+    amount: 2500,
+    emptied: false
 }];
 var UL = [{
     id: 'getReplaced',
@@ -1190,7 +1241,12 @@ var gMix = [
     [1, 3, 10],
     [2, 5, 8]
 ];
-
+var level8Mix = [
+[3,1,2],
+[4,2,5],
+[10,3,4],
+[9,10,7],
+];
 var oneWarMix = [
     [3, 1, 2],
     [4, 1, 2],
@@ -1405,10 +1461,6 @@ function labMode(roomName, mode, labs) {
             returned = muster;
             break;
         case 'XUH2O':
-            for (a in XUH2O) {
-                if (labs[a] !== undefined)
-                    XUH2O[a].id = labs[a].id;
-            }
             returned = XUH2O;
             break;
         case 'XKH2O':
@@ -1513,13 +1565,21 @@ function getLabMixes(roomName) {
         case 'GH2O':
         case 'GG':
             return oneWarMix;
-        case 'XXZHO2':
-            return E29S79WarMix;
         case 'light':
         case undefined:
             return Game.rooms[roomName].memory.labMix;
         case 'G':
             return gMix;
+        case 'XUH2O':
+        case 'XUHO2':
+        case 'XGHO2':
+        case 'XLHO2':
+        case 'XLH2O':
+        case 'XKHO2':
+        case 'XKH2O':
+        case 'XZHO2':
+        case 'XZH2O':
+            return level8Mix;
         default:
             return oneWarMix;
     }
@@ -1578,8 +1638,8 @@ function analyzeRoomLabs(roomName, labs) {
 //            Game.rooms[roomName].memory.labMode = undefined;
         } else {
             //            console.log('and it"s not ready',Memory.stats.totalMinerals[mineral], maxMinerals[mineral],mineral);
-            return Game.rooms[roomName].memory.labMode;
         }
+            return Game.rooms[roomName].memory.labMode;
     }
 }
 
