@@ -85,11 +85,9 @@ function attackCreep(creep, bads) {
         //        var targets = creep.pos.findInRange(bads, 3);
 
         // Ranged attack.
-        if (bads.length === 1) {
+        if (bads.length <= 2) {
             creep.rangedAttack(enemy);
-        } else {
-            creep.rangedMassAttack();
-        }
+        } 
         creep.selfHeal();
             creep.moveTo(enemy, { ignoreRoads: true });
 
@@ -104,7 +102,7 @@ function attackCreep(creep, bads) {
         creep.moveTo(enemy, { ignoreRoads: true });
         }
     }
-    if (bads.length > 3) {
+    if (bads.length > 2) {
         creep.rangedMassAttack();
     }
 }
@@ -256,7 +254,7 @@ class roleGuard extends roleParent {
             return;
         }
         super.rebirth(creep);
-        if (creep.memory.party == 'Flag13' || creep.memory.party == 'Flag15')
+//        if (creep.memory.party == 'Flag13' || creep.memory.party == 'Flag15')
             if (super.boosted(creep, boost)) {
                 return;
             }

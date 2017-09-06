@@ -122,7 +122,7 @@ var Mod_E17S34 = [
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
 
-    ['linker', require('role.linker'), 3, 4],
+    ['linker', require('role.linker'), 2, 4],
     //    ['homeDefender', require('role.defender2'), 1, 4]
 ];
 var Mod_E18S32 = [
@@ -139,10 +139,11 @@ var Mod_E28S37 = [
     ['minHarvest', require('role.mineral'),2,7],
     ['assistant', require('role.assistant'),1,0],
     ['first', require('role.first'), 2, 4],
+    ['upgrader', require('role.upgrader'), 1, 4],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 3, 4],
+    ['linker', require('role.linker'), 2, 4],
     ['homeDefender', require('role.defender2'), 1, 4]
 ];
 var Mod_E23S38 = [
@@ -150,7 +151,7 @@ var Mod_E23S38 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['upgrader', require('role.upgrader'), 2, 4],
+    ['upgrader', require('role.upgrader'), 1, 4],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 4],
@@ -222,7 +223,7 @@ var Mod_E24S33 = [
         ['minHarvest', require('role.mineral'),2,7],
         ['assistant', require('role.assistant'),1,0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['upgrader', require('role.upgrader'), 1, 5],
+    ['upgrader', require('role.upgrader'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
             ['homeDefender', require('role.defender2'), 1, 3]
 ];
@@ -233,9 +234,9 @@ var Mod_E14S43 = [
     ['wallwork', require('role.wallworker'), 1, 2],
     ['harvester', require('role.harvester'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['scientist', require('role.scientist'),1,3],
-//    ['upgrader', require('role.upgrader'), 2, 4],
-    ['linker', require('role.linker'), 3, 4],
+//    ['scientist', require('role.scientist'),1,3],
+    ['upgrader', require('role.upgrader'), 2, 4],
+    ['linker', require('role.linker'), 2, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
 var Mod_E25S47 = [
@@ -251,31 +252,41 @@ var Mod_E25S47 = [
 
 var Mod_E14S47 = [
     ['first', require('role.first'), 1, 3],
+    ['wallwork', require('role.wallworker'), 1, 3],
     ['harvester', require('role.harvester'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['upgrader', require('role.upgrader'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
 var Mod_E25S43 = [
     ['first', require('role.first'), 1, 3],
+        ['minHarvest', require('role.mineral'),2,7],
+        ['assistant', require('role.assistant'),1,0],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['harvester', require('role.harvester'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['upgrader', require('role.upgrader'), 2, 4],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3] 
 ];
 var Mod_E28S42 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-//    ['wallwork', require('role.wallworker'), 1, 1],
+        ['minHarvest', require('role.mineral'),2,7],
+        ['assistant', require('role.assistant'),1,0],
+
+    ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
-    ['upgrader', require('role.upgrader'), 1, 4],
+    ['upgrader', require('role.upgrader'), 2, 4],
     ['linker', require('role.linker'), 2, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
 var Mod_E23S42 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
+        ['minHarvest', require('role.mineral'),1,7],
+        ['assistant', require('role.assistant'),1,0],
     ['wallwork', require('role.wallworker'), 1, 1],
     ['upbuilder', require('role.upbuilder'), 2, 4],
     ['linker', require('role.linker'), 2, 4],

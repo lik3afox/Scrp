@@ -329,6 +329,7 @@ function getSpawnCreating(flag) {
         case 'tower':
         case 'science':
         case 'SCI':
+        case 'SCI2':
         case 'scout':
             return returnClosestRoom(flag.pos.roomName);
             //    default:
@@ -443,6 +444,7 @@ function getCurrentParty(flag) {
             case 'science':
                 return scienceParty;
             case 'SCI':
+            case 'SCI2':
                 return scienceParty;
 
             case 'fighter':
@@ -528,6 +530,7 @@ function getCurrentParty(flag) {
                 return engineerParty;
             case 'science':
             case 'SCI':
+            case 'SCI2':
                 return scienceParty;
 
             case 'fighter':

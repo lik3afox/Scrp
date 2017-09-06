@@ -1,5 +1,5 @@
 var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34','E24S33'
-,'E14S43','E28S42'];
+,'E14S43','E28S42','E23S42','E25S43'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -87,13 +87,16 @@ var maxMinerals = {
         'X': 125000, */
 
     'OH': 30000,
-    'UL': 50000,
-    'ZK': 50000,
-    'G': 50000,
-    'GG' : 50000,
+    'UL': 30000,
+    'ZK': 30000,
+    'G': 30000,
+    'GG' : 30000,
     'LH': 30000,
     'KO': 30000,
     'LO': 30000,
+    'GH': 50000,
+    'GH2O': 60000,
+    'XGH2O': 100,
 
     /*    'UO': 10000,
         'UH': 10000,
@@ -101,10 +104,7 @@ var maxMinerals = {
         'ZH': 10000,
         'KH': 10000, */
 
-    'GH': 50000,
-    //    'GHO2': 60000,
-    /*    'XGHO2': 100,
-
+/*
         //    'UHO2': 5000,
         //   'UH2O': 5000,
         //    'ZHO2': 5000,
@@ -115,13 +115,13 @@ var maxMinerals = {
         //    'KH2O': 5000,
 
         'XUHO2': 0, //  Mining
-        'XZHO2': 100000, //  Move
-        'XZH2O': 100000, // Dismantle
         'XLH2O': 0, // Repair
-        'XKHO2': 100000, // Ranged
         'XKH2O': 0, // Carry */
-        'XUH2O': 100000, // Attack
-        'XLHO2': 100000, // Heal
+        'XZH2O': 20000, // Dismantle
+        'XKHO2': 20000, // Ranged
+        'XZHO2': 20000, //  Move
+        'XUH2O': 20000, // Attack
+        'XLHO2': 20000, // Heal
 
 };
 
@@ -1393,16 +1393,6 @@ function labMode(roomName, mode, labs) {
     var returned;
 
     switch (mode) {
-        case 'G':
-            for (a in G) {
-                if (labs[a] !== undefined)
-                    G[a].id = labs[a].id;
-            }
-            returned = G;
-            break;
-        case 'GG':
-            returned = GG;
-            break;
         case 'OH':
             for (a in OH) {
                 if (labs[a] !== undefined)
@@ -1421,12 +1411,12 @@ function labMode(roomName, mode, labs) {
             returned = ZK;
             break;
 
-        case 'GG':
-            for (a in GG) {
+        case 'G':
+            for (a in G) {
                 if (labs[a] !== undefined)
-                    GG[a].id = labs[a].id;
+                    G[a].id = labs[a].id;
             }
-            returned = GG;
+            returned = G;
             break;
 
         case 'GH':
@@ -1531,24 +1521,6 @@ function labMode(roomName, mode, labs) {
         if (labs[mmm] !== undefined)
             returned[mmm].id = labs[mmm].id;
     }
-  //  if(roomName == 'E14S37')
-//console.log( returned[2].resource,'b',Game.rooms[roomName].memory.boostRequest.length);
-    if(Game.rooms[roomName].memory.boostRequest !== undefined)
-        if ( Game.rooms[roomName].memory.boostRequest.length > 0) {
-                Game.rooms[roomName].memory.boostRequest[0].timed--;
-            if (Game.rooms[roomName].memory.boostRequest[0].timed < 0) {
-                Game.rooms[roomName].memory.boostRequest.shift();
-            } else {
-                let zz = Game.rooms[roomName].memory.boostRequest[0].resource;
-//                console.log(zz,Game.rooms[roomName].memory.boostRequest[0].amount,roomName);
-                returned[2].resource = zz;
-                returned[2].amount = Game.rooms[roomName].memory.boostRequest[0].amount;
-                returned[2].emptied = false;
-            }
-        }
-//    if(roomName == 'E14S37')
-
-//console.log( returned[2].resource,'a',Game.rooms[roomName].memory.boostRequest.length);
     return returned;
 }
 
@@ -1563,7 +1535,7 @@ function getLabMixes(roomName) {
         case 'KO':
         case 'LO':
         case 'GH2O':
-        case 'GG':
+        case 'G':
             return oneWarMix;
         case 'light':
         case undefined:
@@ -1622,7 +1594,10 @@ function analyzeRoomLabs(roomName, labs) {
                     if (_.contains(lv8, RS) && Game.rooms[roomName].controller.level == 8) {
                         Game.rooms[roomName].memory.labMode = RS;
                     } else {
-                        Game.rooms[roomName].memory.labMode = RS;
+  //                      Game.rooms[roomName].memory.labMode = RS;
+                    }
+                    if (!_.contains(lv8,RS)) {
+                        Game.rooms[roomName].memory.labMode = RS;   
                     }
                     //                  console.log('Then we change it into it.', Game.rooms[roomName].memory.labMode);
                     return Game.rooms[roomName].memory.labMode;
@@ -1634,8 +1609,9 @@ function analyzeRoomLabs(roomName, labs) {
         var mineral = Game.rooms[roomName].memory.labMode;
         if (maxMinerals[mineral] === undefined) {
 //            Game.rooms[roomName].memory.labMode = undefined;
+//                console.log('SET MAX FOR',mineral);
         } else if (Memory.stats.totalMinerals[mineral] >= maxMinerals[mineral]) {
-//            Game.rooms[roomName].memory.labMode = undefined;
+//            Game.rooms[roomName].memory.labMode = undefined;// This is set so it changes. 
         } else {
             //            console.log('and it"s not ready',Memory.stats.totalMinerals[mineral], maxMinerals[mineral],mineral);
         }
@@ -1775,13 +1751,17 @@ class buildLab {
             }
             if (Game.rooms[roomName].memory.labsNeedWork) {
                 // here we see if the flag to create scientist is there
-                if (Game.flags.SCI === undefined && roomName !== 'E18S36') {
+                if (Game.flags.SCI === undefined) {
                     console.log("ADDING FLAG",roomName);
                     Game.rooms[roomName].createFlag(25, 25, 'SCI', COLOR_YELLOW, COLOR_YELLOW);
-                } else {
-
+                } else if(Game.flags.SCI2 === undefined){
+                        if(Game.flags.SCI.pos.roomName != roomName) {
+                            console.log("Adding Flag",roomName);
+                            Game.rooms[roomName].createFlag(25, 25, 'SCI2', COLOR_YELLOW, COLOR_YELLOW);
+                        }
                 }
             }
+//            console.log(Game.flags.SCI.pos.roomName,roomName);
         }
 
         linksCache = [];

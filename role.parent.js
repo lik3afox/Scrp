@@ -729,15 +729,16 @@ class baseParent {
 
 
     static boosted(creep, boosted) {
-        if (creep.room.memory.boostRequest === undefined) creep.room.memory.boostRequest = [];
-        if (creep.ticksToLive <  1400) return false;
-
+        if (creep.ticksToLive <  1400) {
+            return false;
+        }
         if (creep.memory.boostNeeded === undefined) {
             creep.memory.boostNeeded = boosted;
         }
+        
+//        creep.room.memory.boost.mineralType = 'none';
 
-
-        if (creep.memory.boostNeeded.length > 0 && creep.memory.home == creep.room.name) {
+        if (creep.memory.boostNeeded.mineralType !== 'none'  && creep.memory.home == creep.room.name) {
 
             var a = creep.memory.boostNeeded.length;
             while (a--) {
@@ -748,15 +749,15 @@ class baseParent {
                     creep.memory.boostNeeded.pop();
                 } else if (creepParts(creep, boosted)) { // this checks an existanced boost already happened.
                     // This makes a request to the room.
-                    if (creep.room.memory.boostRequest.length === 0) {
+//                    if (creep.room.memory.boost !== undefined) {
                         var need = {
-                            resource: creep.memory.boostNeeded[a],
-                            creepID: creep.id,
-                            timed: 50,
-                            amount: neededMin
+                            mineralType: creep.memory.boostNeeded[a],
+  //                          creepID: creep.id,
+                            timed: 20,
+                            mineralAmount: neededMin
                         };
-                        creep.room.memory.boostRequest.push(need);
-                    }
+                        creep.room.memory.boost = need;
+//                    }
 
                     let labs = creep.pos.findInRange(FIND_STRUCTURES, 20, {
                         filter: object => (object.structureType == STRUCTURE_LAB &&
@@ -769,7 +770,7 @@ class baseParent {
                             creep.say('ah!' + zz);
                             if (zz == OK) {
                                 creep.memory.boostNeeded.splice(a, 1); // = 'done';
-                                creep.room.memory.boostRequest.shift();
+                                creep.room.memory.boost.mineralType = 'none';
                             } 
                         } else {
                             creep.say('drugs');
@@ -778,7 +779,7 @@ class baseParent {
                         }
                         return true;
                     } else {
-                        if (creep.room.memory.boostRequest.length === 0) {
+                        if (creep.room.memory.boost.mineralType !== 'none') {
                             return false;
                         } else {
                             // waiting for minerals.

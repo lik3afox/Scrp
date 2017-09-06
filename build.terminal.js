@@ -18,7 +18,7 @@ let basic = [
     'KO', 'KHO2', 'XKHO2',
 ];
 var labRooms = ['E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E28S37', 'E25S37', 'E13S34', 'E14S37',
-    'E27S34','E14S43'
+    'E27S34','E14S43','E23S42','E28S42','E24S33','E25S43','E14S47'
 ];
 
 // If you need to focus all minerals somewhere change it here.
@@ -80,13 +80,15 @@ function shareEnergy(terminal) {
     var currentLow = 1000000;
     for (var e in labRooms) {
         let storage = Game.rooms[labRooms[e]].storage;
-        if (storage !== null && storage.store[RESOURCE_ENERGY] < 800000 && storage.room.name == 'E18S32') {
-            if (storage.store[RESOURCE_ENERGY] < currentLow && terminal.total !== 300000) {
+        if (storage !== null && labRooms[e] !== terminal.room.name ) {
+//        	console.log(labRooms[e],storage.store[RESOURCE_ENERGY] , currentLow, terminal.total);
+            if (storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total !== 300000) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
             }
         }
     }
+    console.log(terminal.room.name,'needs found lowest',lowestStore);
     if (lowestStore === undefined) return false;
 
 
@@ -907,11 +909,13 @@ function giveMinerals(terminal, mineral, amount) {
     let target;
     let highest = 0;
 if(terminal.room.name == 'E18S36') {
-    console.log(terminal, mineral, amount);
+//    console.log(terminal, mineral, amount);
 }
     for (var e in labRooms) {
         if (terminal.room.name != labRooms[e]) {
             let tmp = Game.rooms[labRooms[e]].terminal; //Game.getObjectById(labRooms[e]);
+  //          if(mineral =='GHO2')
+//            	console.log('here?',tmp.store[mineral],mineral,tmp.room.name);
             if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest && tmp.room.controller.level > 5) {
                 highest = tmp.store[mineral];
                 target = tmp;
@@ -921,6 +925,7 @@ if(terminal.room.name == 'E18S36') {
 
     //              let sentResult = target.send(mineral, amount, targetRoom, '1zz');               
 //     console.log('Sending Minerals:',target.pos.roomName,mineral,amount, 'azz');
+//console.log('Target:',target,target !== undefined? target.pos.roomName :'none');
     if (target !== undefined) {
         let sender = target.pos.roomName;
         if (target.store[mineral] < 2100) return;
@@ -1034,15 +1039,15 @@ class roleTerminal {
 
                     }
                 }
-                                if (!focus) focus = focusRoom(terminal);
+//                                if (!focus) focus = focusRoom(terminal);
 
                 let needed = labs.neededMinerals(terminal.pos.roomName);
                 getMinerals(terminal, needed);
 
-if (terminal.room.name === 'E18S36' && terminal.room.memory.boost !== undefined) {
-    console.log(terminal.store[terminal.room.memory.boost.mineralType],'zvv');
+if (terminal.room.memory.boost !== undefined) {
+//    console.log(terminal.store[terminal.room.memory.boost.mineralType],'zvv');
     if(terminal.store[terminal.room.memory.boost.mineralType] === undefined || terminal.store[terminal.room.memory.boost.mineralType] < terminal.room.memory.boost.mineralAmount) {
-        giveMinerals(terminal,terminal.room.memory.boost.mineralType, 1000);
+        giveMinerals(terminal,terminal.room.memory.boost.mineralType);
     }
 }
                 //   break; // Ends looking for stuff.

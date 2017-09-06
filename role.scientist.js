@@ -311,7 +311,11 @@ class scientistRole extends roleParent {
 
                                     if(Game.flags.SCI !== undefined && Game.flags.SCI.pos.roomName == creep.room.name) {
                                         Game.flags.SCI.remove();
-                                        console.log("REMOVING FLAG");
+                                        console.log("REMOVING FLAG, SCI");
+                                    }
+                                    if(Game.flags.SCI2 !== undefined && Game.flags.SCI2.pos.roomName == creep.room.name) {
+                                        Game.flags.SCI2.remove();
+                                        console.log("REMOVING FLAG,SCI2");
                                     }
                                     creep.room.memory.labsNeedWork = false;
                                     // Here we remove the flag if it's in this room.

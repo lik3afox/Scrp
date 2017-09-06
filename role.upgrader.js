@@ -59,7 +59,7 @@ class roleUpgrader extends roleParent {
         }
 
         if (creep.room.controller.level != 8)
-            if (super.boosted(creep, ['GH'])) {
+            if (super.boosted(creep, ['GH2O'])) {
                 return;
             } 
 

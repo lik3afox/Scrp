@@ -32,33 +32,32 @@ function getCost(module) {
 }
 
 function getSpawnCreating(flag) {
-    switch (flag.name) {
+    if(flag.memory.spawnRoom === undefined) flag.memory.spawnRoom = 'none';
+    if (flag.memory.spawnRoom !== 'none') {
+        return flag.memory.spawnRoom;
+    } else {
+        switch (flag.name) {
             case 'Flag8':
-            return 'E24S33';
+                return 'E24S33';
 
             case 'Flag14':
-            return 'E17S45';
+                return 'E17S45';
             case 'Flag17':
-            return 'E14S37';
+                return 'E14S37';
             case 'Flag21':
-            return 'E13S34';
-
-            case 'Flag13':
-            case 'Flag16':
-
-            case 'Flag22':
-            return 'E18S36';
+                return 'E13S34';
             case 'Flag15':
-            
-            return 'E25S37';
+
+                return 'E25S37';
             case 'Flag26':
             case 'Flag29':
-            return 'E27S34';
-        default:
-            return '';
+                return 'E27S34';
+            default:
+                return '';
+        }
     }
 
-}
+} // Game.flags.Flag22.pos;
 // E36S75
 function getCurrentParty(flag) {
     if (flag.memory.musterType !== 'none') {
@@ -186,8 +185,7 @@ class partyInteract {
                         console.log('using new');
                         temp.memory.parent = spawn[0].id;
                         spawn[0].memory.expandCreate.unshift(temp);
-                    } else {
-                    }
+                    } else {}
 
                     totalParty[i]++;
 
