@@ -498,14 +498,15 @@ class baseParent {
                             creep.memory._move.time++;
                         }
 
-                        if (badz[0].owner.username !== 'Source Keeper' && badz[0].owner.username !== 'Invader') {
+//                        if (badz[0].owner.username !== 'Source Keeper' && badz[0].owner.username !== 'Invader') {
                             var close = creep.pos.findClosestByRange(badz);
                             var rnz = creep.pos.getRangeTo(close);
                             creep.say(rnz);
-                            if (rnz == 4)
-                                // you can also use an array of targets, and it'll attempt to stay away from all of them
+                            if (rnz <= 4){
                                 creep.runFrom(close);
-                        }
+                            }
+                                // you can also use an array of targets, and it'll attempt to stay away from all of them
+//                        }
                     }
                 } else if (task.energyPickup) {
                     if (!constr.moveToPickUpEnergyIn(creep, 4)) {
@@ -709,23 +710,6 @@ class baseParent {
       return;
     } 
     */
-
-    static fillLabForBoost(creep) {
-        if (creep.room.memory.boostRequest === undefined || creep.room.memory.boostRequest.length > 0) {
-            require('role.scientist').run(creep);
-            creep.say('boo');
-            creep.memory.staySci = 10;
-            return true;
-        } else if(creep.memory.staySci > 0){
-            creep.memory.staySci --;
-            if(creep.memory.staySci > 0) {
-            require('role.scientist').run(creep);
-            creep.say('bood');
-                return true;
-            }
-        }
-        return false;
-    }
 
 
     static boosted(creep, boosted) {

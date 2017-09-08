@@ -1001,19 +1001,8 @@ function E23S42(creep, fill) {
         }
     } else {
         switch (creep.memory.roleID) {
-            default: let zz = creep.room.storage;
-            if (zz === undefined) {
-                moveToAndDrop(creep, new RoomPosition(25, 18, creep.room.name));
-            } else {
-                if (creep.pos.isNearTo(zz)) {
-                    for (var e in creep.carry) {
-                        creep.transfer(zz, e);
-                    }
-                } else {
-                    creep.moveTo(zz);
-                }
-            }
-            //        toStorageOrTerminal(creep);
+            default: 
+                    toStorageOrTerminal(creep);
             break;
         }
     }

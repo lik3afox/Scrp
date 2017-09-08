@@ -327,6 +327,58 @@ var GH2O = [{
     emptied: false
 }];
 
+var UO = [{
+    id: 'getReplaced',
+    resource: 'O',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'U',
+    amount: 2400,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'UO',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UO',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UO',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UO',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UO',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UO',
+    amount: 1,
+    emptied: true
+}, {
+    id: 'getReplaced',
+    resource: 'UO',
+    amount: 2700,
+    emptied: false
+}, {
+    id: 'getReplaced',
+    resource: 'UO',
+    amount: 2500,
+    emptied: false
+}];
+
 var OH = [{
     id: 'getReplaced',
     resource: 'O',
@@ -1367,13 +1419,13 @@ function labDo(roomName, created, labz, laby) {
 //    if(labs[created - 1].resource == 'g')
 //    console.log('bizz',lab2.room.terminal.store[labs[created - 1].resource],labs[created - 1].resource,roomName);
         if  (lab1.mineralAmount >= 2950 || 
-            (lab2.mineralAmount < 100 && lab2.room.terminal.store[labs[labz - 1].resource] > 100 ) || 
-            (lab3.mineralAmount < 100 && lab3.room.terminal.store[labs[laby - 1].resource] > 100 ) ||
+            (lab2.mineralAmount < 150 && lab2.room.terminal.store[labs[labz - 1].resource] > 150 ) || 
+            (lab3.mineralAmount < 150 && lab3.room.terminal.store[labs[laby - 1].resource] > 150 ) ||
             (lab2.mineralType !== undefined && labs[labz - 1].resource !== lab2.mineralType) ||
             (lab3.mineralType !== undefined && labs[laby - 1].resource !== lab3.mineralType) ) {
 
             lab3.room.memory.labsNeedWork = true;
-            return false;
+//            return false;
         }
     if (lab2.mineralType != labs[labz - 1].resource) return false;
     if (lab3.mineralType != labs[laby - 1].resource) return false;
@@ -1412,6 +1464,9 @@ function labMode(roomName, mode, labs) {
 
         case 'GH':
             returned = GH;
+            break;
+        case 'UO':
+            returned = UO;
             break;
 
         case 'GH2O':
@@ -1500,6 +1555,7 @@ function getLabMixes(roomName) {
         case 'UL':
         case 'KO':
         case 'LO':
+        case 'UO':
         case 'GH2O':
         case 'G':
             return oneWarMix;
@@ -1617,13 +1673,7 @@ function returnLabs(roomName) {
 }
 
 function updateRoomMember(roomName) {
-    // Game.rooms[roomName].memory.labMinerals - this hold what the room has
-    // Game.rooms[roomName].memory.calledMinerals - this holds what creep in production have called.
-    // Game.rooms[roomName].memory.availableMinerals - this hold what is available for creeps to call.
-    if (Game.rooms[roomName].memory.calledMinerals === undefined) {
-        Game.rooms[roomName].memory.calledMinerals = {};
-    }
-    //    if (Game.rooms[roomName].memory.availableMinerals === undefined) Game.rooms[roomName].memory.availableMinerals = [];
+//    if (Game.rooms[roomName].memory.boostRequest !== undefined) Game.rooms[roomName].memory.boostRequest = undefined;
 
     let roomLabs = returnLabs(roomName); //Game.rooms[roomName].memory.labs;
     let minerals = {};
@@ -1653,9 +1703,6 @@ function updateRoomMember(roomName) {
 
             if (minerals[lab.mineralType] === undefined) {
                 minerals[lab.mineralType] = lab.mineralAmount;
-                if (Game.rooms[roomName].memory.calledMinerals[lab.mineralType] === undefined) {
-                    Game.rooms[roomName].memory.calledMinerals[lab.mineralType] = 0;
-                }
             } else {
                 minerals[lab.mineralType] += lab.mineralAmount;
             }
@@ -1664,7 +1711,6 @@ function updateRoomMember(roomName) {
     }
 
 
-    Game.rooms[roomName].memory.labMinerals = minerals;
 
 }
 

@@ -530,6 +530,7 @@
         } // End of Spawns Loops
 
         Memory.stats.rooms = spawnReport;
+        memoryStatsUpdate();
         link.run();
                 Memory.totalPowerProcessed = 0;
 //            doUpgradeRooms();

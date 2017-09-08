@@ -114,7 +114,7 @@ var Mod_E18S36 = [
 var Mod_E17S34 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     //    ['upgrader', require('role.upgrader'), 1, 5],
     ['minHarvest', require('role.mineral'), 1, 7],
@@ -137,9 +137,9 @@ var Mod_E28S37 = [
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['first', require('role.first'), 2, 4],
-    //    ['upgrader', require('role.upgrader'), 1, 5],
+    //    ['upgrader', require('role.upgrader'), 1, 4],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 2, 4],
     ['homeDefender', require('role.defender2'), 1, 4]
@@ -147,7 +147,7 @@ var Mod_E28S37 = [
 var Mod_E23S38 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     //    ['upgrader', require('role.upgrader'), 1, 4],
     ['minHarvest', require('role.mineral'), 1, 7],
@@ -182,7 +182,7 @@ var Mod_E27S34 = [
 var Mod_E13S34 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
@@ -206,7 +206,7 @@ var Mod_E14S37 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 5],
 
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
@@ -216,7 +216,7 @@ var Mod_E14S37 = [
 var Mod_E24S33 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 4],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
@@ -228,7 +228,7 @@ var Mod_E24S33 = [
 
 var Mod_E14S43 = [
     ['first', require('role.first'), 2, 3],
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['minHarvest', require('role.mineral'), 2, 7],
@@ -239,8 +239,9 @@ var Mod_E14S43 = [
 ];
 var Mod_E25S47 = [
     ['first', require('role.first'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 2],
-
+    ['wallwork', require('role.wallworker'), 1, 3],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['harvester', require('role.harvester'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 1, 3],
@@ -263,10 +264,10 @@ var Mod_E25S43 = [
     ['first', require('role.first'), 2, 7],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
-    ['upgrader', require('role.upgrader'), 2, 5],
+    ['upgrader', require('role.upgrader'), 3, 5],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
@@ -276,7 +277,7 @@ var Mod_E28S42 = [
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
 
-    ['wallwork', require('role.wallworker'), 1, 2],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 2, 4],
     ['linker', require('role.linker'), 2, 4],
@@ -287,7 +288,7 @@ var Mod_E23S42 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
-    ['wallwork', require('role.wallworker'), 1, 1],
+    ['wallwork', require('role.wallworker'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 2, 4],
     ['linker', require('role.linker'), 2, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
@@ -653,7 +654,7 @@ function rebuildCreep(creep) {
     var needBoost;
     var isModded = false;
     if (creep.memory.needBoost === undefined || creep.memory.needBoost.length === 0) { // this pretty much says if it's gotten a boost before.
-        if ((creep.memory.home == 'E35S73' || creep.memory.home == 'E35S83' || creep.memory.home == 'E26S77x') &&
+        if ((creep.memory.home == 'E35S73') &&
             (creep.memory.role == 'miner') && _body.length > 6) {
             var cBuild = [];
             //                console.log(_body,'ray');
@@ -808,7 +809,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
 
 
     //    console.log(workCount, room.memory.labMinerals.UO - room.memory.calledMinerals.UO, nWorkPart * 30);
-    if (workCount >= 3 && room.memory.labMinerals.UO - room.memory.calledMinerals.UO >= nWorkPart * 30) {
+    if (workCount >= 3 && room.terminal.UO >= nWorkPart * 30) {
         // so "UO" will make it 3 instead of 1 work, 
         let workparts = [];
         do {
@@ -818,7 +819,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
 
         build = otherParts.concat(workparts); // Changes build with otherparts+work
         room.memory.tempBoost.push('UO'); // Adds it to memory so it can be added to it's self memory in build.
-        room.memory.calledMinerals.UO += nWorkPart * 30;
+//        room.memory.calledMinerals.UO += nWorkPart * 30;
 
     }
 
@@ -833,7 +834,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
     let bneeded = Math.ceil((otherParts.length * 2) / 4); // This is for ZO 
     needed = Math.ceil(bneeded * 0.50); // We'll start everything using roads. 
     //    console.log(bneeded,otherParts,needed,room.memory.labMinerals['ZO'],room.memory.calledMinerals['ZO'] ,needed*30 )
-    if (bneeded > 1 && room.memory.labMinerals.ZO - room.memory.calledMinerals.ZO >= needed * 30) {
+    if (bneeded > 1 && room.terminal.ZO  >= needed * 30) {
         // so "UO" will make it 3 instead of 1 work, 
         let moveParts = [];
         do {
@@ -843,7 +844,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
 
         build = otherParts.concat(carryParts).concat(moveParts); // Changes build with otherparts+work
         room.memory.tempBoost.unshift('ZO'); // Adds it to memory so it can be added to it's self memory in build.
-        room.memory.calledMinerals.ZO += needed * 30;
+//        room.memory.calledMinerals.ZO += needed * 30;
     } else {
         needed = Math.ceil(otherParts.length * 0.5); // This is to still fix the move parts to be lower incase other changes have occured.
         console.log(needed, 'no boost change into');
