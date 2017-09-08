@@ -211,7 +211,7 @@ class transportz extends roleParent {
                 }
 
 
-                if (!super._constr.moveToPickUpEnergyIn(creep, 4)) {
+//                if (!super._constr.moveToPickUpEnergyIn(creep, 4)) {
                     let target = Game.getObjectById(creep.memory.gotoID);
                     if (target !== null) {
 
@@ -257,7 +257,7 @@ class transportz extends roleParent {
                     } else {
                         creep.memory.gotoID = undefined;
                     }
-                }
+//                }
 
             }
 

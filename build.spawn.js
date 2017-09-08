@@ -86,7 +86,7 @@ var newbModLevel = [
         //        ['repairer', require('role.repairer'), 1, 1],
         ['upbuilder', require('role.upbuilder'), 6, 2],
         ['upgrader', require('role.upgrader'), 1, 2],
-                ['linker', require('role.linker'), 2, 3],
+        ['linker', require('role.linker'), 2, 3],
         //        ['upbuilder',    require('role.upbuilder'), 5, 2],
         ['harvester', require('role.harvester'), 2, 2]
     ], // At this point there shoulud be another module for it to take over
@@ -104,8 +104,6 @@ var Mod_E18S36 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
-    ['builder',    require('role.builder'), 0   , 5],
-
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
     ['assistant', require('role.assistant'), 1, 0],
@@ -118,7 +116,7 @@ var Mod_E17S34 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['upgrader', require('role.upgrader'), 1, 5],
+    //    ['upgrader', require('role.upgrader'), 1, 5],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
 
@@ -128,18 +126,18 @@ var Mod_E17S34 = [
 var Mod_E18S32 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-//    ['wallwork', require('role.wallworker'), 1, 3],
+    //    ['wallwork', require('role.wallworker'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 2, 4],
-    ['assistant', require('role.assistant'),1,0],
-    ['minHarvest', require('role.mineral'),2,7],
+    ['linker', require('role.linker'), 1, 4],
+    ['assistant', require('role.assistant'), 1, 0],
+    ['minHarvest', require('role.mineral'), 2, 7],
     ['homeDefender', require('role.defender2'), 1, 4]
 ];
 var Mod_E28S37 = [
-    ['minHarvest', require('role.mineral'),2,7],
-    ['assistant', require('role.assistant'),1,0],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['first', require('role.first'), 2, 4],
-    ['upgrader', require('role.upgrader'), 1, 4],
+    //    ['upgrader', require('role.upgrader'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 8],
@@ -151,7 +149,7 @@ var Mod_E23S38 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['upgrader', require('role.upgrader'), 1, 4],
+    //    ['upgrader', require('role.upgrader'), 1, 4],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 4],
@@ -162,11 +160,11 @@ var Mod_E25S37 = [
     ['first', require('role.first'), 2, 4],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 5],
-    ['minHarvest', require('role.mineral'),2 ,7],
-    ['assistant', require('role.assistant'),1,0],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['builder', require('role.builder'), 2, 4],
-//    ['upgrader', require('role.upgrader'), 3  , 5],
+    //    ['builder', require('role.builder'), 2, 4],
+    //    ['upgrader', require('role.upgrader'), 3  , 5],
     ['linker', require('role.linker'), 1, 3],
 ];
 var Mod_E27S34 = [
@@ -175,42 +173,41 @@ var Mod_E27S34 = [
 
     ['wallwork', require('role.wallworker'), 1, 6],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['upgrader', require('role.upgrader'), 5, 4],
-        ['minHarvest', require('role.mineral'),2,7],
-        ['assistant', require('role.assistant'),1,0],
-    ['linker', require('role.linker'), 1, 3],
-        ['homeDefender', require('role.defender2'), 1, 4]
+    //    ['upgrader', require('role.upgrader'), 5, 4],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+    ['linker', require('role.linker'), 2, 4],
+    ['homeDefender', require('role.defender2'), 1, 5]
 ];
 var Mod_E13S34 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
-        ['minHarvest', require('role.mineral'),2,7],
-        ['assistant', require('role.assistant'),1,0],
-//    ['upgrader', require('role.upgrader'), 3, 4],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 4]
 ];
 var Mod_E17S45 = [
     ['first', require('role.first'), 2, 4],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 6],
-    ['minHarvest', require('role.mineral'),2,7],
-    ['assistant', require('role.assistant'),1,0],
-   
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+    ['upgrader', require('role.upgrader'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 3]
+    ['homeDefender', require('role.defender2'), 1, 5]
 ];
 
 var Mod_E14S37 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-        ['minHarvest', require('role.mineral'),2,7],
-        ['assistant', require('role.assistant'),1,0],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 2],
-    
+
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
     //        ['homeDefender', require('role.defender2'), 1, 3]
@@ -220,12 +217,12 @@ var Mod_E24S33 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 4],
-        ['minHarvest', require('role.mineral'),2,7],
-        ['assistant', require('role.assistant'),1,0],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['upgrader', require('role.upgrader'), 1, 4],
+    //    ['upgrader', require('role.upgrader'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
-            ['homeDefender', require('role.defender2'), 1, 3]
+    ['homeDefender', require('role.defender2'), 1, 3]
 ];
 
 
@@ -233,21 +230,22 @@ var Mod_E14S43 = [
     ['first', require('role.first'), 2, 3],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['scientist', require('role.scientist'),1,3],
-    ['upgrader', require('role.upgrader'), 2, 4],
+    ['upbuilder', require('role.upbuilder'), 1, 7],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+    //    ['upgrader', require('role.upgrader'), 2, 4],
     ['linker', require('role.linker'), 2, 4],
-    ['homeDefender', require('role.defender2'), 1, 3]
+    ['homeDefender', require('role.defender2'), 1, 5]
 ];
 var Mod_E25S47 = [
     ['first', require('role.first'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 1],
-    
+    ['wallwork', require('role.wallworker'), 1, 2],
+
     ['harvester', require('role.harvester'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
-//    ['upgrader', require('role.upgrader'), 1, 3],
-    ['linker', require('role.linker'), 2, 4],
-//    ['homeDefender', require('role.defender2'), 1, 3]
+    //    ['upgrader', require('role.upgrader'), 1, 3],
+    ['linker', require('role.linker'), 1, 4],
+    //    ['homeDefender', require('role.defender2'), 1, 3]
 ];
 
 var Mod_E14S47 = [
@@ -255,38 +253,40 @@ var Mod_E14S47 = [
     ['wallwork', require('role.wallworker'), 1, 3],
     ['harvester', require('role.harvester'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
-    ['upgrader', require('role.upgrader'), 1, 4],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+    //    ['upgrader', require('role.upgrader'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
 var Mod_E25S43 = [
-    ['first', require('role.first'), 1, 3],
-        ['minHarvest', require('role.mineral'),2,7],
-        ['assistant', require('role.assistant'),1,0],
+    ['first', require('role.first'), 2, 7],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['harvester', require('role.harvester'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
-    ['upgrader', require('role.upgrader'), 2, 4],
+    ['upgrader', require('role.upgrader'), 2, 5],
     ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 3] 
+    ['homeDefender', require('role.defender2'), 1, 3]
 ];
 var Mod_E28S42 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-        ['minHarvest', require('role.mineral'),2,7],
-        ['assistant', require('role.assistant'),1,0],
+    ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
 
     ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
-    ['upgrader', require('role.upgrader'), 2, 4],
+    //    ['upgrader', require('role.upgrader'), 2, 4],
     ['linker', require('role.linker'), 2, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
 var Mod_E23S42 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
-        ['minHarvest', require('role.mineral'),1,7],
-        ['assistant', require('role.assistant'),1,0],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 1],
     ['upbuilder', require('role.upbuilder'), 2, 4],
     ['linker', require('role.linker'), 2, 4],
@@ -1009,9 +1009,12 @@ class theSpawn {
             if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
 
             } else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
-                
-            } else if (
-                spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {} else {
+
+            } else if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
+
+            } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
+
+            } else {
 
                 // If totalCreeps is less than require through currentModule then.
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
@@ -1112,12 +1115,12 @@ class theSpawn {
                 } else if (cpuUsedz > 75 && Game.creeps[name].memory.cpuCount > 1200) {
                     cpuUsed[zzz] = cpuUsedz;
                 }
-                //                Memory.stats.theCpuCount = cpuUsed;
+                Memory.stats.theCpuCount = cpuUsed;
             } else {
                 //                Memory.stats.theCpuCount = undefined;
             }
             if (Memory.showInfo > 1) {
-                //Memory.stats.roles = totalRoles;
+                Memory.stats.roles = totalRoles;
             }
 
         }

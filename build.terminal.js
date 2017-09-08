@@ -18,7 +18,7 @@ let basic = [
     'KO', 'KHO2', 'XKHO2',
 ];
 var labRooms = ['E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E28S37', 'E25S37', 'E13S34', 'E14S37',
-    'E27S34','E14S43','E23S42','E28S42','E24S33','E25S43','E14S47'
+    'E27S34','E14S43','E23S42','E28S42','E24S33','E25S43','E14S47','E25S47'
 ];
 
 // If you need to focus all minerals somewhere change it here.

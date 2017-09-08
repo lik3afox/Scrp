@@ -58,8 +58,8 @@ class roleUpgrader extends roleParent {
             return;
         }
 
-        if (creep.room.controller.level != 8)
-            if (super.boosted(creep, ['GH2O'])) {
+        if (creep.room.controller.level != 8 )
+            if (super.boosted(creep, ['XGH2O'])) {
                 return;
             } 
 
@@ -70,9 +70,9 @@ class roleUpgrader extends roleParent {
         if (creep.memory.level > 5) super.renew(creep);
 
 
-    //    if(creep.ticksToLive == 1000) {
-  //          creep.moveTo(creep.room.controller);
-//        }
+        if(creep.ticksToLive == 1000) {
+            creep.moveTo(creep.room.controller);
+        }
     //    if(creep.ticksToLive == 750 && creep.pos.y == 25) {
   //          creep.moveTo(creep.room.controller);
 //        }

@@ -14,11 +14,12 @@ var fox = require('foxGlobals');
 
 function getHostiles(creep) {
     let range = 5;
-    if (creep.room.name == 'E26S35' || creep.room.name == 'W4S94') range = 6;
+    if (creep.room.name == 'E26S35' || creep.room.name == 'E14S35') range = 6;
+
     if (creep.room.name == 'E11S36') {
         range = 49;
     }
-    var rng10 = ['E24S75', 'E26S76', 'E36S74', 'E24S74', 'E34S74'];
+    var rng10 = ['E16S35'];
     if (_.contains(rng10, creep.room.name)) {
         range = 10;
     }
@@ -87,9 +88,12 @@ function attackCreep(creep, bads) {
         // Ranged attack.
         if (bads.length <= 2) {
             creep.rangedAttack(enemy);
-        } 
+        } else {
+            creep.rangedMassAttack();
+        }
         creep.selfHeal();
-            creep.moveTo(enemy, { ignoreRoads: true });
+        creep.moveTo(enemy, { ignoreRoads: true });
+        if (bads.length > 2) {}
 
         return;
     } else if (distance >= 4) {
@@ -98,8 +102,8 @@ function attackCreep(creep, bads) {
             if (creep.hits == creep.hitsMax) {
                 creep.moveTo(enemy, { ignoreRoads: true });
             }
-        } else { 
-        creep.moveTo(enemy, { ignoreRoads: true });
+        } else {
+            creep.moveTo(enemy, { ignoreRoads: true });
         }
     }
     if (bads.length > 2) {
@@ -108,6 +112,7 @@ function attackCreep(creep, bads) {
 }
 
 function analyzeSourceKeeper(creep) {
+    var noMineral = ['E14S34'];
 
     let keepers = creep.memory.keeperLair;
     let targetID;
@@ -124,19 +129,16 @@ function analyzeSourceKeeper(creep) {
         if (keepers[e] !== null)
             keeperTarget = Game.getObjectById(keepers[e].id);
         if (keeperTarget !== null && tempin !== null) {
-            if (keepers[e] !== null && tempin.pos.inRangeTo(keeperTarget, 10) && creep.room.name != "E26S76") {
-                if (creep.room.name != "E35S84") {
-                    if (tempin.mineralAmount !== 0) {
-                        if (keeperTarget.ticksToSpawn === undefined) {
-                            targetID = e;
-                            break;
-                            //Winner
-                        } else if (keeperTarget.ticksToSpawn < lowest) {
-                            lowest = keeperTarget.ticksToSpawn;
-                            targetID = e;
-                        }
+            if (keepers[e] !== null && tempin.pos.inRangeTo(keeperTarget, 10) && !_.contains(noMineral, creep.room.name)) {
+                if (tempin.mineralAmount !== 0) {
+                    if (keeperTarget.ticksToSpawn === undefined) {
+                        targetID = e;
+                        break;
+                        //Winner
+                    } else if (keeperTarget.ticksToSpawn < lowest) {
+                        lowest = keeperTarget.ticksToSpawn;
+                        targetID = e;
                     }
-
                 }
             } else {
                 if (keeperTarget !== undefined) {
@@ -193,7 +195,7 @@ function moveCreep(creep) {
             if (creep.room.name == 'E24S74') {
                 creep.moveMe(rmPos, {
                     reusePath: 7,
-                    maxRooms: 1,
+                    //                    maxRooms: 1,
                     ignoreRoads: (creep.room.name == 'W4S94'),
                     visualizePathStyle: {
                         fill: 'transparent',
@@ -206,7 +208,7 @@ function moveCreep(creep) {
             } else {
                 creep.moveMe(rmPos, {
                     reusePath: 7,
-                    maxRooms:1,
+                    //                    maxRooms:1,
                     ignoreRoads: (creep.room.name == 'W4S94'),
                     visualizePathStyle: {
                         fill: 'transparent',
@@ -254,10 +256,10 @@ class roleGuard extends roleParent {
             return;
         }
         super.rebirth(creep);
-//        if (creep.memory.party == 'Flag13' || creep.memory.party == 'Flag15')
-            if (super.boosted(creep, boost)) {
-                return;
-            }
+        //        if (creep.memory.party == 'Flag13' || creep.memory.party == 'Flag15')
+        if (super.boosted(creep, boost)) {
+            return;
+        }
 
         if (creep.memory.goalPos === undefined && Game.flags[creep.memory.party] !== undefined) {
 

@@ -206,24 +206,7 @@ function defendRoom(towers, hostiles) {
                     focusTarget = focusTarget[0];
                 }
             }
-            while (e--) {
-                if (towers[e].energy > 100) {
-                    if (whatToDo === 1) {
-                        focusTarget = hostiles[Math.floor(Math.random() * hostiles.length)];
-                    }
-                    if (whatToDo === 0) {
-                        let zz = Math.floor(Math.random() * hostiles.length);
-                        showTowerRange(towers[e]);
-                        towers[e].attack(hostiles[zz]);
-                    } else if (whatToDo === 1) {
-                        showTowerRange(towers[e]);
-                        towers[e].attack(focusTarget);
-                    } else {
-                        showTowerRange(towers[e]);
-                        towers[e].attack(focusTarget);
-                    }
-                }
-            }
+
         } else {
             e = towers.length;
             while (e--) {
@@ -248,6 +231,8 @@ function defendRoom(towers, hostiles) {
 
 //                showTowerRange(towers[e]);
                 towers[e].attack(hostiles[zz]);
+
+
 
             }
         }
@@ -481,11 +466,8 @@ class roleTower {
             if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
                 // SO we should just repair and make it longer
                 if (!healRoom(towers, hurt)) {
-                    for (var bad in hostiles) {
-                        if (estimateDamageAndAttack(hostiles[bad], mycreeps, towers)) {
-                            return;
+                    if (!defendRoom(towers, hostiles)) {
                         }
-                    }
                     if (zz.memory.invaderTimed > 350) {
                         repairRampart(towers);
                     }
@@ -512,7 +494,7 @@ class roleTower {
 
             if (hostiles.length > 0) {
                 for (var e in hostiles) {
-                    if(hostiles[e].owner.usename !== 'Invader'){
+                    if(hostiles[e].owner.username !== 'Invader'){
                     if (estimateDamageAndAttack(hostiles[e], mycreeps, towers)) {
                         console.log("KILLING", hostiles[e].room.name);
                         return;

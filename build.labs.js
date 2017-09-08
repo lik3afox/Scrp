@@ -1,5 +1,5 @@
 var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34','E24S33'
-,'E14S43','E28S42','E23S42','E25S43'];
+,'E14S43','E28S42','E23S42','E25S43','E25S47'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -1366,8 +1366,11 @@ function labDo(roomName, created, labz, laby) {
     //   console.log('gets here?');
 //    if(labs[created - 1].resource == 'g')
 //    console.log('bizz',lab2.room.terminal.store[labs[created - 1].resource],labs[created - 1].resource,roomName);
-        if (lab1.mineralAmount >= 2950 || (lab2.mineralAmount < 50 && lab2.room.terminal.store[labs[labz - 1].resource] > 100 ) || 
-            (lab3.mineralAmount < 50 && lab3.room.terminal.store[labs[laby - 1].resource] > 100 ) ) {
+        if  (lab1.mineralAmount >= 2950 || 
+            (lab2.mineralAmount < 100 && lab2.room.terminal.store[labs[labz - 1].resource] > 100 ) || 
+            (lab3.mineralAmount < 100 && lab3.room.terminal.store[labs[laby - 1].resource] > 100 ) ||
+            (lab2.mineralType !== undefined && labs[labz - 1].resource !== lab2.mineralType) ||
+            (lab3.mineralType !== undefined && labs[laby - 1].resource !== lab3.mineralType) ) {
 
             lab3.room.memory.labsNeedWork = true;
             return false;
@@ -1394,78 +1397,41 @@ function labMode(roomName, mode, labs) {
 
     switch (mode) {
         case 'OH':
-            for (a in OH) {
-                if (labs[a] !== undefined)
-                    OH[a].id = labs[a].id;
-            }
             returned = OH;
             break;
         case 'UL':
             returned = UL;
             break;
         case 'ZK':
-            for (a in ZK) {
-                if (labs[a] !== undefined)
-                    ZK[a].id = labs[a].id;
-            }
             returned = ZK;
             break;
 
         case 'G':
-            for (a in G) {
-                if (labs[a] !== undefined)
-                    G[a].id = labs[a].id;
-            }
-            returned = G;
+            returned = GG;
             break;
 
         case 'GH':
-            for (a in GH) {
-                if (labs[a] !== undefined)
-                    GH[a].id = labs[a].id;
-            }
             returned = GH;
             break;
 
         case 'GH2O':
-            for (a in GH2O) {
-                if (labs[a] !== undefined)
-                    GH2O[a].id = labs[a].id;
-            }
             returned = GH2O;
             break;
 
         case 'XGH2O':
-            for (a in XGH2O) {
-                if (labs[a] !== undefined)
-                    XGH2O[a].id = labs[a].id;
-            }
             returned = XGH2O;
             break;
 
         case 'muster':
-            for (a in muster) {
-                if (labs[a] !== undefined)
-                    muster[a].id = labs[a].id;
-            }
             returned = muster;
             break;
         case 'XUH2O':
             returned = XUH2O;
             break;
         case 'XKH2O':
-            for (a in XKH2O) {
-                //        if (labs[e] !== undefined)
-                if (labs[a] !== undefined)
-                    XKH2O[a].id = labs[a].id;
-            }
             returned = XKH2O;
             break;
         case 'XGHO2':
-            for (var e in XGHO2) {
-                if (labs[a] !== undefined)
-                    XGHO2[e].id = labs[e].id;
-            }
             returned = XGHO2;
             break;
         case 'XUHO2':

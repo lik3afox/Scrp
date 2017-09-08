@@ -52,7 +52,7 @@ class mineralRole extends roleParent {
             creep.memory.mining = true;
             creep.memory.goHome = false;
         }
-        if (carry > creep.carryCapacity - 45) {
+        if (carry > creep.carryCapacity - creep.stats('mineral')) {
             creep.memory.mining = false;
             creep.memory.goHome = true;
         }

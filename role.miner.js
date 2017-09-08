@@ -171,6 +171,9 @@ class settler extends roleParent {
         }
 
         var _source = Game.getObjectById(creep.memory.goal);
+        if(creep.memory.goal == '5982ff7ab097071b4adc2b7d') {
+            creep.memory.reportDeath = false;
+        }
 
         if (_source !== null && (_source.pos.roomName != creep.room.name)) creep.memory.distance++;
 

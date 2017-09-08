@@ -122,6 +122,9 @@ module.exports = function() {
                 case 'mining':
                     let zz = this.memory.stats[stat] = this.getActiveBodyparts(WORK) * 2;
                     return zz;
+                case 'mineral':
+                    let zzb = this.memory.stats[stat] = this.getActiveBodyparts(WORK);
+                    return zzb;
                 case 'upgrading':
                     let aa = this.memory.stats[stat] = this.getActiveBodyparts(WORK);
                     return aa;

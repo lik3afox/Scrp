@@ -735,7 +735,7 @@ function E27S34(creep, fill) {
                 break;
 
             case 1:
-                let goto2 = Game.getObjectById('599edec130519b072d942c84');
+                let goto2 = Game.getObjectById('59a087a117949d1664063798');
                 if (goto2 !== null) {
                     if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(goto2, {
@@ -791,19 +791,8 @@ function E24S33(creep, fill) {
         }
     } else {
         switch (creep.memory.roleID) {
-            default: let zz = creep.room.storage;
-            if (zz === null) {
-                moveToAndDrop(creep, new RoomPosition(10, 16, creep.room.name));
-            } else {
-                if (creep.pos.isNearTo(zz)) {
-                    for (var e in creep.carry) {
-                        creep.transfer(zz, e);
-                    }
-                } else {
-                    creep.moveTo(zz);
-                }
-            }
-            //        toStorageOrTerminal(creep);
+            default: 
+                    toStorageOrTerminal(creep);
             break;
         }
     }
@@ -985,16 +974,18 @@ function E23S42(creep, fill) {
     if (!fill) {
         switch (creep.memory.roleID) {
             case 0:
-
-                let goto = Game.getObjectById('59ab831de08945471b2f274e');
-                if (goto !== null) {
-                    if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(goto, {
+                let goto3 = Game.getObjectById('59ab831de08945471b2f274e');
+                if (goto3 !== null && goto3.energy > 0) {
+                    if (creep.withdraw(goto3, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto3, {
                             reusePath: 20
                         });
                     }
+                } else {
+                    takeFromTerminalForStorage(creep);
                 }
                 break;
+
             case 1:
                 let goto2 = Game.getObjectById('59a9054e00167a4b78f8332a');
                 if (goto2 !== null) {
@@ -1030,23 +1021,23 @@ function E23S42(creep, fill) {
 
 function E25S47(creep, fill) {
     var goto;
-    creep.say('what');
     if (!fill) {
         switch (creep.memory.roleID) {
             case 0:
-                creep.say('what1');
-                goto = Game.getObjectById('59ada0239cabec7faa49800f');
-                if (goto !== null) {
-                    if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(goto, {
+                let goto3 = Game.getObjectById('59ada0239cabec7faa49800f');
+                if (goto3 !== null && goto3.energy > 0) {
+                    if (creep.withdraw(goto3, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto3, {
                             reusePath: 20
                         });
                     }
+                } else {
+                    takeFromTerminalForStorage(creep);
                 }
-                break;
+                break;            
+
 
             case 1:
-                creep.say('what2');
                 let goto2 = Game.getObjectById('59a9c6de83bd410897a242c7');
                 if (goto2 !== null) {
                     if (creep.withdraw(goto2, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -1061,20 +1052,8 @@ function E25S47(creep, fill) {
         }
     } else {
         switch (creep.memory.roleID) {
-            default: creep.say('what3');
-            let zz = creep.room.storage;
-            if (zz === undefined || creep.room.controller.level === 3) {
-                moveToAndDrop(creep, new RoomPosition(13, 39, creep.room.name));
-            } else {
-                if (creep.pos.isNearTo(zz)) {
-                    for (var e in creep.carry) {
-                        creep.transfer(zz, e);
-                    }
-                } else {
-                    creep.moveTo(zz);
-                }
-            }
-            //        toStorageOrTerminal(creep);
+            default: 
+                    toStorageOrTerminal(creep);
             break;
         }
     }
