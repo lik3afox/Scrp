@@ -273,6 +273,7 @@
     //    var ALLIES = foxy.friends;
 
     function doRoomReport(room) {
+        if(room.name == 'E14S38') return;
         bads = room.find(FIND_HOSTILE_CREEPS);
         bads = _.filter(bads, function(creep) {
             return (!_.contains(fox.friends, creep.owner.username));

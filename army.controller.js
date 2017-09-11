@@ -20,9 +20,7 @@ class hackerClass extends roleParent {
         if (super.goToPortal(creep)) return;
 
         console.log('Control checking in', creep.pos);
-        //        super.returnEnergy(creep); 5836bb2241230b6b7a5b9a59 37,33 E36S75
-        //      var target = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES,2);
-        //{filter: {structureType: STRUCTURE_WALL}}
+
         //console.log('acon',Game.flags.control , creep.pos.roomName , Game.flags.control.pos.roomName);
         if (Game.flags[creep.memory.party] !== undefined && creep.pos.roomName == Game.flags[creep.memory.party].pos.roomName) {
             if (creep.room.controller !== undefined) {
@@ -56,17 +54,15 @@ class hackerClass extends roleParent {
 
                         break;
                 }
-            }  else {
+            } else {
                 movement.flagMovement(creep);
             }
         } else {
 
 
-            //      if(!super.guardRoom(creep)  ) {
             if (!super.avoidArea(creep))
                 movement.flagMovement(creep);
         }
-        //      }
 
     }
 }

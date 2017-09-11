@@ -34,10 +34,6 @@ var thief2Party = [
     ['thief', require('army.thief'), 1, 3],
 ];
 
-var muleParty = [
-    ['mule', require('army.mule'), 4, 1]
-];
-
 var skInvade = [
     ['skinvader', require('army.skinvader'), 7, 1]
 ];
@@ -218,9 +214,17 @@ var upgradeParty = [
 var upgrade2Party = [
     ['Aupgrader', require('army.upgrader'), 3, 6]
 ];
+
 var upgradeRoomParty = [
     ['Aupgrader', require('army.upgrader'), 2, 6]
+    
 ];
+var muleParty = [
+    ['mule', require('army.mule'),  6  , 1],
+
+
+];
+
 
 var soloFighter = [
     ['fighter', require('army.fighter'), 1, 10]
@@ -287,7 +291,9 @@ function getSpawnCreating(flag) {
         case 'thief':
             return 'E25S37';
         case 'mule':
-            return 'E17S34';
+        case 'upgradeRoom':
+
+            return 'E14S37';
         case 'mule2':
             return 'E18S32';
             //    case 'scout2' :
@@ -304,7 +310,6 @@ function getSpawnCreating(flag) {
         case '3upgrade':
         case 'thief5':
 
-        case 'upgradeRoom':
 
         case 'recontrol':
         case 'test':

@@ -30,14 +30,11 @@ var allModule = [
     ['builder', require('role.builder')],
     //    ['roadbuilder', require('role.roadbuilder')], // Pick up/harvest to build. 
     ['fighter', require('army.fighter')],
-    //    ['boss', require('role.constructionBoss')],
     ['upbuilder', require('role.upbuilder')],
     ['controller', require('role.controller')],
     ['scientist', require('role.scientist')],
-    ['xtransport', require('role.xtransport')], // Harvester - experiemnt w/o carry
-    ['ytransport', require('role.ytransport')], // Harvester - experiemnt w/o carry
+    ['rtransport', require('role.rtransport')], // Transport that repairs too.
     ['ztransport', require('role.ztransport')], // Harvester - experiemnt w/o carry
-    ['rtransport', require('role.rtransport')], // Harvester - experiemnt w/o carry
     ['upgrader', require('role.upgrader')],
     ['Aupgrader', require('army.upgrader')],
     ['guard', require('keeper.guard')],
@@ -116,7 +113,7 @@ var Mod_E17S34 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    //    ['upgrader', require('role.upgrader'), 1, 5],
+    ['upgrader', require('role.upgrader'), 1, 5],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
 
@@ -173,7 +170,7 @@ var Mod_E27S34 = [
 
     ['wallwork', require('role.wallworker'), 1, 6],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    //    ['upgrader', require('role.upgrader'), 5, 4],
+    ['upgrader', require('role.upgrader'), 2, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 2, 4],
@@ -200,13 +197,15 @@ var Mod_E17S45 = [
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
 
+
+
 var Mod_E14S37 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
-    ['upgrader', require('role.upgrader'), 4, 5],
+//    ['upgrader', require('role.upgrader'), 4, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
     
@@ -298,7 +297,8 @@ var Mod_E23S42 = [
     ['linker', require('role.linker'), 1 , 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
-
+var Mod_E14S38 = [
+];
 
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
@@ -373,23 +373,17 @@ var expansionModule = [
 
     [ // LEVEL 11 is another expansion that has a spawn.
         ['mineral', require('keeper.scientist'), 1, 4],
-        ['rtransport', require('role.rtransport'), 1, 0],
-        ['ztransport', require('role.ytransport'), 1, 0],
-        ['ytransport', require('role.ytransport'), 1, 0]
+        ['ztransport', require('role.ztransport'), 1, 0],
     ],
 
     [ // LEVEL 12 is another expansion that has a spawn. 5836b8168b8b9619519f1708
         ['mineral', require('keeper.scientist'), 1, 5],
-        ['rtransport', require('role.rtransport'), 1, 0],
-        ['ztransport', require('role.ytransport'), 1, 0],
-        ['ytransport', require('role.ytransport'), 1, 0]
+        ['ztransport', require('role.ztransport'), 1, 0],
     ],
 
     [ // LEVEL 13 - for just a miner and transport.
         ['mineral', require('keeper.scientist'), 1, 6],
-        ['rtransport', require('role.rtransport'), 1, 0],
-        ['ztransport', require('role.ytransport'), 1, 0],
-        ['ytransport', require('role.ytransport'), 1, 0]
+        ['ztransport', require('role.ztransport'), 1, 0],
     ],
     [ // LEVEL 14 - for an mineral For spawn3
         ['miner', require('role.miner'), 1, 3], // Gather and move 12- just carry 
@@ -422,24 +416,17 @@ var expansionModule = [
     ], // al
     [ // LEVEL 20 - for just a miner and transport. Weaker than lv 15
         ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['ytransport', require('role.ytransport'), 1, 0],
         ['transport', require('role.transport'), 1, 6],
         ['ztransport', require('role.ztransport'), 1, 0],
-        ['xtransport', require('role.xtransport'), 1, 0] // Harvester - experiemnt w/o carry
     ], // 
     [ // LEVEL 21 [E25S74 12,9]
         ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['ytransport', require('role.ytransport'), 1, 0],
         ['transport', require('role.transport'), 2, 6],
         ['ztransport', require('role.ztransport'), 1, 0],
-        ['xtransport', require('role.xtransport'), 1, 0] // Harvester - experiemnt w/o carry
     ], // 
     [ // LEVEL 22 
         ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['ytransport', require('role.ytransport'), 1, 0],
         ['transport', require('role.transport'), 1, 6],
-        ['xtransport', require('role.xtransport'), 1, 0] // Harvester - experiemnt w/o carry
-
     ], // 
     [ // LEVEL 23  [E35S84 10,6]
         ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
@@ -447,13 +434,10 @@ var expansionModule = [
     ], //
     [ // LEVEL 24 
         ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['ytransport', require('role.ytransport'), 1, 0],
         ['transport', require('role.transport'), 1, 6],
-        ['ztransport', require('role.ztransport'), 1, 0]
     ], // 
     [ // LEVEL 25 
         ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['xtransport', require('role.transport'), 1, 3], // 800 carry transport.
         ['transport', require('role.transport'), 1, 3] // 800 carry transport.
 
     ], // 
@@ -602,7 +586,7 @@ function rebuildCreep(creep) {
     // expansion creep.
     let _body = [];
 
-    if (creep.memory.role == 'miner' || creep.memory.role == 'transport' || creep.memory.role == 'ztransport' || creep.memory.role == 'rtransport' || creep.memory.role == 'xtransport' || creep.memory.role == 'ytransport') {
+    if (creep.memory.role == 'miner' || creep.memory.role == 'transport' || creep.memory.role == 'ztransport' || creep.memory.role == 'rtransport' ) {
         let spawn = Game.getObjectById(creep.memory.parent);
         let _module;
         let goalInfo;
@@ -746,6 +730,9 @@ function getNuke(spawn) {
 }
 
 function getCurrentModule(spawn) {
+    if(spawn.room.name == 'E14S38'){
+        return Mod_E14S38;
+    }
 
     if (spawn === null || spawn === undefined) return;
     var currentModuleLevel = getModuleLevel(spawn);
@@ -1193,14 +1180,6 @@ class theSpawn {
                         if (_module[e][_name] == 'transport') {
                             maxTrans = _module[e][_number];
                         }
-                        if (_module[e][_name] == 'xtransport') {
-
-                            maxxTrans = _module[e][_number];
-                        }
-                        if (_module[e][_name] == 'ytransport') {
-
-                            maxyTrans = _module[e][_number];
-                        }
                         if (_module[e][_name] == 'ztransport') {
                             maxzTrans = _module[e][_number];
                         }
@@ -1236,21 +1215,6 @@ class theSpawn {
                         }
                     }
 
-                    if ((spawn.memory.roadsTo[ie].xtransport !== undefined)) {
-                        let xtransport = getExpandRole('xtransport', spawn.memory.roadsTo[ie].source, totalCreeps);
-                        let xtransportBuild = getPossibleRole(spawn, 'xtransport', spawn.memory.roadsTo[ie].source);
-                        if (xtransport + xtransportBuild < maxxTrans) {
-                            spawn.memory.roadsTo[ie].xtransport = false;
-                        }
-                    }
-                    if (spawn.memory.roadsTo[ie].ytransport !== undefined) {
-                        let ytransport = getExpandRole('ytransport', spawn.memory.roadsTo[ie].source, totalCreeps);
-                        let ytransportBuild = getPossibleRole(spawn, 'ytransport', spawn.memory.roadsTo[ie].source);
-
-                        if ((ytransport + ytransportBuild < maxyTrans)) {
-                            spawn.memory.roadsTo[ie].ytransport = false;
-                        }
-                    }
                     if (spawn.memory.roadsTo[ie].ztransport !== undefined) {
                         let ztransport = getExpandRole('ztransport', spawn.memory.roadsTo[ie].source, totalCreeps);
                         let ztransportBuild = getPossibleRole(spawn, 'ztransport', spawn.memory.roadsTo[ie].source);
@@ -1432,103 +1396,6 @@ class theSpawn {
     // Okay here, false means that there is no creep
     // when it's add to the stack it also becomes true.
 
-    static reportFrom(creep) {
-        var spawn = Game.getObjectById(creep.memory.parent);
-        if (spawn === null) return false;
-        var e;
-        switch (creep.memory.role) {
-            case "miner":
-                /*
-                                for (e in spawn.memory.roadsTo) {
-                                    if (spawn.memory.roadsTo[e].expLevel == 1) {
-
-                                        if (creep.memory.keeperLairID === undefined || creep.memory.keeperLairID == 'none') {
-                                            if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                                                spawn.memory.roadsTo[e].expLevel = 2;
-                                                spawn.memory.roadsTo[e].transport = false;
-                                                return 0;
-                                            }
-                                        } else { // If this is an keeperlair set it to lv 13
-                                            if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                                                spawn.memory.roadsTo[e].expLevel = 9;
-                                                spawn.memory.roadsTo[e].transport = false;
-                                                return 0;
-                                            }
-
-                                        }
-
-                                    }
-                                    if (spawn.memory.roadsTo[e].expLevel == 20) {
-                                        if (spawn.memory.roadsTo[e].xtransport === undefined) {
-                                            spawn.memory.roadsTo[e].xtransport = false;
-                                            return 0;
-                                        }
-                                    }
-                                }*/
-
-                return 750; // cooldown
-
-            case "transport":
-                /*                if (creep.memory.distance !== undefined && creep.memory.distance !== 0) {
-                                    for (e in spawn.memory.roadsTo) {
-                                        if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                                            let expand = spawn.memory.roadsTo[e];
-                                            if (expand.allDistance === undefined) {
-                                                expand.allDistance = [];
-                                            }
-                                            if (creep.memory.distance !== 1)
-                                                expand.allDistance.push(creep.memory.distance);
-                                            //                      console.log("Creep Reporting distance :",creep.memory.distance,creep.memory.goal)
-                                            if (expand.allDistance.length > 100) {
-                                                expand.allDistance = undefined;
-                                            }
-
-                                        }
-                                    }
-                                }*/
-                break;
-            case "roadbuilder":
-
-                for (e in spawn.memory.roadsTo) {
-                    if (spawn.memory.roadsTo[e].source == creep.memory.goal &&
-                        spawn.memory.roadsTo[e].expLevel === 0) {
-                        spawn.memory.roadsTo[e].miner = false;
-                        spawn.memory.roadsTo[e].expLevel = 1;
-                    }
-                }
-
-                break;
-            case "guard":
-
-
-            case "boss":
-                var BUILD = {
-                    source: creep.memory.goal,
-                    sourcePos: Game.getObjectById(creep.memory.goal).pos,
-                    miner: false,
-                    transport: false,
-                    expLevel: 2
-                };
-                spawn.memory.roadsTo.push(BUILD);
-                return 250;
-
-            case "rebuilder":
-                for (e in spawn.memory.roadsTo) {
-                    if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                        spawn.memory.roadsTo[e].rebuilder = false;
-                    }
-                }
-                return 250;
-            case "transport":
-                for (e in spawn.memory.roadsTo) {
-                    if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                        spawn.memory.roadsTo[e].transport = false;
-                    }
-                }
-                return 250;
-        }
-    }
-
     static reportDeath(creep) {
         var spawn = Game.getObjectById(creep.memory.parent);
         //                console.log( creep.rebuildMe(creep)+'aasdfffffffffffffffffffffffffffffffffffffff' );
@@ -1538,8 +1405,6 @@ class theSpawn {
                 case "transport":
                     spawn.memory.expandCreate.push(rebuildCreep(creep));
                     break;
-                case "xtransport":
-                case "ytransport":
                 case "ztransport":
                 case "rtransport":
                     spawn.memory.expandCreate.push(rebuildCreep(creep));

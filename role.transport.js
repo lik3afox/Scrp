@@ -132,8 +132,8 @@ class transport extends roleParent {
 
         if (link.stayDeposit(creep)) {
             constr.pickUpEnergy(creep);
-            let zparent = require('build.spawn');
-            zparent.reportFrom(creep);
+            //            let zparent = require('build.spawn');
+            //            zparent.reportFrom(creep);
             creep.countReset();
             return;
         }
@@ -146,7 +146,7 @@ class transport extends roleParent {
         }
 
         shouldDie(creep);
-//        creep.memory.reportDeath = true;
+        //        creep.memory.reportDeath = true;
         super.deathWatch(creep);
         if (creep.memory.gohome === undefined) { creep.memory.gohome = false; }
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }
@@ -164,7 +164,6 @@ class transport extends roleParent {
             constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
 
         if (creep.memory.gohome) {
-
 
             if (creep.room.controller !== undefined && creep.room.controller.level === 1) {
 
@@ -234,7 +233,7 @@ class transport extends roleParent {
                             }
                             creep.memory.roadCount--;
                             if (creep.memory.roadCount < 0) {
-//                                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
+                                //                                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
                                 creep.memory.roadCount = 1;
                             }
 

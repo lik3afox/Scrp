@@ -193,8 +193,8 @@ class settler extends roleParent {
                         buildContainer(creep);
                     } else {
                         creep.memory.workContainer = isContainer[0].id;
-                        let zparent = require('build.spawn');
-                        zparent.reportFrom(creep);
+//                        let zparent = require('build.spawn');
+//                        zparent.reportFrom(creep);
                         doWork(creep);
                         return;
 

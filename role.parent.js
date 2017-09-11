@@ -190,7 +190,8 @@ function getDeathSpot(roomName) {
     switch (roomName) {
         case "E18S36":
             return new RoomPosition(38, 24, roomName);
-
+            case "E14S37":
+            return new RoomPosition(36, 30, roomName);
         default:
             return;
     }

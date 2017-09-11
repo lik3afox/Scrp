@@ -830,17 +830,18 @@ function getAverageMineralPrice(resource, buy) {
         if (zz[zz.length - 4].price !== 0.01)
             bb += zz[zz.length - 4].price;
     } else {
-        if (zz[1].price !== 0.01)
+        if (zz[1] !== undefined && zz[1].price !== 0.01)
             bb += zz[1].price;
-        if (zz[2].price !== 0.01)
+        if (zz[2] !== undefined && zz[2].price !== 0.01)
             bb += zz[2].price;
-        if (zz[3].price !== 0.01)
+        if (zz[3] !== undefined && zz[3].price !== 0.01)
             bb += zz[3].price;
         if (zz[0].price !== 0.01)
             bb += zz[0].price;
     }
 
     amount = (bb / 4);
+    if(amount > 1.10) return 1.10;
     return amount;
     //  }
 
@@ -983,11 +984,11 @@ function getMinerals(terminal, needed) {
 }
 
 function focusRoom(terminal) {
-    var target = 'E28S42';
+    var target = 'E14S37';
     if (terminal.room.name == target) return false;
     //   if (Game.rooms.E27S34.storage.store[RESOURCE_ENERGY] < 10000) target = 'E27S34';
     if (Game.rooms[target].terminal === undefined) return false;
-    if (Game.rooms[target].terminal.total === 300000) return false;
+    if (Game.rooms[target].terminal.total > 290000) return false;
     if (terminal.store[RESOURCE_ENERGY] < 10000) return false;
 
     //    if (terminal.room.name == target && terminal.room.name == 'E17S34' && terminal.room.name == 'E27S34') return false;
@@ -1040,7 +1041,7 @@ class roleTerminal {
 
                     }
                 }
-                //                                if (!focus) focus = focusRoom(terminal);
+//                                                if (!focus) focus = focusRoom(terminal);
 
                 let needed = labs.neededMinerals(terminal.pos.roomName);
                 getMinerals(terminal, needed);

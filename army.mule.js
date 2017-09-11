@@ -5,11 +5,14 @@
 var classLevels = [
     [CARRY,
         MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE
-    ]
+    ],
+    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]
 ];
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
+var constr = require('commands.toStructure');
+
 //STRUCTURE_POWER_BANK:
 class muleClass extends roleParent {
     static levels(level) {
@@ -29,6 +32,7 @@ class muleClass extends roleParent {
         if (!creep.memory.goHome) {
             if (total === 0) {
                 let stor = creep.room.storage;
+                constr.pickUpEnergy(creep);
                 if (creep.pos.isNearTo(stor)) {
                     creep.withdraw(stor, RESOURCE_ENERGY);
                 } else {
@@ -82,7 +86,7 @@ class muleClass extends roleParent {
             } else {
                 let zz = Game.getObjectById(creep.memory.parent);
                 if (zz !== null) {
-                    creep.moveTo(zz, { reusePath: 50 });
+                    creep.moveMe(zz, { reusePath: 50, ignoreCreeps:true });
 
                 }
             }

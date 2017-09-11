@@ -20,7 +20,7 @@ var classLevels = [
     //5 /2250 Energy
     [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY],
     //6
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
+    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
 ];
 
 var boost = ['LH'];
@@ -39,9 +39,9 @@ class roleWallWorker extends roleParent {
 
     static run(creep) {
         if (super.depositNonEnergy(creep)) return;
-        if (creep.room.name != 'E18S36'&&creep.memory.level >=4 && super.boosted(creep, boost)) {
-            return;
-        }
+    //    if (creep.room.name != 'E18S36'&&creep.memory.level >=4 && super.boosted(creep, boost)) {
+  //          return;
+//        }
 
 
         if (creep.memory.repair) {

@@ -674,7 +674,7 @@ class MoveInteract {
 
 
         if (Game.flags[creep.memory.party] === undefined) return false;
-        creep.moveMe(Game.flags[creep.memory.party], { ignoreRoads: true, reusePath: 75 });
+        creep.moveMe(Game.flags[creep.memory.party], { ignoreRoads: creep.memory.role == 'mule'? true : false , reusePath: 75 });
         return true;
         /*
                 if (creep.memory.partyFlag === undefined) {

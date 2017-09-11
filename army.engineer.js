@@ -72,6 +72,7 @@ class engineerClass extends roleParent {
 
         if (creep.room.name == 'E25Sxx37')
             if (super.boosted(creep, ['LH'])) { return; }
+
         if (super.goToPortal(creep)) return;
         //        spawn.wantRenew(creep);
         //        if (super.depositNonEnergy(creep)) return;
@@ -83,14 +84,12 @@ class engineerClass extends roleParent {
         } else {
             isThere = true;
         }
-        if (creep.room.name == 'E35S85') isThere = false;
 
         if (!isThere) {
             if (!super.avoidArea(creep)) {
                 movement.flagMovement(creep);
             }
         } else {
-            if (creep.carry.X > 0) creep.drop('X');
 
             creep.say('eng!');
             if (creep.memory.renewSpawnID === undefined) {
@@ -111,7 +110,7 @@ class engineerClass extends roleParent {
             if (creep.carry.energy < (creep.stats('mining') + 1)) {
                 creep.memory.building = false;
                 creep.say('harvesting');
-                super._constr.pickUpEnergy(creep);
+                //                super._constr.pickUpEnergy(creep);
                 /*
                                                if (!super._constr.pickUpEnergy(creep)) {
                                 //                if (!super._containers.withdrawFromStorage(creep)) {
@@ -127,62 +126,48 @@ class engineerClass extends roleParent {
 
 
             if (creep.memory.building) {
-                if (!spawn.moveToTransfer(creep)) {
-                    if (creep.room.controller.level !== 1) {
-                        if (!constr.moveToBuild(creep)) {
-                            //                    if (!super._containers.moveToStorage(creep)) {
-                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                if(creep.room.name == 'E14S38') {
-                                creep.moveTo(37,8);
-                                } else {
-                                creep.moveTo(creep.room.controller);
-                                }
-                            }
-                            //                  }
-                        }
-                    } else {
-                        if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(creep.room.controller);
-                        }
+                //         if (!spawn.moveToTransfer(creep)) {
+                if (creep.room.controller.level !== 1) {
+                    //                  if (!constr.moveToBuild(creep)) {
+                    if (!super._containers.moveToStorage(creep)) {
+
+                        /*                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                                                        if (creep.room.name == 'E14S38') {
+                                                            creep.moveTo(37, 8);
+                                                        } else {
+                                                            creep.moveTo(creep.room.controller);
+                                                        }
+                                                    }*/
+
                     }
+                    //                    }
                 } else {
-                    constr.doCloseRoadRepair(creep);
+                    if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(creep.room.controller);
+                    }
                 }
+                //                }
 
             } else {
                 super._constr.pickUpEnergy(creep);
+                /*                  let zz = Game.getObjectById('59a706eff5b4d253ca80424a');
+                                  if(zz !== null) {
+                                    creep.moveTo(zz);
+                                    creep.pickup(zz);
+                                    return;
+                                  }*/
+                //                    if (!super._constr.moveToPickUpEnergy(creep),0) { 
+                //                    if (!super._containers.moveToWithdraw(creep)) {
+                //                            if (!super._containers.withdrawFromStorage(creep)) {
+                //           if (!super._containers.moveToWithdraw(creep))
+                //                if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity - creep.stats('mining') )
+                super._sources.moveToWithdraw(creep);
+                //                          }
+                //                        creep.say('zZzZ')
+                //                  }
+                //                  }
 
-                if (creep.room.name == 'E25xxS43') {
-                    if (!super._constr.moveToPickUpEnergy(creep), 300) {
-                        if (!super._containers.moveToWithdraw(creep)) {
-                            let zz = Game.getObjectById('59a2f9d1a1533f58324ae5db');
-                            if (zz !== null)
-                                if (creep.pos.isNearTo(zz)) {
-                                    creep.dismantle(zz);
-                                } else {
-                                    creep.moveMe(zz);
-                                }
-                        }
-                    }
-                    return;
-                } else {
-                    /*                  let zz = Game.getObjectById('59a706eff5b4d253ca80424a');
-                                      if(zz !== null) {
-                                        creep.moveTo(zz);
-                                        creep.pickup(zz);
-                                        return;
-                                      }*/
-                    //                    if (!super._constr.moveToPickUpEnergy(creep),0) { 
-                    if (!super._containers.moveToWithdraw(creep)) {
-                        //                            if (!super._containers.withdrawFromStorage(creep)) {
-                        //           if (!super._containers.moveToWithdraw(creep))
-                        super._sources.moveToWithdraw(creep);
-                        //                          }
-                        //                        creep.say('zZzZ')
-                    }
-                    //                  }
 
-                }
             }
 
         }

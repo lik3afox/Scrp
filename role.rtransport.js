@@ -180,7 +180,6 @@ class reTransport extends roleParent {
             // Here we go around and repair roads and containers.
             if (creep.memory.repairTarget === undefined) {
                 let containerz = getSKContainers(creep);
-                console.log(containerz.length);
                 let lowNeed = 10000000;
                 let lowTar;
                 for (let a in containerz) {

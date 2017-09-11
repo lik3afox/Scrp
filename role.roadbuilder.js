@@ -57,8 +57,8 @@ class roadbuilder extends roleParent {
         }
         containers.toWithdraw(creep);
         if (creep.room.name == creep.memory.home && creep.memory.goHome) {
-            let home = require('build.spawn');
-            home.reportFrom(creep);
+//            let home = require('build.spawn');
+//            home.reportFrom(creep);
             creep.memory.death = true;
         }
         // first it always goes to the goal

@@ -518,9 +518,9 @@ class StructureInteract {
             creep.memory.constructionID = undefined;
             return false;
         }
-
-        creep.say('Build');
-        if (creep.build(ztarget) == ERR_NOT_IN_RANGE) {
+            let zz = creep.build(ztarget);
+        creep.say('Build'+zz);
+        if (zz == ERR_NOT_IN_RANGE) {
             creep.moveTo(ztarget);
         }
         return true;

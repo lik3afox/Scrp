@@ -16,7 +16,8 @@ var classLevels = [
     [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
     [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, CARRY, MOVE, MOVE],
     [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
-    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE,
+    
+    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE,CARRY, CARRY,
         CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE
     ],
 
@@ -1048,6 +1049,46 @@ function E25S47(creep, fill) {
     }
 }
 
+function E14S38(creep, fill) {
+    var goto;
+    if (!fill) {
+        switch (creep.memory.roleID) {
+            case 0:
+            if(creep.room.terminal !== undefined) {
+                
+            }
+                let goto3 = creep.room.storage;
+                if (goto3 !== null ) {
+                    if (creep.withdraw(goto3, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(goto3, {
+                            reusePath: 20
+                        });
+                    }
+                } 
+                break;            
+        }
+    } else {
+        switch (creep.memory.roleID) {
+            default: 
+            // First we do the tower
+            let tower = Game.getObjectById('59b6c74247713d03af663275');
+            if(tower !== undefined) {
+                creep.transfer(tower,RESOURCE_ENERGY);
+            }
+            // Then we do spawn 
+            let spawn = Game.getObjectById('59b6bbb8fa8a1c0b7da30a88');
+            if(spawn !== undefined && spawn.energy < 100) {
+                creep.transfer(spawn,RESOURCE_ENERGY);
+            }
+            let storage = creep.room.storage;
+            if(storage !== undefined) {
+
+            }
+            break;
+        }
+    }
+}
+
 class roleLinker extends roleParent {
 
     static levels(level) {
@@ -1217,6 +1258,9 @@ class roleLinker extends roleParent {
 
             case 'E25S47':
                 E25S47(creep, creep.memory.full);
+                break;
+            case 'E14S38':
+                E14S38(creep, creep.memory.full);
                 break;
             case 'E14S47':
                 E14S47(creep, creep.memory.full);
