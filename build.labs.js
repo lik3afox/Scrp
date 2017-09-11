@@ -1,5 +1,5 @@
 var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34','E24S33'
-,'E14S43','E28S42','E23S42','E25S43','E25S47'];
+,'E14S43','E28S42','E23S42','E25S43','E25S47','E14S47'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -265,13 +265,13 @@ var XGH2O = [{
 }, {
     id: 'getReplaced',
     resource: 'XGH2O',
-    amount: 2500,
-    emptied: false
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'XGH2O',
+    amount: 1,
+    emptied: true
 }];
 
 
@@ -317,14 +317,14 @@ var GH2O = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'GH2O',
+    amount: 1,
+    emptied: true
 }];
 
 var UO = [{
@@ -1306,6 +1306,7 @@ var oneWarMix = [
     [6, 1, 2],
     [7, 1, 2],
     [8, 1, 2],
+    [9, 1, 2],
 ];
 
 function getCached(id) {

@@ -63,6 +63,9 @@ class roleUpgrader extends roleParent {
                 return;
             } 
 
+if(creep.room.controller.level == 8) {
+    creep.memory.death = true;
+}
         if (super.returnEnergy(creep)) {
             return;
         }

@@ -502,7 +502,9 @@ class baseParent {
                             var close = creep.pos.findClosestByRange(badz);
                             var rnz = creep.pos.getRangeTo(close);
                             creep.say(rnz);
-                            if (rnz <= 4){
+                            if (rnz == 4){
+                              //  creep.runFrom(close);
+                            } else if(rnz > 4) {
                                 creep.runFrom(close);
                             }
                                 // you can also use an array of targets, and it'll attempt to stay away from all of them

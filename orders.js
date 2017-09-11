@@ -15,7 +15,7 @@ Game.rooms.E24S33.terminal.send('energy', 30000, 'E14S43', 'trade');
 
 
 
-Game.rooms.E23S38.terminal.send('X', 10000, 'E7S19', 'trade');
+Game.rooms.E14S47.terminal.send('U', 10000, 'W13N14', 'trade');
 
 Game.rooms.E28S71.terminal.send('X', 15000, 'E5N7', 'trade');
 Game.rooms.E23S38.terminal.send('LO', 1000, 'E18S36', 'trade');
@@ -32,7 +32,7 @@ Game.market.createOrder(ORDER_SELL, 'O', 0.82, 100000, "E18S36");
 
 Game.market.createOrder(ORDER_SELL, 'K', 0.10, 75000, "E33S76");
 
-Game.market.createOrder(ORDER_SELL, 'H', 0.22, 40000, "E23S75");
+Game.market.createOrder(ORDER_BUY, 'H', 1, 40000, "E14S43");
 Game.market.changeOrderPrice('59456151c6f617101cab61f3', 0.17);
 
 

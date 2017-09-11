@@ -22,7 +22,7 @@ var scienceParty = [
     ['scientist', require('role.scientist'), 1, 3]
 ];
 var engineerParty = [
-    ['engineer', require('army.engineer'), 2, 5],
+    ['engineer', require('army.engineer'), 1, 5],
 ];
 var engineer2Party = [
     ['engineer', require('army.engineer'), 2, 4],
@@ -279,7 +279,7 @@ function getSpawnCreating(flag) {
 
     switch (flag.name) {
         case 'control':
-            return 'E25S43';
+            return 'E14S37';
         case 'engineer2':
             return 'E17S45';
         case 'fightHealer':

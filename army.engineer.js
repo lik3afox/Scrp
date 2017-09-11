@@ -132,7 +132,11 @@ class engineerClass extends roleParent {
                         if (!constr.moveToBuild(creep)) {
                             //                    if (!super._containers.moveToStorage(creep)) {
                             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                                if(creep.room.name == 'E14S38') {
+                                creep.moveTo(37,8);
+                                } else {
                                 creep.moveTo(creep.room.controller);
+                                }
                             }
                             //                  }
                         }
