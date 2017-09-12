@@ -84,34 +84,36 @@ class upgraderzClass extends roleParent {
 
             }
 
-            if (creep.carry.energy < 100) {
+            if (creep.carry.energy < creep.stats('building')) {
                 constr.pickUpEnergy(creep);
+
                 if (creep.pos.isNearTo(creep.room.storage)) {
                     creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
-                } else if (contain.withdrawFromStorage(creep)) {
-
-                } else if (creep.pos.isNearTo(creep.room.terminal)) {
+                } 
+                if (creep.pos.isNearTo(creep.room.terminal)) {
                     creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
                 }
 
             }
             if (!constr.moveToBuild(creep)) {
                 if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {}
+            } else {
+                creep.withdraw(creep.room.storage,RESOURCE_ENERGY);
             }
             if (creep.room.name == 'E14S38') {
                 let zz;
                 switch (creep.memory.roleID) {
-                    case 0:
+                    case 1:
                         zz = new RoomPosition(32, 9, creep.room.name);
                         break;
-                    case 1:
+                    case 0:
                         zz = new RoomPosition(34, 10, creep.room.name);
                         break;
                     case 2:
                         zz = new RoomPosition(34, 9, creep.room.name);
                         break;
                     case 3:
-                        zz = new RoomPosition(33, 11, creep.room.name);
+                        zz = new RoomPosition(34, 8, creep.room.name);
                         break;
                     case 4:
                         zz = new RoomPosition(32, 11, creep.room.name);

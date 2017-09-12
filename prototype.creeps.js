@@ -122,6 +122,9 @@ module.exports = function() {
                 case 'mining':
                     let zz = this.memory.stats[stat] = this.getActiveBodyparts(WORK) * 2;
                     return zz;
+                case 'building':
+                    let zxz = this.memory.stats[stat] = this.getActiveBodyparts(WORK) * 10;
+                    return zxz;
                 case 'mineral':
                     let zzb = this.memory.stats[stat] = this.getActiveBodyparts(WORK);
                     return zzb;
@@ -626,13 +629,8 @@ module.exports = function() {
         if (this.memory.role == 'transport' || this.memory.role == 'xtransport' || this.memory.party !== undefined) {
             if (this.room.name != this.memory.home)
                 options.ignoreCreeps = true;
-            if (this.room.name == 'E35S84' || this.room.name == 'E35S74')
-                options.ignoreRoads = false;
         }
 
-        if (this.room.name == 'W4S93') {
-            options.ignoreCreeps = true;
-        }
 
         if (options.ignoreCreeps) {
             if (this.memory.stuckCount > 2) {

@@ -162,7 +162,7 @@ var Mod_E25S37 = [
     ['upbuilder', require('role.upbuilder'), 1, 8],
     //    ['builder', require('role.builder'), 2, 4],
     //    ['upgrader', require('role.upgrader'), 3  , 5],
-    ['linker', require('role.linker'), 1, 3],
+    ['linker', require('role.linker'), 1, 4],
 ];
 var Mod_E27S34 = [
     ['first', require('role.first'), 2, 4],

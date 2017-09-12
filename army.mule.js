@@ -33,6 +33,9 @@ class muleClass extends roleParent {
             if (total === 0) {
                 let stor = creep.room.storage;
                 constr.pickUpEnergy(creep);
+                if(stor.store[RESOURCE_ENERGY] < 1000) {
+                    stor = creep.room.terminal;
+                }
                 if (creep.pos.isNearTo(stor)) {
                     creep.withdraw(stor, RESOURCE_ENERGY);
                 } else {
@@ -58,7 +61,7 @@ class muleClass extends roleParent {
                             creep.memory.goHome = true;
 
                         } else {
-                            creep.moveTo(creep.room.storage, { reusePath: 20 });
+                            creep.moveTo(creep.room.storage, { reusePath: 20,ignoreCreeps:true });
                         }
                     } else {
 /*                    	if (creep.pos.isNearTo(Game.flags[creep.memory.party].pos)) {
@@ -73,7 +76,7 @@ class muleClass extends roleParent {
                     	} else*/ if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {
                             creep.drop(RESOURCE_ENERGY);
                         } else {
-                            creep.moveTo(Game.flags[creep.memory.party], { reusePath: 20 });
+                            creep.moveMe(Game.flags[creep.memory.party], { reusePath: 20,ignoreCreeps:true });
                         }
                     }
                 }
@@ -81,6 +84,7 @@ class muleClass extends roleParent {
 
             }
         } else {
+                constr.pickUpEnergy(creep);
             if (creep.room.name == creep.memory.home) {
                 creep.memory.goHome = false;
             } else {
