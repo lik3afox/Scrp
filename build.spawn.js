@@ -173,7 +173,7 @@ var Mod_E27S34 = [
     ['upgrader', require('role.upgrader'), 2, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
-    ['linker', require('role.linker'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
 var Mod_E13S34 = [
@@ -1088,7 +1088,7 @@ class theSpawn {
                 while (type--) {
 
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'scientist') { countCPU = true; } else { countCPU = false; }
+                        if (Game.creeps[name].memory.role == 'scout') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.

@@ -1056,6 +1056,10 @@ function E14S38(creep, fill) {
         target = creep.room.storage;
     }*/
     }
+
+    if(creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
+           target = creep.room.storage;
+    }
     if (!fill) {
         switch (creep.memory.roleID) {
             case 0:
@@ -1073,8 +1077,9 @@ function E14S38(creep, fill) {
             default: 
             // First we do the tower
             let tower = Game.getObjectById('59b6c74247713d03af663275');
-            if(tower !== undefined) {
+            if(tower !== undefined && tower.energy < 100) {
                 creep.transfer(tower,RESOURCE_ENERGY);
+                return;
             }
             // Then we do spawn 
             let spawn = Game.getObjectById('59b6bbb8fa8a1c0b7da30a88');
@@ -1084,6 +1089,7 @@ function E14S38(creep, fill) {
                 } else {
                     creep.moveTo(spawn);
                 }
+                return;
             }
 
             if(target.structureType == STRUCTURE_STORAGE) {

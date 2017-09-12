@@ -421,14 +421,14 @@ var OH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 2700,
-    emptied: false
+    resource: 'OH',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'OH',
+    amount: 1,
+    emptied: true
 }];
 
 var LO = [{
@@ -579,14 +579,14 @@ var GH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'GH',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'GH',
+    amount: 1,
+    emptied: true
 }];
 
 // Repair
@@ -637,9 +637,9 @@ var LH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'LH',
+    amount: 1,
+    emptied: true
 }];
 // Attack
 var UH = [{
@@ -689,9 +689,9 @@ var UH = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'UH',
+    amount: 1,
+    emptied: true
 }];
 
 var XZHO2 = [{
@@ -1107,14 +1107,14 @@ var UL = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'UL',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'UL',
+    amount: 1,
+    emptied: true
 }];
 
 
@@ -1160,14 +1160,14 @@ var ZK = [{
     emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XGH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'ZK',
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
-    resource: 'XUH2O',
-    amount: 2500,
-    emptied: false
+    resource: 'ZK',
+    amount: 1,
+    emptied: true
 }];
 
 var G = [{
@@ -1385,15 +1385,15 @@ function labDo(roomName, created, labz, laby) {
         return false;
     }
     if (labs[created - 1] === undefined || labs[labz - 1] === undefined || labs[laby - 1] === undefined) {
-        console.log('undefined Lab', roomName);
+//        console.log('undefined Lab', roomName);
         return false;
     }
     //    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
     if (REACTIONS[labs[labz - 1].resource] === undefined) {
-        console.log('ERROR', roomName);
+//        console.log('ERROR', roomName);
     } else if (REACTIONS[labs[labz - 1].resource][labs[laby - 1].resource] !== labs[created - 1].resource) {
-        console.log(REACTIONS[labs[labz - 1].resource][labs[laby - 1].resource], labs[created - 1].resource, roomName);
+  //      console.log(REACTIONS[labs[labz - 1].resource][labs[laby - 1].resource], labs[created - 1].resource, roomName);
         return;
     }
     //  if (Memory.stats.totalMinerals !== undefined)
@@ -1433,7 +1433,7 @@ function labDo(roomName, created, labz, laby) {
 
     let zz = lab1.runReaction(lab2, lab3);
 
-    if (zz !== 0) console.log(created, labz, laby, lab1.mineralAmount, 'lab Reaction', zz, lab1.mineralType, lab2.mineralType, lab3.mineralType, roomName);
+//    if (zz !== 0) console.log(created, labz, laby, lab1.mineralAmount, 'lab Reaction', zz, lab1.mineralType, lab2.mineralType, lab3.mineralType, roomName);
     return true;
 }
 
