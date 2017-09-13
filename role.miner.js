@@ -266,7 +266,8 @@ class settler extends roleParent {
             if (_source !== null && creep.room.name == _source.room.name) {
                 let contain = Game.getObjectById(creep.memory.workContainer);
                 if(contain !== null) {
-                    if(creep.memory.goal == '5982ff78b097071b4adc2b4f' || creep.memory.goal == '5982ff07b097071b4adc1fa3'  ) {
+                    if(creep.memory.goal == '5982ff78b097071b4adc2b4f' || creep.memory.goal == '5982ff07b097071b4adc1fa3' ||
+                    creep.memory.goal == '5982ff6bb097071b4adc297d' || creep.memory.goal == '5982ff6bb097071b4adc297a'  ) {
                         creep.moveMe(_source, { reusePath: 10 });
                     } else {
                         creep.moveMe(contain, { reusePath: 10 });

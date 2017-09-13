@@ -1065,7 +1065,7 @@ function E14S38(creep, fill) {
             case 0:
                 if (target !== null ) {
                     if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target, {
+                        creep.moveTo(32,10, {
                             reusePath: 20
                         });
                     }

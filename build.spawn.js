@@ -170,7 +170,7 @@ var Mod_E27S34 = [
 
     ['wallwork', require('role.wallworker'), 1, 6],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['upgrader', require('role.upgrader'), 2, 5],
+//    ['upgrader', require('role.upgrader'), 2, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 4],
