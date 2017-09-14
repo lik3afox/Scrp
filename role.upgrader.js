@@ -58,10 +58,17 @@ class roleUpgrader extends roleParent {
             return;
         }
 
-        if (creep.room.controller.level != 8 && creep.room.name !== 'E17S34')
-            if (super.boosted(creep, ['XGH2O'])) {
-                return;
+        if (creep.room.controller.level != 8) {
+            if (creep.room.name === '') {
+                if (super.boosted(creep, ['XGH2O'])) {
+                    return;
+                }
+            } else {
+                if (super.boosted(creep, ['GH'])) {
+                    return;
+                }
             }
+        }
 
         if (creep.room.controller.level == 8) {
             creep.memory.death = true;
@@ -73,23 +80,27 @@ class roleUpgrader extends roleParent {
         if (creep.memory.level > 5) super.renew(creep);
 
         if (creep.carry.energy < creep.stats('upgrading') + 1) {
-            if (creep.room.name == 'E14S43') {
+            if (creep.room.name == 'E17S34') {
                 if (creep.memory.roleID == '0') {
                     if (!creep.pos.isEqualTo(new RoomPosition(18, 21, creep.room.name))) {
-                        creep.moveTo(18, 21);
+                        creep.moveTo(17, 12);
                     }
                 }
                 if (creep.memory.roleID == '1') {
                     if (!creep.pos.isEqualTo(new RoomPosition(18, 22, creep.room.name))) {
-                        creep.moveTo(18, 22);
+                        creep.moveTo(18, 12);
                     }
                 }
                 if (creep.memory.roleID == '2') {
                     if (!creep.pos.isEqualTo(new RoomPosition(18, 23, creep.room.name))) {
-                        creep.moveTo(18, 23);
+                        creep.moveTo(19, 12);
                     }
                 }
-                if (!containers.withdrawFromStorage(creep)) {}
+                if (creep.pos.isNearTo(creep.room.terminal)) {
+                    creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+                } else {
+                    if (!containers.withdrawFromStorage(creep)) {}
+                }
 
             } else {
                 if (!structures.pickUpEnergy(creep)) {

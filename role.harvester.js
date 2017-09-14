@@ -173,6 +173,18 @@ if(creep.memory.sourceID == '5982ff6bb097071b4adc298d') {
     //creep.moveTo(17,6);
 }
         if (creep.carry.energy > creep.carryCapacity - creep.stats('mining')) {
+            if(creep.room.name == 'E14S43') {
+                let zz = Game.getObjectById('59ba8fa1f2ce785fd0fdb45e');
+                if(zz !== null) {
+                    if(creep.pos.isNearTo(zz)) {
+                        creep.build(zz);
+                    } else {    
+                        creep.moveTo(zz);
+                    }
+                    return;
+                }
+            }
+
             if (super.depositNonEnergy(creep)) return;
             if (!link.deposit(creep)) {
                 if (!depositSpawn(creep)) {
@@ -181,6 +193,7 @@ if(creep.memory.sourceID == '5982ff6bb097071b4adc298d') {
                     }
                 }
             }
+            
         }
         moveToWithdraw(creep);
     }

@@ -1426,7 +1426,6 @@ function labDo(roomName, created, labz, laby) {
         lab3.room.memory.labsNeedWork = true;
     }
 
-
     if ((lab2.mineralAmount < 150 && lab2.room.terminal.store[labs[labz - 1].resource] > 1500) ||
         (lab3.mineralAmount < 150 && lab3.room.terminal.store[labs[laby - 1].resource] > 1500)) {
         if (lab1.room.name == 'E17S34')

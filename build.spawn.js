@@ -112,8 +112,8 @@ var Mod_E17S34 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 5],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['upgrader', require('role.upgrader'), 1, 5],
+//    ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['upgrader', require('role.upgrader'), 2, 5],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
 
@@ -170,7 +170,6 @@ var Mod_E27S34 = [
 
     ['wallwork', require('role.wallworker'), 1, 6],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    //    ['upgrader', require('role.upgrader'), 2, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 4],
@@ -181,6 +180,7 @@ var Mod_E13S34 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
+    ['upgrader', require('role.upgrader'), 2, 5],
     ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
@@ -230,11 +230,11 @@ var Mod_E14S43 = [
     ['first', require('role.first'), 2, 3],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2],
-//    ['upbuilder', require('role.upbuilder'), 1, 7],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
-    ['upgrader', require('role.upgrader'), 3, 5],
-    ['linker', require('role.linker'), 2, 4],
+    //    ['upgrader', require('role.upgrader'), 3, 5],
+    ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
 var Mod_E25S47 = [
@@ -584,26 +584,26 @@ function rebuildCreep(creep) {
         let _module;
         let goalInfo;
         if (spawn !== null) {
-/*
-            for (var e in spawn.memory.roadsTo) {
-                if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
-                    _module = expansionModule[spawn.memory.roadsTo[e].expLevel];
-                    goalInfo = spawn.memory.roadsTo[e];
-                    if (creep.memory.role == 'transport') {
-                        analyzeSource(spawn.memory.roadsTo[e]);
-                    }
-                }
-                break;
-            } */
+            /*
+                        for (var e in spawn.memory.roadsTo) {
+                            if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
+                                _module = expansionModule[spawn.memory.roadsTo[e].expLevel];
+                                goalInfo = spawn.memory.roadsTo[e];
+                                if (creep.memory.role == 'transport') {
+                                    analyzeSource(spawn.memory.roadsTo[e]);
+                                }
+                            }
+                            break;
+                        } */
 
-//            if (_body === undefined || _body === null) {
-                for (var o in _module) {
-                    if (_module[o][_name] == creep.memory.role) {
-                        _body = getModuleRole(_module[o][_name]).levels(_module[o][_level], spawn.room);
-                        break;
-                    }
+            //            if (_body === undefined || _body === null) {
+            for (var o in _module) {
+                if (_module[o][_name] == creep.memory.role) {
+                    _body = getModuleRole(_module[o][_name]).levels(_module[o][_level], spawn.room);
+                    break;
                 }
-  //          }
+            }
+            //          }
 
         }
 
@@ -1127,6 +1127,7 @@ class theSpawn {
                 return;
             }
             let xp = spawn.memory.roadsTo[ie].expLevel;
+            if (xp == 11) xp = 12;
             _module = expansionModule[xp];
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 
