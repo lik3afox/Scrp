@@ -1,4 +1,4 @@
-var labRooms = ['E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17S45', 'E28S37', 'E27S34', 'E24S33', 'E14S43', 'E28S42', 'E23S42', 'E25S43', 'E25S47', 'E14S47', 'E18S36', 'E14S38'];
+var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17S45', 'E28S37', 'E27S34', 'E24S33', 'E14S43', 'E28S42', 'E23S42', 'E25S43', 'E25S47', 'E14S47', 'E18S36', 'E14S38', 'E25S37'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -197,7 +197,7 @@ var XUH2O = [{
     id: 'getReplaced',
     resource: 'UH2O',
     amount: 2400,
-    emptied: false
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'X',
@@ -217,7 +217,7 @@ var XUH2O = [{
     id: 'getReplaced',
     resource: 'UH2O',
     amount: 2500,
-    emptied: false
+    emptied: true
 }];
 
 var XGH2O = [{
@@ -915,7 +915,7 @@ var XGHO2 = [{
     id: 'getReplaced',
     resource: 'GO',
     amount: 2400,
-    emptied: false
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'OH',
@@ -951,7 +951,7 @@ var XGHO2 = [{
     id: 'getReplaced',
     resource: 'GHO2',
     amount: 2500,
-    emptied: false
+    emptied: true
 }];
 
 var E33S76WarMix = [
@@ -1420,30 +1420,36 @@ function labDo(roomName, created, labz, laby) {
     //   console.log('gets here?');
     //    if(labs[created - 1].resource == 'g')
     //    console.log('bizz',lab2.room.terminal.store[labs[created - 1].resource],labs[created - 1].resource,roomName);
-    if (lab1.mineralAmount >= 2950) {
-        if (lab1.room.name == 'E17S34')
-            console.log('Lab needs work too much');
-        lab3.room.memory.labsNeedWork = true;
-    }
+    if (!lab3.room.memory.labsNeedWork) {
+        if (lab1.mineralAmount >= 2950 && labs[labz - 1].emptied) {
+            if (lab1.room.name == 'E18S36')
+                console.log('Lab needs work too much');
+            lab3.room.memory.labsNeedWork = true;
+        }
+        //     if (lab1.room.name == 'E18S36')
+        //         console.log(labs[labz - 1].emptied,  lab2.mineralAmount , lab2.room.terminal.store[labs[labz - 1].resource],'xx');
+        if ((!labs[labz - 1].emptied && lab2.mineralAmount < 150 && lab2.room.terminal.store[labs[labz - 1].resource] > 1500) ||
+            (!labs[laby - 1].emptied && lab3.mineralAmount < 150 && lab3.room.terminal.store[labs[laby - 1].resource] > 1500)) {
+            //     if (lab1.room.name == 'E18S36')
+            //          console.log('Lab needs work too little');
+            lab3.room.memory.labsNeedWork = true;
+        }
 
-    if ((lab2.mineralAmount < 150 && lab2.room.terminal.store[labs[labz - 1].resource] > 1500) ||
-        (lab3.mineralAmount < 150 && lab3.room.terminal.store[labs[laby - 1].resource] > 1500)) {
-        if (lab1.room.name == 'E17S34')
-            console.log('Lab needs work too little');
-        lab3.room.memory.labsNeedWork = true;
+        if (lab3.mineralType === undefined || lab2.mineralType === undefined)
+            lab3.room.memory.labsNeedWork = true;
+
+        if ((lab2.mineralType !== undefined && labs[labz - 1].resource !== lab2.mineralType)) {
+            if (lab1.room.name == 'E17S34')
+                console.log('Lab needs work not the same2');
+            lab3.room.memory.labsNeedWork = true;
+        }
+        if (
+            (lab3.mineralType !== undefined && labs[laby - 1].resource !== lab3.mineralType)) {
+            if (lab1.room.name == 'E17S34')
+                console.log('Lab needs work not the same3');
+            lab3.room.memory.labsNeedWork = true;
+        }
     }
-/*
-    if ((lab2.mineralType !== undefined && labs[labz - 1].resource !== lab2.mineralType)  ) {
-        if (lab1.room.name == 'E17S34')
-            console.log('Lab needs work not the same2');
-        lab3.room.memory.labsNeedWork = true;
-    } 
-    if (
-        (lab3.mineralType !== undefined && labs[laby - 1].resource !== lab3.mineralType)  ) {
-        if (lab1.room.name == 'E17S34')
-            console.log('Lab needs work not the same3');
-        lab3.room.memory.labsNeedWork = true;
-    }  */
     if (lab2.mineralType != labs[labz - 1].resource) return false;
     if (lab3.mineralType != labs[laby - 1].resource) return false;
 

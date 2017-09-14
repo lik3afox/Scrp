@@ -64,7 +64,7 @@ class roleUpgrader extends roleParent {
                     return;
                 }
             } else {
-                if (super.boosted(creep, ['GH'])) {
+                if (super.boosted(creep, ['XGH2O'])) {
                     return;
                 }
             }

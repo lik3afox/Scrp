@@ -190,9 +190,9 @@ function getDeathSpot(roomName) {
     switch (roomName) {
         case "E18S36":
             return new RoomPosition(38, 24, roomName);
-            case "E14S37":
+        case "E14S37":
             return new RoomPosition(36, 30, roomName);
-            case "E24S33":
+        case "E24S33":
             return new RoomPosition(9, 15, roomName);
         default:
             return;
@@ -501,17 +501,17 @@ class baseParent {
                             creep.memory._move.time++;
                         }
 
-//                        if (badz[0].owner.username !== 'Source Keeper' && badz[0].owner.username !== 'Invader') {
-                            var close = creep.pos.findClosestByRange(badz);
-                            var rnz = creep.pos.getRangeTo(close);
-                            creep.say(rnz);
-                            if (rnz == 4){
-                              //  creep.runFrom(close);
-                            } else if(rnz > 4) {
-                                creep.runFrom(close);
-                            }
-                                // you can also use an array of targets, and it'll attempt to stay away from all of them
-//                        }
+                        //                        if (badz[0].owner.username !== 'Source Keeper' && badz[0].owner.username !== 'Invader') {
+                        var close = creep.pos.findClosestByRange(badz);
+                        var rnz = creep.pos.getRangeTo(close);
+                        creep.say(rnz);
+                        if (rnz == 4) {
+                            //  creep.runFrom(close);
+                        } else if (rnz < 4) {
+                            creep.runFrom(close);
+                        }
+                        // you can also use an array of targets, and it'll attempt to stay away from all of them
+                        //                        }
                     }
                 } else if (task.energyPickup) {
                     if (!constr.moveToPickUpEnergyIn(creep, 4)) {
@@ -718,16 +718,16 @@ class baseParent {
 
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive <  1400) {
+        if (creep.ticksToLive < 1400) {
             return false;
         }
         if (creep.memory.boostNeeded === undefined) {
             creep.memory.boostNeeded = boosted;
         }
-        
-//        creep.room.memory.boost.mineralType = 'none';
 
-        if (creep.memory.boostNeeded.mineralType !== 'none'  && creep.memory.home == creep.room.name) {
+        //        creep.room.memory.boost.mineralType = 'none';
+
+        if (creep.memory.boostNeeded.mineralType !== 'none' && creep.memory.home == creep.room.name) {
 
             var a = creep.memory.boostNeeded.length;
             while (a--) {
@@ -738,44 +738,67 @@ class baseParent {
                     creep.memory.boostNeeded.pop();
                 } else if (creepParts(creep, boosted)) { // this checks an existanced boost already happened.
                     // This makes a request to the room.
-//                    if (creep.room.memory.boost !== undefined) {
-                        var need = {
-                            mineralType: creep.memory.boostNeeded[a],
-  //                          creepID: creep.id,
-                            timed: 20,
-                            mineralAmount: neededMin
-                        };
-                        creep.room.memory.boost = need;
-//                    }
-
-                    let labs = creep.pos.findInRange(FIND_STRUCTURES, 20, {
-                        filter: object => (object.structureType == STRUCTURE_LAB &&
-                            object.mineralType == creep.memory.boostNeeded[a] &&
-                            object.mineralAmount > 29)
-                    });
-                    
-                    if (labs.length > 0) {
-                        if (creep.pos.isNearTo(labs[0]) && labs[0].mineralAmount >= neededMin ) {
-                            let zz = labs[0].boostCreep(creep);
-                            creep.say('ah!' + zz);
-                            if (zz == OK) {
-                                creep.memory.boostNeeded.splice(a, 1); // = 'done';
-                                creep.room.memory.boost.mineralType = 'none';
-                            } 
-                        } else {
-                            creep.say('drugs');
-                            creep.moveTo(labs[0]);
-                            creep.room.visual.line(creep.pos, labs[0].pos);
-                        }
-                        return true;
-                    } else {
-                        if (creep.room.memory.boost.mineralType !== 'none') {
-                            return false;
-                        } else {
-                            // waiting for minerals.
+                    //                    if (creep.room.memory.boost !== undefined) {
+                    var need = {
+                        mineralType: creep.memory.boostNeeded[a],
+                        //                          creepID: creep.id,
+                        timed: 20,
+                        mineralAmount: neededMin
+                    };
+                    creep.room.memory.boost = need;
+                    //                    }
+                    if (creep.room.memory.boostLabID !== undefined) {
+                        let laber = Game.getObjectById(creep.room.memory.boostLabID);
+                        if (laber !== null) {
+                            if (creep.pos.isNearTo(laber) && laber.mineralAmount >= neededMin) {
+                                let zz = laber.boostCreep(creep);
+                                creep.say('ah!' + zz);
+                                if (zz == OK) {
+                                    creep.memory.boostNeeded.splice(a, 1); // = 'done';
+                                    creep.room.memory.boost.mineralType = 'none';
+                                }
+                                if( zz == -5 || zz == -6) {
+                                    creep.memory.boostNeeded.splice(a, 1); // = 'done';
+                                    creep.room.memory.boost.mineralType = 'none';
+                                }
+                            } else {
+                                creep.say('drugs');
+                                creep.moveTo(laber);
+                                creep.room.visual.line(creep.pos, laber.pos);
+                            }
                             return true;
                         }
+                    } else {
+                        let labs = creep.pos.findInRange(FIND_STRUCTURES, 20, {
+                            filter: object => (object.structureType == STRUCTURE_LAB &&
+                                object.mineralType == creep.memory.boostNeeded[a] &&
+                                object.mineralAmount > 29)
+                        });
+
+                        if (labs.length > 0) {
+                            if (creep.pos.isNearTo(labs[0]) && labs[0].mineralAmount >= neededMin) {
+                                let zz = labs[0].boostCreep(creep);
+                                creep.say('ah!' + zz);
+                                if (zz == OK) {
+                                    creep.memory.boostNeeded.splice(a, 1); // = 'done';
+                                    creep.room.memory.boost.mineralType = 'none';
+                                }
+                            } else {
+                                creep.say('drugs');
+                                creep.moveTo(labs[0]);
+                                creep.room.visual.line(creep.pos, labs[0].pos);
+                            }
+                            return true;
+                        } else {
+                            if (creep.room.memory.boost.mineralType !== 'none') {
+                                return false;
+                            } else {
+                                // waiting for minerals.
+                                return true;
+                            }
+                        }
                     }
+
                 }
             }
         }

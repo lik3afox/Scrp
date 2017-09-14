@@ -283,6 +283,7 @@ function getSpawnCreating(flag) {
 
     switch (flag.name) {
         case 'control':
+        case 'recontrol':
             return 'E14S37';
         case 'engineer2':
             return 'E17S45';
@@ -311,7 +312,6 @@ function getSpawnCreating(flag) {
         case 'thief5':
 
 
-        case 'recontrol':
         case 'test':
 
         case 'engineer3':

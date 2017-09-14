@@ -163,7 +163,7 @@
     function doUpgradeRooms() { //5836b82d8b8b9619519f19be
         if (Memory.war)
             return;
-        let spwns = ['58c074ead62936ed5e2bce0b']; //,''
+        let spwns = ['59b6bbb8fa8a1c0b7da30a88']; //,''
         if (Game.flags.recontrol !== undefined) return;
         var e = spwns.length;
         while (e--) {
@@ -450,11 +450,10 @@
         memoryStatsUpdate();
         link.run();
         Memory.totalPowerProcessed = 0;
-        //            doUpgradeRooms();
+        doUpgradeRooms();
         if (Game.cpu.bucket > 250) {
             //            power.run();
             //            observer.run();
-            //            globalCreep();
 
             if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
             Memory.labsRunCounter--;

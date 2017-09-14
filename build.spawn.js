@@ -266,7 +266,7 @@ var Mod_E25S43 = [
     ['upbuilder', require('role.upbuilder'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 3, 5],
     ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 3]
+    ['homeDefender', require('role.defender2'), 1, 5]
 ];
 var Mod_E28S42 = [
     ['first', require('role.first'), 2, 3],
@@ -636,7 +636,7 @@ function rebuildCreep(creep) {
     let rando = Math.floor(Math.random() * creep.memory.parent.length);
     var needBoost;
     var isModded = false;
-    var doBoost = [];
+    var doBoost = ['E25S37'];
     if (creep.memory.needBoost === undefined || creep.memory.needBoost.length === 0) { // this pretty much says if it's gotten a boost before.
         if (_.contains(doBoost, creep.memory.home) &&
             (creep.memory.role == 'miner') && _body.length > 6) {
@@ -1127,7 +1127,7 @@ class theSpawn {
                 return;
             }
             let xp = spawn.memory.roadsTo[ie].expLevel;
-            if (xp == 11) xp = 12;
+//            xp = 13;
             _module = expansionModule[xp];
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 

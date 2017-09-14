@@ -103,10 +103,10 @@ class upgraderzClass extends roleParent {
             if (creep.room.name == 'E14S38') {
                 let zz;
                 switch (creep.memory.roleID) {
-                    case 1:
+                    case 0:
                         zz = new RoomPosition(32, 9, creep.room.name);
                         break;
-                    case 0:
+                    case 1:
                         zz = new RoomPosition(34, 10, creep.room.name);
                         break;
                     case 2:

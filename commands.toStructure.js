@@ -395,23 +395,19 @@ class StructureInteract {
     }
 
     static doCloseRoadRepair(creep) {
-        if (creep.room.name == 'E27S75'
-            //           || creep.room.name == 'E35S74'|| creep.room.name == 'E35S75'|| creep.room.name =='E36S75'
-            //           || creep.room.name == 'E34S84'|| creep.room.name == 'E34S85'|| creep.room.name == 'E35S85'
-            //          || creep.room.name == 'E25S76'|| creep.room.name == 'E26S76'|| creep.room.name == 'E26S75'
-            //          || creep.room.name == 'E25S74'|| creep.room.name == 'E26S74'|| creep.room.name == 'E25S75'
-        ) return false;
+//        if (creep.room.name == 'E27S75'
+//        ) return false;
 
-        if (creep.room.name == 'E27S74' &&
-            creep.pos.x > 32 && creep.pos.y > 32) return false;
+    //    if (creep.room.name == 'E27S74' &&
+  //          creep.pos.x > 32 && creep.pos.y > 32) return false;
 
         let atFeet = creep.room.lookAt(creep.pos.x, creep.pos.y);
         for (var i in atFeet) {
             if (atFeet[i].type == 'structure' && atFeet[i].structure.structureType == STRUCTURE_ROAD &&
                 (atFeet[i].structure.hits < atFeet[i].structure.hitsMax - 1500)) {
                 //                console.log(atFeet[i],atFeet[i].structure.structureType,i,atFeet[i].structure.hits,              );
-                //let dont = ['58de62291a511b1c34d01176','58de66302c883f369b9d05be','58dc3a0e6ac6a53b41864cfb'];
-                //if(!_.includes(dont, atFeet[i].structure.id))
+                let dont = ['59a49ce114d66f37b6e1955d','59a49f2c9192ec49d5a25b57'];
+                if(!_.includes(dont, atFeet[i].structure.id))
                 if (creep.repair(atFeet[i].structure) == OK) {
                     return true;
                 }

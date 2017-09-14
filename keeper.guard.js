@@ -6,7 +6,7 @@ var classLevels = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, M
     ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL
 ];
 
-var boost = [ 'KO'];
+var boost = [];
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var fox = require('foxGlobals');
@@ -112,7 +112,7 @@ function attackCreep(creep, bads) {
 }
 
 function analyzeSourceKeeper(creep) {
-    var noMineral = ['E14S34','E16S34','E24S34'];
+    var noMineral = ['E14S34', 'E16S34', 'E24S34'];
 
     let keepers = creep.memory.keeperLair;
     let targetID;
@@ -257,6 +257,14 @@ class roleGuard extends roleParent {
         }
         super.rebirth(creep);
         //        if (creep.memory.party == 'Flag13' || creep.memory.party == 'Flag15')
+        if (creep.ticksToLive === 1499) {
+            if (Memory.stats.totalMinerals.KO > 20000) {
+                boost.push('KO');
+            }
+            if (Memory.stats.totalMinerals.LO > 20000) {
+                boost.push('LO');
+            }
+        }
         if (super.boosted(creep, boost)) {
             return;
         }

@@ -15,12 +15,12 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, CARRY], // 550
     //3
     [MOVE, WORK, MOVE, WORK, WORK, WORK, WORK, MOVE, CARRY], // 550
-    //4
+    //4 700
     [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY], // 550
-    //5
+    //5 2550/36
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY],
-    //6
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY]
+    //6 3400/48
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY]
 ];
 
 function memoryCheck(creep) {
@@ -41,9 +41,16 @@ class mineralRole extends roleParent {
             return;
         }
 
+        let carry = _.sum(creep.carry);
+        if (creep.saying == 'zZzZ') {
+            if (carry > 0) {
+                creep.memory.mining = false;
+                creep.memory.goHome = true;
+            }
+        }
+
         memoryCheck(creep);
 
-        let carry = _.sum(creep.carry);
 
         if (super.returnEnergy(creep)) return;
         if (movement.runAway(creep)) return;
@@ -53,6 +60,10 @@ class mineralRole extends roleParent {
             creep.memory.goHome = false;
         }
         if (carry > creep.carryCapacity - creep.stats('mineral')) {
+            creep.memory.mining = false;
+            creep.memory.goHome = true;
+        }
+        if (carry > 0 && creep.ticksToLive < 100) {
             creep.memory.mining = false;
             creep.memory.goHome = true;
         }
@@ -69,7 +80,7 @@ class mineralRole extends roleParent {
             creep.memory.death = true;
         }
 
-        if (super.keeperWatch(creep)) { // two parter - keeperFind happens when
+        if (!creep.memory.goHome &&  super.keeperWatch(creep)) { // two parter - keeperFind happens when
             return;
         }
 
@@ -103,7 +114,7 @@ class mineralRole extends roleParent {
                 creep.say('home');
 
                 if (!super.guardRoom(creep)) {
-                            super._movement.moveHome(creep);
+                    super._movement.moveHome(creep);
                 }
                 return;
             }
@@ -118,7 +129,7 @@ class mineralRole extends roleParent {
                 reusePath: 49,
                 visualizePathStyle: visPath
             });
-            
+
         } else if (!(_goal.roomName == creep.room.name && creep.pos.inRangeTo(_goal.x, _goal.y, 4))) {
 
             if (!super.guardRoom(creep)) {

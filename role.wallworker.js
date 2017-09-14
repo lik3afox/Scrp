@@ -23,7 +23,7 @@ var classLevels = [
     [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
 ];
 
-var boost = ['LH'];
+var boost = [];
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
@@ -39,9 +39,13 @@ class roleWallWorker extends roleParent {
 
     static run(creep) {
         if (super.depositNonEnergy(creep)) return;
-//        if ( creep.room.name != 'E18S36'&& creep.memory.level >=4 && super.boosted(creep, boost)) {
-  //          return;
-    //    }
+        if(Memory.stats.totalMinerals.LH > 20000) {
+            boost.push('LH');
+        }
+
+        if ( creep.room.name != 'E18S36'&& creep.memory.level >=4 && super.boosted(creep, boost)) {
+            return;
+        }
 
 
         if (creep.memory.repair) {

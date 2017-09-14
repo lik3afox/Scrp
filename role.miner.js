@@ -37,6 +37,14 @@ function buildContainer(creep) {
 
 }
 
+function getBads(creep) {
+    var bads = creep.pos.findInRange(creep.room.hostilesHere, 3);
+    bads = _.filter(bads, function(object) {
+        return (object.owner.username != 'zolox' && object.owner.username != 'admon');
+    });
+    return bads;
+}
+
 function doWork(creep) {
     //    if(!super.guardRoom(creep)) false;
     if (creep.memory.keeperLairID !== undefined && creep.memory.keeperLairID != 'none') { // THis is obtained when 
@@ -119,6 +127,11 @@ class settler extends roleParent {
     static run(creep) {
         if (movement.runAway(creep)) return;
         if (super.returnEnergy(creep)) return;
+        if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
+            if (super.boosted(creep, creep.memory.needBoost)) {
+                return;
+            }
+        }
         if (super.doTask(creep)) {
             return;
         }
@@ -129,11 +142,6 @@ class settler extends roleParent {
         if (creep.saying == 'zZz') {
             creep.say('zZ');
             return;
-        }
-        if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
-            if (super.boosted(creep, creep.memory.needBoost)) {
-                return;
-            }
         }
         //        shouldDie(creep);
         movement.checkForBadsPlaceFlag(creep);
@@ -225,43 +233,55 @@ class settler extends roleParent {
         } else {
 
             if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.memory.distance++;
+
             if (_source !== null && creep.room.name == _source.room.name) {
+                let bads = getBads(creep);
                 let contain = Game.getObjectById(creep.memory.workContainer);
-                if (contain !== null) {
-                    if (creep.memory.goal == '5982ff78b097071b4adc2b4f' || creep.memory.goal == '5982ff07b097071b4adc1fa3' ||
-                        creep.memory.goal == '5982ff6bb097071b4adc297d' || creep.memory.goal == '5982ff6bb097071b4adc297a') {
-                        creep.moveMe(_source, { reusePath: 10 });
+                if (bads.length === 0) {
+                    if (contain !== null) {
+                        if (creep.memory.goal == '5982ff78b097071b4adc2b4f' || creep.memory.goal == '5982ff07b097071b4adc1fa3' ||
+                            creep.memory.goal == '5982ff6bb097071b4adc297d' || creep.memory.goal == '5982ff6bb097071b4adc297a') {
+                            creep.moveMe(_source, { reusePath: 10 });
+                        } else {
+                            creep.moveMe(contain, { reusePath: 10 });
+                        }
                     } else {
-                        creep.moveMe(contain, { reusePath: 10 });
+                        creep.moveMe(_source, { reusePath: 10 });
                     }
                 } else {
-                    creep.moveMe(_source, { reusePath: 10 });
+                    creep.runFrom(bads);
                 }
 
             } else {
                 var goingTo = movement.getRoomPos(creep.memory.goal);
-                //                }
-                if (_source !== null) {
-                    let task = {};
-                    task.options = {
-                        reusePath: 10,
-                        ignoreRoads: false,
-                        visualizePathStyle: {
-                            fill: 'transparent',
-                            stroke: '#ff0',
-                            lineStyle: 'dotted',
-                            strokeWidth: 0.15,
-                            opacity: 0.5
-                        }
-                    };
-                    task.pos = _source.pos;
-                    task.count = true;
-                    task.order = "moveTo";
-                    task.enemyWatch = true;
-                    task.rangeHappy = 1;
-                    creep.memory.task.push(task);
+                let bads = getBads(creep);
+                let contain = Game.getObjectById(creep.memory.workContainer);
+                if (bads.length === 0) {
+                    if (_source !== null) {
+                        let task = {};
+                        task.options = {
+                            reusePath: 10,
+                            ignoreRoads: false,
+                            visualizePathStyle: {
+                                fill: 'transparent',
+                                stroke: '#ff0',
+                                lineStyle: 'dotted',
+                                strokeWidth: 0.15,
+                                opacity: 0.5
+                            }
+                        };
+                        task.pos = _source.pos;
+                        task.count = true;
+                        task.order = "moveTo";
+                        task.enemyWatch = true;
+                        task.rangeHappy = 1;
+                        creep.memory.task.push(task);
+                    }
+                    creep.moveMe(goingTo, { reusePath: 49 });
+                } else {
+                    creep.runFrom(bads);
                 }
-                creep.moveMe(goingTo, { reusePath: 49 });
+
 
             }
 
