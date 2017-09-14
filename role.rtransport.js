@@ -139,7 +139,6 @@ class reTransport extends roleParent {
         let _goal = Game.getObjectById(creep.memory.goal);
 
         super.rebirth(creep);
-        super.deathWatch(creep);
 
         if (super._movement.runAway(creep)) {
             return;

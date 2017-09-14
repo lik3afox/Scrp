@@ -89,7 +89,6 @@ class transportz extends roleParent {
         let _goal = Game.getObjectById(creep.memory.goal);
 
         super.rebirth(creep);
-        super.deathWatch(creep);
 
         if (super.returnEnergy(creep)) {
             return;

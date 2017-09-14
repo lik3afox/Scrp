@@ -624,7 +624,7 @@ function findParty(flag) {
                 }
             }
         }
-        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::';
+        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@'+flag.room.name;
 
     }
     console.log(report);

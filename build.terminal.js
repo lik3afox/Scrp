@@ -17,13 +17,13 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var labRooms = ['E28S37','E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37',
+var labRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37',
     'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38'
 ];
 
 // If you need to focus all minerals somewhere change it here.
-var focusID; //= '59ac3667fb91882e9366ace8';
-var focusMin; //= 'GH2O';
+var focusID;
+var focusMin;
 
 // Every terminal needs this amount or else...
 var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amount: 500 }];
@@ -67,9 +67,9 @@ function shareEnergy(terminal) {
             }
         }
     }
-//    console.log(terminal.room.name, 'needs found lowest', lowestStore);
+    //    console.log(terminal.room.name, 'needs found lowest', lowestStore);
     if (lowestStore === undefined) return false;
-//    if (currentLow < 500000) return false;
+    //    if (currentLow < 500000) return false;
 
 
     let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
@@ -118,7 +118,7 @@ function needEnergy(terminal) {
             for (e in labRooms) {
                 let storage = Game.rooms[labRooms[e]].terminal;
                 if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh &&
-                    terminal.room.name != storage.room.name ) {
+                    terminal.room.name != storage.room.name) {
                     highestEnergy = Game.rooms[labRooms[e]].terminal;
                     currentHigh = storage.store[RESOURCE_ENERGY];
                 }
@@ -1017,15 +1017,11 @@ class roleTerminal {
 
     /** @param {Creep} creep **/
     static run() {
-
-        //console.log( checkEnergyProfit(10,.02,1000) );
-
         focusMinerals(focusID, focusMin);
         cleanUpOrders();
-        //        adjustOldPrices();
+        adjustOldPrices();
         Memory.stats.totalMinerals = countTerminals();
 
-        //            Memory.termRun = 10;
         var focus = false;
 
         for (var e in labRooms) {
@@ -1056,9 +1052,6 @@ class roleTerminal {
                         giveMinerals(terminal, terminal.room.memory.boost.mineralType);
                     }
                 }
-                //                if (!Memory.war || terminal.store[RESOURCE_ENERGY] > 100000)
-                //                    newTradeEnergy(terminal);
-
                 //                forEveryTerminal(terminal);
 
 
@@ -1075,19 +1068,9 @@ class roleTerminal {
                             }*/
 
 
-                //                          let zz = terminal.total;
-
                 //    if (!newTradeEnergy(terminal)) {
-
-                //              if (zz > 299000) {
                 //                if (!sellMineral(terminal)) {
                 //                   tradeEnergy(terminal);
-
-                //           } else {
-                //     tradeEnergy(terminal);
-                //                }
-                //       }
-                //    }
             }
             //          energyCheck(terminal);
         }

@@ -1,5 +1,4 @@
-var labRooms = ['E18S36', 'E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32','E14S37','E17S45','E28S37','E27S34','E24S33'
-,'E14S43','E28S42','E23S42','E25S43','E25S47','E14S47'];
+var labRooms = ['E23S38', 'E25S37', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17S45', 'E28S37', 'E27S34', 'E24S33', 'E14S43', 'E28S42', 'E23S42', 'E25S43', 'E25S47', 'E14S47', 'E18S36', 'E14S38'];
 
 /*
 RESOURCE_ENERGY: "energy",
@@ -25,8 +24,7 @@ RESOURCE_ENERGY: "energy",
     RESOURCE_LEMERGIUM_HYDRIDE: "LH",
     RESOURCE_LEMERGIUM_OXIDE: "LO",
     RESOURCE_ZYNTHIUM_HYDRIDE: "ZH",
-    RESOURCE_ZYNTHIUM_OXIDE: "ZO",
-    RESOURCE_GHODIUM_HYDRIDE: "GH",
+    RESOURCE_ZYNTHIUM_OXIDE: "ZO",;sn
     RESOURCE_GHODIUM_OXIDE: "GO",
 
     RESOURCE_UTRIUM_ACID: "UH2O",
@@ -46,8 +44,8 @@ RESOURCE_ENERGY: "energy",
     RESOURCE_CATALYZED_KEANIUM_ALKALIDE: "XKHO2",
     RESOURCE_CATALYZED_LEMERGIUM_ACID: "XLH2O",
     RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE: "XLHO2",
-    RESOURCE_CATALYZED_ZYNTHIUM_ACID: "XZH2O",
-    RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE: "XZHO2",
+    RESOURCE_CATALYZED_ZYNTHIUM_ACID: "XZH2O"
+ ,   RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE: "XZHO2",
     RESOURCE_CATALYZED_GHODIUM_ACID: "XGH2O",
     RESOURCE_CATALYZED_GHODIUM_ALKALIDE: "XGHO2",
 5836b8118b8b9619519f1663
@@ -90,7 +88,7 @@ var maxMinerals = {
     'UL': 30000,
     'ZK': 30000,
     'G': 30000,
-    'GG' : 30000,
+    'GG': 30000,
     'LH': 30000,
     'KO': 30000,
     'LO': 30000,
@@ -104,24 +102,24 @@ var maxMinerals = {
         'ZH': 10000,
         'KH': 10000, */
 
-/*
-        //    'UHO2': 5000,
-        //   'UH2O': 5000,
-        //    'ZHO2': 5000,
-        //    'ZH2O': 5000,
-        //    'LHO2': 5000,
-        //    'LH2O': 5000,
-        //    'KHO2': 5000,
-        //    'KH2O': 5000,
+    /*
+            //    'UHO2': 5000,
+            //   'UH2O': 5000,
+            //    'ZHO2': 5000,
+            //    'ZH2O': 5000,
+            //    'LHO2': 5000,
+            //    'LH2O': 5000,
+            //    'KHO2': 5000,
+            //    'KH2O': 5000,
 
-        'XUHO2': 0, //  Mining
-        'XLH2O': 0, // Repair
-        'XKH2O': 0, // Carry */
-        'XZH2O': 20000, // Dismantle
-        'XKHO2': 20000, // Ranged
-        'XZHO2': 20000, //  Move
-        'XUH2O': 20000, // Attack
-        'XLHO2': 20000, // Heal
+            'XUHO2': 0, //  Mining
+            'XLH2O': 0, // Repair
+            'XKH2O': 0, // Carry */
+    'XZH2O': 20000, // Dismantle
+    'XKHO2': 20000, // Ranged
+    'XZHO2': 20000, //  Move
+    'XUH2O': 20000, // Attack
+    'XLHO2': 20000, // Heal
 
 };
 
@@ -370,13 +368,13 @@ var UO = [{
 }, {
     id: 'getReplaced',
     resource: 'UO',
-    amount: 2700,
-    emptied: false
+    amount: 1,
+    emptied: true
 }, {
     id: 'getReplaced',
     resource: 'UO',
-    amount: 2500,
-    emptied: false
+    amount: 1,
+    emptied: true
 }];
 
 var OH = [{
@@ -1293,12 +1291,14 @@ var gMix = [
     [1, 3, 10],
     [2, 5, 8]
 ];
+
 var level8Mix = [
-[3,1,2],
-[4,2,5],
-[10,3,4],
-[9,10,7],
+    [3, 1, 2],
+    [4, 2, 5],
+    [10, 3, 4],
+    [9, 10, 7],
 ];
+
 var oneWarMix = [
     [3, 1, 2],
     [4, 1, 2],
@@ -1307,6 +1307,7 @@ var oneWarMix = [
     [7, 1, 2],
     [8, 1, 2],
     [9, 1, 2],
+    [10, 1, 2],
 ];
 
 function getCached(id) {
@@ -1385,15 +1386,15 @@ function labDo(roomName, created, labz, laby) {
         return false;
     }
     if (labs[created - 1] === undefined || labs[labz - 1] === undefined || labs[laby - 1] === undefined) {
-//        console.log('undefined Lab', roomName);
+        //        console.log('undefined Lab', roomName);
         return false;
     }
     //    if (Memory.stats.totalMinerals[labs[created - 1]] === undefined) return false;
     //    console.log(( Memory.stats.totalMinerals[labs[created-1].resource]>maxMinerals[labs[created-1].resource] ));
     if (REACTIONS[labs[labz - 1].resource] === undefined) {
-//        console.log('ERROR', roomName);
+        //        console.log('ERROR', roomName);
     } else if (REACTIONS[labs[labz - 1].resource][labs[laby - 1].resource] !== labs[created - 1].resource) {
-  //      console.log(REACTIONS[labs[labz - 1].resource][labs[laby - 1].resource], labs[created - 1].resource, roomName);
+        //      console.log(REACTIONS[labs[labz - 1].resource][labs[laby - 1].resource], labs[created - 1].resource, roomName);
         return;
     }
     //  if (Memory.stats.totalMinerals !== undefined)
@@ -1417,23 +1418,39 @@ function labDo(roomName, created, labz, laby) {
     if (lab1.cooldown !== 0) return false;
     ///       if(lab1.room.name == 'E13S34')
     //   console.log('gets here?');
-//    if(labs[created - 1].resource == 'g')
-//    console.log('bizz',lab2.room.terminal.store[labs[created - 1].resource],labs[created - 1].resource,roomName);
-        if  (lab1.mineralAmount >= 2950 || 
-            (lab2.mineralAmount < 150 && lab2.room.terminal.store[labs[labz - 1].resource] > 150 ) || 
-            (lab3.mineralAmount < 150 && lab3.room.terminal.store[labs[laby - 1].resource] > 150 ) ||
-            (lab2.mineralType !== undefined && labs[labz - 1].resource !== lab2.mineralType) ||
-            (lab3.mineralType !== undefined && labs[laby - 1].resource !== lab3.mineralType) ) {
+    //    if(labs[created - 1].resource == 'g')
+    //    console.log('bizz',lab2.room.terminal.store[labs[created - 1].resource],labs[created - 1].resource,roomName);
+    if (lab1.mineralAmount >= 2950) {
+        if (lab1.room.name == 'E17S34')
+            console.log('Lab needs work too much');
+        lab3.room.memory.labsNeedWork = true;
+    }
 
-            lab3.room.memory.labsNeedWork = true;
-//            return false;
-        }
+
+    if ((lab2.mineralAmount < 150 && lab2.room.terminal.store[labs[labz - 1].resource] > 1500) ||
+        (lab3.mineralAmount < 150 && lab3.room.terminal.store[labs[laby - 1].resource] > 1500)) {
+        if (lab1.room.name == 'E17S34')
+            console.log('Lab needs work too little');
+        lab3.room.memory.labsNeedWork = true;
+    }
+/*
+    if ((lab2.mineralType !== undefined && labs[labz - 1].resource !== lab2.mineralType)  ) {
+        if (lab1.room.name == 'E17S34')
+            console.log('Lab needs work not the same2');
+        lab3.room.memory.labsNeedWork = true;
+    } 
+    if (
+        (lab3.mineralType !== undefined && labs[laby - 1].resource !== lab3.mineralType)  ) {
+        if (lab1.room.name == 'E17S34')
+            console.log('Lab needs work not the same3');
+        lab3.room.memory.labsNeedWork = true;
+    }  */
     if (lab2.mineralType != labs[labz - 1].resource) return false;
     if (lab3.mineralType != labs[laby - 1].resource) return false;
 
     let zz = lab1.runReaction(lab2, lab3);
 
-//    if (zz !== 0) console.log(created, labz, laby, lab1.mineralAmount, 'lab Reaction', zz, lab1.mineralType, lab2.mineralType, lab3.mineralType, roomName);
+    //    if (zz !== 0) console.log(created, labz, laby, lab1.mineralAmount, 'lab Reaction', zz, lab1.mineralType, lab2.mineralType, lab3.mineralType, roomName);
     return true;
 }
 
@@ -1583,7 +1600,7 @@ function getLabMixes(roomName) {
 //labRooms
 function anyroomMakingMineral(type) {
     for (var e in labRooms) {
-//        console.log(Game.rooms[labRooms[e]].memory.labMode, labRooms[e], type);
+        //        console.log(Game.rooms[labRooms[e]].memory.labMode, labRooms[e], type);
         if (Game.rooms[labRooms[e]].memory.labMode !== undefined && Game.rooms[labRooms[e]].memory.labMode == type) {
             return true;
         }
@@ -1617,10 +1634,10 @@ function analyzeRoomLabs(roomName, labs) {
                     if (_.contains(lv8, RS) && Game.rooms[roomName].controller.level == 8) {
                         Game.rooms[roomName].memory.labMode = RS;
                     } else {
-  //                      Game.rooms[roomName].memory.labMode = RS;
+                        //                      Game.rooms[roomName].memory.labMode = RS;
                     }
-                    if (!_.contains(lv8,RS)) {
-                        Game.rooms[roomName].memory.labMode = RS;   
+                    if (!_.contains(lv8, RS)) {
+                        Game.rooms[roomName].memory.labMode = RS;
                     }
                     //                  console.log('Then we change it into it.', Game.rooms[roomName].memory.labMode);
                     return Game.rooms[roomName].memory.labMode;
@@ -1631,14 +1648,14 @@ function analyzeRoomLabs(roomName, labs) {
         //        console.log('for that one we also check to see if any room is currently doing it, and if it"s reaching it max');
         var mineral = Game.rooms[roomName].memory.labMode;
         if (maxMinerals[mineral] === undefined) {
-//            Game.rooms[roomName].memory.labMode = undefined;
-//                console.log('SET MAX FOR',mineral);
+            //            Game.rooms[roomName].memory.labMode = undefined;
+            //                console.log('SET MAX FOR',mineral);
         } else if (Memory.stats.totalMinerals[mineral] >= maxMinerals[mineral]) {
-//            Game.rooms[roomName].memory.labMode = undefined;// This is set so it changes. 
+            //            Game.rooms[roomName].memory.labMode = undefined;// This is set so it changes. 
         } else {
             //            console.log('and it"s not ready',Memory.stats.totalMinerals[mineral], maxMinerals[mineral],mineral);
         }
-            return Game.rooms[roomName].memory.labMode;
+        return Game.rooms[roomName].memory.labMode;
     }
 }
 
@@ -1674,7 +1691,7 @@ function returnLabs(roomName) {
 }
 
 function updateRoomMember(roomName) {
-//    if (Game.rooms[roomName].memory.boostRequest !== undefined) Game.rooms[roomName].memory.boostRequest = undefined;
+    //    if (Game.rooms[roomName].memory.boostRequest !== undefined) Game.rooms[roomName].memory.boostRequest = undefined;
 
     let roomLabs = returnLabs(roomName); //Game.rooms[roomName].memory.labs;
     let minerals = {};
@@ -1765,16 +1782,16 @@ class buildLab {
             if (Game.rooms[roomName].memory.labsNeedWork) {
                 // here we see if the flag to create scientist is there
                 if (Game.flags.SCI === undefined) {
-                    console.log("ADDING FLAG",roomName);
+                    console.log("ADDING FLAG", roomName);
                     Game.rooms[roomName].createFlag(25, 25, 'SCI', COLOR_YELLOW, COLOR_YELLOW);
-                } else if(Game.flags.SCI2 === undefined){
-                        if(Game.flags.SCI.pos.roomName != roomName) {
-                            console.log("Adding Flag",roomName);
-                            Game.rooms[roomName].createFlag(25, 25, 'SCI2', COLOR_YELLOW, COLOR_YELLOW);
-                        }
+                } else if (Game.flags.SCI2 === undefined) {
+                    if (Game.flags.SCI.pos.roomName != roomName) {
+                        console.log("Adding Flag", roomName);
+                        Game.rooms[roomName].createFlag(25, 25, 'SCI2', COLOR_YELLOW, COLOR_YELLOW);
+                    }
                 }
             }
-//            console.log(Game.flags.SCI.pos.roomName,roomName);
+            //            console.log(Game.flags.SCI.pos.roomName,roomName);
         }
 
         linksCache = [];

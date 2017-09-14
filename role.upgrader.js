@@ -29,7 +29,7 @@ var classLevels = [
     [MOVE, WORK, MOVE, WORK, WORK, CARRY, CARRY, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, WORK, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
     //5
 
-    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY,  WORK, WORK, WORK, WORK, WORK, MOVE,MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY,MOVE, MOVE],
+    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE],
     // 6
     // Final evel
     [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], // 800    
@@ -58,43 +58,39 @@ class roleUpgrader extends roleParent {
             return;
         }
 
-        if (creep.room.controller.level != 8 && creep.room.name !== 'E17S34' )
+        if (creep.room.controller.level != 8 && creep.room.name !== 'E17S34')
             if (super.boosted(creep, ['XGH2O'])) {
                 return;
-            } 
+            }
 
-if(creep.room.controller.level == 8) {
-    creep.memory.death = true;
-}
+        if (creep.room.controller.level == 8) {
+            creep.memory.death = true;
+        }
         if (super.returnEnergy(creep)) {
             return;
         }
         if (super.depositNonEnergy(creep)) return;
         if (creep.memory.level > 5) super.renew(creep);
 
-
-        if(creep.ticksToLive == 1000) {
-            creep.moveTo(creep.room.controller);
-        }
-    //    if(creep.ticksToLive == 750 && creep.pos.y == 25) {
-  //          creep.moveTo(creep.room.controller);
-//        }
-     //   if(creep.ticksToLive == 250) {
-   //         creep.moveTo(creep.room.controller);
- //       }
-     //   if(creep.ticksToLive == 500) {
-    //        creep.moveTo(creep.room.controller);
-  //      }
-        if (creep.carry.energy < creep.stats('upgrading')+1) {
-            if (creep.room.name == 'xxx') {
-                if (creep.memory.roleID == '1') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(40, 39, 'E35S73'))) {
-                        creep.moveTo(40, 39);
+        if (creep.carry.energy < creep.stats('upgrading') + 1) {
+            if (creep.room.name == 'E14S43') {
+                if (creep.memory.roleID == '0') {
+                    if (!creep.pos.isEqualTo(new RoomPosition(18, 21, creep.room.name))) {
+                        creep.moveTo(18, 21);
                     }
-                    if (!containers.withdrawFromTerminal(creep)) {}
-                } else {
-                    if (!containers.withdrawFromStorage(creep)) {}
                 }
+                if (creep.memory.roleID == '1') {
+                    if (!creep.pos.isEqualTo(new RoomPosition(18, 22, creep.room.name))) {
+                        creep.moveTo(18, 22);
+                    }
+                }
+                if (creep.memory.roleID == '2') {
+                    if (!creep.pos.isEqualTo(new RoomPosition(18, 23, creep.room.name))) {
+                        creep.moveTo(18, 23);
+                    }
+                }
+                if (!containers.withdrawFromStorage(creep)) {}
+
             } else {
                 if (!structures.pickUpEnergy(creep)) {
                     if (!containers.fromStorage(creep)) {
@@ -112,7 +108,7 @@ if(creep.room.controller.level == 8) {
         }
 
         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+            creep.moveTo(creep.room.controller);
         }
     }
 }

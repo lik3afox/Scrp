@@ -120,11 +120,11 @@ class transport extends roleParent {
         }
 
         super.rebirth(creep);
+
         if (movement.runAway(creep)) {
             return;
         }
 
-        //        let total = _.sum(creep.carry);
         if (super.doTask(creep)) {
             return;
         }
@@ -132,8 +132,6 @@ class transport extends roleParent {
 
         if (link.stayDeposit(creep)) {
             constr.pickUpEnergy(creep);
-            //            let zparent = require('build.spawn');
-            //            zparent.reportFrom(creep);
             creep.countReset();
             return;
         }
@@ -146,8 +144,7 @@ class transport extends roleParent {
         }
 
         shouldDie(creep);
-        //        creep.memory.reportDeath = true;
-        super.deathWatch(creep);
+
         if (creep.memory.gohome === undefined) { creep.memory.gohome = false; }
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }
 
@@ -159,21 +156,7 @@ class transport extends roleParent {
             creep.memory.empty = true;
         }
 
-
-        if (creep.room.name != 'E28S77' && creep.room.name != 'E27S74' && creep.room.storage === null)
-            constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
-
         if (creep.memory.gohome) {
-
-            if (creep.room.controller !== undefined && creep.room.controller.level === 1) {
-
-                if (creep.room.controller.ticksToDowngrade < 3000) {
-                    if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(creep.room.controller);
-                    }
-                    return;
-                }
-            }
 
             creep.countDistance();
             if (creep.memory.linkID !== undefined && creep.carry[RESOURCE_ENERGY] > 0) {
@@ -254,7 +237,6 @@ class transport extends roleParent {
 
             let rng = 4;
             let _goal = Game.getObjectById(creep.memory.goal);
-            if (creep.room.name == 'E27S74') rng = 3;
 
             if (!super._constr.moveToPickUpEnergyIn(creep, 7))
                 if (creep.memory.workContain !== undefined) {
@@ -276,7 +258,6 @@ class transport extends roleParent {
                             task.pos = new RoomPosition(zzz.pos.x, zzz.pos.y, zzz.pos.roomName);
                             task.order = "moveTo";
                             task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
-                            if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
                             task.energyPickup = true;
                             task.rangeHappy = 1;
                             creep.memory.task.push(task);
@@ -287,7 +268,6 @@ class transport extends roleParent {
                         while (z--) {
                             var o = keys[z];
                             if (creep.withdraw(zzz, o) == OK) {
-                                //                                super.keeperFind(creep);
                             }
                         }
                     } else if (creep.pos.isNearTo(_goal)) {
@@ -366,20 +346,11 @@ class transport extends roleParent {
                 };
                 task.pos = _goal.pos;
                 task.order = "moveTo";
-
-
                 task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
-                if (creep.memory.goal == '5873bd6f11e3e4361b4d9356') task.enemyWatch = false;
                 task.energyPickup = true;
                 task.rangeHappy = 2;
                 creep.memory.task.push(task);
 
-
-                /*creep.moveMe(_goal, {
-                                    ignoreRoads: _ignoreRoad,
-                                    reusePath: 49,
-                                    visualizePathStyle: visPath
-                                }); */
             } else if (_goal === null) {
                 var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveMe(goingTo, {

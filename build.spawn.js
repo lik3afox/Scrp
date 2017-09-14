@@ -170,7 +170,7 @@ var Mod_E27S34 = [
 
     ['wallwork', require('role.wallworker'), 1, 6],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['upgrader', require('role.upgrader'), 2, 5],
+    //    ['upgrader', require('role.upgrader'), 2, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 4],
@@ -205,10 +205,10 @@ var Mod_E14S37 = [
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
-//    ['upgrader', require('role.upgrader'), 4, 5],
+    //    ['upgrader', require('role.upgrader'), 4, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
-    
+
     //        ['homeDefender', require('role.defender2'), 1, 3]
 ];
 
@@ -216,11 +216,11 @@ var Mod_E24S33 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 5],
-    
+
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['upgrader', require('role.upgrader'), 4, 5],
+    //    ['upgrader', require('role.upgrader'), 4, 5],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
@@ -230,10 +230,10 @@ var Mod_E14S43 = [
     ['first', require('role.first'), 2, 3],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 1, 7],
+//    ['upbuilder', require('role.upbuilder'), 1, 7],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
-    //    ['upgrader', require('role.upgrader'), 2, 4],
+    ['upgrader', require('role.upgrader'), 3, 5],
     ['linker', require('role.linker'), 2, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
@@ -244,22 +244,16 @@ var Mod_E25S47 = [
     ['assistant', require('role.assistant'), 1, 0],
     ['harvester', require('role.harvester'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
-//    ['upgrader', require('role.upgrader'), 2, 4],
-
-    //    ['upgrader', require('role.upgrader'), 1, 3],
     ['linker', require('role.linker'), 1, 4],
-    //    ['homeDefender', require('role.defender2'), 1, 3]
 ];
 
 var Mod_E14S47 = [
-    ['first', require('role.first'), 1, 3],
+    ['first', require('role.first'), 2, 4],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
-//    ['upgrader', require('role.upgrader'), 4, 4],
-
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
@@ -270,7 +264,7 @@ var Mod_E25S43 = [
     ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
-//    ['upgrader', require('role.upgrader'), 3, 5],
+    //    ['upgrader', require('role.upgrader'), 3, 5],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
@@ -294,11 +288,10 @@ var Mod_E23S42 = [
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 4],
     //['upgrader', require('role.upgrader'), 3, 4],
-    ['linker', require('role.linker'), 1 , 4],
-    ['homeDefender', require('role.defender2'), 1, 3]
+    ['linker', require('role.linker'), 1, 4],
+    ['homeDefender', require('role.defender2'), 1, 5]
 ];
-var Mod_E14S38 = [
-];
+var Mod_E14S38 = [];
 
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
@@ -586,11 +579,12 @@ function rebuildCreep(creep) {
     // expansion creep.
     let _body = [];
 
-    if (creep.memory.role == 'miner' || creep.memory.role == 'transport' || creep.memory.role == 'ztransport' || creep.memory.role == 'rtransport' ) {
+    if (creep.memory.role == 'miner' || creep.memory.role == 'transport' || creep.memory.role == 'ztransport' || creep.memory.role == 'rtransport') {
         let spawn = Game.getObjectById(creep.memory.parent);
         let _module;
         let goalInfo;
         if (spawn !== null) {
+/*
             for (var e in spawn.memory.roadsTo) {
                 if (spawn.memory.roadsTo[e].source == creep.memory.goal) {
                     _module = expansionModule[spawn.memory.roadsTo[e].expLevel];
@@ -600,16 +594,16 @@ function rebuildCreep(creep) {
                     }
                 }
                 break;
-            }
-            if (_body === undefined || _body === null) {
+            } */
+
+//            if (_body === undefined || _body === null) {
                 for (var o in _module) {
                     if (_module[o][_name] == creep.memory.role) {
-                        //       _body = _module[e][_require].levels(_module[e][_level],spawn.room);
                         _body = getModuleRole(_module[o][_name]).levels(_module[o][_level], spawn.room);
                         break;
                     }
                 }
-            }
+  //          }
 
         }
 
@@ -642,9 +636,9 @@ function rebuildCreep(creep) {
     let rando = Math.floor(Math.random() * creep.memory.parent.length);
     var needBoost;
     var isModded = false;
-    var doBoost = ['E25S37'];
+    var doBoost = [];
     if (creep.memory.needBoost === undefined || creep.memory.needBoost.length === 0) { // this pretty much says if it's gotten a boost before.
-        if (_.contains(doBoost,creep.memory.home) &&
+        if (_.contains(doBoost, creep.memory.home) &&
             (creep.memory.role == 'miner') && _body.length > 6) {
             var cBuild = [];
             //                console.log(_body,'ray');
@@ -730,7 +724,7 @@ function getNuke(spawn) {
 }
 
 function getCurrentModule(spawn) {
-    if(spawn.room.name == 'E14S38'){
+    if (spawn.room.name == 'E14S38') {
         return Mod_E14S38;
     }
 
@@ -797,12 +791,10 @@ function changeBuild(build, room) { // Input [body,body,carry],room
 
     let nWorkPart = Math.ceil(workCount / BOOSTS.work.UO.harvest);
     let harvestEffect = nWorkPart * HARVEST_POWER; // 11 = 22
-    // take 22 divide it by 400% increase -
-    room.memory.tempBoost = []; //+200% harvest effectiveness
+    room.memory.tempBoost = [];
 
 
-    //    console.log(workCount, room.memory.labMinerals.UO - room.memory.calledMinerals.UO, nWorkPart * 30);
-    if (workCount >= 3 && room.terminal.UO >= nWorkPart * 30) {
+    if (workCount >= 3 && Memory.stats.totalMinerals.UO >= nWorkPart * 30) {
         // so "UO" will make it 3 instead of 1 work, 
         let workparts = [];
         do {
@@ -812,7 +804,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
 
         build = otherParts.concat(workparts); // Changes build with otherparts+work
         room.memory.tempBoost.push('UO'); // Adds it to memory so it can be added to it's self memory in build.
-//        room.memory.calledMinerals.UO += nWorkPart * 30;
+        //        room.memory.calledMinerals.UO += nWorkPart * 30;
 
     }
 
@@ -827,7 +819,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
     let bneeded = Math.ceil((otherParts.length * 2) / 4); // This is for ZO 
     needed = Math.ceil(bneeded * 0.50); // We'll start everything using roads. 
     //    console.log(bneeded,otherParts,needed,room.memory.labMinerals['ZO'],room.memory.calledMinerals['ZO'] ,needed*30 )
-    if (bneeded > 1 && room.terminal.ZO  >= needed * 30) {
+    if (bneeded > 1 && room.terminal.ZO >= needed * 30) {
         // so "UO" will make it 3 instead of 1 work, 
         let moveParts = [];
         do {
@@ -837,7 +829,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
 
         build = otherParts.concat(carryParts).concat(moveParts); // Changes build with otherparts+work
         room.memory.tempBoost.unshift('ZO'); // Adds it to memory so it can be added to it's self memory in build.
-//        room.memory.calledMinerals.ZO += needed * 30;
+        //        room.memory.calledMinerals.ZO += needed * 30;
     } else {
         needed = Math.ceil(otherParts.length * 0.5); // This is to still fix the move parts to be lower incase other changes have occured.
         console.log(needed, 'no boost change into');
@@ -850,6 +842,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
         build = carryParts.concat(moveParts).concat(otherParts); // Changes build with otherparts+work
         //        build = build.concat(carryParts);
     }
+
     console.log('in the end', room.memory.tempBoost);
 
     // Uses this memory point in order to pass more than 1 variable.

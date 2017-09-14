@@ -192,6 +192,8 @@ function getDeathSpot(roomName) {
             return new RoomPosition(38, 24, roomName);
             case "E14S37":
             return new RoomPosition(36, 30, roomName);
+            case "E24S33":
+            return new RoomPosition(9, 15, roomName);
         default:
             return;
     }
@@ -751,6 +753,7 @@ class baseParent {
                             object.mineralType == creep.memory.boostNeeded[a] &&
                             object.mineralAmount > 29)
                     });
+                    
                     if (labs.length > 0) {
                         if (creep.pos.isNearTo(labs[0]) && labs[0].mineralAmount >= neededMin ) {
                             let zz = labs[0].boostCreep(creep);
@@ -885,36 +888,6 @@ class baseParent {
         }
     }
 
-    static deathWatch(creep) {
-        if (creep.memory.deathDistance === undefined) {
-            //            let vv = Game.getObjectById(creep.memory.parent);
-
-            /*            for (var a in vv.memory.roadsTo) {
-                            if ( creep.memory.goal == vv.memory.roadsTo[a].source) {
-                                if (vv.memory.roadsTo[a].aveDistance !== undefined) {
-                                    creep.memory.deathDistance = vv.memory.roadsTo[a].aveDistance * 2;
-                                }
-                            }
-                        } */
-            if (creep.memory.deathDistance === undefined) {
-                creep.memory.deathDistance = 'none';
-            }
-        }
-        if (creep.memory.deathDistance != 'none') {
-            if (creep.ticksToLive < creep.memory.deathDistance) {
-                if (_.sum(creep.carry) === 0) {
-                    if (!creep.memory.reportDeath) {
-                        let spawnsDo = require('build.spawn');
-                        spawnsDo.reportDeath(creep);
-                        creep.memory.reportDeath = true;
-                    }
-                    creep.suicide();
-                } else {
-                    creep.memory.gohome = true;
-                }
-            }
-        }
-    }
 
     static keeperFind(creep) {
         if (creep.memory.keeperLairID !== undefined) return;
@@ -922,25 +895,7 @@ class baseParent {
         if (target !== null) {
             keeperFindAt(target.pos.x, target.pos.y, creep);
         }
-        //            keeperFindAt(creep.pos.x, creep.pos.y, creep);
     }
-    /*
-        static rebuildMe(creep) {
-                let temp = {
-                                build:creep.levels(creep.memory.level),
-                                name: undefined,
-                                memory:{
-                                    role: creep.memory.role,
-                                    home: creep.memory.home,
-                                    parent: creep.memory.parent,
-                                    goal: creep.memory.goal,
-                                    level: creep.memory.level,
-                                    party: creep.memory.party
-                                }
-                            }
-
-            return temp;
-        } */
 
     static returnEnergy(creep) {
         if (creep.memory.death === undefined) {

@@ -71,81 +71,7 @@ function getHostiles(creep) {
     }
     return [];
 }
-/*
-function attackCreep(creep, bads) {
-    if (bads.length === 0) {
-        creep.memory.needed = undefined;
-        return true;
-    }
-    if (creep.memory.badTargetID === undefined) {
-        for (var e in bads) {
-            if (bads[e].owner.username == 'Invader') {
-                for (var a in bads[e].body) {
-                    if (bads[e].body[a].type == RANGED_ATTACK) {
-                        creep.memory.badTargetID = bads[e];
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
-    if (creep.memory.badTargetID === undefined) {
-
-        let enemy = creep.pos.findClosestByRange(bads);
-        let distance = creep.pos.getRangeTo(enemy);
-        creep.say('attk' + distance);
-
-        if (creep.pos.isNearTo(enemy)) {
-            creep.memory.walkingTo = undefined;
-            if (enemy.owner.username != 'Source Keeper' || enemy.hits <= 100) {
-                creep.attack(enemy);
-                creep.rangedMassAttack();
-            } else {
-                creep.attack(enemy);
-                //            creep.selfHeal();
-            }
-        } else if (distance < 4) {
-
-            var targets = creep.pos.findInRange(bads, 3);
-
-            // Ranged attack.
-            if (targets.length > 2) {
-                if (enemy.owner.username != 'Source Keeper') {
-                    creep.rangedMassAttack();
-                } else {
-                    creep.selfHeal();
-                }
-
-            } else {
-                if (enemy.owner.username != 'Source Keeper') {
-                    creep.rangedAttack(enemy);
-                } else {
-                    creep.selfHeal();
-                }
-
-            }
-            // Heal
-            creep.selfHeal();
-            // Move
-            creep.moveTo(enemy, { ignoreRoads: true });
-        } else if (distance >= 4) {
-            creep.selfHeal();
-            creep.moveTo(enemy, { ignoreRoads: true });
-        }
-    } else {
-        let target = Game.getObjectById(creep.memory.badTargetID);
-        if (creep.pos.isNearTo(target)) {
-            creep.attack(target);
-            creep.rangedMassAttack();
-        } else {
-            creep.moveTo(target);
-            creep.rangedAttack(target);
-            creep.selfHeal();
-        }
-    }
-
-}*/
 
 function getRangeAttacker(bads) {
     for (var e in bads) {
@@ -267,9 +193,6 @@ function attackCreep(creep, bads) {
     if (enemy !== null && enemy.owner !== null && enemy.owner.username == 'Source Keeper') {
         SKAttack(creep, bads);
     }
-    /*else if (enemy.owner.username != 'Invader' && enemy.owner.username != "Source Keeper" && !_.contains(FLAG.friends, enemy.owner.username)) {
-           //        playerAttack(creep, bads);
-       }*/
     else {
         invasionAttack(creep, bads);
     }
@@ -288,26 +211,6 @@ function moveCreep(creep) {
     }
 }
 
-var E25S75 = ['E24S74', 'E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E24S76', 'E25S76', 'E26S76'];
-var E35S75 = ['E34S74', 'E35S74', 'E36S74', 'E34S75', 'E35S75', 'E36S75', 'E34S76', 'E35S76', 'E36S76'];
-
-function analyzeMining(creep) {
-    if (_.contains(E25S75, creep.room.name)) {
-        let flag = Game.flags[creep.memory.party];
-        let mostMinedRoom;
-        let mostMined = 0;
-        for (var e in E25S75) {
-            if (Game.rooms[E25S75[e]] !== undefined && Game.rooms[E25S75[e]].memory.mining > mostMined) {
-                mostMinedRoom = E25S75[e];
-                mostMined = Game.rooms[E25S75[e]].memory.mining;
-            }
-        }
-        //        console.log(flag, flag.room.name, mostMinedRoom, mostMined, "Most mined room info");
-        if (flag.room.name !== mostMinedRoom) {
-            flag.setPosition(new RoomPosition(flag.pos.x, flag.pos.y, mostMinedRoom));
-        }
-    }
-}
 
 class roleGuard extends roleParent {
 
@@ -332,7 +235,6 @@ class roleGuard extends roleParent {
             return;
         }
         if (creep.saying == 'ZzZz') {
-            analyzeMining(creep);
             creep.say('ZzZ');
             return;
         }
@@ -350,13 +252,10 @@ class roleGuard extends roleParent {
             attackCreep(creep, bads);
         } else {
             if (!movement.moveToDefendFlag(creep)) {
-                //     creep.selfHeal();
                 moveCreep(creep);
             }
         }
 
-
-        //            if()
     }
 
 

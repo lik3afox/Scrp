@@ -6,7 +6,7 @@ var classLevels = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, M
     ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL
 ];
 
-var boost = [RESOURCE_LEMERGIUM_OXIDE, 'KO'];
+var boost = [ 'KO'];
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var fox = require('foxGlobals');
@@ -112,7 +112,7 @@ function attackCreep(creep, bads) {
 }
 
 function analyzeSourceKeeper(creep) {
-    var noMineral = ['E14S34','E16S34'];
+    var noMineral = ['E14S34','E16S34','E24S34'];
 
     let keepers = creep.memory.keeperLair;
     let targetID;

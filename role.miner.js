@@ -49,19 +49,12 @@ function doWork(creep) {
 
     let contain = Game.getObjectById(creep.memory.workContainer);
     if (contain === null) return;
-    if ((
-            //(      creep.room.name != 'E35S74'&& creep.room.name !='E35S75'&& creep.room.name !='E36S75'
-            //&&        creep.room.name != 'E35S84'&& creep.room.name !='E35S85'&& creep.room.name !='E34S84'
-            //    && creep.room.name != 'E25S76'&& creep.room.name != 'E26S76'&& creep.room.name != 'E26S75'
-            //    && creep.room.name != 'E25S74'&& creep.room.name != 'E26S74'&& creep.room.name != 'E25S75'
-            //)&& 
-            contain.hits < contain.hitsMax - 25000) || (contain.hits < 50000)) {
+    if ((contain.hits < contain.hitsMax - 25000) || (contain.hits < 50000)) {
         if (!creep.pos.isNearTo(contain)) {}
 
         let rep = creep.repair(contain);
         if (rep == ERR_NOT_IN_RANGE) {
             creep.say('m2w');
-
             //            creep.moveTo(contain);
         } else if (rep == OK) {
             return true;
@@ -70,7 +63,7 @@ function doWork(creep) {
         if (creep.pos.isNearTo(contain)) {
             if (contain.store != contain.storeCapacity) {
                 //            creep.say('t');
-                for(var e in creep.carry){
+                for (var e in creep.carry) {
                     creep.transfer(contain, e);
                 }
             }
@@ -90,22 +83,6 @@ function doWork(creep) {
     }
 
 }
-
-function reportMining(creep) {
-    let reporting = ['E25S74', 'E26S74', 'E24S75', 'E25S75', 'E26S75', 'E25S76', 'E26S76',
-        'E35S74', 'E36S74', 'E35S75', 'E36S75', 'E34S76'
-    ];
-    let room = creep.room;
-    if (creep.memory.reportMining === undefined) {
-        creep.memory.reportMining = _.contains(reporting, room.name);
-    }
-    if (!creep.memory.reportMining) return false;
-    if (room.memory.mining === undefined) {
-        room.memory.mining = 0;
-    }
-    room.memory.mining += creep.stats('mining');
-}
-
 
 function shouldDie(creep) {
     if (creep.hits == creep.hitsMax) return;
@@ -140,11 +117,8 @@ class settler extends roleParent {
 
 
     static run(creep) {
-        super.calcuateStats(creep);
         if (movement.runAway(creep)) return;
         if (super.returnEnergy(creep)) return;
-
-
         if (super.doTask(creep)) {
             return;
         }
@@ -161,7 +135,7 @@ class settler extends roleParent {
                 return;
             }
         }
-        shouldDie(creep);
+        //        shouldDie(creep);
         movement.checkForBadsPlaceFlag(creep);
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
@@ -171,7 +145,7 @@ class settler extends roleParent {
         }
 
         var _source = Game.getObjectById(creep.memory.goal);
-        if(creep.memory.goal == '5982ff7ab097071b4adc2b7d') {
+        if (creep.memory.goal == '5982ff7ab097071b4adc2b7d') {
             creep.memory.reportDeath = false;
         }
 
@@ -193,8 +167,6 @@ class settler extends roleParent {
                         buildContainer(creep);
                     } else {
                         creep.memory.workContainer = isContainer[0].id;
-//                        let zparent = require('build.spawn');
-//                        zparent.reportFrom(creep);
                         doWork(creep);
                         return;
 
@@ -207,16 +179,11 @@ class settler extends roleParent {
 
             let contain = Game.getObjectById(creep.memory.workContainer);
             if (contain === null || (contain !== null && _source.energy !== 0 && contain.total < contain.storeCapacity)) {
-                //            if(!creep.pos.isEqualTo(contain.pos)) {
-                //                  creep.moveTo(contain.pos);
-                //                } else {
 
                 if (creep.harvest(_source) == OK) {
                     if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {
                         super.keeperFind(creep);
                     }
-                    //                                flags.reportMining(creep);
-                    reportMining(creep);
                     creep.memory.isThere = true;
                     creep.room.visual.text(_source.energy + "/" + _source.ticksToRegeneration, _source.pos.x + 1, _source.pos.y, {
                         color: 'white',
@@ -225,7 +192,6 @@ class settler extends roleParent {
                         strokeWidth: 0.75
                     });
                 }
-                //          }
 
             } else if (contain !== null && contain.total === contain.storeCapacity && contain.hits < contain.hitsMax) {
                 if (creep.carry[RESOURCE_ENERGY] < 20) {
@@ -239,7 +205,6 @@ class settler extends roleParent {
                     if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {
                         super.keeperFind(creep);
                     }
-                    //                              flags.reportMining(creep);
                     creep.memory.isThere = true;
                 }
 
@@ -259,21 +224,18 @@ class settler extends roleParent {
 
         } else {
 
-            //            if (!super.guardRoom(creep)) {
-
             if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.memory.distance++;
-            //if(_source != undefined) console.log( creep.room.name,  _source.room.name)
             if (_source !== null && creep.room.name == _source.room.name) {
                 let contain = Game.getObjectById(creep.memory.workContainer);
-                if(contain !== null) {
-                    if(creep.memory.goal == '5982ff78b097071b4adc2b4f' || creep.memory.goal == '5982ff07b097071b4adc1fa3' ||
-                    creep.memory.goal == '5982ff6bb097071b4adc297d' || creep.memory.goal == '5982ff6bb097071b4adc297a'  ) {
+                if (contain !== null) {
+                    if (creep.memory.goal == '5982ff78b097071b4adc2b4f' || creep.memory.goal == '5982ff07b097071b4adc1fa3' ||
+                        creep.memory.goal == '5982ff6bb097071b4adc297d' || creep.memory.goal == '5982ff6bb097071b4adc297a') {
                         creep.moveMe(_source, { reusePath: 10 });
                     } else {
                         creep.moveMe(contain, { reusePath: 10 });
                     }
                 } else {
-                        creep.moveMe(_source, { reusePath: 10 });
+                    creep.moveMe(_source, { reusePath: 10 });
                 }
 
             } else {
@@ -291,8 +253,8 @@ class settler extends roleParent {
                             strokeWidth: 0.15,
                             opacity: 0.5
                         }
-                    }; 
-                   task.pos = _source.pos;
+                    };
+                    task.pos = _source.pos;
                     task.count = true;
                     task.order = "moveTo";
                     task.enemyWatch = true;

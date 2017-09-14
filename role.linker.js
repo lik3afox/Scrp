@@ -1128,8 +1128,9 @@ class roleLinker extends roleParent {
         if (creep.room.controller.level != 8 && creep.memory.roleID === 0) {
             creep.room.visual.text(creep.room.controller.progressTotal - creep.room.controller.progress, creep.room.controller.pos.x + 1, creep.room.controller.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: RIGHT });
         }
-        if (creep.room.name !== 'x' && creep.room.name !== 'E14S47')
+//        if (creep.room.name !== 'x' && creep.room.name !== 'E14S47')
             constr.pickUpEnergy(creep);
+
         if (super.returnEnergy(creep)) return;
 
         super.renew(creep);
