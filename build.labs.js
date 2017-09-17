@@ -1784,19 +1784,6 @@ class buildLab {
                 let form = labMix[a];
                 if (labDo(roomName, form[0], form[1], form[2])) {}
             }
-            if (Game.rooms[roomName].memory.labsNeedWork) {
-                // here we see if the flag to create scientist is there
-                if (Game.flags.SCI === undefined) {
-                    console.log("ADDING FLAG", roomName);
-                    Game.rooms[roomName].createFlag(25, 25, 'SCI', COLOR_YELLOW, COLOR_YELLOW);
-                } else if (Game.flags.SCI2 === undefined) {
-                    if (Game.flags.SCI.pos.roomName != roomName) {
-                        console.log("Adding Flag", roomName);
-                        Game.rooms[roomName].createFlag(25, 25, 'SCI2', COLOR_YELLOW, COLOR_YELLOW);
-                    }
-                }
-            }
-            //            console.log(Game.flags.SCI.pos.roomName,roomName);
         }
 
         linksCache = [];

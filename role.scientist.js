@@ -202,6 +202,10 @@ class scientistRole extends roleParent {
             }
             return;
         } */
+        if(creep.memory.party === undefined && !creep.room.memory.labsNeedWork){
+            creep.say('🏄🏽');
+            return;
+        }
 
         if (super.doTask(creep)) {
             return;
@@ -285,7 +289,7 @@ class scientistRole extends roleParent {
 
                     if (!labsBuild.getFromTerminal(creep)) {
                         let otherThings = false;
-                        var keys = Object.keys(creep.room.storage.store);
+/*                        var keys = Object.keys(creep.room.storage.store);
                         var n = keys.length;
                         while (n--) {
                             var e = keys[n];
@@ -297,7 +301,7 @@ class scientistRole extends roleParent {
                                     creep.moveMe(creep.room.storage);
                                 }
                             }
-                        }
+                        } */
 
                         if (!otherThings) {
 
@@ -308,15 +312,6 @@ class scientistRole extends roleParent {
                                 } else {
                                     creep.say('raiders', true);
                                     creep.memory.distance++;
-
-                                    if(Game.flags.SCI !== undefined && Game.flags.SCI.pos.roomName == creep.room.name) {
-                                        Game.flags.SCI.remove();
-                                        console.log("REMOVING FLAG, SCI");
-                                    }
-                                    if(Game.flags.SCI2 !== undefined && Game.flags.SCI2.pos.roomName == creep.room.name) {
-                                        Game.flags.SCI2.remove();
-                                        console.log("REMOVING FLAG,SCI2");
-                                    }
                                     creep.room.memory.labsNeedWork = false;
                                     // Here we remove the flag if it's in this room.
                                 }
@@ -325,12 +320,14 @@ class scientistRole extends roleParent {
                     }
 
                 } else {
+/*
                     if (creep.room.storage !== undefined) {
                         var keyz = Object.keys(creep.room.storage.store);
                         var z = keyz.length;
                         while (z--) {
                             var a = keyz[z];
-                            if (a != RESOURCE_ENERGY && creep.room.storage.store[a]) {
+                            var stored = [RESOURCE_ENERGY,'XGHO2','XLHO2','XUH2O','XZHO2','XZH2O','XKHO2'];
+                            if (!_.contains(stored,a) && creep.room.storage.store[a]) {
                                 if (creep.pos.isNearTo(creep.room.storage)) {
                                     creep.withdraw(creep.room.storage, a);
                                 } else {
@@ -338,8 +335,8 @@ class scientistRole extends roleParent {
                                 }
                             }
                         }
+                    } */
 
-                    }
                 }
         }
     }

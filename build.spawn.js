@@ -102,6 +102,7 @@ var Mod_E18S36 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['scientist', require('role.scientist'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
     ['assistant', require('role.assistant'), 1, 0],
     ['minHarvest', require('role.mineral'), 2, 7],
@@ -112,10 +113,10 @@ var Mod_E17S34 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 5],
-//    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['upgrader', require('role.upgrader'), 2, 5],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
+    ['scientist', require('role.scientist'), 1, 4],
 
     ['linker', require('role.linker'), 2, 4],
     //    ['homeDefender', require('role.defender2'), 1, 4]
@@ -123,6 +124,7 @@ var Mod_E17S34 = [
 var Mod_E18S32 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
+    ['scientist', require('role.scientist'), 1, 4],
     //    ['wallwork', require('role.wallworker'), 1, 3],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
@@ -146,6 +148,7 @@ var Mod_E23S38 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['scientist', require('role.scientist'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 1, 4],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
@@ -160,7 +163,7 @@ var Mod_E25S37 = [
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    //    ['builder', require('role.builder'), 2, 4],
+    ['scientist', require('role.scientist'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 3  , 5],
     ['linker', require('role.linker'), 1, 4],
 ];
@@ -180,6 +183,7 @@ var Mod_E13S34 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['minHarvest', require('role.mineral'), 2, 7],
+    ['scientist', require('role.scientist'), 1, 4],
     ['upgrader', require('role.upgrader'), 2, 5],
     ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
@@ -189,6 +193,7 @@ var Mod_E13S34 = [
 var Mod_E17S45 = [
     ['first', require('role.first'), 2, 4],
     ['harvester', require('role.harvester'), 2, 2],
+    ['scientist', require('role.scientist'), 1, 4],
     ['wallwork', require('role.wallworker'), 1, 6],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
@@ -205,6 +210,8 @@ var Mod_E14S37 = [
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
+
+    ['scientist', require('role.scientist'), 1, 4],    
     //    ['upgrader', require('role.upgrader'), 4, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
@@ -220,6 +227,7 @@ var Mod_E24S33 = [
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['scientist', require('role.scientist'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 4, 5],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
@@ -232,8 +240,9 @@ var Mod_E14S43 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['minHarvest', require('role.mineral'), 2, 7],
+    ['scientist', require('role.scientist'), 1, 4],
     ['assistant', require('role.assistant'), 1, 0],
-    //    ['upgrader', require('role.upgrader'), 3, 5],
+        ['upgrader', require('role.upgrader'), 2, 5],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
@@ -242,7 +251,9 @@ var Mod_E25S47 = [
     ['wallwork', require('role.wallworker'), 1, 5],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
+    ['upgrader', require('role.upgrader'), 2, 5],
     ['harvester', require('role.harvester'), 2, 2],
+    ['scientist', require('role.scientist'), 1, 4],
     ['upbuilder', require('role.upbuilder'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
 ];
@@ -254,6 +265,8 @@ var Mod_E14S47 = [
     ['upbuilder', require('role.upbuilder'), 1, 4],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
+    ['upgrader', require('role.upgrader'), 2, 5],    
+    ['scientist', require('role.scientist'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
@@ -264,6 +277,7 @@ var Mod_E25S43 = [
     ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['scientist', require('role.scientist'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 3, 5],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
@@ -274,6 +288,7 @@ var Mod_E28S42 = [
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
 
+    ['scientist', require('role.scientist'), 1, 4],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 2, 4],
@@ -287,6 +302,7 @@ var Mod_E23S42 = [
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['scientist', require('role.scientist'), 1, 4],    
     //['upgrader', require('role.upgrader'), 3, 4],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
@@ -636,7 +652,7 @@ function rebuildCreep(creep) {
     let rando = Math.floor(Math.random() * creep.memory.parent.length);
     var needBoost;
     var isModded = false;
-    var doBoost = ['E25S37'];
+    var doBoost = ['E25xxS37'];
     if (creep.memory.needBoost === undefined || creep.memory.needBoost.length === 0) { // this pretty much says if it's gotten a boost before.
         if (_.contains(doBoost, creep.memory.home) &&
             (creep.memory.role == 'miner') && _body.length > 6) {

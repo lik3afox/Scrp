@@ -856,6 +856,74 @@ function buyMineralOrder() {
 
 }
 
+var xStorage = {
+    XGHO2 : {
+        amount:1000
+    },
+    XUH2O : {
+        amount:1000
+    },
+    XZH2O : {
+        amount:1000
+    },
+    XKHO2 : {
+        amount:1000
+    },
+
+    XZHO2 : {
+        amount:1000
+    },
+    XLHO2 : {
+        amount:1000
+    }
+};
+
+function forEveryStorage(terminal) {
+//console.log(xStorage.XUH2O.amount,'forEveryStorage');
+if(terminal.room.name !== 'E25S37' && terminal.room.name !== 'E18S36') return;
+
+var storage = terminal.room.storage;
+for(var e in xStorage) {
+    if(storage.store[e] === undefined || (storage.store[e] !== undefined && storage.store[e] < xStorage[e].amount && terminal.store[e] < 1000 ) ){
+        console.log(e,'needed @',terminal.room.name,'amount:',xStorage[e].amount , storage.store[e], terminal.store[e]);
+        if(terminal.store[e] < 1000 || terminal.store[e] === undefined )
+            giveMinerals(terminal,e,1000);
+    }
+}
+/*
+    for (var e in required) {
+        //      console.log('Doing required',e,required[e].amount,required[e].resource)
+        let needed = required[e];
+        let reNeeded = needed.resource;
+        let reAmount = needed.amount;
+        let termAmount = terminal.store[reNeeded];
+        if (termAmount === undefined) termAmount = 0;
+        if (termAmount < reAmount && terminal.room.controller.level > 5) {
+            // get difference
+            // then make the request
+            let needed = reAmount - terminal.store[reNeeded];
+            let doit = true;
+            //          terminal.room.memory.powerSpawn = undefined;
+            if (terminal.room.memory.powerSpawnID === undefined && reNeeded == RESOURCE_POWER) {
+                let zz = terminal.room.find(FIND_STRUCTURES);
+                zz = _.filter(zz, function(o) {
+                    return o.structureType == STRUCTURE_POWER_SPAWN;
+                });
+                if (zz.length === 0) {
+                    doit = false;
+                } else {
+                    terminal.room.memory.powerSpawnID = zz.id;
+                }
+            }
+
+            if (doit) {
+                giveMinerals(terminal, reNeeded, reAmount);
+            }
+        }
+    } */
+}
+
+
 function forEveryTerminal(terminal) {
     for (var e in required) {
         //      console.log('Doing required',e,required[e].amount,required[e].resource)
@@ -1015,6 +1083,9 @@ function upgradeRoom(terminal) {
 
 class roleTerminal {
 
+static getStored(){
+    return xStorage;
+}
     /** @param {Creep} creep **/
     static run() {
         focusMinerals(focusID, focusMin);
@@ -1053,6 +1124,7 @@ class roleTerminal {
                     }
                 }
                 //                forEveryTerminal(terminal);
+                                forEveryStorage(terminal);
 
 
                 /*            if (terminal.room.memory.powerSpawnID === undefined) {

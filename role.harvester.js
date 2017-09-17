@@ -154,6 +154,7 @@ class roleHarvester extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
 
+
         //        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
                 creep.pickUpEnergy();
 
