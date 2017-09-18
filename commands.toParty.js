@@ -119,9 +119,9 @@ var warParty = [
 
 var fightHealer = [
     ['fighter', require('army.fighter'), 1, 10],
-    ['demolisher', require('army.demolisher'), 1, 2],
+//    ['demolisher', require('army.demolisher'), 1, 2],
     //['healer', require('army.healer'), 1, 5]
-];
+];// E18S32
 
 var fight2Healer = [
     ['fighter', require('army.fighter'), 1, 2],
@@ -220,7 +220,7 @@ var upgradeRoomParty = [
     
 ];
 var muleParty = [
-    ['mule', require('army.mule'),  3  , 1],
+    ['mule', require('army.mule'),  2  , 0],
 
 
 ];
@@ -400,6 +400,9 @@ function getCurrentParty(flag) {
                 return warParty5;
             case 'warparty3':
                 return warParty3;
+            case 'lvl5Buster':
+                return lvl5Buster;
+                
             case 'harass2':
                 return harass2;
             case 'harass':
@@ -624,7 +627,7 @@ function findParty(flag) {
                 }
             }
         }
-        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@'+flag.room.name;
+        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@'+flag.pos.roomName;
 
     }
     console.log(report);

@@ -51,6 +51,7 @@ function mineralContainerEmpty(creep) {
                 }
 
             } else {
+/*
                 if (creep.room.storage !== undefined) {
                     var keyz = Object.keys(creep.room.storage.store);
                     var x = keyz.length;
@@ -66,7 +67,8 @@ function mineralContainerEmpty(creep) {
 
                     }
 
-                }
+                } */
+
             }
         }
     }

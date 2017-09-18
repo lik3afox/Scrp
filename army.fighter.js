@@ -346,7 +346,7 @@ class fighterClass extends roleParent {
 
             }
         } else {
-            var killBase = ['E15S41', 'E23S44'];
+            var killBase = ['E21S29', 'E23S27'];
 
             if (_.contains(killBase, creep.room.name) && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
                 creep.killBase({ maxRooms: 1 });

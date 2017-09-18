@@ -154,6 +154,7 @@ class roleHarvester extends roleParent {
     static run(creep) {
         super.calcuateStats(creep);
 
+
         //        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
                 creep.pickUpEnergy();
 
@@ -164,13 +165,9 @@ class roleHarvester extends roleParent {
             return;
         }
         if (creep.memory.level > 1) super.renew(creep);
-if(creep.memory.sourceID == '5982ff6bb097071b4adc298d') {
-    let poss = new RoomPosition(22 ,40,creep.room.name);
-    if(!creep.pos.isEqualTo(poss)) {
-        creep.moveTo(poss);
-        return;
-    }
-    //creep.moveTo(17,6);
+
+if(creep.memory.sourceID == '5982ff7ab097071b4adc2b7d') {
+    creep.memory.reportDeath = true;
 }
         if (creep.carry.energy > creep.carryCapacity - creep.stats('mining')) {
             if(creep.room.name == 'E14S43') {

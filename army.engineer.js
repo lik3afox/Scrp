@@ -128,7 +128,7 @@ class engineerClass extends roleParent {
             if (creep.memory.building) {
                 //         if (!spawn.moveToTransfer(creep)) {
                 if (creep.room.controller.level !== 1) {
-                    //                  if (!constr.moveToBuild(creep)) {
+                                      if (!constr.moveToBuild(creep)) {
                     if (!super._containers.moveToStorage(creep)) {
 
                         /*                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -140,7 +140,7 @@ class engineerClass extends roleParent {
                                                     }*/
 
                     }
-                    //                    }
+                                        }
                 } else {
                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(creep.room.controller);
@@ -156,16 +156,16 @@ class engineerClass extends roleParent {
                                     creep.pickup(zz);
                                     return;
                                   }*/
-                //                    if (!super._constr.moveToPickUpEnergy(creep),0) { 
-                //                    if (!super._containers.moveToWithdraw(creep)) {
+                                    if (!super._constr.moveToPickUpEnergy(creep)) { 
+                                    if (!super._containers.moveToWithdraw(creep)) {
                 //                            if (!super._containers.withdrawFromStorage(creep)) {
                 //           if (!super._containers.moveToWithdraw(creep))
                 //                if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity - creep.stats('mining') )
                 super._sources.moveToWithdraw(creep);
                 //                          }
                 //                        creep.say('zZzZ')
-                //                  }
-                //                  }
+                                  }
+                                  }
 
 
             }

@@ -158,14 +158,14 @@ class transport extends roleParent {
 
         if (creep.memory.gohome) {
 
-            if(creep.room.name == 'E14S43') {
-                let zz = Game.getObjectById('59ba8fa1f2ce785fd0fdb45e');
+            if(creep.room.name == 'E25S47') {
+                let zz = Game.getObjectById('59c0197506c31c559f30be6b');
                 if(zz !== null) {
-                    if(creep.pos.isNearTo(zz)) {
-                        creep.build(zz);
-                    } else {    
+                    if(!creep.pos.isNearTo(zz)) {
                         creep.moveTo(zz);
                     }
+                    creep.build(zz);
+
                     return;
                 }
             }

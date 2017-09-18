@@ -2,7 +2,7 @@
 // Designed to do damage to all.
 
 var classLevels = [
-    [MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
+    [MOVE],
     [MOVE, MOVE, MOVE, WORK, ATTACK, CARRY, HEAL,RANGED_ATTACK],
     [MOVE],
     [MOVE],
@@ -55,11 +55,11 @@ class scoutClass extends roleParent {
         console.log('scout reporting in', creep.pos);
         if (super.goToPortal(creep)) return;
 //        creep.say('sc');
-            if (!super.moveToSignControl(creep)) {
+//            if (!super.moveToSignControl(creep)) {
                 if (!super.avoidArea(creep)) {
                     movement.flagMovement(creep);
                 }
-            }
+  //          }
         creep.sing(zz, true);
 
     }
