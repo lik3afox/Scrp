@@ -259,6 +259,35 @@
         }
 
     }
+    function doRoomVisual(room) {
+
+    room.visual.text(room.memory.labMode+":"+Memory.stats.totalMinerals[room.memory.labMode], 10, 41, {
+                    color: room.memory.primaryLab ?'#10c3ba' :'#000000 ',
+                    stroke: '#000000 ',
+                    strokeWidth: 0.123,
+                    font: 0.5
+                });
+    room.visual.text(room.memory.lab2Mode+":"+Memory.stats.totalMinerals[room.memory.lab2Mode], 10, 42, {
+                    color: room.memory.primaryLab ?'#000000' :'#10c3ba ',
+                    stroke: '#000000 ',
+                    strokeWidth: 0.123,
+                    font: 0.5
+                });
+        room.visual.text(room.memory.boost.mineralType, 10, 43, {
+                    color:'#10c3ba ',
+                    stroke: '#000000 ',
+                    strokeWidth: 0.123,
+                    font: 0.5
+                });
+        room.visual.text("w:"+room.memory.labsNeedWork, 10, 44, {
+                    color:'#10c3ba ',
+                    stroke: '#000000 ',
+                    strokeWidth: 0.123,
+                    font: 0.5
+                });
+
+
+    }
 
     function memoryStatsUpdate() {
         if (Memory.stats === undefined) {
@@ -332,6 +361,8 @@
         while (t--) { // Start of spawn Loop
             title = keys[t];
             if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
+
+                doRoomVisual(Game.spawns[title].room);
 
                 if (Game.cpu.bucket > 500) {
                     rampartCheck(Game.spawns[title]);
@@ -453,7 +484,7 @@
         doUpgradeRooms();
         if (Game.cpu.bucket > 250) {
             //            power.run();
-            //            observer.run();
+            observer.run();
 
             if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
             Memory.labsRunCounter--;

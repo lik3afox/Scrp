@@ -264,6 +264,7 @@ class roleGuard extends roleParent {
             if (Memory.stats.totalMinerals.LO > 20000) {
                 boost.push('LO');
             }
+            _.uniq(boost);
         }
         if (super.boosted(creep, boost)) {
             return;

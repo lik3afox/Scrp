@@ -82,7 +82,7 @@ function shareEnergy(terminal) {
         let storage = Game.rooms[labRooms[e]].storage;
         if (storage !== null && labRooms[e] !== terminal.room.name) {
             //          console.log(labRooms[e],storage.store[RESOURCE_ENERGY] , currentLow, terminal.total);
-            if (storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total !== 300000) {
+            if (storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total !== 300000 && Game.rooms[labRooms[e]].controller.level > 5) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
             }
@@ -90,7 +90,7 @@ function shareEnergy(terminal) {
     }
     //    console.log(terminal.room.name, 'needs found lowest', lowestStore);
     if (lowestStore === undefined) return false;
-    if (currentLow > 800000) return false;
+    if (currentLow > 899000) return false;
 
 
     let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
@@ -1107,10 +1107,12 @@ static getStored(){
                 var energy = terminal.store[RESOURCE_ENERGY];
                 var total = terminal.total;
                 if (total > 295000) {
+                    console.log(labRooms[e]);
                     if (energy > 20000) {
                         if (!shareEnergy(terminal)) { // Moves energy around
-                            if (upgradeRoom(terminal)) {
-
+                            if (!upgradeRoom(terminal)) {
+                                if (!tradeEnergy(terminal)) { 
+                                }
                             }
                         }
 
@@ -1119,7 +1121,10 @@ static getStored(){
                     } else {
 
                     }
+                } else if( energy > 20000) {
+                    if (!newTradeEnergy(terminal)) { }
                 }
+                
                 //                if (!focus) focus = focusRoom(terminal);
                 needEnergy(terminal);
                 let needed = labs.neededMinerals(terminal.pos.roomName);

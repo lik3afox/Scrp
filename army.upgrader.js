@@ -84,13 +84,12 @@ class upgraderzClass extends roleParent {
 
             }
 
-            if (creep.carry.energy < creep.stats('building')) {
-                constr.pickUpEnergy(creep);
+            if (creep.carry.energy < creep.stats('upgrading')) {
+
 
                 if (creep.pos.isNearTo(creep.room.storage)) {
                     creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
-                } 
-                if (creep.pos.isNearTo(creep.room.terminal)) {
+                } else if (creep.pos.isNearTo(creep.room.terminal)) {
                     creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
                 }
 
@@ -98,8 +97,10 @@ class upgraderzClass extends roleParent {
             if (!constr.moveToBuild(creep)) {
                 if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {}
             } else {
-                creep.withdraw(creep.room.storage,RESOURCE_ENERGY);
+//                creep.withdraw(creep.room.storage,RESOURCE_ENERGY);
             }
+                constr.pickUpEnergy(creep);
+
             if (creep.room.name == 'E14S38') {
                 let zz;
                 switch (creep.memory.roleID) {

@@ -4,29 +4,30 @@ var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17
 
  Room       Prim        Second
  
- E18S36     XGH2O       *GH
+ E18S36     XGHO2       *GH
  E24S33     XZHO2       ZK*
  E13S34     XZH2O*      GH*
  E17S45     XUH2O*      G*
- E27S34     XLH2O*          *ZK
- E14S37     XLHO2*          UL*
+ E27S34     XLH2O*      *ZK
+ E14S37     XLHO2*      UL*
 
  E25S37     XKHO2       OH*
 
- E14S43     XGH2O
- E25S43     GH2O        
+ E14S43     XGHO2       XGH2O
+ E25S43     *XZHO2      *GH2O        
 
- E17S34     LO              *GH2O
+ E17S34     OH         *GH2O
+ E25S47     XUH2O*      &UL
+ E14S47     XKHO2       *KO
+
 
 Lv7 or not ready
- E25S47     ZK
  E23S38     UL
  E18S32     OH
- E28S37     OH
+ E28S37     ZK
  E23S42     G
  E28S42     LH
 
- E14S47     KO              *G
  
 
   E14S38        UPGRADE
@@ -118,7 +119,7 @@ var maxMinerals = {
     'OH': 100000,
     'UL': 100000,
     'ZK': 100000,
-    'G': 30000,
+    'G': 100000,
     'GG': 30000,
 
     'LH': 50000,
@@ -163,7 +164,7 @@ var maxMinerals = {
     'KHO2': 1000, // Repair
 //    'KO': 1000, // Repair
 
-    'XZHO2': 100000, //  Move*
+    'XZHO2': 70000, //  Move*
     'ZHO2': 1000, // Repair
     'ZO': 1000, // Repair
 
@@ -1466,20 +1467,6 @@ function labDo(roomName, created, labz, laby) {
         lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
         lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
     }
-    if( labs[created - 1].resource == 'LO' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode: lab1.room.memory.lab2Mode == 'LO' ){
-    	if( Memory.stats.totalMinerals.L < 40000 ||  Memory.stats.totalMinerals.O < 40000 ) {
-    		console.log('LO failed due to low L or O',roomName);
-    		return false;
-    	}
-    }
-   
-    if( labs[created - 1].resource == 'KO' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode: lab1.room.memory.lab2Mode == 'KO'){
-    	if( Memory.stats.totalMinerals.K < 40000 ||  Memory.stats.totalMinerals.O < 40000 ) {
-    		console.log('KO failed due to low L or O',roomName);
-    		return false;
-    	}
-    }
-
     //   if(lab1.room.name == 'E13S34')
     //     console.log('gets here?2');
 
@@ -1505,6 +1492,27 @@ function labDo(roomName, created, labz, laby) {
             lab3.room.memory.labsNeedWork = true;
         }
     }
+
+    if(labs[created - 1].emptied && labs[created - 1].resource == 'LO' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode: lab1.room.memory.lab2Mode == 'LO' ){
+        if( Memory.stats.totalMinerals.L < 60000 ||  Memory.stats.totalMinerals.O < 60000 ) {
+            console.log('LO failed due to low L or O',roomName);
+            return false;
+        }
+    }
+   
+    if(labs[created - 1].emptied && labs[created - 1].resource == 'KO' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode:lab1.room.memory.lab2Mode == 'KO'){
+        if( Memory.stats.totalMinerals.K < 60000 ||  Memory.stats.totalMinerals.O < 60000 ) {
+            console.log('KO failed due to low L or O',roomName);
+            return false;
+        }
+    }
+    if(labs[created - 1].emptied && labs[created - 1].resource == 'LH' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode:lab1.room.memory.lab2Mode == 'LH'){
+        if( Memory.stats.totalMinerals.L < 30000 ||  Memory.stats.totalMinerals.H < 30000 ) {
+            console.log('LH failed due to low L or H',roomName);
+            return false;
+        }
+    }
+
     if (lab2.mineralType != labs[labz - 1].resource) return false;
     if (lab3.mineralType != labs[laby - 1].resource) return false;
 

@@ -106,6 +106,7 @@ function getSpot(roomName) {
 }
 
 //var boost =['XGH2O'];
+        var boost = [];
 class roleUpbuilder extends roleParent {
 
     static levels(level) {
@@ -122,10 +123,10 @@ class roleUpbuilder extends roleParent {
         if (creep.saying == '⚡' && creep.carry.energy > 51) {
             creep.upgradeController(creep.room.controller);
             creep.say('⚡', true);
-            let spot = getSpot(creep.room.name);
+/*            let spot = getSpot(creep.room.name);
             if (spot !== undefined && !creep.pos.isEqualTo(spot)) {
                 creep.moveTo(spot);
-            }
+            } */
             return;
         }
         if (super.returnEnergy(creep)) {
@@ -141,34 +142,16 @@ class roleUpbuilder extends roleParent {
             require('role.wallworker').run(creep);
             return;
         }
-
-/*
-        if (!Memory.war) {
-            if (creep.ticksToLive > 1420 && creep.room.controller.level == 8) {
-                let zz;
-                switch (creep.room.name) {
-                    case 'E18S36':
-                        zz = super.boosted(creep, ['XLH2O']);
-                        break;
-                        //                    case 'E23S37':
-                        //                        zz = super.boosted(creep,['GH']);
-                        //                        break;
-                    case 'E28S73':
-                    case 'E28S71':
-                    case 'E26S73':
-                    case 'E38S72':
-                    case 'E35S83':
-                    case 'E37S75':
-                    case 'E35S73':
-                    case 'W4S93':
-                        zz = super.boosted(creep, ['XGH2O']);
-                        break;
-                }
-                if (zz) {
-                    return;
-                }
+        if (creep.ticksToLive === 1499 && creep.memory.level === 8 ||creep.memory.level === 4) {
+            if (Memory.stats.totalMinerals.GH > 85000) {
+                boost.push('GH');
             }
-        } */
+            _.uniq(boost);
+        }
+        if (super.boosted(creep, boost)) {
+            return;
+        }
+
         if (super.depositNonEnergy(creep)) return;
 
 
@@ -265,15 +248,16 @@ class roleUpbuilder extends roleParent {
                 let zz = creep.upgradeController(creep.room.controller);
 
                 if (creep.room.name == 'E17S34') {
-                    creep.moveTo(23, 42);
+                    var nez = new RoomPosition(17, 13,'E17S34');
+                    creep.moveTo(nez);
                 } else {
                     if (zz == ERR_NOT_IN_RANGE) {
                         creep.moveTo(creep.room.controller);
                     }
                 }
 
-                if(zz == OK)
-                	creep.say('⚡');
+                if (zz == OK)
+                    creep.say('⚡');
             }
 
         }
