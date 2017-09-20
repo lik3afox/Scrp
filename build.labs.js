@@ -1,6 +1,38 @@
 var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17S45', 'E28S37', 'E27S34', 'E24S33', 'E14S43', 'E28S42', 'E23S42', 'E25S43', 'E25S47', 'E14S47', 'E18S36', 'E14S38', 'E25S37'];
 
 /*
+
+ Room       Prim        Second
+ 
+ E18S36     XGHO2       *GH
+ E24S33     XZHO2       ZK*
+ E13S34     XZH2O*      GH*
+ E17S45     XUH2O*      G*
+ E27S34     XLH2O*      *ZK
+ E14S37     XLHO2*      UL*
+
+ E25S37     XKHO2       OH*
+
+ E14S43     XGHO2       XGH2O
+ E25S43     *XZHO2      *GH2O        
+
+ E17S34     OH         *GH2O
+ E25S47     XUH2O*      &UL
+ E14S47     XKHO2       *KO
+
+
+Lv7 or not ready
+ E23S38     UL
+ E18S32     OH
+ E28S37     ZK
+ E23S42     G
+ E28S42     LH
+
+ 
+
+  E14S38        UPGRADE
+
+
 RESOURCE_ENERGY: "energy",
     RESOURCE_POWER: "power",
 
@@ -84,17 +116,19 @@ var maxMinerals = {
         'H': 125000,
         'X': 125000, */
 
-    'OH': 30000,
-    'UL': 30000,
-    'ZK': 30000,
-    'G': 30000,
+    'OH': 100000,
+    'UL': 100000,
+    'ZK': 100000,
+    'G': 100000,
     'GG': 30000,
-    'LH': 30000,
-    'KO': 30000,
-    'LO': 30000,
-    'GH': 50000,
-    'GH2O': 60000,
-    'XGH2O': 100,
+
+    'LH': 50000,
+
+    'KO': 50000,
+    'LO': 50000,
+
+    'GH': 100000,
+    'GH2O': 100000,
 
     /*    'UO': 10000,
         'UH': 10000,
@@ -113,13 +147,34 @@ var maxMinerals = {
             //    'KH2O': 5000,
 
             'XUHO2': 0, //  Mining
-            'XLH2O': 0, // Repair
             'XKH2O': 0, // Carry */
-    'XZH2O': 20000, // Dismantle
-    'XKHO2': 20000, // Ranged
-    'XZHO2': 20000, //  Move
-    'XUH2O': 20000, // Attack
-    'XLHO2': 20000, // Heal
+    'LH2O': 1000, // Repair
+//    'LH': 1000, // Repair
+    'XLH2O': 50000, // Repair *
+
+    'XGHO2': 100000,
+    'GHO2': 1000, // Repair
+    'GO': 1000, // Repair
+
+    'XZH2O': 50000, // Dismantle
+    'ZH2O': 1000, // Repair
+    'ZH': 1000, // Repair
+
+    'XKHO2': 150000, // Ranged*
+    'KHO2': 1000, // Repair
+//    'KO': 1000, // Repair
+
+    'XZHO2': 70000, //  Move*
+    'ZHO2': 1000, // Repair
+    'ZO': 1000, // Repair
+
+    'XUH2O': 50000, // Attack
+    'UH2O': 1000, // Repair
+    'UH': 1000, // Repair
+
+    'XLHO2': 100000, // Heal*
+    'LHO2': 1000, // Repair
+//    'LO': 1000, // Repair
 
 };
 
@@ -729,7 +784,7 @@ var XZHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LH',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -781,7 +836,7 @@ var XZH2O = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LH',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -833,7 +888,7 @@ var XKHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LH',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -885,7 +940,7 @@ var XKH2O = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LH',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -938,7 +993,7 @@ var XGHO2 = [{
     emptied: false
 }, {
     id: 'getReplaced',
-    resource: 'LH',
+    resource: 'none',
     amount: 2400,
     emptied: false
 }, {
@@ -1397,11 +1452,12 @@ function labDo(roomName, created, labz, laby) {
         //      console.log(REACTIONS[labs[labz - 1].resource][labs[laby - 1].resource], labs[created - 1].resource, roomName);
         return;
     }
-    //  if (Memory.stats.totalMinerals !== undefined)
-    //        if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
-    //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource]);
-    //    return false;
-    //  }
+    if (Memory.stats.totalMinerals !== undefined)
+        if(labs[created - 1].resource == 'XGHO2') console.log(Memory.stats.totalMinerals[labs[created - 1].resource] , maxMinerals[labs[created - 1].resource] , labs[created - 1].emptied);
+        if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
+            console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource],roomName);
+            return false;
+        }
     let lab1 = getCached(labs[created - 1].id);
     let lab2 = getCached(labs[labz - 1].id);
     let lab3 = getCached(labs[laby - 1].id);
@@ -1411,27 +1467,17 @@ function labDo(roomName, created, labz, laby) {
         lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
         lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
     }
-
     //   if(lab1.room.name == 'E13S34')
     //     console.log('gets here?2');
 
     if (lab1.cooldown !== 0) return false;
-    ///       if(lab1.room.name == 'E13S34')
-    //   console.log('gets here?');
-    //    if(labs[created - 1].resource == 'g')
-    //    console.log('bizz',lab2.room.terminal.store[labs[created - 1].resource],labs[created - 1].resource,roomName);
+
     if (!lab3.room.memory.labsNeedWork) {
         if (lab1.mineralAmount >= 2950 && labs[labz - 1].emptied) {
-            if (lab1.room.name == 'E18S36')
-                console.log('Lab needs work too much');
             lab3.room.memory.labsNeedWork = true;
         }
-        //     if (lab1.room.name == 'E18S36')
-        //         console.log(labs[labz - 1].emptied,  lab2.mineralAmount , lab2.room.terminal.store[labs[labz - 1].resource],'xx');
-        if ((!labs[labz - 1].emptied && lab2.mineralAmount < 150 && lab2.room.terminal.store[labs[labz - 1].resource] > 1500) ||
-            (!labs[laby - 1].emptied && lab3.mineralAmount < 150 && lab3.room.terminal.store[labs[laby - 1].resource] > 1500)) {
-            //     if (lab1.room.name == 'E18S36')
-            //          console.log('Lab needs work too little');
+        if ((!labs[labz - 1].emptied && lab2.mineralAmount < 150 && lab2.room.terminal.store[labs[labz - 1].resource] > 1) ||
+            (!labs[laby - 1].emptied && lab3.mineralAmount < 150 && lab3.room.terminal.store[labs[laby - 1].resource] > 1)) {
             lab3.room.memory.labsNeedWork = true;
         }
 
@@ -1439,17 +1485,34 @@ function labDo(roomName, created, labz, laby) {
             lab3.room.memory.labsNeedWork = true;
 
         if ((lab2.mineralType !== undefined && labs[labz - 1].resource !== lab2.mineralType)) {
-            if (lab1.room.name == 'E17S34')
-                console.log('Lab needs work not the same2');
             lab3.room.memory.labsNeedWork = true;
         }
         if (
             (lab3.mineralType !== undefined && labs[laby - 1].resource !== lab3.mineralType)) {
-            if (lab1.room.name == 'E17S34')
-                console.log('Lab needs work not the same3');
             lab3.room.memory.labsNeedWork = true;
         }
     }
+
+    if(labs[created - 1].emptied && labs[created - 1].resource == 'LO' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode: lab1.room.memory.lab2Mode == 'LO' ){
+        if( Memory.stats.totalMinerals.L < 60000 ||  Memory.stats.totalMinerals.O < 60000 ) {
+            console.log('LO failed due to low L or O',roomName);
+            return false;
+        }
+    }
+   
+    if(labs[created - 1].emptied && labs[created - 1].resource == 'KO' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode:lab1.room.memory.lab2Mode == 'KO'){
+        if( Memory.stats.totalMinerals.K < 60000 ||  Memory.stats.totalMinerals.O < 60000 ) {
+            console.log('KO failed due to low L or O',roomName);
+            return false;
+        }
+    }
+    if(labs[created - 1].emptied && labs[created - 1].resource == 'LH' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode:lab1.room.memory.lab2Mode == 'LH'){
+        if( Memory.stats.totalMinerals.L < 30000 ||  Memory.stats.totalMinerals.H < 30000 ) {
+            console.log('LH failed due to low L or H',roomName);
+            return false;
+        }
+    }
+
     if (lab2.mineralType != labs[labz - 1].resource) return false;
     if (lab3.mineralType != labs[laby - 1].resource) return false;
 
@@ -1505,6 +1568,9 @@ function labMode(roomName, mode, labs) {
             break;
         case 'XUH2O':
             returned = XUH2O;
+            break;
+        case 'XLH2O':
+            returned = XLH2O;
             break;
         case 'XKH2O':
             returned = XKH2O;
@@ -1569,7 +1635,14 @@ function labMode(roomName, mode, labs) {
 }
 
 function getLabMixes(roomName) {
-    switch (Game.rooms[roomName].memory.labMode) {
+    var lab;
+    if(Game.rooms[roomName].memory.primaryLab){
+        lab = Game.rooms[roomName].memory.labMode;
+    } else {
+        lab = Game.rooms[roomName].memory.lab2Mode;
+    }
+
+    switch (lab) {
         case 'XGH2O':
         case 'LH':
         case 'OH':
@@ -1603,6 +1676,7 @@ function getLabMixes(roomName) {
 }
 
 //labRooms
+/*
 function anyroomMakingMineral(type) {
     for (var e in labRooms) {
         //        console.log(Game.rooms[labRooms[e]].memory.labMode, labRooms[e], type);
@@ -1612,63 +1686,42 @@ function anyroomMakingMineral(type) {
     }
     return false;
 }
-
+*/
 
 function analyzeRoomLabs(roomName, labs) {
-
     if (Game.rooms[roomName].memory.labMode === undefined) {
-        //    console.log('first we check to see what mineral we need to use');
-        for (var RS in maxMinerals) {
-            //        console.log(Memory.stats.totalMinerals[RS], RS, maxMinerals[RS]);
-            if (Memory.stats.totalMinerals[RS] < maxMinerals[RS]) {
-                // We need this
-                var min = RS;
+        Game.rooms[roomName].memory.labMode = 'none';
+    }
+    if (Game.rooms[roomName].memory.lab2Mode === undefined) {
+        Game.rooms[roomName].memory.lab2Mode = 'none';
+    }
+    if (Game.rooms[roomName].memory.primaryLab === undefined) {
+        Game.rooms[roomName].memory.primaryLab = true;
+    }
+    let min = Game.rooms[roomName].memory.labMode;
+    if (Memory.stats.totalMinerals[min] !== undefined && Memory.stats.totalMinerals[min] < maxMinerals[min]) {
 
-                if (!anyroomMakingMineral(RS)) {
-                    //                console.log('Then we check to see if any room is available', Game.rooms[roomName], anyroomMakingMineral(RS));
-                    var lv8 = [
-                        'XUHO2',
-                        'XUH2O',
-                        'XZHO2',
-                        'XZH2O',
-                        'XLHO2',
-                        'XLH2O',
-                        'XKHO2',
-                        'XKH2O',
-                    ];
-                    if (_.contains(lv8, RS) && Game.rooms[roomName].controller.level == 8) {
-                        Game.rooms[roomName].memory.labMode = RS;
-                    } else {
-                        //                      Game.rooms[roomName].memory.labMode = RS;
-                    }
-                    if (!_.contains(lv8, RS)) {
-                        Game.rooms[roomName].memory.labMode = RS;
-                    }
-                    //                  console.log('Then we change it into it.', Game.rooms[roomName].memory.labMode);
-                    return Game.rooms[roomName].memory.labMode;
-                }
-            }
-        }
-    } else {
-        //        console.log('for that one we also check to see if any room is currently doing it, and if it"s reaching it max');
-        var mineral = Game.rooms[roomName].memory.labMode;
-        if (maxMinerals[mineral] === undefined) {
-            //            Game.rooms[roomName].memory.labMode = undefined;
-            //                console.log('SET MAX FOR',mineral);
-        } else if (Memory.stats.totalMinerals[mineral] >= maxMinerals[mineral]) {
-            //            Game.rooms[roomName].memory.labMode = undefined;// This is set so it changes. 
-        } else {
-            //            console.log('and it"s not ready',Memory.stats.totalMinerals[mineral], maxMinerals[mineral],mineral);
-        }
+        Game.rooms[roomName].memory.primaryLab = true;
         return Game.rooms[roomName].memory.labMode;
+    } else {
+        if (Game.rooms[roomName].memory.lab2Mode == 'none') {
+  //          console.log('maxed out minerals, doing 1st cause no 2ndary.', roomName);
+
+        Game.rooms[roomName].memory.primaryLab = true;
+            return Game.rooms[roomName].memory.labMode;
+        }
+//        console.log('maxed out minerals, doing 2ndary.', roomName);
+
+        Game.rooms[roomName].memory.primaryLab = false;
+        return Game.rooms[roomName].memory.lab2Mode;
     }
 }
 
 function setLabs(roomName, labs) {
-    var lab = analyzeRoomLabs(roomName, labs);
+    var mode = analyzeRoomLabs(roomName, labs);
 
-    if (lab) {
-        let zz = labMode(roomName, lab, labs);
+    if (mode) {
+        let zz = labMode(roomName, mode, labs);
         return zz;
     }
 

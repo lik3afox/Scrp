@@ -39,8 +39,9 @@ class roleWallWorker extends roleParent {
 
     static run(creep) {
         if (super.depositNonEnergy(creep)) return;
-        if(Memory.stats.totalMinerals.LH > 20000) {
+        if(creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
             boost.push('LH');
+            _.uniq(boost);
         }
 
         if ( creep.room.name != 'E18S36'&& creep.memory.level >=4 && super.boosted(creep, boost)) {

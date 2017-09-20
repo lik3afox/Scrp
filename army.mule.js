@@ -32,7 +32,7 @@ class muleClass extends roleParent {
         if (!creep.memory.goHome) {
             if (total === 0) {
                 let stor = creep.room.storage;
-                constr.pickUpEnergy(creep);
+//                constr.pickUpEnergy(creep);
                 if(stor.store[RESOURCE_ENERGY] < 1000) {
                     stor = creep.room.terminal;
                 }
@@ -84,7 +84,7 @@ class muleClass extends roleParent {
 
             }
         } else {
-                constr.pickUpEnergy(creep);
+//                constr.pickUpEnergy(creep);
             if (creep.room.name == creep.memory.home) {
                 creep.memory.goHome = false;
             } else {

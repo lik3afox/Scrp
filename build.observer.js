@@ -1,4 +1,4 @@
-var observers = ['58b720b29b2a356930fd3438', '58ecd1142353c5da3b415c92', '58e886be32d51ba206139da7', '5923cf17001830320d3e99c0'];
+var observers = ['59aee0acae855116d42aaff7'];
 //'E32S70',
 var roomsObserve = ['E30S80', 'E30S70', 'E31S70', 'E29S70', 'E30S71', 'E30S69',
     'E28S70', 'E30S72', 'E30S68', 'E27S70', 'E26S70', 'E25S70',
@@ -31,7 +31,7 @@ function doTask(tasks) {
                 }
                 if (ob !== null) {
                     var distance = Game.map.getRoomLinearDistance(ob.room.name, target);
-                    //        console.log(target,"distance:",distance,ob,"doing the task of",task.order,"for "+task.options.timed+ "longer")
+                           console.log(target,"distance:",distance,ob,"doing the task of",task.order,"for "+task.options.timed+ "longer");
                     if (distance <= 10) {
                         if (ob.observeRoom(target) == OK) {
                             task.options.timed--;
@@ -102,6 +102,7 @@ class buildObserver {
                 }
             }
         } else {
+
             let powerBank = Game.rooms[target].find(FIND_STRUCTURES);
             powerBank = _.filter(powerBank, function(s) {
                 return s.structureType == STRUCTURE_POWER_BANK;

@@ -28,6 +28,27 @@ var focusMin;
 // Every terminal needs this amount or else...
 var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amount: 500 }];
 
+var xStorage = {
+    XGHO2 : {
+        amount:2000
+    },
+    XUH2O : {
+        amount:2000
+    },
+    XZH2O : {
+        amount:2000
+    },
+    XKHO2 : {
+        amount:3000
+    },
+    XZHO2 : {
+        amount:2000
+    },
+    XLHO2 : {
+        amount:2000
+    },
+//    XLH2O : {        amount:1000    },
+};
 // This is when you cannot change.
 var prohibited = ['KO', 'GH', 'LO', 'UO', 'LH', 'G', 'OH', 'GO', 'GH2O', 'GHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGH2O', 'XGHO2', 'XZH2O', 'XLHO2', 'XKHO2', 'XKH2O', 'XZHO2'];
 
@@ -61,7 +82,7 @@ function shareEnergy(terminal) {
         let storage = Game.rooms[labRooms[e]].storage;
         if (storage !== null && labRooms[e] !== terminal.room.name) {
             //          console.log(labRooms[e],storage.store[RESOURCE_ENERGY] , currentLow, terminal.total);
-            if (storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total !== 300000) {
+            if (storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total !== 300000 && Game.rooms[labRooms[e]].controller.level > 5) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
             }
@@ -69,7 +90,7 @@ function shareEnergy(terminal) {
     }
     //    console.log(terminal.room.name, 'needs found lowest', lowestStore);
     if (lowestStore === undefined) return false;
-    //    if (currentLow < 500000) return false;
+    if (currentLow > 899000) return false;
 
 
     let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
@@ -191,6 +212,10 @@ function countTerminals() {
         let info = { type: basic[b], amount: 0 };
         for (var e in labRooms) {
             let target = Game.rooms[labRooms[e]].terminal;
+            if (target !== null && target.store !== undefined && target.store[basic[b]] > 0) {
+                info.amount += target.store[basic[b]];
+            }
+            target = Game.rooms[labRooms[e]].storage;
             if (target !== null && target.store !== undefined && target.store[basic[b]] > 0) {
                 info.amount += target.store[basic[b]];
             }
@@ -856,35 +881,14 @@ function buyMineralOrder() {
 
 }
 
-var xStorage = {
-    XGHO2 : {
-        amount:1000
-    },
-    XUH2O : {
-        amount:1000
-    },
-    XZH2O : {
-        amount:1000
-    },
-    XKHO2 : {
-        amount:1000
-    },
-
-    XZHO2 : {
-        amount:1000
-    },
-    XLHO2 : {
-        amount:1000
-    }
-};
 
 function forEveryStorage(terminal) {
 //console.log(xStorage.XUH2O.amount,'forEveryStorage');
-if(terminal.room.name !== 'E25S37' && terminal.room.name !== 'E18S36') return;
-
+if(terminal.room.name !== 'E24S33') return;
 var storage = terminal.room.storage;
 for(var e in xStorage) {
-    if(storage.store[e] === undefined || (storage.store[e] !== undefined && storage.store[e] < xStorage[e].amount && terminal.store[e] < 1000 ) ){
+    if(storage.store[e] === undefined || 
+        (storage.store[e] !== undefined && storage.store[e] < xStorage[e].amount && (terminal.store[e] === undefined || terminal.store[e] < 1000) ) ){
         console.log(e,'needed @',terminal.room.name,'amount:',xStorage[e].amount , storage.store[e], terminal.store[e]);
         if(terminal.store[e] < 1000 || terminal.store[e] === undefined )
             giveMinerals(terminal,e,1000);
@@ -1066,10 +1070,12 @@ function focusRoom(terminal) {
 
 function upgradeRoom(terminal) {
     var targetRoom = Game.spawns.upgrade.room;
+    if(targetRoom.controller.level < 6) return false;
     if (targetRoom.terminal === undefined) return false;
     var totalEnergy = targetRoom.storage.store[RESOURCE_ENERGY] + targetRoom.terminal.store[RESOURCE_ENERGY];
-    if (totalEnergy > 400000) return false;
-    if (terminal.store[RESOURCE_ENERGY] < 21000 && terminal.room.storage.store[RESOURCE_ENERGY] > 900000) return false;
+    if(targetRoom.storage.store[RESOURCE_ENERGY] > 999000 || targetRoom.terminal.store[RESOURCE_ENERGY] > 299000 ) return false;
+//    if (totalEnergy > 400000) return false;
+//    if (terminal.store[RESOURCE_ENERGY] < 21000 && terminal.room.storage.store[RESOURCE_ENERGY] > 900000) return false;
     var amount = terminal.store[RESOURCE_ENERGY] * 0.25;
     var sender = terminal;
     //
@@ -1101,9 +1107,13 @@ static getStored(){
                 var energy = terminal.store[RESOURCE_ENERGY];
                 var total = terminal.total;
                 if (total > 295000) {
+                    console.log(labRooms[e]);
                     if (energy > 20000) {
                         if (!shareEnergy(terminal)) { // Moves energy around
-                            if (upgradeRoom(terminal)) {}
+                            if (!upgradeRoom(terminal)) {
+                                if (!tradeEnergy(terminal)) { 
+                                }
+                            }
                         }
 
                     } else if (energy > 10000) {
@@ -1111,7 +1121,10 @@ static getStored(){
                     } else {
 
                     }
+                } else if( energy > 20000) {
+                    if (!newTradeEnergy(terminal)) { }
                 }
+                
                 //                if (!focus) focus = focusRoom(terminal);
                 needEnergy(terminal);
                 let needed = labs.neededMinerals(terminal.pos.roomName);
