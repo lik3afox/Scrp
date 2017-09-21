@@ -92,7 +92,7 @@ function attackCreep(creep, bads) {
             creep.rangedMassAttack();
         }
         creep.selfHeal();
-        creep.moveTo(enemy, { ignoreRoads: true });
+        creep.moveTo(enemy, { ignoreRoads: true,maxRooms:1 });
         if (bads.length > 2) {}
 
         return;
@@ -100,10 +100,10 @@ function attackCreep(creep, bads) {
         creep.selfHeal();
         if (enemy.owner.username === 'Source Keeper') {
             if (creep.hits == creep.hitsMax) {
-                creep.moveTo(enemy, { ignoreRoads: true });
+                creep.moveTo(enemy, { ignoreRoads: true,maxRooms:1 });
             }
         } else {
-            creep.moveTo(enemy, { ignoreRoads: true });
+            creep.moveTo(enemy, { ignoreRoads: true,maxRooms:1 });
         }
     }
     if (bads.length > 2) {
@@ -192,10 +192,10 @@ function moveCreep(creep) {
 
         let rmPos = new RoomPosition(creep.memory.keeperLair[creep.memory.goTo].pos.x, creep.memory.keeperLair[creep.memory.goTo].pos.y, creep.memory.keeperLair[creep.memory.goTo].pos.roomName);
         if (!creep.pos.isNearTo(gota)) {
-            if (creep.room.name == 'E24S74') {
+            if (creep.room.name == 'E15S34') {
                 creep.moveMe(rmPos, {
                     reusePath: 7,
-                    //                    maxRooms: 1,
+                                        maxRooms: 1,
                     ignoreRoads: (creep.room.name == 'W4S94'),
                     visualizePathStyle: {
                         fill: 'transparent',
@@ -208,7 +208,7 @@ function moveCreep(creep) {
             } else {
                 creep.moveMe(rmPos, {
                     reusePath: 7,
-                    //                    maxRooms:1,
+                           //             maxRooms:1,
                     ignoreRoads: (creep.room.name == 'W4S94'),
                     visualizePathStyle: {
                         fill: 'transparent',

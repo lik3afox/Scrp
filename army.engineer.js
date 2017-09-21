@@ -110,41 +110,29 @@ class engineerClass extends roleParent {
             if (creep.carry.energy < (creep.stats('mining') + 1)) {
                 creep.memory.building = false;
                 creep.say('harvesting');
-                //                super._constr.pickUpEnergy(creep);
-                /*
-                                               if (!super._constr.pickUpEnergy(creep)) {
-                                //                if (!super._containers.withdrawFromStorage(creep)) {
-                                                      if (!super._containers.moveToWithdraw(creep)) {
-                                //      if (!super._containers.moveToWithdraw(creep))
-                                //                    super._sources.moveToWithdraw(creep);
-                                                  }
-                                //                        creep.say('zZzZ')
-                                //                  }
-                                            }
-                                            return; */
             }
 
 
             if (creep.memory.building) {
                 //         if (!spawn.moveToTransfer(creep)) {
 
-                    
-                    if(creep.room.name == 'E14S38') {
-                        if(creep.room.controller.level < 4) {
-                            if(creep.pos.isEqualTo(Game.flags[creep.memory.party])){
-                                creep.drop(RESOURCE_ENERGY);
-                            } else {
-                                creep.moveTo(Game.flags[creep.memory.party]);
-                            }
+
+                if (creep.room.name == 'E14S38') {
+                    if (creep.room.controller.level < 4) {
+                        if (creep.pos.isEqualTo(Game.flags[creep.memory.party])) {
+                            creep.drop(RESOURCE_ENERGY);
                         } else {
-                            if (!super._containers.moveToStorage(creep)) {}
+                            creep.moveTo(Game.flags[creep.memory.party]);
                         }
-                        return;
+                    } else {
+                        if (!super._containers.moveToStorage(creep)) {}
                     }
+                    return;
+                }
 
 
                 if (creep.room.controller.level !== 1) {
-                                    //    if(creep.room.controller.level < 4)
+                    //    if(creep.room.controller.level < 4)
                     if (!super._containers.moveToStorage(creep)) {
 
                         /*                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -156,7 +144,7 @@ class engineerClass extends roleParent {
                                                     }*/
 
                     }
-                                      //  }
+                    //  }
                 } else {
                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(creep.room.controller);
@@ -165,23 +153,28 @@ class engineerClass extends roleParent {
                 //                }
 
             } else {
-//                super._constr.pickUpEnergy(creep);
+                if (creep.room.name == 'E14S38') {
+                super._sources.moveToWithdraw(creep);
+            } else {
+                                               if (!super._constr.moveToPickUpEnergy(creep)) { 
+                }
+            }
+                //                super._constr.pickUpEnergy(creep);
                 /*                  let zz = Game.getObjectById('59a706eff5b4d253ca80424a');
                                   if(zz !== null) {
                                     creep.moveTo(zz);
                                     creep.pickup(zz);
                                     return;
                                   }*/
-     //                               if (!super._constr.moveToPickUpEnergy(creep)) { 
-    //                                if (!super._containers.moveToWithdraw(creep)) {
+                //                               if (!super._constr.moveToPickUpEnergy(creep)) { 
+                //                                if (!super._containers.moveToWithdraw(creep)) {
                 //                            if (!super._containers.withdrawFromStorage(creep)) {
                 //           if (!super._containers.moveToWithdraw(creep))
                 //                if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity - creep.stats('mining') )
-                super._sources.moveToWithdraw(creep);
                 //                          }
                 //                        creep.say('zZzZ')
-  //                                }
-//                                  }
+                //                                }
+                //                                  }
 
 
             }

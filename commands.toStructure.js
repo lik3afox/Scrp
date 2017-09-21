@@ -395,19 +395,14 @@ class StructureInteract {
     }
 
     static doCloseRoadRepair(creep) {
-//        if (creep.room.name == 'E27S75'
-//        ) return false;
-
-    //    if (creep.room.name == 'E27S74' &&
-  //          creep.pos.x > 32 && creep.pos.y > 32) return false;
 
         let atFeet = creep.room.lookAt(creep.pos.x, creep.pos.y);
         for (var i in atFeet) {
             if (atFeet[i].type == 'structure' && atFeet[i].structure.structureType == STRUCTURE_ROAD &&
-                (atFeet[i].structure.hits < atFeet[i].structure.hitsMax - 1500)) {
+                (atFeet[i].structure.hits < atFeet[i].structure.hitsMax - 500)) {
                 //                console.log(atFeet[i],atFeet[i].structure.structureType,i,atFeet[i].structure.hits,              );
-                let dont = ['59a49ce114d66f37b6e1955d','59a49f2c9192ec49d5a25b57'];
-                if(!_.includes(dont, atFeet[i].structure.id))
+  //              let dont = ['59a49ce114d66f37b6e1955d','59a49f2c9192ec49d5a25b57'];
+//                if(!_.includes(dont, atFeet[i].structure.id))
                 if (creep.repair(atFeet[i].structure) == OK) {
                     return true;
                 }

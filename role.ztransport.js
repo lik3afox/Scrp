@@ -230,7 +230,7 @@ class transportz extends roleParent {
                                 creep.memory.gotoID = undefined;
                             }
                         } else {
-                            var bads = creep.pos.findInRange(creep.room.hostilesHere(), 4);
+                            var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
                             if (bads.length === 0) {
                                 //if(!super.avoidArea(creep)) { 
 
