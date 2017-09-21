@@ -273,6 +273,7 @@
                     strokeWidth: 0.123,
                     font: 0.5
                 });
+    if(room.memory.boost !== undefined)
         room.visual.text(room.memory.boost.mineralType, 10, 43, {
                     color:'#10c3ba ',
                     stroke: '#000000 ',

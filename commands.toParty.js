@@ -25,7 +25,7 @@ var engineerParty = [
     ['engineer', require('army.engineer'), 1, 5],
 ];
 var engineer2Party = [
-    ['engineer', require('army.engineer'), 2, 4],
+    ['engineer', require('army.engineer'), 2, 5],
 ];
 var thiefParty = [
     ['thief', require('army.thief'), 3, 3],

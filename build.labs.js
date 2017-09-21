@@ -129,6 +129,7 @@ var maxMinerals = {
 
     'GH': 100000,
     'GH2O': 100000,
+    'XGH2O': 100000,
 
     /*    'UO': 10000,
         'UH': 10000,
@@ -1455,7 +1456,7 @@ function labDo(roomName, created, labz, laby) {
     if (Memory.stats.totalMinerals !== undefined)
         if(labs[created - 1].resource == 'XGHO2') console.log(Memory.stats.totalMinerals[labs[created - 1].resource] , maxMinerals[labs[created - 1].resource] , labs[created - 1].emptied);
         if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
-            console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource],roomName);
+//            console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource],roomName);
             return false;
         }
     let lab1 = getCached(labs[created - 1].id);
@@ -1495,20 +1496,20 @@ function labDo(roomName, created, labz, laby) {
 
     if(labs[created - 1].emptied && labs[created - 1].resource == 'LO' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode: lab1.room.memory.lab2Mode == 'LO' ){
         if( Memory.stats.totalMinerals.L < 60000 ||  Memory.stats.totalMinerals.O < 60000 ) {
-            console.log('LO failed due to low L or O',roomName);
+    //        console.log('LO failed due to low L or O',roomName);
             return false;
         }
     }
    
     if(labs[created - 1].emptied && labs[created - 1].resource == 'KO' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode:lab1.room.memory.lab2Mode == 'KO'){
         if( Memory.stats.totalMinerals.K < 60000 ||  Memory.stats.totalMinerals.O < 60000 ) {
-            console.log('KO failed due to low L or O',roomName);
+  //          console.log('KO failed due to low L or O',roomName);
             return false;
         }
     }
     if(labs[created - 1].emptied && labs[created - 1].resource == 'LH' && Game.rooms[roomName].memory.primaryLab ? lab1.room.memory.labMode:lab1.room.memory.lab2Mode == 'LH'){
         if( Memory.stats.totalMinerals.L < 30000 ||  Memory.stats.totalMinerals.H < 30000 ) {
-            console.log('LH failed due to low L or H',roomName);
+//            console.log('LH failed due to low L or H',roomName);
             return false;
         }
     }

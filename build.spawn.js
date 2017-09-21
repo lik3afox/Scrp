@@ -118,14 +118,15 @@ var Mod_E17S34 = [
     ['assistant', require('role.assistant'), 1, 0],
     ['scientist', require('role.scientist'), 1, 4],
 
-    ['linker', require('role.linker'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
     //    ['homeDefender', require('role.defender2'), 1, 4]
 ];
 var Mod_E18S32 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['scientist', require('role.scientist'), 1, 4],
-    //    ['wallwork', require('role.wallworker'), 1, 3],
+//    ['upgrader', require('role.upgrader'), 1, 5],
+    ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
     ['assistant', require('role.assistant'), 1, 0],
@@ -137,7 +138,6 @@ var Mod_E28S37 = [
     ['assistant', require('role.assistant'), 1, 0],
     ['first', require('role.first'), 2, 4],
     ['scientist', require('role.scientist'), 1, 4],
-        ['upgrader', require('role.upgrader'), 2, 5],
     ['harvester', require('role.harvester'), 2, 2],
     
     ['wallwork', require('role.wallworker'), 2, 5],
@@ -292,7 +292,7 @@ var Mod_E28S42 = [
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 4],
     ['upgrader', require('role.upgrader'), 2, 5],
-    ['linker', require('role.linker'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
 ];
 var Mod_E23S42 = [
@@ -308,6 +308,7 @@ var Mod_E23S42 = [
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
 var Mod_E14S38 = [];
+var Mod_E23S44 = [];
 
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
@@ -743,6 +744,9 @@ function getCurrentModule(spawn) {
     if (spawn.room.name == 'E14S38') {
         return Mod_E14S38;
     }
+    if (spawn.room.name == 'E23S44') {
+        return Mod_E23S44;
+    }
 
     if (spawn === null || spawn === undefined) return;
     var currentModuleLevel = getModuleLevel(spawn);
@@ -1016,6 +1020,8 @@ class theSpawn {
             } else if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
 
             } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
+
+            } else if (currentModule[type][_name] == 'scientist' && !spawn.room.memory.labsNeedWork){
 
             } else {
 

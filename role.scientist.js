@@ -271,11 +271,12 @@ class scientistRole extends roleParent {
 
                     if (!labsBuild.getFromTerminal(creep)) {
                         let otherThings = false;
-/*                        var keys = Object.keys(creep.room.storage.store);
+                        var keys = Object.keys(creep.room.storage.store);
                         var n = keys.length;
                         while (n--) {
                             var e = keys[n];
-                            if (e != RESOURCE_ENERGY && creep.room.storage.store[e]) {
+                            var stored = [RESOURCE_ENERGY,'XGHO2','XLHO2','XUH2O','XZHO2','XZH2O','XKHO2'];
+                            if (!_.contains(stored,e) && creep.room.storage.store[e]) {
                                 otherThings = true;
                                 if (creep.pos.isNearTo(creep.room.storage)) {
                                     creep.withdraw(creep.room.storage, e);
@@ -283,7 +284,7 @@ class scientistRole extends roleParent {
                                     creep.moveMe(creep.room.storage);
                                 }
                             }
-                        } */
+                        } 
 
                         if (!otherThings) {
 

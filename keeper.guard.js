@@ -112,7 +112,7 @@ function attackCreep(creep, bads) {
 }
 
 function analyzeSourceKeeper(creep) {
-    var noMineral = ['E14S34', 'E16S34', 'E24S34'];
+    var noMineral = ['E14S34', 'E16S34', 'E24S34','E25S44','E14S35'];
 
     let keepers = creep.memory.keeperLair;
     let targetID;

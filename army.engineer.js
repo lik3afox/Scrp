@@ -65,7 +65,6 @@ class engineerClass extends roleParent {
         }
 
         if (creep.room.name == 'E25xxS43') {
-
             killWalls(creep);
             return;
         }
@@ -74,8 +73,6 @@ class engineerClass extends roleParent {
             if (super.boosted(creep, ['LH'])) { return; }
 
         if (super.goToPortal(creep)) return;
-        //        spawn.wantRenew(creep);
-        //        if (super.depositNonEnergy(creep)) return;
 
         let isThere = false;
         if (creep.memory.renewSpawnID === undefined) {
@@ -110,6 +107,18 @@ class engineerClass extends roleParent {
             if (creep.carry.energy < (creep.stats('mining') + 1)) {
                 creep.memory.building = false;
                 creep.say('harvesting');
+                //                super._constr.pickUpEnergy(creep);
+                /*
+                                               if (!super._constr.pickUpEnergy(creep)) {
+                                //                if (!super._containers.withdrawFromStorage(creep)) {
+                                                      if (!super._containers.moveToWithdraw(creep)) {
+                                //      if (!super._containers.moveToWithdraw(creep))
+                                //                    super._sources.moveToWithdraw(creep);
+                                                  }
+                                //                        creep.say('zZzZ')
+                                //                  }
+                                            }
+                                            return; */
             }
 
 
@@ -134,15 +143,11 @@ class engineerClass extends roleParent {
                 if (creep.room.controller.level !== 1) {
                     //    if(creep.room.controller.level < 4)
                     if (!super._containers.moveToStorage(creep)) {
-
-                        /*                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                                        if (creep.room.name == 'E14S38') {
-                                                            creep.moveTo(37, 8);
-                                                        } else {
-                                                            creep.moveTo(creep.room.controller);
-                                                        }
-                                                    }*/
-
+                        if (!super._constr.moveToBuild(creep)) {
+                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(creep.room.controller);
+                            }
+                        }
                     }
                     //  }
                 } else {
@@ -153,13 +158,7 @@ class engineerClass extends roleParent {
                 //                }
 
             } else {
-                if (creep.room.name == 'E14S38') {
-                super._sources.moveToWithdraw(creep);
-            } else {
-                                               if (!super._constr.moveToPickUpEnergy(creep)) { 
-                }
-            }
-                //                super._constr.pickUpEnergy(creep);
+                //                super._constr.moveToBuild(creep);
                 /*                  let zz = Game.getObjectById('59a706eff5b4d253ca80424a');
                                   if(zz !== null) {
                                     creep.moveTo(zz);
@@ -171,6 +170,7 @@ class engineerClass extends roleParent {
                 //                            if (!super._containers.withdrawFromStorage(creep)) {
                 //           if (!super._containers.moveToWithdraw(creep))
                 //                if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity - creep.stats('mining') )
+                super._sources.moveToWithdraw(creep);
                 //                          }
                 //                        creep.say('zZzZ')
                 //                                }

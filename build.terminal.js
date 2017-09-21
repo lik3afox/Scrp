@@ -884,7 +884,7 @@ function buyMineralOrder() {
 
 function forEveryStorage(terminal) {
 //console.log(xStorage.XUH2O.amount,'forEveryStorage');
-if(terminal.room.name !== 'E24S33') return;
+if(terminal.room.name === 'E14S38') return;
 var storage = terminal.room.storage;
 for(var e in xStorage) {
     if(storage.store[e] === undefined || 

@@ -142,12 +142,15 @@ class roleUpbuilder extends roleParent {
             require('role.wallworker').run(creep);
             return;
         }
+        /*
         if (creep.ticksToLive === 1499 && creep.memory.level === 8 ||creep.memory.level === 4) {
-            if (Memory.stats.totalMinerals.GH > 85000) {
+            if (Memory.stats.totalMinerals.XGH2O > 85000) {
+                boost.push('XGH2O');
+            }else if (Memory.stats.totalMinerals.GH > 85000) {
                 boost.push('GH');
             }
             _.uniq(boost);
-        }
+        } */
         if (super.boosted(creep, boost)) {
             return;
         }
