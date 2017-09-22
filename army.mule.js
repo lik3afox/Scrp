@@ -3,10 +3,14 @@
 // mule takes thing and send them
 
 var classLevels = [
+// Level 0, equal carry and move.
     [CARRY,
         MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE
     ],
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]
+// Level 1, 1:2 move to carry
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+// Level 2, heal and move;
+    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL]
 ];
 
 var movement = require('commands.toMove');
@@ -30,10 +34,10 @@ class muleClass extends roleParent {
         if (total === 0 && creep.room.name == creep.memory.home) creep.memory.goHome = false;
 
         if (!creep.memory.goHome) {
-            if (total === 0) {
+            if (total === 0 && creep.memory.level !== 2) {
                 let stor = creep.room.storage;
-//                constr.pickUpEnergy(creep);
-                if(stor.store[RESOURCE_ENERGY] < 1000) {
+                //                constr.pickUpEnergy(creep);
+                if (stor.store[RESOURCE_ENERGY] < 1000) {
                     stor = creep.room.terminal;
                 }
                 if (creep.pos.isNearTo(stor)) {
@@ -55,42 +59,56 @@ class muleClass extends roleParent {
                         movement.flagMovement(creep);
                     }
                 } else {
-                    if (creep.room.storage !== undefined) {
-                        if (creep.pos.isNearTo(creep.room.storage)) {
-                            creep.transfer(creep.room.storage, RESOURCE_ENERGY);
-                            creep.memory.goHome = true;
-
-                        } else {
-                            creep.moveTo(creep.room.storage, { reusePath: 20,ignoreCreeps:true });
+                    if (creep.memory.level === 2) {
+                        if (creep.memory.recycleID === undefined) {
+                            var stru = creep.room.find(FIND_STRUCTURES);
+                            stru = _.filter(stru, function(o) {
+                                return o.structureType == STRUCTURE_SPAWN;
+                            });
+                            if (stru.length !== 0) {
+                                creep.memory.recycleID = stru[0].id;
+                            }
                         }
+                        var targ = Game.getObjectById(creep.memory.recycleID);
+                        if(targ !== null){
+                            if(creep.pos.isNearTo(targ)) {
+                                targ.recycleCreep(creep);
+                                return;
+                            } else {
+                                creep.moveTo(targ);
+                            }
+                        }
+
                     } else {
-/*                    	if (creep.pos.isNearTo(Game.flags[creep.memory.party].pos)) {
-            	        	var stru = creep.room.find(FIND_STRUCTURES);
-        	            	stru = _.filter(stru, function(o) {
-    	                		return o.structureType == STRUCTURE_CONTAINER && o.pos.isNearTo(creep);
-	                    	});
-	                    	creep.say(stru.length);
-                	    	if(stru.length > 0){
-                    		console.log( 	creep.transfer(stru[0],RESOURCE_ENERGY) );
-                    		}
-                    	} else*/ if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {
-                            creep.drop(RESOURCE_ENERGY);
+                        if (creep.room.storage !== undefined) {
+                            if (creep.pos.isNearTo(creep.room.storage)) {
+                                creep.transfer(creep.room.storage, RESOURCE_ENERGY);
+                                creep.memory.goHome = true;
+
+                            } else {
+                                creep.moveTo(creep.room.storage, { reusePath: 20, ignoreCreeps: true });
+                            }
                         } else {
-                            creep.moveMe(Game.flags[creep.memory.party], { reusePath: 20,ignoreCreeps:true });
+                            if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {
+                                creep.drop(RESOURCE_ENERGY);
+                            } else {
+                                creep.moveMe(Game.flags[creep.memory.party], { reusePath: 20, ignoreCreeps: true });
+                            }
                         }
                     }
+
                 }
 
 
             }
         } else {
-//                constr.pickUpEnergy(creep);
+            //                constr.pickUpEnergy(creep);
             if (creep.room.name == creep.memory.home) {
                 creep.memory.goHome = false;
             } else {
                 let zz = Game.getObjectById(creep.memory.parent);
                 if (zz !== null) {
-                    creep.moveMe(zz, { reusePath: 50, ignoreCreeps:true });
+                    creep.moveMe(zz, { reusePath: 50, ignoreCreeps: true });
 
                 }
             }

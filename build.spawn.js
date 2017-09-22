@@ -143,7 +143,7 @@ var Mod_E28S37 = [
     ['wallwork', require('role.wallworker'), 2, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 4]
+    ['homeDefender', require('role.defender2'), 1, 5]
 ];
 var Mod_E23S38 = [
     ['first', require('role.first'), 2, 3],
@@ -254,7 +254,7 @@ var Mod_E25S47 = [
     ['upgrader', require('role.upgrader'), 2, 5],
     ['harvester', require('role.harvester'), 2, 2],
     ['scientist', require('role.scientist'), 1, 4],
-    ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
 ];
 
@@ -262,7 +262,7 @@ var Mod_E14S47 = [
     ['first', require('role.first'), 2, 4],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['harvester', require('role.harvester'), 1, 2],
-    ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['upgrader', require('role.upgrader'), 2, 5],    
@@ -276,7 +276,7 @@ var Mod_E25S43 = [
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 2, 5],
     ['harvester', require('role.harvester'), 1, 2],
-    ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['scientist', require('role.scientist'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 3, 5],
     ['linker', require('role.linker'), 1, 4],
@@ -290,7 +290,7 @@ var Mod_E28S42 = [
 
     ['scientist', require('role.scientist'), 1, 4],
     ['wallwork', require('role.wallworker'), 1, 5],
-    ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['upgrader', require('role.upgrader'), 2, 5],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 3]
@@ -301,7 +301,7 @@ var Mod_E23S42 = [
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 2, 5],
-    ['upbuilder', require('role.upbuilder'), 1, 4],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['scientist', require('role.scientist'), 1, 4],    
     ['upgrader', require('role.upgrader'), 2, 5],
     ['linker', require('role.linker'), 1, 4],
@@ -384,16 +384,19 @@ var expansionModule = [
     [ // LEVEL 11 is another expansion that has a spawn.
         ['mineral', require('keeper.scientist'), 1, 4],
         ['ztransport', require('role.ztransport'), 1, 0],
+        ['rtransport', require('role.ztransport'), 1, 0],
     ],
 
     [ // LEVEL 12 is another expansion that has a spawn. 5836b8168b8b9619519f1708
         ['mineral', require('keeper.scientist'), 1, 5],
         ['ztransport', require('role.ztransport'), 1, 0],
+        ['rtransport', require('role.ztransport'), 1, 0],
     ],
 
     [ // LEVEL 13 - for just a miner and transport.
         ['mineral', require('keeper.scientist'), 1, 6],
         ['ztransport', require('role.ztransport'), 1, 0],
+        ['rtransport', require('role.ztransport'), 1, 0],
     ],
     [ // LEVEL 14 - for an mineral For spawn3
         ['miner', require('role.miner'), 1, 3], // Gather and move 12- just carry 

@@ -112,7 +112,9 @@ class buildLink {
         sendEnergy('59c14850412b1716375f72bd', '59b0372168bf6b4daa13fa97');
 
         sendEnergy(['59b0372168bf6b4daa13fa97','59c41813517721078ea558b3'], '599d511549eaf30b4769db20');
-        sendEnergy(['599db076d16d032ddc47c76d', '59a081f1063f4155d29b0c4f'], '599d9a8849dbcd7a6e95f99b');
+        
+        sendEnergy('59a081f1063f4155d29b0c4f', '59c0760f50691d4be5208bd7');
+        sendEnergy(['599db076d16d032ddc47c76d', '59c0760f50691d4be5208bd7'], '599d9a8849dbcd7a6e95f99b');
         sendEnergy(['59a0a51811339d0b50c91557'], '599e13ba4820ce76f0fb3380', 700);
 
         sendEnergy('59a4a21ea43d2e7af216c1ba', '59a9e1bd0795aa50d7ded256');

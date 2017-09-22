@@ -221,8 +221,9 @@ var upgradeRoomParty = [
 ];
 var muleParty = [
     ['mule', require('army.mule'),  1  , 1],
-
-
+];
+var muleHealParty = [
+    ['mule', require('army.mule'),  1  , 2],
 ];
 
 
@@ -336,6 +337,7 @@ function getSpawnCreating(flag) {
         case 'SCI':
         case 'SCI2':
         case 'scout':
+      
             return returnClosestRoom(flag.pos.roomName);
             //    default:
             //      case 'scout':
@@ -418,6 +420,10 @@ function getCurrentParty(flag) {
             case 'mule2':
 
                 return muleParty;
+            case 'hMule':
+            case 'hmule':
+
+                return muleHealParty;
 
             case 'kill':
             case 'kill2':

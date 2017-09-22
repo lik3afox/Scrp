@@ -49,14 +49,8 @@ function shouldDie(creep) {
 
 function getRooms(roomName) {
     switch (roomName) {
-        case "E35S73":
-            return ['E35S74', 'E36S74', 'E35S75', 'E36S75'];
-        case "E35S83":
-            return ['E35S84', 'E34S84', 'E35S85'];
-        case "E26S77":
-            return ['E26S76', 'E25S76', 'E26S75'];
-        case "E26S73":
-            return ['E26S74', 'E25S74', 'E25S75'];
+        case "E17S34":
+            return ['E15S34'];
     }
 }
 
@@ -153,71 +147,72 @@ class reTransport extends roleParent {
             creep.memory.gohome = true;
             creep.memory.empty = false;
         }
-        if (total === 0 && creep.room.name == creep.memory.home) {
-            if (creep.pos.isNearTo(creep.room.storage)) {
-                creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
-            } else {
-                creep.moveMe(creep.room.storage);
-            }
-        }
 
         if (total < 20) {
             creep.memory.gohome = false;
             creep.memory.empty = true;
             creep.memory.repairTarget = undefined;
         }
-        if (creep.memory.stats('heal') > 0) {
+        if (creep.stats('heal') > 0) {
             creep.selfHeal();
-
-            /*    if( !creep.healOther(5) ){
-                }else {
-                  return  
-                } */
         }
 
         if (creep.memory.gohome) {
-            // Here we go around and repair roads and containers.
-            if (creep.memory.repairTarget === undefined) {
-                let containerz = getSKContainers(creep);
-                let lowNeed = 10000000;
-                let lowTar;
-                for (let a in containerz) {
-                    console.log(containerz[a].hits, lowNeed);
-                    if (containerz[a].hits < lowNeed) {
-                        lowNeed = containerz[a].hits;
-                        lowTar = containerz[a];
+            var build = creep.room.find(FIND_CONSTRUCTION_SITES);
+            if (build.length === 0) {
+                // Here we go around and repair roads and containers.
+                if (creep.memory.repairTarget === undefined) {
+                    let containerz = getSKContainers(creep);
+                    let lowNeed = 10000000;
+                    let lowTar;
+                    for (let a in containerz) {
+                        console.log(containerz[a].hits, lowNeed);
+                        if (containerz[a].hits < lowNeed) {
+                            lowNeed = containerz[a].hits;
+                            lowTar = containerz[a];
+                        }
+                    }
+                    console.log(lowTar);
+                    if (lowTar !== undefined)
+                        creep.memory.repairTarget = lowTar.id;
+                }
+
+                let target = Game.getObjectById(creep.memory.repairTarget);
+                if (target !== null && creep.pos.inRangeTo(target, 3)) {
+                    creep.repair(target);
+                    if (!creep.pos.isNearTo(target)) {
+                        creep.moveMe(target);
+                    } else if (creep.carry[RESOURCE_ENERGY] < 200) {
+                        creep.withdraw(target, RESOURCE_ENERGY);
+                    }
+
+                    if (target.hits == target.hitsMax) {
+                        creep.memory.repairTarget = undefined;
+                        creep.withdraw(target, RESOURCE_ENERGY);
+                    }
+
+                    var bads = creep.pos.findInRange(creep.room.hostilesHere(), 4);
+                    if (bads.length === 0) {} else {
+                        creep.runFrom(bads);
+                    }
+
+                } else {
+
+                    if (repairRoad(creep, 10)) return true;
+                }
+            } else {
+                if (creep.pos.inRangeTo(build[0], 3)) {
+                    creep.build(build[0]);
+                } else {
+                    if (!super.guardRoom(creep)) {
+
+                        creep.moveTo(build[0]);
                     }
                 }
-                console.log(lowTar);
-                creep.memory.repairTarget = lowTar.id;
-            }
-
-            let target = Game.getObjectById(creep.memory.repairTarget);
-            if (creep.pos.inRangeTo(target, 3)) {
-                creep.repair(target);
-                if (!creep.pos.isNearTo(target)) {
-                    creep.moveMe(target);
-                } else if (creep.carry[RESOURCE_ENERGY] < 200) {
-                    creep.withdraw(target, RESOURCE_ENERGY);
-                }
-
-                if (target.hits == target.hitsMax) {
-                    creep.memory.repairTarget = undefined;
-                    creep.withdraw(target, RESOURCE_ENERGY);
-                }
-
-                var bads = creep.pos.findInRange(creep.room.hostilesHere(), 4);
-                if (bads.length === 0) {} else {
-                    creep.runFrom(bads);
-                }
-
-            } else {
-
-                if (repairRoad(creep, 10)) return true;
             }
 
         } else {
-            if (creep.room.name == creep.memory.home) {
+            if (creep.room.name !== _goal.room.name) {
                 if (!super.guardRoom(creep)) {
                     creep.moveTo(_goal, {
                         reusePath: 49,
