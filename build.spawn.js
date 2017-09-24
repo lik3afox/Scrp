@@ -311,6 +311,7 @@ var Mod_E14S38 = [];
 var Mod_E25S27 = [
     ['first', require('role.first'), 1, 0],
     ['harvester', require('role.harvester'), 1, 1],
+    ['linker', require('role.linker'), 1, 2],
     ['upbuilder', require('role.upbuilder'), 1, 1],
 ];
 

@@ -142,13 +142,13 @@ class engineerClass extends roleParent {
 
                 if (creep.room.controller !== undefined && creep.room.controller.level !== 1) {
                     //    if(creep.room.controller.level < 4)
-                    if (!super._containers.moveToStorage(creep)) {
+//                    if (!super._containers.moveToStorage(creep)) {
                         if (!super._constr.moveToBuild(creep)) {
                             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                                 creep.moveTo(creep.room.controller);
                             }
                         }
-                    }
+  //                  }
                     //  }
                 } else {
                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -167,11 +167,18 @@ class engineerClass extends roleParent {
                                   }*/
                 //                               if (!super._constr.moveToPickUpEnergy(creep)) { 
                 //                                if (!super._containers.moveToWithdraw(creep)) {
-                //                            if (!super._containers.withdrawFromStorage(creep)) {
                 //           if (!super._containers.moveToWithdraw(creep))
                 //                if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity - creep.stats('mining') )
-if(!super._constr.moveToPickUpEnergy(creep))
+//if(!super._constr.moveToPickUpEnergy(creep,100))
+                if (creep.room.name == 'E14S38') {
                 super._sources.moveToWithdraw(creep);
+            } else {
+if(!super._constr.moveToPickUpEnergy(creep,(500*creep.memory.roleID)+500)){
+                                            if (!super._containers.withdrawFromStorage(creep)) {
+                }
+
+}
+            }
                 //                          }
                 //                        creep.say('zZzZ')
                 //                                }

@@ -229,8 +229,12 @@ class roleFirst extends roleParent {
 //        }
  if(creep.memory.roleID === 0 &&creep.room.name == 'E25S27'){
     let zz= Game.getObjectById('59c7cc38c354a34c538569de');
-    if(zz !== null && zz.energy < 1000){
+    if(zz !== null && zz.energy < 1000 && creep.carryTotal !== 0){
+       if(creep.pos.isNearTo(zz)){
         creep.transfer(zz,RESOURCE_ENERGY);
+       } else {
+		creep.moveTo(zz);       	
+       }
         return;
     }
 

@@ -920,6 +920,32 @@ function E23S42(creep, fill) {
     }
 }
 
+function E25S27(creep, fill) {
+    var goto;
+    if (!fill) {
+        switch (creep.memory.roleID) {
+            case 0:
+                if(!constr.moveToPickUpEnergy(creep,100)){
+
+                }
+            break;
+
+
+        }
+    } else {
+        switch (creep.memory.roleID) {
+            default: 
+  //          toStorageOrTerminal(creep);
+  var zz = creep.room.storage;
+  if(creep.pos.isNearTo(zz)){
+    creep.transfer(zz,RESOURCE_ENERGY);
+  } else {
+    creep.moveTo(zz);
+  }
+            break;
+        }
+    }
+}
 function E25S47(creep, fill) {
     var goto;
     if (!fill) {
@@ -1263,6 +1289,9 @@ class roleLinker extends roleParent {
                 break;
             case 'E28S37':
                 E28S37(creep, creep.memory.full);
+                break;
+            case 'E25S27':
+                E25S27(creep, creep.memory.full);
                 break;
 
         }

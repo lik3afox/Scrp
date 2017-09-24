@@ -295,7 +295,7 @@ class StructureInteract {
                 return object.amount > min;
             }
         }); 
-        if (close === undefined) return false;
+        if (close === null) return false;
 
         if (creep.pos.isNearTo(close)) {
             creep.pickup(close,RESOURCE_ENERGY);
