@@ -103,11 +103,11 @@ class engineerClass extends roleParent {
             if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
                 creep.memory.building = true;
             }
+                
 
             if (creep.carry.energy < (creep.stats('mining') + 1)) {
                 creep.memory.building = false;
                 creep.say('harvesting');
-                //                super._constr.pickUpEnergy(creep);
                 /*
                                                if (!super._constr.pickUpEnergy(creep)) {
                                 //                if (!super._containers.withdrawFromStorage(creep)) {
@@ -140,7 +140,7 @@ class engineerClass extends roleParent {
                 }
 
 
-                if (creep.room.controller.level !== 1) {
+                if (creep.room.controller !== undefined && creep.room.controller.level !== 1) {
                     //    if(creep.room.controller.level < 4)
                     if (!super._containers.moveToStorage(creep)) {
                         if (!super._constr.moveToBuild(creep)) {
@@ -170,6 +170,7 @@ class engineerClass extends roleParent {
                 //                            if (!super._containers.withdrawFromStorage(creep)) {
                 //           if (!super._containers.moveToWithdraw(creep))
                 //                if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity - creep.stats('mining') )
+if(!super._constr.moveToPickUpEnergy(creep))
                 super._sources.moveToWithdraw(creep);
                 //                          }
                 //                        creep.say('zZzZ')

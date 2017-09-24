@@ -158,10 +158,10 @@ class transport extends roleParent {
 
         if (creep.memory.gohome) {
 
-            if(creep.room.name == 'E25S47') {
+            if (creep.room.name == 'E25S47') {
                 let zz = Game.getObjectById('59c0197506c31c559f30be6b');
-                if(zz !== null) {
-                    if(!creep.pos.isNearTo(zz)) {
+                if (zz !== null) {
+                    if (!creep.pos.isNearTo(zz)) {
                         creep.moveTo(zz);
                     }
                     creep.build(zz);
@@ -218,20 +218,21 @@ class transport extends roleParent {
                 }
 
             } else {
+                if (creep.room.name !== 'E15S34') {
+                    if (!constr.doCloseRoadRepair(creep)) {
+                        if (!constr.doCloseRoadBuild(creep)) {
+                            if (creep.carry[RESOURCE_ENERGY] > creep.carryCapacity - 15) {
+                                //console.log('here we decide to create an road if we aren''t near one');
+                                if (creep.memory.roadCount === undefined) {
+                                    creep.memory.roadCount = 0;
+                                }
+                                creep.memory.roadCount--;
+                                if (creep.memory.roadCount < 0) {
+                                    //                                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
+                                    creep.memory.roadCount = 1;
+                                }
 
-                if (!constr.doCloseRoadRepair(creep)) {
-                    if (!constr.doCloseRoadBuild(creep)) {
-                        if (creep.carry[RESOURCE_ENERGY] > creep.carryCapacity - 15) {
-                            //console.log('here we decide to create an road if we aren''t near one');
-                            if (creep.memory.roadCount === undefined) {
-                                creep.memory.roadCount = 0;
                             }
-                            creep.memory.roadCount--;
-                            if (creep.memory.roadCount < 0) {
-                                //                                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
-                                creep.memory.roadCount = 1;
-                            }
-
                         }
                     }
                 }
@@ -279,8 +280,7 @@ class transport extends roleParent {
                         var z = keys.length;
                         while (z--) {
                             var o = keys[z];
-                            if (creep.withdraw(zzz, o) == OK) {
-                            }
+                            if (creep.withdraw(zzz, o) == OK) {}
                         }
                     } else if (creep.pos.isNearTo(_goal)) {
                         creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });

@@ -308,7 +308,11 @@ var Mod_E23S42 = [
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
 var Mod_E14S38 = [];
-var Mod_E23S44 = [];
+var Mod_E25S27 = [
+    ['first', require('role.first'), 1, 0],
+    ['harvester', require('role.harvester'), 1, 1],
+    ['upbuilder', require('role.upbuilder'), 1, 1],
+];
 
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
@@ -747,8 +751,8 @@ function getCurrentModule(spawn) {
     if (spawn.room.name == 'E14S38') {
         return Mod_E14S38;
     }
-    if (spawn.room.name == 'E23S44') {
-        return Mod_E23S44;
+    if (spawn.room.name == 'E25S27') {
+        return Mod_E25S27;
     }
 
     if (spawn === null || spawn === undefined) return;

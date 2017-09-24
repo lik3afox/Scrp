@@ -30,22 +30,22 @@ var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amou
 
 var xStorage = {
     XGHO2: {
-        amount: 2000
-    },
-    XUH2O: {
-        amount: 2000
-    },
-    XZH2O: {
-        amount: 2000
-    },
-    XKHO2: {
         amount: 3000
     },
+    XUH2O: {
+        amount: 3000
+    },
+    XZH2O: {
+        amount: 3000
+    },
+    XKHO2: {
+        amount: 5000
+    },
     XZHO2: {
-        amount: 2000
+        amount: 3000
     },
     XLHO2: {
-        amount: 2000
+        amount: 3000
     },
     //    XLH2O : {        amount:1000    },
 };

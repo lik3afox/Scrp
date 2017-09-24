@@ -153,11 +153,11 @@ var maxMinerals = {
 //    'LH': 1000, // Repair
     'XLH2O': 50000, // Repair *
 
-    'XGHO2': 100000,
+    'XGHO2': 125000,
     'GHO2': 1000, // Repair
     'GO': 1000, // Repair
 
-    'XZH2O': 50000, // Dismantle
+    'XZH2O': 100000, // Dismantle
     'ZH2O': 1000, // Repair
     'ZH': 1000, // Repair
 
@@ -165,15 +165,15 @@ var maxMinerals = {
     'KHO2': 1000, // Repair
 //    'KO': 1000, // Repair
 
-    'XZHO2': 70000, //  Move*
+    'XZHO2': 125000, //  Move*
     'ZHO2': 1000, // Repair
     'ZO': 1000, // Repair
 
-    'XUH2O': 50000, // Attack
-    'UH2O': 1000, // Repair
+    'XUH2O': 100000, // Attack
+    'UH2O': 2000, // Repair
     'UH': 1000, // Repair
 
-    'XLHO2': 100000, // Heal*
+    'XLHO2': 125000, // Heal*
     'LHO2': 1000, // Repair
 //    'LO': 1000, // Repair
 

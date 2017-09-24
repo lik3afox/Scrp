@@ -978,7 +978,7 @@ function E14S38(creep, fill) {
     //    }
     if (!fill) {
         switch (creep.memory.roleID) {
-            default: if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 999000) {
+            default: if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
                 if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(32, 10, {
                         reusePath: 20

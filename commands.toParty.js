@@ -216,14 +216,14 @@ var upgrade2Party = [
 ];
 
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 1, 6]
+    ['Aupgrader', require('army.upgrader'), 2, 6]
     
 ];
 var muleParty = [
     ['mule', require('army.mule'),  1  , 1],
 ];
 var muleHealParty = [
-    ['mule', require('army.mule'),  1  , 2],
+    ['mule', require('army.mule'),  2  , 2],
 ];
 
 
