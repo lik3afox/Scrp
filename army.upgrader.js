@@ -110,7 +110,7 @@ class upgraderzClass extends roleParent {
                     case 11:
                         zz = new RoomPosition(34, 10, creep.room.name);
                         break;
-                    case 2:
+                    case 1:
                         zz = new RoomPosition(34, 9, creep.room.name);
                         break;
                     case 3:

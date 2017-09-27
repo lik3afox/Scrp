@@ -24,7 +24,8 @@ Game.rooms.E28S71.terminal.send('X', 15000, 'E5N7', 'trade');
 Game.rooms.E23S38.terminal.send('LO', 1000, 'E18S36', 'trade');
 Game.rooms.W4S93.terminal.send('H', 8000, 'E5N7', 'trade');
 
-Game.market.cancelOrder('59b71e99e7ab1338611c9831');
+Game.market.cancelOrder('59c6688cc3086045fc730bd0');
+Game.market.cancelOrder('59c72e66e6480025b1468a45');
 
 var cost = Game.market.calcTransactionCost(10000, 'E28S73', 'E28S71');
 

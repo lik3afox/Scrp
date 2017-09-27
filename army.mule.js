@@ -98,7 +98,7 @@ class muleClass extends roleParent {
 
 
                     } else {
-                        if (creep.room.storage !== undefined) {
+                        if (creep.room.storage !== undefined && creep.room.controller.level > 3) {
                             if (creep.pos.isNearTo(creep.room.storage)) {
                                 creep.transfer(creep.room.storage, RESOURCE_ENERGY);
                                 creep.memory.goHome = true;

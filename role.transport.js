@@ -130,11 +130,11 @@ class transport extends roleParent {
         }
         if (super.depositNonEnergy(creep)) return;
 
-        if (link.stayDeposit(creep)) {
-            constr.pickUpEnergy(creep);
-            creep.countReset();
-            return;
-        }
+            if (link.waitForTransfer(creep)) {
+                constr.pickUpEnergy(creep);
+                creep.countReset();
+                return;
+            }
 
         if (super.returnEnergy(creep)) {
             return;
@@ -171,7 +171,7 @@ class transport extends roleParent {
             }
 
             creep.countDistance();
-            if (creep.memory.linkID !== undefined && creep.carry[RESOURCE_ENERGY] > 0) {
+            if (creep.memory.linkID !== undefined && creep.carry[RESOURCE_ENERGY] > 0 && creep.memory.home != creep.room.name) {
 
                 let goal = Game.getObjectById(creep.memory.linkID);
                 if (goal !== null) {

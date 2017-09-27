@@ -758,6 +758,7 @@ class baseParent {
                                 if (zz == OK) {
                                     creep.memory.boostNeeded.splice(a, 1); // = 'done';
                                     creep.room.memory.boost.mineralType = 'none';
+                                    creep.memory.isBoosted = true;
                                 }
                                 if( zz == -5 || zz == -6) {
                                     creep.memory.boostNeeded.splice(a, 1); // = 'done';

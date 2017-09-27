@@ -142,8 +142,10 @@ class roleUpbuilder extends roleParent {
             require('role.wallworker').run(creep);
             return;
         }
-        
-        if (creep.room.name == 'E27S34' && creep.ticksToLive === 1499 && creep.memory.level === 8 ||creep.memory.level === 4) {
+    
+    var doUpgrade = [ 'E27S34','E14S43'];
+    var justgh = [ 'E27S34' ];
+        if (_.contains(doUpgrade,creep.room.name) && creep.ticksToLive === 1499 && creep.memory.level === 8 ||creep.memory.level === 4) {
             if (Memory.stats.totalMinerals.XGH2O > 85000) {
                 boost.push('XGH2O');
             }else if (Memory.stats.totalMinerals.GH > 85000) {
@@ -151,7 +153,7 @@ class roleUpbuilder extends roleParent {
             }
             _.uniq(boost);
         } 
-        if (creep.room.name == 'E25S37'&& creep.ticksToLive === 1499 && creep.memory.level === 8 ||creep.memory.level === 4) {
+        if (_.contains(justgh,creep.room.name) && creep.ticksToLive === 1499 && creep.memory.level === 8 ||creep.memory.level === 4) {
             if (Memory.stats.totalMinerals.GH > 85000) {
                 boost.push('GH');
             }
@@ -248,7 +250,7 @@ class roleUpbuilder extends roleParent {
 
             var strucs = Game.getObjectById(creep.memory.constructionID);
 
-            if (strucs !== null && !_.contains(doNot, creep.room.name)) {
+            if (strucs !== null && !_.contains(doNot, creep.room.name) && !creep.memory.isBoosted ) {
                 if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(strucs);
                 }

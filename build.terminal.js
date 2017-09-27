@@ -18,7 +18,7 @@ let basic = [
     'KO', 'KHO2', 'XKHO2',
 ];
 var labRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37',
-    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38'
+    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38','E25S27'
 ];
 
 // If you need to focus all minerals somewhere change it here.
@@ -1048,7 +1048,7 @@ function getMinerals(terminal, needed) {
 }
 
 function focusRoom(terminal) {
-    var target = 'E14S37';
+    var target = 'E25S27';
     if (terminal.room.name == target) return false;
     //   if (Game.rooms.E27S34.storage.store[RESOURCE_ENERGY] < 10000) target = 'E27S34';
     if (Game.rooms[target].terminal === undefined) return false;
@@ -1111,7 +1111,7 @@ class roleTerminal {
 
         for (var e in labRooms) {
             let terminal = Game.rooms[labRooms[e]].terminal;
-            if (terminal !== undefined && terminal.cooldown === 0) {
+            if (terminal !== undefined && terminal.cooldown === 0 && labRooms[e] !== 'E14S38') {
                 var energy = terminal.store[RESOURCE_ENERGY];
                 var total = terminal.total;
                 if (total > 295000) {
@@ -1139,26 +1139,12 @@ class roleTerminal {
                 getMinerals(terminal, needed);
 
                 if (terminal.room.memory.boost !== undefined) {
-                    //    console.log(terminal.store[terminal.room.memory.boost.mineralType],'zvv');
                     if (terminal.store[terminal.room.memory.boost.mineralType] === undefined || terminal.store[terminal.room.memory.boost.mineralType] < terminal.room.memory.boost.mineralAmount) {
                         giveMinerals(terminal, terminal.room.memory.boost.mineralType);
                     }
                 }
                 //                forEveryTerminal(terminal);
                 forEveryStorage(terminal);
-
-
-                /*            if (terminal.room.memory.powerSpawnID === undefined) {
-                                let zz = terminal.room.find(FIND_STRUCTURES);
-                                zz = _.filter(zz, function(o) {
-                                    return o.structureType == STRUCTURE_POWER_SPAWN;
-                                });
-                                if (zz.length === 0) {
-                                    //      doit = false;
-                                } else {
-                                    terminal.room.memory.powerSpawnID = zz[0].id;
-                                }
-                            }*/
 
             }
             //          energyCheck(terminal);

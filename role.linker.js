@@ -923,29 +923,22 @@ function E23S42(creep, fill) {
 function E25S27(creep, fill) {
     var goto;
     if (!fill) {
-        switch (creep.memory.roleID) {
-            case 0:
-                if(!constr.moveToPickUpEnergy(creep,100)){
-
-                }
-            break;
-
+        let goto3 = Game.getObjectById('59c830becbabcd74ecf1bdcc');
+        if (goto3 !== null && goto3.energy > 0) {
+            if (creep.withdraw(goto3, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(goto3, {
+                    reusePath: 20
+                });
+            }
+        } else {
+            takeFromTerminalForStorage(creep);
 
         }
     } else {
-        switch (creep.memory.roleID) {
-            default: 
-  //          toStorageOrTerminal(creep);
-  var zz = creep.room.storage;
-  if(creep.pos.isNearTo(zz)){
-    creep.transfer(zz,RESOURCE_ENERGY);
-  } else {
-    creep.moveTo(zz);
-  }
-            break;
-        }
+        toStorageOrTerminal(creep);
     }
 }
+
 function E25S47(creep, fill) {
     var goto;
     if (!fill) {
@@ -990,14 +983,10 @@ function E14S38(creep, fill) {
     //    var storageMore = false;
     var target = creep.room.storage;
     //    if( creep.room.controller.level > 5 ){
-    if (creep.room.terminal !== undefined && creep.room.controller.level > 5) {
+    if (creep.room.terminal !== undefined && creep.room.controller.level > 3) {
         target = creep.room.terminal;
     }
     if (creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
-        target = creep.room.storage;
-    }
-
-    if (creep.room.controller.level === 5) {
         target = creep.room.storage;
     }
 

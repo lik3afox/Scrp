@@ -336,6 +336,9 @@
         var i = prototypes.length;
         while (i--) {
             prototypes[i]();
+            global.roomLink= function(roomname) {
+                return '<a href=https://screeps.com/a/#!/room/shard1/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
+            };
         }
 
         var totalSpawn = 10;

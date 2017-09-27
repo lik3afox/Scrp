@@ -223,7 +223,7 @@ var muleParty = [
     ['mule', require('army.mule'),  1  , 1],
 ];
 var muleHealParty = [
-    ['mule', require('army.mule'),  2  , 2],
+    ['mule', require('army.mule'),  3  , 2],
 ];
 
 
@@ -633,7 +633,7 @@ function findParty(flag) {
                 }
             }
         }
-        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@'+flag.pos.roomName;
+        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@'+roomLink(flag.pos.roomName);
 
     }
     console.log(report);

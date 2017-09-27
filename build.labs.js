@@ -154,8 +154,8 @@ var maxMinerals = {
     'XLH2O': 50000, // Repair *
 
     'XGHO2': 125000,
-    'GHO2': 1000, // Repair
-    'GO': 1000, // Repair
+    'GHO2': 10000, // Repair
+    'GO': 10000, // Repair
 
     'XZH2O': 100000, // Dismantle
     'ZH2O': 1000, // Repair
@@ -971,7 +971,7 @@ var XGHO2 = [{
     id: 'getReplaced',
     resource: 'GO',
     amount: 2400,
-    emptied: true
+    emptied: false
 }, {
     id: 'getReplaced',
     resource: 'OH',

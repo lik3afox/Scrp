@@ -55,11 +55,11 @@ class scoutClass extends roleParent {
         console.log('scout reporting in', creep.pos);
         if (super.goToPortal(creep)) return;
 //        creep.say('sc');
-//            if (!super.moveToSignControl(creep)) {
+            if (!super.moveToSignControl(creep)) {
                 if (!super.avoidArea(creep)) {
                     movement.flagMovement(creep);
                 }
-  //          }
+            }
         creep.sing(zz, true);
 
     }

@@ -80,26 +80,39 @@ class roleUpgrader extends roleParent {
         if (creep.memory.level > 5) super.renew(creep);
 
         if (creep.carry.energy < creep.stats('upgrading') + 1) {
-            if (creep.room.name == 'E17S34') {
-                if (creep.memory.roleID == '0') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(18, 21, creep.room.name))) {
-                        creep.moveTo(17, 12);
+            if (creep.room.name == 'E25S27') {
+                if (creep.memory.roleID == '4') {
+                    if (!creep.pos.isEqualTo(new RoomPosition(43, 36, creep.room.name))) {
+                        creep.moveTo(43, 36);
+                    }
+                } 
+                if (creep.memory.roleID == '3') {
+                    if (!creep.pos.isEqualTo(new RoomPosition(41, 36, creep.room.name))) {
+                        creep.moveTo(41, 36);
+                    }
+                }
+
+                if (creep.memory.roleID == '2') {
+                    if (!creep.pos.isEqualTo(new RoomPosition(40, 35, creep.room.name))) {
+                        creep.moveTo(40, 35);
                     }
                 }
                 if (creep.memory.roleID == '1') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(18, 22, creep.room.name))) {
-                        creep.moveTo(18, 12);
+                    if (!creep.pos.isEqualTo(new RoomPosition(40, 34, creep.room.name))) {
+                        creep.moveTo(40, 34);
                     }
                 }
-                if (creep.memory.roleID == '2') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(18, 23, creep.room.name))) {
-                        creep.moveTo(19, 12);
+                if (creep.memory.roleID == '0') {
+                    if (!creep.pos.isEqualTo(new RoomPosition(40, 33, creep.room.name))) {
+                        creep.moveTo(40, 33);
                     }
                 }
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
                 } else {
-                    if (!containers.withdrawFromStorage(creep)) {}
+                       if (creep.pos.isNearTo(creep.room.storage)) {
+                    creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                }
                 }
 
             } else {
