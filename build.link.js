@@ -51,7 +51,7 @@ function newLinkTransfer() {
                     if (LINK.energy > 0) {
                         if (LINK.room.memory.chainLinks[LINK.id] !== undefined) {
                             let nLink = Game.getObjectById(LINK.room.memory.chainLinks[LINK.id]);
-                            if (nLink !== undefined) {
+                            if (nLink !== undefined && nLink.energy < 100 ) {
                                 LINK.room.visual.line(LINK.pos, nLink.pos, { color: 'yellow' });
                                 LINK.transferEnergy(nLink);
                             }
@@ -72,7 +72,7 @@ function newLinkTransfer() {
                 if (LINK !== null && LINK.energy > 0) {
                     if (LINK.room.memory.chainLinks[LINK.id] !== undefined) {
                         let nLink = Game.getObjectById(LINK.room.memory.chainLinks[LINK.id]);
-                        if (nLink !== undefined) {
+                        if (nLink !== undefined && nLink.energy < 100) {
                             LINK.room.visual.line(LINK.pos, nLink.pos, { color: 'yellow' });
                             LINK.transferEnergy(nLink);
                         }

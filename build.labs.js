@@ -1,31 +1,35 @@
-var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17S45', 'E28S37', 'E27S34', 'E24S33', 'E14S43', 'E28S42', 'E23S42', 'E25S43', 'E25S47', 'E14S47', 'E18S36', 'E14S38', 'E25S37'];
+var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17S45', 'E28S37', 'E27S34', 'E24S33', 'E14S43', 'E28S42', 'E23S42', 'E25S43', 'E25S47', 'E14S47', 'E18S36', 'E14S38', 'E25S37'
+,'E25S27'];
 
 /*
 
  Room       Prim        Second
  
  E18S36     XGHO2       *GH
- E24S33     XZHO2       ZK*
- E13S34     XZH2O*      GH*
+ E14S43     XGHO2       XGH2O
+ 
+ E24S33     XZHO2       ZK*         // MV
+ E25S43     *XZHO2      *GH2O        
+ 
+ E13S34     XZH2O*      GH*         // Dismantle
+ 
  E17S45     XUH2O*      G*
+ E25S47     XUH2O*      &UL
+ 
  E27S34     XLH2O*      *ZK
+ 
+ E25S27     XLHO2       G
  E14S37     XLHO2*      UL*
 
  E25S37     XKHO2       OH*
-
- E14S43     XGHO2       XGH2O
- E25S43     *XZHO2      *GH2O        
-
- E17S34     OH         *GH2O
- E25S47     XUH2O*      &UL
  E14S47     XKHO2       *KO
 
 
-Lv7 or not ready
- E23S38     UL
- E18S32     OH
+ E17S34     OH         *GH2O
+ E23S38     ZK
+ E18S32     LO
  E28S37     ZK
- E23S42     G
+ E23S42     KO
  E28S42     LH
 
  
@@ -128,8 +132,8 @@ var maxMinerals = {
     'LO': 50000,
 
     'GH': 100000,
-    'GH2O': 100000,
-    'XGH2O': 100000,
+    'GH2O': 75000,
+    'XGH2O': 150000,
 
     /*    'UO': 10000,
         'UH': 10000,

@@ -87,7 +87,7 @@ function restingSpot(creep) {
         case 'E25S43':
             return new RoomPosition(38, 43, creep.memory.home);
         case 'E25S27':
-            return new RoomPosition(39, 33, creep.memory.home);
+            return new RoomPosition(37, 30, creep.memory.home);
 
 
         default:

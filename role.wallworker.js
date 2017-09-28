@@ -18,9 +18,9 @@ var classLevels = [
     //4
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
     //5 /2250 Energy
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
     //6
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
 ];
 
 var boost = [];
@@ -39,12 +39,18 @@ class roleWallWorker extends roleParent {
 
     static run(creep) {
         if (super.depositNonEnergy(creep)) return;
-        if(creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
+        if (creep.room.name == 'E25S27' && creep.ticksToLive == 1499) {
+            let bb = creep.room.find(FIND_CONSTRUCTION_SITES);
+            if(bb.length > 2) {
+                boost.push('XLH2O');
+                _.uniq(boost);
+            }
+        } else if (creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
             boost.push('LH');
             _.uniq(boost);
         }
 
-        if ( creep.room.name != 'E18S36'&& creep.memory.level >=4 && super.boosted(creep, boost)) {
+        if (creep.room.name != 'E18S36' && creep.memory.level >= 4 && super.boosted(creep, boost)) {
             return;
         }
 

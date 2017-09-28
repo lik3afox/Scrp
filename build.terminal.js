@@ -18,7 +18,7 @@ let basic = [
     'KO', 'KHO2', 'XKHO2',
 ];
 var labRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37',
-    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38','E25S27'
+    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27'
 ];
 
 // If you need to focus all minerals somewhere change it here.
@@ -157,7 +157,7 @@ function needEnergy(terminal) {
             for (e in labRooms) {
                 let storage = Game.rooms[labRooms[e]].terminal;
 
-                if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name) {
+                if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name&& terminal.room.name  !== 'E14S38') {
                     highestEnergy = Game.rooms[labRooms[e]].terminal;
                     currentHigh = storage.store[RESOURCE_ENERGY];
                 }
@@ -237,7 +237,6 @@ function newTradeEnergy(terminal) {
     Orders = _.filter(Orders, function(order) {
         return (order.price > 0.01);
     });
-
     if (Orders.length === 0) {
         console.log('ALERT - .01 energy low');
         return false;
@@ -261,7 +260,7 @@ function newTradeEnergy(terminal) {
         if (Game.rooms[Orders[e].roomName] !== undefined) {
             console.log('trying to buy own energy');
         } else {
-            if (profit / (1 + temp) > target.price / (1 + target.cost) && Orders[e].roomName != 'E24S72' && Orders[e].roomName != 'E22S77') {
+            if (profit / (1 + temp) > target.price / (1 + target.cost)) {
                 target.id = Orders[e].id;
                 target.cost = temp;
                 target.amount = Orders[e].amount;
@@ -270,6 +269,8 @@ function newTradeEnergy(terminal) {
             }
         }
     }
+    console.log('in newtrade', target.room, target.price);
+
     let trans = EnergyNum; // (Math.floor(eTotal / (1 + target.cost)));
     if (trans > target.amount) trans = target.amount;
     if (trans > maxEnergyTrans) trans = maxEnergyTrans;
@@ -282,32 +283,50 @@ function newTradeEnergy(terminal) {
 
     ( 1000000 - (10500 / energySell) )  / (10500 / energySell)
     */
-    switch (target.price) {
-        case 0.02:
-            profitLine = 0.90;
-            break;
-        case 0.03:
-            profitLine = 1.85;
-            break;
-        case 0.04:
-            profitLine = 2.80;
-            break;
-        case 0.05:
-            profitLine = 3.71;
-            break;
-        case 0.06:
-            profitLine = 4.71;
-            break;
-        case 0.07:
-            profitLine = 5.66;
-            break;
-        case 0.07:
-            profitLine = 6.61;
-
-            break;
-        default:
-            break;
+    if (target.price < 0.03) {
+        profitLine = 0.90;
+    } else if (target.price < 0.04) {
+        profitLine = 1.85;
+    } else if (target.price < 0.05) {
+        profitLine = 2.80;
+    } else if (target.price < 0.06) {
+        profitLine = 3.71;
+    } else if (target.price < 0.07) {
+        profitLine = 4.71;
+    } else if (target.price < 0.08) {
+        profitLine = 5.66;
+    } else {
+        profitLine = 6.61;
     }
+    /*
+        switch (target.price) {
+            case 0.02:
+                profitLine = 0.90;
+                break;
+            case 0.03:
+                profitLine = 1.85;
+                break;
+            case 0.04:
+                profitLine = 2.80;
+                break;
+            case 0.05:
+                profitLine = 3.71;
+                break;
+            case 0.06:
+                profitLine = 4.71;
+                break;
+            case 0.07:
+                profitLine = 5.66;
+                break;
+            case 0.08:
+                profitLine = 6.61;
+                break;
+            default:
+                break;
+        }
+        if(target.price > 0.07) {
+            profitLine = 7;
+        } */
     //    console.log(profitLine, perEnergy);
     if (profitLine > perEnergy) {
 
@@ -376,16 +395,19 @@ function newTradeEnergy(terminal) {
                     } else if (energyGained >= 3900) {
                         Memory.stats.deals.AA++;
                         grade = 'A++ Grade Deal:';
+                    } else {
+                        grade = 'A+++++ Grade Deal:';
+
                     }
                     console.log(maxLimit, grade, whatHappened, '*EstProfit:', (energyGained * 0.01).toFixed(2), 'From:', terminal.room, 'to', target.room, '@', target.price,
                         'Gain:', profit.toFixed(2),
                         "total=", energyUsed.toFixed(2), "Amount", trans.toFixed(2), '+Transfer:', cost, '@perEnergy', perEnergy.toFixed(3));
                     return true;
                 } else {
-                console.log(maxLimit, grade, whatHappened, '*EstProfit:', (energyGained * 0.01).toFixed(2), 'From:', terminal.room, 'to', target.room, '@', target.price,
-                    'Gain:', profit.toFixed(2),
-                    "total=", energyUsed.toFixed(2), "Amount", trans.toFixed(2), '+Transfer:', cost, '@perEnergy', perEnergy.toFixed(3));
-                return false;
+                    console.log(maxLimit, grade, whatHappened, '*EstProfit:', (energyGained * 0.01).toFixed(2), 'From:', terminal.room, 'to', target.room, '@', target.price,
+                        'Gain:', profit.toFixed(2),
+                        "total=", energyUsed.toFixed(2), "Amount", trans.toFixed(2), '+Transfer:', cost, '@perEnergy', perEnergy.toFixed(3));
+                    return false;
                 }
 
             }
@@ -1048,7 +1070,7 @@ function getMinerals(terminal, needed) {
 }
 
 function focusRoom(terminal) {
-    var target = 'E25S27';
+    var target = 'E14S37';
     if (terminal.room.name == target) return false;
     //   if (Game.rooms.E27S34.storage.store[RESOURCE_ENERGY] < 10000) target = 'E27S34';
     if (Game.rooms[target].terminal === undefined) return false;
@@ -1139,12 +1161,26 @@ class roleTerminal {
                 getMinerals(terminal, needed);
 
                 if (terminal.room.memory.boost !== undefined) {
+                    //    console.log(terminal.store[terminal.room.memory.boost.mineralType],'zvv');
                     if (terminal.store[terminal.room.memory.boost.mineralType] === undefined || terminal.store[terminal.room.memory.boost.mineralType] < terminal.room.memory.boost.mineralAmount) {
                         giveMinerals(terminal, terminal.room.memory.boost.mineralType);
                     }
                 }
                 //                forEveryTerminal(terminal);
                 forEveryStorage(terminal);
+
+
+                /*            if (terminal.room.memory.powerSpawnID === undefined) {
+                                let zz = terminal.room.find(FIND_STRUCTURES);
+                                zz = _.filter(zz, function(o) {
+                                    return o.structureType == STRUCTURE_POWER_SPAWN;
+                                });
+                                if (zz.length === 0) {
+                                    //      doit = false;
+                                } else {
+                                    terminal.room.memory.powerSpawnID = zz[0].id;
+                                }
+                            }*/
 
             }
             //          energyCheck(terminal);
