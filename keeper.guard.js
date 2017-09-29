@@ -19,7 +19,7 @@ function getHostiles(creep) {
     if (creep.room.name == 'E11S36') {
         range = 49;
     }
-    var rng10 = ['E16S35'];
+    var rng10 = ['E16S35','E25S26'];
     if (_.contains(rng10, creep.room.name)) {
         range = 10;
     }

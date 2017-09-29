@@ -143,7 +143,7 @@ class roleUpbuilder extends roleParent {
             return;
         }
     
-    var doUpgrade = [ 'E27S34','E14S43'];
+    var doUpgrade = [ 'E18S36','E23S42','E14S47','E14S37','E28S42'];
     var justgh = [ 'E27S34' ];
         if (_.contains(doUpgrade,creep.room.name) && creep.ticksToLive === 1499 && creep.memory.level === 8 ||creep.memory.level === 4) {
             if (Memory.stats.totalMinerals.XGH2O > 85000) {

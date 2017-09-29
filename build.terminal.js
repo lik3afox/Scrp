@@ -157,7 +157,7 @@ function needEnergy(terminal) {
             for (e in labRooms) {
                 let storage = Game.rooms[labRooms[e]].terminal;
 
-                if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name&& terminal.room.name  !== 'E14S38') {
+                if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name && terminal.room.name !== 'E14S38') {
                     highestEnergy = Game.rooms[labRooms[e]].terminal;
                     currentHigh = storage.store[RESOURCE_ENERGY];
                 }
@@ -1144,17 +1144,16 @@ class roleTerminal {
                             }
                         }
 
+                    } else if (energy > 21000) {
+                        if (!newTrade) {
+                            newTrade = newTradeEnergy(terminal);
+                        }
                     } else if (energy > 10000) {
 
                     } else {
 
                     }
-                } else if (energy > 20000) {
-                    if (!newTrade) {
-                        newTrade = newTradeEnergy(terminal);
-                    }
                 }
-
                 //                if (!focus) focus = focusRoom(terminal);
                 needEnergy(terminal);
                 let needed = labs.neededMinerals(terminal.pos.roomName);
