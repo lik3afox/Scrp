@@ -216,7 +216,7 @@ var upgrade2Party = [
 ];
 
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 2, 6]
+    ['Aupgrader', require('army.upgrader'), 3, 6]
     
 ];
 var muleParty = [
@@ -284,6 +284,7 @@ function getSpawnCreating(flag) {
 
     switch (flag.name) {
         case 'control':
+            return 'E25S27';
         case 'recontrol':
             return 'E14S37';
         case 'engineer2':

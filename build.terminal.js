@@ -211,13 +211,15 @@ function countTerminals() {
     for (var b in basic) {
         let info = { type: basic[b], amount: 0 };
         for (var e in labRooms) {
-            let target = Game.rooms[labRooms[e]].terminal;
-            if (target !== null && target.store !== undefined && target.store[basic[b]] > 0) {
-                info.amount += target.store[basic[b]];
-            }
-            target = Game.rooms[labRooms[e]].storage;
-            if (target !== null && target.store !== undefined && target.store[basic[b]] > 0) {
-                info.amount += target.store[basic[b]];
+            if (Game.rooms[labRooms[e]] !== undefined) {
+                let target = Game.rooms[labRooms[e]].terminal;
+                if (target !== null && target.store !== undefined && target.store[basic[b]] > 0) {
+                    info.amount += target.store[basic[b]];
+                }
+                target = Game.rooms[labRooms[e]].storage;
+                if (target !== null && target.store !== undefined && target.store[basic[b]] > 0) {
+                    info.amount += target.store[basic[b]];
+                }
             }
         }
         data[basic[b]] = info.amount;
@@ -1132,6 +1134,8 @@ class roleTerminal {
         var newTrade = false;
 
         for (var e in labRooms) {
+            if(Game.rooms[labRooms[e]] !== undefined) {
+
             let terminal = Game.rooms[labRooms[e]].terminal;
             if (terminal !== undefined && terminal.cooldown === 0 && labRooms[e] !== 'E14S38') {
                 var energy = terminal.store[RESOURCE_ENERGY];
@@ -1180,12 +1184,14 @@ class roleTerminal {
                                     terminal.room.memory.powerSpawnID = zz[0].id;
                                 }
                             }*/
+                
+            }
 
             }
             //          energyCheck(terminal);
         }
 
-        //   doDebt(); // Send energy to a target
+        doDebt(); // Send energy to a target
         //        giveInviso();
         sellMineralOrder();
         //        buyMineralOrder();

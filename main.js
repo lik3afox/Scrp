@@ -168,9 +168,9 @@
         var e = spwns.length;
         while (e--) {
             let spawn = Game.getObjectById(spwns[e]);
+            if (spawn === null) return;
             let control = spawn.room.controller;
             if (control.level < 7) return;
-            if (spawn === null) return;
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
             if (control.level >= 7 && control.progress > 10900000 || control.level === 8) {
                 if (Game.flags.recontrol === undefined) {
@@ -355,7 +355,6 @@
             Memory.doFlag = 2;
         }
         // for creeps.
-
         var total = 0;
         spawnsDo.runCreeps();
         var spawnReport = {};

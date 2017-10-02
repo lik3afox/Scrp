@@ -19,6 +19,13 @@ class hackerClass extends roleParent {
     static run(creep) {
         if (super.goToPortal(creep)) return;
 
+        if(Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName) {
+        	creep.memory.party = 'there';
+        	creep.say('P');
+        	creep.moveTo(Game.flags.portal);
+        	return;
+        }
+// E23S38
         console.log('Control checking in', creep.pos);
 
         //console.log('acon',Game.flags.control , creep.pos.roomName , Game.flags.control.pos.roomName);

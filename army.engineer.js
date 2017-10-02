@@ -52,6 +52,14 @@ class engineerClass extends roleParent {
 
     static run(creep) {
         //     super.renew(creep);
+        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName) {
+            creep.memory.party = 'there';
+            creep.say('P');
+            creep.moveTo(Game.flags.portal);
+            return;
+        }
+
+
         if (creep.saying == 'zZzZ') {
             creep.say('zZz');
             return;
@@ -72,12 +80,13 @@ class engineerClass extends roleParent {
         if (creep.room.name == 'E25Sxx37')
             if (super.boosted(creep, ['LH'])) { return; }
 
-        if (super.goToPortal(creep)) return;
+        //        if (super.goToPortal(creep)) return;
 
         let isThere = false;
         if (creep.memory.renewSpawnID === undefined) {
-            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].pos.roomName == creep.room.name)
+            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].pos.roomName == creep.room.name) {
                 isThere = true;
+            } 
         } else {
             isThere = true;
         }
@@ -103,7 +112,7 @@ class engineerClass extends roleParent {
             if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
                 creep.memory.building = true;
             }
-                
+
 
             if (creep.carry.energy < (creep.stats('mining') + 1)) {
                 creep.memory.building = false;
@@ -142,13 +151,13 @@ class engineerClass extends roleParent {
 
                 if (creep.room.controller !== undefined && creep.room.controller.level !== 1) {
                     //    if(creep.room.controller.level < 4)
-//                    if (!super._containers.moveToStorage(creep)) {
-                        if (!super._constr.moveToBuild(creep)) {
-                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(creep.room.controller);
-                            }
+                    //                    if (!super._containers.moveToStorage(creep)) {
+                    if (!super._constr.moveToBuild(creep)) {
+                        if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(creep.room.controller);
                         }
-  //                  }
+                    }
+                    //                  }
                     //  }
                 } else {
                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -169,16 +178,17 @@ class engineerClass extends roleParent {
                 //                                if (!super._containers.moveToWithdraw(creep)) {
                 //           if (!super._containers.moveToWithdraw(creep))
                 //                if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity - creep.stats('mining') )
-//if(!super._constr.moveToPickUpEnergy(creep,100))
-                if (creep.room.name == 'E14S38') {
-                super._sources.moveToWithdraw(creep);
-            } else {
-if(!super._constr.moveToPickUpEnergy(creep,(500*creep.memory.roleID)+500)){
-                                            if (!super._containers.withdrawFromStorage(creep)) {
-                }
+                //if(!super._constr.moveToPickUpEnergy(creep,100))
+                if (creep.room.name == 'E14S38' || creep.room.name == 'E22S27'|| creep.room.name == 'E38S81') {
+                    if(!super._sources.moveToWithdraw(creep)) {
+                        super._constr.moveToPickUpEnergy(creep);
+                    }
+                } else {
+                    if (!super._constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID) + 500)) {
+                        if (!super._containers.withdrawFromStorage(creep)) {}
 
-}
-            }
+                    }
+                }
                 //                          }
                 //                        creep.say('zZzZ')
                 //                                }

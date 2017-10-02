@@ -125,7 +125,7 @@ var Mod_E18S32 = [
     ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['scientist', require('role.scientist'), 1, 4],
-//    ['upgrader', require('role.upgrader'), 1, 5],
+    //    ['upgrader', require('role.upgrader'), 1, 5],
     ['wallwork', require('role.wallworker'), 1, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
@@ -139,7 +139,7 @@ var Mod_E28S37 = [
     ['first', require('role.first'), 2, 4],
     ['scientist', require('role.scientist'), 1, 4],
     ['harvester', require('role.harvester'), 2, 2],
-    
+
     ['wallwork', require('role.wallworker'), 2, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
@@ -211,7 +211,7 @@ var Mod_E14S37 = [
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
 
-    ['scientist', require('role.scientist'), 1, 4],    
+    ['scientist', require('role.scientist'), 1, 4],
     //    ['upgrader', require('role.upgrader'), 4, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
@@ -297,21 +297,21 @@ var Mod_E23S42 = [
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 2, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['scientist', require('role.scientist'), 1, 4],    
+    ['scientist', require('role.scientist'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
-var Mod_E14S38 = [];
+var Mod_E38S81 = [];
 var Mod_E25S27 = [
     ['first', require('role.first'), 2, 3],
-    ['scientist', require('role.scientist'), 1, 4], 
+    ['scientist', require('role.scientist'), 1, 4],
     ['harvester', require('role.harvester'), 1, 2],
     ['linker', require('role.linker'), 1, 4],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 2, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['homeDefender', require('role.defender2'), 1, 4]
+    ['homeDefender', require('role.defender2'), 1, 6]
 ];
 
 var expansionModule = [
@@ -748,8 +748,8 @@ function getNuke(spawn) {
 }
 
 function getCurrentModule(spawn) {
-    if (spawn.room.name == 'E14S38') {
-        return Mod_E14S38;
+    if (spawn.room.name == 'E38S81') {
+        return Mod_E38S81;
     }
     if (spawn.room.name == 'E25S27') {
         return Mod_E25S27;
@@ -1028,7 +1028,7 @@ class theSpawn {
 
             } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
 
-            } else if (currentModule[type][_name] == 'scientist' && !spawn.room.memory.labsNeedWork){
+            } else if (currentModule[type][_name] == 'scientist' && !spawn.room.memory.labsNeedWork) {
 
             } else {
 
@@ -1083,7 +1083,27 @@ class theSpawn {
     // Id matches and returns an array of current count. 
 
     static runCreeps() {
+        if (Game.shard.name == 'shard0') {
 
+//            console.log('doing test in shard0');
+            for (var ee in Game.creeps) {
+//                console.log(Game.creeps[ee].memory.role, ee);
+                if (Game.creeps[ee].memory === undefined) {
+                    Game.creeps[ee].memory = {
+                        role: 'engineer',
+                        party: 'hello'
+                    };
+
+                }
+                if (Game.creeps[ee].memory.role === undefined) {
+                    Game.creeps[ee].memory.role = 'engineer';
+                }
+                if (Game.creeps[ee].memory.party === undefined) {
+                    Game.creeps[ee].memory.party = 'hello';
+                }
+                //    return;
+            }
+        }
         if (Memory.creeps === undefined) return false;
         var spawnCreeps = Memory.creeps;
         var start;
@@ -1100,7 +1120,9 @@ class theSpawn {
             if (!Game.creeps[name]) { // Check to see if this needs deletion
                 delete spawnCreeps[name]; // If it does then it does.
             } else {
-
+                if (Game.creeps[name] === undefined) {
+                    console.log('got undefined Memory');
+                }
                 if (Memory.showInfo > 1) {
                     if (totalRoles[Game.creeps[name].memory.role] === undefined) totalRoles[Game.creeps[name].memory.role] = 0;
                     totalRoles[Game.creeps[name].memory.role]++;
@@ -1108,7 +1130,6 @@ class theSpawn {
                 }
                 var type = allModule.length;
                 while (type--) {
-
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
                         if (Game.creeps[name].memory.role == 'scout') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
@@ -1156,7 +1177,7 @@ class theSpawn {
                 return;
             }
             let xp = spawn.memory.roadsTo[ie].expLevel;
-//            xp = 13;
+            //            xp = 13;
             _module = expansionModule[xp];
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 
