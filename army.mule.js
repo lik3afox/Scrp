@@ -104,7 +104,7 @@ class muleClass extends roleParent {
                                 creep.memory.goHome = true;
 
                             } else {
-                                creep.moveTo(creep.room.storage, { reusePath: 20, ignoreCreeps: true });
+                                creep.moveTo(creep.room.storage, { reusePath: 20});
                             }
                         } else {
                             if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {

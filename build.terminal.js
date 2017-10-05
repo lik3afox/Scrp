@@ -30,22 +30,22 @@ var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amou
 
 var xStorage = {
     XGHO2: {
-        amount: 3000
+        amount: 5000
     },
     XUH2O: {
-        amount: 3000
+        amount: 4000
     },
     XZH2O: {
         amount: 3000
     },
     XKHO2: {
-        amount: 5000
+        amount: 6000
     },
     XZHO2: {
-        amount: 3000
+        amount: 4000
     },
     XLHO2: {
-        amount: 3000
+        amount: 4000
     },
     //    XLH2O : {        amount:1000    },
 };
@@ -172,12 +172,6 @@ function needEnergy(terminal) {
     // This terminal if below 100k will make a order if none exist.
     // Find the highest terminal that's level 8 and get energy from it.
     /*
-        if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
-            if (!anyLikeOrder(RESOURCE_ENERGY, terminal.room.name)) {
-                //          let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, terminal.room.name);
-                //            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, terminal.room.name, '');
-            }
-        }
 
         if (terminal.room.terminal.store[RESOURCE_POWER] > 45000) {
             if (!anyLikeOrder(RESOURCE_POWER, terminal.room.name)) {
@@ -490,7 +484,7 @@ function tradeEnergy(terminal) {
         }
 
         let whatHappened = Game.market.deal(target.id, trans, targetRoom);
-        console.log("Max Energy Trade", whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost));
+        console.log("Max Energy Trade", whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost),roomLink(terminal.room.name) );
     }
 
     //  var amountSending = terminal.store[RESOURCE_ENERGY] * 0.05;
@@ -1104,7 +1098,7 @@ function upgradeRoom(terminal) {
     if (targetRoom.controller.level < 6) return false;
     if (targetRoom.terminal === undefined) return false;
     var totalEnergy = targetRoom.storage.store[RESOURCE_ENERGY] + targetRoom.terminal.store[RESOURCE_ENERGY];
-    if (targetRoom.storage.store[RESOURCE_ENERGY] > 999000 && targetRoom.terminal.store[RESOURCE_ENERGY] > 299000) return false;
+    if (targetRoom.storage.store[RESOURCE_ENERGY] > 990000 && targetRoom.terminal.store[RESOURCE_ENERGY] > 290000) return false;
     //    if (totalEnergy > 400000) return false;
     //    if (terminal.store[RESOURCE_ENERGY] < 21000 && terminal.room.storage.store[RESOURCE_ENERGY] > 900000) return false;
     var amount = terminal.store[RESOURCE_ENERGY] * 0.25;
@@ -1133,6 +1127,14 @@ class roleTerminal {
         var focus = false;
         var newTrade = false;
 
+        //if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
+            /*var tgt = 'E14S37'             ;
+            if (!anyLikeOrder(RESOURCE_ENERGY, tgt)) {
+                          let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, tgt);
+                            console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, tgt, '');
+            } */
+        //}
+
         for (var e in labRooms) {
             if(Game.rooms[labRooms[e]] !== undefined) {
 
@@ -1144,6 +1146,7 @@ class roleTerminal {
                     if (energy > 20000) {
                         if (!upgradeRoom(terminal)) {
                             if (!shareEnergy(terminal)) { // Moves energy around
+                                if(terminal.room.name !== 'E14S37')
                                 if (!tradeEnergy(terminal)) {}
                             }
                         }
@@ -1171,6 +1174,8 @@ class roleTerminal {
                 }
                 //                forEveryTerminal(terminal);
                 forEveryStorage(terminal);
+
+
 
 
                 /*            if (terminal.room.memory.powerSpawnID === undefined) {

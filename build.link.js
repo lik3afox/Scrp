@@ -127,6 +127,13 @@ class buildLink {
                             nlinkz[i].structure.room.visual.line(nlinkz[i].structure.pos, mLink.pos, { color: 'green' });
                         }
                     }
+                    if (creep.memory.containerID !== undefined){
+                        var zz = Game.getObjectById(creep.memory.containerID);
+                        if(zz !== null) {
+                            zz.destroy();
+                        }
+                        creep.memory.containerID = undefined;
+                    }
 
                     return true;
                 }

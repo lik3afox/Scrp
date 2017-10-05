@@ -348,12 +348,9 @@ class SpawnInteract {
         }
 
 
-        if (spawn.room.name == 'E26S73') {
-            spawn.memory.renewEnergyLevel = 1300;
-        }
-
         if (spawn.memory.wantRenew === undefined) return false;
         if (spawn.memory.wantRenew.length === 0) return false;
+        if(spawn.room.name == 'E14S38' && spawn.room.controller.level < 6) return false;
         if (spawn.memory.renewEnergyLevel !== undefined) {
             if (spawn.room.energyAvailable < spawn.memory.renewEnergyLevel) {
                 return false;

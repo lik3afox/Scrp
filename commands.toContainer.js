@@ -6,7 +6,7 @@
 function getNonEmptyContain(creep) {
     return creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
-            return ((structure.structureType == STRUCTURE_STORAGE ||
+            return ((
                 structure.structureType == STRUCTURE_CONTAINER));
         }
     });
@@ -213,7 +213,6 @@ class ContainerInteract {
             creep.memory.containerID = contains;
         }
         if (creep.memory.containerID.length < 1) return false;
-
 
 
         if (creep.memory.containerID.length > 0) {

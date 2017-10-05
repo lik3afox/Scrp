@@ -301,7 +301,12 @@ var Mod_E23S42 = [
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
-var Mod_E38S81 = [];
+var Mod_E38S81 = [
+    ['harvester', require('role.harvester'), 2, 2],
+    ['first', require('role.first'), 1, 2],
+    ['linker', require('role.linker'), 2, 4],
+    ['upgrader', require('role.upgrader'), 2, 3],
+];
 var Mod_E25S27 = [
     ['first', require('role.first'), 2, 3],
     ['scientist', require('role.scientist'), 1, 4],

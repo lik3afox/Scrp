@@ -12,7 +12,7 @@ var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17
  
  E13S34     XZH2O*      GH*         // Dismantle
  
- E17S45     XUH2O*      G*
+ E17S45     G*      G*
  E25S47     XUH2O*      &UL
  
  E27S34     XLH2O*      *ZK
@@ -156,7 +156,7 @@ var maxMinerals = {
     //    'LH': 1000, // Repair
     'XLH2O': 50000, // Repair *
 
-    'XGHO2': 125000,
+    'XGHO2': 150000,
     'GHO2': 10000, // Repair
     'GO': 10000, // Repair
 
@@ -164,11 +164,11 @@ var maxMinerals = {
     'ZH2O': 1000, // Repair
     'ZH': 1000, // Repair
 
-    'XKHO2': 150000, // Ranged*
+    'XKHO2': 200000, // Ranged*
     'KHO2': 1000, // Repair
     //    'KO': 1000, // Repair
 
-    'XZHO2': 125000, //  Move*
+    'XZHO2': 150000, //  Move*
     'ZHO2': 1000, // Repair
     'ZO': 1000, // Repair
 
@@ -176,7 +176,7 @@ var maxMinerals = {
     'UH2O': 2000, // Repair
     'UH': 1000, // Repair
 
-    'XLHO2': 125000, // Heal*
+    'XLHO2': 150000, // Heal*
     'LHO2': 1000, // Repair
     //    'LO': 1000, // Repair
 

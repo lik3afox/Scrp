@@ -17,8 +17,8 @@ var classLevels = [
     [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, CARRY, MOVE, MOVE],
     [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
 
-    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY,
-        CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE
+    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE,
+        CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE
     ],
 
     [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE] // 500 
@@ -59,7 +59,13 @@ function isItTier3(creep) {
 
 function toStorageOrTerminal(creep) {
     let maxStorage = 850000;
+    if (creep.room.controller.level < 4) {
+        // Here we drop.
+        return false;
+    }
     if (isItTier3(creep)) {} else if (creep.room.terminal !== undefined && creep.room.terminal.total == 300000) {
+        containers.moveToStorage(creep);
+    } else if (creep.room.terminal === undefined) {
         containers.moveToStorage(creep);
     } else if ((creep.carry[RESOURCE_ENERGY] === 0 && creep.carryTotal !== 0) || creep.room.terminal.store[RESOURCE_ENERGY] < 5000) {
         containers.moveToTerminal(creep);
@@ -68,18 +74,7 @@ function toStorageOrTerminal(creep) {
     } else if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 || creep.room.storage.store[RESOURCE_ENERGY] > 900000) {
         containers.moveToTerminal(creep);
     } else {
-        if (creep.room.name == 'E35S83' && creep.memory.roleID == 1) {
-            if (creep.pos.isNearTo(creep.room.storage)) {
-                if (creep.transfer(creep.room.storage, RESOURCE_ENERGY) == OK) {
-                    creep.moveTo(creep.room.storage);
-                }
-            } else {
-                creep.moveTo(creep.room.storage);
-            }
-        } else {
             containers.moveToStorage(creep);
-
-        }
     }
 }
 
@@ -123,9 +118,13 @@ function getMineralForStorage(creep) {
 
 function takeFromTerminalForStorage(creep) {
     if (creep.room.terminal === undefined || creep.room.storage === undefined) return false;
-    if (getMineralForStorage(creep)) return;
+    if (getMineralForStorage(creep)) {
+    	creep.say('M');
+    	return;
+    }
     var goto = creep.room.terminal;
     if (goto !== undefined && goto.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
+    	creep.say('T');
         if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(goto);
         }
@@ -1044,6 +1043,36 @@ function E14S38(creep, fill) {
     }
 }
 
+function doDefault(creep) {
+    if (creep.carryTotal !== creep.carryCapacity) {
+        // Then pick up energy.
+        if (!constr.moveToPickUpEnergy(creep, 300)) {
+            // First look for containers.
+            if(creep.room.memory.masterLinkID !== undefined) {
+
+            }
+            if (creep.memory.roleID === 0) {
+                    let cc = Game.getObjectById(creep.room.memory.masterLinkID);
+                    if (cc !== null && cc.energy > 0) {
+                        if (creep.pos.isNearTo(cc)) {
+                            creep.withdraw(cc, RESOURCE_ENERGY);
+                        } else {
+                            creep.moveTo(cc);
+                        }
+                        return true;
+                    }
+            }
+            if (creep.memory.roleID !== 0 && !containers.moveToWithdraw(creep)) {
+            	return true;
+            }
+            takeFromTerminalForStorage(creep);
+        }
+    } else {
+        toStorageOrTerminal(creep);
+    }
+
+}
+
 class roleLinker extends roleParent {
 
     static levels(level) {
@@ -1220,6 +1249,9 @@ class roleLinker extends roleParent {
         }
 
         switch (creep.pos.roomName) {
+            case 'E38S81':
+                doDefault(creep, creep.memory.full);
+                break;
 
             case 'E25S47':
                 E25S47(creep, creep.memory.full);
