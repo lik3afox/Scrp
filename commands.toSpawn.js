@@ -113,11 +113,11 @@ function getStack(spawn) {
 
 
                 alpha.memory.currentStack = 'create';
-                if (alpha.memory.create.length === 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length > 0) {
+                if (alpha.memory.create !== undefined && alpha.memory.create.length === 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length > 0) {
                     alpha.memory.currentStack = 'war';
                 }
 
-                if (Game.flags[rampart] === undefined && alpha.memory.create.length === 0 && alpha.memory.expandCreate.length > 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length === 0) {
+                if (alpha.memory.create !== undefined && Game.flags[rampart] === undefined && alpha.memory.create.length === 0 && alpha.memory.expandCreate.length > 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length === 0) {
                     alpha.memory.currentStack = 'expand';
                 }
 
@@ -350,7 +350,7 @@ class SpawnInteract {
 
         if (spawn.memory.wantRenew === undefined) return false;
         if (spawn.memory.wantRenew.length === 0) return false;
-        if(spawn.room.name == 'E14S38' && spawn.room.controller.level < 6) return false;
+//        if(spawn.room.name == 'E14S38' && spawn.room.controller.level < 6) return false;
         if (spawn.memory.renewEnergyLevel !== undefined) {
             if (spawn.room.energyAvailable < spawn.memory.renewEnergyLevel) {
                 return false;
@@ -378,7 +378,11 @@ class SpawnInteract {
             renewLimit = spawn.memory.renewLevel;
         }
         if (temp < renewLimit) {
-            let rst = spawn.renewCreep(renewTarget);
+            if(spawn.room.name === 'E14S38' && renewTarget.memory.role === 'Aupgrader'){
+                
+            }else {
+                let rst = spawn.renewCreep(renewTarget);
+            }
 
             //console.log('********* ',spawn,' am Renewing:',renewTarget.name,rst,'********* ');
             return true;
@@ -459,7 +463,7 @@ class SpawnInteract {
 
                 } */
         //        if (spawn.memory.notSpawner === true) return;
-        if (STACK.length > 0) {
+        if (STACK !== undefined && STACK.length > 0) {
             // Creation here.
 
             if (spawn.canCreateCreep(STACK[0].build) == OK) {

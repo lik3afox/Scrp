@@ -28,6 +28,8 @@ function restingSpot(creep) {
     switch (creep.memory.sourceID) {
         case '5982ff21b097071b4adc2224':
             return new RoomPosition(33, 29, creep.memory.home);
+        case '5982feebb097071b4adc1bd6':
+            return new RoomPosition(18, 36, creep.memory.home);
 
 
         default:
@@ -156,7 +158,7 @@ class roleHarvester extends roleParent {
 
 
         //        if (creep.memory.containerID !== undefined || creep.memory.linkID !== undefined)
-                creep.pickUpEnergy();
+        creep.pickUpEnergy();
 
         if (creep.memory.distance === undefined) { creep.memory.distance = 0; }
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
@@ -166,16 +168,16 @@ class roleHarvester extends roleParent {
         }
         if (creep.memory.level > 1) super.renew(creep);
 
-if(creep.memory.sourceID == '5982ff7ab097071b4adc2b7d') {
-    creep.memory.reportDeath = true;
-}
+        if (creep.memory.sourceID == '5982ff7ab097071b4adc2b7d') {
+            creep.memory.reportDeath = true;
+        }
         if (creep.carry.energy > creep.carryCapacity - creep.stats('mining')) {
-            if(creep.room.name == 'E14S43') {
+            if (creep.room.name == 'E14S43') {
                 let zz = Game.getObjectById('59ba8fa1f2ce785fd0fdb45e');
-                if(zz !== null) {
-                    if(creep.pos.isNearTo(zz)) {
+                if (zz !== null) {
+                    if (creep.pos.isNearTo(zz)) {
                         creep.build(zz);
-                    } else {    
+                    } else {
                         creep.moveTo(zz);
                     }
                     return;
@@ -190,7 +192,7 @@ if(creep.memory.sourceID == '5982ff7ab097071b4adc2b7d') {
                     }
                 }
             }
-            
+
         }
         moveToWithdraw(creep);
     }

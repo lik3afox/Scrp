@@ -989,14 +989,19 @@ function E14S38(creep, fill) {
         target = creep.room.storage;
     }
 
+    var tgt = new RoomPosition(32, 10,'E14S38');
+    if(!creep.pos.isEqualTo(tgt)){
+    	creep.say('hug'+creep.moveTo(tgt));
+        
+    }
+
     //    }
     if (!fill) {
         switch (creep.memory.roleID) {
-            default: if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
+            default: 
+            if(!constr.pickUpEnergy(creep))
+            if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
                 if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(32, 10, {
-                        reusePath: 20
-                    });
                 }
             }
             break;
@@ -1017,7 +1022,7 @@ function E14S38(creep, fill) {
                 if (creep.pos.isNearTo(spawn)) {
                     creep.transfer(spawn, RESOURCE_ENERGY);
                 } else {
-                    creep.moveTo(spawn);
+     //               creep.moveTo(spawn);
                 }
                 return;
             }
@@ -1032,7 +1037,7 @@ function E14S38(creep, fill) {
                     if (creep.pos.isNearTo(target)) {
                         creep.transfer(target, RESOURCE_ENERGY);
                     } else {
-                        creep.moveTo(target);
+//                        creep.moveTo(target);
                     }
                 }
 
@@ -1092,7 +1097,7 @@ class roleLinker extends roleParent {
             creep.room.visual.text(creep.room.controller.progressTotal - creep.room.controller.progress, creep.room.controller.pos.x + 1, creep.room.controller.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: RIGHT });
         }
         //        if (creep.room.name !== 'x' && creep.room.name !== 'E14S47')
-        constr.pickUpEnergy(creep);
+        
 
         if (super.returnEnergy(creep)) return;
 

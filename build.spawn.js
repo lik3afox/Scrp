@@ -759,7 +759,9 @@ function getCurrentModule(spawn) {
     if (spawn.room.name == 'E25S27') {
         return Mod_E25S27;
     }
-
+if(spawn.room.name == 'E14S38'){
+    return [];
+}
     if (spawn === null || spawn === undefined) return;
     var currentModuleLevel = getModuleLevel(spawn);
     if (spawn.room.controller.level >= 3) {

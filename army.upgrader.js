@@ -54,6 +54,11 @@ class upgraderzClass extends roleParent {
             }
         }
 
+        if(creep.memory.roleID === 0 && creep.room.storage.store[RESOURCE_ENERGY]=== 0 && creep.room.terminal.store[RESOURCE_ENERGY]=== 0) {
+            creep.memory.death = true;
+            creep.memory.home = 'E14S38';
+        }
+
 
         let isThere = false;
         if (creep.memory.renewSpawnID === undefined) {
