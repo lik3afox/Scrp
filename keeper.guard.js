@@ -19,7 +19,7 @@ function getHostiles(creep) {
     if (creep.room.name == 'E11S36') {
         range = 49;
     }
-    var rng10 = ['E16S35','E25S26'];
+    var rng10 = ['E16S35', 'E25S26'];
     if (_.contains(rng10, creep.room.name)) {
         range = 10;
     }
@@ -92,7 +92,7 @@ function attackCreep(creep, bads) {
             creep.rangedMassAttack();
         }
         creep.selfHeal();
-        creep.moveTo(enemy, { ignoreRoads: true,maxRooms:1 });
+        creep.moveTo(enemy, { ignoreRoads: true, maxRooms: 1 });
         if (bads.length > 2) {}
 
         return;
@@ -100,10 +100,10 @@ function attackCreep(creep, bads) {
         creep.selfHeal();
         if (enemy.owner.username === 'Source Keeper') {
             if (creep.hits == creep.hitsMax) {
-                creep.moveTo(enemy, { ignoreRoads: true,maxRooms:1 });
+                creep.moveTo(enemy, { ignoreRoads: true, maxRooms: 1 });
             }
         } else {
-            creep.moveTo(enemy, { ignoreRoads: true,maxRooms:1 });
+            creep.moveTo(enemy, { ignoreRoads: true, maxRooms: 1 });
         }
     }
     if (bads.length > 2) {
@@ -112,36 +112,48 @@ function attackCreep(creep, bads) {
 }
 
 function analyzeSourceKeeper(creep) {
-    var noMineral = ['E14S34', 'E16S34', 'E24S34','E25S44','E14S35'];
+    var noMineral = ['E14S34', 'E16S34', 'E24S34', 'E25S44', 'E14S35'];
 
     let keepers = creep.memory.keeperLair;
     let targetID;
     let lowest = 300;
 
-    if (creep.memory.mineralRoomID === undefined) {
-        let tempinz = creep.room.find(FIND_MINERALS);
-        creep.memory.mineralRoomID = tempinz[0].id;
-    }
-    let tempin = Game.getObjectById(creep.memory.mineralRoomID);
     var e = keepers.length;
     while (e--) {
         let keeperTarget;
         if (keepers[e] !== null)
             keeperTarget = Game.getObjectById(keepers[e].id);
-        if (keeperTarget !== null && tempin !== null) {
-            if (keepers[e] !== null && tempin.pos.inRangeTo(keeperTarget, 10) && !_.contains(noMineral, creep.room.name)) {
-                if (tempin.mineralAmount !== 0) {
-                    if (keeperTarget.ticksToSpawn === undefined) {
-                        targetID = e;
-                        break;
-                        //Winner
-                    } else if (keeperTarget.ticksToSpawn < lowest) {
-                        lowest = keeperTarget.ticksToSpawn;
-                        targetID = e;
-                    }
+
+        if (keeperTarget !== null) {
+            if (_.contains(noMineral, creep.room.name)) { // Will always kill mineral SK.
+                if (keeperTarget.ticksToSpawn === undefined) {
+                    targetID = e;
+                    break;
+                    //Winner
+                } else if (keeperTarget.ticksToSpawn < lowest) {
+                    lowest = keeperTarget.ticksToSpawn;
+                    targetID = e;
                 }
             } else {
-                if (keeperTarget !== undefined) {
+
+                if (creep.memory.mineralRoomID === undefined) {
+                    let tempinz = creep.room.find(FIND_MINERALS);
+                    creep.memory.mineralRoomID = tempinz[0].id;
+                }
+
+                if (e == creep.memory.mineralRoomID) {
+                    let tempin = Game.getObjectById(creep.memory.mineralRoomID);
+                    if (tempin.mineralAmount !== 0) {
+                        if (keeperTarget.ticksToSpawn === undefined) {
+                            targetID = e;
+                            break;
+                            //Winner
+                        } else if (keeperTarget.ticksToSpawn < lowest) {
+                            lowest = keeperTarget.ticksToSpawn;
+                            targetID = e;
+                        }
+                    }
+                } else {
                     if (keeperTarget.ticksToSpawn === undefined) {
                         targetID = e;
                         break;
@@ -164,23 +176,14 @@ function analyzeSourceKeeper(creep) {
 }
 
 function moveCreep(creep) {
-    if (creep.room.name == 'E11S36xx') {
-        var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-        site = _.filter(site, function(o) {
-            return !o.pos.lookForStructure(STRUCTURE_RAMPART);
-        });
-        if (site.length > 0) {
-            var zzz = creep.pos.findClosestByRange(site);
-            creep.moveTo(zzz);
-        }
-        return;
-    }
+
     if (creep.memory.goTo === undefined) {
         creep.memory.goTo = analyzeSourceKeeper(creep);
     }
     if (creep.memory.keeperLair[creep.memory.goTo] === undefined) {
-        //        creep.memory.goTo = undefined;
-        return false;
+//        console.log('BLah', creep.pos, creep.memory.goTo);
+        creep.memory.goTo = analyzeSourceKeeper(creep);
+        return;
     }
     let gota = Game.getObjectById(creep.memory.keeperLair[creep.memory.goTo].id);
     if (gota !== null) {
@@ -188,14 +191,14 @@ function moveCreep(creep) {
         if (inRange < 4 && gota.ticksToSpawn > 200) {
             creep.say('dif', true);
             creep.memory.goTo = analyzeSourceKeeper(creep);
+            return;
         }
 
-        let rmPos = new RoomPosition(creep.memory.keeperLair[creep.memory.goTo].pos.x, creep.memory.keeperLair[creep.memory.goTo].pos.y, creep.memory.keeperLair[creep.memory.goTo].pos.roomName);
         if (!creep.pos.isNearTo(gota)) {
             if (creep.room.name == 'E15S34') {
-                creep.moveMe(rmPos, {
+                creep.moveMe(gota, {
                     reusePath: 7,
-                                        maxRooms: 1,
+                    maxRooms: 1,
                     ignoreRoads: (creep.room.name == 'W4S94'),
                     visualizePathStyle: {
                         fill: 'transparent',
@@ -206,10 +209,8 @@ function moveCreep(creep) {
                     }
                 });
             } else {
-                creep.moveMe(rmPos, {
+                creep.moveMe(gota, {
                     reusePath: 7,
-                           //             maxRooms:1,
-                    ignoreRoads: (creep.room.name == 'W4S94'),
                     visualizePathStyle: {
                         fill: 'transparent',
                         stroke: '#bf0',
@@ -224,8 +225,6 @@ function moveCreep(creep) {
         } else {
             creep.say('zZzZz');
         }
-    } else {
-        //        creep.say('zZzZz');
     }
 
 }
@@ -330,6 +329,13 @@ class roleGuard extends roleParent {
         } else {
             if (creep.memory.keeperLair === undefined) {
                 creep.memory.keeperLair = creep.room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_KEEPER_LAIR } });
+                if (creep.room.name == 'E26S34') {
+                    var ee = Game.getObjectById('5982ff86b097071b4adc2d2a');
+                    var zz = Game.getObjectById('5982ff86b097071b4adc2d2c');
+
+                    creep.memory.keeperLair.push(ee);
+                    creep.memory.keeperLair.push(zz);
+                }
                 creep.memory.goTo = analyzeSourceKeeper(creep);
             }
             moveCreep(creep);

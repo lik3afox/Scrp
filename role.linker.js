@@ -175,6 +175,7 @@ function doLinkRoom(creep) {
 
 function oneLinkRoom(creep, fill) {
     if (!fill) {
+    if(constr.pickUpEnergy(creep)) return;
         switch (creep.memory.roleID) {
             case 0:
                 doLinkRoom(creep);
@@ -990,10 +991,14 @@ function E14S38(creep, fill) {
     }
 
     var tgt = new RoomPosition(32, 10,'E14S38');
+    
+if(creep.memory.roleID !== 0)
+tgt = new RoomPosition(34, 10,'E14S38');
     if(!creep.pos.isEqualTo(tgt)){
     	creep.say('hug'+creep.moveTo(tgt));
         
     }
+
 
     //    }
     if (!fill) {
@@ -1051,7 +1056,7 @@ function E14S38(creep, fill) {
 function doDefault(creep) {
     if (creep.carryTotal !== creep.carryCapacity) {
         // Then pick up energy.
-        if (!constr.moveToPickUpEnergy(creep, 300)) {
+        if (creep.room.controller.level > 3) {
             // First look for containers.
             if(creep.room.memory.masterLinkID !== undefined) {
 
@@ -1071,6 +1076,8 @@ function doDefault(creep) {
             	return true;
             }
             takeFromTerminalForStorage(creep);
+        } else {
+            constr.moveToPickUpEnergy(creep, 300);
         }
     } else {
         toStorageOrTerminal(creep);

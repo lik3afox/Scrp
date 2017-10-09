@@ -1,41 +1,18 @@
-var roomCache = [];
+var roomCache = {};
+var visPath = {
+    fill: 'transparent',
+    stroke: '#fff',
+    lineStyle: 'dashed',
+    strokeWidth: 0.15,
+    opacity: 0.5
+};
 
 function getTargets(creep) {
-    //    if (roomCache[creep.room.name] === undefined) {
-    if (creep.memory.spawnTargets !== undefined) {
-        let zzz = [];
-        var e = creep.memory.spawnTargets.length;
-        while (e--) {
-            let target = Game.getObjectById(creep.memory.spawnTargets[e]);
-            //            console.log(target.energy);
-            if (target !== null && target.energy < target.energyCapacity) {
-                if (creep.pos.isNearTo(target)) {
-                    zzz.unshift(target);
-                    return zzz;
-                }
-                zzz.push(target);
-            }
-        }
-        //        console.log(zzz.length, '/', creep.memory.spawnTargets.length, creep.pos);
-        //        creep.say('bizzches', true);
-        //          roomCache[creep.room.name] = zzz;
-        //        console.log('Setting roomCache', roomCache[creep.room.name].length, creep.room.name);
-        return zzz;
-    }
+    if (creep.ticksToLive === 1499 || creep.room.memory.spawnTargets === undefined) {
+        // Once a creeps life we will get the room.
+        let zzz;
 
-    let zzz;
-
-    zzz = creep.room.find(FIND_MY_STRUCTURES);
-    if (creep.room.name == 'E35S83') {
-
-        zzz = _.filter(zzz, function(structure) {
-            return (structure.structureType == STRUCTURE_EXTENSION ||
-                structure.structureType == STRUCTURE_SPAWN ||
-                structure.structureType == STRUCTURE_TOWER ||
-                structure.structureType == STRUCTURE_LAB
-            );
-        });
-    } else {
+        zzz = creep.room.find(FIND_MY_STRUCTURES);
         zzz = _.filter(zzz, function(structure) {
             return (structure.structureType == STRUCTURE_EXTENSION ||
                 structure.structureType == STRUCTURE_SPAWN ||
@@ -44,19 +21,35 @@ function getTargets(creep) {
                 structure.structureType == STRUCTURE_POWER_SPAWN
             );
         });
-    }
 
-    creep.memory.spawnTargets = [];
-  //  if(creep.memory.level > 2) {
+        creep.room.memory.spawnTargets = [];
         var a = zzz.length;
         while (a--) {
-            creep.memory.spawnTargets.push(zzz[a].id);
+            creep.room.memory.spawnTargets.push(zzz[a].id);
         }
-//    }
+        return zzz;
 
-    //        roomCache[creep.room.name] = zzz;
-    //       console.log('Setting roomCache', roomCache[creep.room.name].length, creep.room.name);
-    return zzz;
+    }
+
+
+    if (roomCache[creep.room.name] === undefined) {
+        let zzz = [];
+        var e = creep.room.memory.spawnTargets.length;
+        while (e--) {
+            let target = Game.getObjectById(creep.room.memory.spawnTargets[e]);
+            if (target !== null ) {
+                zzz.push(target);
+            }
+        }
+        roomCache[creep.room.name] = zzz;
+        if(creep.room.name == 'E13S34')
+        console.log('Room isn"t cached',zzz.length);
+
+        return zzz;
+    } else {
+        return roomCache[creep.room.name];
+    }
+
 }
 
 function getCost(module) {
@@ -242,41 +235,73 @@ class SpawnInteract {
         }
 
         var targets = getTargets(creep);
-
-        let goTo = 0;
-
-        if (targets.length > 1) {
-            if (targets.length < creep.memory.roleID) {
-                goTo = creep.memory.roleID % targets.length;
-            } else {
-                goTo = creep.memory.roleID;
-            }
-        }
-        if (targets[goTo] === undefined) return false;
-        creep.memory.spawnTarget = targets[goTo].id;
-
-        if (targets.length > 0) {
-            if (creep.pos.isNearTo(targets[goTo])) {
-                if (creep.transfer(targets[goTo], RESOURCE_ENERGY) == OK) {
-                    if (creep.carry[RESOURCE_ENERGY] < 51) {
-                        creep.moveTo(creep.room.terminal, { maxOpts: 100, reusePath: 1 });
-                    } else {
-                        if (targets[goTo + 1] !== undefined) {
-                            if (!creep.pos.isNearTo(targets[goTo + 1]))
-                                creep.moveTo(targets[goTo + 1], { maxOpts: 100, reusePath: 1 });
-                            return true;
-                        }
-                    }
-
+creep.say(creep.memory.goToSpawn+'!!!'+targets.length);
+if(creep.memory.goToSpawn === undefined) {
+        let goTo = -1; //= creep.memory.roleID;
+        if (creep.memory.roleID === 0) {
+            do {
+                goTo++;
+                if(targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
+                    goTo++;
                 }
-            } else {
-                checkAround(creep);
-                creep.moveTo(targets[goTo]);
-            }
-            return true;
+                if(goTo > targets.length) return false;
+            } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
+
         } else {
+            goTo = targets.length - 1;
+            do {
+                goTo--;
+                if(targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
+                    goTo--;
+                } 
+                if(goTo < 0) return false;
+            } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
+        }
+        creep.memory.goToSpawn = goTo;
+}
+
+var goTo = creep.memory.goToSpawn;
+
+
+        if (targets[goTo] === undefined) {
+            creep.memory.goToSpawn = undefined;            
             return false;
         }
+            creep.say('^^');
+
+            if (creep.pos.isNearTo(targets[goTo])) {
+                let zzz =creep.transfer(targets[goTo], RESOURCE_ENERGY);
+                if (zzz == OK) {
+                    creep.memory.goToSpawn = undefined;
+
+                        if(creep.carry[RESOURCE_ENERGY] < targets[goTo].energy - targets[goTo].energyCapacity) creep.moveTo(creep.room.storage,{ maxOpts: 100, reusePath: 1 });
+
+                        if(creep.memory.roleID === 0) {
+                            goTo++;
+                        } else {
+                            goTo--;
+                        }
+
+                        if (targets[goTo] !== undefined && targets[goTo].energy !== targets[goTo].energyCapacity) {
+                            if (!creep.pos.isNearTo(targets[goTo]))
+                                creep.moveTo(targets[goTo], { maxOpts: 100, reusePath: 1 });
+                            return true;
+                        }
+                        roomCache[creep.room.name] = undefined;
+                } else if(zzz == -8) {
+                    roomCache[creep.room.name] = undefined;
+                    creep.memory.goToSpawn = undefined;
+                }
+                creep.say('^'+zzz);
+            } else {
+                this.toTransfer(creep);
+                creep.moveTo(targets[goTo], {
+                    visualizePathStyle: visPath
+                });
+                creep.say('^');
+                return true;
+            }
+        
     }
 
     static checkMemory(spawn) {
@@ -350,7 +375,7 @@ class SpawnInteract {
 
         if (spawn.memory.wantRenew === undefined) return false;
         if (spawn.memory.wantRenew.length === 0) return false;
-//        if(spawn.room.name == 'E14S38' && spawn.room.controller.level < 6) return false;
+        //        if(spawn.room.name == 'E14S38' && spawn.room.controller.level < 6) return false;
         if (spawn.memory.renewEnergyLevel !== undefined) {
             if (spawn.room.energyAvailable < spawn.memory.renewEnergyLevel) {
                 return false;
@@ -378,9 +403,13 @@ class SpawnInteract {
             renewLimit = spawn.memory.renewLevel;
         }
         if (temp < renewLimit) {
-            if(spawn.room.name === 'E14S38' && renewTarget.memory.role === 'Aupgrader'){
-                
-            }else {
+            if (spawn.room.name === 'E14S38') {
+                if (spawn.room.controller.level > 5 && renewTarget.memory.role === 'Aupgrader') {
+                    let rst = spawn.renewCreep(renewTarget);
+                } else if (renewTarget.memory.role === 'linker') {
+                    let rst = spawn.renewCreep(renewTarget);
+                }
+            } else {
                 let rst = spawn.renewCreep(renewTarget);
             }
 

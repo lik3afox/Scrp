@@ -738,7 +738,7 @@ class baseParent {
                 //console.log('amount needed',numberOfBody(creep, boosted[a]));
                 var neededMin = numberOfBody(creep, boosted[a]) * 30;
 
-                if (Memory.stats.totalMinerals[boosted[a]] < neededMin) {
+                if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals[boosted[a]] < neededMin) {
                     creep.memory.boostNeeded.pop();
                 } else if (creepParts(creep, boosted)) { // this checks an existanced boost already happened.
                     // This makes a request to the room.

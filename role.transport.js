@@ -218,7 +218,7 @@ class transport extends roleParent {
                 }
 
             } else {
-                if (creep.room.name !== 'E15S34') {
+                if (creep.room.name !== '') {
                     if (!constr.doCloseRoadRepair(creep)) {
                         if (!constr.doCloseRoadBuild(creep)) {
                             if (creep.carry[RESOURCE_ENERGY] > creep.carryCapacity - 15) {

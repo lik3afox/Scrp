@@ -1119,6 +1119,7 @@ class roleTerminal {
     }
     /** @param {Creep} creep **/
     static run() {
+    if (Game.shard.name == 'shard0') { return;     }
         focusMinerals(focusID, focusMin);
         cleanUpOrders();
         adjustOldPrices();
@@ -1196,7 +1197,7 @@ class roleTerminal {
             //          energyCheck(terminal);
         }
 
-        doDebt(); // Send energy to a target
+//        doDebt(); // Send energy to a target
         //        giveInviso();
         sellMineralOrder();
         //        buyMineralOrder();

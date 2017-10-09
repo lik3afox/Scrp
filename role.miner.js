@@ -151,7 +151,6 @@ class settler extends roleParent {
         if (super.keeperWatch(creep)) {
             return;
         }
-
         var _source = Game.getObjectById(creep.memory.goal);
         if (creep.memory.goal == '5982ff7ab097071b4adc2b7d') {
             creep.memory.reportDeath = false;
@@ -234,7 +233,7 @@ class settler extends roleParent {
 
             if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.memory.distance++;
 
-            if (_source !== null && creep.room.name == _source.room.name) {
+/*            if (_source !== null && creep.room.name == _source.room.name) {
                 let bads = getBads(creep);
                 let contain = Game.getObjectById(creep.memory.workContainer);
                 if (bads.length === 0) {
@@ -253,15 +252,15 @@ class settler extends roleParent {
                     creep.runFrom(bads);
                 }
 
-            } else {
+            } else { */
                 var goingTo = movement.getRoomPos(creep.memory.goal);
-                let bads = getBads(creep);
-                let contain = Game.getObjectById(creep.memory.workContainer);
-                if (bads.length === 0) {
+  //              let bads = getBads(creep);
+//                let contain = Game.getObjectById(creep.memory.workContainer);
+//                if (bads.length === 0) {
                     if (_source !== null) {
                         let task = {};
                         task.options = {
-                            reusePath: 10,
+                            reusePath: 49,
                             ignoreRoads: false,
                             visualizePathStyle: {
                                 fill: 'transparent',
@@ -278,13 +277,13 @@ class settler extends roleParent {
                         task.rangeHappy = 1;
                         creep.memory.task.push(task);
                     }
-                    creep.moveMe(goingTo, { reusePath: 49 });
-                } else {
+//                    creep.moveMe(goingTo, { reusePath: 49 });
+/*                } else {
                     creep.runFrom(bads);
-                }
+                }*/
 
 
-            }
+//            }
 
         }
 

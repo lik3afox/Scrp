@@ -32,7 +32,7 @@ function newLinkTransfer() {
 
                         let targets = LINK.pos.findInRange(FIND_MY_CREEPS, 1);
                         targets = _.filter(targets, function(s) {
-                            return (s.carry[RESOURCE_ENERGY] > 0 && s.memory.linkID == linksID[zz]);
+                            return (s.carry[RESOURCE_ENERGY] > 0 && (s.memory.role =='transport'||s.memory.role =='ztransport') );//&& s.memory.linkID == linksID[zz]
                         });
                         if (targets.length !== 0) {
 
@@ -51,13 +51,13 @@ function newLinkTransfer() {
                     if (LINK.energy > 0) {
                         if (LINK.room.memory.chainLinks[LINK.id] !== undefined) {
                             let nLink = Game.getObjectById(LINK.room.memory.chainLinks[LINK.id]);
-                            if (nLink !== undefined && nLink.energy < 100 ) {
+                            if (nLink !== null && nLink.energy < 100 ) {
                                 LINK.room.visual.line(LINK.pos, nLink.pos, { color: 'yellow' });
                                 LINK.transferEnergy(nLink);
                             }
                         } else if (LINK.room.memory.masterLinkID !== undefined) {
                             let mLink = Game.getObjectById(LINK.room.memory.masterLinkID);
-                            if (mLink !== undefined && mLink.energy < 100) {
+                            if (mLink !== null && mLink.energy < 100) {
                                 LINK.room.visual.line(LINK.pos, mLink.pos, { color: 'white' });
                                 LINK.transferEnergy(mLink);
                             }
@@ -72,13 +72,13 @@ function newLinkTransfer() {
                 if (LINK !== null && LINK.energy > 0) {
                     if (LINK.room.memory.chainLinks[LINK.id] !== undefined) {
                         let nLink = Game.getObjectById(LINK.room.memory.chainLinks[LINK.id]);
-                        if (nLink !== undefined && nLink.energy < 100) {
+                        if (nLink !== null && nLink.energy < 100) {
                             LINK.room.visual.line(LINK.pos, nLink.pos, { color: 'yellow' });
                             LINK.transferEnergy(nLink);
                         }
                     } else if (LINK.room.memory.masterLinkID !== undefined) {
                         let mLink = Game.getObjectById(LINK.room.memory.masterLinkID);
-                        if (mLink !== undefined && mLink.energy < 100) {
+                        if (mLink !== null && mLink.energy < 100) {
                             LINK.room.visual.line(LINK.pos, mLink.pos, { color: 'white' });
                             LINK.transferEnergy(mLink);
                         }

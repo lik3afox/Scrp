@@ -60,7 +60,7 @@ function makePatrol(creep, simPatrol) {
     }
     return pPath;
 }
-
+/*
 function mineralContainerEmpty(creep) {
     if (creep.memory.containsGood) return false;
     if (creep.memory.mineralContainerID !== undefined) {
@@ -93,7 +93,7 @@ function mineralContainerEmpty(creep) {
     }
 
     return false;
-}
+} */
 
 function isOnPath(creep) {
     let path = creep.memory.patrolpath;
@@ -276,7 +276,11 @@ class roleFirst extends roleParent {
             getEnergy(creep);
 
         } else {
-            if (creep.room.name != 'E23S75' && creep.room.energyAvailable == creep.room.energyCapacityAvailable || (creep.room.name == 'E37S75' && creep.room.energyAvailable == (creep.room.energyCapacityAvailable - 900))) {
+            if (creep.room.energyAvailable == creep.room.energyCapacityAvailable ) {         
+                        creep.say('noWork');
+                        return;
+            }
+/*            if (creep.room.name != 'E23S75' && creep.room.energyAvailable == creep.room.energyCapacityAvailable || (creep.room.name == 'E37S75' && creep.room.energyAvailable == (creep.room.energyCapacityAvailable - 900))) {
                 if (creep.room.powerspawn !== undefined && creep.room.powerspawn !== null) {
                     if (creep.room.powerspawn.energy > creep.room.powerspawn.energyCapacity - 1000) {
                         //                        if(!mineralContainerEmpty(creep))
@@ -291,9 +295,11 @@ class roleFirst extends roleParent {
                 } else {
                     creep.say('noWork');
                 }
-            } else {
+            } else {*/
                 if (!moveOnPath(creep)) {
-                    if (!spawn.moveToTransfer(creep)) {}
+                    if (!spawn.moveToTransfer(creep)) {
+
+                    }
                 } else {
                     if (spawn.toTransfer(creep)) {
                         if (creep.carry[RESOURCE_ENERGY] < getExtendEnergy(creep) + 1) {
@@ -301,7 +307,7 @@ class roleFirst extends roleParent {
                         }
                     }
                 }
-            }
+//            }
 
         }
     }

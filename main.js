@@ -260,7 +260,7 @@
 
     }
     function doRoomVisual(room) {
-
+if(Memory.stats.totalMinerals === undefined) return;
     room.visual.text(room.memory.labMode+":"+Memory.stats.totalMinerals[room.memory.labMode], 10, 41, {
                     color: room.memory.primaryLab ?'#10c3ba' :'#000000 ',
                     stroke: '#000000 ',
@@ -483,7 +483,7 @@
         Memory.stats.rooms = spawnReport;
         memoryStatsUpdate();
         link.run();
-        Memory.totalPowerProcessed = 0;
+if (Game.shard.name == 'shard1') {
         doUpgradeRooms();
         if (Game.cpu.bucket > 250) {
             //            power.run();
@@ -496,17 +496,32 @@
                 labs.run();
             }
         }
-        if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
         Memory.marketRunCounter--;
         if (Memory.marketRunCounter <= 0) {
             Memory.marketRunCounter = 5;
             market.run();
         }
+}        
+        Memory.totalPowerProcessed = 0;
+        if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
 
-        if (Game.spawns.Spawn1 !== undefined) {
+if (Game.shard.name == 'shard1') {
+        if (Game.spawns.Spawn1 !== undefined ) {
             let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
             console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+
             Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
+//            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
         }
+} else {
+        if ( Game.spawns.E38S81) {
+//            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
+let dif;
+            console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+
+//            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
+            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
+        }
+}
 
     });

@@ -301,12 +301,6 @@ var Mod_E23S42 = [
     ['linker', require('role.linker'), 1, 4],
     ['homeDefender', require('role.defender2'), 1, 5]
 ];
-var Mod_E38S81 = [
-    ['harvester', require('role.harvester'), 2, 2],
-    ['first', require('role.first'), 1, 2],
-    ['linker', require('role.linker'), 2, 4],
-    ['upgrader', require('role.upgrader'), 2, 3],
-];
 var Mod_E25S27 = [
     ['first', require('role.first'), 2, 3],
     ['scientist', require('role.scientist'), 1, 4],
@@ -318,6 +312,18 @@ var Mod_E25S27 = [
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['homeDefender', require('role.defender2'), 1, 6]
 ];
+
+
+var Mod_E38S81 = [
+    ['harvester', require('role.harvester'), 2, 2],
+    ['first', require('role.first'), 1, 2],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+    ['linker', require('role.linker'), 1, 4],
+    ['upbuilder', require('role.upbuilder'), 1, 7],
+    ['upgrader', require('role.upgrader'), 0, 4],
+];
+
 
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
@@ -721,7 +727,11 @@ function rebuildCreep(creep) {
 function addFromCreateStack(totalCreeps, role, spawn) {
     //                if(spawn.memory.create[e] != undefined) {
     var e;
-
+if(totalCreeps[role] === undefined) {
+    totalCreeps[role]= {
+        count:0,
+        goal:[]};
+}
     for (e in spawn.memory.create) {
         if (role == spawn.memory.create[e].memory.role) {
             totalCreeps[role].count++;
@@ -919,6 +929,25 @@ function buildTransport(carryParts) {
     return body;
 }
 
+function doSpawnCount(creep) {
+var spawnCount = Memory.spawnCount;
+//    if(Game.shard.name == 'shard1') return;
+    if(spawnCount[creep.memory.parent] === undefined) {
+        spawnCount[creep.memory.parent] = {};
+    }
+    if(spawnCount[creep.memory.parent][creep.memory.role] === undefined) {
+        spawnCount[creep.memory.parent][creep.memory.role] = {
+            count:0,
+            goal:[],
+        } ;
+    }
+    creep.memory.roleID = spawnCount[creep.memory.parent][creep.memory.role].count;
+    spawnCount[creep.memory.parent][creep.memory.role].count++;
+
+    if(creep.memory.goal !== undefined)
+        spawnCount[creep.memory.parent][creep.memory.role].goal.push(creep.memory.goal);
+}
+
 function getModuleRole(role) {
     for (var a in allModule) {
         if (allModule[a][_name] == role) {
@@ -973,6 +1002,14 @@ class theSpawn {
     }
 
     static spawnCount(spawnID) {
+
+        if(Memory.spawnCount !== undefined) {
+            if(Memory.spawnCount[spawnID] !== undefined){
+//                console.log('Memory returned');
+//                return Memory.spawnCount[spawnID];
+            }
+        }
+            console.log('memory is not returned so count.');
         var totalCreeps = [];
         for (var a in allModule) {
             totalCreeps[allModule[a][_name]] = { goal: [], count: 0 };
@@ -988,7 +1025,6 @@ class theSpawn {
         for (var name in spawnCreeps) { // Start of creep loop
             for (var type in allModule) {
                 if (spawnCreeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                    spawnCreeps[name].memory.roleID = totalCreeps[allModule[type][_name]].count;
                     totalCreeps[allModule[type][_name]].count++;
                     totalCreeps[allModule[type][_name]].goal.push(spawnCreeps[name].memory.goal);
                 }
@@ -1040,6 +1076,7 @@ class theSpawn {
             } else {
 
                 // If totalCreeps is less than require through currentModule then.
+//                console.log(currentModule[type][_name],totalCreeps.length);
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
                     if (spawn.memory.created === undefined) { spawn.memory.created = 0; }
                     spawn.memory.created++;
@@ -1091,6 +1128,7 @@ class theSpawn {
 
     static runCreeps() {
         if (Game.shard.name == 'shard0') {
+// Initialize Local variables.
 
 //            console.log('doing test in shard0');
             for (var ee in Game.creeps) {
@@ -1120,8 +1158,12 @@ class theSpawn {
         var keys = Object.keys(Memory.creeps);
         var e = keys.length;
         var name;
+        Memory.spawnCount = {};
         while (e--) { // Start of Creep Loop
             name = keys[e];
+
+// This is spawn count stuff.
+
             if (Memory.showInfo > 4)
                 start = Game.cpu.getUsed();
             if (!Game.creeps[name]) { // Check to see if this needs deletion
@@ -1142,6 +1184,7 @@ class theSpawn {
                         if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
+                            doSpawnCount(Game.creeps[name]);
                         }
                         if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
 
