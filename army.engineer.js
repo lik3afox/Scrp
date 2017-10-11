@@ -53,7 +53,6 @@ class engineerClass extends roleParent {
     static run(creep) {
         //     super.renew(creep);
         if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName) {
-            creep.memory.party = 'there';
             creep.say('P');
             creep.moveTo(Game.flags.portal);
             return;
@@ -163,13 +162,13 @@ class engineerClass extends roleParent {
                 if (creep.room.controller !== undefined && creep.room.controller.level !== 1) {
                     //    if(creep.room.controller.level < 4)
                     //                    if (!super._containers.moveToStorage(creep)) {
-                    //                    if (!spawn.moveToTransfer(creep)){
+                                        if (!spawn.moveToTransfer(creep)){
                     if (!super._constr.moveToBuild(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(creep.room.controller);
                         }
                     }
-                    //                  }                        
+                                      }                        
                     //                  }
                     //  }
                 } else {
@@ -204,7 +203,7 @@ class engineerClass extends roleParent {
                 } else {
                     if (!super._constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID) + 500)) {
                         if (!super._containers.withdrawFromStorage(creep)) {}
-
+if (!super._sources.moveToWithdraw(creep)) {}
                     }
                 }
                 //                          }

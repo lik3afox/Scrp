@@ -26,6 +26,12 @@ class muleClass extends roleParent {
 
     static run(creep) {
         // First if it's home it will go to storage.
+        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && creep.memory.party !== 'hello22') {
+            creep.say('P');
+            creep.moveTo(Game.flags.portal);
+            return;
+        }
+
         if (creep.memory.goHome === undefined) {
             creep.memory.goHome = false;
         }
@@ -68,6 +74,16 @@ class muleClass extends roleParent {
         if (total === 0 && creep.room.name !== creep.memory.home && creep.memory.level !== 3) creep.memory.goHome = true;
         if (total === 0 && creep.room.name == creep.memory.home) creep.memory.goHome = false;
 
+if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name == Game.flags.hello22.pos.roomName){
+  creep.say('blh');
+  creep.memory.parent = '599a20fdea625865e74d453d';
+  creep.memory.death = true;
+          if (this.returnEnergy(creep)) {
+            return false;
+        }
+
+} 
+
         if (!creep.memory.goHome) {
             if (total === 0 && creep.memory.level !== 2) {
                 let stor = creep.room.storage;
@@ -75,8 +91,20 @@ class muleClass extends roleParent {
                 if (stor.store[RESOURCE_ENERGY] < 1000) {
                     stor = creep.room.terminal;
                 }
+                if (creep.room.name == 'E38S81') {
+                    stor = creep.room.terminal;
+                }
+
                 if (creep.pos.isNearTo(stor)) {
-                    creep.withdraw(stor, RESOURCE_ENERGY);
+                    if (creep.room.name == 'E38S81') {
+                        for (var e in stor.store) {
+                            //                            console.log('zz'+e);
+                            if (e !== RESOURCE_ENERGY)
+                                creep.withdraw(stor, e);
+                        }
+                    } else {
+                        creep.withdraw(stor, RESOURCE_ENERGY);
+                    }
                 } else {
                     creep.moveTo(stor, { reusePath: 20 });
                 }
@@ -99,13 +127,21 @@ class muleClass extends roleParent {
 
                     } else {
                         if (creep.room.storage !== undefined && creep.room.controller.level > 3) {
-                            if (creep.pos.isNearTo(creep.room.storage)) {
-                                creep.transfer(creep.room.storage, RESOURCE_ENERGY);
+                            var target = creep.room.storage;
+                            if (creep.memory.party == 'hello22') {
+                                target = creep.room.terminal;
+                            }
+
+                            if (creep.pos.isNearTo(target)) {
+                                for (var bb in creep.carry) {
+                                    creep.transfer(target, bb);
+                                }
                                 creep.memory.goHome = true;
 
                             } else {
-                                creep.moveTo(creep.room.storage, { reusePath: 20});
+                                creep.moveTo(target, { reusePath: 20 });
                             }
+
                         } else {
                             if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {
                                 creep.drop(RESOURCE_ENERGY);

@@ -79,7 +79,7 @@ var lowFFH = [
 ];
 var lowFFH = [
     ['fighter', require('army.fighter'), 2, 10],
-    ['healer', require('army.healer'), 1 ,5] // Healer    
+    ['healer', require('army.healer'), 1, 5] // Healer    
 ];
 
 var lvl3Buster = [
@@ -112,16 +112,16 @@ var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 2],
-//    ['fighter', require('army.fighter'), 1, 11],
+    //    ['fighter', require('army.fighter'), 1, 11],
     ['demolisher', require('army.demolisher'), 1, 3],
     ['healer', require('army.healer'), 1, 5] // Healer    
 ];
 
 var fightHealer = [
     ['fighter', require('army.fighter'), 1, 10],
-//    ['demolisher', require('army.demolisher'), 1, 2],
+    //    ['demolisher', require('army.demolisher'), 1, 2],
     //['healer', require('army.healer'), 1, 5]
-];// E18S32
+]; // E18S32
 
 var fight2Healer = [
     ['fighter', require('army.fighter'), 1, 2],
@@ -217,13 +217,16 @@ var upgrade2Party = [
 
 var upgradeRoomParty = [
     ['Aupgrader', require('army.upgrader'), 4, 6]
-    
+
 ];
 var muleParty = [
-    ['mule', require('army.mule'),  1  , 1],
+    ['mule', require('army.mule'), 2, 0],
+];
+var upgradeMuleParty = [
+    ['mule', require('army.mule'), 1, 1],
 ];
 var muleHealParty = [
-    ['mule', require('army.mule'),  3  , 2],
+    ['mule', require('army.mule'), 3, 2],
 ];
 
 
@@ -251,7 +254,7 @@ var soloGuard = [
 ];
 var harass = [
     ['harass', require('keeper.harass'), 2, 0]
-    
+
 ];
 var harass2 = [
     ['harass', require('keeper.harass'), 1, 1]
@@ -327,9 +330,9 @@ function getSpawnCreating(flag) {
         case 'harass':
         case 'harass2':
         case 'warparty1':
-//        case 'control':
+            //        case 'control':
             return 'E18S36';
-//            return 'E25S37';
+            //            return 'E25S37';
 
         case 'fighter':
         case 'upgrade':
@@ -338,7 +341,7 @@ function getSpawnCreating(flag) {
         case 'SCI':
         case 'SCI2':
         case 'scout':
-      
+
             return returnClosestRoom(flag.pos.roomName);
             //    default:
             //      case 'scout':
@@ -405,7 +408,7 @@ function getCurrentParty(flag) {
                 return warParty3;
             case 'lvl5Buster':
                 return lvl5Buster;
-                
+
             case 'harass2':
                 return harass2;
             case 'harass':
@@ -513,6 +516,8 @@ function getCurrentParty(flag) {
 
             case 'mule':
                 return muleParty;
+            case 'upgrademule':
+                return upgradeMuleParty;
 
             case 'kill':
             case 'kill2':
@@ -634,7 +639,7 @@ function findParty(flag) {
                 }
             }
         }
-        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@'+roomLink(flag.pos.roomName);
+        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName);
 
     }
     console.log(report);
@@ -956,10 +961,26 @@ class partyInteract {
                             level: currentParty[e][_level]
                         }
                     };
-
-                    let toSpawn = require('commands.toSpawn');
-                    toSpawn.addToWarStack(temp);
-                    totalParty[i]++;
+                    if (currentParty[e][_name] == 'mule' && home == 'E38S81') {
+                        var terminalStuff;
+                        terminalStuff = 0;
+                        var term = Game.rooms.E38S81.terminal;
+                        for (var eez in term.store) {
+                            if (eez !== RESOURCE_ENERGY) {
+                                terminalStuff += term.store[eez];
+                            }
+                        }
+//                        console.log('MULE CHECK @ ROOM E38S81' + terminalStuff);
+                        if (terminalStuff > 1250) {
+                            let toSpawn = require('commands.toSpawn');
+                            toSpawn.addToWarStack(temp);
+                            totalParty[i]++;
+                        }
+                    } else {
+                        let toSpawn = require('commands.toSpawn');
+                        toSpawn.addToWarStack(temp);
+                        totalParty[i]++;
+                    }
                 }
             }
         }

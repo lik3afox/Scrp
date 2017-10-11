@@ -8,6 +8,7 @@ var visPath = {
 };
 
 function getTargets(creep) {
+
     if (creep.ticksToLive === 1499 || creep.room.memory.spawnTargets === undefined) {
         // Once a creeps life we will get the room.
         let zzz;
@@ -42,8 +43,7 @@ function getTargets(creep) {
             }
         }
         roomCache[creep.room.name] = zzz;
-        if(creep.room.name == 'E13S34')
-        console.log('Room isn"t cached',zzz.length);
+        console.log('Room isn"t cached',creep.room.name);
 
         return zzz;
     } else {
@@ -219,6 +219,9 @@ class SpawnInteract {
                 //          console.log(around[e].structure.energy , around[e].structure.energyCapacity);
                 if ((around[e].structure.structureType != STRUCTURE_LINK && around[e].structure.structureType != STRUCTURE_NUKER) && around[e].structure.energy < around[e].structure.energyCapacity) {
                     if (creep.transfer(around[e].structure, RESOURCE_ENERGY) == OK) {
+                        if(creep.carry[RESOURCE_ENERGY] < 51) {
+                            creep.moveTo(creep.room.storage,{maxOpts:10});
+                        }
                         return true;
                     }
                 }
@@ -459,39 +462,8 @@ var goTo = creep.memory.goToSpawn;
 
     static createFromStack(spawn) {
         var STACK = getStack(spawn);
-        //    if (spawn.name == 'Spawn9') {
-        //          var test = [ ];
-        //            console.log(STACK.length, STACK[0].build.length, STACK[0].name, spawn.canCreateCreep(STACK[0].build), getCost(test), spawn.room.energyCapacityAvailable);
 
-        //        }
 
-        /*       if(spawn.memory.currentStack == 'War') {
-            // Trash Idea - can't built complicated 3 50 parts units at once.
-                    // We get all the spawns in the room.
-                    // Make sure they are not spawning.
-                    // Once they are not spawning we push 3 of the warSTACK on them.
-                    var spawns = _.filter(Game.spawns,function(o){return o.room.name == spawn.room.name ; });
-                    var spawning = false;
-                    for(var e in spawns){
-                        if(spawns[e].spawning !== null) spawning = true;
-                    }
-                    if(!spawning) {
-                        if(STACK[0] !== undefined && spawns[0] !== undefined){
-                            let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
-                        }
-                        if(STACK[1] !== undefined&& spawns[1] !== undefined){
-                            let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
-                        }
-                        if(STACK[2] !== undefined&& spawns[2] !== undefined){
-                            let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
-                        }
-                    } else {
-                        console.log("waiting for spawn Stopping before war create");
-                        // return;
-                    }
-
-                } */
-        //        if (spawn.memory.notSpawner === true) return;
         if (STACK !== undefined && STACK.length > 0) {
             // Creation here.
 

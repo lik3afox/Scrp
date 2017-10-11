@@ -427,9 +427,11 @@ if(Memory.stats.totalMinerals === undefined) return;
                                     Game.spawns[title].memory.checkCount = countCheck;
                                 }
                                 if (Game.spawns[title].memory.checkCount < 0) {
-                                    let zz = spawnsDo.spawnCount(Game.spawns[title].id);
-                                    spawnsDo.checkModules(Game.spawns[title], zz);
-                                    spawnsDo.checkExpand(Game.spawns[title], zz); // Checks roads and expansions to.
+                                    let zz = spawnsDo.spawnCount(Game.spawns[title].id); // This gets creep totals.
+                                    spawnsDo.checkModules(Game.spawns[title], zz); // This uses that info and adds to query.
+                                    spawnsDo.checkExpand(Game.spawns[title], zz); // This uses creepTotal to do expansion stuff - and adds to expandQuery.
+
+
                                     Game.spawns[title].memory.checkCount = countCheck;
                                 }
                             }

@@ -1197,7 +1197,7 @@ class roleTerminal {
             //          energyCheck(terminal);
         }
 
-//        doDebt(); // Send energy to a target
+        doDebt(); // Send energy to a target
         //        giveInviso();
         sellMineralOrder();
         //        buyMineralOrder();

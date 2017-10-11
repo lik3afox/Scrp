@@ -299,6 +299,8 @@ class roleFirst extends roleParent {
                 if (!moveOnPath(creep)) {
                     if (!spawn.moveToTransfer(creep)) {
 
+                    } else {
+
                     }
                 } else {
                     if (spawn.toTransfer(creep)) {
