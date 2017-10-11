@@ -30,6 +30,8 @@ function restingSpot(creep) {
             return new RoomPosition(33, 29, creep.memory.home);
         case '5982feebb097071b4adc1bd6':
             return new RoomPosition(18, 36, creep.memory.home);
+        case '5982ff79b097071b4adc2b63':
+            return new RoomPosition(17, 38, creep.memory.home);
 
 
         default:
@@ -167,6 +169,7 @@ class roleHarvester extends roleParent {
             return;
         }
         if (creep.memory.level > 1) super.renew(creep);
+            creep.memory.reportDeath = true;
 
         if (creep.memory.sourceID == '5982ff7ab097071b4adc2b7d') {
             creep.memory.reportDeath = true;

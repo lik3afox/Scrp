@@ -33,7 +33,7 @@ function getTargets(creep) {
     }
 
 
-    if (roomCache[creep.room.name] === undefined) {
+  //  if (roomCache[creep.room.name] === undefined) {
         let zzz = [];
         var e = creep.room.memory.spawnTargets.length;
         while (e--) {
@@ -43,12 +43,12 @@ function getTargets(creep) {
             }
         }
         roomCache[creep.room.name] = zzz;
-        console.log('Room isn"t cached',creep.room.name);
+        console.log('Room isn"t cached',creep.room.name,roomCache[creep.room.name].length);
 
         return zzz;
-    } else {
-        return roomCache[creep.room.name];
-    }
+//    } else {
+//        return roomCache[creep.room.name];
+//    }
 
 }
 
@@ -238,7 +238,6 @@ class SpawnInteract {
         }
 
         var targets = getTargets(creep);
-creep.say(creep.memory.goToSpawn+'!!!'+targets.length);
 if(creep.memory.goToSpawn === undefined) {
         let goTo = -1; //= creep.memory.roleID;
         if (creep.memory.roleID === 0) {
@@ -262,6 +261,7 @@ if(creep.memory.goToSpawn === undefined) {
         }
         creep.memory.goToSpawn = goTo;
 }
+creep.say(creep.memory.goToSpawn+'!!!'+targets.length);
 
 var goTo = creep.memory.goToSpawn;
 

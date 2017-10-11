@@ -503,7 +503,7 @@ var showEveryone = true;
 var countCPU = false;
 
 function cpuCount(creep, time) {
-if(creep.memory === undefined) return;
+    if (creep.memory === undefined) return;
     if (creep.memory.cpu === undefined) {
         creep.memory.cpu = [];
     }
@@ -732,11 +732,12 @@ function rebuildCreep(creep) {
 function addFromCreateStack(totalCreeps, role, spawn) {
     //                if(spawn.memory.create[e] != undefined) {
     var e;
-if(totalCreeps[role] === undefined) {
-    totalCreeps[role]= {
-        count:0,
-        goal:[]};
-}
+    if (totalCreeps[role] === undefined) {
+        totalCreeps[role] = {
+            count: 0,
+            goal: []
+        };
+    }
     for (e in spawn.memory.create) {
         if (role == spawn.memory.create[e].memory.role) {
             totalCreeps[role].count++;
@@ -778,9 +779,9 @@ function getCurrentModule(spawn) {
     if (spawn.room.name == 'E25S27') {
         return Mod_E25S27;
     }
-if(spawn.room.name == 'E14S38'){
-    return [];
-}
+    if (spawn.room.name == 'E14S38') {
+        return [];
+    }
     if (spawn === null || spawn === undefined) return;
     var currentModuleLevel = getModuleLevel(spawn);
     if (spawn.room.controller.level >= 3) {
@@ -939,29 +940,30 @@ function buildTransport(carryParts) {
 }
 
 function doSpawnCount(creep) {
-//var spawnCount = Memory.Memory.spawnCount;
-//    if(Game.shard.name == 'shard1') return;
-    if(Memory.spawnCount[creep.memory.parent] === undefined) {
+
+    if (Memory.spawnCount[creep.memory.parent] === undefined) {
         Memory.spawnCount[creep.memory.parent] = {};
     }
-    if(Memory.spawnCount[creep.memory.parent][creep.memory.role] === undefined) {
+    if (Memory.spawnCount[creep.memory.parent][creep.memory.role] === undefined) {
         Memory.spawnCount[creep.memory.parent][creep.memory.role] = {
-            count:0,
-            goal:[],
-        } ;
+            count: 0,
+            goal: [],
+        };
     }
-    if(Memory.spawnCount[creep.memory.parent].bodyCount === undefined) {
+    if (Memory.spawnCount[creep.memory.parent].bodyCount === undefined) {
         Memory.spawnCount[creep.memory.parent].bodyCount = 0;
     }
-    if(Memory.spawnCount[creep.memory.parent].total === undefined) {
+    if (Memory.spawnCount[creep.memory.parent].total === undefined) {
         Memory.spawnCount[creep.memory.parent].total = 0;
     }
     //totalBuild = totalBuild + spawnCreeps[name].body.length
-    Memory.spawnCount[creep.memory.parent].bodyCount += creep.body.length;    
+    Memory.spawnCount[creep.memory.parent].bodyCount += creep.body.length;
+
     creep.memory.roleID = Memory.spawnCount[creep.memory.parent][creep.memory.role].count;
     Memory.spawnCount[creep.memory.parent][creep.memory.role].count++;
     Memory.spawnCount[creep.memory.parent].total++;
-    if(creep.memory.goal !== undefined)
+
+    if (creep.memory.goal !== undefined)
         Memory.spawnCount[creep.memory.parent][creep.memory.role].goal.push(creep.memory.goal);
 }
 
@@ -974,7 +976,7 @@ function getModuleRole(role) {
 }
 
 function calculateCPU(cpu, creep) {
-    if(creep.memory === undefined) return;
+    if (creep.memory === undefined) return;
     if (creep === undefined) return;
     if (creep.memory.cpuCount === undefined)
         creep.memory.cpuCount = 1500;
@@ -1020,18 +1022,20 @@ class theSpawn {
     }
 
     static spawnCount(spawnID) {
+        var doSpawn = ['599c7de1255bda6a7f60b395','599dff0efcee88089b5814aa'];
 
-            if(Memory.spawnCount[spawnID] !== undefined){
 
-        let spawn = Game.getObjectById(spawnID);
-        if (spawn !== null) {
-            spawn.memory.TotalBuild = (Memory.spawnCount[spawnID].bodyCount * 3);
-            spawn.memory.totalCreep = Memory.spawnCount[spawnID].total;
-        }
+        if (_.contains(doSpawn, spawnID) && Memory.spawnCount[spawnID] !== undefined) {
 
-                return Memory.spawnCount[spawnID];
+            let spawn = Game.getObjectById(spawnID);
+            if (spawn !== null) {
+                spawn.memory.TotalBuild = (Memory.spawnCount[spawnID].bodyCount * 3);
+                spawn.memory.totalCreep = Memory.spawnCount[spawnID].total;
             }
-            console.log('memory is not returned so count.');
+
+            return Memory.spawnCount[spawnID];
+        }
+        console.log('memory is not returned so count.',spawnID);
         var totalCreeps = [];
         for (var a in allModule) {
             totalCreeps[allModule[a][_name]] = { goal: [], count: 0 };
@@ -1084,11 +1088,11 @@ class theSpawn {
             let min = Game.getObjectById(spawn.room.memory.mineralID);
             let nuke = getNuke(spawn);
             var alertProhib = ['minHarvest', 'assistant', 'nuker'];
-    
+
 
             if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
 
-            }else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
+            } else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
 
             } else if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
 
@@ -1099,7 +1103,7 @@ class theSpawn {
             } else {
 
                 // If totalCreeps is less than require through currentModule then.
-//                console.log(currentModule[type][_name],totalCreeps.length);
+                //                console.log(currentModule[type][_name],totalCreeps.length);
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
                     if (spawn.memory.created === undefined) { spawn.memory.created = 0; }
                     spawn.memory.created++;
@@ -1444,11 +1448,11 @@ class theSpawn {
                 if (Game.creeps[zzzz].memory.role === undefined) {
                     Game.creeps[zzzz].memory.role = 'mule';
                     Game.creeps[zzzz].memory.party = 'hello22';
-                } 
+                }
             }
         }
         if (Memory.creeps === undefined) return false;
-        var spawnCreeps = Memory.creeps;
+
         var start;
         Memory.creepTotal = 0;
         var totalRoles = {};
@@ -1460,12 +1464,11 @@ class theSpawn {
         while (e--) { // Start of Creep Loop
             name = keys[e];
 
-// This is spawn count stuff.
-
             if (Memory.showInfo > 4)
                 start = Game.cpu.getUsed();
+
             if (!Game.creeps[name]) { // Check to see if this needs deletion
-                delete spawnCreeps[name]; // If it does then it does.
+                delete Memory.creeps[name]; // If it does then it does.
             } else {
                 if (Game.creeps[name] === undefined) {
                     console.log('got undefined Memory');
@@ -1475,6 +1478,9 @@ class theSpawn {
                     totalRoles[Game.creeps[name].memory.role]++;
                     Memory.creepTotal++;
                 }
+
+                doSpawnCount(Game.creeps[name]); // THis is where the creeps are counted.
+
                 var type = allModule.length;
                 while (type--) {
                     if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
@@ -1483,9 +1489,7 @@ class theSpawn {
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }
-                            doSpawnCount(Game.creeps[name]);
                         if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
-
                         break;
                     }
                 }

@@ -24,13 +24,19 @@ Game.rooms.E28S71.terminal.send('X', 15000, 'E5N7', 'trade');
 Game.rooms.E23S38.terminal.send('LO', 1000, 'E18S36', 'trade');
 Game.rooms.W4S93.terminal.send('H', 8000, 'E5N7', 'trade');
 
+Game.market.cancelOrder('598dd9bbc9aaff3cb2dad9b6');
+Game.market.cancelOrder('59d937cc1aadaa262312db20');
+Game.market.cancelOrder('59d937d01aadaa262312dc57');
+Game.market.cancelOrder('59d937d91aadaa262312dec3');
+Game.market.cancelOrder('59dd832216373068e967dbaf');
 Game.market.cancelOrder('59c6688cc3086045fc730bd0');
+59dd832216373068e967dbaf
 Game.market.cancelOrder('59c72e66e6480025b1468a45');
 
 var cost = Game.market.calcTransactionCost(10000, 'E28S73', 'E28S71');
 
 Game.market.createOrder(ORDER_BUY, 'XUH2O', 0.05, 10000, "E28S77");
-Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, "E14S37");
+Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, "E14S38");
 
 Game.market.createOrder(ORDER_SELL, 'O', 0.82, 100000, "E18S36");
 
