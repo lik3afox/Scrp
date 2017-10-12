@@ -43,7 +43,7 @@ function getTargets(creep) {
             }
         }
         roomCache[creep.room.name] = zzz;
-        console.log('Room isn"t cached',creep.room.name,roomCache[creep.room.name].length);
+//        console.log('Room isn"t cached',creep.room.name,roomCache[creep.room.name].length);
 
         return zzz;
 //    } else {
@@ -340,6 +340,10 @@ var goTo = creep.memory.goToSpawn;
                 spawn.memory.expandCreate = [];
                 console.log('----------------Create Spawn ExpansionStack----------------');
             }
+                    if (spawn.memory.created === undefined) { 
+                        spawn.memory.created = 0; 
+                console.log('----------------Create Spawn Created Count----------------');
+                    }
 
             // Analyzed is an array of rooms that this spawn has looked at. 
             if (spawn.memory.analyzed === undefined) {

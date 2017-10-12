@@ -246,7 +246,7 @@
             });
             if (spwns.length > 0) {
                 if (!spwns[0].spawning && room.energyAvailable === 300) {
-                    spwns[0].createCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir', {
+                    spwns[0].spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir', {
                         role: 'first',
                         roleID: 0,
                         home: spwns[0].pos.roomName,

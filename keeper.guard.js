@@ -124,7 +124,7 @@ function analyzeSourceKeeper(creep) {
         if (keepers[e] !== null)
             keeperTarget = Game.getObjectById(keepers[e].id);
 
-        if (keeperTarget !== null) {
+        if (keeperTarget !== null&&keeperTarget !== undefined) {
             if (_.contains(noMineral, creep.room.name)) { // Will always kill mineral SK.
                 if (keeperTarget.ticksToSpawn === undefined) {
                     targetID = e;

@@ -31,6 +31,9 @@ class muleClass extends roleParent {
             creep.moveTo(Game.flags.portal);
             return;
         }
+        if (this.returnEnergy(creep)) {
+            return false;
+        }
 
         if (creep.memory.goHome === undefined) {
             creep.memory.goHome = false;
@@ -166,7 +169,6 @@ if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name
                 }
             }
         }
-
     }
 }
 

@@ -30,7 +30,7 @@ Game.market.cancelOrder('59d937d01aadaa262312dc57');
 Game.market.cancelOrder('59d937d91aadaa262312dec3');
 Game.market.cancelOrder('59dd832216373068e967dbaf');
 Game.market.cancelOrder('59c6688cc3086045fc730bd0');
-59dd832216373068e967dbaf
+
 Game.market.cancelOrder('59c72e66e6480025b1468a45');
 
 var cost = Game.market.calcTransactionCost(10000, 'E28S73', 'E28S71');

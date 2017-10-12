@@ -74,7 +74,7 @@ function toStorageOrTerminal(creep) {
     } else if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 || creep.room.storage.store[RESOURCE_ENERGY] > 900000) {
         containers.moveToTerminal(creep);
     } else {
-            containers.moveToStorage(creep);
+        containers.moveToStorage(creep);
     }
 }
 
@@ -119,12 +119,12 @@ function getMineralForStorage(creep) {
 function takeFromTerminalForStorage(creep) {
     if (creep.room.terminal === undefined || creep.room.storage === undefined) return false;
     if (getMineralForStorage(creep)) {
-    	creep.say('M');
-    	return;
+        creep.say('M');
+        return;
     }
     var goto = creep.room.terminal;
     if (goto !== undefined && goto.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
-    	creep.say('T');
+        creep.say('T');
         if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(goto);
         }
@@ -175,7 +175,7 @@ function doLinkRoom(creep) {
 
 function oneLinkRoom(creep, fill) {
     if (!fill) {
-    if(constr.pickUpEnergy(creep)) return;
+        if (constr.pickUpEnergy(creep)) return;
         switch (creep.memory.roleID) {
             case 0:
                 doLinkRoom(creep);
@@ -990,25 +990,23 @@ function E14S38(creep, fill) {
         target = creep.room.storage;
     }
 
-    var tgt = new RoomPosition(32, 10,'E14S38');
-    
-if(creep.memory.roleID !== 0)
-tgt = new RoomPosition(34, 10,'E14S38');
-    if(!creep.pos.isEqualTo(tgt)){
-    	creep.say('hug'+creep.moveTo(tgt));
-        
+    var tgt = new RoomPosition(32, 10, 'E14S38');
+
+    if (creep.memory.roleID !== 0)
+        tgt = new RoomPosition(34, 10, 'E14S38');
+    if (!creep.pos.isEqualTo(tgt)) {
+        creep.say('hug' + creep.moveTo(tgt));
+
     }
 
 
     //    }
     if (!fill) {
         switch (creep.memory.roleID) {
-            default: 
-            if(!constr.pickUpEnergy(creep))
-            if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
-                if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            default: if (!constr.pickUpEnergy(creep))
+                if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
+                    if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
                 }
-            }
             break;
         }
     } else {
@@ -1027,7 +1025,7 @@ tgt = new RoomPosition(34, 10,'E14S38');
                 if (creep.pos.isNearTo(spawn)) {
                     creep.transfer(spawn, RESOURCE_ENERGY);
                 } else {
-     //               creep.moveTo(spawn);
+                    //               creep.moveTo(spawn);
                 }
                 return;
             }
@@ -1042,7 +1040,7 @@ tgt = new RoomPosition(34, 10,'E14S38');
                     if (creep.pos.isNearTo(target)) {
                         creep.transfer(target, RESOURCE_ENERGY);
                     } else {
-//                        creep.moveTo(target);
+                        //                        creep.moveTo(target);
                     }
                 }
 
@@ -1055,25 +1053,34 @@ tgt = new RoomPosition(34, 10,'E14S38');
 
 function doDefault(creep) {
     if (creep.carryTotal !== creep.carryCapacity) {
+                    creep.say('<');
         // Then pick up energy.
         if (creep.room.controller.level > 3) {
             // First look for containers.
-            if(creep.room.memory.masterLinkID !== undefined) {
+            if (creep.room.memory.masterLinkID !== undefined) {
 
             }
             if (creep.memory.roleID === 0) {
-                    let cc = Game.getObjectById(creep.room.memory.masterLinkID);
-                    if (cc !== null && cc.energy > 0) {
-                        if (creep.pos.isNearTo(cc)) {
-                            creep.withdraw(cc, RESOURCE_ENERGY);
-                        } else {
-                            creep.moveTo(cc);
-                        }
-                        return true;
+                let cc = Game.getObjectById(creep.room.memory.masterLinkID);
+                if (cc !== null && cc.energy > 0) {
+                    if (creep.pos.isNearTo(cc)) {
+                        creep.withdraw(cc, RESOURCE_ENERGY);
+                    } else {
+                        creep.moveTo(cc);
                     }
+                    return true;
+                }
             }
-            if (creep.memory.roleID !== 0 && !containers.moveToWithdraw(creep)) {
-            	return true;
+            if (creep.room.memory.masterLinkID !== undefined) {
+                                    creep.say('!@@');
+
+                if (creep.memory.roleID !== 0 && containers.moveToWithdraw(creep)) {
+                    return true;
+                }
+            } else {
+                if (containers.moveToWithdraw(creep)) {
+                    return true;
+                }
             }
             takeFromTerminalForStorage(creep);
         } else {
@@ -1104,7 +1111,7 @@ class roleLinker extends roleParent {
             creep.room.visual.text(creep.room.controller.progressTotal - creep.room.controller.progress, creep.room.controller.pos.x + 1, creep.room.controller.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: RIGHT });
         }
         //        if (creep.room.name !== 'x' && creep.room.name !== 'E14S47')
-        
+
 
         if (super.returnEnergy(creep)) return;
 
@@ -1261,10 +1268,6 @@ class roleLinker extends roleParent {
         }
 
         switch (creep.pos.roomName) {
-            case 'E38S81':
-                doDefault(creep, creep.memory.full);
-                break;
-
             case 'E25S47':
                 E25S47(creep, creep.memory.full);
                 break;
@@ -1325,6 +1328,9 @@ class roleLinker extends roleParent {
                 break;
             case 'E25S27':
                 E25S27(creep, creep.memory.full);
+                break;
+            default:
+                doDefault(creep, creep.memory.full);
                 break;
 
         }

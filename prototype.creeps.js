@@ -442,7 +442,7 @@ module.exports = function() {
         this.say('><', true);
     };
 
-    Spawn.prototype.deadCheck = function() {
+/*    Spawn.prototype.deadCheck = function() {
         // first off a spawn needs to have a memory check too make sure
         // it wants to do this deadCheck
         // Leveling rooms do not want this.
@@ -474,7 +474,7 @@ module.exports = function() {
                 parent: this.id,
                 level: 1
             };
-            let zz = this.createCreep(body, name, mem);
+            let zz = this.spawnCreep(body, name, mem);
             if (zz === 0) this.room.memory.roomFailure = -1500;
             console.log('Emergency creation, trying to create simple RESULT:');
         }
@@ -485,7 +485,7 @@ module.exports = function() {
         // spawn.memory.totalCreep
 
 
-    };
+    }; */
 
     //    var fox = require('foxGlobals');
     Creep.prototype.sing = function(lyrics, public) {

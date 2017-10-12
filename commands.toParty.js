@@ -216,7 +216,7 @@ var upgrade2Party = [
 ];
 
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 4, 6]
+    ['Aupgrader', require('army.upgrader'), 2, 6]
 
 ];
 var muleParty = [
@@ -482,6 +482,8 @@ function getCurrentParty(flag) {
                 return thief2Party;
             case 'thief':
                 return thiefParty;
+            case 'upgrademule':
+                return upgradeMuleParty;
 
             case 'thief3':
             case 'thief4':
