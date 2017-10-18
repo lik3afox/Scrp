@@ -568,7 +568,7 @@ function sellMineralOrder() {
 
     let total = 0;
     for (var e in Memory.stats.totalMinerals) {
-        if (e == 'K' || e == 'U' || e == 'Z' || e == 'L') {
+        if (e == 'K' || e == 'U' || e == 'Z' || e == 'X'|| e == 'L'|| e == 'O') {
             if (Memory.stats.totalMinerals[e] > 150000) {
 
                 //                let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: e });

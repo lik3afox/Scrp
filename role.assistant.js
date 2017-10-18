@@ -106,12 +106,16 @@ class scientistRole extends roleParent {
         }
 
         if (creep.memory.putaway) {
-            if (creep.pos.isNearTo(creep.room.terminal)) {
+            let tar = creep.room.terminal;
+            if(tar.total === 300000){
+                tar = creep.room.storage;
+            }
+            if (creep.pos.isNearTo(tar)) {
                 for (var a in creep.carry) {
-                    creep.transfer(creep.room.terminal, a);
+                    creep.transfer(tar, a);
                 }
             } else {
-                creep.moveMe(creep.room.terminal);
+                creep.moveMe(tar);
             }
 
         } else {
