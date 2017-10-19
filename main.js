@@ -259,33 +259,34 @@
         }
 
     }
+
     function doRoomVisual(room) {
-if(Memory.stats.totalMinerals === undefined) return;
-    room.visual.text(room.memory.labMode+":"+Memory.stats.totalMinerals[room.memory.labMode], 10, 41, {
-                    color: room.memory.primaryLab ?'#10c3ba' :'#000000 ',
-                    stroke: '#000000 ',
-                    strokeWidth: 0.123,
-                    font: 0.5
-                });
-    room.visual.text(room.memory.lab2Mode+":"+Memory.stats.totalMinerals[room.memory.lab2Mode], 10, 42, {
-                    color: room.memory.primaryLab ?'#000000' :'#10c3ba ',
-                    stroke: '#000000 ',
-                    strokeWidth: 0.123,
-                    font: 0.5
-                });
-    if(room.memory.boost !== undefined)
-        room.visual.text(room.memory.boost.mineralType, 10, 43, {
-                    color:'#10c3ba ',
-                    stroke: '#000000 ',
-                    strokeWidth: 0.123,
-                    font: 0.5
-                });
-        room.visual.text("w:"+room.memory.labsNeedWork, 10, 44, {
-                    color:'#10c3ba ',
-                    stroke: '#000000 ',
-                    strokeWidth: 0.123,
-                    font: 0.5
-                });
+        if (Memory.stats.totalMinerals === undefined) return;
+        room.visual.text(room.memory.labMode + ":" + Memory.stats.totalMinerals[room.memory.labMode], 10, 41, {
+            color: room.memory.primaryLab ? '#10c3ba' : '#000000 ',
+            stroke: '#000000 ',
+            strokeWidth: 0.123,
+            font: 0.5
+        });
+        room.visual.text(room.memory.lab2Mode + ":" + Memory.stats.totalMinerals[room.memory.lab2Mode], 10, 42, {
+            color: room.memory.primaryLab ? '#000000' : '#10c3ba ',
+            stroke: '#000000 ',
+            strokeWidth: 0.123,
+            font: 0.5
+        });
+        if (room.memory.boost !== undefined)
+            room.visual.text(room.memory.boost.mineralType, 10, 43, {
+                color: '#10c3ba ',
+                stroke: '#000000 ',
+                strokeWidth: 0.123,
+                font: 0.5
+            });
+        room.visual.text("w:" + room.memory.labsNeedWork, 10, 44, {
+            color: '#10c3ba ',
+            stroke: '#000000 ',
+            strokeWidth: 0.123,
+            font: 0.5
+        });
 
 
     }
@@ -336,7 +337,7 @@ if(Memory.stats.totalMinerals === undefined) return;
         var i = prototypes.length;
         while (i--) {
             prototypes[i]();
-            global.roomLink= function(roomname) {
+            global.roomLink = function(roomname) {
                 return '<a href=https://screeps.com/a/#!/room/shard1/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
             };
         }
@@ -444,12 +445,7 @@ if(Memory.stats.totalMinerals === undefined) return;
                         Game.spawns[title].memory.lastSpawn++;
 
 
-                    } else if (Game.spawns[title].memory.alphaSpawn && Game.spawns[title].memory.checkCount < -25) {
-                    let zz = spawnsDo.spawnCount(Game.spawns[title].id);
-                    spawnsDo.checkModules(Game.spawns[title], zz);
-                    spawnsDo.checkExpand(Game.spawns[title], zz); // Checks roads and expansions to.
-                    Game.spawns[title].memory.checkCount = countCheck;
-                } else {
+                    } else {
                     Game.spawns[title].memory.lastSpawn = 0;
                     let spawn = Game.spawns[title];
                     spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
@@ -485,45 +481,47 @@ if(Memory.stats.totalMinerals === undefined) return;
         Memory.stats.rooms = spawnReport;
         memoryStatsUpdate();
         link.run();
-if (Game.shard.name == 'shard1') {
-        doUpgradeRooms();
-        if (Game.cpu.bucket > 250) {
-            //            power.run();
-            observer.run();
+        
+        if (Game.shard.name == 'shard1') {
+            doUpgradeRooms();
+            if (Game.cpu.bucket > 250) {
+                //            power.run();
+                observer.run();
 
-            if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
-            Memory.labsRunCounter--;
-            if (Memory.labsRunCounter <= 0) {
-                Memory.labsRunCounter = 10;
-                labs.run();
+                if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
+                Memory.labsRunCounter--;
+                if (Memory.labsRunCounter <= 0) {
+                    Memory.labsRunCounter = 10;
+                    labs.run();
+                }
             }
         }
-        Memory.marketRunCounter--;
-        if (Memory.marketRunCounter <= 0) {
-            Memory.marketRunCounter = 5;
-            market.run();
-        }
-}        
+            Memory.marketRunCounter--;
+            if (Memory.marketRunCounter <= 0) {
+                Memory.marketRunCounter = 5;
+                market.run();
+            }
+
         Memory.totalPowerProcessed = 0;
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
 
-if (Game.shard.name == 'shard1') {
-        if (Game.spawns.Spawn1 !== undefined ) {
-            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-            console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+        if (Game.shard.name == 'shard1') {
+            if (Game.spawns.Spawn1 !== undefined) {
+                let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
+                console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
-            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
-//            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
-        }
-} else {
-        if ( Game.spawns.E38S81) {
-//            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-let dif;
-            console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
+                //            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
+            }
+        } else {
+            if (Game.spawns.E38S81) {
+                //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
+                let dif;
+                console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
-//            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
-            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
+                //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
+                Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
+            }
         }
-}
 
     });

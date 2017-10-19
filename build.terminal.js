@@ -17,9 +17,10 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var labRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37',
+var s1LabRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37',
     'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27'
 ];
+var s0LabRooms = ['E38S81'];
 
 // If you need to focus all minerals somewhere change it here.
 var focusID;
@@ -63,8 +64,8 @@ function focusMinerals(targetID, mineral) {
     if (mineral === undefined) return;
     let target = Game.getObjectById(targetID);
     if (target === null) return;
-    for (var e in labRooms) {
-        let term = Game.rooms[labRooms[e]].terminal;
+    for (var e in s1LabRooms) {
+        let term = Game.rooms[s1LabRooms[e]].terminal;
         if (term !== null && term.store[mineral] > 1) {
             term.send(mineral, term.store[mineral] - 1, target.room.name, 'focus Trade');
         }
@@ -78,11 +79,11 @@ function shareEnergy(terminal) {
     if (terminal.store[RESOURCE_ENERGY] < 21000) return false;
     var lowestStore;
     var currentLow = 1000000;
-    for (var e in labRooms) {
-        let storage = Game.rooms[labRooms[e]].storage;
-        if (storage !== null && labRooms[e] !== terminal.room.name) {
-            //          console.log(labRooms[e],storage.store[RESOURCE_ENERGY] , currentLow, terminal.total);
-            if (storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total !== 300000 && Game.rooms[labRooms[e]].controller.level > 5) {
+    for (var e in s1LabRooms) {
+        let storage = Game.rooms[s1LabRooms[e]].storage;
+        if (storage !== null && s1LabRooms[e] !== terminal.room.name) {
+            //          console.log(s1LabRooms[e],storage.store[RESOURCE_ENERGY] , currentLow, terminal.total);
+            if (storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total !== 300000 && Game.rooms[s1LabRooms[e]].controller.level > 5) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
             }
@@ -136,11 +137,11 @@ function needEnergy(terminal) {
     if (terminal.room.name == 'E14S38') {
         if (terminal.room.storage.store[RESOURCE_ENERGY] < 10000) {
             currentHigh = 0;
-            for (e in labRooms) {
-                let storage = Game.rooms[labRooms[e]].terminal;
+            for (e in s1LabRooms) {
+                let storage = Game.rooms[s1LabRooms[e]].terminal;
                 if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh &&
                     terminal.room.name != storage.room.name) {
-                    highestEnergy = Game.rooms[labRooms[e]].terminal;
+                    highestEnergy = Game.rooms[s1LabRooms[e]].terminal;
                     currentHigh = storage.store[RESOURCE_ENERGY];
                 }
             }
@@ -154,11 +155,11 @@ function needEnergy(terminal) {
 
             currentHigh = 0;
 
-            for (e in labRooms) {
-                let storage = Game.rooms[labRooms[e]].terminal;
+            for (e in s1LabRooms) {
+                let storage = Game.rooms[s1LabRooms[e]].terminal;
 
                 if (storage !== null && storage.store[RESOURCE_ENERGY] > currentHigh && terminal.room.name != storage.room.name && terminal.room.name !== 'E14S38') {
-                    highestEnergy = Game.rooms[labRooms[e]].terminal;
+                    highestEnergy = Game.rooms[s1LabRooms[e]].terminal;
                     currentHigh = storage.store[RESOURCE_ENERGY];
                 }
             }
@@ -204,13 +205,13 @@ function countTerminals() {
     let data = {};
     for (var b in basic) {
         let info = { type: basic[b], amount: 0 };
-        for (var e in labRooms) {
-            if (Game.rooms[labRooms[e]] !== undefined) {
-                let target = Game.rooms[labRooms[e]].terminal;
+        for (var e in s1LabRooms) {
+            if (Game.rooms[s1LabRooms[e]] !== undefined) {
+                let target = Game.rooms[s1LabRooms[e]].terminal;
                 if (target !== null && target.store !== undefined && target.store[basic[b]] > 0) {
                     info.amount += target.store[basic[b]];
                 }
-                target = Game.rooms[labRooms[e]].storage;
+                target = Game.rooms[s1LabRooms[e]].storage;
                 if (target !== null && target.store !== undefined && target.store[basic[b]] > 0) {
                     info.amount += target.store[basic[b]];
                 }
@@ -699,8 +700,8 @@ function energyCheck(terminal) {
     // Then lets get the lowest terminal.
     var lowestStore;
     var currentLow = 1000000;
-    for (var v in labRooms) {
-        let storage = Game.getObjectById(labRooms[v]);
+    for (var v in s1LabRooms) {
+        let storage = Game.getObjectById(s1LabRooms[v]);
         if (storage !== null && storage.total < currentLow) {
             lowestStore = storage;
             currentLow = storage.total;
@@ -732,9 +733,9 @@ function getMostTerminal(mineralz, target) {
     var e;
     var mineral = mineralz; // = mineralz.toLowerCase();
     if (target === undefined) {
-        e = labRooms.length;
+        e = s1LabRooms.length;
         while (e--) {
-            let tmp = Game.rooms[labRooms[e]].terminal;
+            let tmp = Game.rooms[s1LabRooms[e]].terminal;
             if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest) {
                 highest = tmp.store[mineral];
                 bested = tmp;
@@ -743,9 +744,9 @@ function getMostTerminal(mineralz, target) {
         return bested;
 
     } else {
-        for (e in labRooms) {
-            if (target.id != labRooms[e]) {
-                let tmp = Game.rooms[labRooms[e]].terminal;
+        for (e in s1LabRooms) {
+            if (target.id != s1LabRooms[e]) {
+                let tmp = Game.rooms[s1LabRooms[e]].terminal;
                 if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest) {
                     highest = tmp.store[mineral];
                     bested = tmp;
@@ -992,9 +993,9 @@ function giveMinerals(terminal, mineral, amount) {
     let target;
     let highest = 0;
 
-    for (var e in labRooms) {
-        if (terminal.room.name != labRooms[e]) {
-            let tmp = Game.rooms[labRooms[e]].terminal; //Game.getObjectById(labRooms[e]);
+    for (var e in s1LabRooms) {
+        if (terminal.room.name != s1LabRooms[e]) {
+            let tmp = Game.rooms[s1LabRooms[e]].terminal; //Game.getObjectById(s1LabRooms[e]);
             //                    if(tmp.store[mineral] > 1)
             //                          console.log('here?',tmp.store[mineral],mineral,tmp.room.name);
             if (tmp.store[mineral] !== undefined && tmp.store[mineral] > highest && tmp.store[mineral] > 2100 && tmp.room.controller.level > 5) {
@@ -1112,6 +1113,23 @@ function upgradeRoom(terminal) {
     return false;
 }
 
+var wanted = ['L','H'];
+
+function buyMineralsFromBUYORDER(terminal) {
+    var stor = terminal.room.storage;
+    if(stor.store[RESOURCE_ENERGY] < 900000) {// Then get energy
+        
+
+    }
+    for(var e in wanted) {
+        if(terminal.store[e] < 2000){
+            
+        }
+    }
+    // Look for resourses wanted.
+
+}
+
 class roleTerminal {
 
     static getStored() {
@@ -1119,7 +1137,15 @@ class roleTerminal {
     }
     /** @param {Creep} creep **/
     static run() {
-    if (Game.shard.name == 'shard0') { return;     }
+    if (Game.shard.name == 'shard0') { 
+        for (var a in s0LabRooms) {
+            if(Game.rooms[s0LabRooms[e]] !== undefined) {
+                let terminal = Game.rooms[s0LabRooms[e]].terminal;
+                buyMineralsFromBUYORDER(terminal);
+            }
+       }
+        return;     
+    }
         focusMinerals(focusID, focusMin);
         cleanUpOrders();
         adjustOldPrices();
@@ -1136,11 +1162,11 @@ class roleTerminal {
             } */
         //}
 
-        for (var e in labRooms) {
-            if(Game.rooms[labRooms[e]] !== undefined) {
+        for (var e in s1LabRooms) {
+            if(Game.rooms[s1LabRooms[e]] !== undefined) {
 
-            let terminal = Game.rooms[labRooms[e]].terminal;
-            if (terminal !== undefined && terminal.cooldown === 0 && labRooms[e] !== 'E14S38') {
+            let terminal = Game.rooms[s1LabRooms[e]].terminal;
+            if (terminal !== undefined && terminal.cooldown === 0 && s1LabRooms[e] !== 'E14S38') {
                 var energy = terminal.store[RESOURCE_ENERGY];
                 var total = terminal.total;
                 if (total > 295000) {

@@ -76,7 +76,7 @@ class transportz extends roleParent {
         }
 
         var link = require('build.link');
-            if (link.waitForTransfer(creep)) {
+            if (link.transfer(creep)) {
 //                constr.pickUpEnergy(creep);
                 creep.countReset();
                 return;

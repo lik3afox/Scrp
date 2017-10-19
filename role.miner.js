@@ -81,6 +81,10 @@ function doWork(creep) {
                 case '5836b8268b8b9619519f18b1':
                     creep.moveTo(33, 34);
                     break;
+                case '5982ff05b097071b4adc1f6a':
+                    creep.moveTo(38, 5);
+                    break;
+
                 default:
                     creep.moveTo(contain);
                     break;

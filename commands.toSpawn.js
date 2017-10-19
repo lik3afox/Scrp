@@ -33,22 +33,22 @@ function getTargets(creep) {
     }
 
 
-  //  if (roomCache[creep.room.name] === undefined) {
-        let zzz = [];
-        var e = creep.room.memory.spawnTargets.length;
-        while (e--) {
-            let target = Game.getObjectById(creep.room.memory.spawnTargets[e]);
-            if (target !== null ) {
-                zzz.push(target);
-            }
+    //  if (roomCache[creep.room.name] === undefined) {
+    let zzz = [];
+    var e = creep.room.memory.spawnTargets.length;
+    while (e--) {
+        let target = Game.getObjectById(creep.room.memory.spawnTargets[e]);
+        if (target !== null) {
+            zzz.push(target);
         }
-        roomCache[creep.room.name] = zzz;
-//        console.log('Room isn"t cached',creep.room.name,roomCache[creep.room.name].length);
+    }
+    roomCache[creep.room.name] = zzz;
+    //        console.log('Room isn"t cached',creep.room.name,roomCache[creep.room.name].length);
 
-        return zzz;
-//    } else {
-//        return roomCache[creep.room.name];
-//    }
+    return zzz;
+    //    } else {
+    //        return roomCache[creep.room.name];
+    //    }
 
 }
 
@@ -219,8 +219,8 @@ class SpawnInteract {
                 //          console.log(around[e].structure.energy , around[e].structure.energyCapacity);
                 if ((around[e].structure.structureType != STRUCTURE_LINK && around[e].structure.structureType != STRUCTURE_NUKER) && around[e].structure.energy < around[e].structure.energyCapacity) {
                     if (creep.transfer(around[e].structure, RESOURCE_ENERGY) == OK) {
-                        if(creep.carry[RESOURCE_ENERGY] < 51) {
-                            creep.moveTo(creep.room.storage,{maxOpts:10});
+                        if (creep.carry[RESOURCE_ENERGY] < 51) {
+                            creep.moveTo(creep.room.storage, { maxOpts: 10 });
                         }
                         return true;
                     }
@@ -238,73 +238,73 @@ class SpawnInteract {
         }
 
         var targets = getTargets(creep);
-if(creep.memory.goToSpawn === undefined) {
-        let goTo = -1; //= creep.memory.roleID;
-        if (creep.memory.roleID === 0) {
-            do {
-                goTo++;
-                if(targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
+        if (creep.memory.goToSpawn === undefined) {
+            let goTo = -1; //= creep.memory.roleID;
+            if (creep.memory.roleID === 0) {
+                do {
                     goTo++;
-                }
-                if(goTo > targets.length) return false;
-            } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
+                    if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
+                        goTo++;
+                    }
+                    if (goTo > targets.length) return false;
+                } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
 
-        } else {
-            goTo = targets.length - 1;
-            do {
-                goTo--;
-                if(targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
+            } else {
+                goTo = targets.length - 1;
+                do {
                     goTo--;
-                } 
-                if(goTo < 0) return false;
-            } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
+                    if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
+                        goTo--;
+                    }
+                    if (goTo < 0) return false;
+                } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
+            }
+            creep.memory.goToSpawn = goTo;
         }
-        creep.memory.goToSpawn = goTo;
-}
-creep.say(creep.memory.goToSpawn+'!!!'+targets.length);
+        creep.say(creep.memory.goToSpawn + '!!!' + targets.length);
 
-var goTo = creep.memory.goToSpawn;
+        var goTo = creep.memory.goToSpawn;
 
 
         if (targets[goTo] === undefined) {
-            creep.memory.goToSpawn = undefined;            
+            creep.memory.goToSpawn = undefined;
             return false;
         }
-            creep.say('^^');
+        creep.say('^^');
 
-            if (creep.pos.isNearTo(targets[goTo])) {
-                let zzz =creep.transfer(targets[goTo], RESOURCE_ENERGY);
-                if (zzz == OK) {
-                    creep.memory.goToSpawn = undefined;
+        if (creep.pos.isNearTo(targets[goTo])) {
+            let zzz = creep.transfer(targets[goTo], RESOURCE_ENERGY);
+            if (zzz == OK) {
+                creep.memory.goToSpawn = undefined;
 
-                        if(creep.carry[RESOURCE_ENERGY] < targets[goTo].energy - targets[goTo].energyCapacity) creep.moveTo(creep.room.storage,{ maxOpts: 100, reusePath: 1 });
+                if (creep.carry[RESOURCE_ENERGY] < targets[goTo].energy - targets[goTo].energyCapacity) creep.moveTo(creep.room.storage, { maxOpts: 100, reusePath: 1 });
 
-                        if(creep.memory.roleID === 0) {
-                            goTo++;
-                        } else {
-                            goTo--;
-                        }
-
-                        if (targets[goTo] !== undefined && targets[goTo].energy !== targets[goTo].energyCapacity) {
-                            if (!creep.pos.isNearTo(targets[goTo]))
-                                creep.moveTo(targets[goTo], { maxOpts: 100, reusePath: 1 });
-                            return true;
-                        }
-                        roomCache[creep.room.name] = undefined;
-                } else if(zzz == -8) {
-                    roomCache[creep.room.name] = undefined;
-                    creep.memory.goToSpawn = undefined;
+                if (creep.memory.roleID === 0) {
+                    goTo++;
+                } else {
+                    goTo--;
                 }
-                creep.say('^'+zzz);
-            } else {
-                this.toTransfer(creep);
-                creep.moveTo(targets[goTo], {
-                    visualizePathStyle: visPath
-                });
-                creep.say('^');
-                return true;
+
+                if (targets[goTo] !== undefined && targets[goTo].energy !== targets[goTo].energyCapacity) {
+                    if (!creep.pos.isNearTo(targets[goTo]))
+                        creep.moveTo(targets[goTo], { maxOpts: 100, reusePath: 1 });
+                    return true;
+                }
+                roomCache[creep.room.name] = undefined;
+            } else if (zzz == -8) {
+                roomCache[creep.room.name] = undefined;
+                creep.memory.goToSpawn = undefined;
             }
-        
+            creep.say('^' + zzz);
+        } else {
+            this.toTransfer(creep);
+            creep.moveTo(targets[goTo], {
+                visualizePathStyle: visPath
+            });
+            creep.say('^');
+            return true;
+        }
+
     }
 
     static checkMemory(spawn) {
@@ -340,10 +340,10 @@ var goTo = creep.memory.goToSpawn;
                 spawn.memory.expandCreate = [];
                 console.log('----------------Create Spawn ExpansionStack----------------');
             }
-                    if (spawn.memory.created === undefined) { 
-                        spawn.memory.created = 0; 
+            if (spawn.memory.created === undefined) {
+                spawn.memory.created = 0;
                 console.log('----------------Create Spawn Created Count----------------');
-                    }
+            }
 
             // Analyzed is an array of rooms that this spawn has looked at. 
             if (spawn.memory.analyzed === undefined) {
@@ -411,10 +411,13 @@ var goTo = creep.memory.goToSpawn;
         }
         if (temp < renewLimit) {
             if (spawn.room.name === 'E14S38') {
-                if (spawn.room.controller.level > 5 && renewTarget.memory.role === 'Aupgrader') {
-                    let rst = spawn.renewCreep(renewTarget);
-                } else if (renewTarget.memory.role === 'linker') {
-                    let rst = spawn.renewCreep(renewTarget);
+                if (renewTarget.memory.role === 'Aupgrader') {
+                    if (spawn.room.controller.level > 5) {
+                        let rst = spawn.renewCreep(renewTarget);
+                    }
+                } 
+                if (renewTarget.memory.role === 'linker') {
+                let rst = spawn.renewCreep(renewTarget);
                 }
             } else {
                 let rst = spawn.renewCreep(renewTarget);

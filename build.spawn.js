@@ -1047,7 +1047,6 @@ class theSpawn {
                 spawn.memory.TotalBuild = (Memory.spawnCount[spawnID].bodyCount * 3);
                 spawn.memory.totalCreep = Memory.spawnCount[spawnID].total;
             }
-
             return Memory.spawnCount[spawnID];
         }
         //        console.log('memory is not returned so count.', spawnID);

@@ -130,11 +130,12 @@ class transport extends roleParent {
         }
         if (super.depositNonEnergy(creep)) return;
 
-            if (link.waitForTransfer(creep)) {
-                constr.pickUpEnergy(creep);
-                creep.countReset();
-                return;
-            }
+        if (link.transfer(creep)) {
+            creep.countReset();
+            return;
+        }
+
+
 
         if (super.returnEnergy(creep)) {
             return;
@@ -158,8 +159,9 @@ class transport extends roleParent {
 
         if (creep.memory.gohome) {
 
-            if (creep.room.name == 'E25S47') {
-                let zz = Game.getObjectById('59c0197506c31c559f30be6b');
+            if (creep.room.name == 'E24S33') {
+                let zz = Game.getObjectById('59e792c1fb22ad17377891b4');
+
                 if (zz !== null) {
                     if (!creep.pos.isNearTo(zz)) {
                         creep.moveTo(zz);
@@ -167,6 +169,41 @@ class transport extends roleParent {
                     creep.build(zz);
 
                     return;
+                }
+            }
+            if (creep.room.name == 'E27S34') {
+                let zz = Game.getObjectById('59e79328602a0717b8a09f0b');
+
+                if (zz !== null) {
+                    if (!creep.pos.isNearTo(zz)) {
+                        creep.moveTo(zz);
+                    }
+                    creep.build(zz);
+
+                    return;
+                }
+            }
+            if (creep.room.name == 'E25S27') {
+                let zz = Game.getObjectById('59e794c30f3a5f17e8d64c90');
+
+                if (zz !== null) {
+                    if (!creep.pos.isNearTo(zz)) {
+                        creep.moveTo(zz);
+                    }
+                    creep.build(zz);
+
+                    return;
+                } else {
+                    zz = Game.getObjectById('59e794b9ca696517c72cd0fa');
+
+                    if (zz !== null) {
+                        if (!creep.pos.isNearTo(zz)) {
+                            creep.moveTo(zz);
+                        }
+                        creep.build(zz);
+
+                        return;
+                    }
                 }
             }
 
