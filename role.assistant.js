@@ -36,7 +36,7 @@ function mineralContainerEmpty(creep) {
     var a;
 
     var targetContain = Game.getObjectById(creep.memory.mineralContainerID);
-    
+
     if (targetContain !== null) {
         var keys = Object.keys(targetContain.store);
         var z = keys.length;
@@ -52,23 +52,23 @@ function mineralContainerEmpty(creep) {
                 }
 
             } else {
-/*
-                if (creep.room.storage !== undefined) {
-                    var keyz = Object.keys(creep.room.storage.store);
-                    var x = keyz.length;
-                    while (x--) {
-                        var b = keyz[x];
-                        if (b != RESOURCE_ENERGY && creep.room.storage.store[b]) {
-                            if (creep.pos.isNearTo(creep.room.storage)) {
-                                creep.withdraw(creep.room.storage, b);
-                            } else {
-                                creep.moveMe(creep.room.storage);
-                            }
-                        }
+                /*
+                                if (creep.room.storage !== undefined) {
+                                    var keyz = Object.keys(creep.room.storage.store);
+                                    var x = keyz.length;
+                                    while (x--) {
+                                        var b = keyz[x];
+                                        if (b != RESOURCE_ENERGY && creep.room.storage.store[b]) {
+                                            if (creep.pos.isNearTo(creep.room.storage)) {
+                                                creep.withdraw(creep.room.storage, b);
+                                            } else {
+                                                creep.moveMe(creep.room.storage);
+                                            }
+                                        }
 
-                    }
+                                    }
 
-                } */
+                                } */
 
             }
         }
@@ -96,10 +96,10 @@ class scientistRole extends roleParent {
             creep.memory.putaway = false;
             var targetContain = Game.getObjectById(creep.memory.mineralContainerID);
             var min = Game.getObjectById(creep.room.memory.mineralID);
-            if(min !== null && targetContain !== null)
-            if(targetContain.total === 0 && min.mineralAmount === 0){
-                creep.memory.death = true;
-            }
+            if (min !== null && targetContain !== null)
+                if (targetContain.total === 0 && min.mineralAmount === 0) {
+                    creep.memory.death = true;
+                }
         }
         if (creep.carryTotal > 0) {
             creep.memory.putaway = true;
@@ -107,19 +107,21 @@ class scientistRole extends roleParent {
 
         if (creep.memory.putaway) {
             let tar = creep.room.terminal;
-            if(tar.total === 300000){
-                tar = creep.room.storage;
-            }
-            if (creep.pos.isNearTo(tar)) {
-                for (var a in creep.carry) {
-                    creep.transfer(tar, a);
+            if (tar !== undefined) {
+                if (tar.total === 300000) {
+                    tar = creep.room.storage;
                 }
-            } else {
-                creep.moveMe(tar);
+                if (creep.pos.isNearTo(tar)) {
+                    for (var a in creep.carry) {
+                        creep.transfer(tar, a);
+                    }
+                } else {
+                    creep.moveMe(tar);
+                }
             }
 
         } else {
-			struc.pickUpEnergy(creep);
+            struc.pickUpEnergy(creep);
             mineralContainerEmpty(creep);
         }
     }

@@ -315,7 +315,7 @@ var Mod_E25S27 = [
 
 var Mod_E38S72 = [
     ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 1, 3],
+    ['upbuilder', require('role.upbuilder'), 2, 3],
     ['first', require('role.first'), 1, 2],
     ['linker', require('role.linker'), 2, 4],
 ];
