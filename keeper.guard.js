@@ -14,7 +14,7 @@ var fox = require('foxGlobals');
 
 function getHostiles(creep) {
     let range = 6;
-    if ( creep.room.name == 'E14S35') range = 6;
+    if ( creep.room.name == 'E16S34') range = 4;
 
     if (creep.room.name == 'E11S36') {
         range = 49;

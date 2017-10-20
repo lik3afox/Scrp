@@ -227,11 +227,11 @@ class roleUpbuilder extends roleParent {
 
             if (creep.memory.constructionID === undefined) {
                 let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-                /*                strucs = _.filter(strucs,function(o){
-                                    return o.structureType !== STRUCTURE_RAMPART;
-                                }); */
-                if (strucs !== null)
+                if (strucs !== null){
+
                     creep.memory.constructionID = strucs.id;
+                    creep.memory.foundCon = true;
+                }
             }
 
             //    return;
@@ -259,6 +259,10 @@ class roleUpbuilder extends roleParent {
                 }
             } else {
                 creep.memory.constructionID = undefined;
+                if(creep.memory.foundCon){
+                    creep.memory.foundCon = false;
+                    creep.room.memory.spawnTargets = undefined;
+                }
                 let zz = creep.upgradeController(creep.room.controller);
 
                 if (creep.room.name == 'E17S34') {

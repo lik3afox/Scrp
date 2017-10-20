@@ -316,8 +316,10 @@ var Mod_E25S27 = [
 var Mod_E38S72 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['upbuilder', require('role.upbuilder'), 2, 3],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['first', require('role.first'), 1, 2],
-    ['linker', require('role.linker'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
 ];
 
 var Mod_E38S81 = [

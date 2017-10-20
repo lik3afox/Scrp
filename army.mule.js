@@ -88,22 +88,26 @@ if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name
 } 
 
         if (!creep.memory.goHome) {
-            if (total === 0 && creep.memory.level !== 2) {
+            if (total !== creep.carryCapacity && creep.memory.level !== 2) {
                 let stor = creep.room.storage;
                 //                constr.pickUpEnergy(creep);
                 if (stor.store[RESOURCE_ENERGY] < 1000) {
                     stor = creep.room.terminal;
                 }
                 if (creep.room.name == 'E38S81') {
-                    stor = creep.room.terminal;
+      //              if(creep.room.storage.total !== creep.room.storage.store[RESOURCE_ENERGY]){
+    //                    stor = creep.room.storage;
+  //                  } else {
+                        stor = creep.room.terminal;
+//                    }
                 }
 
                 if (creep.pos.isNearTo(stor)) {
                     if (creep.room.name == 'E38S81') {
                         for (var e in stor.store) {
-                            //                            console.log('zz'+e);
-                            if (e !== RESOURCE_ENERGY)
+                            if (e !== RESOURCE_ENERGY){
                                 creep.withdraw(stor, e);
+                            }
                         }
                     } else {
                         creep.withdraw(stor, RESOURCE_ENERGY);

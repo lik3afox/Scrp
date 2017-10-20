@@ -234,7 +234,7 @@
         }
 
         var goods = room.find(FIND_MY_CREEPS);
-        if (goods.length <= 3) {
+        if (goods.length <= 2) {
             for (var i in goods) {
                 if (goods[i].memory.role == 'linker') {
                     goods[i].memory.role = 'first';
@@ -498,7 +498,7 @@
         }
             Memory.marketRunCounter--;
             if (Memory.marketRunCounter <= 0) {
-                Memory.marketRunCounter = 5;
+                Memory.marketRunCounter = 10;
                 market.run();
             }
 

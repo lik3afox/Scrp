@@ -1099,7 +1099,7 @@ function upgradeRoom(terminal) {
     if (targetRoom.controller.level < 6) return false;
     if (targetRoom.terminal === undefined) return false;
     var totalEnergy = targetRoom.storage.store[RESOURCE_ENERGY] + targetRoom.terminal.store[RESOURCE_ENERGY];
-    if (targetRoom.storage.store[RESOURCE_ENERGY] > 990000 && targetRoom.terminal.store[RESOURCE_ENERGY] > 290000) return false;
+    if (targetRoom.storage.store[RESOURCE_ENERGY] > 990000 && targetRoom.terminal.total > 290000) return false;
     //    if (totalEnergy > 400000) return false;
     //    if (terminal.store[RESOURCE_ENERGY] < 21000 && terminal.room.storage.store[RESOURCE_ENERGY] > 900000) return false;
     var amount = terminal.store[RESOURCE_ENERGY] * 0.25;
