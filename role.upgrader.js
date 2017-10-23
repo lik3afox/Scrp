@@ -34,7 +34,7 @@ var classLevels = [
     // Final evel
     [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY], // 800    
     // 7
-    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, CARRY]
+    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, CARRY]
 ];
 
 var containers = require('commands.toContainer');
@@ -80,49 +80,34 @@ class roleUpgrader extends roleParent {
         if (creep.memory.level > 5) super.renew(creep);
 
         if (creep.carry.energy < creep.stats('upgrading') + 1) {
-            if (creep.room.name == 'E38S81') {
-                if (creep.memory.roleID == '6') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(24, 36, creep.room.name))) {
-                        creep.moveTo(24, 36);
-                    }
+            if (creep.room.name == 'E27S45') {
+                var going;
+                var pos = [
+//                new RoomPosition(13, 41, creep.room.name),
+                new RoomPosition(14, 41, creep.room.name),
+                new RoomPosition(15, 41, creep.room.name),
+                new RoomPosition(15, 40, creep.room.name),
+                new RoomPosition(15, 39, creep.room.name),
+                new RoomPosition(15, 38, creep.room.name),
+                new RoomPosition(14, 38, creep.room.name),
+                ];
+                if(pos[creep.memory.roleID] !== undefined) {
+                    going = pos[creep.memory.roleID];
                 } 
-                if (creep.memory.roleID == '5') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(24, 35, creep.room.name))) {
-                        creep.moveTo(24, 35);
+
+                if (going !== undefined) {
+                    if (!creep.pos.isEqualTo(going)) {
+                        creep.moveTo(going);
                     }
-                } 
-                if (creep.memory.roleID == '4') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(24, 34, creep.room.name))) {
-                        creep.moveTo(24, 34);
-                    }
-                } 
-                if (creep.memory.roleID == '3') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(23, 34, creep.room.name))) {
-                        creep.moveTo(23, 34);
-                    }
+
                 }
 
-                if (creep.memory.roleID == '2') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(22, 34, creep.room.name))) {
-                        creep.moveTo(22, 34);
-                    }
-                }
-                if (creep.memory.roleID == '1') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(21, 34, creep.room.name))) {
-                        creep.moveTo(21, 34);
-                    }
-                }
-                if (creep.memory.roleID == '0') {
-                    if (!creep.pos.isEqualTo(new RoomPosition(20, 34, creep.room.name))) {
-                        creep.moveTo(20, 34);
-                    }
-                }
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
                 } else {
-                       if (creep.pos.isNearTo(creep.room.storage)) {
-                    creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
-                }
+                    if (creep.pos.isNearTo(creep.room.storage)) {
+                        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                    }
                 }
 
             } else {

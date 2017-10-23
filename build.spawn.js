@@ -313,19 +313,14 @@ var Mod_E25S27 = [
     ['homeDefender', require('role.defender2'), 1, 6]
 ];
 
-var Mod_E38S72 = [
+var Mod_E27S45 = [
     ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 2, 5],
-    ['upgrader', require('role.upgrader'), 0, 7],
+    ['linker', require('role.linker'), 1, 4],
+    ['first', require('role.first'), 1, 3],
+    ['upgrader', require('role.upgrader'), 6, 5],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
-    ['first', require('role.first'), 1, 2],
-    ['linker', require('role.linker'), 2, 4],
-];
-var Mod_E27S45 = [
-['harvester', require('role.harvester'), 2, 2],
-    ['linker', require('role.linker'), 2, 4],
-//['first', require('role.first'), 1, 2],
+    ['upbuilder', require('role.upbuilder'), 1, 5],
 ];
 
 var Mod_E38S81 = [
@@ -336,6 +331,14 @@ var Mod_E38S81 = [
     ['linker', require('role.linker'), 1, 4],
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['upgrader', require('role.upgrader'), 0, 4],
+];
+var Mod_E38S72 = [
+    ['harvester', require('role.harvester'), 2, 2],
+    ['upbuilder', require('role.upbuilder'), 1, 7],
+    ['minHarvest', require('role.mineral'), 1, 7],
+    ['assistant', require('role.assistant'), 1, 0],
+    ['first', require('role.first'), 1, 2],
+    ['linker', require('role.linker'), 1, 4],
 ];
 
 

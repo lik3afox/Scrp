@@ -498,7 +498,7 @@
         }
             Memory.marketRunCounter--;
             if (Memory.marketRunCounter <= 0) {
-                Memory.marketRunCounter = 10;
+                    Memory.marketRunCounter = 10;
                 market.run();
             }
 

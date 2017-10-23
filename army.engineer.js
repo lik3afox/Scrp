@@ -162,13 +162,13 @@ class engineerClass extends roleParent {
                 if (creep.room.controller !== undefined && creep.room.controller.level !== 1) {
                     //    if(creep.room.controller.level < 4)
                     //                    if (!super._containers.moveToStorage(creep)) {
-                                        if (!spawn.moveToTransfer(creep)){
+//                                        if (!spawn.moveToTransfer(creep)){
                     if (!super._constr.moveToBuild(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(creep.room.controller);
                         }
                     }
-                                      }                        
+  //                                    }                        
                     //                  }
                     //  }
                 } else {
@@ -196,7 +196,7 @@ class engineerClass extends roleParent {
                 //if(!super._constr.pickUpEnergy(creep,100))
 
                 if (creep.room.name == 'E14S38' || creep.room.name == 'E22S27') {
-                    if (!super._constr.moveToPickUpEnergy(creep))
+//                    if (!super._constr.moveToPickUpEnergy(creep))
                         if (!super._sources.moveToWithdraw(creep)) {
                             //                        super._constr.moveToPickUpEnergy(creep);
                         }
