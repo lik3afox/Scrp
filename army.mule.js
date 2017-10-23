@@ -31,6 +31,11 @@ class muleClass extends roleParent {
             creep.moveTo(Game.flags.portal);
             return;
         }
+        if (Game.flags.portal2 !== undefined && creep.room.name == Game.flags.portal2.pos.roomName && creep.memory.party !== 'hello22') {
+            creep.say('P2');
+            creep.moveTo(Game.flags.portal2);
+            return;
+        }
         if (this.returnEnergy(creep)) {
             return false;
         }
@@ -94,16 +99,16 @@ if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name
                 if (stor.store[RESOURCE_ENERGY] < 1000) {
                     stor = creep.room.terminal;
                 }
-                if (creep.room.name == 'E38S81') {
-      //              if(creep.room.storage.total !== creep.room.storage.store[RESOURCE_ENERGY]){
-    //                    stor = creep.room.storage;
-  //                  } else {
+                if (Game.shard.name == 'shard0') {
+                    if(creep.room.storage.total !== creep.room.storage.store[RESOURCE_ENERGY]){
+                        stor = creep.room.storage;
+                    } else {
                         stor = creep.room.terminal;
-//                    }
+                    }
                 }
 
                 if (creep.pos.isNearTo(stor)) {
-                    if (creep.room.name == 'E38S81') {
+                    if (Game.shard.name == 'shard0') {
                         for (var e in stor.store) {
                             if (e !== RESOURCE_ENERGY){
                                 creep.withdraw(stor, e);

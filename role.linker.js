@@ -1070,7 +1070,10 @@ function doDefault(creep) {
                     }
                     return true;
                 }
+            } else {
+                constr.moveToPickUpEnergy(creep, 100);
             }
+
             if (creep.room.memory.masterLinkID !== undefined) {
                                     creep.say('!@@');
 

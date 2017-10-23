@@ -195,7 +195,7 @@ function getDeathSpot(roomName) {
         case "E24S33":
             return new RoomPosition(9, 15, roomName);
         case "E25S47":
-            return new RoomPosition(6, 37, roomName);
+            return new RoomPosition(5, 37, roomName);
         case "E14S38":
             return new RoomPosition(32, 9, roomName); 
 //        case "E23S38":

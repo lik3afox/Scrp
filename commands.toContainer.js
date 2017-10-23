@@ -169,11 +169,13 @@ class ContainerInteract {
         var storage = creep.room.storage;
 
         if (storage === undefined) return false;
-        creep.say(storage.store[RESOURCE_ENERGY]);
 
         if (storage.store[RESOURCE_ENERGY] === 0) {
             return false;
         }
+
+        creep.say(storage.store[RESOURCE_ENERGY]);
+
         if (creep.pos.isNearTo(storage)) {
             for (var e in creep.carry) {
                 creep.withdraw(storage, e);

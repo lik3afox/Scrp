@@ -202,8 +202,11 @@ class engineerClass extends roleParent {
                         }
                 } else {
                     if (!super._constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID) + 500)) {
-                        if (!super._containers.withdrawFromStorage(creep)) {}
-if (!super._sources.moveToWithdraw(creep)) {}
+                        if (!super._containers.withdrawFromStorage(creep)) {
+                            if (!super._sources.moveToWithdraw(creep)) {
+
+                            }
+                        }
                     }
                 }
                 //                          }
