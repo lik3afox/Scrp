@@ -320,6 +320,7 @@ class roleLinker extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
+        this.rebirth(creep);
         if (creep.saying == 'ZzZ') return;
 
         if (creep.room.controller.level != 8 && creep.memory.roleID === 0) {

@@ -25,6 +25,7 @@ var roleParent = require('role.parent');
 var fox = require('foxGlobals');
 
 function doAttack(creep) {
+    if(creep.room.name !== Game.flags[creep.memory.party].pos.roomName) return;
     let target;
     var E18S64targets;
     switch (creep.room.name) {
@@ -70,10 +71,10 @@ function doAttack(creep) {
                     //                  return true;
                 }
             } else { */
-                bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-                bads = _.filter(bads, function(o) {
-                    return !_.contains(fox.friends, o.owner.username);
-                });
+                bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
+    //            bads = _.filter(bads, function(o) {
+  //                  return !_.contains(fox.friends, o.owner.username);
+//                });
                 if (bads.length > 0) {
                     creep.dismantle(bads[0]);
                                   return true;
@@ -126,10 +127,21 @@ class demolisherClass extends roleParent {
             }
         }
 
-        var killBase = ['E15S41','E22S42'];
+        var killBase = ['E28S45'];
 
         if (Game.flags[creep.memory.party] !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName && _.contains(killBase,creep.room.name)) {
-            creep.killBase();
+            let zz = Game.getObjectById('599c4116f4cc3c5f26a258a7');
+            if(zz === null) {
+                creep.say('kill');
+                creep.killBase();
+                return;
+            } else {
+                if(creep.pos.isNearTo(zz)) {
+                   creep.dismantle(zz); 
+                } else {
+                    creep.moveTo(zz);
+                }
+            }
         } else if (!doAttack(creep)) {
             movement.flagMovement(creep);
         } else {

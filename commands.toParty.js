@@ -14,8 +14,8 @@ var basicParty = [
 ];
 
 var demoParty = [
-    //['demolisher', require('army.demolisher'), 1, 1],
-    ['thief', require('army.thief'), 1, 3],
+    ['demolisher', require('army.demolisher'), 1, 2],
+//    ['thief', require('army.thief'), 1, 3],
 
 ];
 var scienceParty = [

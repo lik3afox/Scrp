@@ -148,7 +148,9 @@ if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name
                                 for (var bb in creep.carry) {
                                     creep.transfer(target, bb);
                                 }
+                            if (creep.memory.party != 'hello22') {
                                 creep.memory.goHome = true;
+                            }
 
                             } else {
                                 creep.moveTo(target, { reusePath: 20 });

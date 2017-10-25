@@ -187,7 +187,12 @@ class scientistRole extends roleParent {
 
     static run(creep) {
         if(creep.memory.party === undefined && !creep.room.memory.labsNeedWork){
-            creep.say('🏄🏽');
+            if(creep.room.name == 'E27S45'){
+                require('role.first').run(creep);
+            }else {
+                creep.say('🏄🏽');
+            }
+
             return;
         }
 

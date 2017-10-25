@@ -1114,7 +1114,7 @@ function upgradeRoom(terminal) {
     return false;
 }
 
-var wanted = ['H'];
+var wanted = ['L'];
 
 function buyMineralsFromBUYORDER(terminal) {
     var stor = terminal.room.storage;
@@ -1136,8 +1136,11 @@ function buyMineralsFromBUYORDER(terminal) {
                 }
                 }
     } else {
+  //      console.log(wanted.length,'xxx',wanted[0]);
         for(var e in wanted) {
-            if(terminal.store[wanted[e]] < 25000){
+//            console.log(wanted[e],terminal.store[wanted[e]],terminal.room.name );
+
+            if(terminal.store[wanted[e]] < 25000 || terminal.store[wanted[e]] === undefined){
         console.log(terminal.room.name,'needs',wanted[e],' in terminal',terminal.store[wanted[e]]);
                 var wantedd = Game.market.getAllOrders({type: ORDER_SELL, resourceType: wanted[e]});
                 if(wantedd.length > 0){

@@ -367,17 +367,17 @@ class SpawnInteract {
     }
 
     static renewCreep(spawn) {
-        if (spawn.memory.autoRenew) {
-            let zz = spawn.pos.findInRange(FIND_CREEPS, 1);
-            zz = _.filter(zz, function(object) {
-                return (object !== null && object.memory !== undefined && object !== undefined && !object.memory.reportDeath &&
-                    object.memory.role != 'scientist' && object.ticksToLive < 1300);
-            });
-            if (zz.length === 0) return false;
-            let creep = zz[0];
-            spawn.renewCreep(creep);
-            return;
-        }
+        /*        if (spawn.memory.autoRenew) {
+                    let zz = spawn.pos.findInRange(FIND_CREEPS, 1);
+                    zz = _.filter(zz, function(object) {
+                        return (object !== null && object.memory !== undefined && object !== undefined && !object.memory.reportDeath &&
+                            object.memory.role != 'scientist' && object.ticksToLive < 1300);
+                    });
+                    if (zz.length === 0) return false;
+                    let creep = zz[0];
+                    spawn.renewCreep(creep);
+                    return;
+                } */
 
 
         if (spawn.memory.wantRenew === undefined) return false;
@@ -399,8 +399,21 @@ class SpawnInteract {
             if (creepTarget === null) {
                 spawn.memory.wantRenew.splice(e, 1);
             } else if (creepTarget.ticksToLive < temp && creepTarget.pos.isNearTo(spawn)) {
-                renewTarget = creepTarget;
-                temp = creepTarget.ticksToLive;
+                //            	console.log( creepTarget.memory.role ,spawn.room.controller.level );
+                if (spawn.room.name === 'E14S38') {
+
+                    if (spawn.room.controller.level > 5) {
+
+                        renewTarget = creepTarget;
+                        temp = creepTarget.ticksToLive;
+                    } else if (creepTarget.memory.role == 'linker') {
+                        renewTarget = creepTarget;
+                        temp = creepTarget.ticksToLive;
+                    }
+                } else {
+                    renewTarget = creepTarget;
+                    temp = creepTarget.ticksToLive;
+                }
             }
         }
 
@@ -409,20 +422,9 @@ class SpawnInteract {
         if (spawn.memory.renewLevel !== undefined) {
             renewLimit = spawn.memory.renewLevel;
         }
-        if (temp < renewLimit) {
-            if (spawn.room.name === 'E14S38') {
-                if (renewTarget.memory.role === 'Aupgrader') {
-                    if (spawn.room.controller.level > 5) {
-                        let rst = spawn.renewCreep(renewTarget);
-                    }
-                } 
-                if (renewTarget.memory.role === 'linker') {
-                let rst = spawn.renewCreep(renewTarget);
-                }
-            } else {
-                let rst = spawn.renewCreep(renewTarget);
-            }
 
+        if (temp < renewLimit) {
+                let rst = spawn.renewCreep(renewTarget);
             //console.log('********* ',spawn,' am Renewing:',renewTarget.name,rst,'********* ');
             return true;
         } else {

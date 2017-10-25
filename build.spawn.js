@@ -317,8 +317,10 @@ var Mod_E27S45 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['linker', require('role.linker'), 1, 4],
     ['first', require('role.first'), 1, 3],
-    ['upgrader', require('role.upgrader'), 6, 5],
+//    ['upgrader', require('role.upgrader'), 6, 5],
+    ['scientist', require('role.scientist'), 1, 4],
     ['minHarvest', require('role.mineral'), 1, 7],
+    ['wallwork', require('role.wallworker'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 5],
 ];
