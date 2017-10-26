@@ -154,7 +154,7 @@ var Mod_E23S38 = [
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 3]
+    ['homeDefender', require('role.defender2'), 1, 5]
 ];
 
 var Mod_E25S37 = [
@@ -316,13 +316,13 @@ var Mod_E25S27 = [
 var Mod_E27S45 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['linker', require('role.linker'), 1, 4],
-    ['first', require('role.first'), 1, 3],
+    ['first', require('role.first'), 1, 4],
 //    ['upgrader', require('role.upgrader'), 6, 5],
-    ['scientist', require('role.scientist'), 1, 4],
+    ['scientist', require('role.scientist'), 1, 6],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['wallwork', require('role.wallworker'), 1, 7],
-    ['assistant', require('role.assistant'), 1, 0],
-    ['upbuilder', require('role.upbuilder'), 1, 5],
+//    ['assistant', require('role.assistant'), 1, 0],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
 ];
 
 var Mod_E38S81 = [
@@ -331,7 +331,7 @@ var Mod_E38S81 = [
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 4],
-    ['upbuilder', require('role.upbuilder'), 1, 7],
+    ['upbuilder', require('role.upbuilder'), 2, 7],
     ['upgrader', require('role.upgrader'), 0, 4],
 ];
 var Mod_E38S72 = [
@@ -339,6 +339,7 @@ var Mod_E38S72 = [
     ['upbuilder', require('role.upbuilder'), 1, 7],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
+//    ['wallwork', require('role.wallworker'), 1, 7],
     ['first', require('role.first'), 1, 2],
     ['linker', require('role.linker'), 1, 4],
 ];
@@ -1054,7 +1055,7 @@ class theSpawn {
         } */
 
     static spawnCount(spawnID) {
-        var doSpawn = ['599c7de1255bda6a7f60b395', '599dff0efcee88089b5814aa','59a89dc250359f180a14beed','59d29e25230c1b15d7056e67','59dd41f8a79b29037141fa85'];
+        var doSpawn = ['59eb8ba3fc952a431cb6c60b','599c7de1255bda6a7f60b395', '599dff0efcee88089b5814aa','59a89dc250359f180a14beed','59d29e25230c1b15d7056e67','59dd41f8a79b29037141fa85'];
 
 
         if (_.contains(doSpawn, spawnID) && Memory.spawnCount[spawnID] !== undefined) {
@@ -1569,8 +1570,6 @@ class theSpawn {
             switch (creep.memory.role) {
                 case "miner":
                 case "transport":
-                    spawn.memory.expandCreate.push(rebuildCreep(creep));
-                    break;
                 case "ztransport":
                 case "rtransport":
                     spawn.memory.expandCreate.push(rebuildCreep(creep));
@@ -1578,6 +1577,7 @@ class theSpawn {
 
                 case "harvester":
                 case "first":
+                case "linker":
                     spawn.memory.create.unshift(rebuildCreep(creep));
                     break;
                 case "scientist":
@@ -1591,6 +1591,9 @@ class theSpawn {
                 case "fighter":
                 case "healer":
                     spawn.memory.warCreate.unshift(rebuildCreep(creep));
+                    break;
+                default:
+                    spawn.memory.create.push(rebuildCreep(creep));
                     break;
             }
     }

@@ -189,6 +189,37 @@ function oneLinkRoom(creep, fill) {
     }
 }
 
+function E38S81(creep, fill) {
+    if (creep.carryTotal === 0 && creep.room.storage.total !== 1000000) {
+        creep.say("!");
+        if (!constr.pickUpEnergy(creep)) {
+            let zz = Game.getObjectById(creep.room.memory.masterLinkID);
+            if (zz !== null && zz.energy > 0) {
+                if (creep.pos.isNearTo(zz)) {
+                    creep.withdraw(zz, RESOURCE_ENERGY);
+                } else {
+                    creep.moveTo(zz);
+                }
+            } else {
+                for (var e in creep.room.terminal.store) {
+                    if (e !== RESOURCE_ENERGY) {
+                        if (creep.pos.isNearTo(creep.room.terminal)) {
+                            creep.withdraw(creep.room.terminal, e);
+                        } else {
+                            creep.moveTo(creep.room.terminal);
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        creep.say("0");
+        for (var ee in creep.carry) {
+            creep.transfer(creep.room.storage, ee);
+        }
+    }
+}
+
 function E14S38(creep, fill) {
     var goto;
     //    var storageMore = false;
@@ -264,7 +295,7 @@ function E14S38(creep, fill) {
 
 function doDefault(creep) {
     if (creep.carryTotal !== creep.carryCapacity) {
-                    creep.say('<');
+        creep.say('<');
         // Then pick up energy.
         if (creep.room.controller.level > 3) {
             // First look for containers.
@@ -281,12 +312,10 @@ function doDefault(creep) {
                     }
                     return true;
                 }
-            } else {
-                constr.moveToPickUpEnergy(creep, 100);
             }
 
             if (creep.room.memory.masterLinkID !== undefined) {
-                                    creep.say('!@@');
+                creep.say('!@@');
 
                 if (creep.memory.roleID !== 0 && containers.moveToWithdraw(creep)) {
                     return true;
@@ -320,9 +349,9 @@ class roleLinker extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-        this.rebirth(creep);
         if (creep.saying == 'ZzZ') return;
 
+        this.rebirth(creep);
         if (creep.room.controller.level != 8 && creep.memory.roleID === 0) {
             creep.room.visual.text(creep.room.controller.progressTotal - creep.room.controller.progress, creep.room.controller.pos.x + 1, creep.room.controller.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: RIGHT });
         }
@@ -486,6 +515,10 @@ class roleLinker extends roleParent {
         switch (creep.pos.roomName) {
             case 'E14S38':
                 E14S38(creep, creep.memory.full);
+                break;
+            case 'E38S81':
+            case 'E38S72':
+                E38S81(creep, creep.memory.full);
                 break;
 
             default:

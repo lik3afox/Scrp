@@ -71,6 +71,7 @@ class mineralRole extends roleParent {
                             });
                             if (stru.length !== 0) {
                                 creep.memory.mineralContainID = stru[0].id;
+                                creep.room.memory.mineralContainID = stru[0].id;
                             } else {
                                 creep.memory.mineralContainID = 'none';
                             }

@@ -21,7 +21,6 @@ var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17
  E14S37     XLHO2*      UL*
 
  E25S37     XKHO2       OH*
- E14S47     XKHO2       *KO
 
 
  E17S34     OH         *GH2O
@@ -178,7 +177,6 @@ var maxMinerals = {
 
     'XLHO2': 150000, // Heal*
     'LHO2': 1000, // Repair
-    //    'LO': 1000, // Repair
 
 };
 

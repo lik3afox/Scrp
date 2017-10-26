@@ -107,13 +107,30 @@ if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name
                     }
                 }
 
+/*
+        var keys = Object.keys(linksID);
+        var z = linksID.length;
+
+            while (z--) {
+                var zz = keys[z];
+                LINK = Game.getObjectById(linksID[zz]);
+*/
+
+
                 if (creep.pos.isNearTo(stor)) {
                     if (Game.shard.name == 'shard0') {
+                     var zz = Math.floor(Math.random()*4);
+                      if(zz !== 0) {
+                                creep.withdraw(stor, 'H');
+                      } else {
                         for (var e in stor.store) {
                             if (e !== RESOURCE_ENERGY){
                                 creep.withdraw(stor, e);
                             }
                         }
+                      }
+
+
                     } else {
                         creep.withdraw(stor, RESOURCE_ENERGY);
                     }

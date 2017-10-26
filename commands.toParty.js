@@ -216,11 +216,11 @@ var upgrade2Party = [
 ];
 
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 2, 6]
+    ['Aupgrader', require('army.upgrader'), 3, 6]
 
 ];
 var muleParty = [
-    ['mule', require('army.mule'), 2, 0],
+    ['mule', require('army.mule'), 4, 0],
 ];
 var upgradeMuleParty = [
     ['mule', require('army.mule'), 1, 1],
@@ -941,6 +941,7 @@ class partyInteract {
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
                     //Add to stack 
                     let rando = Math.floor(Math.random() * flag.name.length);
+
                     var death = false;
                     if (currentParty[e][_name] == 'first' || currentParty[e][_name] == 'scientist' || currentParty[e][_name] == 'wallwork') {
                         death = true;
@@ -952,7 +953,7 @@ class partyInteract {
                         room: home, // This will return a room, and that room will add to alphaSpawn warstack.
 
                         spawn: home,
-                        name: currentParty[e][_name] + '!' + flag.name[rando],
+                        name: currentParty[e][_name] + '!' + flag.name[rando]+ Game.shard.name[0]+ Game.shard.name[5],
                         //                name: currentParty[e][_name]+,
                         memory: {
                             role: currentParty[e][_name],
