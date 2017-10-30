@@ -1173,10 +1173,7 @@ class baseParent {
         }
 
         if (creep.memory.distance !== undefined) distance = creep.memory.distance;
-        //      if (creep.memory.role == 'guard')
-        //            creep.say('here?');
         if (creep.ticksToLive < ((3 * creep.body.length) + distance)) {
-            creep.say('herezzz');
             let spawnsDo = require('build.spawn');
             spawnsDo.reportDeath(creep);
             creep.memory.reportDeath = true;

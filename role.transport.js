@@ -321,6 +321,8 @@ class transport extends roleParent {
                         }
                     } else if (creep.pos.isNearTo(_goal)) {
                         creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
+                    } else {
+                           creep.say('zZzZ', true);
                     }
 
                 } else if (_goal !== null && creep.pos.inRangeTo(_goal, rng)) {
@@ -340,10 +342,11 @@ class transport extends roleParent {
                 }
 
                 super.keeperFind(creep);
-
+/*
                 let contain = Game.getObjectById(creep.memory.workContain);
                 if (contain !== null) {
                     if (contain.total > 100) {
+                        creep.say('!!!');
                         if (creep.pos.isNearTo(contain)) {
                             var keyz = Object.keys(contain.store);
                             var a = keyz.length;
@@ -365,19 +368,21 @@ class transport extends roleParent {
                         } else {
                             creep.moveTo(contain, { maxOps: 50 });
                         }
-                    } else if (creep.pos.isNearTo(_goal)) {
-                        creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
-                    } else {
+                    } else if (!creep.pos.isNearTo(contain)) {
+                    creep.say('!!!!');
+                        creep.moveTo(contain, { maxOps: 50 });
+                    } else if (creep.pos.isNearTo(contain)) {
+                    creep.say('!!!!!');
                         creep.say('zZzZ', true);
                     }
                 } else {
-                    if (creep.pos.isNearTo(contain)) {
-                        creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
+                    if (!creep.pos.isNearTo(contain)) {
+                        creep.moveTo(contain, { maxOps: 50 });
                     } else {
                         creep.say('zZzZ');
                     }
                 }
-
+*/
 
             } else if (_goal !== null) {
 

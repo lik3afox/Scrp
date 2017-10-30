@@ -972,9 +972,17 @@ class partyInteract {
                             if (eez !== RESOURCE_ENERGY) {
                                 terminalStuff += term.store[eez];
                             }
-                        }
+                        }/*
+                        var storageStuff;
+                        storageStuff = 0;
+                         term = Game.rooms.E38S81.storage;
+                        for (eez in term.store) {
+                            if (eez !== RESOURCE_ENERGY) {
+                                storageStuff += term.store[eez];
+                            }
+                        } */
 //                        console.log('MULE CHECK @ ROOM E38S81' + terminalStuff);
-                        if (terminalStuff > 1250) {
+                        if (terminalStuff > 1250 ) {
                             let toSpawn = require('commands.toSpawn');
                             toSpawn.addToWarStack(temp);
                             totalParty[i]++;

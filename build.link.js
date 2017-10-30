@@ -117,7 +117,10 @@ class buildLink {
                     if (creep.memory.containerID !== undefined) {
                         var zz = Game.getObjectById(creep.memory.containerID);
                         if (zz !== null) {
-                            zz.destroy();
+                            if(creep.pos.isNearTo(zz)){
+                                zz.destroy();
+                                creep.memory.containerID = undefined;
+                            }
                         }
                         creep.memory.containerID = undefined;
                     }

@@ -132,7 +132,8 @@ if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name
 
 
                     } else {
-                        creep.withdraw(stor, RESOURCE_ENERGY);
+                        if(creep.room.name =='E14S37')
+                            creep.withdraw(stor, RESOURCE_ENERGY);
                     }
                 } else {
                     creep.moveTo(stor, { reusePath: 20 });

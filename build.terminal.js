@@ -31,7 +31,7 @@ var required = [{ resource: RESOURCE_POWER, amount: 100 }, { resource: 'G', amou
 
 var xStorage = {
     XGHO2: {
-        amount: 7000
+        amount: 15000
     },
     XUH2O: {
         amount: 4000
@@ -40,7 +40,7 @@ var xStorage = {
         amount: 3000
     },
     XKHO2: {
-        amount: 6000
+        amount: 12000
     },
     XZHO2: {
         amount: 4000
@@ -1120,7 +1120,7 @@ function buyMineralsFromBUYORDER(terminal) {
     var stor = terminal.room.storage;
     var eng = terminal.store[RESOURCE_ENERGY];
     var buy;
-    if(eng < 20000) {
+    if(eng < 30000) {
         console.log(terminal.room.name,'needs energy in terminal');
                 var eWanted = Game.market.getAllOrders({type: ORDER_SELL, resourceType: RESOURCE_ENERGY});
                 if(eWanted.length > 0){
@@ -1136,7 +1136,6 @@ function buyMineralsFromBUYORDER(terminal) {
                 }
                 }
     } else {
-        /*
   //      console.log(wanted.length,'xxx',wanted[0]);
         for(var e in wanted) {
 //            console.log(wanted[e],terminal.store[wanted[e]],terminal.room.name );
@@ -1160,7 +1159,6 @@ function buyMineralsFromBUYORDER(terminal) {
                 }
             }
         }
-        */
     }
     // Look for resourses wanted.
 

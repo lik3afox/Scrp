@@ -99,6 +99,8 @@ function getSpot(roomName) {
     switch (roomName) {
         case "E38S72":
             return new RoomPosition(36, 34, roomName);
+        case "E23S38":
+            return new RoomPosition(35, 8, roomName);
         case "E13S34":
             return new RoomPosition(37, 18, roomName);
         default:
@@ -179,7 +181,7 @@ class roleUpbuilder extends roleParent {
             //            creep.memory.upgrading = false;
             super._constr.pickUpEnergy(creep);
             creep.memory.wallTargetID = undefined;
-            if (creep.room.name == 'E35S83' || creep.room.name == 'E28S73') {
+            if (creep.room.name == 'E17S34' || creep.room.name == 'E28S73') {
                 super._containers.withdrawFromTerminal(creep);
             } else if (creep.room.name == 'x') {
 

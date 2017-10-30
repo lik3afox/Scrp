@@ -234,10 +234,11 @@
         }
 
         var goods = room.find(FIND_MY_CREEPS);
-        if (goods.length <= 2) {
+        if (goods.length <= 1) {
             for (var i in goods) {
                 if (goods[i].memory.role == 'linker') {
                     goods[i].memory.role = 'first';
+                    goods[i].memory.reportDeath = true;
                 }
             }
             var spwns = room.find(FIND_STRUCTURES);

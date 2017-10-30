@@ -50,7 +50,12 @@ function isItTier3(creep) {
     var tier3 = ['XLHO2', 'XUH2O', 'XGHO2', 'XZHO2', 'XZH2O', 'XKHO2'];
     for (var ee in tier3) {
         if (creep.carry[tier3[ee]] !== undefined) {
+            if(creep.pos.isNearTo(creep.room.storage)) {
             let zz = creep.transfer(creep.room.storage, tier3[ee]);
+            } else {
+            creep.moveTo(creep.room.storage);
+            }
+
             return true;
         }
     }
@@ -63,13 +68,15 @@ function toStorageOrTerminal(creep) {
         // Here we drop.
         return false;
     }
-    if (isItTier3(creep)) {} else if (creep.room.terminal !== undefined && creep.room.terminal.total == 300000) {
-        containers.moveToStorage(creep);
-    } else if (creep.room.terminal === undefined) {
+    if (isItTier3(creep)) {
+
+    } else if (creep.room.terminal !== undefined && creep.room.terminal.total == 300000) {
         containers.moveToStorage(creep);
     } else if ((creep.carry[RESOURCE_ENERGY] === 0 && creep.carryTotal !== 0) || creep.room.terminal.store[RESOURCE_ENERGY] < 5000) {
         containers.moveToTerminal(creep);
-    } else if (creep.room.storage.store[RESOURCE_ENERGY] < 75000) {
+    }else if (creep.room.terminal === undefined) {
+        containers.moveToStorage(creep);
+    }  else if (creep.room.storage.store[RESOURCE_ENERGY] < 75000) {
         containers.moveToStorage(creep);
     } else if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 || creep.room.storage.store[RESOURCE_ENERGY] > 900000) {
         containers.moveToTerminal(creep);
@@ -176,11 +183,7 @@ function doLinkRoom(creep) {
 function oneLinkRoom(creep, fill) {
     if (!fill) {
         if (constr.pickUpEnergy(creep)) return;
-        switch (creep.memory.roleID) {
-            case 0:
-                doLinkRoom(creep);
-                break;
-        }
+        doLinkRoom(creep);
     } else {
         switch (creep.memory.roleID) {
             default: toStorageOrTerminal(creep);
@@ -507,7 +510,7 @@ class roleLinker extends roleParent {
                             returned[2].emptied = false;             */
         }
 
-        if (creep.room.controller.level === 8 && creep.memory.roleID === 0) {
+        if (creep.room.controller.level === 8) {
             oneLinkRoom(creep, creep.memory.full);
             return;
         }
@@ -516,10 +519,10 @@ class roleLinker extends roleParent {
             case 'E14S38':
                 E14S38(creep, creep.memory.full);
                 break;
-            case 'E38S81':
+/*            case 'E38S81':
             case 'E38S72':
                 E38S81(creep, creep.memory.full);
-                break;
+                break;*/
 
             default:
                 doDefault(creep, creep.memory.full);

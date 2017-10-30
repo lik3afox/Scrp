@@ -171,7 +171,6 @@ class roleHarvester extends roleParent {
             return;
         }
         if (creep.memory.level > 1) super.renew(creep);
-            creep.memory.reportDeath = true;
 
         if (creep.memory.sourceID == '5982ff7ab097071b4adc2b7d') {
             creep.memory.reportDeath = true;

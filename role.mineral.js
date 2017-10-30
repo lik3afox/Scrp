@@ -74,6 +74,14 @@ class mineralRole extends roleParent {
                                 creep.room.memory.mineralContainID = stru[0].id;
                             } else {
                                 creep.memory.mineralContainID = 'none';
+
+    let isBuilt = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3, {
+        filter: object => (object.structureType == STRUCTURE_CONTAINER)
+    });
+    // If you find a construction site
+    if (isBuilt.length > 0) {
+                                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
+    }
                             }
                         }
                     }

@@ -167,9 +167,9 @@ var maxMinerals = {
     'KHO2': 1000, // Repair
     //    'KO': 1000, // Repair
 
-    'XZHO2': 150000, //  Move*
-    'ZHO2': 1000, // Repair
-    'ZO': 1000, // Repair
+    'XZHO2': 200000, //  Move*
+    'ZHO2': 1000, // Move
+    'ZO': 1000, // Move
 
     'XUH2O': 100000, // Attack
     'UH2O': 2000, // Repair
@@ -1456,8 +1456,9 @@ function labDo(roomName, created, labz, laby) {
     }
     if (Memory.stats.totalMinerals !== undefined)
         if (labs[created - 1].resource == 'XGHO2') console.log(Memory.stats.totalMinerals[labs[created - 1].resource], maxMinerals[labs[created - 1].resource], labs[created - 1].emptied);
-    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
-        //            console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource],roomName);
+//    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
+    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] ) {
+//        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource],roomName);
         return false;
     }
     let lab1 = getCached(labs[created - 1].id);
