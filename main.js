@@ -6,29 +6,20 @@
     // 1 Bare Visual
 
     var fox = require('foxGlobals');
-    var _showJobs = true;
-    var _creepsReport = false;
     var flag = require('build.flags');
     var tower = require('build.tower');
     var spawnsDo = require('build.spawn');
     var ccSpawn = require('commands.toSpawn');
-
-    var _last;
-
     var link = require('build.link');
     var observer = require('build.observer');
-    var movement = require('commands.toMove');
-    var warband = require('commands.toParty');
     var power = require('commands.toPower');
     var labs = require('build.labs');
     var market = require('build.terminal');
-    var allModule = require('allModule');
 
     var prototypes = [
         require('prototype.creeps')
     ];
 
-    var roomCheck = 10;
     var countCheck = 3;
 
     function whoWorksFor(goal) {
@@ -328,38 +319,40 @@
     }
 
     module.exports.loop = blackMagic(function() {
-        var start = Game.cpu.getUsed();
+//        var start = Game.cpu.getUsed();
 
         if (Memory.stats === undefined) Memory.stats = {};
 
         if (Memory.war === undefined) Memory.war = true;
 
         if (Memory.showInfo === undefined) Memory.showInfo = 5;
+
+        if (Memory.stopRemoteMining === undefined) Memory.stopRemoteMining = [];
+        
+
         var i = prototypes.length;
         while (i--) {
             prototypes[i]();
-            global.roomLink = function(roomname) {
-                return '<a href=https://screeps.com/a/#!/room/shard1/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
-            };
         }
+        global.roomLink = function(roomname) {
+            return '<a href=https://screeps.com/a/#!/room/shard1/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
+        };
 
-        var totalSpawn = 10;
-        var report;
-        var doSpawnChecks = false;
-
-        if (Memory.stopRemoteMining === undefined) {
-            Memory.stopRemoteMining = [];
-        }
         if (Memory.doFlag === undefined) Memory.doFlag = 1;
         Memory.doFlag--;
         if (Memory.doFlag < 0) {
             flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
             Memory.doFlag = 2;
         }
-        // for creeps.
-        var total = 0;
+
+// Doing CREEP RUN.
+// Doing CREEP RUN.
         spawnsDo.runCreeps();
+// Doing CREEP RUN.
+// Doing CREEP RUN.
+
         var spawnReport = {};
+
         var keys = Object.keys(Game.spawns);
         var t = keys.length;
         var title;
@@ -383,15 +376,12 @@
                 //                  if (Memory.war) {
                 if (Game.spawns[title].memory.alphaSpawn) {
                     doRoomReport(Game.spawns[title].room);
-                }
-                //                    }
+                    Game.spawns[title].memory.checkCount--;
 
-                if (Game.spawns[title].memory.alphaSpawn) {
                     //                      var constr = require('commands.toStructure');
                     //                        console.log(Game.spawns[title].pos.roomName);
                     //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
 
-                    totalSpawn++;
                     tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
 
                     if (Game.spawns[title].memory.roadsTo.length === 0) {
@@ -406,47 +396,46 @@
                     }
 
                 }
-
-                let anySpawn = false;
-                if (Game.spawns[title].memory.alphaSpawn) {
-                    Game.spawns[title].memory.checkCount--;
-                }
-                if ((Game.spawns[title].spawning === null)) {
-                    ccSpawn.renewCreep(Game.spawns[title]);
-                }
-
-                if (Game.cpu.bucket > 500)
-                    if ((Game.spawns[title].spawning === null)) {
-                        if (Game.spawns[title].memory.alphaSpawn) {
-
-                            let zz = _.filter(Game.spawns, function(o) {
-                                return (o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
-                            });
-                            if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
-
-                            if (anySpawn) {
-                                if (Game.spawns[title].memory.checkCount === undefined) {
-                                    Game.spawns[title].memory.checkCount = countCheck;
-                                }
-                                if (Game.spawns[title].memory.checkCount < 0) {
-                                    let zz = spawnsDo.spawnCount(Game.spawns[title].id); // This gets creep totals.
-                                    spawnsDo.checkModules(Game.spawns[title], zz); // This uses that info and adds to query.
-                                    spawnsDo.checkExpand(Game.spawns[title], zz); // This uses creepTotal to do expansion stuff - and adds to expandQuery.
+                //                    }
 
 
-                                    Game.spawns[title].memory.checkCount = countCheck;
-                                }
+
+                if (Game.cpu.bucket > 500) {
+
+                    if (Game.spawns[title].memory.alphaSpawn) {
+                        if (Game.spawns[title].memory.checkCount < 0) {
+                            let anySpawn = false;
+                            if (Game.spawns[title].spawning !== null) {
+                                let zz = _.filter(Game.spawns, function(o) {
+                                    return (o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
+                                });
+
+                                if (zz.length > 0)
+                                    anySpawn = true; // or any other spawn needs help. 
+                            } else {
+                                anySpawn = true;
                             }
 
+                            if (anySpawn) {
+                                let zz = spawnsDo.spawnCount(Game.spawns[title].id); // This gets creep totals.
+                                spawnsDo.checkModules(Game.spawns[title], zz); // This uses that info and adds to query.
+                                spawnsDo.checkExpand(Game.spawns[title], zz); // This uses creepTotal to do expansion stuff - and adds to expandQuery.
+                                Game.spawns[title].memory.checkCount = countCheck;
+                            }
                         }
-                        ccSpawn.createFromStack(Game.spawns[title]);
+                    }
 
-                        if (Game.spawns[title].memory.lastSpawn === undefined)
-                            Game.spawns[title].memory.lastSpawn = 0;
-                        Game.spawns[title].memory.lastSpawn++;
+                    if ((Game.spawns[title].spawning === null)) {
+                        if (!ccSpawn.createFromStack(Game.spawns[title])) {
+                            ccSpawn.renewCreep(Game.spawns[title]);
+                        } else {
+                            Game.spawns[title].memory.lastSpawn++;
+                        }
+                    } 
+                }
 
 
-                    } else {
+                if ((Game.spawns[title].spawning !== null)) {
                     Game.spawns[title].memory.lastSpawn = 0;
                     let spawn = Game.spawns[title];
                     spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
@@ -456,11 +445,14 @@
                         font: 0.5,
                         align: RIGHT
                     });
+
                 }
+
                 //                }
+                
                 if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
                     let spawn = Game.spawns[title];
-                    let spawnStats = {
+                    spawnReport[spawn.room.name] = {
                         storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
                         terminalEnergy: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.store[RESOURCE_ENERGY],
                         terminalTotal: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.total,
@@ -473,16 +465,14 @@
                         warQ: spawn.memory.warCreate.length,
                         expandQ: spawn.memory.expandCreate.length
                     };
-                    spawnReport[Game.spawns[title].room.name] = spawnStats;
-
-                }
+                } 
             }
         } // End of Spawns Loops
 
         Memory.stats.rooms = spawnReport;
         memoryStatsUpdate();
         link.run();
-        
+
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
             if (Game.cpu.bucket > 250) {
@@ -497,11 +487,12 @@
                 }
             }
         }
-            Memory.marketRunCounter--;
-            if (Memory.marketRunCounter <= 0) {
-                    Memory.marketRunCounter = 10;
-                market.run();
-            }
+
+        Memory.marketRunCounter--;
+        if (Memory.marketRunCounter <= 0) {
+            Memory.marketRunCounter = 10;
+            market.run();
+        }
 
         Memory.totalPowerProcessed = 0;
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
@@ -510,19 +501,12 @@
             if (Game.spawns.Spawn1 !== undefined) {
                 let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
                 console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
-
                 Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
-                //            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
         } else {
-            if (Game.spawns.E38S81) {
-                //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-                let dif;
-                console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
-
-                //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
-                Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
-            }
+                console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****'  + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
         }
+// whoWorksFor('5982ff78b097071b4adc2b4f');
+// whoWorksFor('5982ff78b097071b4adc2b4c');
 
     });

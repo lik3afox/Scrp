@@ -204,18 +204,13 @@ var Mod_E17S45 = [
 
 
 var Mod_E14S37 = [
-    ['first', require('role.first'), 2, 3],
+    ['first', require('role.first'), 1, 6],
     ['harvester', require('role.harvester'), 2, 2],
     ['minHarvest', require('role.mineral'), 2, 7],
-    ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
-
     ['scientist', require('role.scientist'), 1, 4],
-    //    ['upgrader', require('role.upgrader'), 4, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
-
-    //        ['homeDefender', require('role.defender2'), 1, 3]
 ];
 
 var Mod_E24S33 = [
@@ -339,7 +334,7 @@ var Mod_E38S72 = [
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
 //    ['wallwork', require('role.wallworker'), 1, 7],
-    ['first', require('role.first'), 1, 2],
+    ['first', require('role.first'), 2, 4],
     ['linker', require('role.linker'), 1, 4],
 ];
 
@@ -1129,14 +1124,14 @@ class theSpawn {
 
             } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
 
-            } else if (currentModule[type][_name] == 'scientist' && !spawn.room.memory.labsNeedWork) {
+            }/* else if (currentModule[type][_name] == 'scientist' && !spawn.room.memory.labsNeedWork) {
 
-            } else {
+            }*/ else {
 
                 // If totalCreeps is less than require through currentModule then.
-                if (spawn.room.name == 'E18S36') {
-                    console.log(spawn.pos, currentModule[type][_name], ":", totalCreeps[currentModule[type][_name]].count, "/", currentModule[type][_number]);
-                }
+    //            if (spawn.room.name == 'E18S36') {
+  //                  console.log(spawn.pos, currentModule[type][_name], ":", totalCreeps[currentModule[type][_name]].count, "/", currentModule[type][_number]);
+//                }
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
 
                     var theBuild = getModuleRole(currentModule[type][_name]).levels(currentModule[type][_level]);

@@ -1,4 +1,4 @@
-var observers = ['59aee0acae855116d42aaff7','59c1d51712c6322c527647d1','59b8299536dabe15ba6d1f99','59a2fa6f51963d5833d4b53a'];
+var observers = ['59aee0acae855116d42aaff7','59c1d51712c6322c527647d1','59b8299536dabe15ba6d1f99','59a2fa6f51963d5833d4b53a','59f8c7d1cac2aa2db34c203a'];
 //'E32S70',
 var roomsObserve = ['E30S80', 'E30S70', 'E31S70', 'E29S70', 'E30S71', 'E30S69',
     'E28S70', 'E30S72', 'E30S68', 'E27S70', 'E26S70', 'E25S70',

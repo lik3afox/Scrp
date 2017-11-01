@@ -43,7 +43,7 @@ var xStorage = {
         amount: 12000
     },
     XZHO2: {
-        amount: 4000
+        amount: 6000
     },
     XLHO2: {
         amount: 4000
@@ -569,7 +569,7 @@ function sellMineralOrder() {
 
     let total = 0;
     for (var e in Memory.stats.totalMinerals) {
-        if (e == 'K' || e == 'U' || e == 'Z' || e == 'X'|| e == 'L'|| e == 'O') {
+        if (e == 'K' || e == 'U' || e == 'Z' || e == 'X'||  e == 'O') { //e == 'L'||
             if (Memory.stats.totalMinerals[e] > 150000) {
 
                 //                let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: e });
@@ -1173,10 +1173,8 @@ class roleTerminal {
     static run() {
     if (Game.shard.name == 'shard0') { 
         for (var a in s0LabRooms) {
-            console.log(Game.rooms[s0LabRooms[a]],s0LabRooms[a]);
             if(Game.rooms[s0LabRooms[a]] !== undefined) {
-                let terminal = Game.rooms[s0LabRooms[a]].terminal;
-                buyMineralsFromBUYORDER(terminal);
+                buyMineralsFromBUYORDER(Game.rooms[s0LabRooms[a]].terminal);
             }
        }
         return;     

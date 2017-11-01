@@ -239,9 +239,9 @@ class roleFirst extends roleParent {
     }
 
  }
- if(creep.memory.roleID > 1) {
-    console.log(roomLink( creep.room.name), creep.ticksToLive,creep.memory.deathCount);
- }
+// if(creep.memory.roleID > 1) {
+//    console.log(roomLink( creep.room.name), creep.ticksToLive,creep.memory.deathCount);
+// }
 
         
         if (super.doTask(creep)) {

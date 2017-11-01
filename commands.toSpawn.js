@@ -183,7 +183,7 @@ class SpawnInteract {
     }
 
     static addToWarStack(newCreep) {
-        console.log("WARSTACK", newCreep.room);
+        console.log("Adding to WARSTACK", newCreep.room);
         // for now it will only created at homeEmpire.
         for (var i in Game.spawns) {
             if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == newCreep.room) {
@@ -321,6 +321,15 @@ class SpawnInteract {
                 spawn.memory.buildLevel = 0;
                 console.log('----------------Create buildLevel Variable----------------');
             }
+            if (spawn.memory.lastSpawn === undefined) {
+                console.log('----------------Create lastSpawn Variable----------------');
+                spawn.memory.lastSpawn = 0;
+            }
+            if (spawn.memory.checkCount === undefined) {
+                spawn.memory.checkCount = 1;
+                console.log('----------------Create checkCount Variable----------------');
+            }
+
             // If there is no memory.create array then create it.
             // Create is an array to hold what will be created.
 
@@ -399,7 +408,7 @@ class SpawnInteract {
             if (creepTarget === null) {
                 spawn.memory.wantRenew.splice(e, 1);
             } else if (creepTarget.ticksToLive < temp && creepTarget.pos.isNearTo(spawn)) {
-                //            	console.log( creepTarget.memory.role ,spawn.room.controller.level );
+                //              console.log( creepTarget.memory.role ,spawn.room.controller.level );
                 if (spawn.room.name === 'E14S38') {
 
                     if (spawn.room.controller.level > 5) {
@@ -424,7 +433,7 @@ class SpawnInteract {
         }
 
         if (temp < renewLimit) {
-                let rst = spawn.renewCreep(renewTarget);
+            let rst = spawn.renewCreep(renewTarget);
             //console.log('********* ',spawn,' am Renewing:',renewTarget.name,rst,'********* ');
             return true;
         } else {
@@ -485,6 +494,7 @@ class SpawnInteract {
                     STACK[0].name = STACK[0].name + 'v';
                 }
                 STACK.shift();
+                return true;
             } else if (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable) {
                 let count = 0;
                 do {
@@ -499,8 +509,9 @@ class SpawnInteract {
                 console.log("ERROR");
                 console.log("ERROR");
                 //STACK.shift();
-
             }
+        
+        return false;
 
         }
     }
