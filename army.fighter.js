@@ -90,8 +90,8 @@ function doAttack(creep) {
             return false;
 
 
-        case "E25xS43":
-            var E18S64targets = ['599e9087932f0f15cf1fa59b'];
+        case "E13S32":
+            var E18S64targets = ['59e7487d9face01d765fda0f'];
             for (a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {

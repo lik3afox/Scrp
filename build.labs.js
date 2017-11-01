@@ -124,7 +124,7 @@ var maxMinerals = {
     'G': 100000,
     'GG': 30000,
 
-    'LH': 100000,
+    'LH': 50000,
 
     'KO': 50000,
     'LO': 50000,
@@ -155,15 +155,15 @@ var maxMinerals = {
     //    'LH': 1000, // Repair
     'XLH2O': 50000, // Repair *
 
-    'XGHO2': 150000,
+    'XGHO2': 300000,
     'GHO2': 10000, // Repair
     'GO': 10000, // Repair
 
-    'XZH2O': 100000, // Dismantle
+    'XZH2O': 150000, // Dismantle
     'ZH2O': 1000, // Repair
     'ZH': 1000, // Repair
 
-    'XKHO2': 200000, // Ranged*
+    'XKHO2': 300000, // Ranged*
     'KHO2': 1000, // Repair
     //    'KO': 1000, // Repair
 
@@ -171,11 +171,11 @@ var maxMinerals = {
     'ZHO2': 1000, // Move
     'ZO': 1000, // Move
 
-    'XUH2O': 100000, // Attack
+    'XUH2O': 150000, // Attack
     'UH2O': 2000, // Repair
     'UH': 1000, // Repair
 
-    'XLHO2': 150000, // Heal*
+    'XLHO2': 200000, // Heal*
     'LHO2': 1000, // Repair
 
 };
@@ -274,7 +274,7 @@ var XUH2O = [{
     id: 'getReplaced',
     resource: 'UH2O',
     amount: 2500,
-    emptied: true
+    emptied: false
 }];
 
 var XGH2O = [{

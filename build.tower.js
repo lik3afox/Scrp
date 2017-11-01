@@ -180,6 +180,9 @@ function defendRoom(towers, hostiles) {
         }
         return;
     } 
+    if(hostiles[0].owner.username !== 'Invader') {
+        
+    }
     /*else if (hostiles[0].owner.username !== 'Invader') {
 
 

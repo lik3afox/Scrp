@@ -204,13 +204,18 @@ var Mod_E17S45 = [
 
 
 var Mod_E14S37 = [
-    ['first', require('role.first'), 1, 6],
+    ['first', require('role.first'), 2, 3],
     ['harvester', require('role.harvester'), 2, 2],
     ['minHarvest', require('role.mineral'), 2, 7],
+    ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],
+
     ['scientist', require('role.scientist'), 1, 4],
+    //    ['upgrader', require('role.upgrader'), 4, 5],
     ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', require('role.linker'), 1, 4],
+
+    //        ['homeDefender', require('role.defender2'), 1, 3]
 ];
 
 var Mod_E24S33 = [
@@ -319,6 +324,8 @@ var Mod_E27S45 = [
     ['upbuilder', require('role.upbuilder'), 1, 8],
 ];
 
+var Mod_E29S48 = [
+];
 var Mod_E38S81 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['first', require('role.first'), 2, 4],
@@ -334,7 +341,7 @@ var Mod_E38S72 = [
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
 //    ['wallwork', require('role.wallworker'), 1, 7],
-    ['first', require('role.first'), 2, 4],
+    ['first', require('role.first'), 1, 2],
     ['linker', require('role.linker'), 1, 4],
 ];
 
@@ -573,6 +580,13 @@ function makeBody(carryNeeded) {
 }
 
 function analyzeSource(expand) {
+
+    expand.transInfo = undefined;
+    expand.mineInfo = undefined;
+    expand.allDistance = undefined;
+    expand.controlInfo = undefined;
+    return;
+    /*
     if (expand.allDistance === undefined) expand.allDistance = [];
 
     if (expand.allDistance.length > 30) {
@@ -619,6 +633,7 @@ function analyzeSource(expand) {
     expand.transInfo = tInfo;
     expand.mineInfo = miningInfo;
     expand.controlInfo = {};
+    */
 }
 
 
@@ -793,6 +808,9 @@ function getCurrentModule(spawn) {
     }
     if (spawn.room.name == 'E27S45') {
         return Mod_E27S45;
+    }
+    if (spawn.room.name == 'E29S48') {
+        return Mod_E29S48;
     }
 
     if (spawn.room.name == 'E25S27') {
@@ -1179,6 +1197,19 @@ class theSpawn {
 
 
         for (var ie in spawn.memory.roadsTo) {
+            if (spawn.memory.roadsTo[ie].allDistance !== undefined) {
+                spawn.memory.roadsTo[ie].allDistance  = undefined;
+            }
+            if (spawn.memory.roadsTo[ie].transInfo !== undefined) {
+                spawn.memory.roadsTo[ie].transInfo  = undefined;
+            }
+            if (spawn.memory.roadsTo[ie].mineInfo !== undefined) {
+                spawn.memory.roadsTo[ie].mineInfo  = undefined;
+            }
+            if (spawn.memory.roadsTo[ie].controlInfo !== undefined) {
+                spawn.memory.roadsTo[ie].controlInfo  = undefined;
+            }
+
             if (spawn.memory.roadsTo[ie] === null) {
                 console.log(spawn, spawn.pos, 'Expand Check Fail');
                 return;
@@ -1560,7 +1591,8 @@ class theSpawn {
     static reportDeath(creep) {
         var spawn = Game.getObjectById(creep.memory.parent);
         //                console.log( creep.rebuildMe(creep)+'aasdfffffffffffffffffffffffffffffffffffffff' );
-        if (spawn !== null)
+        if (spawn !== null){
+            console.log('Reporting death,',creep.name,roomLink(creep.pos.roomName));
             switch (creep.memory.role) {
                 case "miner":
                 case "transport":
@@ -1589,7 +1621,8 @@ class theSpawn {
                 default:
                     spawn.memory.create.push(rebuildCreep(creep));
                     break;
-            }
+            }        }
+
     }
 
 

@@ -11,40 +11,43 @@ var containers = require('commands.toContainer');
 var constr = require('commands.toStructure');
 
 function getEnergy(creep) {
-    if (creep.room.name == 'E35S83') {
-        creep.say('E38');
-        var bads = creep.room.find(FIND_HOSTILE_CREEPS);
-        if (bads.length > 0) {
-            if (!containers.withdrawFromStorage(creep)) {
-                creep.moveTo(Game.flags[creep.memory.party]);
-            }
-        } else {
-
-            var close = creep.room.find(FIND_DROPPED_RESOURCES);
-            close.sort((a, b) => a.amount - b.amount);
-            var high = close.length - 1;
-
-            if (close[high] === undefined) return false;
-
-            if (creep.pos.isNearTo(close[high])) {
-                creep.pickup(close[high]);
-            } else {
-                creep.moveTo(close[high], {
-                    maxRooms: 1,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#f0f',
-                        lineStyle: 'dashed',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                });
-            }
-
+    //    if (creep.room.name == 'E35S83') {
+    //        creep.say('E38');
+    var bads = creep.room.find(FIND_HOSTILE_CREEPS);
+    if (bads.length > 0) {
+        if (!containers.withdrawFromStorage(creep)) {
+            creep.moveTo(Game.flags[creep.memory.party]);
         }
-        return;
+    } else {
+
+        var close = creep.room.find(FIND_DROPPED_RESOURCES);
+        if (close.length === 0) {
+            if (!containers.withdrawFromStorage(creep)) {}
+            return;
+        }
+        close.sort((a, b) => a.amount - b.amount);
+        var high = close.length - 1;
+
+        if (close[high] === undefined) return false;
+
+        if (creep.pos.isNearTo(close[high])) {
+            creep.pickup(close[high]);
+        } else {
+            creep.moveTo(close[high], {
+                maxRooms: 1,
+                visualizePathStyle: {
+                    fill: 'transparent',
+                    stroke: '#f0f',
+                    lineStyle: 'dashed',
+                    strokeWidth: 0.15,
+                    opacity: 0.5
+                }
+            });
+        }
+
     }
-    if (!containers.withdrawFromStorage(creep)) {}
+    return;
+    //   }
 
 }
 

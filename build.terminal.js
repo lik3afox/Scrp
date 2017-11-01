@@ -43,7 +43,7 @@ var xStorage = {
         amount: 12000
     },
     XZHO2: {
-        amount: 6000
+        amount: 4000
     },
     XLHO2: {
         amount: 4000
@@ -569,7 +569,7 @@ function sellMineralOrder() {
 
     let total = 0;
     for (var e in Memory.stats.totalMinerals) {
-        if (e == 'K' || e == 'U' || e == 'Z' || e == 'X'||  e == 'O') { //e == 'L'||
+        if (e == 'K' || e == 'U' || e == 'Z' || e == 'X'|| e == 'L'|| e == 'O') {
             if (Memory.stats.totalMinerals[e] > 150000) {
 
                 //                let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: e });
@@ -917,8 +917,10 @@ function forEveryStorage(terminal) {
         if (storage.store[e] === undefined ||
             (storage.store[e] !== undefined && storage.store[e] < xStorage[e].amount && (terminal.store[e] === undefined || terminal.store[e] < 1000))) {
             console.log(e, 'needed @', terminal.room.name, 'amount:', xStorage[e].amount, storage.store[e], terminal.store[e]);
-            if (terminal.store[e] < 1000 || terminal.store[e] === undefined)
-                giveMinerals(terminal, e, 1000);
+            if (terminal.store[e] < 1000 || terminal.store[e] === undefined){
+                console.log(giveMinerals(terminal, e, 1000));
+                
+            }
         }
     }
     /*
@@ -1043,7 +1045,7 @@ function giveMinerals(terminal, mineral, amount) {
             return true;
         }
     }
-
+    return false;
     //          if(Memory.termReport )console.log(mineral,'no one has');
 }
 
@@ -1125,15 +1127,14 @@ function buyMineralsFromBUYORDER(terminal) {
                 var eWanted = Game.market.getAllOrders({type: ORDER_SELL, resourceType: RESOURCE_ENERGY});
                 if(eWanted.length > 0){
                 eWanted.sort((a, b) => a.price - b.price);
-                buy = 50000;
-                if(eWanted[0].amount > 50000){
-                        buy = 50000;
-                } else if(eWanted[0].amount <= 50000){
+                buy = 5000;
+                if(eWanted[0].amount > 5000){
+                        buy = 5000;
+                } else if(eWanted[0].amount <= 5000){
                         buy = eWanted[0].amount;
                 }
-                if( Game.market.deal(eWanted[0].id, buy, terminal.room.name) == OK) {
-                    console.log('getting Energy for this room',terminal.room.name);
-                }
+                let vv = Game.market.deal(eWanted[0].id, buy, terminal.room.name);
+                console.log(eWanted.length,'orders?',vv,'getting Energy for this room',eWanted[0].id, buy,terminal.room.name);
                 }
     } else {
   //      console.log(wanted.length,'xxx',wanted[0]);
@@ -1145,7 +1146,6 @@ function buyMineralsFromBUYORDER(terminal) {
                 var wantedd = Game.market.getAllOrders({type: ORDER_SELL, resourceType: wanted[e]});
                 if(wantedd.length > 0){
                 wantedd.sort((a, b) => a.price - b.price);
-                //Game.market.deal('588b9067dab725f87b0f1afc', 4000, 'E26S77');
                 buy = 5000;
                 if(wantedd[0].amount > 5000){
                         buy = 5000;
@@ -1173,8 +1173,10 @@ class roleTerminal {
     static run() {
     if (Game.shard.name == 'shard0') { 
         for (var a in s0LabRooms) {
+            console.log(Game.rooms[s0LabRooms[a]],s0LabRooms[a]);
             if(Game.rooms[s0LabRooms[a]] !== undefined) {
-                buyMineralsFromBUYORDER(Game.rooms[s0LabRooms[a]].terminal);
+                let terminal = Game.rooms[s0LabRooms[a]].terminal;
+                buyMineralsFromBUYORDER(terminal);
             }
        }
         return;     

@@ -29,8 +29,8 @@ function doAttack(creep) {
     let target;
     var E18S64targets;
     switch (creep.room.name) {
-        case "E12S43":
-            E18S64targets = ['599ae1f89bc4694f39c98f01'];
+        case "E13S32":
+            E18S64targets = ['59e7487d9face01d765fda0f'];
             for (var a in E18S64targets) {
                 target = Game.getObjectById(E18S64targets[a]);
                 if (target !== null) {

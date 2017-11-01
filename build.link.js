@@ -21,7 +21,10 @@ function getCached(id) {
 function newLinkTransfer() {
     var LINK;
     for (var e in Game.rooms) {
-        if (Game.rooms[e].memory.roomLinksID !== undefined && Game.rooms[e].memory.roomLinksID.length > 0) {
+        if(Game.rooms[e].memory.roomLinksID === undefined) {
+            Game.rooms[e].memory.roomLinksID = [];
+        }
+        if (Game.rooms[e].memory.roomLinksID.length > 0) {
             var linksID = Game.rooms[e].memory.roomLinksID;
         var keys = Object.keys(linksID);
         var z = linksID.length;

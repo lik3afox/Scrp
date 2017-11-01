@@ -103,7 +103,8 @@ function getMineralForStorage(creep) {
             }
         }
 
-        if (creep.room.storage.store[e] < xStored[e].amount) {
+        if (creep.room.storage.store[e] < xStored[e].amount && creep.room.terminal.store[e] !== undefined) {
+//            console.log(e,xStored[e].amount,creep.room.storage.store[e],creep.room.terminal.store[e]);
             if (creep.room.terminal.store[e] > 0) {
                 var taken = xStored[e].amount - creep.room.storage.store[e];
                 if (taken > creep.carryCapacity) taken = creep.carryCapacity;
@@ -401,8 +402,7 @@ class roleLinker extends roleParent {
             };
         }
         //var good = ['E25S43', 'E14S43', 'E28S42','E17S34','E17S45','E23S38','E28S37','E27S34','E14S37'];
-
-        if (creep.memory.roleID === 0 && creep.room.memory.boost.mineralType !== 'none' && creep.room.memory.boostLabID !== undefined) {
+        if ( creep.room.memory.boost.mineralType !== 'none' && creep.room.memory.boostLabID !== undefined) {
             creep.say('hi');
             var boost = creep.room.memory.boost;
             boost.timed--;
@@ -474,8 +474,13 @@ class roleLinker extends roleParent {
                     }
 
                     //                    console.log('BBB', creep.room.terminal.store[boost.mineralType], lab.mineralAmount, boost.mineralAmount, Memory.stats.totalMinerals[boost.mineralType]);
-                    if (creep.room.terminal.store[boost.mineralType] > 0 && lab.mineralAmount < boost.mineralAmount) {
+                    if(creep.room.name == 'E13S34'){
+                        console.log(creep.room.terminal.store[boost.mineralType], boost.mineralAmount, lab.mineralAmount );
+                    }
+                    if((creep.room.terminal.store[boost.mineralType] > 0 || creep.room.storage.store[boost.mineralType] > 0) && (lab.mineralAmount < boost.mineralAmount || lab.mineralAmount === 0) ) {
                         let target = creep.room.terminal;
+if(creep.room.name == 'E13S34')                        
+                        console.log('here?');
                         if (creep.room.storage.store[boost.mineralType] > boost.mineralAmount) {
                             target = creep.room.storage;
                         }
@@ -500,14 +505,13 @@ class roleLinker extends roleParent {
 
                         return;
                     }
+                    creep.say('zzz'+lab.mineralAmount);
+                    return;
                 }
             }
             if (boost.timed <= 0 || boost.timed === undefined) {
                 boost.mineralType = 'none';
             }
-            /*                returned[2].resource = zz;
-                            returned[2].amount = Game.rooms[roomName].memory.boostRequest[0].amount;
-                            returned[2].emptied = false;             */
         }
 
         if (creep.room.controller.level === 8) {

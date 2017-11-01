@@ -112,9 +112,9 @@ var warParty = [
     ['first', require('role.first'), 0, 4],
     ['scientist', require('role.scientist'), 0, 3],
     ['ranger', require('army.ranger'), 0, 2],
-    //    ['fighter', require('army.fighter'), 1, 11],
+    ['fighter', require('army.fighter'), 2, 12],
     ['demolisher', require('army.demolisher'), 1, 3],
-    ['healer', require('army.healer'), 1, 5] // Healer    
+    ['healer', require('army.healer'), 2, 6] // Healer    
 ];
 
 var fightHealer = [
@@ -216,7 +216,7 @@ var upgrade2Party = [
 ];
 
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 3, 6]
+    ['Aupgrader', require('army.upgrader'), 4, 6]
 
 ];
 var muleParty = [

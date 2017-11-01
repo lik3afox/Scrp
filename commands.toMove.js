@@ -104,6 +104,90 @@ function getRetreatFlag(creep) {
 
     switch (creep.memory.goal) {
 
+        case '5836b8118b8b9619519f1659':
+        case '5836b8118b8b9619519f165c':
+            flag = Game.flags.Flag6;
+            break;
+
+        case '5836b8118b8b9619519f165f':
+            flag = Game.flags.Flag11;
+            break;
+
+        case '5836b8148b8b9619519f16d7':
+        case '5836b8148b8b9619519f16d8':
+            flag = Game.flags.Flag38;
+            break;
+        case '5836b8138b8b9619519f16cb':
+        case '5836b8138b8b9619519f16c2':
+        case '5836b8138b8b9619519f16c1':
+        case '5836b8138b8b9619519f16c8':
+        case '5836bb2241230b6b7a5b9a35':
+            flag = Game.flags.Flag31;
+            break;
+
+        case '5836b8138b8b9619519f16b8':
+        case '5836b8138b8b9619519f16bd':
+            flag = Game.flags.Flag9;
+            break;
+
+        case '5836b8138b8b9619519f16ba':
+        case '5836bb2241230b6b7a5b9a33':
+            flag = Game.flags.Flag3;
+            break;
+
+        case '5873bd6d11e3e4361b4d92ec':
+            flag = Game.flags.Flag44;
+            break;
+        case '5873bd6d11e3e4361b4d92ef':
+            flag = Game.flags.Flag45;
+            break;
+
+        case '5873bd6d11e3e4361b4d92ed':
+        case '5873c198ade6694c56c57c84':
+
+            flag = Game.flags.Flag41;
+            break;
+        case '5873bd6f11e3e4361b4d9356':
+            flag = Game.flags.Flag48;
+            break;
+
+        case '5873bd6f11e3e4361b4d9355':
+        case '5873bd6f11e3e4361b4d9357':
+        case '5873c198ade6694c56c57c92':
+
+            flag = Game.flags.Flag45;
+            break;
+        case '5836bb2241230b6b7a5b9a37':
+        case '5836b8138b8b9619519f16cc':
+        case '5836b8138b8b9619519f16cf':
+
+            flag = Game.flags.Flag14;
+            break;
+
+        case '5836bb2241230b6b7a5b9a2b':
+        case '5836b8118b8b9619519f166c':
+            flag = Game.flags.Flag29;
+            break;
+
+        case '5836b8118b8b9619519f1669':
+        case '5836b8118b8b9619519f1668':
+        case '5836b8138b8b9619519f16c8':
+
+            flag = Game.flags.Flag30;
+            break;
+
+        case '5836b8118b8b9619519f1664':
+        case '5836b8118b8b9619519f1665':
+
+            flag = Game.flags.Flag33;
+            break;
+
+        case '5836b8118b8b9619519f1663':
+        case '5836bb2241230b6b7a5b9a29':
+
+            flag = Game.flags.Flag32;
+            break;
+
         default:
             let targetParent = Game.getObjectById(creep.memory.parent);
             if (targetParent !== null) {
