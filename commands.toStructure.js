@@ -404,10 +404,22 @@ class StructureInteract {
   //              let dont = ['59a49ce114d66f37b6e1955d','59a49f2c9192ec49d5a25b57'];
 //                if(!_.includes(dont, atFeet[i].structure.id))
                 if (creep.repair(atFeet[i].structure) == OK) {
+                    creep.memory.onRoad = true;
                     return true;
                 }
             }
         }
+        // If none there, then create 1 road per creep.
+        if(creep.memory.onRoad) {
+            if(creep.memory.roadCount === undefined) {
+                creep.memory.roadCount = 1;
+            }
+            if(creep.memory.roadCount > 0 && creep.memory.stuckCount <= 2 ) {
+                creep.room.createConstructionSite(creep.pos,STRUCTURE_ROAD);
+                creep.memory.roadCount--;
+            }
+        }
+        creep.memory.onRoad = false;
 
         return false;
     }

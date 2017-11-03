@@ -22,8 +22,7 @@
     var power = require('commands.toPower');
     var labs = require('build.labs');
     var market = require('build.terminal');
-    var allModule = require('allModule');
-
+    
     var prototypes = [
         require('prototype.creeps')
     ];

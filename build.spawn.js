@@ -322,13 +322,20 @@ var Mod_E27S45 = [
     ['wallwork', require('role.wallworker'), 1, 7],
 //    ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['homeDefender', require('role.defender2'), 1, 6]
 ];
 
 var Mod_E29S48 = [
+    ['first', require('role.first'), 1, 4],
+    ['harvester', require('role.harvester'), 2, 2],
+    ['upbuilder', require('role.upbuilder'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
 ];
+
 var Mod_E38S81 = [
     ['harvester', require('role.harvester'), 2, 2],
     ['first', require('role.first'), 2, 4],
+    ['linker', require('role.linker'), 1, 4],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['linker', require('role.linker'), 1, 4],
@@ -1067,7 +1074,7 @@ class theSpawn {
         } */
 
     static spawnCount(spawnID) {
-        var doSpawn = ['59eb8ba3fc952a431cb6c60b','599c7de1255bda6a7f60b395', '599dff0efcee88089b5814aa','59a89dc250359f180a14beed','59d29e25230c1b15d7056e67','59dd41f8a79b29037141fa85'];
+        var doSpawn = ['59a89dc250359f180a14beed','59d29e25230c1b15d7056e67','59dd41f8a79b29037141fa85'];
 
 
         if ( _.contains(doSpawn, spawnID) &&Memory.spawnCount[spawnID] !== undefined) {

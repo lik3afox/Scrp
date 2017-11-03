@@ -72,7 +72,7 @@ function toStorageOrTerminal(creep) {
 
     } else if (creep.room.terminal !== undefined && creep.room.terminal.total == 300000) {
         containers.moveToStorage(creep);
-    } else if ((creep.carry[RESOURCE_ENERGY] === 0 && creep.carryTotal !== 0) || creep.room.terminal.store[RESOURCE_ENERGY] < 5000) {
+    } else if ((creep.carry[RESOURCE_ENERGY] === 0 && creep.carryTotal !== 0) || (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 5000) ){
         containers.moveToTerminal(creep);
     }else if (creep.room.terminal === undefined) {
         containers.moveToStorage(creep);
@@ -128,7 +128,7 @@ function takeFromTerminalForStorage(creep) {
     if (creep.room.terminal === undefined || creep.room.storage === undefined) return false;
     if (creep.room.controller.level === 8 && getMineralForStorage(creep)) {
         creep.say('M');
-        return;
+        return true;
     }
     var goto = creep.room.terminal;
     if (goto !== undefined && goto.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
@@ -136,7 +136,9 @@ function takeFromTerminalForStorage(creep) {
         if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(goto);
         }
+        return true;
     }
+    return false;
 }
 
 function moveToAndDrop(creep, pos) {
@@ -329,7 +331,8 @@ function doDefault(creep) {
                     return true;
                 }
             }
-            takeFromTerminalForStorage(creep);
+            if(!takeFromTerminalForStorage(creep))
+                  constr.moveToPickUpEnergy(creep, 300);
             return;
         } else {
             constr.moveToPickUpEnergy(creep, 300);
@@ -479,8 +482,6 @@ class roleLinker extends roleParent {
                     }
                     if((creep.room.terminal.store[boost.mineralType] > 0 || creep.room.storage.store[boost.mineralType] > 0) && (lab.mineralAmount < boost.mineralAmount || lab.mineralAmount === 0) ) {
                         let target = creep.room.terminal;
-if(creep.room.name == 'E13S34')                        
-                        console.log('here?');
                         if (creep.room.storage.store[boost.mineralType] > boost.mineralAmount) {
                             target = creep.room.storage;
                         }

@@ -692,7 +692,7 @@ class baseParent {
         return labsBuild;
     }
 
-    static get _links() {
+    static get link() {
         return links;
     }
     static get _spawns() {

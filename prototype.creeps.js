@@ -212,10 +212,11 @@ module.exports = function() {
             if (zz[e].type == 'resource') {
                 if (zz[e].resource.resourceType == 'energy') {
                     if (this.pickup(zz[e].resource) == OK)
-                        return;
+                        return true;
                 }
             }
         }
+        return false;
     };
 
     Creep.prototype.countDistance = function() {
@@ -231,13 +232,6 @@ module.exports = function() {
         return false;
     };
 
-    Creep.prototype.dropEverything = function() {
-        for (var e in this.carry) {
-            this.drop(e);
-            return;
-        }
-    };
-
     Creep.prototype.countStop = function() {
         this.memory.notThere = true;
     };
@@ -245,6 +239,14 @@ module.exports = function() {
         this.memory.notThere = false;
         this.memory.distance = 0;
     };
+
+    Creep.prototype.dropEverything = function() {
+        for (var e in this.carry) {
+            this.drop(e);
+            return;
+        }
+    };
+
 
     Creep.prototype.healOther = function(range) {
         var hurtz;
