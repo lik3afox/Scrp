@@ -33,7 +33,6 @@ class controllerRole extends roleParent {
     }
 
     static run(creep) {
-        super.calcuateStats(creep);
         var temp = Game.getObjectById(creep.memory.goal);
         if (movement.runAway(creep)) {
             return; }

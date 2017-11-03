@@ -92,7 +92,6 @@ class thiefClass extends roleParent {
 
     static run(creep) {
         creep.memory.waypoint = true;
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
@@ -104,7 +103,7 @@ class thiefClass extends roleParent {
             return;
         }
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
 
@@ -112,7 +111,7 @@ class thiefClass extends roleParent {
             if (powerAction(creep)) return;
         }
 
-        //        if (super._constr.pickUpNonEnergy(creep)) return;
+        //        if (super.constr.pickUpNonEnergy(creep)) return;
 
         let creepCarry = creep.carryTotal;
 
@@ -170,7 +169,7 @@ class thiefClass extends roleParent {
                 if (bads.length > 0) {
                     creep.moveTo(Game.flags[creep.memory.party]);
                 } else {
-                    super._constr.moveToPickUpEnergy(creep);
+                    super.constr.moveToPickUpEnergy(creep);
                 }
                 return;
             } else {

@@ -41,7 +41,7 @@ class upgraderzClass extends roleParent {
     static run(creep) {
         creep.memory.waypoint = true;
 
-        if (super.returnEnergy(creep)) return;
+        if (super.spawnRecycle(creep)) return;
 
         if (creep.memory.renewSpawnID !== undefined) {
             if (creep.ticksToLive < 10) {

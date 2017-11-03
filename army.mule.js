@@ -36,7 +36,7 @@ class muleClass extends roleParent {
             creep.moveTo(Game.flags.portal2);
             return;
         }
-        if (this.returnEnergy(creep)) {
+        if (this.spawnRecycle(creep)) {
             return false;
         }
 
@@ -82,15 +82,11 @@ class muleClass extends roleParent {
         if (total === 0 && creep.room.name !== creep.memory.home && creep.memory.level !== 3) creep.memory.goHome = true;
         if (total === 0 && creep.room.name == creep.memory.home) creep.memory.goHome = false;
 
-if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name == Game.flags.hello22.pos.roomName){
-  creep.say('blh');
-  creep.memory.parent = '599a20fdea625865e74d453d';
-  creep.memory.death = true;
-          if (this.returnEnergy(creep)) {
-            return false;
+        if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name == Game.flags.hello22.pos.roomName) {
+            creep.say('blh');
+            creep.memory.parent = '599a20fdea625865e74d453d';
+            creep.memory.death = true;
         }
-
-} 
 
         if (!creep.memory.goHome) {
             if (total !== creep.carryCapacity && creep.memory.level !== 2) {
@@ -100,39 +96,39 @@ if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name
                     stor = creep.room.terminal;
                 }
                 if (Game.shard.name == 'shard0') {
-                    if(creep.room.storage.total !== creep.room.storage.store[RESOURCE_ENERGY]){
+                    if (creep.room.storage.total !== creep.room.storage.store[RESOURCE_ENERGY]) {
                         stor = creep.room.storage;
                     } else {
                         stor = creep.room.terminal;
                     }
                 }
 
-/*
-        var keys = Object.keys(linksID);
-        var z = linksID.length;
+                /*
+                        var keys = Object.keys(linksID);
+                        var z = linksID.length;
 
-            while (z--) {
-                var zz = keys[z];
-                LINK = Game.getObjectById(linksID[zz]);
-*/
+                            while (z--) {
+                                var zz = keys[z];
+                                LINK = Game.getObjectById(linksID[zz]);
+                */
 
 
                 if (creep.pos.isNearTo(stor)) {
                     if (Game.shard.name == 'shard0') {
-                     var zz = Math.floor(Math.random()*4);
-                      if(zz !== 0) {
-                                creep.withdraw(stor, 'H');
-                      } else {
-                        for (var e in stor.store) {
-                            if (e !== RESOURCE_ENERGY){
-                                creep.withdraw(stor, e);
+                        var zz = Math.floor(Math.random() * 4);
+                        if (zz !== 0) {
+                            creep.withdraw(stor, 'H');
+                        } else {
+                            for (var e in stor.store) {
+                                if (e !== RESOURCE_ENERGY) {
+                                    creep.withdraw(stor, e);
+                                }
                             }
                         }
-                      }
 
 
                     } else {
-                        if(creep.room.name =='E14S37')
+                        if (creep.room.name == 'E14S37')
                             creep.withdraw(stor, RESOURCE_ENERGY);
                     }
                 } else {
@@ -166,9 +162,9 @@ if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name
                                 for (var bb in creep.carry) {
                                     creep.transfer(target, bb);
                                 }
-                            if (creep.memory.party != 'hello22') {
-                                creep.memory.goHome = true;
-                            }
+                                if (creep.memory.party != 'hello22') {
+                                    creep.memory.goHome = true;
+                                }
 
                             } else {
                                 creep.moveTo(target, { reusePath: 20 });

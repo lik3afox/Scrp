@@ -134,7 +134,7 @@ class rangerClass extends roleParent {
             if (super.boosted(creep, ['XZHO2', 'XGHO2', 'XKHO2'])) {
                 return;
             }
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (super.goToPortal(creep)) return;

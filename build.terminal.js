@@ -18,7 +18,7 @@ let basic = [
     'KO', 'KHO2', 'XKHO2',
 ];
 var s1LabRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37',
-    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27', 'E27S45'
+    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27', 'E27S45', 'E29S48'
 ];
 var s0LabRooms = ['E38S81', 'E38S72'];
 
@@ -73,7 +73,7 @@ function focusMinerals(targetID, mineral) {
 }
 
 function shareEnergy(terminal) {
-    if(terminal.room.name == 'E14S38') return false;
+    if (terminal.room.name == 'E14S38') return false;
 
     // When full, From this terminal, we will send energy to another.
     // Lets check here in all the storages to see if that room's storage level is at.
@@ -1134,8 +1134,10 @@ function buyMineralsFromBUYORDER(terminal) {
             } else if (eWanted[0].amount <= 5000) {
                 buy = eWanted[0].amount;
             }
+            if(eWanted[0].price < 0.5){
             let vv = Game.market.deal(eWanted[0].id, buy, terminal.room.name);
             console.log(eWanted.length, 'orders?', vv, 'getting Energy for this room', eWanted[0].id, buy, terminal.room.name);
+            }
         }
     } else {
         //      console.log(wanted.length,'xxx',wanted[0]);
@@ -1153,9 +1155,12 @@ function buyMineralsFromBUYORDER(terminal) {
                     } else if (wantedd[0].amount <= 5000) {
                         buy = wantedd[0].amount;
                     }
-                    if (Game.market.deal(wantedd[0].id, buy, terminal.room.name) == OK) {
-                        //                    console.log(wantedd[0].price,wanted[e],'OK');
-                        return;
+                    console.log('Trying order',wantedd[0].price);
+                    if (wantedd[0].price <= 0.01) {
+                        if (Game.market.deal(wantedd[0].id, buy, terminal.room.name) == OK) {
+                            console.log(wantedd[0].price, wanted[e], 'OK');
+                            return;
+                        }
                     }
                 }
             }
@@ -1177,7 +1182,7 @@ class roleTerminal {
                 console.log(Game.rooms[s0LabRooms[a]], s0LabRooms[a]);
                 if (Game.rooms[s0LabRooms[a]] !== undefined) {
                     let terminal = Game.rooms[s0LabRooms[a]].terminal;
-                    //                buyMineralsFromBUYORDER(terminal);
+                                    buyMineralsFromBUYORDER(terminal);
                 }
             }
             return;

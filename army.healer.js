@@ -151,8 +151,7 @@ class healerClass extends roleParent {
     static run(creep) {
         doMove = false;
         if (super.sayWhat(creep)) return;
-        super.calcuateStats(creep);
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (super.doTask(creep)) {

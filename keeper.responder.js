@@ -238,7 +238,7 @@ class roleGuard extends roleParent {
             creep.say('ZzZ');
             return;
         }
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (super.doTask(creep)) {

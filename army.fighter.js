@@ -283,7 +283,7 @@ class fighterClass extends roleParent {
 
     static run(creep) {
         creep.say('fight');
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
 

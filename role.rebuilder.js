@@ -32,22 +32,11 @@ class rebuilder extends roleParent {
         }
         
     static run(creep) {
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return; }
-
-        // First it needs to go to the room
-        // if not in the room that it needs to be
-        //      console.log(Game.getObjectById(creep.memory.goal).room.name,creep.room.name );
-        //        creep.say('rb');
-        /*
-                    let lastMovement = {x:creep.pos.x,y:creep.pos.y};
-                    creep.memory.lastPos = lastMovement;
-                    console.log('last',creep.memory.lastPos.x,creep.memory.lastPos.y);
-                    console.log('current',creep.pos.x,creep.pos.y); */
 
         if (creep.memory.build === undefined) {
             creep.memory.build = false;

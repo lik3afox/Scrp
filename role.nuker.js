@@ -40,7 +40,7 @@ class roleNuker extends roleParent {
         //  creep.say('nuke');
         let nuke = creep.room.nuke;
         let total = _.sum(creep.carry);
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
 

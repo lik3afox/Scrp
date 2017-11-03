@@ -1,15 +1,3 @@
-// Main 300
-// level 0 = 200
-// level 1 = 300 / 0
-// Level 2 = 550 / 5
-// Level 3 = 800 / 10
-// Level 4 = 1300 / 20
-// Level 5 = 1800 / 30
-// Level 6 = 2300 / 40  Not added yet, not certain if needed.
-
-// First to be built, this one stays home and makes sure everything stays running.
-// Mostly works with spawn.
-
 var classLevels = [
     [CARRY, MOVE, CARRY, MOVE, WORK], // 300
 
@@ -17,21 +5,16 @@ var classLevels = [
 
     [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], // 800
 
-    [MOVE,CARRY, CARRY,  MOVE, CARRY, CARRY, MOVE,CARRY, CARRY, MOVE,CARRY, CARRY, MOVE, MOVE,  CARRY, CARRY,
-    MOVE,CARRY, CARRY, MOVE, CARRY, CARRY, MOVE,  CARRY, CARRY, CARRY   ], //1300
+    [MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE, CARRY, CARRY,
+        MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, CARRY
+    ], //1300
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY]
 
 ];
 
-var thisID;
-
 var roleParent = require('role.parent');
-var containers = require('commands.toContainer');
-var constr = require('commands.toStructure');
-var spawn = require('commands.toSpawn');
-var sources = require('commands.toSource');
 
 function makePatrol(creep, simPatrol) {
     if (creep.room.memory.firstTracker === undefined) {
@@ -60,40 +43,6 @@ function makePatrol(creep, simPatrol) {
     }
     return pPath;
 }
-/*
-function mineralContainerEmpty(creep) {
-    if (creep.memory.containsGood) return false;
-    if (creep.memory.mineralContainerID !== undefined) {
-        let contains = creep.room.find(FIND_STRUCTURES);
-        contains = _.filter(contains, function(o) {
-            return o.structureType == STRUCTURE_CONTAINER;
-        });
-
-        for (var e in contains) {
-            for (var a in contains[e].store) {
-                if (a != RESOURCE_ENERGY && contains[e].store[a] > creep.stats.carry) {
-                    creep.memory.mineralContainerID = contains[e].id;
-                }
-            }
-        }
-    }
-
-    let contain = Game.getObjectById(creep.memory.mineralContainerID);
-    if (contain !== null) {
-        if (creep.pos.isNearTo(contain)) {
-            for (var o in contain) {
-                creep.withdraw(contain, o);
-            }
-            return true;
-        } else {
-            creep.moveMe(contain, { reusePath: 15 });
-            return true;
-        }
-
-    }
-
-    return false;
-} */
 
 function isOnPath(creep) {
     let path = creep.memory.patrolpath;
@@ -160,38 +109,6 @@ function moveOnPath(creep) {
     }
 }
 
-function getEnergy(creep) {
-    if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
-        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
-    } else {
-        if (!containers.withdrawFromStorage(creep)) {
-            if (!containers.withdrawFromTerminal(creep)) {
-                if (!containers.moveToWithdraw(creep)) {
-                    if (!constr.moveToPickUpEnergyIn(creep, 2)) {
-                        if (!constr.moveToPickUpEnergy(creep,creep.memory.roleID * 40)+300 ) {
-                            if (!sources.moveToWithdraw(creep)) {
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
-function getExtenAm(creep) {
-    switch (creep.room.controller.level) {
-        case '7':
-            return 100;
-        case '8':
-            return 200;
-        default:
-            return 50;
-    }
-}
 
 function getExtendEnergy(creep) {
     let zz = creep.room.controller.level;
@@ -216,52 +133,17 @@ class roleFirst extends roleParent {
         return classLevels[level];
     }
     static run(creep) {
-        if (creep.saying == 'noWork') {
-            creep.say('zZzZ');
-            return;
-        }
-        if (creep.saying == 'zZzZ') {
-            creep.say('zZz');
-            return;
-        }
-    //    if(creep.memory.roleID === 0 &&  (creep.room.name == 'E25S37'||creep.room.name == 'E17S45' ) &&  super.fillLabForBoost(creep)){
-  //          return;
-//        }
- if(creep.memory.roleID === 0 &&creep.room.name == 'E25S27'){
-    let zz= Game.getObjectById('59c7cc38c354a34c538569de');
-    if(zz !== null && zz.energy < 1000 && creep.carryTotal !== 0){
-       if(creep.pos.isNearTo(zz)){
-        creep.transfer(zz,RESOURCE_ENERGY);
-       } else {
-		creep.moveTo(zz);       	
-       }
-        return;
-    }
 
- }
- if(creep.memory.roleID > 1) {
-    console.log(roomLink( creep.room.name), creep.ticksToLive,creep.memory.deathCount);
- }
-
-        
-        if (super.doTask(creep)) {
-            return;
-        }
-        if (this.returnEnergy(creep)) {
-            return false;
-        }
-        this.rebirth(creep);
+        super.rebirth(creep);
+        super.baseRun(creep);
 
         if (creep.memory.roleID === 0)
-            if (super._power.getPowerToSpawn(creep)) return;
-
-        if (super.depositNonEnergy(creep)) return;
+            if (super.power.getPowerToSpawn(creep)) return;
 
         if (creep.memory.deposit === undefined) { creep.memory.deposit = false; }
 
         if (!creep.memory.deposit && creep.carryTotal > creep.carryCapacity - 5) {
             creep.memory.deposit = true;
-            //spawn.newTarget(creep);
         }
         if (creep.room.name != creep.memory.home) {
             let zzz = Game.getObjectById(creep.memory.parent);
@@ -275,45 +157,45 @@ class roleFirst extends roleParent {
 
         if (!creep.memory.deposit) {
 
-            constr.pickUpEnergy(creep);
-            getEnergy(creep);
+            if (!creep.pickUpEnergy()) {
+                if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
+                    creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                } else {
+                    if (!super.containers.withdrawFromStorage(creep)) {
+                        if (!super.containers.withdrawFromTerminal(creep)) {
+                            if (!super.containers.moveToWithdraw(creep)) {
+                                if (!super.constr.moveToPickUpEnergyIn(creep, 2)) {
+                                    if (!super.constr.moveToPickUpEnergy(creep, creep.memory.roleID * 40) + 300) {
+                                        if (!super.sources.moveToWithdraw(creep)) {
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
 
         } else {
-            if (creep.room.energyAvailable == creep.room.energyCapacityAvailable ) {         
-                        creep.say('noWork');
-                        return;
+            if (creep.room.energyAvailable == creep.room.energyCapacityAvailable) {
+                creep.sleep();
+                return;
             }
-/*            if (creep.room.name != 'E23S75' && creep.room.energyAvailable == creep.room.energyCapacityAvailable || (creep.room.name == 'E37S75' && creep.room.energyAvailable == (creep.room.energyCapacityAvailable - 900))) {
-                if (creep.room.powerspawn !== undefined && creep.room.powerspawn !== null) {
-                    if (creep.room.powerspawn.energy > creep.room.powerspawn.energyCapacity - 1000) {
-                        //                        if(!mineralContainerEmpty(creep))
-                        creep.say('noWork');
-                    } else {
-                        if (creep.pos.isNearTo(creep.room.powerspawn)) {
-                            creep.transfer(creep.room.powerspawn, RESOURCE_ENERGY);
-                        } else {
-                            creep.say('noWork');
-                        }
-                    }
-                } else {
-                    creep.say('noWork');
+            if (!moveOnPath(creep)) {
+                if (!super.spawns.moveToTransfer(creep)) {
+
                 }
-            } else {*/
-                if (!moveOnPath(creep)) {
-                    if (!spawn.moveToTransfer(creep)) {
-
-                    } else {
-
-                    }
-                } else {
-                    if (spawn.toTransfer(creep)) {
-                        if (creep.carry[RESOURCE_ENERGY] < getExtendEnergy(creep) + 1) {
-                            getEnergy(creep);
-                        }
+            } else {
+                if (super.spawns.toTransfer(creep)) {
+                    if (creep.carry[RESOURCE_ENERGY] < getExtendEnergy(creep) + 1) {
+                        super.containers.withdrawFromStorage(creep);
                     }
                 }
-//            }
-
+            }
         }
     }
 }

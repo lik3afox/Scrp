@@ -92,6 +92,8 @@ function restingSpot(creep) {
             return new RoomPosition(41, 14, creep.memory.home);
         case 'E14S47':
             return new RoomPosition(26, 35, creep.memory.home);
+        case 'E27S45':
+            return new RoomPosition(15, 36, creep.memory.home);
 
 
         default:
@@ -180,7 +182,6 @@ class roleNewDefender extends roleParent {
     }
 
     static run(creep) {
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
@@ -207,11 +208,11 @@ class roleNewDefender extends roleParent {
             ccSpawn.wantRenew(creep);
         }
         
-        super._constr.pickUpNonEnergy(creep);
+        super.constr.pickUpNonEnergy(creep);
 
         // If no defend flag then
 
-        if (super._movement.moveToDefendFlag(creep)) {
+        if (super.movement.moveToDefendFlag(creep)) {
 
             var badzs = getHostiles(creep);
             creep.say('nDef' + badzs.length + creep.memory.active);

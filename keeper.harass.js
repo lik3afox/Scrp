@@ -105,7 +105,7 @@ class roleGuard extends roleParent {
             creep.memory.runAwayLimit = 1900;
         }
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (super.doTask(creep)) {

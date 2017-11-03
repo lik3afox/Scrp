@@ -88,7 +88,7 @@ class scientistRole extends roleParent {
     static run(creep) {
         if (creep.memory.party === undefined && !creep.room.memory.labsNeedWork) {
         	var newUse = ['E27S45','E13S34','E18S36','E23S38','E25S47','E28S42','E23S42','E14S43','E25S27','E14S47','E17S45'
-        	,'E17S34','E24S33','E28S37','E25S37','E25S43','E27S34','E18S32'];
+        	,'E17S34','E24S33','E28S37','E25S37','E25S43','E27S34','E18S32','E29S48','E14S37'];
             if (_.contains(newUse,creep.room.name) ) {
                 if (creep.room.memory.mineralContainID !== undefined) {
                     var zz = Game.getObjectById(creep.room.memory.mineralContainID);
@@ -110,7 +110,7 @@ class scientistRole extends roleParent {
             return;
         }
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
 
@@ -134,9 +134,9 @@ class scientistRole extends roleParent {
         if (creep.memory.putaway) {
             if (!labsBuild.moveToTransfer(creep)) {
                 if (creep.room.name == 'E33S76') {
-                    super._containers.moveToStorage(creep);
+                    super.containers.moveToStorage(creep);
                 } else {
-                    super._containers.moveToTerminal(creep);
+                    super.containers.moveToTerminal(creep);
                 }
             }
         } else {

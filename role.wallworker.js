@@ -1,59 +1,39 @@
-// Main 300
-// level 0 = 200
-// level 1 = 300 / 0
-// Level 2 = 550 / 5
-// Level 3 = 800 / 10
-// Level 4 = 1300 / 20
-// Level 5 = 1800 / 30
-// Level 6 = 2300 / 40  Not added yet, not certain if needed.
-
 var classLevels = [
     //0
     [WORK, CARRY, MOVE],
     //1
-
     [WORK, MOVE, WORK, MOVE, CARRY, CARRY, MOVE],
     //2
     [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY],
     //3
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
-    //4 /2250 Energy
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
+    //4 /2300 Energy
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
     //5
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
 ];
 
 var boost = [];
 var roleParent = require('role.parent');
-var movement = require('commands.toMove');
-var constr = require('commands.toStructure');
-var contain = require('commands.toContainer');
-var sources = require('commands.toSource');
-var labs = require('build.labs');
 
 class roleWallWorker extends roleParent {
-    static levels(level, room) { // goalInfo is roadsTo in Spawn.memory;
+
+    static levels(level, room) { 
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         return classLevels[level];
     }
 
     static run(creep) {
-        if (super.depositNonEnergy(creep)) return;
-        if (creep.room.name == 'E25S27' && creep.ticksToLive == 1499) {
-            let bb = creep.room.find(FIND_CONSTRUCTION_SITES);
-            if(bb.length > 2) {
-                boost.push('XLH2O');
-                _.uniq(boost);
-            }
-        } else if (creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
+        if(super.baseRun(creep)) return;
+
+        if (creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
             boost.push('LH');
             _.uniq(boost);
         }
 
-        if (creep.room.name != 'E18S36' && creep.memory.level >= 4 && super.boosted(creep, boost)) {
+        if (creep.memory.level >= 4 && super.boosted(creep, boost)) {
             return;
         }
-
 
         if (creep.memory.repair) {
             if (creep.memory.constructionID !== undefined) {
@@ -66,8 +46,7 @@ class roleWallWorker extends roleParent {
                     creep.memory.constructionID = undefined;
                 }
             } else {
-                constr.moveToRepairWall(creep);
-
+                super.constr.moveToRepairWall(creep);
             }
 
             if (creep.carry.energy === 0) {
@@ -75,13 +54,12 @@ class roleWallWorker extends roleParent {
             }
         } else {
 
-            constr.pickUpEnergy(creep);
-            if (!contain.withdrawFromStorage(creep)) {
-                if (!contain.moveToWithdraw(creep)) {
-                    sources.moveToWithdraw(creep);
-                    //           }
+            super.constr.pickUpEnergy(creep);
+            if (!super.containers.withdrawFromStorage(creep)) {
+                if (!super.containers.moveToWithdraw(creep)) {
+                    super.sources.moveToWithdraw(creep);
                 }
-            } else {}
+            }
 
             if (creep.carry.energy > creep.carryCapacity - 50) {
                 creep.memory.repair = true;
@@ -91,7 +69,6 @@ class roleWallWorker extends roleParent {
             }
 
         }
-        //        creep.say('ww');
     }
 
 }

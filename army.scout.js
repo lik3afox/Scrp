@@ -22,7 +22,7 @@ class scoutClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }        
         var zz = ['!Never', '!gonna', 'give', 'you!',

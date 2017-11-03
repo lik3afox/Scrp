@@ -36,7 +36,6 @@ class mineralRole extends roleParent {
     }
 
     static run(creep) {
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
@@ -52,7 +51,7 @@ class mineralRole extends roleParent {
         memoryCheck(creep);
 
 
-        if (super.returnEnergy(creep)) return;
+        if (super.spawnRecycle(creep)) return;
         if (movement.runAway(creep)) return;
 
         if (carry === 0) {
@@ -114,7 +113,7 @@ class mineralRole extends roleParent {
                 creep.say('home');
 
                 if (!super.guardRoom(creep)) {
-                    super._movement.moveHome(creep);
+                    super.movement.moveHome(creep);
                 }
                 return;
             }

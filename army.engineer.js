@@ -126,7 +126,7 @@ class engineerClass extends roleParent {
                 creep.memory.building = false;
                 creep.say('harvesting');
                 /*
-                                               if (!super._constr.pickUpEnergy(creep)) {
+                                               if (!super.constr.pickUpEnergy(creep)) {
                                 //                if (!super._containers.withdrawFromStorage(creep)) {
                                                       if (!super._containers.moveToWithdraw(creep)) {
                                 //      if (!super._containers.moveToWithdraw(creep))
@@ -144,7 +144,7 @@ class engineerClass extends roleParent {
 
 
                 if (creep.room.name == 'E14S38') {
-                    if (!super._constr.moveToBuild(creep)) {
+                    if (!super.constr.moveToBuild(creep)) {
                         if (creep.room.controller.level < 4) {
                             if (creep.pos.isEqualTo(Game.flags[creep.memory.party])) {
                                 creep.drop(RESOURCE_ENERGY);
@@ -152,7 +152,7 @@ class engineerClass extends roleParent {
                                 creep.moveTo(Game.flags[creep.memory.party]);
                             }
                         } else {
-                            if (!super._containers.moveToStorage(creep)) {}
+                            if (!super.containers.moveToStorage(creep)) {}
                         }
                     }
                     return;
@@ -163,7 +163,7 @@ class engineerClass extends roleParent {
                     //    if(creep.room.controller.level < 4)
                     //                    if (!super._containers.moveToStorage(creep)) {
                                         if (!spawn.moveToTransfer(creep,300)){
-                    if (!super._constr.moveToBuild(creep)) {
+                    if (!super.constr.moveToBuild(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(creep.room.controller);
                         }
@@ -174,7 +174,7 @@ class engineerClass extends roleParent {
                     creep.say('!');
                 } else {
 
-                    if (!super._constr.moveToBuild(creep)) {
+                    if (!super.constr.moveToBuild(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(creep.room.controller);
                         }
@@ -198,14 +198,14 @@ class engineerClass extends roleParent {
                 //if(!super._constr.pickUpEnergy(creep,100))
 
                 if (creep.room.name == 'E14S38' || creep.room.name == 'E22S27') {
-//                    if (!super._constr.moveToPickUpEnergy(creep))
-                        if (!super._sources.moveToWithdraw(creep)) {
-                            //                        super._constr.moveToPickUpEnergy(creep);
+//                    if (!super.constr.moveToPickUpEnergy(creep))
+                        if (!super.sources.moveToWithdraw(creep)) {
+                            //                        super.constr.moveToPickUpEnergy(creep);
                         }
                 } else {
-                    if (!super._constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID) + 500)) {
+                    if (!super.constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID) + 500)) {
                         if (!super._containers.withdrawFromStorage(creep)) {
-                            if (!super._sources.moveToWithdraw(creep)) {
+                            if (!super.sources.moveToWithdraw(creep)) {
 
                             }
                         }

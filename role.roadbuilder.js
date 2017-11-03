@@ -36,12 +36,11 @@ class roadbuilder extends roleParent {
 
     static run(creep) {
         creep.say('rr');
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (super.keeperWatch(creep)) { // two parter - keeperFind happens when

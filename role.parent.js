@@ -1,7 +1,15 @@
 // Base parent class for all roles - this has basic functions that all
 // classes use to do there thing.
 var sign = '[Ypsilon Pact]: Territory Claimed by Likeafox. Respect our Borders.';
-
+var containers = require('commands.toContainer');
+var constr = require('commands.toStructure');
+var movement = require('commands.toMove');
+var sources = require('commands.toSource');
+var links = require('build.link');
+var spawnsCC = require('commands.toSpawn');
+var labsBuild = require('build.labs');
+var power = require('commands.toPower');
+var fox = require('foxGlobals');
 
 function getCost(module) {
     var total = 0;
@@ -39,16 +47,6 @@ function keeperFindAt(xx, yy, creep) {
         }
     }
 }
-
-//var containers = r
-var containers = require('commands.toContainer');
-var constr = require('commands.toStructure');
-var movement = require('commands.toMove');
-var sources = require('commands.toSource');
-var links = require('build.link');
-var spawnsCC = require('commands.toSpawn');
-var labsBuild = require('build.labs');
-var power = require('commands.toPower');
 
 function numberOfBody(creep, boost) {
     let nonBoost = false;
@@ -155,18 +153,6 @@ function creepParts(creep, boost) {
 
     return true;
 }
-/*
-function getCost(module) {
-    var total = 0;
-    for (var i in module) {
-        for (var e in BODYPART_COST) {
-            if (module[i].type == e) {
-                total += BODYPART_COST[e];
-            }
-        }
-    }
-    return total;
-} */
 
 function getParts(creep) {
     let parts = {
@@ -184,7 +170,6 @@ function getParts(creep) {
     let carryParts = _.filter(creep.body, { type: CARRY }).length;
 
 }
-var fox = require('foxGlobals');
 
 function getDeathSpot(roomName) {
     switch (roomName) {
@@ -197,9 +182,9 @@ function getDeathSpot(roomName) {
         case "E25S47":
             return new RoomPosition(5, 37, roomName);
         case "E14S38":
-            return new RoomPosition(32, 9, roomName); 
-//        case "E23S38":
-//            return new RoomPosition(33, 6, roomName); 
+            return new RoomPosition(32, 9, roomName);
+            //        case "E23S38":
+            //            return new RoomPosition(33, 6, roomName); 
         default:
             return;
     }
@@ -208,67 +193,57 @@ function getDeathSpot(roomName) {
 //5836b8138b8b9619519f16c1
 class baseParent {
 
-    static calcuateStats(creep) {
-        return;
-        /*
-               if (creep.memory.stats !== undefined) return;
+    static run(creep) {
+        console.log(creep.memory.role, creep.name);
+    }
+    static baseRun(creep) {
+        if (this.depositNonEnergy(creep)) return true;
+        if (this.spawnRecycle(creep)) return true;
+        if (this.doTask(creep)) return true;
+        if (this.sayWhat(creep)) return true;
 
-               let wParts = _.filter(creep.body, { type: WORK }).length;
-               let mParts = _.filter(creep.body, { type: MOVE }).length;
-               let hParts = _.filter(creep.body, { type: HEAL }).length;
-               let rParts = _.filter(creep.body, { type: RANGED_ATTACK }).length;
-               let aParts = _.filter(creep.body, { type: ATTACK }).length;
-               let cParts = _.filter(creep.body, { type: CARRY }).length;
-               let cost = getCost(creep.body);
-               let stats = {
-                   //            birthTime: Game.time
-                   // === 0 ? undefined : wParts
-                   work: wParts,
-                   heal: hParts,
-                   carry: cParts,
-                   move: mParts,
-                   energyCost: cost,
-                   spawnTime: creep.body.length * 3,
-                   mining: wParts * 2,
-                   harvesting: wParts,
-                   attack: aParts * 30,
-                   build: wParts * 5,
-                   repair: wParts * 100,
-                   repairEnergy: wParts,
-                   upgrade: wParts,
-                   carryMax: cParts * 50,
-                   dismanle: wParts * 50,
-                   healMax: hParts * 12,
-                   rangeHeal: hParts * 4,
-                   massMax: rParts * 1,
-                   massMid: rParts * 4,
-                   massMin: rParts * 10,
-                   range: rParts * 10,
-                   recovery: mParts,
-                   fatigue: (creep.body.length - mParts),
-                   swamp: (creep.body.length - mParts) * 5,
-                   renewCost: Math.ceil(cost / 2.5 / creep.body.length),
-                   renewTime: Math.floor(600 / creep.body.length),
-
-                   level: creep.memory.level
-               };
-               creep.memory.stats = stats;*/
-        //      let body = getBodyParts(creep);  This will look at parts returning part numbers - and modifiers. 
-        //     Boosted?
-        //    minig
-        //    Energy Building
-        //    Renew cost and Tick
-        //    Move Amount
-        //    Range damage amount
-        //    Toughness amount.
-        //    Amount of boosts - tier 1 is 1 tier 2 is 2 ect.
-        //    Level.
-
+        return false;
     }
 
-    static getStat(creep) {
-
+    static get attack() {
+        return attack;
     }
+
+    static get labs() {
+        return labsBuild;
+    }
+
+    static get link() {
+        return links;
+    }
+    static get fox() {
+        return fox;
+    }
+
+    static get spawns() {
+        return spawnsCC;
+    }
+
+    static get containers() {
+        return containers;
+    }
+
+    static get sources() {
+        return sources;
+    }
+
+    static get constr() {
+        return constr;
+    }
+    static get movement() {
+        return movement;
+    }
+    static get power() {
+        return power;
+    }
+    constructor() {}
+
+    levels(level) {}
 
     static edgeRun(creep) {
 
@@ -302,6 +277,26 @@ class baseParent {
         }
         return false;
     }
+
+    static shouldDie(creep) {
+        if (creep.hits == creep.hitsMax) return;
+
+        let death = true;
+        var e = creep.body.length;
+        while (e--) {
+            if (creep.body[e].type == 'move' && creep.body[e].hits > 0) {
+                death = false;
+            }
+        }
+        // Looking for any move parts
+        // if there sin't any
+        if (death) {
+            console.log(creep, 'wants to die');
+            creep.suicide();
+        }
+
+    }
+
     static sayWhat(creep) {
         switch (creep.saying) {
             case "ty":
@@ -680,49 +675,6 @@ class baseParent {
 
     }
 
-    static run(creep) {
-        console.log(creep.memory.role, creep.name);
-    }
-
-    static get _attack() {
-        return attack;
-    }
-
-    static get _labs() {
-        return labsBuild;
-    }
-
-    static get link() {
-        return links;
-    }
-    static get _spawns() {
-        return spawnsCC;
-    }
-
-    static get _containers() {
-        return containers;
-    }
-
-    static get _sources() {
-        return sources;
-    }
-
-    static get _constr() {
-        return constr;
-    }
-    static get _movement() {
-        return movement;
-    }
-    static get _power() {
-        return power;
-    }
-    /*
-    static get _() {
-      return;
-    } 
-    */
-
-
     static boosted(creep, boosted) {
         if (creep.ticksToLive < 1400) {
             return false;
@@ -764,7 +716,7 @@ class baseParent {
                                     creep.room.memory.boost.mineralType = 'none';
                                     creep.memory.isBoosted = true;
                                 }
-                                if( zz == -5 || zz == -6) {
+                                if (zz == -5 || zz == -6) {
                                     creep.memory.boostNeeded.splice(a, 1); // = 'done';
                                     creep.room.memory.boost.mineralType = 'none';
                                 }
@@ -927,7 +879,7 @@ class baseParent {
         }
     }
 
-    static returnEnergy(creep) {
+    static spawnRecycle(creep) {
         if (creep.memory.death === undefined) {
             //        creep.memory.returnSource = false;
             creep.memory.death = false;
@@ -1120,7 +1072,7 @@ class baseParent {
 
     static depositNonEnergy(creep) {
 
-        //        if (creep.room.controller !== undefined && creep.room.controller.owner !== 'likeafox') return false;
+        if (creep.room.name !== creep.memory.home) return false;
         if (creep.room.terminal === undefined && creep.room.storage === undefined) return false;
 
         if (creep.carryTotal === 0) return false;
@@ -1262,7 +1214,7 @@ class baseParent {
         return true;
     }
 
-    static isFlagged(creep) {
+    static isInParty(creep) {
         let flagged = false;
         if (creep.memory.party !== undefined) {
             if (Game.flags[creep.memory.party] !== undefined) {
@@ -1324,12 +1276,6 @@ class baseParent {
 
     }
 
-
-    constructor() {}
-
-    levels(level) {}
-
-    levelEnergy(level) {}
 }
 
 module.exports = baseParent;

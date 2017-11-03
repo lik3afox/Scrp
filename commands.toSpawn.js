@@ -240,7 +240,9 @@ class SpawnInteract {
         var targets = getTargets(creep);
         if (creep.memory.goToSpawn === undefined) {
             let goTo = -1; //= creep.memory.roleID;
-            if (creep.memory.roleID === 0) {
+            var zz = creep.memory.roleID;
+            if(creep.memory.role == 'scientist') zz++;
+            if (zz) {
                 do {
                     goTo++;
                     if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
@@ -248,7 +250,6 @@ class SpawnInteract {
                     }
                     if (goTo > targets.length) return false;
                 } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
-
             } else {
                 goTo = targets.length - 1;
                 do {

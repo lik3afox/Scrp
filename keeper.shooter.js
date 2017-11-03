@@ -279,10 +279,9 @@ class roleGuard extends roleParent {
 
     static run(creep) {
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }

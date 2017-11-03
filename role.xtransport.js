@@ -106,15 +106,14 @@ class transport extends roleParent {
 
         super.rebirth(creep);
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
-        if (super._movement.runAway(creep)) {
+        if (super.movement.runAway(creep)) {
             return;
-        }
-        /*super.calcuateStats(creep);
+        }/*
         if (creep.room.name == 'E27S75' || creep.room.name == 'E37S75' && creep.carryTotal !== 0) {
-            super._constr.toRepairWall(creep);
+            super.constr.toRepairWall(creep);
         } */
         if (super.doTask(creep)) {
             return;
@@ -141,14 +140,14 @@ class transport extends roleParent {
 
         //        if (creep.room.name != 'E28S77' && creep.room.storage == undefined && creep.room.name != 'E27S75' )
         if (!creep.pos.isNearTo(Game.flags[creep.memory.focusFlagName]))
-            super._constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
+            super.constr.pickUpEnergy(creep); // This is to pick up after other transport deaths.
 
 
         if (creep.memory.gohome) {
 
             /*super.goToFocusFlag(creep, Game.flags[creep.memory.focusFlagName]);
-            if (!super._constr.doCloseRoadRepair(creep))
-                super._constr.doCloseRoadBuild(creep);
+            if (!super.constr.doCloseRoadRepair(creep))
+                super.constr.doCloseRoadBuild(creep);
 */
             let task = {};
             task.options = {
@@ -169,7 +168,7 @@ class transport extends roleParent {
         } else { // IF not going home. 
 
             if (_goal === null) {
-                var goingTo = super._movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+                var goingTo = super.movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 creep.moveMe(goingTo, {
                     ignoreRoads: _ignoreRoad,
                     reusePath: 49,
@@ -222,7 +221,7 @@ class transport extends roleParent {
 
                 //let foxy = require('foxMethods');
                 // If in the same room and with in a square of 5 away from goal. 
-                if (!super._constr.moveToPickUpEnergyIn(creep, 5))
+                if (!super.constr.moveToPickUpEnergyIn(creep, 5))
                     if (_goal.room.name === creep.room.name && creep.pos.inRangeTo(_goal.pos, 5)) {
                         //                    if (!constr.pickUpEnergy(creep)) {
                         if (creep.memory.workContain === undefined) {

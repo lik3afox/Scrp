@@ -89,7 +89,7 @@ class scientistRole extends roleParent {
             return;
         }
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (creep.carryTotal === 0) {

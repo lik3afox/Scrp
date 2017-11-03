@@ -133,10 +133,9 @@ class roleHarvester extends roleParent {
             creep.memory.reportDeath = true;
         }
 
+        if (super.baseRun(creep))return;
         super.rebirth(creep);
-        if (super.returnEnergy(creep)) {
-            return;
-        }
+        
 
         if (creep.carry.energy > creep.carryCapacity - creep.stats('mining')) {
             if (!super.link.deposit(creep)) {

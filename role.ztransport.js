@@ -57,15 +57,13 @@ class transportz extends roleParent {
         return classLevels[level];
     }
     static run(creep) {
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
 
         var start;
-        //    super._movement.checkForBadsPlaceFlag(creep);
+        //    super.movement.checkForBadsPlaceFlag(creep);
         shouldDie(creep);
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
@@ -92,10 +90,10 @@ class transportz extends roleParent {
 
         super.rebirth(creep);
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
-        if (super._movement.runAway(creep)) {
+        if (super.movement.runAway(creep)) {
             return;
         }
         if (creep.memory.gohome === undefined) {
@@ -116,8 +114,8 @@ class transportz extends roleParent {
 
         if (creep.memory.gohome) {
             if (creep.room.name === creep.memory.home) {
-                if (!super._containers.moveToStorage(creep))
-                    var zz = super._containers.moveToTerminal(creep);
+                if (!super.containers.moveToStorage(creep))
+                    var zz = super.containers.moveToTerminal(creep);
             } else {
 
                 let task = {};
@@ -139,7 +137,7 @@ class transportz extends roleParent {
             if (creep.memory.gotoID === undefined || (creep.carryTotal === 0 && creep.memory.home == creep.room.name)) {
                 var goingTo;
                 if (_goal === null) {
-                    goingTo = super._movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+                    goingTo = super.movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
                 } else {
                     goingTo = _goal.pos;
                 }
@@ -212,7 +210,7 @@ class transportz extends roleParent {
                 }
 
 
-//                if (!super._constr.moveToPickUpEnergyIn(creep, 4)) {
+//                if (!super.constr.moveToPickUpEnergyIn(creep, 4)) {
                     let target = Game.getObjectById(creep.memory.gotoID);
                     if (target !== null) {
 

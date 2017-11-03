@@ -29,7 +29,6 @@ class roleRepairer extends roleParent {
 
     /** @param {Creep} creep **/
     static run(creep) {
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return; }
 
@@ -37,7 +36,7 @@ class roleRepairer extends roleParent {
         // Logic here
         // Logic here
         // Logic here
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (super.depositNonEnergy(creep)) return;

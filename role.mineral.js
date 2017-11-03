@@ -38,13 +38,12 @@ class mineralRole extends roleParent {
     }
 
     static run(creep) {
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
         memoryCheck(creep);
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         let minz = Game.getObjectById(creep.memory.mineralID);
@@ -100,8 +99,8 @@ class mineralRole extends roleParent {
             let contain = Game.getObjectById(creep.memory.mineralContainID);
             if (contain === null || contain === undefined || creep.memory.level !== 7) {
 
-                    if (!super._containers.moveToTerminal(creep)) {
-                        super._containers.moveToStorage(creep);
+                    if (!super.containers.moveToTerminal(creep)) {
+                        super.containers.moveToStorage(creep);
                 }
             } else {
                 let containTotal = _.sum(contain.store);

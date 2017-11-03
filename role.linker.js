@@ -365,7 +365,7 @@ class roleLinker extends roleParent {
         //        if (creep.room.name !== 'x' && creep.room.name !== 'E14S47')
 
 
-        if (super.returnEnergy(creep)) return;
+        if (super.spawnRecycle(creep)) return;
 
         super.renew(creep);
         // Linker goes to link and stores it at the storage.

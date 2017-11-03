@@ -107,7 +107,7 @@ class demolisherClass extends roleParent {
     }
 
     static run(creep) {
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (super.doTask(creep)) {
@@ -115,9 +115,8 @@ class demolisherClass extends roleParent {
         }
 
         //        console.log(super.isFlagged(creep));
-        if (super.isFlagged(creep)) {
+        if (super.isInParty(creep)) {
             creep.memory.death = false;
-
         } else {
             creep.memory.death = true;
         }

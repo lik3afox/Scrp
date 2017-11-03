@@ -33,7 +33,7 @@ class roleGuard extends roleParent {
 
     static run(creep) {
 
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (!super.run(creep)) return;

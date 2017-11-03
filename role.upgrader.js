@@ -53,7 +53,6 @@ class roleUpgrader extends roleParent {
     /** @param {Creep} creep **/
     static run(creep) {
 
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
@@ -73,23 +72,20 @@ class roleUpgrader extends roleParent {
         if (creep.room.controller.level == 8) {
             creep.memory.death = true;
         }
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
         if (super.depositNonEnergy(creep)) return;
         if (creep.memory.level > 5) super.renew(creep);
 
         if (creep.carry.energy < creep.stats('upgrading') + 1) {
-            if (creep.room.name == 'E27S45') {
+            if (creep.room.name == 'E29S48') {
                 var going;
                 var pos = [
-//                new RoomPosition(13, 41, creep.room.name),
-                new RoomPosition(14, 41, creep.room.name),
-                new RoomPosition(15, 41, creep.room.name),
-                new RoomPosition(15, 40, creep.room.name),
-                new RoomPosition(15, 39, creep.room.name),
-                new RoomPosition(15, 38, creep.room.name),
-                new RoomPosition(14, 38, creep.room.name),
+                new RoomPosition(10, 29, creep.room.name),
+                new RoomPosition(11, 29, creep.room.name),
+                new RoomPosition(12, 29, creep.room.name),
+                new RoomPosition(12, 30, creep.room.name),
                 ];
                 if(pos[creep.memory.roleID] !== undefined) {
                     going = pos[creep.memory.roleID];
@@ -97,7 +93,15 @@ class roleUpgrader extends roleParent {
 
                 if (going !== undefined) {
                     if (!creep.pos.isEqualTo(going)) {
-                        creep.moveTo(going);
+                        creep.moveTo(going,{
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#bf0',
+                        lineStyle: 'dashed',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                });
                     }
 
                 }

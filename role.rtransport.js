@@ -113,7 +113,6 @@ class reTransport extends roleParent {
         return classLevels[level];
     }
     static run(creep) {
-        super.calcuateStats(creep);
         if (super.doTask(creep)) {
             return;
         }
@@ -126,7 +125,7 @@ class reTransport extends roleParent {
             creep.memory.keeperLairID = undefined;
             //            console.log('heya, here we set up a different parent so it goes back there');
         }
-        if (super.returnEnergy(creep)) {
+        if (super.spawnRecycle(creep)) {
             return;
         }
 
@@ -134,7 +133,7 @@ class reTransport extends roleParent {
 
         super.rebirth(creep);
 
-        if (super._movement.runAway(creep)) {
+        if (super.movement.runAway(creep)) {
             return;
         }
         if (creep.memory.gohome === undefined) {
@@ -269,7 +268,7 @@ class reTransport extends roleParent {
                 }
 
 
-                if (!super._constr.moveToPickUpEnergyIn(creep, 5)) {
+                if (!super.constr.moveToPickUpEnergyIn(creep, 5)) {
                     let target = Game.getObjectById(creep.memory.gotoID);
                     if (target !== null) {
                         // Once picked up, clears memory so it can pick up something new.
