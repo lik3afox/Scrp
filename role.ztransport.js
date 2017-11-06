@@ -206,7 +206,7 @@ class transportz extends roleParent {
                             }
                             creep.memory.scientistID = undefined;
                         } else {
-                            if (!creep.pos.isNearTo(sci)) {
+                            if (creep.room.name == sci.pos.roomName && !creep.pos.isNearTo(sci)) {
                                 creep.moveTo(sci, { reusePath: 50, maxOpts: 100 });
                             } else {
                                 super.keeperFind(creep);
