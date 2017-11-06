@@ -314,8 +314,8 @@ var Mod_E29S48 = [
     ['first', require('role.first'), 1, 4],
     ['scientist', require('role.scientist'), 1, 6],
     ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 0, 5],
-    ['upgrader', require('role.upgrader'), 3, 5],
+    ['upbuilder', require('role.upbuilder'), 1, 8],
+//    ['upgrader', require('role.upgrader'), 1, 8],
     ['minHarvest', require('role.mineral'), 1, 7],
     ['wallwork', require('role.wallworker'), 1, 4],
     ['linker', require('role.linker'), 1, 4],
@@ -432,9 +432,8 @@ var expansionModule = [
         ['rtransport', require('role.ztransport'), 1, 0],
     ],
     [ // LEVEL 14 - for an mineral For spawn3
-        ['miner', require('role.miner'), 1, 3], // Gather and move 12- just carry 
-        ['transport', require('role.transport'), 2, 2], // Gather and move - just carry 
-        ['controller', require('role.controller'), 1, 4]
+        ['mineral', require('keeper.scientist'), 1, 7],
+        ['ztransport', require('role.ztransport'), 1, 0],
     ],
     [ // LEVEL 15 - for an mineral for spawn1
         ['miner', require('role.miner'), 1, 3], // Gather and move - just carry 
@@ -1217,6 +1216,10 @@ class theSpawn {
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 
             if (spawn.memory.roadsTo[ie].expLevel > 0) {
+                if(spawn.memory.roadsTo[ie].expLevel == 14){
+                    console.log('HERESX a 14');
+                }
+
                 if (source === null) {
                     if (spawn.memory.roadsTo[ie].sourcePos !== undefined) {
                         let obser = require('build.observer');

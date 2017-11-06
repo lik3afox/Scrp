@@ -1905,7 +1905,7 @@ class buildLab {
 
 
     static getFromTerminal(creep) { // gets the resource wanted from the terminal.
-        creep.say('g');
+//        creep.say('g');
         let wanted = whatDoIget(creep);
         if (wanted === undefined) return false;
         let howMuch = howMuchDoIget(creep, wanted);

@@ -159,7 +159,7 @@ class transport extends roleParent {
                     if (creep.memory.roadCount === 0 && !super.constr.doCloseRoadBuild(creep)) {
 
                     }else {
-                        console.log('G');
+//                        console.log('G');
                     }
                 }
 

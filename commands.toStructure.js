@@ -406,8 +406,10 @@ class StructureInteract {
                 if (creep.repair(atFeet[i].structure) == OK) {
                     creep.memory.onRoad = true;
                     return true;
+                } 
+            }else {
+                    creep.memory.onRoad = false;
                 }
-            }
         }
         // If none there, then create 1 road per creep.
         if (creep.memory.onRoad) {
@@ -415,9 +417,9 @@ class StructureInteract {
                 creep.memory.roadCount = 1;
             }
             if (creep.memory.roadCount > 0 && creep.memory.stuckCount <= 2) {
-                if(creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {
+          /*      if(creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {
                     creep.memory.roadCount--;
-                }
+                }*/
             }
         }
         creep.memory.onRoad = false;

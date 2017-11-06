@@ -183,10 +183,10 @@ class settler extends roleParent {
                         creep.withdraw(contain, RESOURCE_ENERGY);
                     }
                 } else {
-                    creep.sleep();
+                    creep.sleep(3);
                 }
             } else {
-                creep.sleep();
+                creep.sleep(3);
             }
 
         } else {
