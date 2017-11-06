@@ -188,7 +188,7 @@ class transportz extends roleParent {
         } else { // IF not going home. 
             //
             
-            if (creep.room.name == _goal.pos.roomName && (creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c07815dd'||creep.memory.goal == '59834303d7922107c078159b') ) {
+            if (creep.room.name == _goal.pos.roomName && (creep.memory.goal == '59834303d7922107c07815db'||creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c07815dd'||creep.memory.goal == '59834303d7922107c078159b') ) {
 
                 if (_goal.mineralAmount > 0  ) {
                     if (creep.memory.scientistID === undefined) {

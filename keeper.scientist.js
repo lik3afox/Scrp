@@ -114,7 +114,7 @@ class mineralRole extends roleParent {
                     return;
                 }
             } else if (creep.room.name != creep.memory.home) {
-                if (creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c07815dd'||creep.memory.goal == '59834303d7922107c078159b') {
+                if (creep.memory.goal == '59834303d7922107c07815db'||creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c07815dd'||creep.memory.goal == '59834303d7922107c078159b') {
                     // So we look through the room or all creeps for ztransport that has matching goal.
 if(creep.memory.ztransportID === undefined) {
         var trans = creep.pos.findInRange(FIND_MY_CREEPS, 3);
