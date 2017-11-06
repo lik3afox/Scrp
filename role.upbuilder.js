@@ -1,20 +1,3 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('role.upgrader');
- * mod.thing == 'a thing'; // true
- */
-
-// Main 300
-// level 0 = 200
-// level 1 = 300 / 0
-// Level 2 = 550 / 5
-// Level 3 = 800 / 10
-// Level 4 = 1300 / 20
-// Level 5 = 1800 / 30
-// Level 6 = 2300 / 40  Not added yet, not certain if needed.
 var classLevels = [
     [WORK, WORK, CARRY, MOVE], // 300
 
@@ -187,7 +170,7 @@ class roleUpbuilder extends roleParent {
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
                     //                    if (super._containers.withdrawFromTerminal(creep))
                     if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
-                        if (!containers.moveToWithdraw(creep)) {
+                        if (!super.containers.moveToWithdraw(creep)) {
 
                         }
 
@@ -195,7 +178,7 @@ class roleUpbuilder extends roleParent {
                 } else {
                     if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
                         if (!super.containers.withdrawFromStorage(creep))
-                            if (!containers.moveToWithdraw(creep)) {
+                            if (!super.containers.moveToWithdraw(creep)) {
                                 //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 
                             }
@@ -208,7 +191,7 @@ class roleUpbuilder extends roleParent {
             } else /* if (creep.carry.energy === 0) */ {
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
                     if (super.containers.withdrawFromTerminal(creep))
-                        if (!containers.moveToWithdraw(creep)) {
+                        if (!super.containers.moveToWithdraw(creep)) {
                             if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
 
                             }
@@ -216,7 +199,7 @@ class roleUpbuilder extends roleParent {
                         }
                 } else {
                     if (!super.containers.withdrawFromStorage(creep))
-                        if (!containers.moveToWithdraw(creep)) {
+                        if (!super.containers.moveToWithdraw(creep)) {
                             if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
                                 //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 

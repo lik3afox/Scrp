@@ -156,7 +156,11 @@ class transport extends roleParent {
 
             } else {
                 if (!super.constr.doCloseRoadRepair(creep)) {
-                    if (!super.constr.doCloseRoadBuild(creep)) {}
+                    if (creep.memory.roadCount === 0 && !super.constr.doCloseRoadBuild(creep)) {
+
+                    }else {
+                        console.log('G');
+                    }
                 }
 
                 let bads = getBads(creep);

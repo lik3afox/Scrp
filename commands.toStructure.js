@@ -415,8 +415,9 @@ class StructureInteract {
                 creep.memory.roadCount = 1;
             }
             if (creep.memory.roadCount > 0 && creep.memory.stuckCount <= 2) {
-                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
-                creep.memory.roadCount--;
+                if(creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {
+                    creep.memory.roadCount--;
+                }
             }
         }
         creep.memory.onRoad = false;

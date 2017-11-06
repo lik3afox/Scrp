@@ -1,12 +1,3 @@
-// Main 300
-// level 0 = 200
-// level 1 = 300 / 0
-// Level 2 = 550 / 5
-// Level 3 = 800 / 10
-// Level 4 = 1300 / 20
-// Level 5 = 1800 / 30
-// Level 6 = 2300 / 40  Not added yet, not certain if needed.
-
 var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, CARRY, RANGED_ATTACK, ATTACK, HEAL], // 0
     [MOVE, MOVE, MOVE, MOVE, CARRY, RANGED_ATTACK, ATTACK, HEAL], // 1
@@ -71,6 +62,12 @@ function attackCreep(creep, bads) {
 }
 
 function restingSpot(creep) {
+    if(creep.room.memory.defenderSleepSpot === undefined) {
+        creep.room.memory.defenderSleepSpot = new RoomPosition(1,1,'none');
+    }
+    if(creep.room.memory.defenderSleepSpot.roomName !== 'none') {
+        return creep.room.memory.defenderSleepSpot;
+    }
     switch (creep.memory.home) {
         case 'E18S36':
             return new RoomPosition(37, 20, creep.memory.home);
@@ -94,8 +91,6 @@ function restingSpot(creep) {
             return new RoomPosition(26, 35, creep.memory.home);
         case 'E27S45':
             return new RoomPosition(15, 36, creep.memory.home);
-
-
         default:
             return false;
     }
@@ -182,19 +177,7 @@ class roleNewDefender extends roleParent {
     }
 
     static run(creep) {
-        if (super.doTask(creep)) {
-            return;
-        }
-
-        if (creep.saying == 'ZzZz') {
-            creep.say('zZz');
-            return;
-        }
-    //    if (rampartDefense(creep)) {
-  //          return;
-//        }
-
-        if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
+        if( super.baseRun(creep) ) return;
 
         // So this guy will stay by his spawn
         if (creep.memory.renewSpawnID === undefined) {
@@ -225,24 +208,24 @@ class roleNewDefender extends roleParent {
             creep.memory.active = false;
 
             if (creep.hits < creep.hitsMax) creep.heal(creep);
-            if (creep.room.name == creep.memory.home)
-                if (lootRun(creep)) return;
+ //           if (creep.room.name == creep.memory.home)
+//            if (lootRun(creep)) return;
 
             let rest = restingSpot(creep); // If this has an assign spot in a room.
             if (!rest) {
                 let mom = Game.getObjectById(creep.memory.renewSpawnID);
                 if (mom !== null) {
                     if (creep.pos.isNearTo(mom)) {
-                        creep.say('ZzZz', true);
+                        creep.sleep();
                     } else {
                         creep.moveTo(mom);
                     }
                 }
             } else {
                 if (creep.pos.isEqualTo(rest)) {
-                    creep.say('ZzZz', true);
+                    creep.sleep();
                 } else {
-                    creep.moveTo(rest);
+                    console.log(creep.moveTo(rest.x,rest.y) );
                 }
 
             }

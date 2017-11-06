@@ -1,5 +1,3 @@
-//
-
 var classLevels = [
     [CARRY, MOVE],
 

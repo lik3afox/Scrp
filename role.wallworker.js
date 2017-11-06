@@ -18,18 +18,23 @@ var roleParent = require('role.parent');
 
 class roleWallWorker extends roleParent {
 
-    static levels(level, room) { 
+    static levels(level, room) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         return classLevels[level];
     }
 
     static run(creep) {
-        if(super.baseRun(creep)) return;
-
-        if (creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
-            boost.push('LH');
-            _.uniq(boost);
+        if (super.baseRun(creep)) return;
+        if(Game.shard.name == 'shard0' && creep.ticksToLive > 1400) {
+            require('role.upbuilder').run(creep);
         }
+
+            if (creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
+
+                boost.push('LH');
+
+                _.uniq(boost);
+            }
 
         if (creep.memory.level >= 4 && super.boosted(creep, boost)) {
             return;
@@ -55,10 +60,16 @@ class roleWallWorker extends roleParent {
         } else {
 
             super.constr.pickUpEnergy(creep);
+            if(creep.room.name == 'E29S48') {
+            if (!super.containers.withdrawFromTerminal(creep)) {
+            }
+
+            } else {
             if (!super.containers.withdrawFromStorage(creep)) {
                 if (!super.containers.moveToWithdraw(creep)) {
                     super.sources.moveToWithdraw(creep);
                 }
+            }
             }
 
             if (creep.carry.energy > creep.carryCapacity - 50) {

@@ -34,7 +34,7 @@ var xStorage = {
         amount: 15000
     },
     XUH2O: {
-        amount: 4000
+        amount: 6000
     },
     XZH2O: {
         amount: 3000
@@ -1117,7 +1117,7 @@ function upgradeRoom(terminal) {
     return false;
 }
 
-var wanted = ['L', 'H'];
+var wanted = ['L', 'H','U'];
 
 function buyMineralsFromBUYORDER(terminal) {
     var stor = terminal.room.storage;
@@ -1134,9 +1134,9 @@ function buyMineralsFromBUYORDER(terminal) {
             } else if (eWanted[0].amount <= 5000) {
                 buy = eWanted[0].amount;
             }
-            if(eWanted[0].price < 0.5){
+            if(eWanted[0].price < 0.01){
             let vv = Game.market.deal(eWanted[0].id, buy, terminal.room.name);
-            console.log(eWanted.length, 'orders?', vv, 'getting Energy for this room', eWanted[0].id, buy, terminal.room.name);
+            console.log(eWanted.length, 'orders?', vv, 'getting Energy for this room', eWanted[0].id, buy,terminal, terminal.room.name);
             }
         }
     } else {
@@ -1156,7 +1156,7 @@ function buyMineralsFromBUYORDER(terminal) {
                         buy = wantedd[0].amount;
                     }
                     console.log('Trying order',wantedd[0].price);
-                    if (wantedd[0].price <= 0.01) {
+                    if (wantedd[0].price <= 0.5) {
                         if (Game.market.deal(wantedd[0].id, buy, terminal.room.name) == OK) {
                             console.log(wantedd[0].price, wanted[e], 'OK');
                             return;

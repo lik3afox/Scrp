@@ -197,6 +197,8 @@ class baseParent {
         console.log(creep.memory.role, creep.name);
     }
     static baseRun(creep) {
+        if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
+
         if (this.depositNonEnergy(creep)) return true;
         if (this.spawnRecycle(creep)) return true;
         if (this.doTask(creep)) return true;

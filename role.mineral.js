@@ -13,7 +13,6 @@ var classLevels = [
 ];
 
 var roleParent = require('role.parent');
-var labsBuild = require('build.labs');
 
 function memoryCheck(creep) {
     if (creep.memory.mineralID === undefined) {
@@ -42,6 +41,7 @@ class mineralRole extends roleParent {
             return;
         }
         memoryCheck(creep);
+        if(super.boosted(creep,['UO'])) return;
 
         if (super.spawnRecycle(creep)) {
             return;
