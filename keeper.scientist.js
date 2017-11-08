@@ -22,7 +22,7 @@ var classLevels = [
     //6 3400/48
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
     //7 4000/50    
-        [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY]
+    [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK]
 
 ];
 
@@ -53,7 +53,6 @@ class mineralRole extends roleParent {
 
         memoryCheck(creep);
 
-
         if (super.spawnRecycle(creep)) return;
         if (movement.runAway(creep)) return;
 
@@ -65,7 +64,7 @@ class mineralRole extends roleParent {
             creep.memory.mining = false;
             creep.memory.goHome = true;
         }
-        if (carry > 0 && (creep.ticksToLive < 100||creep.memory.home == creep.room.name) ){
+        if (carry > 0 && (creep.ticksToLive < 100 || creep.memory.home == creep.room.name)) {
             creep.memory.mining = false;
             creep.memory.goHome = true;
         }
@@ -74,11 +73,10 @@ class mineralRole extends roleParent {
         }
 
         var _goal = movement.getRoomPos(creep.memory.goal);
-        let min = Game.getObjectById(creep.memory.goal);
-        //     if (creep.room.name == 'W5S94') {
-        //            console.log(min, min !== null ? min.mineralAmount : 0, carry);
-        //       }
-        if (min !== null && min.mineralAmount === 0 && carry === 0) {
+
+        this.rebirth(creep);
+
+        if (_goal !== null && _goal.mineralAmount === 0 && carry === 0) {
             creep.memory.death = true;
         }
 
@@ -89,7 +87,7 @@ class mineralRole extends roleParent {
         // He's not in 5 spaces of his goal. so he needs to move there. 
         if (creep.memory.goHome) {
 
-            if (creep.room.terminal !== undefined &&( creep.room.controller.owner !== undefined||creep.room.name == creep.memory.home ) ) {
+            if (creep.room.terminal !== undefined && (creep.room.controller.owner !== undefined || creep.room.name == creep.memory.home)) {
                 if (creep.pos.isNearTo(creep.room.terminal)) {
                     for (var a in creep.carry) {
                         creep.transfer(creep.room.terminal, a);
@@ -114,45 +112,38 @@ class mineralRole extends roleParent {
                     return;
                 }
             } else if (creep.room.name != creep.memory.home) {
-                if (creep.memory.goal == '59834303d7922107c07815db'||creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c07815dd'||creep.memory.goal == '59834303d7922107c078159b') {
-                    // So we look through the room or all creeps for ztransport that has matching goal.
-if(creep.memory.ztransportID === undefined) {
-        var trans = creep.pos.findInRange(FIND_MY_CREEPS, 3);
-        trans = _.filter(trans, function(object) {
-            return object.memory.role == 'ztransport' && object.memory.goal == creep.memory.goal;
-        });
-        if(trans.length > 0 ){
-            trans[0].memory.scientistID = creep.id;
-            creep.memory.ztransportID = trans[0].id;
-        }
-}
+                //                if (creep.memory.goal == '59834303d7922107c07815db'||creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c07815dd'||creep.memory.goal == '59834303d7922107c078159b') {
+                // So we look through the room or all creeps for ztransport that has matching goal.
 
-if(creep.memory.ztransportID !== undefined) {
-    let zz = Game.getObjectById(creep.memory.ztransportID);
-    if(zz !== null) {
-    if(creep.pos.isNearTo(zz)) {
-        for(var e in creep.carry){
-            if(creep.transfer(zz,e) == OK){
+                if (creep.memory.ztransportID !== undefined) {
+                    let zz = Game.getObjectById(creep.memory.ztransportID);
+                    if (zz !== null) {
+                        if (creep.pos.isNearTo(zz)) {
+                            for (var e in creep.carry) {
+                                if (creep.transfer(zz, e) == OK) {
+                                    creep.memory.goHome = false;
+                                    creep.memory.mining = true;
+                                    return;
+                                }
+
+                            }
+                        }
+                    } else {
+                        creep.memory.ztransportID = undefined;
+                    }
+                }
+                creep.say('Looking for Ztransport');
                 creep.memory.goHome = false;
                 creep.memory.mining = true;
-                return;
-            }
-
-        }
-    }
-} else {
-    creep.memory.ztransportID = undefined;
-}
-}
-                    creep.say('Looking for Ztransport');
-
-                    return;
-                }
-
-                creep.say('home');
-
-                if (!super.guardRoom(creep)) {
-                    super.movement.moveHome(creep);
+                if (creep.memory.ztransportID === undefined) {
+                    var tranzs = creep.room.find(FIND_MY_CREEPS);
+                    tranzs = _.filter(tranzs, function(object) {
+                        return object.memory.role == 'ztransport' && object.memory.goal == creep.memory.goal;
+                    });
+                    if (tranzs.length > 0) {
+                        tranzs[0].memory.scientistID = creep.id;
+                        creep.memory.ztransportID = tranzs[0].id;
+                    }
                 }
 
                 return;
@@ -197,6 +188,16 @@ if(creep.memory.ztransportID !== undefined) {
                     if (extract !== null && extract.cooldown === 0) {
                         if (creep.harvest(_source) == OK) {
                             super.keeperFind(creep);
+                            if (creep.memory.ztransportID === undefined) {
+                                var trans = creep.room.find(FIND_MY_CREEPS);
+                                trans = _.filter(trans, function(object) {
+                                    return object.memory.role == 'ztransport' && object.memory.goal == creep.memory.goal;
+                                });
+                                if (trans.length > 0) {
+                                    trans[0].memory.scientistID = creep.id;
+                                    creep.memory.ztransportID = trans[0].id;
+                                }
+                            }
                         }
                     }
                 } else {

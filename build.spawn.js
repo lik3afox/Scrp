@@ -427,7 +427,7 @@ var expansionModule = [
     ],
 
     [ // LEVEL 13 - for just a miner and transport.
-        ['mineral', require('keeper.scientist'), 1, 6],
+        ['mineral', require('keeper.scientist'), 1, 7],
         ['ztransport', require('role.ztransport'), 1, 0],
         ['rtransport', require('role.ztransport'), 1, 0],
     ],
@@ -1216,9 +1216,7 @@ class theSpawn {
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 
             if (spawn.memory.roadsTo[ie].expLevel > 0) {
-                if(spawn.memory.roadsTo[ie].expLevel == 14){
-                    console.log('HERESX a 14');
-                }
+
 
                 if (source === null) {
                     if (spawn.memory.roadsTo[ie].sourcePos !== undefined) {

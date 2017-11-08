@@ -644,7 +644,6 @@ module.exports = function() {
 
         var moveStatus;
         if (options === undefined) options = {};
-        var samePath = 50;
         var stuck = false;
 
         if (this.memory.position !== undefined) {
@@ -653,26 +652,17 @@ module.exports = function() {
         this.memory.position = this.pos;
         if (this.memory.stuckCount > 0)
             this.say('St' + this.memory.stuckCount);
+
         if (stuck) {
             this.memory.stuckCount++;
-
-            if (this.memory.stuckCount >= 2) {
-                this.memory.detourTicks = 5;
-            }
+            if(this.memory.stuckCount > 5)
+                this.memory.stuckCount = 5;
         } else {
-            if (this.memory.stuckCount > 0)
+            if(this.memory.stuckCount > 0){
                 this.memory.stuckCount--;
+            }
         }
 
-        if (this.memory.detourTicks > 0) {
-            this.memory.detourTicks--;
-            samePath = 5;
-        }
-
-        if (this.memory.stuckCount > 5)
-            this.memory.stuckCount = 5;
-
-        //  options.reusePath = samePath;
         if (options.visualizePathStyle === undefined) {
             options.visualizePathStyle = {
                 stroke: '#faF',
@@ -692,6 +682,7 @@ module.exports = function() {
             if (this.memory.stuckCount > 2) {
                 options.reusePath = 5;
                 options.ignoreCreeps = false;
+                this.memory._move = undefined;
             }
         }
 

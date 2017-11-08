@@ -112,7 +112,7 @@ function attackCreep(creep, bads) {
 }
 
 function analyzeSourceKeeper(creep) {
-    var noMineral = ['E14S34', 'E16S34', 'E24S34', 'E25S44', 'E14S35'];
+    var noMineral = ['E14S34', 'E16S34', 'E24S34', 'E25S44', 'E14S35','E25S44'];
 
     let keepers = creep.memory.keeperLair;
     let targetID;
@@ -125,7 +125,7 @@ function analyzeSourceKeeper(creep) {
             keeperTarget = Game.getObjectById(keepers[e].id);
 
         if (keeperTarget !== null&&keeperTarget !== undefined) {
-            if (_.contains(noMineral, creep.room.name)) { // Will always kill mineral SK.
+        //    if (_.contains(noMineral, creep.room.name) ) { // Will always kill mineral SK.
                 if (keeperTarget.ticksToSpawn === undefined) {
                     targetID = e;
                     break;
@@ -134,8 +134,8 @@ function analyzeSourceKeeper(creep) {
                     lowest = keeperTarget.ticksToSpawn;
                     targetID = e;
                 }
-            } else {
-
+    //        } else {
+/*
                 if (creep.memory.mineralRoomID === undefined) {
                     let tempinz = creep.room.find(FIND_MINERALS);
                     creep.memory.mineralRoomID = tempinz[0].id;
@@ -163,8 +163,8 @@ function analyzeSourceKeeper(creep) {
                         targetID = e;
                     }
                 }
-
-            }
+*/
+//            }
         }
 
 

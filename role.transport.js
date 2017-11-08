@@ -92,56 +92,8 @@ class transport extends roleParent {
         }
 
         if (creep.memory.gohome) {
-            /*
-                        if (creep.room.name == 'E27S45') {
-                            let zz = Game.getObjectById('59fa31ab20b5cd5f44d8d78a');
-
-                            if (zz !== null) {
-                                if (!creep.pos.isNearTo(zz)) {
-                                    creep.moveTo(zz);
-                                }
-                                creep.build(zz);
-
-                                return;
-                            }
-                        }
-                       */
-
             creep.countDistance();
-            if (creep.memory.linkID !== undefined && creep.carry[RESOURCE_ENERGY] > 0 && creep.memory.home != creep.room.name) {
-
-                let goal = Game.getObjectById(creep.memory.linkID);
-                if (goal !== null) {
-                    let task = {};
-
-                    task.options = {
-                        reusePath: rePath,
-                        visualizePathStyle: {
-                            fill: 'transparent',
-                            stroke: '#ff0',
-                            lineStyle: 'dashed',
-                            strokeWidth: 0.15,
-                            opacity: 0.5
-                        }
-                    };
-                    task.pos = goal.pos;
-                    task.order = "roadMoveTo";
-                    let zzz = Game.getObjectById(creep.memory.goal);
-                    if (zzz !== null && zzz.energyCapacity === 3000) {
-                        task.enemyWatch = false;
-                    } else {
-                        task.enemyWatch = true;
-                    }
-                    task.rangeHappy = 1;
-                    creep.memory.task.push(task);
-                } else {
-                    creep.memory.linkID = undefined;
-                }
-
-
-
-            } else if (creep.memory.home == creep.room.name) {
-
+            if (creep.memory.home == creep.room.name) {
                 if (!super.containers.moveToStorage(creep)) {
                     if (!super.containers.moveToTerminal(creep)) {
                         if (!super.spawns.moveToTransfer(creep)) {
@@ -157,9 +109,6 @@ class transport extends roleParent {
             } else {
                 if (!super.constr.doCloseRoadRepair(creep)) {
                     if (creep.memory.roadCount === 0 && !super.constr.doCloseRoadBuild(creep)) {
-
-                    }else {
-//                        console.log('G');
                     }
                 }
 

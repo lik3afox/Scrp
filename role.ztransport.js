@@ -144,11 +144,22 @@ class transportz extends roleParent {
         if (super.movement.runAway(creep)) {
             return;
         }
-        let kept = Game.getObjectById('creep.memory.keeperLairID');
-        if (kept !== null) {
-            if (kept.ticksToSpawn === undefined||kept.ticksToSpawn < 15) {
+
+        let kept = Game.getObjectById(creep.memory.keeperLairID);
+        if (kept !== null && !creep.memory.gohome) {
+            if (kept.ticksToSpawn === undefined || kept.ticksToSpawn < 15) {
+
                 creep.memory.gohome = true;
                 creep.memory.empty = false;
+                if (creep.carryTotal > 0) {
+                    let sci = Game.getObjectById(creep.memory.scientistID);
+                    if (sci !== null && creep.pos.isNearTo(sci)) {
+                        for (var e in sci.carry) {
+                            if (sci.transfer(creep, e) == OK)
+                                return;
+                        }
+                    }
+                }
                 return;
             }
         }
@@ -187,10 +198,10 @@ class transportz extends roleParent {
 
         } else { // IF not going home. 
             //
-            
-            if (creep.room.name == _goal.pos.roomName && (creep.memory.goal == '59834303d7922107c07815db'||creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c07815dd'||creep.memory.goal == '59834303d7922107c078159b') ) {
 
-                if (_goal.mineralAmount > 0  ) {
+            if (_goal !== null && creep.room.name == _goal.pos.roomName) {
+
+                if (_goal.mineralAmount > 0) {
                     if (creep.memory.scientistID === undefined) {
                         if (!super.guardRoom(creep)) {
                             if (!creep.pos.inRangeTo(_goal, 3)) {
@@ -208,19 +219,24 @@ class transportz extends roleParent {
                         } else {
                             if (creep.room.name == sci.pos.roomName && !creep.pos.isNearTo(sci)) {
                                 creep.moveTo(sci, { reusePath: 50, maxOpts: 100 });
-                            } else {
+                            }/* else if (creep.pos.isNearTo(sci) && sci.carryTotal > (creep.carryCapacity - creep.carryTotal)) {
+                                for (var z in sci.carry) {
+                                    if (sci.transfer(creep, z) == OK)
+                                        return;
+                                }
+                            } */ else {
                                 super.keeperFind(creep);
                             }
                             creep.say('go sci');
                         }
                     }
-                    if(creep.ticksToLive < 100){
+                    if (creep.ticksToLive < 100) {
                         creep.memory.gohome = true;
                         creep.memory.empty = false;
                     }
                 } else {
-                    creep.say('Get Energy');
                     if (_goal !== null && _goal.room.name === creep.room.name) {
+                        creep.say('Get Energy');
                         getEnergy(creep);
                     }
                 }

@@ -225,7 +225,7 @@ class roleNewDefender extends roleParent {
                 if (creep.pos.isEqualTo(rest)) {
                     creep.sleep();
                 } else {
-                    console.log(creep.moveTo(rest.x,rest.y) );
+                    creep.moveTo(rest.x,rest.y);
                 }
 
             }
