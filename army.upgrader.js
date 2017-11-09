@@ -93,11 +93,64 @@ class upgraderzClass extends roleParent {
 
             if (creep.room.name == 'E14S38') {
                 if (creep.memory.upgradeSpot === undefined) {
-                    creep.memory.upgradeSpot = creep.memory.roleID;
+
+                    let zz = creep.room.find(FIND_CREEPS);
+                    let vv;
+                    zz = _.filter(zz, function(object) {
+                        return (object.memory.role == 'Aupgrader');
+                    }).sort((a, b) => a.ticksToLive - b.ticksToLive);
+                    var eee = 0;
+                    for (var ae in zz) {
+                        console.log(zz[ae].ticksToLive);
+                        zz[ae].memory.upgradeSpot = eee;
+                        eee++;
+                    }
+
+
                 }
                 let zz;
                 switch (creep.memory.upgradeSpot) {
-                    case 0: // Boost Spot - highest life
+
+                    case 0: // Watch spot - When it gets low do a shuffle. 
+                        zz = new RoomPosition(33, 8, creep.room.name);
+                        creep.say('watch');
+                        if (creep.ticksToLive < 5) {
+                            // DO shuffle here.
+                            let zz = creep.room.find(FIND_CREEPS);
+
+                            zz = _.filter(zz, function(object) {
+                                return (object.memory.role === 'Aupgrader');
+                            });
+                            for (var ee in zz) {
+
+                                zz[ee].memory.upgradeSpot++;
+                                if (zz[ee].memory.upgradeSpot > 3) zz[ee].memory.upgradeSpot = 0;
+
+                            }
+
+                        }
+                        break;
+                    case 1: // renew spot.
+                            zz = new RoomPosition(32, 9, creep.room.name);
+                        if (creep.room.controller.level > 5) {
+                            creep.say('renew');
+                            let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
+                            if (spawn !== null && creep.ticksToLive < 1489) {
+                                spawn.renewCreep(creep);
+                            } else if (creep.ticksToLive > 1490) {
+                                // Here it moves to the boost spot. 
+                            }
+                            creep.memory.boosted = false;
+                        } else if(creep.room.storage.store.RESOURCE_ENERGY === undefined ){
+       //                     var spawned = Game.getObjectById('5a03400a3e83cd1e5374cf65');
+     //                       if(spawned !== null && creep.pos.isEqualTo(new RoomPosition(32,9,creep.room.name))) {
+  ///                              spawned.recycleCreep(creep);
+//                            }   
+                        }
+
+                        break;
+
+                    case 2: // Boost Spot - highest life
                         zz = new RoomPosition(33, 10, creep.room.name);
                         creep.say('boost');
                         if (creep.room.controller > 5) {
@@ -120,53 +173,30 @@ class upgraderzClass extends roleParent {
                                     // also moves to 2nd location.
                                 }
                             }
+                        } else {
+                            if(creep.room.storage.RESOURCE_ENERGY === undefined){
+         //                       creep.memory.upgradeSpot = 1;
+                            }
                         }
 
                         break;
 
 
-                    case 1: // Waiting
+                    case 3: // Waiting
                         zz = new RoomPosition(34, 9, creep.room.name);
                         creep.say('wait');
+                            if(creep.room.storage.RESOURCE_ENERGY === undefined){
+           //                     creep.memory.upgradeSpot = 2;
+                            }
+
                         break;
                         /*
                     case 2: // Waiting
                         zz = new RoomPosition(34, 8, creep.room.name);
                         creep.say('wait');
                         break;
-						*/
+                        */
 
-                    case 2: // Watch spot - When it gets low do a shuffle. 
-                        zz = new RoomPosition(33, 8, creep.room.name);
-                        creep.say('watch');
-                        if (creep.ticksToLive < 5) {
-                            // DO shuffle here.
-                            let zz = creep.room.find(FIND_CREEPS);
-
-                            zz = _.filter(zz, function(object) {
-                                return (object.memory.role === 'Aupgrader');
-                            });
-                            for (var ee in zz) {
-
-                                zz[ee].memory.upgradeSpot++;
-                                if (zz[ee].memory.upgradeSpot > 3) zz[ee].memory.upgradeSpot = 0;
-
-                            }
-
-                        }
-                        break;
-                    case 3: // Boost spot.
-                        zz = new RoomPosition(32, 9, creep.room.name);
-                        creep.say('renew');
-                        let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
-                        if (spawn !== null && creep.ticksToLive < 1489) {
-                            spawn.renewCreep(creep);
-                        } else if (creep.ticksToLive > 1490) {
-                        	// Here it moves to the boost spot. 
-                        }
-                        creep.memory.boosted = false;
-
-                        break;
                 }
                 if (zz !== undefined) {
                     if (!creep.pos.isEqualTo(zz))
