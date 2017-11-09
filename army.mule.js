@@ -89,53 +89,9 @@ class muleClass extends roleParent {
         }
 
         if (!creep.memory.goHome) {
-            if (total !== creep.carryCapacity && creep.memory.level !== 2) {
-                let stor = creep.room.storage;
-                //                constr.pickUpEnergy(creep);
-                if (stor.store[RESOURCE_ENERGY] < 1000) {
-                    stor = creep.room.terminal;
-                }
-                if (Game.shard.name == 'shard0') {
-                    if (creep.room.storage.total !== creep.room.storage.store[RESOURCE_ENERGY]) {
-                        stor = creep.room.storage;
-                    } else {
-                        stor = creep.room.terminal;
-                    }
-                }
+            if (total > 0 && creep.memory.level !== 2) {
 
-                /*
-                        var keys = Object.keys(linksID);
-                        var z = linksID.length;
-
-                            while (z--) {
-                                var zz = keys[z];
-                                LINK = Game.getObjectById(linksID[zz]);
-                */
-
-
-                if (creep.pos.isNearTo(stor)) {
-                    if (Game.shard.name == 'shard0') {
-                        var zz = Math.floor(Math.random() * 4);
-                        if (zz !== 0) {
-                            creep.withdraw(stor, 'H');
-                        } else {
-                            for (var e in stor.store) {
-                                if (e !== RESOURCE_ENERGY) {
-                                    creep.withdraw(stor, e);
-                                }
-                            }
-                        }
-
-
-                    } else {
-                        if (creep.room.name == 'E14S37')
-                            creep.withdraw(stor, RESOURCE_ENERGY);
-                    }
-                } else {
-                    creep.moveTo(stor, { reusePath: 20 });
-                }
-            } else {
-                creep.say('bich');
+                creep.say('bich'); 
                 let isThere = false;
                 if (Game.flags[creep.memory.party] !== undefined &&
                     Game.flags[creep.memory.party].room !== undefined &&
@@ -181,6 +137,54 @@ class muleClass extends roleParent {
 
                 }
 
+
+            } else {
+               
+                
+                let stor = creep.room.storage;
+                //                constr.pickUpEnergy(creep);
+                if (stor.store[RESOURCE_ENERGY] < 1000) {
+                    stor = creep.room.terminal;
+                }
+                if (Game.shard.name == 'shard0') {
+                    if (creep.room.storage.total !== creep.room.storage.store[RESOURCE_ENERGY]) {
+                        stor = creep.room.storage;
+                    } else {
+                        stor = creep.room.terminal;
+                    }
+                }
+
+                /*
+                        var keys = Object.keys(linksID);
+                        var z = linksID.length;
+
+                            while (z--) {
+                                var zz = keys[z];
+                                LINK = Game.getObjectById(linksID[zz]);
+                */
+
+
+                if (creep.pos.isNearTo(stor)) {
+                    if (Game.shard.name == 'shard0') {
+                        var zz = Math.floor(Math.random() * 4);
+                        if (zz !== 0) {
+                            creep.withdraw(stor, 'H');
+                        } else {
+                            for (var e in stor.store) {
+                                if (e !== RESOURCE_ENERGY) {
+                                    creep.withdraw(stor, e);
+                                }
+                            }
+                        }
+
+
+                    } else {
+                        if (creep.room.name == 'E14S37')
+                            creep.withdraw(stor, RESOURCE_ENERGY);
+                    }
+                } else {
+                    creep.moveTo(stor, { reusePath: 20 });
+                }
 
             }
         } else {

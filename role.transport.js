@@ -108,7 +108,7 @@ class transport extends roleParent {
 
             } else {
                 if (!super.constr.doCloseRoadRepair(creep)) {
-                    if (creep.memory.roadCount === 0 && !super.constr.doCloseRoadBuild(creep)) {
+                    if (!super.constr.doCloseRoadBuild(creep)) {
                     }
                 }
 

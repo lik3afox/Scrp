@@ -1097,18 +1097,35 @@ function focusRoom(terminal) {
 }
 
 
-
-function upgradeRoom(terminal) {
-    var targetRoom = Game.spawns.upgrade.room;
+function upgradeGH(terminal) {
+        var targetRoom = Game.spawns.Spawn28.room;
     if (targetRoom.controller.level < 6) return false;
     if (targetRoom.terminal === undefined) return false;
+    if (Memory.stats.totalMinerals.XGH2O < 100000) return false;
+    if(targetRoom.terminal.store.XGH2O !== undefined && 
+        targetRoom.terminal.store.XGH2O > 10000 ) return true;
+
+// XGH2O stuff
+console.log('checking ',targetRoom.terminal.store.XGH2O,terminal.store.XGH2O,terminal.room.controller.level  );
+    if((targetRoom.terminal.store.XGH2O === undefined || targetRoom.terminal.store.XGH2O < 10000 ) && terminal.store.XGH2O > 2000 && terminal.room.controller.level === 8) {
+        let amount = 1000;
+        let result = terminal.send('XGH2O', amount, targetRoom.name);
+        console.log('^^^ Sending XGH2O to upgrade room:' + result + '#:' + amount + ' ^^^');
+        if (result === 0) {
+            return true;
+        }
+    }
+}
+function upgradeRoom(terminal) {
+//    if(Game.spawns.upgrade === undefined) return;
+    var targetRoom = Game.spawns.Spawn28.room;
+    if (targetRoom.controller.level < 6) return false;
+    if (targetRoom.terminal === undefined) return false;
+// Energy stuff.
     var totalEnergy = targetRoom.storage.store[RESOURCE_ENERGY] + targetRoom.terminal.store[RESOURCE_ENERGY];
     if (targetRoom.storage.store[RESOURCE_ENERGY] > 990000 && targetRoom.terminal.total > 290000) return false;
-    //    if (totalEnergy > 400000) return false;
-    //    if (terminal.store[RESOURCE_ENERGY] < 21000 && terminal.room.storage.store[RESOURCE_ENERGY] > 900000) return false;
     var amount = terminal.store[RESOURCE_ENERGY] * 0.25;
     var sender = terminal;
-    //
     var result = terminal.send('energy', amount, targetRoom.name);
     console.log('^^^ Sending ENERGY to upgrade room:' + result + '#:' + amount + ' ^^^');
     if (result === 0) {
@@ -1117,54 +1134,32 @@ function upgradeRoom(terminal) {
     return false;
 }
 
-var wanted = ['L', 'H','U'];
+var wanted = ['L'];
 
 function buyMineralsFromBUYORDER(terminal) {
     var stor = terminal.room.storage;
     var eng = terminal.store[RESOURCE_ENERGY];
     var buy;
-    if (eng < 30000) {
+    if (eng < 30000 && !anyLikeOrder(RESOURCE_ENERGY, terminal.pos.roomName)) {
         console.log(terminal.room.name, 'needs energy in terminal');
-        var eWanted = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: RESOURCE_ENERGY });
-        if (eWanted.length > 0) {
-            eWanted.sort((a, b) => a.price - b.price);
-            buy = 5000;
-            if (eWanted[0].amount > 5000) {
-                buy = 5000;
-            } else if (eWanted[0].amount <= 5000) {
-                buy = eWanted[0].amount;
-            }
-            if(eWanted[0].price < 0.01){
-            let vv = Game.market.deal(eWanted[0].id, buy, terminal.room.name);
-            console.log(eWanted.length, 'orders?', vv, 'getting Energy for this room', eWanted[0].id, buy,terminal, terminal.room.name);
-            }
-        }
+            Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 100000, terminal.pos.roomName);
     } else {
-        //      console.log(wanted.length,'xxx',wanted[0]);
         for (var e in wanted) {
-            //            console.log(wanted[e],terminal.store[wanted[e]],terminal.room.name );
-
             if (terminal.store[wanted[e]] < 25000 || terminal.store[wanted[e]] === undefined) {
                 console.log(terminal.room.name, 'needs', wanted[e], ' in terminal', terminal.store[wanted[e]]);
-                var wantedd = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: wanted[e] });
-                if (wantedd.length > 0) {
-                    wantedd.sort((a, b) => a.price - b.price);
-                    buy = 5000;
-                    if (wantedd[0].amount > 5000) {
-                        buy = 5000;
-                    } else if (wantedd[0].amount <= 5000) {
-                        buy = wantedd[0].amount;
-                    }
-                    console.log('Trying order',wantedd[0].price);
-                    if (wantedd[0].price <= 0.5) {
-                        if (Game.market.deal(wantedd[0].id, buy, terminal.room.name) == OK) {
-                            console.log(wantedd[0].price, wanted[e], 'OK');
-                            return;
-                        }
-                    }
-                }
+
+        if(!anyLikeOrder(wanted[e], terminal.pos.roomName) ){
+            let average = getAverageMineralPrice(wanted[e], true);
+            if (average < 0.5) {
+                Game.market.createOrder(ORDER_BUY, wanted[e],average , 25000, terminal.pos.roomName);
             }
+
         }
+            }
+
+        }
+
+
     }
     // Look for resourses wanted.
 
@@ -1177,6 +1172,8 @@ class roleTerminal {
     }
     /** @param {Creep} creep **/
     static run() {
+        cleanUpOrders();
+        adjustOldPrices();
         if (Game.shard.name == 'shard0') {
             for (var a in s0LabRooms) {
                 console.log(Game.rooms[s0LabRooms[a]], s0LabRooms[a]);
@@ -1188,27 +1185,29 @@ class roleTerminal {
             return;
         }
         focusMinerals(focusID, focusMin);
-        cleanUpOrders();
-        adjustOldPrices();
         Memory.stats.totalMinerals = countTerminals();
 
         var focus = false;
         var newTrade = false;
         var upgradeTransfer = false;
 
-        //if (terminal.room.storage.store[RESOURCE_ENERGY] < 100000) {
-        /*var tgt = 'E14S37'             ;
-        if (!anyLikeOrder(RESOURCE_ENERGY, tgt)) {
-                      let qq = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 1000000, tgt);
-                        console.log(ORDER_BUY, RESOURCE_ENERGY, 1000000, 0.01, tgt, '');
-        } */
-        //}
+        if(Game.rooms.E14S38.controller.level > 5 && Game.rooms.E14S38.terminal.store.K > 1000) {
+            Game.rooms.E14S38.terminal.send('K', Game.rooms.E14S38.terminal.store.K, 'E17S45', 'trade');
+        }
 
         for (var e in s1LabRooms) {
             if (Game.rooms[s1LabRooms[e]] !== undefined) {
 
+
                 let terminal = Game.rooms[s1LabRooms[e]].terminal;
+
+
+
                 if (terminal !== undefined && terminal.cooldown === 0 && s1LabRooms[e] !== 'E14S38') {
+
+    if(!upgradeTransfer)
+        upgradeTransfer = upgradeGH(terminal);
+
                     var energy = terminal.store[RESOURCE_ENERGY];
                     var total = terminal.total;
                     if (total > 295000) {
@@ -1275,7 +1274,6 @@ class roleTerminal {
         }
 
         doDebt(); // Send energy to a target
-        //        giveInviso();
         sellMineralOrder();
         //        buyMineralOrder();
 

@@ -74,6 +74,9 @@ function doWork(creep) {
                 case '5982ff05b097071b4adc1f6a':
                     creep.moveTo(38, 5);
                     break;
+                case '5982feeab097071b4adc1bc5':
+                    creep.moveTo(43,10);
+                    break;
 
                 default:
                     creep.moveTo(contain);

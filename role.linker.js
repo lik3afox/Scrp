@@ -235,6 +235,18 @@ function E14S38(creep, fill) {
 
     }
 
+let lab = Game.getObjectById(creep.room.memory.boostLabID);
+if(lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000) && creep.room.terminal.store.XGH2O !== undefined &&creep.carry.XGH2O > 1){
+    if(!fill) {
+        creep.withdraw(creep.room.terminal,'XGH2O');
+    } else {
+            creep.transfer(lab,'XGH2O');
+    }
+    creep.say('GH'+fill);
+    return;
+}
+
+
 
     //    }
     if (!fill) {
@@ -251,13 +263,18 @@ function E14S38(creep, fill) {
                 // First we do the tower
 
                 let tower = Game.getObjectById('59b6c74247713d03af663275');
-            if (tower !== undefined && tower.energy < 100 && creep.room.controller.level > 2) {
+            if (tower !== null && tower.energy < 100 && creep.room.controller.level > 2) {
                 creep.transfer(tower, RESOURCE_ENERGY);
                 return;
             }
+            let lab = Game.getObjectById(creep.room.memory.boostLabID);
+            if (lab !== null && lab.energy !== lab.energyCapacity && creep.room.controller.level > 5) {
+                creep.transfer(lab, RESOURCE_ENERGY);
+                return;
+            }
             // Then we do spawn 
-            let spawn = Game.getObjectById('59b6bbb8fa8a1c0b7da30a88');
-            if (spawn !== undefined && spawn.energy < 100) {
+            let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
+            if (spawn !== null && spawn.energy < 100) {
                 if (creep.pos.isNearTo(spawn)) {
                     creep.transfer(spawn, RESOURCE_ENERGY);
                 } else {
