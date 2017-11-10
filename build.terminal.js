@@ -1135,6 +1135,30 @@ function upgradeRoom(terminal) {
 }
 
 var wanted = ['L'];
+function reduceTerminal(terminal){
+    // first we get the most
+    var min;
+    var most = 0;
+    for(var e in terminal.store){
+        if(terminal.store[e] > most) {
+            most = terminal.store[e];
+            min = e;
+        }
+    }
+    var leastTerm = 300000;
+    var room;
+    for(var ee in s1LabRooms){
+        if(Game.rooms[s1LabRooms[ee]].terminal.total <leastTerm && s1LabRooms[ee] !== 'E14S38'){
+            room = s1LabRooms[ee];
+            leastTerm = Game.rooms[s1LabRooms[ee]].terminal.total;
+        }
+    }
+    // then we get the terminal with the least
+    console.log('this terminal" most is',min,"going to room",roomLink(room));
+terminal.send(min, 5000, room, 'trade');
+
+
+}
 
 function buyMineralsFromBUYORDER(terminal) {
     var stor = terminal.room.storage;
@@ -1232,7 +1256,9 @@ class roleTerminal {
                             if (!newTrade) {
                                 newTrade = newTradeEnergy(terminal);
                             }
-                        } else if (energy > 10000) {
+                        } else if (energy < 20000 && terminal.total === 300000) {
+                            console.log(roomLink(terminal.room.name), "is full and less than 20K energy");
+                            reduceTerminal(terminal);
 
                         } else {
 

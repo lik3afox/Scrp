@@ -262,15 +262,17 @@ module.exports = function() {
         return false;
     };
     Creep.prototype.sleep = function(count) {
-            if(count === undefined) {
-                this.say('zZzZz');
-            } else if(count === 1) {
+        switch(count) {
+            case 1:
                 this.say('zZz');
-            } else if(count === 2) {
+            break;
+            case 2:
                 this.say('zZzZ');
-            } else if(count === 3) {
+            break;
+            default:
                 this.say('zZzZz');
-            }
+            break;
+        }
     };
 
     Creep.prototype.countDistance = function() {

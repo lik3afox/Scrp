@@ -208,24 +208,22 @@ class roleNewDefender extends roleParent {
             creep.memory.active = false;
 
             if (creep.hits < creep.hitsMax) creep.heal(creep);
- //           if (creep.room.name == creep.memory.home)
-//            if (lootRun(creep)) return;
 
             let rest = restingSpot(creep); // If this has an assign spot in a room.
             if (!rest) {
                 let mom = Game.getObjectById(creep.memory.renewSpawnID);
                 if (mom !== null) {
                     if (creep.pos.isNearTo(mom)) {
-                        creep.sleep();
+                        creep.sleep(3);
                     } else {
                         creep.moveTo(mom);
                     }
                 }
             } else {
-                if (creep.pos.isEqualTo(rest)) {
-                    creep.sleep();
+                if (creep.pos.isEqualTo(new RoomPosition(rest.x,rest.y,rest.roomName) )) {
+                    creep.sleep(3);
                 } else {
-                    creep.moveTo(rest.x,rest.y);
+                    creep.moveTo(new RoomPosition(rest.x,rest.y,rest.roomName) );
                 }
 
             }

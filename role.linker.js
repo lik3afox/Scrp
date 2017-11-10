@@ -222,7 +222,7 @@ function E14S38(creep, fill) {
     if (creep.room.terminal !== undefined && creep.room.controller.level > 3) {
         target = creep.room.terminal;
     }
-    if (creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
+    if (!fill && creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
         target = creep.room.storage;
     }
 
@@ -236,11 +236,13 @@ function E14S38(creep, fill) {
     }
 
 let lab = Game.getObjectById(creep.room.memory.boostLabID);
-if(lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000) && creep.room.terminal.store.XGH2O !== undefined &&creep.carry.XGH2O > 1){
+if((lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000) && creep.room.terminal.store.XGH2O !== undefined )||creep.carry.XGH2O > 1 ){
     if(!fill) {
         creep.withdraw(creep.room.terminal,'XGH2O');
     } else {
-            creep.transfer(lab,'XGH2O');
+        for(var e in creep.carry){
+            creep.transfer(lab,e);
+        }
     }
     creep.say('GH'+fill);
     return;
@@ -251,7 +253,8 @@ if(lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000)
     //    }
     if (!fill) {
         switch (creep.memory.roleID) {
-            default: if (!constr.pickUpEnergy(creep))
+            default: 
+            if (!constr.pickUpEnergy(creep))
                 if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
                     if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
                 }
@@ -262,7 +265,7 @@ if(lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000)
             default:
                 // First we do the tower
 
-                let tower = Game.getObjectById('59b6c74247713d03af663275');
+            let tower = Game.getObjectById('59b6c74247713d03af663275');
             if (tower !== null && tower.energy < 100 && creep.room.controller.level > 2) {
                 creep.transfer(tower, RESOURCE_ENERGY);
                 return;
@@ -274,7 +277,7 @@ if(lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000)
             }
             // Then we do spawn 
             let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
-            if (spawn !== null && spawn.energy < 100) {
+            if (spawn !== null && spawn.energy < 175) {
                 if (creep.pos.isNearTo(spawn)) {
                     creep.transfer(spawn, RESOURCE_ENERGY);
                 } else {

@@ -1027,7 +1027,9 @@ function calculateCPU(cpu, creep) {
         creep.memory.cpuCost = 0;
     }
     creep.memory.cpuCount--;
-
+creep.memory.cpuCost+=cpu;
+return creep.memory.cpuCost;
+/*
     if (cpu < 1) {
         return creep.memory.cpuCost;
     } else if (cpu < 2) {
@@ -1045,7 +1047,8 @@ function calculateCPU(cpu, creep) {
     } else {
         creep.memory.cpuCost += 21;
     }
-    return creep.memory.cpuCost;
+
+    return creep.memory.cpuCost;*/
 }
 
 class theSpawn {
