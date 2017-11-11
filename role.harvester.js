@@ -2,7 +2,7 @@ var classLevels = [
     [WORK, WORK, CARRY, MOVE], // 300
     [WORK, WORK, WORK, WORK, WORK, MOVE], // 550
     [MOVE, MOVE, CARRY, WORK, WORK, WORK, WORK, WORK, MOVE], // 550
-    [MOVE, WORK, WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, MOVE], // 550
+    [MOVE,MOVE,MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, MOVE], // 550
 ];
 
 var roleParent = require('role.parent');
@@ -24,6 +24,15 @@ function restingSpot(creep) {
         default:
             return false;
     }
+}
+
+function clearMemory(creep) {
+    // When creep is there - lets clean up some stuff.
+    if(creep.memory.position !== undefined) creep.memory.position = undefined;
+    if(creep.memory._move !== undefined) creep.memory._move = undefined;
+    if(creep.memory.stuckCount !== undefined) creep.memory.stuckCount = undefined;
+    if(creep.memory.isThere !== undefined) creep.memory.isThere = undefined;
+
 }
 
 function moveToWithdraw(creep) {
@@ -55,18 +64,25 @@ function moveToWithdraw(creep) {
         }
     }
 
-
+    if(source.energy === 0){
+        creep.sleep(3);
+        return;
+    }
     let rest = restingSpot(creep); // If this has an assign spot in a room.
     if (rest) {
         if (creep.pos.isEqualTo(rest)) {
             if (creep.harvest(source) == OK) {
-                creep.memory.isThere = true;
+                creep.memory.notThere = true;
+                clearMemory(creep);
                 creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
-                    color: 'white',
+                    color: 'yellow',
                     align: LEFT,
                     font: 0.6,
                     strokeWidth: 0.75
                 });
+                if(creep.memory.linkID !== undefined) {
+                    creep.say('⛏️');
+                }
             }
         } else {
             creep.moveMe(rest,{reusePath:10});
@@ -76,13 +92,17 @@ function moveToWithdraw(creep) {
     } else {
         if (creep.pos.isNearTo(source)) {
             if (creep.harvest(source) == OK) {
-                creep.memory.isThere = true;
+                creep.memory.notThere = true;
+                clearMemory(creep);
                 creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
                     color: 'white',
                     align: LEFT,
                     font: 0.6,
                     strokeWidth: 0.75
                 });
+                if(creep.memory.linkID !== undefined) {
+                    creep.say('⛏️');
+                }
             }
         } else {
             creep.moveMe(source,{reusePath:10});
@@ -128,14 +148,32 @@ class roleHarvester extends roleParent {
     }
 
     static run(creep) {
-        if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
+        if (super.baseRun(creep))return;
+        if(creep.saying == "⛏️" && creep.memory.sourceID !== undefined && creep.room.memory.masterLinkID !== undefined){
+            let goal = Game.getObjectById(creep.memory.sourceID);
+            if(goal.energy > 0 ) {
+                creep.harvest(goal);
+                if (creep.carry.energy > creep.carryCapacity - creep.stats('mining')) {
+                    let link = Game.getObjectById(creep.memory.linkID);
+                    creep.transfer(link,RESOURCE_ENERGY);
+                    if(link.energy > 750 && link.cooldown === undefined){
+                        let master = Game.getObjectById(creep.room.memory.masterLinkID);
+                        link.transferEnergy(master);
+                    }
+                } else {
+                    creep.say("⛏️",true);
+                }
+            } else {
+                creep.sleep(3);
+            }
+            return;
+        }
+
+
+        super.rebirth(creep);
         if (creep.memory.sourceID == '5982ff7ab097071b4adc2b7d') {
             creep.memory.reportDeath = true;
         }
-
-        if (super.baseRun(creep))return;
-        super.rebirth(creep);
-        
 
         if (creep.carry.energy > creep.carryCapacity - creep.stats('mining')) {
             if (!super.link.deposit(creep)) {

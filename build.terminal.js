@@ -135,7 +135,9 @@ function needEnergy(terminal) {
     var highestEnergy;
     var currentHigh = 0;
     var e;
+//    console.log('xx',terminal.room.name);
     if (terminal.room.name == 'E14S38') {
+        console.log(terminal.room.storage.store[RESOURCE_ENERGY]);
         if (terminal.room.storage.store[RESOURCE_ENERGY] < 10000) {
             currentHigh = 0;
             for (e in s1LabRooms) {
@@ -148,7 +150,7 @@ function needEnergy(terminal) {
             }
             let amount = currentHigh * 0.25;
             let zz = highestEnergy.send(RESOURCE_ENERGY, amount, terminal.room.name, 'Emergency');
-            console.log('This terminal:', terminal.room, 'gets' + amount + ' energy:', highestEnergy.room, 'result:', zz);
+            console.log('UPGRADE terminal:', terminal.room, 'gets' + amount + ' energy:', highestEnergy.room, 'result:', zz);
             //    console.log('this room has Order for it');
         }
     } else {
@@ -1107,7 +1109,7 @@ function upgradeGH(terminal) {
 
 // XGH2O stuff
 console.log('checking ',targetRoom.terminal.store.XGH2O,terminal.store.XGH2O,terminal.room.controller.level  );
-    if((targetRoom.terminal.store.XGH2O === undefined || targetRoom.terminal.store.XGH2O < 10000 ) && terminal.store.XGH2O > 2000 && terminal.room.controller.level === 8) {
+    if((targetRoom.terminal.store.XGH2O === undefined || targetRoom.terminal.store.XGH2O <= 10000 ) && terminal.store.XGH2O > 2000 && terminal.room.controller.level === 8) {
         let amount = 1000;
         let result = terminal.send('XGH2O', amount, targetRoom.name);
         console.log('^^^ Sending XGH2O to upgrade room:' + result + '#:' + amount + ' ^^^');
@@ -1116,6 +1118,7 @@ console.log('checking ',targetRoom.terminal.store.XGH2O,terminal.store.XGH2O,ter
         }
     }
 }
+
 function upgradeRoom(terminal) {
 //    if(Game.spawns.upgrade === undefined) return;
     var targetRoom = Game.spawns.Spawn28.room;
@@ -1214,10 +1217,12 @@ class roleTerminal {
         var focus = false;
         var newTrade = false;
         var upgradeTransfer = false;
+        var upgradeGHTransfer = false;
 
         if(Game.rooms.E14S38.controller.level > 5 && Game.rooms.E14S38.terminal.store.K > 1000) {
             Game.rooms.E14S38.terminal.send('K', Game.rooms.E14S38.terminal.store.K, 'E17S45', 'trade');
         }
+                    needEnergy(Game.rooms.E14S38.terminal);
 
         for (var e in s1LabRooms) {
             if (Game.rooms[s1LabRooms[e]] !== undefined) {
@@ -1229,13 +1234,13 @@ class roleTerminal {
 
                 if (terminal !== undefined && terminal.cooldown === 0 && s1LabRooms[e] !== 'E14S38') {
 
-    if(!upgradeTransfer)
-        upgradeTransfer = upgradeGH(terminal);
+    if(!upgradeGHTransfer)
+        upgradeGHTransfer = upgradeGH(terminal);
 
                     var energy = terminal.store[RESOURCE_ENERGY];
                     var total = terminal.total;
                     if (total > 295000) {
-                        if (energy > 20000) {
+                        if (energy > 21000) {
                             if (!upgradeTransfer) {
                                 upgradeTransfer = upgradeRoom(terminal);
                                 if (!upgradeTransfer) {
@@ -1252,17 +1257,15 @@ class roleTerminal {
 
                             }
 
-                        } else if (energy > 21000) {
+                        }/* else if (energy > 21000) {
                             if (!newTrade) {
                                 newTrade = newTradeEnergy(terminal);
                             }
-                        } else if (energy < 20000 && terminal.total === 300000) {
+                        }*/ else {
                             console.log(roomLink(terminal.room.name), "is full and less than 20K energy");
                             reduceTerminal(terminal);
 
-                        } else {
-
-                        }
+                        } 
                     }
                     //                if (!focus) focus = focusRoom(terminal);
                     needEnergy(terminal);

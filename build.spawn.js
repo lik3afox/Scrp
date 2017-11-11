@@ -194,7 +194,7 @@ var Mod_E17S45 = [
 
 var Mod_E14S37 = [
     ['first', require('role.first'), 2, 3],
-    ['harvester', require('role.harvester'), 2, 2],
+    ['harvester', require('role.harvester'), 2, 3],
     ['minHarvest', require('role.mineral'), 2, 7],
     ['assistant', require('role.assistant'), 1, 0],
     ['wallwork', require('role.wallworker'), 1, 5],

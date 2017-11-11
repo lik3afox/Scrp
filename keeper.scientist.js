@@ -76,7 +76,7 @@ class mineralRole extends roleParent {
 
         this.rebirth(creep);
 
-        if (_goal !== null && _goal.mineralAmount === 0 && carry === 0) {
+        if (_goal !== null && _goal.mineralAmount === undefined) {
             creep.memory.death = true;
         }
 

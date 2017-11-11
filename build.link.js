@@ -92,6 +92,7 @@ class buildLink {
     static deposit(creep) { // Used by harvesters
 
         if (creep.carry[RESOURCE_ENERGY] === 0) return false;
+        if (creep.room.controller.level < 5) return false;
 
         if (creep.memory.linkID === undefined) {
             let yy = creep.pos.y - 1;
@@ -106,7 +107,7 @@ class buildLink {
 
             for (var i in nlinkz) {
                 if (nlinkz[i].structure !== undefined && nlinkz[i].structure.structureType == 'link') {
-                    //                    creep.memory.linkID = nlinkz[i].id;
+                    creep.memory.linkID = nlinkz[i].structure.id;
                     creep.transfer(nlinkz[i].structure, RESOURCE_ENERGY);
 
                     if (creep.room.memory.masterLinkID !== undefined) {

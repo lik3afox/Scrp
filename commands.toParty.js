@@ -216,7 +216,7 @@ var upgrade2Party = [
 ];
 
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 4, 6]
+    ['Aupgrader', require('army.upgrader'), 2, 6]
 
 ];
 var muleParty = [
