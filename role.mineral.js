@@ -41,7 +41,7 @@ class mineralRole extends roleParent {
             return;
         }
         memoryCheck(creep);
-        if(super.boosted(creep,['UO'])) return;
+//        if(super.boosted(creep,['UO'])) return;
 
         if (super.spawnRecycle(creep)) {
             return;

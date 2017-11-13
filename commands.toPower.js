@@ -294,30 +294,26 @@ class PowerInteract {
     static analyzePowerBank(powerBank, room) {
 
         if (powerBank.ticksToDecay < 4000) {
-            console.log('Powerbank too old@', powerBank.pos);
+            console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
             return false;
-        } else if (powerBank.power < 1599) {
-            console.log('Not enough power@', powerBank.pos);
+        } else if (powerBank.power < 6000) {
+            console.log('Not enough power@',powerBank.power , powerBank.pos);
             return false;
         }
-        /*else if (powerBank.power < Game.cpu.bucket + 3000) {
-                   console.log('Not enough CPU@', powerBank.pos);
-                   return false;
-               } */
         else {
             let rando = Math.floor(Math.random() * 100) + 1;
-            var name = 'powerbankX' + rando;
+            var name = 'powerbankX';// + rando;
             console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);
-            if (room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === null) {
-                Memory.flagName = name;
-                Memory.flagPos = new RoomPosition(powerBank.pos.x, powerBank.pos.y, powerBank.pos.roomName);
-                Memory.flagCol = COLOR_YELLOW;
-                Memory.flagCol2 = COLOR_RED;
-                console.log('We place a flag we have it', Memory.flagPos, Memory.flagName, Memory.flagCol, Memory.flagCol2);
-                room.createFlag(Memory.flagPos, Memory.flagName, Memory.flagCol, Memory.flagCol2);
-            } else {
-                //                        console.log('Powerbank targeted@',Game.flags[name].pos,'this:',powerBank.pos);
-            }
+            if (Game.flags[name] === undefined &&(room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === null)) {
+                var mem = {
+                flagName: name,
+                flagPos: new RoomPosition(powerBank.pos.x, powerBank.pos.y, powerBank.pos.roomName),
+                flagCol: COLOR_YELLOW,
+                flagCol2: COLOR_RED
+                };
+                console.log('We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+                room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+            } 
             return true;
         }
 

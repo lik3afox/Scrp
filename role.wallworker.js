@@ -28,8 +28,9 @@ class roleWallWorker extends roleParent {
         if(Game.shard.name == 'shard0' && creep.ticksToLive > 1400) {
             require('role.upbuilder').run(creep);
         }
-
-            if (Game.shard.name == 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
+        if(Game.shard.name == 'shard1'&& creep.ticksToLive > 1450 &&creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade > 50000 ){
+            require('role.upbuilder').run(creep);
+        }  else if (Game.shard.name == 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
 
                 boost.push('LH');
 

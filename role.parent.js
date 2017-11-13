@@ -310,7 +310,7 @@ class baseParent {
             case "zZzZz":
                 creep.say('zZzZ', true);
                 return true;
-            case "ZzZz":
+            case "zZzZ":
                 creep.say('zZz', true);
                 return true;
             case "zZz":

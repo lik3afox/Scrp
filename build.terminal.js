@@ -632,7 +632,7 @@ function cleanUpOrders() {
     if (Game.market.orders.length === 0) return;
     for (var e in Game.market.orders) {
         let order = Game.market.orders[e];
-        if (!order.active && Game.time - order.created > 2500 && order.remainingAmount <= 10) {
+        if (Game.time - order.created > 2500 && order.remainingAmount <= 10) {
             Game.market.cancelOrder(order.id);
         }
     }
@@ -1103,6 +1103,7 @@ function upgradeGH(terminal) {
         var targetRoom = Game.spawns.Spawn28.room;
     if (targetRoom.controller.level < 6) return false;
     if (targetRoom.terminal === undefined) return false;
+    if (terminal.store[RESOURCE_CATALYZED_GHODIUM_ACID] < 2000) return false;
     if (Memory.stats.totalMinerals.XGH2O < 100000) return false;
     if(targetRoom.terminal.store.XGH2O !== undefined && 
         targetRoom.terminal.store.XGH2O > 10000 ) return true;
@@ -1211,7 +1212,7 @@ class roleTerminal {
             }
             return;
         }
-        focusMinerals(focusID, focusMin);
+//        focusMinerals(focusID, focusMin);
         Memory.stats.totalMinerals = countTerminals();
 
         var focus = false;

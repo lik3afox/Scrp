@@ -88,23 +88,23 @@ class upgraderzClass extends roleParent {
                 var ez;
                 switch (creep.memory.upgradeSpot) {
                     case 1: // renew spot.
-                            zz = new RoomPosition(32, 9, creep.room.name);
-                        if (creep.room.controller.level > 5 &&((!creep.memory.boosted) || (creep.memory.boosted && creep.ticksToLive < 5))) {
+                        zz = new RoomPosition(32, 9, creep.room.name);
+                        if (creep.room.controller.level > 5 && ((!creep.memory.boosted) || (creep.memory.boosted && creep.ticksToLive < 5))) {
                             creep.say('renew');
                             let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
                             if (spawn !== null && creep.ticksToLive < 1489) {
-                                if( spawn.renewCreep(creep) == OK)
+                                if (spawn.renewCreep(creep) == OK)
                                     creep.memory.boosted = false;
                             } else if (creep.ticksToLive > 1490) {
-                                 creep.memory.upgradeSpot = 2; // Moving to boost spot.
+                                creep.memory.upgradeSpot = 2; // Moving to boost spot.
                             }
-                        } else if(creep.room.storage.store.RESOURCE_ENERGY === undefined ){
-       //                     var spawned = Game.getObjectById('5a03400a3e83cd1e5374cf65');
-     //                       if(spawned !== null && creep.pos.isEqualTo(new RoomPosition(32,9,creep.room.name))) {
-  ///                              spawned.recycleCreep(creep);
-//                            }   
+                        } else if (creep.room.storage.store[RESOURCE_ENERGY] === 0) {
+                            var spawned = Game.getObjectById('5a03400a3e83cd1e5374cf65');
+                            if (spawned !== null && creep.pos.isEqualTo(new RoomPosition(32, 9, creep.room.name))) {
+                                spawned.recycleCreep(creep);
+                            }
                         } else {
-                             creep.say('rwait');
+                            creep.say();
                         }
 
                         break;
@@ -122,7 +122,7 @@ class upgraderzClass extends roleParent {
                                 if (lab !== null && creep.ticksToLive > 1450) {
                                     // Do boost here and 
                                     let zzz = lab.boostCreep(creep);
-//                                    creep.say(zzz);
+                                    //                                    creep.say(zzz);
                                     if (zzz == OK) {
                                         creep.memory.boosted = true;
                                         creep.memory.upgradeSpot = 0; // 0 is the wait spot that can take multiple creeps.
@@ -134,8 +134,8 @@ class upgraderzClass extends roleParent {
                                 }
                             }
                         } else {
-                            if(creep.room.storage.store.RESOURCE_ENERGY === undefined){
-         //                       creep.memory.upgradeSpot = 1;
+                            if (creep.room.storage.store.RESOURCE_ENERGY === undefined) {
+                                //                       creep.memory.upgradeSpot = 1;
                             }
                         }
 
@@ -143,92 +143,159 @@ class upgraderzClass extends roleParent {
 
                     case 0:
 
-if(creep.memory.waitSpot === undefined||creep.memory.waitSpot === null) {
-                            let eee = creep.room.find(FIND_CREEPS);
 
-                            eee = _.filter(eee, function(object) {
-                                return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot === 0);
-                            }).sort((a, b) => a.ticksToLive - b.ticksToLive);
-let count = 0;                            
-for(var guy in eee){
-    eee[guy].memory.waitSpot = count;
-    count++;
-}
-} 
+                        if (creep.memory.waitTimer === undefined) {
+                            creep.memory.waitTimer = 100;
+                        }
+                        creep.memory.waitTimer--;
+                        switch (creep.memory.waitSpot) {
+                            case 0:
+                                zz = new RoomPosition(32, 8, creep.room.name);
+                                if (creep.memory.waitTimer < 0 && creep.ticksToLive < 1400 && creep.pos.isEqualTo(zz)) {
+                                    renew = creep.room.lookAt(32, 9); // renew spot
+                                    atSpot = false;
+                                    for (ez in renew) {
+                                        if (renew[ez].type == 'creep') {
+                                            atSpot = true;
+                                        }
+                                    }
+                                    if (!atSpot) {
+                                        creep.memory.waitSpot = undefined;
+                                        creep.memory.waitTimer = undefined;
 
-    switch(creep.memory.waitSpot){
-        case 0:
-            zz = new RoomPosition(32, 8, creep.room.name);
-if(creep.ticksToLive < 1400) {
-             renew = creep.room.lookAt(32, 9); // renew spot
-             atSpot = false;
-            for( ez in renew) {
-                if(renew[ez].type == 'creep'){
-                    atSpot = true;
-                }
-            }
-            if(!atSpot) {
-                creep.memory.waitSpot = undefined;
-                creep.memory.upgradeSpot = 1;
-            }
+                                        creep.memory.upgradeSpot = 1;
+                                    }
 
-}
-        break;
-        case 1:
-            zz = new RoomPosition(33, 8, creep.room.name);
+                                }
+                                break;
+                            case 1:
+                                zz = new RoomPosition(33, 8, creep.room.name);
+                                if (creep.memory.waitTimer < 0 && creep.pos.isEqualTo(zz)) {
+                                    renew = creep.room.lookAt(32, 8); // renew spot
+                                    atSpot = false;
+                                    for (ez in renew) {
+                                        if (renew[ez].type == 'creep') {
+                                            atSpot = true;
+                                        }
+                                    }
+                                    if (!atSpot) {
+                                        creep.memory.waitSpot--;
+                                        creep.memory.waitTimer = undefined;
+                                    }
+                                }
+                                break;
+                            case 2:
+                                zz = new RoomPosition(34, 8, creep.room.name);
+                                if (creep.memory.waitTimer < 0 && creep.pos.isEqualTo(zz)) {
 
-            renew = creep.room.lookAt(32, 8); // renew spot
-            atSpot = false;
-            for(ez in renew) {
-                if(renew[ez].type == 'creep'){
-                    atSpot = true;
-                }
-            }
-            if(!atSpot) {
-                creep.memory.waitSpot--;
-            }
-        break;
-        case 2:
-            zz = new RoomPosition(34, 8, creep.room.name);
+                                    renew = creep.room.lookAt(33, 8); // renew spot
+                                    atSpot = false;
+                                    for (ez in renew) {
+                                        if (renew[ez].type == 'creep') {
+                                            atSpot = true;
+                                        }
+                                    }
+                                    if (!atSpot) {
+                                        creep.memory.waitSpot--;
+                                        creep.memory.waitTimer = undefined;
+                                    }
+                                }
+                                break;
+                            case 3:
+                                zz = new RoomPosition(34, 9, creep.room.name);
+                                if (creep.memory.waitTimer < 0 && creep.pos.isEqualTo(zz)) {
 
-             renew = creep.room.lookAt(33, 8); // renew spot
-             atSpot = false;
-            for( ez in renew) {
-                if(renew[ez].type == 'creep'){
-                    atSpot = true;
-                }
-            }
-            if(!atSpot) {
-                creep.memory.waitSpot--;
-            }
-        break;
-        case 3:
-            zz = new RoomPosition(34, 9, creep.room.name);
-        break;
-        case 4:
-            zz = new RoomPosition(35, 9, creep.room.name);
-        break;
-default:
-                            let eee = creep.room.find(FIND_CREEPS);
+                                    renew = creep.room.lookAt(34, 8); // renew spot
+                                    atSpot = false;
+                                    for (ez in renew) {
+                                        if (renew[ez].type == 'creep') {
+                                            atSpot = true;
+                                        }
+                                    }
+                                    if (!atSpot) {
+                                        creep.memory.waitSpot--;
+                                        creep.memory.waitTimer = undefined;
+                                    }
+                                }
+                                break;
+                            case 4:
+                                zz = new RoomPosition(34, 10, creep.room.name);
+                                if (creep.memory.waitTimer < 0 && creep.pos.isEqualTo(zz)) {
 
-                            eee = _.filter(eee, function(object) {
-                                return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot === 0);
-                            }).sort((a, b) => a.ticksToLive - b.ticksToLive);
-let count = 0;                            
-for(var gg in eee){
-    eee[gg].memory.waitSpot = count;
-    count++;
-}
+                                    renew = creep.room.lookAt(34, 9); // renew spot
+                                    atSpot = false;
+                                    for (ez in renew) {
+                                        if (renew[ez].type == 'creep') {
+                                            atSpot = true;
 
-break;
-    }
-                        creep.say('wait'+creep.memory.waitSpot);
+                                        }
+                                    }
+                                    if (!atSpot) {
+                                        creep.memory.waitSpot--;
+                                        creep.memory.waitTimer = undefined;
+                                    }
+                                }
+                                break;
+                            case 5:
+                                zz = new RoomPosition(33, 10, creep.room.name);
+                                if (creep.memory.waitTimer < 0 && creep.pos.isEqualTo(zz)) {
+
+                                    renew = creep.room.lookAt(34, 10); // renew spot
+                                    atSpot = false;
+                                    for (ez in renew) {
+                                        if (renew[ez].type == 'creep') {
+                                            atSpot = true;
+
+                                        }
+                                    }
+                                    if (!atSpot) {
+                                        creep.memory.waitSpot--;
+                                        creep.memory.waitTimer = undefined;
+                                    }
+                                }
+                                break;
+                            default:
+                                let eee = creep.room.find(FIND_CREEPS);
+                                var ggg;
+                                let count = 0;
+                                let aaa = _.filter(eee, function(object) {
+                                    return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot === 0 && ( object.memory.boosted === undefined || !object.memory.boosted)  );                                
+                                }).sort((a, b) => a.ticksToLive - b.ticksToLive);
+
+                                for (ggg in aaa) {
+                                    aaa[ggg].memory.waitSpot = count;
+                                    console.log('xxx',aaa[ggg].name,aaa[ggg].memory.waitSpot,aaa[ggg].ticksToLive, aaa[ggg].memory.boosted );
+                                    count++;
+                                }
+
+                                let uuu = _.filter(eee, function(object) {
+                                    return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot === 0 && object.memory.boosted !== undefined && object.memory.boosted);
+                                }).sort((a, b) => a.ticksToLive - b.ticksToLive);
+
+                                for(ggg in uuu){
+                                    uuu[ggg].memory.waitSpot = count;
+                                    console.log('yyy',uuu[ggg].name,uuu[ggg].memory.waitSpot,uuu[ggg].ticksToLive, uuu[ggg].memory.boosted );
+                                    count++;
+                                }
+
+                                break;
+                        }
+                        creep.say('wait' + creep.memory.waitSpot);
                         break;
 
                 }
                 if (zz !== undefined) {
-                    if (!creep.pos.isEqualTo(zz))
+                    if (!creep.pos.isEqualTo(zz)) {
                         creep.moveTo(zz, { ignoreCreep: true });
+                        let isThere = creep.room.lookAt(zz);
+
+                        for (var a in isThere) {
+                            if (isThere[a].type == 'creep') {
+                                creep.memory.waitSpot = undefined;
+                            }
+                        }
+
+                    }
                 }
             }
         }

@@ -145,7 +145,7 @@ class engineerClass extends roleParent {
 
                 if (creep.room.name == 'E14S38') {
                     if (!super.constr.moveToBuild(creep)) {
-                        if (creep.room.controller.level < 4) {
+                        if (creep.room.controller.level !== 8) {
                             if (creep.pos.isEqualTo(Game.flags[creep.memory.party])) {
                                 creep.drop(RESOURCE_ENERGY);
                             } else {

@@ -108,7 +108,7 @@ class muleClass extends roleParent {
 
 
                     } else {
-                        if (creep.room.storage !== undefined && creep.room.controller.level > 3) {
+                        if (creep.room.storage !== undefined && creep.room.controller.level > 3 && creep.room.name !== 'E14S38') {
                             var target = creep.room.storage;
                             if (creep.memory.party == 'hello22') {
                                 target = creep.room.terminal;

@@ -39,17 +39,15 @@ class mineralRole extends roleParent {
     }
 
     static run(creep) {
+        var _goal; //= Game.getObjectById(creep.memory.goal);
+    //    if(_goal !== null && _goal.cooldown !== undefined && _goal.cooldown !== 0){
+  //          return;
+//        }
         if (super.doTask(creep)) {
             return;
         }
 
         let carry = _.sum(creep.carry);
-        if (creep.saying == 'zZzZ') {
-            if (carry > 0) {
-                creep.memory.mining = false;
-                creep.memory.goHome = true;
-            }
-        }
 
         memoryCheck(creep);
 
@@ -71,14 +69,11 @@ class mineralRole extends roleParent {
         if (creep.room.name == creep.memory.home && creep.ticksToLive < 200 && _.sum(creep.carry) === 0) {
             creep.memory.death = true;
         }
-
-        var _goal = movement.getRoomPos(creep.memory.goal);
+//        if(_goal === null){
+            _goal = movement.getRoomPos(creep.memory.goal);
+  //      }
 
         this.rebirth(creep);
-
-        if (_goal !== null && _goal.mineralAmount === undefined) {
-            creep.memory.death = true;
-        }
 
         if (super.keeperWatch(creep)) { // two parter - keeperFind happens when
             return;
@@ -144,6 +139,8 @@ class mineralRole extends roleParent {
                         tranzs[0].memory.scientistID = creep.id;
                         creep.memory.ztransportID = tranzs[0].id;
                     }
+                } else {
+
                 }
 
                 return;
@@ -197,6 +194,10 @@ class mineralRole extends roleParent {
                                     trans[0].memory.scientistID = creep.id;
                                     creep.memory.ztransportID = trans[0].id;
                                 }
+                            } else {
+                                let ez = Game.getObjectById(creep.memory.ztransportID);
+                                if(ez === null);
+                                    creep.memory.ztransportID = undefined;
                             }
                         }
                     }
@@ -209,6 +210,14 @@ class mineralRole extends roleParent {
                 }
             }
         }
+
+_goal = Game.getObjectById(creep.memory.goal);
+    creep.say(_goal.coolDown);
+       if (_goal !== null && _goal.mineralAmount === 0) {
+            creep.suicide();
+
+        }
+
 
     }
 }

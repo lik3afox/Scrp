@@ -162,7 +162,7 @@
     function doUpgradeRooms() { //5836b82d8b8b9619519f19be
         if (Memory.war)
             return;
-        let spwns = ['59b6bbb8fa8a1c0b7da30a88']; //,''
+        let spwns = ['5a03400a3e83cd1e5374cf65']; //,''
         if (Game.flags.recontrol !== undefined) return;
         var e = spwns.length;
         while (e--) {
@@ -367,17 +367,16 @@
             if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
 
                 doRoomVisual(Game.spawns[title].room);
-
-                if (Game.cpu.bucket > 500) {
-                    rampartCheck(Game.spawns[title]);
+                rampartCheck(Game.spawns[title]);
+                if (Game.cpu.bucket > 1000) {
                     safemodeCheck(Game.spawns[title]);
                     ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
                     if (Game.spawns[title].memory.newSpawn === undefined) {
                         spawnsDo.checkNewSpawn(Game.spawns[title]);
                     }
+                    spawnsDo.checkBuild(Game.spawns[title]);
                 }
 
-                spawnsDo.checkBuild(Game.spawns[title]);
 
                 //                  if (Memory.war) {
                 if (Game.spawns[title].memory.alphaSpawn) {

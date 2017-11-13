@@ -216,7 +216,7 @@ var upgrade2Party = [
 ];
 
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 2, 6]
+    ['Aupgrader', require('army.upgrader'), 6, 6]
 
 ];
 var muleParty = [
@@ -591,28 +591,20 @@ function returnClosestRoom(roomName) {
     var distance = 100;
     var spawn;
 
-    switch (roomName) {
-        case "E25S70":
-        case "E24S70":
-        case "E32S70":
-            return "E26S73";
-        case "E30S78":
-        case "E30S77":
-            return "E28S77";
-        default:
+  //  switch (roomName) {
+  //      default:
             for (var e in Game.spawns) {
                 if (Game.spawns[e].memory.alphaSpawn) {
                     var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
-                    if (tempDis < distance && Game.spawns[e].room.name != 'E35S73') {
+                    if (tempDis < distance && Game.spawns[e].room.name != 'E14S38') {
                         distance = tempDis;
                         spawn = Game.spawns[e];
                     }
                 }
             }
-            if (spawn.room.name == 'E35S73') return 'E26S73';
             return spawn.room.name;
             //  break;
-    }
+//    }
 
 }
 
@@ -964,7 +956,7 @@ class partyInteract {
                             level: currentParty[e][_level]
                         }
                     };
-                    if (currentParty[e][_name] == 'mule' && home == 'E38S81') {
+                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81'||home == 'E38S72' ) ) {
                         var terminalStuff;
                         terminalStuff = 0;
                         var term = Game.rooms.E38S81.terminal;
