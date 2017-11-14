@@ -212,7 +212,7 @@ class mineralRole extends roleParent {
         }
 
 _goal = Game.getObjectById(creep.memory.goal);
-    creep.say(_goal.coolDown);
+//    creep.say(_goal.coolDown);
        if (_goal !== null && _goal.mineralAmount === 0) {
             creep.suicide();
 

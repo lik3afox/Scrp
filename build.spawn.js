@@ -50,327 +50,312 @@ var transportLevel = 20000;
 
 var newbModLevel = [
     [
-        ['upbuilder', require('role.upbuilder'), 0, 0]
+        ['upbuilder', 0, 0]
     ], // Overflow 
 
 
     // First wave - right when spawn is created.
     [
         //        ['upgrader', require('role.upgrader'), 1, 0],
-        ['first', require('role.first'), 2, 0],
-        ['harvester', require('role.harvester'), 4, 0],
-        ['upbuilder', require('role.upbuilder'), 5, 0]
+        ['first', 2, 0],
+        ['harvester', 4, 0],
+        ['upbuilder', 5, 0]
     ],
     // 2nd Wave starts right at Controller lvl 2. 
     [
-        ['first', require('role.first'), 2, 1],
+        ['first', 2, 1],
 
         //        ['defender',    require('role.defender'), 1, 0],
-        ['upbuilder', require('role.upbuilder'), 10, 1],
-        ['repairer', require('role.repairer'), 1, 1],
-        ['upgrader', require('role.upgrader'), 1, 1],
+        ['upbuilder', 10, 1],
+        ['repairer', 1, 1],
+        ['upgrader', 1, 1],
         //        ['builder', require('role.builder'), 2, 2],
-        ['harvester', require('role.harvester'), 2, 1]
+        ['harvester', 2, 1]
     ],
 
     // 3rd wave starts @ Controller level 3
     [
-        ['first', require('role.first'), 2, 1],
+        ['first', 2, 1],
 
         //        ['defender',    require('role.defender'), 1, 1],
         //        ['builder',    require('role.builder'), 0, 1],
         //        ['repairer', require('role.repairer'), 1, 1],
-        ['upbuilder', require('role.upbuilder'), 6, 2],
-        ['upgrader', require('role.upgrader'), 1, 2],
-        ['linker', require('role.linker'), 2, 3],
+        ['upbuilder', 6, 2],
+        ['upgrader', 1, 2],
+        ['linker', 2, 3],
         //        ['upbuilder',    require('role.upbuilder'), 5, 2],
-        ['harvester', require('role.harvester'), 2, 2]
+        ['harvester', 2, 2]
     ], // At this point there shoulud be another module for it to take over
     [
-        ['first', require('role.first'), 2, 2],
-        ['harvester', require('role.harvester'), 2, 2],
+        ['first', 2, 2],
+        ['harvester', 2, 2],
         //        ['wallwork', require('role.wallworker'), 1, 2],
-        ['upbuilder', require('role.upbuilder'), 3, 3],
-        ['linker', require('role.linker'), 0, 3]
+        ['upbuilder', 3, 3],
+        ['linker', 0, 3]
     ] // At this point there shoulud be another module for it to take over
 ]; // 
 
 
 var Mod_E18S36 = [
-    ['first', require('role.first'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['linker', require('role.linker'), 1, 4],
-    ['minHarvest', require('role.mineral'), 2, 7],
-    ['homeDefender', require('role.defender2'), 1, 4],
+    ['first', 1, 6],
+    ['harvester', 2, 2],
+    ['wallwork', 1, 5],
+    //    ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['scientist', 1, 6],
+    ['linker', 1, 4],
+    ['minHarvest', 2, 7],
+    ['homeDefender', 1, 4],
 ];
 
 var Mod_E17S34 = [
-    ['first', require('role.first'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 5],
-//    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['minHarvest', require('role.mineral'), 1, 7],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['linker', require('role.linker'), 1, 4],
+    ['first', 1, 6],
+    ['harvester', 2, 2],
+    ['wallwork', 1, 5],
+    //    ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['minHarvest', 1, 7],
+    ['scientist', 1, 6],
+    ['linker', 1, 4],
 ];
 var Mod_E18S32 = [
-    ['first', require('role.first'), 1, 7],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 1, 4],
-    ['minHarvest', require('role.mineral'), 2, 7],
-    ['homeDefender', require('role.defender2'), 1, 7]
+    ['first', 1, 7],
+    ['harvester', 2, 2],
+    ['scientist', 1, 6],
+    ['wallwork', 1, 5],
+    ['upbuilder', 1, 8],
+    ['linker', 1, 4],
+    ['minHarvest', 2, 7],
+    ['homeDefender', 1, 7]
 ];
 var Mod_E28S37 = [
-    ['minHarvest', require('role.mineral'), 2, 7],
-    ['first', require('role.first'), 1, 6],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 5]
+    ['minHarvest', 2, 7],
+    ['first', 1, 6],
+    ['scientist', 1, 6],
+    ['harvester', 2, 2],
+    ['wallwork', 1, 5],
+    ['upbuilder', 1, 8],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 5]
 ];
 var Mod_E23S38 = [
-    ['first', require('role.first'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['minHarvest', require('role.mineral'), 1, 7],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 5]
+    ['first', 1, 6],
+    ['harvester', 2, 2],
+    ['wallwork', 1, 5],
+    ['upbuilder', 1, 8],
+    ['scientist', 1, 6],
+    ['minHarvest', 1, 7],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 5]
 ];
 
 var Mod_E25S37 = [
-    ['first', require('role.first'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['minHarvest', require('role.mineral'), 2, 7],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['linker', require('role.linker'), 1, 4],
+    ['first', 1, 6],
+    ['harvester', 2, 2],
+    ['wallwork', 1, 5],
+    ['minHarvest', 2, 7],
+    ['upbuilder', 1, 8],
+    ['scientist', 1, 6],
+    ['linker', 1, 4],
 ];
 var Mod_E27S34 = [
-    ['first', require('role.first'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['wallwork', require('role.wallworker'), 1, 6],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['minHarvest', require('role.mineral'), 2, 7],
-//    ['assistant', require('role.assistant'), 1, 0],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 5]
+    ['first', 1, 6],
+    ['harvester', 2, 2],
+    ['scientist', 1, 6],
+    ['wallwork', 1, 6],
+    ['upbuilder', 1, 8],
+    ['minHarvest', 2, 7],
+    //    ['assistant', require('role.assistant'), 1, 0],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 5]
 ];
 var Mod_E13S34 = [
-    ['first', require('role.first'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['minHarvest', require('role.mineral'), 2, 7],
-    ['scientist', require('role.scientist'), 1, 6],
-//    ['assistant', require('role.assistant'), 1, 0],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 4]
+    ['first', 1, 6],
+    ['harvester', 2, 2],
+    ['wallwork', 1, 5],
+    ['minHarvest', 2, 7],
+    ['scientist', 1, 6],
+    //    ['assistant', require('role.assistant'), 1, 0],
+    //    ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 4]
 ];
 var Mod_E17S45 = [
-    ['first', require('role.first'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['wallwork', require('role.wallworker'), 1, 6],
-    ['minHarvest', require('role.mineral'), 2, 7],
-//    ['assistant', require('role.assistant'), 1, 0],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 5]
+    ['first', 1, 6],
+    ['harvester', 2, 2],
+    ['scientist', 1, 6],
+    ['wallwork', 1, 6],
+    ['minHarvest', 2, 7],
+    //    ['assistant', require('role.assistant'), 1, 0],
+    ['upbuilder', 1, 8],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 5]
 ];
 
 
 
 var Mod_E14S37 = [
-    ['first', require('role.first'), 2, 3],
-    ['harvester', require('role.harvester'), 2, 3],
-    ['minHarvest', require('role.mineral'), 2, 7],
-    ['assistant', require('role.assistant'), 1, 0],
-    ['wallwork', require('role.wallworker'), 1, 5],
-
-    ['scientist', require('role.scientist'), 1, 4],
-    //    ['upgrader', require('role.upgrader'), 4, 5],
-//    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 1, 4],
-
-    //        ['homeDefender', require('role.defender2'), 1, 3]
+    ['first', 2, 3],
+    ['harvester', 1, 4],
+    ['minHarvest', 2, 7],
+    ['assistant', 1, 0],
+    ['wallwork', 1, 5],
+    ['scientist', 1, 4],
+    ['linker', 1, 4],
 ];
 
 var Mod_E24S33 = [
-    ['first', require('role.first'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['wallwork', require('role.wallworker'), 1, 5],
+    ['first', 1, 6],
+    ['harvester', 2, 2],
+    ['wallwork', 1, 5],
 
-    ['minHarvest', require('role.mineral'), 2, 7],
-//    ['assistant', require('role.assistant'), 1, 0],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 3]
+
+
+    ['minHarvest', 2, 7],
+    //    ['assistant', require('role.assistant'), 1, 0],
+    ['upbuilder', 1, 8],
+    ['scientist', 1, 6],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 3]
 ];
 
 
 var Mod_E14S43 = [
-    ['first', require('role.first'), 1, 5],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['minHarvest', require('role.mineral'), 2, 7],
-    ['scientist', require('role.scientist'), 1, 6],
-//    ['assistant', require('role.assistant'), 1, 0],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 5]
+    ['first', 1, 5],
+    ['wallwork', 1, 5],
+    ['harvester', 2, 2],
+    //    ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['minHarvest', 2, 7],
+    ['scientist', 1, 6],
+    //    ['assistant', require('role.assistant'), 1, 0],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 5]
 ];
 var Mod_E25S47 = [
-    ['first', require('role.first'), 1, 6],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['minHarvest', require('role.mineral'), 1, 7],
-//    ['assistant', require('role.assistant'), 1, 0],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 1, 4],
+    ['first', 1, 6],
+    ['wallwork', 1, 5],
+    ['minHarvest', 1, 7],
+    //    ['assistant', require('role.assistant'), 1, 0],
+    ['harvester', 2, 2],
+    ['scientist', 1, 6],
+    ['upbuilder', 1, 8],
+    ['linker', 1, 4],
 ];
 
 var Mod_E14S47 = [
-    ['first', require('role.first'), 1, 6],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['harvester', require('role.harvester'), 1, 2],
-    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['minHarvest', require('role.mineral'), 2, 7],
-//    ['assistant', require('role.assistant'), 1, 0],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 3]
+    ['first', 1, 6],
+    ['wallwork', 1, 5],
+    ['harvester', 1, 2],
+    //    ['upbuilder', require('role.upbuilder'), 1, 8],
+    ['minHarvest', 2, 7],
+    //    ['assistant', require('role.assistant'), 1, 0],
+    ['scientist', 1, 6],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 3]
 ];
 var Mod_E25S43 = [
-    ['first', require('role.first'), 1, 7],
-    ['minHarvest', require('role.mineral'), 2, 7],
-//    ['assistant', require('role.assistant'), 1, 0],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    ['harvester', require('role.harvester'), 1, 2],
-    //['upbuilder', require('role.upbuilder'), 1, 8],
-    ['scientist', require('role.scientist'), 1, 6],
-    //    ['upgrader', require('role.upgrader'), 3, 5],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 5]
+    ['first', 1, 7],
+    ['minHarvest', 2, 7],
+    ['wallwork', 1, 5],
+    ['harvester', 1, 2],
+    ['scientist', 1, 6],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 5]
 ];
 var Mod_E28S42 = [
-    ['first', require('role.first'), 1, 5],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['minHarvest', require('role.mineral'), 2, 7],
-//    ['assistant', require('role.assistant'), 1, 0],
-
-    ['scientist', require('role.scientist'), 1, 6],
-    ['wallwork', require('role.wallworker'), 1, 5],
-  //  ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 3]
+    ['first', 1, 5],
+    ['harvester', 2, 2],
+    ['minHarvest', 2, 7],
+    ['scientist', 1, 6],
+    ['wallwork', 1, 5],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 3]
 ];
 var Mod_E23S42 = [
-    ['first', require('role.first'), 1, 5],
-    ['harvester', require('role.harvester'), 2, 2],
-    ['minHarvest', require('role.mineral'), 1, 7],
-    ['wallwork', require('role.wallworker'), 1, 5],
-//    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 5]
+    ['first', 1, 5],
+    ['harvester', 2, 2],
+    ['minHarvest', 1, 7],
+    ['wallwork', 1, 5],
+    ['scientist', 1, 6],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 5]
 ];
 var Mod_E25S27 = [
-    ['first', require('role.first'), 1, 5],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['harvester', require('role.harvester'), 1, 2],
-    ['linker', require('role.linker'), 1, 4],
-    ['minHarvest', require('role.mineral'), 2, 7],
-    ['wallwork', require('role.wallworker'), 1, 5],
-    //['upbuilder', require('role.upbuilder'), 1, 8],
-    ['homeDefender', require('role.defender2'), 1, 6]
+    ['first', 1, 5],
+    ['scientist', 1, 6],
+    ['harvester', 1, 2],
+    ['linker', 1, 4],
+    ['minHarvest', 2, 7],
+    ['wallwork', 1, 5],
+    ['homeDefender', 1, 6]
 ];
 
 var Mod_E27S45 = [
-    ['harvester', require('role.harvester'), 2, 2],
-    ['linker', require('role.linker'), 1, 4],
-    ['first', require('role.first'), 1, 4],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['minHarvest', require('role.mineral'), 1, 7],
-    ['wallwork', require('role.wallworker'), 1, 7],
-//    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['homeDefender', require('role.defender2'), 1, 6]
+    ['harvester', 2, 2],
+    ['linker', 1, 4],
+    ['first', 1, 4],
+    ['scientist', 1, 6],
+    ['minHarvest', 1, 7],
+    ['wallwork', 1, 7],
+    ['homeDefender', 1, 6]
 ];
 
 var Mod_E29S48 = [
-    ['first', require('role.first'), 1, 4],
-    ['scientist', require('role.scientist'), 1, 6],
-    ['harvester', require('role.harvester'), 2, 2],
-//    ['upbuilder', require('role.upbuilder'), 1, 8],
-//    ['upgrader', require('role.upgrader'), 1, 8],
-    ['minHarvest', require('role.mineral'), 1, 7],
-    ['wallwork', require('role.wallworker'), 1, 4],
-    ['linker', require('role.linker'), 1, 4],
-    ['homeDefender', require('role.defender2'), 1, 4]
+    ['first', 1, 4],
+    ['scientist', 1, 6],
+    ['harvester', 2, 2],
+    ['minHarvest', 1, 7],
+    ['wallwork', 1, 4],
+    ['linker', 1, 4],
+    ['homeDefender', 1, 4]
 ];
 
 var Mod_E38S81 = [
-    ['harvester', require('role.harvester'), 2, 2],
-    ['first', require('role.first'), 1, 4],
-    ['linker', require('role.linker'), 1, 4],
-    ['minHarvest', require('role.mineral'), 1, 7],
-    ['assistant', require('role.assistant'), 1, 0],
-    ['wallwork', require('role.wallworker'), 1, 7],
-    ['linker', require('role.linker'), 1, 4],
-//    ['upbuilder', require('role.upbuilder'), 1, 8],
-    ['upgrader', require('role.upgrader'), 0, 4],
+    ['harvester', 2, 2],
+    ['first', 1, 4],
+    ['linker', 1, 4],
+    ['minHarvest', 1, 7],
+    ['assistant', 1, 0],
+    ['wallwork', 1, 7],
+    ['linker', 1, 4],
+    ['upgrader', 0, 4],
 ];
 var Mod_E38S72 = [
-    ['harvester', require('role.harvester'), 2, 2],
-    ['upbuilder', require('role.upbuilder'), 1, 7],
-    ['minHarvest', require('role.mineral'), 1, 7],
-    ['assistant', require('role.assistant'), 1, 0],
-    ['first', require('role.first'), 1, 2],
-    ['linker', require('role.linker'), 1, 4],
+    ['harvester', 2, 2],
+    ['upbuilder', 1, 7],
+    ['minHarvest', 1, 7],
+    ['assistant', 1, 0],
+    ['first', 1, 2],
+    ['linker', 1, 4],
 ];
 
 
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
     [ // 200 Energy required
-        ['roadbuilder', require('role.roadbuilder'), 1, 2] // Pick up/harvest to build. 
+        ['roadbuilder', 1, 2] // Pick up/harvest to build. 
     ],
     // sends a miner to build the cotainer
     [ // 300 Energy Required
-        ['miner', require('role.miner'), 1, 2] // Harvester - experiemnt w/o carry
+        ['miner', 1, 2] // Harvester - experiemnt w/o carry
     ],
     // Adds transport once container is built.
     [ // 550 Energy Max
-        ['miner', require('role.miner'), 1, 2], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 2] // Gather and move - just carry 
+        ['miner', 1, 2], // Harvester - experiemnt w/o carry
+        ['transport', 1, 2] // Gather and move - just carry 
     ],
     // Level 3 has a controller 
     [ // 800 Energy Max.
-        ['miner', require('role.miner'), 1, 2], // Harvester - experiemnt w/o carry
+        ['miner', 1, 2], // Harvester - experiemnt w/o carry
         // There are two transports because this is cock blocked by expansions.
-        ['transport', require('role.transport'), 1, 2], // Gather and move - just carry 
-        ['controller', require('role.controller'), 1, 1]
+        ['transport', 1, 2], // Gather and move - just carry 
+        ['controller', 1, 1]
     ],
 
     // four level When the spawn can create 1300 strong units. 
     // The transport here will be designed for 1 square away - 
     [ // 1300 Energy Max.
-        ['miner', require('role.miner'), 1, 3], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 3], // Gather and move - just carry 
-        ['controller', require('role.controller'), 1, 4]
+        ['miner', 1, 3], // Harvester - experiemnt w/o carry
+        ['transport', 1, 3], // Gather and move - just carry 
+        ['controller', 1, 4]
     ],
 
     // Level 5 or above means the area is constructed, 
@@ -379,111 +364,111 @@ var expansionModule = [
     // Level five is an contructed fully area - rebuilder can be downgraded and more
     // transports.
     [ // 1800 Energy Max.
-        ['miner', require('role.miner'), 1, 3], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 3], // Gather and move - just carry 800
-        ['controller', require('role.controller'), 1, 4]
+        ['miner', 1, 3], // Harvester - experiemnt w/o carry
+        ['transport', 1, 3], // Gather and move - just carry 800
+        ['controller', 1, 4]
     ],
     // Level six is a bit further - needing 2 heavy level transports.
     [ // 1800 Energy Max.
-        ['miner', require('role.miner'), 1, 3], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 4], // Gather and move - just carry up to 1400
-        ['ztransport', require('role.ztransport'), 1, 0], // Gather and move - just carry up to 1400
-        ['controller', require('role.controller'), 1, 4]
+        ['miner', 1, 3], // Harvester - experiemnt w/o carry
+        ['transport', 1, 4], // Gather and move - just carry up to 1400
+        ['ztransport', 1, 0], // Gather and move - just carry up to 1400
+        ['controller', 1, 4]
     ],
 
     // Level seven is the highest distance away. 
     [ // 1800 Energy Max.
-        ['miner', require('role.miner'), 1, 4], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 5], // Gather and move - just carry 
-        ['controller', require('role.controller'), 1, 5]
+        ['miner', 1, 4], // Harvester - experiemnt w/o carry
+        ['transport', 1, 5], // Gather and move - just carry 
+        ['controller', 1, 5]
     ],
     [ // 1800 Energy Max.5836b8138b8b9619519f16b8
-        ['miner', require('role.miner'), 1, 4], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 6], // Gather and move - just carry up to 1400
-        ['controller', require('role.controller'), 1, 5]
+        ['miner', 1, 4], // Harvester - experiemnt w/o carry
+        ['transport', 1, 6], // Gather and move - just carry up to 1400
+        ['controller', 1, 5]
     ],
 
     [ // LEVEL 9 is another expansion that has a spawn.
-        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['controller', require('role.controller'), 1, 5],
-        ['transport', require('role.transport'), 1, 5] // Gather and move - just carry 
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['controller', 1, 5],
+        ['transport', 1, 5] // Gather and move - just carry 
     ],
     [ // LEVEL 10 is another expansion that has a spawn.5836b8168b8b9619519f1708
-        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 6], // Gather and move - just carry up to 1400
-        ['controller', require('role.controller'), 1, 5] // Gather and move - just carry 
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 1, 6], // Gather and move - just carry up to 1400
+        ['controller', 1, 5] // Gather and move - just carry 
     ],
 
     [ // LEVEL 11 is another expansion that has a spawn.
-        ['mineral', require('keeper.scientist'), 1, 4],
-        ['ztransport', require('role.ztransport'), 1, 0],
-        ['rtransport', require('role.ztransport'), 1, 0],
+        ['mineral', 1, 4],
+        ['ztransport', 1, 0],
+        ['rtransport', 1, 0],
     ],
 
     [ // LEVEL 12 is another expansion that has a spawn. 5836b8168b8b9619519f1708
-        ['mineral', require('keeper.scientist'), 1, 5],
-        ['ztransport', require('role.ztransport'), 1, 0],
-        ['rtransport', require('role.ztransport'), 1, 0],
+        ['mineral', 1, 5],
+        ['ztransport', 1, 0],
+        ['rtransport', 1, 0],
     ],
 
     [ // LEVEL 13 - for just a miner and transport.
-        ['mineral', require('keeper.scientist'), 1, 7],
-        ['ztransport', require('role.ztransport'), 1, 0],
-        ['rtransport', require('role.ztransport'), 1, 0],
+        ['mineral', 1, 7],
+        ['ztransport', 1, 0],
+        ['rtransport', 1, 0],
     ],
     [ // LEVEL 14 - for an mineral For spawn3
-        ['mineral', require('keeper.scientist'), 1, 7],
-        ['ztransport', require('role.ztransport'), 1, 0],
+        ['mineral', 1, 7],
+        ['ztransport', 1, 0],
     ],
     [ // LEVEL 15 - for an mineral for spawn1
-        ['miner', require('role.miner'), 1, 3], // Gather and move - just carry 
-        ['transport', require('role.transport'), 2, 3], // Gather and move - just carry 
-        ['controller', require('role.controller'), 1, 4]
+        ['miner', 1, 3], // Gather and move - just carry 
+        ['transport', 2, 3], // Gather and move - just carry 
+        ['controller', 1, 4]
     ],
     [ // LEVEL 16 - for just a miner and transport.
-        ['miner', require('role.miner'), 1, 5], // Gather and move - just carry 
-        ['transport', require('role.transport'), 2, 4], // Gather and move - just carry 
-        ['controller', require('role.controller'), 1, 4]
+        ['miner', 1, 5], // Gather and move - just carry 
+        ['transport', 2, 4], // Gather and move - just carry 
+        ['controller', 1, 4]
     ], // al
     [ // LEVEL 17 - for just a miner and transport. Weaker than lv 15
-        ['miner', require('role.miner'), 1, 5], // Gather and move - just carry 
-        ['transport', require('role.transport'), 2, 4], // Gather and move - just carry 
-        ['controller', require('role.controller'), 1, 4]
+        ['miner', 1, 5], // Gather and move - just carry 
+        ['transport', 2, 4], // Gather and move - just carry 
+        ['controller', 1, 4]
     ], // al
     [ // LEVEL 18 - for just a miner and transport. Weaker than lv 15
-        ['miner', require('role.miner'), 1, 5], // Gather and move - just carry 
-        ['transport', require('role.transport'), 2, 5] // Gather and move - just carry 
+        ['miner', 1, 5], // Gather and move - just carry 
+        ['transport', 2, 5] // Gather and move - just carry 
     ],
     [ // LEVEL 19 - for just a miner and transport.
-        ['miner', require('role.miner'), 1, 5], // Gather and move - just carry 
-        ['controller', require('role.controller'), 1, 4],
-        ['transport', require('role.transport'), 2, 6] // Gather and move - just carry 
+        ['miner', 1, 5], // Gather and move - just carry 
+        ['controller', 1, 4],
+        ['transport', 2, 6] // Gather and move - just carry 
     ], // al
     [ // LEVEL 20 - for just a miner and transport. Weaker than lv 15
-        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 6],
-        ['ztransport', require('role.ztransport'), 1, 0],
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 1, 6],
+        ['ztransport', 1, 0],
     ], // 
     [ // LEVEL 21 [E25S74 12,9]
-        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 2, 6],
-        ['ztransport', require('role.ztransport'), 1, 0],
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 2, 6],
+        ['ztransport', 1, 0],
     ], // 
     [ // LEVEL 22 
-        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 6],
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 1, 6],
     ], // 
     [ // LEVEL 23  [E35S84 10,6]
-        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 4]
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 1, 4]
     ], //
     [ // LEVEL 24 
-        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 6],
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 1, 6],
     ], // 
     [ // LEVEL 25 
-        ['miner', require('role.miner'), 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', require('role.transport'), 1, 3] // 800 carry transport.
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 1, 3] // 800 carry transport.
 
     ], // 
     [ // LEVEL 26 
@@ -504,10 +489,12 @@ var overflow = ['upgrader', require('role.upgrader'), 0, 0];
 var party = require('commands.toParty');
 
 var _overflow = 0;
+
+var _require = 1; // Only All Module uses require
+
 var _name = 0;
-var _require = 1;
-var _number = 2;
-var _level = 3;
+var _number = 1;
+var _level = 2;
 
 var currentModule;
 
@@ -529,6 +516,17 @@ function cpuCount(creep, time) {
 
 // Give it a role, and SourceID
 // Returns all creeps that match that role and source ID
+
+function newGetExpandRole(creepRole, sourceID, totalCreeps) {
+    if (totalCreeps[creepRole] !== undefined) {
+        let cc = _.filter(totalCreeps[creepRole].goal, function(o) {
+            return o == sourceID;
+        });
+        return cc.length;
+    }
+    return 0;
+}
+
 function getPossibleRole(spawn, creepRole, sourceID) {
     let total = 0;
 
@@ -795,6 +793,12 @@ function getNuke(spawn) {
 }
 
 function getCurrentModule(spawn) {
+    if (Game.flags[spawn.room.name] !== undefined && Game.flags[spawn.room.name].color == COLOR_WHITE && Game.flags[spawn.room.name].secondaryColor == COLOR_GREEN) {
+        if (Game.flags[spawn.room.name].memory.module !== undefined) {
+            console.log('Room flag used', spawn.room.name);
+        }
+    }
+
 
     if (spawn.room.name == 'E38S72') {
         return Mod_E38S72;
@@ -973,11 +977,11 @@ function buildTransport(carryParts) {
 }
 
 function doSpawnCount(creep) {
-    if(creep === undefined) {
-//  console.log('bad creep',creep);
-  return;  
+    if (creep === undefined) {
+        //  console.log('bad creep',creep);
+        return;
     }
-if(creep.memory.parent === undefined) return;
+    if (creep.memory.parent === undefined) return;
     if (Memory.spawnCount[creep.memory.parent] === undefined) {
         Memory.spawnCount[creep.memory.parent] = {};
     }
@@ -1027,28 +1031,28 @@ function calculateCPU(cpu, creep) {
         creep.memory.cpuCost = 0;
     }
     creep.memory.cpuCount--;
-creep.memory.cpuCost+=cpu;
-return creep.memory.cpuCost;
-/*
-    if (cpu < 1) {
-        return creep.memory.cpuCost;
-    } else if (cpu < 2) {
-        creep.memory.cpuCost += 1;
-    } else if (cpu < 3) {
-        creep.memory.cpuCost += 2;
-    } else if (cpu < 4) {
-        creep.memory.cpuCost += 3;
-    } else if (cpu < 5) {
-        creep.memory.cpuCost += 5;
-    } else if (cpu < 6) {
-        creep.memory.cpuCost += 8;
-    } else if (cpu < 7) {
-        creep.memory.cpuCost += 13;
-    } else {
-        creep.memory.cpuCost += 21;
-    }
+    creep.memory.cpuCost += cpu;
+    return creep.memory.cpuCost;
+    /*
+        if (cpu < 1) {
+            return creep.memory.cpuCost;
+        } else if (cpu < 2) {
+            creep.memory.cpuCost += 1;
+        } else if (cpu < 3) {
+            creep.memory.cpuCost += 2;
+        } else if (cpu < 4) {
+            creep.memory.cpuCost += 3;
+        } else if (cpu < 5) {
+            creep.memory.cpuCost += 5;
+        } else if (cpu < 6) {
+            creep.memory.cpuCost += 8;
+        } else if (cpu < 7) {
+            creep.memory.cpuCost += 13;
+        } else {
+            creep.memory.cpuCost += 21;
+        }
 
-    return creep.memory.cpuCost;*/
+        return creep.memory.cpuCost;*/
 }
 
 class theSpawn {
@@ -1065,11 +1069,239 @@ class theSpawn {
 
         } */
 
+    static spawnQuery(spawnID) {
+        // Counting
+        console.log('doing new spawn Query');
+        var totalCreeps;
+        var spawn = Game.getObjectById(spawnID);
+        var type;
+        if (Memory.spawnCount[spawnID] !== undefined) {
+            let spawn = Game.getObjectById(spawnID);
+            if (spawn !== null) {
+                spawn.memory.TotalBuild = (Memory.spawnCount[spawnID].bodyCount * 3);
+                spawn.memory.totalCreep = Memory.spawnCount[spawnID].total;
+            }
+            totalCreeps = Memory.spawnCount[spawnID];
+        } else {
+            return;
+        }
+
+        // Module Check
+
+        if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
+            if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
+                for (var ee in currentModule) {
+                    Game.flags[spawn.pos.roomName].memory.module.push(currentModule[ee]);
+                }
+            }
+        }
+
+        currentModule = Game.flags[spawn.room.name].memory.module;
+
+        for (type in currentModule) {
+
+            let min = Game.getObjectById(spawn.room.memory.mineralID);
+            let nuke = getNuke(spawn);
+            var alertProhib = ['minHarvest', 'assistant', 'nuker'];
+
+            if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
+
+            } else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
+
+            } else if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
+
+            } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
+
+            } else {
+                if(totalCreeps[currentModule[type][_name]] === undefined) {
+                    totalCreeps[currentModule[type][_name]] = {
+                        count : 0,
+                        goal : []
+                    };
+                }
+                if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
+
+                    var theBuild = getModuleRole(currentModule[type][_name]).levels(currentModule[type][_level]);
+                    let temp = {
+                        build: theBuild,
+                        name: currentModule[type][_name] + totalCreeps[currentModule[type][_name]].count + "*" + spawn.memory.created,
+                        memory: {
+                            role: currentModule[type][_name],
+                            home: spawn.room.name,
+                            parent: spawn.id,
+                            level: currentModule[type][_level]
+                        }
+                    };
+                    if (currentModule[type][_name] == 'first' || currentModule[type][_name] == 'harvester') {
+                        spawn.memory.create.unshift(temp);
+                        totalCreeps[currentModule[type][_name]].count++;
+                        spawn.memory.created++;
+                    } else {
+                        spawn.memory.create.push(temp);
+                        totalCreeps[currentModule[type][_name]].count++;
+                        spawn.memory.created++;
+
+                    }
+                }
+            }
+        }
+
+
+        // Expand check
+        if (spawn.memory.roadsTo.length === 0) return;
+
+        var _module;
+        var report = '';
+
+
+        for (var ie in spawn.memory.roadsTo) {
+
+            let xp = spawn.memory.roadsTo[ie].expLevel;
+            _module = expansionModule[xp];
+            var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
+
+            // Checking if room is visable and too observe it.
+            if (spawn.memory.roadsTo[ie].expLevel > 0) {
+                if (source === null) {
+                    if (spawn.memory.roadsTo[ie].sourcePos !== undefined) {
+                        let obser = require('build.observer');
+                        obser.reqestRoom(spawn.memory.roadsTo[ie].sourcePos.roomName, 5);
+                    }
+                } else {
+                    if (source.room === undefined) {
+                        console.log('ERROR source.room not available:checkexpand', spawn.pos);
+                    }
+                }
+            }
+
+            // Expand Module Check.
+            if (source !== null) {
+
+                if (spawn.memory.roadsTo[ie].sourcePos === undefined) {
+                    spawn.memory.roadsTo[ie].sourcePos = source.pos;
+                }
+                var expandRole = ['miner', 'controller', 'transport', 'ztransport', 'mineral'];
+                var maxRole = {};
+                var e;
+                for (e in expandRole) {
+                    if (maxRole[expandRole[e]] === undefined) {
+                        maxRole[expandRole[e]] = 0;
+                    }
+                } // This creates maxRole={miner:0,transport:0,ztransport:0}
+
+                for (e in _module) {
+                    maxRole[_module[e][_name]] = _module[e][_number];
+                }
+
+                for (e in expandRole) {
+                    if (spawn.memory.roadsTo[ie][expandRole[e]] !== undefined) {
+                        let transportBuild;
+
+                        let currentCount = newGetExpandRole(expandRole[e], spawn.memory.roadsTo[ie].source, totalCreeps);
+                        //console.log('new Expand Check',expandRole[e],currentCount,'/',maxRole[expandRole[e]], source,'@', spawn.memory.roadsTo[ie][expandRole[e]]);
+                        if (currentCount < maxRole[expandRole[e]]) {
+                            spawn.memory.roadsTo[ie][expandRole[e]] = false;
+                        }
+
+
+                    }
+                }
+
+
+            }
+
+            // Going through Expand and Modules.
+            for (type in spawn.memory.roadsTo[ie]) {
+                for (var uo in _module) {
+
+                    // Find the expansions
+                    if (type == _module[uo][_name]) {
+                        // Instead of checking roadsTo - you can check the expansion #
+                        if (!spawn.memory.roadsTo[ie][type]) {
+                            if (spawn.memory.created === undefined) {
+                                spawn.memory.created = 0;
+                            }
+                            spawn.memory.created++;
+                            let needBoost = [];
+                            let temp = {
+                                build: getModuleRole(_module[uo][_name]).levels(_module[uo][_level], spawn.memory.roadsTo[ie], spawn.room),
+                                name: type + "-" + spawn.memory.created + "v",
+                                memory: {
+                                    needBoost: needBoost,
+                                    role: _module[uo][_name],
+                                    home: spawn.room.name,
+                                    parent: spawn.id,
+                                    goal: spawn.memory.roadsTo[ie].source,
+                                    level: _module[uo][_level]
+                                }
+                            };
+
+                            // Here, we'll check to see if the controller needs to be created
+
+                            // For expansions here we can determine special requirements needed to
+                            // create an unit
+
+                            if (temp.memory.role == 'miner') {
+                                spawn.memory.expandCreate.unshift(temp);
+                                spawn.memory.roadsTo[ie][type] = true;
+                            }
+                            // Controller needs it's target reservation to go below 2000
+                            else if (temp.memory.role == 'controller') {
+                                var level;
+                                let sourcez = Game.getObjectById(spawn.memory.roadsTo[ie].source);
+                                var controlLeft;
+                                if (sourcez !== null) {
+                                    controlLeft = sourcez.room.controller;
+                                    if (sourcez.room.controller !== undefined && sourcez.room.controller.reservation !== undefined) {
+                                        level = sourcez.room.controller.reservation.ticksToEnd;
+                                    } else {
+                                        level = 0;
+                                    }
+
+                                    if ((level < controllerLevel) || (sourcez.room.controller.level > 0)) {
+                                        spawn.memory.expandCreate.push(temp);
+                                        spawn.memory.roadsTo[ie][type] = true;
+                                    }
+
+                                }
+                            } else if (temp.memory.role == 'mineral') {
+                                let min = Game.getObjectById(spawn.memory.roadsTo[ie].source);
+                                if (min !== null && min.mineralAmount > 0 &&
+                                    min.room.controller !== undefined && min.room.controller.level >= 6) {
+                                    spawn.memory.expandCreate.push(temp);
+                                    spawn.memory.roadsTo[ie][type] = true;
+
+                                } else if (min !== null && min.mineralAmount > 0 && min.room.controller === undefined) {
+                                    spawn.memory.expandCreate.push(temp);
+                                    spawn.memory.roadsTo[ie][type] = true;
+                                } else {
+
+                                }
+                            } else if (temp.memory.role == 'transport') {
+                                spawn.memory.expandCreate.push(temp);
+                                spawn.memory.roadsTo[ie][type] = true;
+                            } else {
+                                spawn.memory.expandCreate.push(temp);
+                                spawn.memory.roadsTo[ie][type] = true;
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+
+    }
+
     static spawnCount(spawnID) {
-        var doSpawn = ['59a89dc250359f180a14beed','59d29e25230c1b15d7056e67','59dd41f8a79b29037141fa85'];
+        var doSpawn = [];
 
 
-        if ( _.contains(doSpawn, spawnID) &&Memory.spawnCount[spawnID] !== undefined) {
+        if (_.contains(doSpawn, spawnID) && Memory.spawnCount[spawnID] !== undefined) {
 
             let spawn = Game.getObjectById(spawnID);
             if (spawn !== null) {
@@ -1120,6 +1352,15 @@ class theSpawn {
         //        var currentModuleLevel = getModuleLevel(spawn);spawn.memory.buildLevel
 
         currentModule = getCurrentModule(spawn);
+        if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
+            console.log('COLOR_GREEN');
+            if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
+                for (var e in currentModule) {
+                    console.log(currentModule[e]);
+                    Game.flags[spawn.pos.roomName].memory.module.push(currentModule[e]);
+                }
+            }
+        }
 
         //        let sites = spawn.room.find(FIND_CONSTRUCTION_SITES);
         for (var type in currentModule) {
@@ -1141,14 +1382,7 @@ class theSpawn {
 
             } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
 
-            }/* else if (currentModule[type][_name] == 'scientist' && !spawn.room.memory.labsNeedWork) {
-
-            }*/ else {
-
-                // If totalCreeps is less than require through currentModule then.
-    //            if (spawn.room.name == 'E18S36') {
-  //                  console.log(spawn.pos, currentModule[type][_name], ":", totalCreeps[currentModule[type][_name]].count, "/", currentModule[type][_number]);
-//                }
+            } else {
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
 
                     var theBuild = getModuleRole(currentModule[type][_name]).levels(currentModule[type][_level]);
@@ -1163,25 +1397,13 @@ class theSpawn {
                         }
                     };
                     if (currentModule[type][_name] == 'first' || currentModule[type][_name] == 'harvester') {
-/*                        if (spawn.room.name == 'E13S34' ||spawn.room.name == 'E14S37'||spawn.room.name == 'E23S42') {
-                            console.log('ROom added,', totalCreeps[currentModule[type][_name]].count,currentModule[type][_name]);
-                        }*/
                         spawn.memory.create.unshift(temp);
                         totalCreeps[currentModule[type][_name]].count++;
                         spawn.memory.created++;
-/*                        if (spawn.room.name == 'E13S34' ||spawn.room.name == 'E14S37'||spawn.room.name == 'E23S42') {
-                            console.log('2ROom added,', totalCreeps[currentModule[type][_name]].count,currentModule[type][_name]);
-                        }*/
                     } else {
-          //              if (spawn.room.name == 'E13S34' ||spawn.room.name == 'E14S37'||spawn.room.name == 'E23S42') {
-        //                    console.log('ROom added,', totalCreeps[currentModule[type][_name]].count,currentModule[type][_name]);
-      //                  }
                         spawn.memory.create.push(temp);
                         totalCreeps[currentModule[type][_name]].count++;
                         spawn.memory.created++;
-    //                    if (spawn.room.name == 'E13S34'||spawn.room.name == 'E14S37'||spawn.room.name == 'E23S42') {
-  //                          console.log('2ROom added,', totalCreeps[currentModule[type][_name]].count);
-//                        }
 
                     }
                 }
@@ -1197,16 +1419,16 @@ class theSpawn {
 
         for (var ie in spawn.memory.roadsTo) {
             if (spawn.memory.roadsTo[ie].allDistance !== undefined) {
-                spawn.memory.roadsTo[ie].allDistance  = undefined;
+                spawn.memory.roadsTo[ie].allDistance = undefined;
             }
             if (spawn.memory.roadsTo[ie].transInfo !== undefined) {
-                spawn.memory.roadsTo[ie].transInfo  = undefined;
+                spawn.memory.roadsTo[ie].transInfo = undefined;
             }
             if (spawn.memory.roadsTo[ie].mineInfo !== undefined) {
-                spawn.memory.roadsTo[ie].mineInfo  = undefined;
+                spawn.memory.roadsTo[ie].mineInfo = undefined;
             }
             if (spawn.memory.roadsTo[ie].controlInfo !== undefined) {
-                spawn.memory.roadsTo[ie].controlInfo  = undefined;
+                spawn.memory.roadsTo[ie].controlInfo = undefined;
             }
 
             if (spawn.memory.roadsTo[ie] === null) {
@@ -1278,19 +1500,8 @@ class theSpawn {
                     }
 
 
-                    if (spawn.room.name == 'E35S73' && spawn.memory.roadsTo[ie].source == '5836b8288b8b9619519f190c') {
-                        //                    maxTrans = spawn.memory.roadsTo[ie].transInfo.transportNum;
-                    }
-
                     if (spawn.memory.roadsTo[ie].transport !== undefined) {
                         let transportBuild;
-                        /*  
-                        if(spawn.memory.roadsTo[ie].transportNum != undefined) {
-                            transportBuild =  spawn.memory.roadsTo[ie].transportNum
-                        } else {
-                            
-                        }
-                        */
                         transportBuild = getPossibleRole(spawn, 'transport', spawn.memory.roadsTo[ie].source);
                         let transport = getExpandRole('transport', spawn.memory.roadsTo[ie].source, totalCreeps);
                         if (transport + transportBuild < maxTrans) {
@@ -1592,8 +1803,8 @@ class theSpawn {
     static reportDeath(creep) {
         var spawn = Game.getObjectById(creep.memory.parent);
         //                console.log( creep.rebuildMe(creep)+'aasdfffffffffffffffffffffffffffffffffffffff' );
-        if (spawn !== null){
-            console.log('Reporting death,',creep.name,roomLink(creep.pos.roomName));
+        if (spawn !== null) {
+            console.log('Reporting death,', creep.name, roomLink(creep.pos.roomName));
             switch (creep.memory.role) {
                 case "miner":
                 case "transport":
@@ -1622,7 +1833,8 @@ class theSpawn {
                 default:
                     spawn.memory.create.push(rebuildCreep(creep));
                     break;
-            }        }
+            }
+        }
 
     }
 

@@ -22,7 +22,7 @@
     var power = require('commands.toPower');
     var labs = require('build.labs');
     var market = require('build.terminal');
-    
+
     var prototypes = [
         require('prototype.creeps')
     ];
@@ -213,7 +213,7 @@
     //    var ALLIES = foxy.friends;
 
     function doRoomReport(room) {
-        if (room.name == 'E14S38'||room.controller.level >= 6) return;
+        if (room.name == 'E14S38' || room.controller.level >= 6) return;
         bads = room.find(FIND_HOSTILE_CREEPS);
         bads = _.filter(bads, function(creep) {
             return (!_.contains(fox.friends, creep.owner.username));
@@ -311,6 +311,51 @@
 
     }
 
+    function addSpawnQuery() {
+        for (var e in Game.spawns) {
+            if (Game.spawns[e].memory.alphaSpawn && Memory.spawnCount[Game.spawns[e].id] !== undefined) {
+                let spwn = Game.spawns[e];
+                let spwnCount = Memory.spawnCount[Game.spawns[e].id];
+                let create = spwn.memory.create;
+                let war = spwn.memory.warCreate;
+                let expand = spwn.memory.expandCreate;
+                let a;
+                for (a in create) {
+                    if (spwnCount[create[a].memory.role] !== undefined) {
+                        spwnCount[create[a].memory.role].count++;
+                    } else {
+                        spwnCount[create[a].memory.role] = {
+                            count: 1,
+                            goal: []
+                        };
+                    }
+                }
+                for (a in war) {
+                    if (spwnCount[war[a].memory.role] !== undefined) {
+                        spwnCount[war[a].memory.role].count++;
+                    } else {
+                        spwnCount[war[a].memory.role] = {
+                            count: 1,
+                            goal: []
+                        };
+                    }
+                }
+                for (a in expand) {
+                    if (spwnCount[expand[a].memory.role] !== undefined) {
+                        spwnCount[expand[a].memory.role].count++;
+                        spwnCount[expand[a].memory.role].goal.push(expand[a].memory.goal);
+                    } else {
+                        spwnCount[expand[a].memory.role] = {
+                            count: 1,
+                            goal: [expand[a].memory.goal]
+                        };
+
+                    }
+                }
+            }
+        }
+    }
+
     function blackMagic(fn) {
         let memory;
         let tick;
@@ -349,16 +394,14 @@
         if (Memory.stopRemoteMining === undefined) {
             Memory.stopRemoteMining = [];
         }
-        if (Memory.doFlag === undefined) Memory.doFlag = 1;
-        Memory.doFlag--;
-        if (Memory.doFlag < 0) {
-            flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
-            Memory.doFlag = 2;
-        }
         // for creeps.
         var total = 0;
         spawnsDo.runCreeps();
+        addSpawnQuery(); // This will not work with old counting.
         var spawnReport = {};
+        flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
+
+
         var keys = Object.keys(Game.spawns);
         var t = keys.length;
         var title;
@@ -413,49 +456,56 @@
                     ccSpawn.renewCreep(Game.spawns[title]);
                 }
 
-                if (Game.cpu.bucket > 500)
-                    if ((Game.spawns[title].spawning === null)) {
-                        if (Game.spawns[title].memory.alphaSpawn) {
+                if (Game.spawns[title].pos.roomName == 'E14S37' && Game.spawns[title].memory.alphaSpawn) {
+                    spawnsDo.spawnQuery(Game.spawns[title].id);
+                    ccSpawn.createFromStack(Game.spawns[title]);
+                } else {
 
-                            let zz = _.filter(Game.spawns, function(o) {
-                                return (o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
-                            });
-                            if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
 
-                            if (anySpawn) {
-                                if (Game.spawns[title].memory.checkCount === undefined) {
-                                    Game.spawns[title].memory.checkCount = countCheck;
+                    if (Game.cpu.bucket > 500)
+                        if ((Game.spawns[title].spawning === null)) {
+                            if (Game.spawns[title].memory.alphaSpawn) {
+
+                                let zz = _.filter(Game.spawns, function(o) {
+                                    return (o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
+                                });
+                                if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
+
+                                if (anySpawn) {
+                                    if (Game.spawns[title].memory.checkCount === undefined) {
+                                        Game.spawns[title].memory.checkCount = countCheck;
+                                    }
+                                    if (Game.spawns[title].memory.checkCount < 0) {
+
+                                        let zz = spawnsDo.spawnCount(Game.spawns[title].id); // This gets creep totals.
+                                        spawnsDo.checkModules(Game.spawns[title], zz); // This uses that info and adds to query.
+                                        spawnsDo.checkExpand(Game.spawns[title], zz); // This uses creepTotal to do expansion stuff - and adds to expandQuery.
+
+
+                                        Game.spawns[title].memory.checkCount = countCheck;
+                                    }
                                 }
-                                if (Game.spawns[title].memory.checkCount < 0) {
-                                    let zz = spawnsDo.spawnCount(Game.spawns[title].id); // This gets creep totals.
-                                    spawnsDo.checkModules(Game.spawns[title], zz); // This uses that info and adds to query.
-                                    spawnsDo.checkExpand(Game.spawns[title], zz); // This uses creepTotal to do expansion stuff - and adds to expandQuery.
 
-
-                                    Game.spawns[title].memory.checkCount = countCheck;
-                                }
                             }
+                            ccSpawn.createFromStack(Game.spawns[title]);
 
-                        }
-                        ccSpawn.createFromStack(Game.spawns[title]);
+                            if (Game.spawns[title].memory.lastSpawn === undefined)
+                                Game.spawns[title].memory.lastSpawn = 0;
+                            Game.spawns[title].memory.lastSpawn++;
 
-                        if (Game.spawns[title].memory.lastSpawn === undefined)
+
+                        } else {
                             Game.spawns[title].memory.lastSpawn = 0;
-                        Game.spawns[title].memory.lastSpawn++;
-
-
-                    } else {
-                    Game.spawns[title].memory.lastSpawn = 0;
-                    let spawn = Game.spawns[title];
-                    spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
-                        color: '#97c39a ',
-                        stroke: '#000000 ',
-                        strokeWidth: 0.123,
-                        font: 0.5,
-                        align: RIGHT
-                    });
+                            let spawn = Game.spawns[title];
+                            spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
+                                color: '#97c39a ',
+                                stroke: '#000000 ',
+                                strokeWidth: 0.123,
+                                font: 0.5,
+                                align: RIGHT
+                            });
+                        }
                 }
-                //                }
                 if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
                     let spawn = Game.spawns[title];
                     let spawnStats = {
@@ -480,7 +530,7 @@
         Memory.stats.rooms = spawnReport;
         memoryStatsUpdate();
         link.run();
-        
+
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
             if (Game.cpu.bucket > 250) {
@@ -495,11 +545,11 @@
                 }
             }
         }
-            Memory.marketRunCounter--;
-            if (Memory.marketRunCounter <= 0) {
-                    Memory.marketRunCounter = 10;
-                market.run();
-            }
+        Memory.marketRunCounter--;
+        if (Memory.marketRunCounter <= 0) {
+            Memory.marketRunCounter = 10;
+            market.run();
+        }
 
         Memory.totalPowerProcessed = 0;
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;

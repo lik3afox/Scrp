@@ -117,6 +117,118 @@
             if (Game.rooms[a] === undefined) delete Memory.rooms[a];
         }
     }
+// Difference is one does if it's undefined
+    function softSetMemory(flag) {
+        var mem = flag.memory;
+        if(mem.module === undefined){
+            mem.module = [];
+        }
+        if(mem.alphaSpawn === undefined) {
+            var spwns = flag.room.find(FIND_STRUCTURES);
+            spwns = _.filter(spwns, function(o) {
+                return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
+            });
+            if(spwns.length > 0)
+                mem.alphaSpawn = spwns[0].id;
+        }
+    }
+    function hardSetMemory(flag) {
+        var mem = flag.memory;
+            mem.module = [];
+            var spwns = flag.room.find(FIND_STRUCTURES);
+            spwns = _.filter(spwns, function(o) {
+                return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
+            });
+            if(spwns.length > 0)
+                mem.alphaSpawn = spwns[0].id;
+
+//            flag.secondaryColor = COLOR_GREEN;
+    }
+
+    function adjustModule(flag) {
+        // Look at room and make adjustments to module
+    }
+
+    var font =  { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align:LEFT,backgroundColor:'#0F0F0F' };
+    var _name = 0;
+    var _number = 1;
+    var _level = 2;
+
+    function showInfo(flag) {
+        if( flag.room === undefined){
+            console.log(flag,roomLink( flag.pos.roomName) );
+            return;
+        }
+        switch (flag.secondaryColor) {
+            case COLOR_WHITE:
+                flag.room.visual.text('No Info Selected', flag.pos.x+1.5, flag.pos.y,font); 
+                break;
+            case COLOR_GREY:
+                flag.room.visual.text('Soft Setting Memory', flag.pos.x+1.5, flag.pos.y,font); 
+                break;
+            case COLOR_RED:
+                flag.room.visual.text('Hard Setting Memory', flag.pos.x+1.5, flag.pos.y,font); 
+                break;
+            case COLOR_GREEN:
+            if(flag.memory.module !== undefined && flag.memory.module.length !== 0 ) {
+                flag.room.visual.text('Module:'+flag.memory.alphaSpawn+' Status:', flag.pos.x+1.5, flag.pos.y-1,font); 
+                var x = flag.pos.x+1.5;
+                var y = flag.pos.y;
+                for(var e in flag.memory.module) {
+                    var outThere;
+                    if(Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined){
+                        outThere = Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
+                    } else {
+                        outThere = 0;
+                    }
+
+                    flag.room.visual.text('Role :'+flag.memory.module[e][_name]+'(Lv:'+flag.memory.module[e][_level]+') #:'+outThere+'/'+flag.memory.module[e][_number], x, y,font); 
+                    y++;
+                }
+            } else {
+                flag.room.visual.text('Fail Module, grabbing from Hard Code', flag.pos.x+1.5, flag.pos.y,font); 
+            }
+                break;
+
+        }
+    }
+
+    function whiteflag(flag) {
+        // Whiteflag functions as a control for that room.
+        // When the secondary is set to white - nothing occurs.
+        switch (flag.secondaryColor) {
+            case COLOR_WHITE:
+                // Nothing, maybe even clearing it. 
+                break;
+            case COLOR_GREY:
+                // Resets it's memory. 
+                softSetMemory(flag);
+                break;
+            case COLOR_GREEN:
+                // Runs off of flag memory. 
+                // This color also means that it's pulled as module for build.spaw
+                adjustModule(flag);
+                break;
+
+            case COLOR_RED:
+                hardSetMemory(flag);
+                break;
+            case COLOR_PURPLE:
+                break;
+            case COLOR_BLUE:
+                break;
+            case COLOR_CYAN:
+                break;
+            case COLOR_YELLOW:
+                break;
+            case COLOR_ORANGE:
+                break;
+            case COLOR_BROWN:
+                break;
+        }
+        showInfo(flag);
+
+    }
 
     class buildFlags {
 
@@ -132,15 +244,18 @@
             }
 
             let zFlags = _.filter(Game.flags, function(o) {
-                return o.color != COLOR_WHITE && o.color != COLOR_GREY && o.color != COLOR_CYAN;
+                return  o.color != COLOR_GREY && o.color != COLOR_CYAN;
             });
-
+//o.color != COLOR_WHITE
             var e = zFlags.length;
             var flag;
             while (e--) {
                 flag = zFlags[e];
 
                 switch (flag.color) {
+                    case COLOR_WHITE:
+                        whiteflag(flag);
+                        break;
 
                     case COLOR_RED:
                         doDefendThings(flag);
@@ -172,32 +287,6 @@
                                         flag.memory.wallTarget = close.id;
                                         flag.setPosition(close.pos);
                                     }
-                                    /*
-                                    var struc = creep.room.find(FIND_STRUCTURES);
-                                    var bads; 
-
-                                    var test2 = _.filter(struc, function(o) {
-                                        return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
-                                    }); // This is something is not on a 
-
-                                    if (test2.length !== 0) {
-                                        flag.memory.wallTarget = flag.pos.findClosestByRange(test2).id;
-                                    } else {
-                                        var test = _.filter(struc, function(o) {
-                                            return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && o.pos.lookForStructure(STRUCTURE_RAMPART);
-                                        });
-                                        if (test.length !== 0) {
-                                            flag.memory.wallTarget = flag.pos.findClosestByRange(test).id;
-                                        } else {
-                                            bads = _.filter(struc, function(o) {
-                                                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_CONTROLLER;
-                                            }); // these are the ramparts
-                                            if (bads.length > 0) {
-                                                flag.memory.wallTarget = flag.pos.findClosestByRange(bads).id;
-                                            } 
-                                        }
-                                    }
-*/
                                     // thing is dead and get a new target.
                                 } else {
                                     console.log('attacking', target, 'hp:', target.hits);
