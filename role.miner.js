@@ -110,7 +110,7 @@ class settler extends roleParent {
             }
         }
 
-        //        shouldDie(creep);
+        super.shouldDie(creep);
 
         super.movement.checkForBadsPlaceFlag(creep);
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }

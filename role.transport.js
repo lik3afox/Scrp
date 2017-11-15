@@ -78,7 +78,7 @@ class transport extends roleParent {
             return;
         }
 
-        super.shouldDie(creep);
+//        super.shouldDie(creep);
 
         if (creep.memory.gohome === undefined) { creep.memory.gohome = false; }
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }

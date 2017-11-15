@@ -112,7 +112,6 @@ function attackCreep(creep, bads) {
 }
 
 function analyzeSourceKeeper(creep) {
-    var noMineral = ['E14S34', 'E16S34', 'E24S34', 'E25S44', 'E14S35','E25S44'];
 
     let keepers = creep.memory.keeperLair;
     let targetID;
@@ -125,46 +124,13 @@ function analyzeSourceKeeper(creep) {
             keeperTarget = Game.getObjectById(keepers[e].id);
 
         if (keeperTarget !== null&&keeperTarget !== undefined) {
-        //    if (_.contains(noMineral, creep.room.name) ) { // Will always kill mineral SK.
-                if (keeperTarget.ticksToSpawn === undefined) {
+                if (keeperTarget.ticksToSpawn === undefined  ) {
                     targetID = e;
                     break;
-                    //Winner
                 } else if (keeperTarget.ticksToSpawn < lowest) {
                     lowest = keeperTarget.ticksToSpawn;
                     targetID = e;
                 }
-    //        } else {
-/*
-                if (creep.memory.mineralRoomID === undefined) {
-                    let tempinz = creep.room.find(FIND_MINERALS);
-                    creep.memory.mineralRoomID = tempinz[0].id;
-                }
-
-                if (e == creep.memory.mineralRoomID) {
-                    let tempin = Game.getObjectById(creep.memory.mineralRoomID);
-                    if (tempin.mineralAmount !== 0) {
-                        if (keeperTarget.ticksToSpawn === undefined) {
-                            targetID = e;
-                            break;
-                            //Winner
-                        } else if (keeperTarget.ticksToSpawn < lowest) {
-                            lowest = keeperTarget.ticksToSpawn;
-                            targetID = e;
-                        }
-                    }
-                } else {
-                    if (keeperTarget.ticksToSpawn === undefined) {
-                        targetID = e;
-                        break;
-                        //Winner
-                    } else if (keeperTarget.ticksToSpawn < lowest) {
-                        lowest = keeperTarget.ticksToSpawn;
-                        targetID = e;
-                    }
-                }
-*/
-//            }
         }
 
 
@@ -329,12 +295,17 @@ class roleGuard extends roleParent {
         } else {
             if (creep.memory.keeperLair === undefined) {
                 creep.memory.keeperLair = creep.room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_KEEPER_LAIR } });
-                if (creep.room.name == 'E26S34') {
-                    var ee = Game.getObjectById('5982ff86b097071b4adc2d2a');
-                    var zz = Game.getObjectById('5982ff86b097071b4adc2d2c');
-
-                    creep.memory.keeperLair.push(ee);
-                    creep.memory.keeperLair.push(zz);
+                switch(creep.room.name){
+                	case 'E26S34':
+    	                creep.memory.keeperLair.push(Game.getObjectById('5982ff86b097071b4adc2d2a'));
+	                    creep.memory.keeperLair.push(Game.getObjectById('5982ff86b097071b4adc2d2c'));
+                	break; 
+                	case 'E16S34':
+    	                creep.memory.keeperLair.push(Game.getObjectById('5982fef8b097071b4adc1d8d'));
+                	break;
+                	case 'E14S34':
+    	                creep.memory.keeperLair.push(Game.getObjectById('5982fef8b097071b4adc1d8b'));
+                	break;
                 }
                 creep.memory.goTo = analyzeSourceKeeper(creep);
             }

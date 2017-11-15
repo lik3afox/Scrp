@@ -296,13 +296,13 @@ class PowerInteract {
         if (powerBank.ticksToDecay < 4000) {
             console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
             return false;
-        } else if (powerBank.power < 6000) {
+        } else if (powerBank.power < 5000) {
             console.log('Not enough power@',powerBank.power , powerBank.pos);
             return false;
         }
         else {
             let rando = Math.floor(Math.random() * 100) + 1;
-            var name = 'powerbankX';// + rando;
+            var name = 'powerbankX' + rando;
             console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);
             if (Game.flags[name] === undefined &&(room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === null)) {
                 var mem = {

@@ -85,7 +85,15 @@ function moveToWithdraw(creep) {
             if (total.length > 0) {
                 creep.memory.sourceID = total[0].id;
             } else {
-                creep.sleep(3);
+                total = creep.room.find(FIND_SOURCES);
+                if(total.length > 1) {
+                    total.sort((a, b) => a.ticksToRegeneration - b.ticksToRegeneration);
+                }
+                if(creep.pos.isNearTo(total[0].pos)){
+                    creep.sleep(3);
+                } else {
+                    creep.moveTo(total[0]);
+                }
                 return;
             }
 
@@ -209,8 +217,8 @@ class roleHarvester extends roleParent {
                     creep.say("⛏️", true);
                 }
             } else {
-                if (creep.pos.isNearTo(goal))
-                    creep.sleep(3);
+  //              if (creep.pos.isNearTo(goal))
+//                    creep.sleep(3);
             }
             return;
         }

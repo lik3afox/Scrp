@@ -52,12 +52,12 @@ var defendParty = [
 
 var bigPowerParty = [
     ['fighter', require('army.fighter'), 1, 10],
-    ['healer', require('army.healer'), 2, 4] // Healer
+    ['healer', require('army.healer'), 2, 3] // Healer
 ];
 
 var smallPowerParty = [
     ['fighter', require('army.fighter'), 1, 8],
-    ['healer', require('army.healer'), 1, 5] // Healer
+    ['healer', require('army.healer'), 1, 4] // Healer
 ];
 
 var mageParty = [

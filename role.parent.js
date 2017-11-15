@@ -282,21 +282,10 @@ class baseParent {
 
     static shouldDie(creep) {
         if (creep.hits == creep.hitsMax) return;
-
-        let death = true;
-        var e = creep.body.length;
-        while (e--) {
-            if (creep.body[e].type == 'move' && creep.body[e].hits > 0) {
-                death = false;
-            }
-        }
-        // Looking for any move parts
-        // if there sin't any
-        if (death) {
-            console.log(creep, 'wants to die');
+        
+        if( creep.getActiveBodyparts(MOVE) === 0) {
             creep.suicide();
         }
-
     }
 
     static sayWhat(creep) {

@@ -24,14 +24,14 @@ function getRepair(creep) {
     //    console.log('does this get used?');
     //  console.log('here?',test.length);
     return creep.room.find(FIND_STRUCTURES, {
-        filter: object => (object.hits < object.hitsMax)&&(object.structureType != STRUCTURE_RAMPART || 
-            (object.structureType == STRUCTURE_RAMPART &&(!object.isPublic ||(object.isPublic && object.hits <= 100000))  ) 
-            
-            )
+        filter: object => (object.hits < object.hitsMax) && (object.structureType != STRUCTURE_RAMPART ||
+            (object.structureType == STRUCTURE_RAMPART && (!object.isPublic || (object.isPublic && object.hits <= 100000)))
+
+        )
     }).sort((a, b) => a.hits - b.hits);
 
-        
-        
+
+
 
 }
 
@@ -413,10 +413,10 @@ class StructureInteract {
                 if (creep.repair(atFeet[i].structure) == OK) {
                     creep.memory.onRoad = true;
                     return true;
-                } 
-            }else {
-                    creep.memory.onRoad = false;
                 }
+            } else {
+                creep.memory.onRoad = false;
+            }
         }
         // If none there, then create 1 road per creep.
         if (creep.memory.onRoad) {
@@ -424,9 +424,9 @@ class StructureInteract {
                 creep.memory.roadCount = 1;
             }
             if (creep.memory.roadCount > 0 && creep.memory.stuckCount <= 2) {
-          /*      if(creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {
-                    creep.memory.roadCount--;
-                }*/
+                /*      if(creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {
+                          creep.memory.roadCount--;
+                      }*/
             }
         }
         creep.memory.onRoad = false;
@@ -583,12 +583,20 @@ class StructureInteract {
         if (creep.memory.wallTargetID === undefined) {
             var sz;
 
-            let targets = creep.room.find(FIND_STRUCTURES);
+            var targets = creep.room.find(FIND_STRUCTURES);
             targets = _.filter(targets,
                 function(object) {
-                    return object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART;
+                    return object.structureType == STRUCTURE_RAMPART && object.isPublic && object.hits < 1000000;
                 }
             ).sort((a, b) => a.hits - b.hits);
+            if (targets.length === 0) {
+                targets = creep.room.find(FIND_STRUCTURES);
+                targets = _.filter(targets,
+                    function(object) {
+                        return object.structureType == STRUCTURE_WALL ||(object.structureType == STRUCTURE_RAMPART&& !object.isPublic );
+                    }
+                ).sort((a, b) => a.hits - b.hits);
+            }
 
             if (targets.length > 0) {
                 creep.memory.wallTargetID = targets[0].id;

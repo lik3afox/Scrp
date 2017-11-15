@@ -456,7 +456,9 @@
                     ccSpawn.renewCreep(Game.spawns[title]);
                 }
 
-                if (Game.spawns[title].pos.roomName == 'E14S37' && Game.spawns[title].memory.alphaSpawn) {
+                if(Game.spawns[title].memory.alphaSpawn && Game.flags[ Game.spawns[title].pos.roomName ] !== undefined && Game.flags[ Game.spawns[title].pos.roomName ].color === COLOR_WHITE &&
+                    Game.flags[ Game.spawns[title].pos.roomName ].secondaryColor === COLOR_GREEN) {
+                    //console.log('doing new Query',Game.spawns[title].pos.roomName);
                     spawnsDo.spawnQuery(Game.spawns[title].id);
                     ccSpawn.createFromStack(Game.spawns[title]);
                 } else {

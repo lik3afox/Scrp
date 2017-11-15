@@ -276,7 +276,7 @@ if((lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000
         switch (creep.memory.roleID) {
             default: 
             if (!constr.pickUpEnergy(creep))
-                if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
+                if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000 && creep.room.storage.store[RESOURCE_ENERGY] > 3000 ) {
                     if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
                 }
             break;

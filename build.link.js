@@ -92,6 +92,7 @@ class buildLink {
     static deposit(creep) { // Used by harvesters
 
         if (creep.carry[RESOURCE_ENERGY] === 0) return false;
+        if( creep.room.controller === undefined) return false;
         if (creep.room.controller.level < 5) return false;
 
         if (creep.memory.linkID === undefined) {
