@@ -92,7 +92,7 @@ function moveToWithdraw(creep) {
                 if(creep.pos.isNearTo(total[0].pos)){
                     creep.sleep(3);
                 } else {
-                    creep.moveTo(total[0]);
+                    creep.moveTo(total[0],{maxRooms:1,maxOpts:10});
                 }
                 return;
             }
