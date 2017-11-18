@@ -473,10 +473,8 @@ class SpawnInteract {
     static createFromStack(spawn) {
         var STACK = getStack(spawn);
 
-
         if (STACK !== undefined && STACK.length > 0) {
             // Creation here.
-
             if (spawn.canCreateCreep(STACK[0].build) == OK) {
 
                 spawn.memory.CreatedMsg = STACK[0].memory.role;

@@ -448,21 +448,16 @@
 
                 }
 
-                let anySpawn = false;
-                if (Game.spawns[title].memory.alphaSpawn) {
-                    Game.spawns[title].memory.checkCount--;
-                }
-                if ((Game.spawns[title].spawning === null)) {
-                    ccSpawn.renewCreep(Game.spawns[title]);
-                }
 
                 if (Game.spawns[title].memory.alphaSpawn && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN) {
                     spawnsDo.spawnQuery(Game.spawns[title].id);
-                    ccSpawn.createFromStack(Game.spawns[title]);
-                }
+                } 
 
-                if (Game.spawns[title].spawning !== null) {
+                if(Game.spawns[title].spawning === null){
+                    ccSpawn.renewCreep(Game.spawns[title]);
+                    ccSpawn.createFromStack(Game.spawns[title]);
+                } else{
                     Game.spawns[title].memory.lastSpawn = 0;
                     let spawn = Game.spawns[title];
                     spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
