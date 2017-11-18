@@ -146,7 +146,54 @@
         //            flag.secondaryColor = COLOR_GREEN;
     }
 
-    var roomer;
+    var roomer = {
+        homeDefender: undefined,
+        minHarvest: undefined,
+        harvester: undefined,
+        nuke: undefined,
+        power: undefined,
+        upbuilder: undefined,
+        first: undefined,
+        scientist    : undefined,
+        wallwork : undefined,
+        spawn : undefined,
+        upgrade : undefined,
+        //           
+        /*            linker   : undefined,
+*/
+        wait:undefined,
+    };
+
+    function killCreeps(room, role, level) {
+        let screeps = room.find(FIND_MY_CREEPS);
+        if (level === undefined) {
+            screeps = _.filter(screeps, function(s) {
+                return s.memory.role == role;
+            });
+        } else {
+            screeps = _.filter(screeps, function(s) {
+                return s.memory.role == role && s.memory.level == level;
+            });
+
+        }
+        console.log('SUCIDE FIND', screeps.length);
+        for (var ea in screeps) {
+            screeps[ea].suicide();
+        }
+    }
+
+    function stopRebirth(room, role) {
+
+        let screeps = room.find(FIND_MY_CREEPS);
+        _.filter(screeps, function(s) {
+            if (s.memory.role == role) {
+                s.memory.reportDeath = true;
+            }
+            //                return s.memory.role == role;
+        });
+
+    }
+
 
     function adjustModule(flag) {
         /*            harvester  : flag.room.energyCapacityAvailable,
@@ -156,66 +203,162 @@
                     scientist    : flag.memory.masterLinkID,*/
 
         // Look at room and make adjustments to module
-        roomer = {
-            harvester: undefined,
-            homeDefender: undefined,
-            minHarvest: undefined,
-            /*            linker   : undefined,
-                        
-                        scientist    : undefined,
-                        wallworker : undefined,
-                        upgrader : undefined,
-                        upbuilder : undefined,
-                        wait1 : undefined,
-                        wait2 : undefined,
-                        wait3 : undefined,
-                        wait4 : undefined,
-                        wait5 : undefined,
-                        wait6 : undefined,
-                        wait7 : undefined, */
-        };
+
         if (flag.room === undefined) return;
         var events = [];
         for (var e in roomer) {
             events.push(e);
         }
 
-        if( flag.memory.module === undefined) {
-             flag.memory.module = [];
-        }
-
-        if (flag.memory.checkWhat === undefined) {
-            flag.memory.checkWhat = 0;
-        }
-        flag.memory.checkWhat++;
-        if (flag.memory.checkWhat >= events.length) {
-            flag.memory.checkWhat = 0;
+        if (flag.memory.module === undefined) {
+            flag.memory.module = [];
         }
 
         var keys = Object.keys(roomer);
         var ee = keys[flag.memory.checkWhat];
         var ez;
+        let zzz;
+        var roomEnergy = flag.room.energyCapacityAvailable;
         //    console.log( roomer[ee],ee,flag.memory.checkWhat,'ADJUST CHECKING',flag.room.name);
-
         switch (ee) {
+            case "upgrader":
+                ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
+                if (ez === -1 && flag.room.controller.level !== 8) {
+                    flag.memory.module.push([ee, 0, 0]);
+                } else {
+                    if(flag.room.controller.level === 8){
+                        flag.memory.module.splice(ez,1);
+                    }
+                }
+                break;
+            case 'upbuilder':
+                // Harvest Checking
+                ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
+                if (ez === -1) {
+                    flag.memory.module.push([ee, 0, 0]);
+                } else {
+                    switch (flag.memory.module[ez][_level]) {
+                        case 0:
+                            // 
+                        break;
+                        case 7:
+                            if (flag.room.controller.level === 8) {
+                                flag.memory.module[ez][_level] = 8;
+                                flag.memory.module[ez][_number] = 1;
+                            }
+                            break;
+                    }
+                }
+                break;
+            case 'lab':
+                // Find lab that is within two distance of storage and terminal.
+                if (flag.room.storage === undefined || flag.room.terminal === undefined) break;
+
+                zzz = flag.room.find(FIND_MY_STRUCTURES);
+                zzz = _.filter(zzz, function(structure) {
+                    return (structure.structureType == STRUCTURE_LAB && structure.pos.inRangeTo(flag.room.storage, 2) && structure.pos.inRangeTo(flag.room.terminal, 2));
+                });
+
+                if (zzz.length > 0) {
+                    console.log(flag, 'FOUND MasterLab', zzz[e].structureType);
+                    flag.room.memory.boostLabID = zzz[e].id;
+                }
+
+                break;
 
             case 'linker':
-                // Harvest Checking
+
+                if (flag.room.storage === undefined) break;
+
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
 
                 }
+
+                if (flag.room.controller.level < 5) break;
+
+                zzz = flag.room.find(FIND_MY_STRUCTURES);
+                zzz = _.filter(zzz, function(structure) {
+                    return (structure.structureType == STRUCTURE_LINK && structure.pos.inRangeTo(flag.room.storage, 2));
+                });
+
+                if (zzz.length > 0) {
+                    console.log(flag, 'FOUND masterLink', zzz[e].structureType);
+                    flag.room.memory.masterLinkID = zzz[e].id;
+                }
+
+
                 break;
 
-            case 'wallworker':
+            case "wait":
+                flag.memory.checkWhat = -10;
+            break;
+            case 'power':
+                if (flag.room.controller.level === 8 && flag.room.memory.powerspawnID === undefined)
+                    console.log(roomLink(flag.pos.roomName), 'FINDING SPAWN' + flag.room.powerspawn);
+                break;
+            case 'nuke':
+                if (flag.room.controller.level === 8 && flag.room.memory.nukeID === undefined)
+                    console.log(roomLink(flag.pos.roomName), 'Finding Nuke' + flag.room.nuke);
+                break;
+            case 'spawn':
+                // This will setup the spawns.
+                console.log('FINDING spawn');
+                zzz = flag.room.find(FIND_MY_STRUCTURES);
+                zzz = _.filter(zzz, function(structure) {
+                    return (structure.structureType == STRUCTURE_EXTENSION ||
+                        structure.structureType == STRUCTURE_SPAWN ||
+                        structure.structureType == STRUCTURE_TOWER ||
+                        structure.structureType == STRUCTURE_LAB ||
+                        structure.structureType == STRUCTURE_POWER_SPAWN
+                    );
+                });
+
+                flag.room.memory.spawnTargets = [];
+                var a = zzz.length;
+                while (a--) {
+                    flag.room.memory.spawnTargets.push(zzz[a].id);
+                }
+
+                break;
+
+            case 'wallwork':
+
                 // Harvest Checking
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
-                } else {
-
+                } else if(Game.shard.name === 'shard1'){
+switch(flag.memory.module[ez][_level]){
+    case 0:
+    if(roomEnergy >= 1250){ // At room controller lv 4 and extensions, with walls or ramparts
+                                    let vr = flag.room.find(FIND_STRUCTURES, {
+                                        filter: s => s.structureType == STRUCTURE_WALL || s.structureType == STRUCTURE_RAMPART
+                                    });
+                                    if(vr.length > 0){
+                                        flag.memory.module[ez][_level] = 2;
+                                        flag.memory.module[ez][_number] = 1;
+                                    }
+    }
+    break;
+    case 2:
+    if(roomEnergy >= 1750){
+        flag.memory.module[ez][_level] = 3;
+    }
+    break;
+    case 3:
+    if(roomEnergy >= 2250){
+        flag.memory.module[ez][_level] = 4;
+    }
+    break;
+    case 4:
+    if(roomEnergy >= 3250){
+        flag.memory.module[ez][_level] = 5;
+    }
+    break;
+}
                 }
                 break;
 
@@ -225,6 +368,44 @@
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
+                    roomEnergy = flag.room.energyCapacityAvailable;
+                    // flag.memory.module[ez][_number] = 2; Number gets reduced by scientist coming.
+
+                    switch (flag.memory.module[ez][_level]) {
+                        case 0:
+                            if (roomEnergy >= 550) {
+                                flag.memory.module[ez][_level] = 1;
+                            }
+                            break;
+                        case 1:
+                            if (roomEnergy >= 800) {
+                                flag.memory.module[ez][_level] = 2;
+                            }
+                            break;
+                        case 2:
+                            if (roomEnergy >= 1300) {
+                                flag.memory.module[ez][_level] = 3;
+                            }
+                            break;
+                        case 3:
+                            if (roomEnergy >= 1800) {
+                                flag.memory.module[ez][_level] = 4;
+                                killCreeps(flag.room, 'first', 3);
+                            }
+                            break;
+                        case 4:
+                            if (roomEnergy >= 2250) {
+                                flag.memory.module[ez][_level] = 5;
+                                killCreeps(flag.room, 'first', 4);
+                            }
+                            break;
+                        case 5:
+                            if (roomEnergy >= 2500) {
+                                flag.memory.module[ez][_level] = 6;
+                                killCreeps(flag.room, 'first', 5);
+                            }
+                            break;
+                    }
 
                 }
                 break;
@@ -248,33 +429,49 @@
                             }
                         }
                     } else {
-                        flag.memory.module[ez][_level] = flag.room.controller.level -1;
+                        flag.memory.module[ez][_level] = flag.room.controller.level - 1;
                     }
 
                 }
                 break;
-
             case 'scientist':
                 // Harvest Checking
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
-                } else {
-                    if (flag.room.memory.mineralContainID !== undefined && flag.room.memory.mineralID !== undefined && flag.room.memory.extractID !== undefined) {
+                } else if(Game.shard.name === 'shard1'){
+                    if (flag.memory.module[ez][_level] === 0 && flag.room.memory.mineralContainID !== undefined && flag.room.memory.mineralID !== undefined && flag.room.memory.extractID !== undefined) {
                         flag.memory.module[ez][_level] = 4;
                         flag.memory.module[ez][_number] = 1;
+                        flag.memory.module[_.findIndex(flag.memory.module, function(o) { return o[_name] == 'first'; })][_number] = 1;
+                        stopRebirth(flag.room,'first');
+                    }
+                    switch( flag.memory.module[ez][_level] ){
+                        case 4:
+                            if (roomEnergy >= 1200) {
+                                flag.memory.module[ez][_level] = 5;
+                            }
+                        break;
+                        case 5:
+                            if (roomEnergy >= 2250) {
+                                flag.memory.module[ez][_level] = 6;
+                            }
+                        break;
                     }
                 }
                 break;
+
             case 'minHarvest':
                 // Harvest Checking
+
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
-                            if (flag.room.controller.level >= 6) {
+                            if (flag.room.controller.level >= 6 && (flag.room.memory.mineralID === undefined || flag.room.memory.extractID === undefined || flag.room.memory.mineralContainID === undefined)) {
+                                console.log(flag, 'FINDING mineral');
                                 // mineralContainID, mineralID, extractID
 
                                 if (flag.room.memory.mineralID === undefined) {
@@ -282,7 +479,7 @@
                                     flag.room.memory.mineralID = vr[0].id;
                                 }
                                 if (flag.room.memory.extractID === undefined) {
-                                    let vr = creep.room.find(FIND_STRUCTURES, {
+                                    let vr = flag.room.find(FIND_STRUCTURES, {
                                         filter: s => s.structureType == STRUCTURE_EXTRACTOR
                                     });
                                     flag.room.memory.extractID = vr[0].id;
@@ -312,24 +509,27 @@
                 break;
             case 'harvester':
                 // Harvest Checking
+                console.log(roomLink(flag.room.name), 'FINDING harvester');
+
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
+
+
                     if (flag.memory.module[ez][_level] < 3) {
-                        var roomEnergy = flag.room.energyCapacityAvailable;
                         console.log(flag.memory.module[ez][_name], 'Lvl:', flag.memory.module[ez][_level], 'Num', flag.memory.module[ez][_number]);
 
                         switch (flag.memory.module[ez][_level]) {
                             case 0:
-                                if (roomEnergy > 700) {
+                                if (roomEnergy >= 700) {
                                     flag.memory.module[ez][_level] = 2;
                                     let source = flag.room.find(FIND_SOURCES);
                                     flag.memory.module[ez][_number] = source.length;
                                 }
                                 break;
                             case 2:
-                                if (roomEnergy > 2900) {
+                                if (roomEnergy >= 2900) {
                                     let source = flag.room.find(FIND_SOURCES);
                                     if (source.length == 1) {
                                         flag.memory.module[ez][_level] = 3;
@@ -338,6 +538,7 @@
                                         flag.memory.module[ez][_level] = 4;
                                         flag.memory.module[ez][_number] = 1;
                                     }
+                                    killCreeps(flag.room, 'harvester', 2);
                                 }
                                 break;
                         }
@@ -367,9 +568,10 @@
     function showInfo(flag) {
         var e;
         if (flag.room === undefined) {
-//            console.log(flag, roomLink(flag.pos.roomName));
+            //            console.log(flag, roomLink(flag.pos.roomName));
             return;
         }
+
         switch (flag.secondaryColor) {
             case COLOR_WHITE:
                 flag.room.visual.text('No Info Selected', flag.pos.x + 1.5, flag.pos.y, font);
@@ -416,9 +618,9 @@
             case COLOR_GREEN:
                 if (flag.memory.module !== undefined && flag.memory.module.length !== 0) {
 
-var zze = roomer !== undefined ? Object.keys(roomer)[flag.memory.checkWhat] : undefined;
+                    var zze = Object.keys(roomer)[flag.memory.checkWhat];
 
-                    flag.room.visual.text('Module:' + flag.memory.alphaSpawn + ' Status:' + zze, flag.pos.x + 1.5, flag.pos.y - 1, font);
+                    flag.room.visual.text('Module:' + flag.memory.alphaSpawn + ' Status:' + flag.memory.checkWhat + zze, flag.pos.x + 1.5, flag.pos.y - 1, font);
                     var x = flag.pos.x + 1.5;
                     var y = flag.pos.y;
                     for (e in flag.memory.module) {
@@ -433,7 +635,7 @@ var zze = roomer !== undefined ? Object.keys(roomer)[flag.memory.checkWhat] : un
                         y++;
                     }
                 } else {
-                    flag.room.visual.text('Fail Module, grabbing from Hard Code', flag.pos.x + 1.5, flag.pos.y, font);
+                    flag.room.visual.text('Fail Module, is Flag name === Room name?', flag.pos.x + 1.5, flag.pos.y, font);
                 }
                 break;
 
@@ -441,6 +643,15 @@ var zze = roomer !== undefined ? Object.keys(roomer)[flag.memory.checkWhat] : un
     }
 
     function whiteflag(flag) {
+        if (flag.memory.checkWhat === undefined) {
+            flag.memory.checkWhat = -10;
+        }
+        if(flag.secondaryColor === COLOR_GREEN)
+            flag.memory.checkWhat++;
+        if (flag.memory.checkWhat >= Object.keys(roomer).length) {
+            flag.memory.checkWhat = 0;
+        }
+
         // Whiteflag functions as a control for that room.
         // When the secondary is set to white - nothing occurs.
         switch (flag.secondaryColor) {
@@ -454,7 +665,8 @@ var zze = roomer !== undefined ? Object.keys(roomer)[flag.memory.checkWhat] : un
             case COLOR_GREEN:
                 // Runs off of flag memory. 
                 // This color also means that it's pulled as module for build.spaw
-//                adjustModule(flag);
+                if (flag.memory.checkWhat >= 0)
+                    adjustModule(flag);
                 break;
 
             case COLOR_RED:
@@ -582,6 +794,13 @@ var zze = roomer !== undefined ? Object.keys(roomer)[flag.memory.checkWhat] : un
                         if (flag.secondaryColor == COLOR_WHITE) {
                             removeRA(flag);
                         }
+                        if (flag.name == 'Flag27') {
+                            if (flag.room.storage.store[RESOURCE_ENERGY] < 100000) {
+                                flag.memory.musterType = 'hmule';
+                            } else {
+                                flag.memory.musterType = 'upgrademule';
+                            }
+                        }
 
 
                         if (rally !== undefined) {
@@ -601,8 +820,8 @@ var zze = roomer !== undefined ? Object.keys(roomer)[flag.memory.checkWhat] : un
                 }
             }
             if (Memory.showInfo > 1) {
-                //                Memory.stats.powerPartyNum = powerTotal;
-                //               Memory.stats.defendFlagNum = defendTotal;
+                Memory.stats.powerPartyNum = powerTotal;
+                Memory.stats.defendFlagNum = defendTotal;
             } else {
                 Memory.stats.powerPartyNum = undefined;
                 Memory.stats.defendFlagNum = undefined;

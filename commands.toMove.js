@@ -15,6 +15,18 @@ function getTotalFlag() {
 
 var portalID = '5881eb5de8d5a7884c0ac723';
 
+function serializePath(creep){// passed a creep
+    if(creep.memory._path === undefined) return;
+    var path = creep.memory._path;
+
+    // The segment serialization needs -
+    // Start - Turns into _path.room and first 4 - 12 = X, 34 = Y
+    // end = Destination
+    // path - 4 to end of the _move.path
+    
+
+}
+
 function createWayPointTask(creep, pos) {
     let task = {};
     task.options = {

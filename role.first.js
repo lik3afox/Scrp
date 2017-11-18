@@ -137,9 +137,6 @@ class roleFirst extends roleParent {
         super.rebirth(creep);
         super.baseRun(creep);
 
-        if (creep.memory.roleID === 0)
-            if (super.power.getPowerToSpawn(creep)) return;
-
         if (creep.memory.deposit === undefined) { creep.memory.deposit = false; }
 
         if (!creep.memory.deposit && creep.carryTotal > creep.carryCapacity - 5) {

@@ -61,10 +61,11 @@ class muleClass extends roleParent {
                         creep.memory.recycleID = stru[0].id;
                     }
                 }
-                var targ = Game.getObjectById(creep.memory.recycleID);
+                var targ = Game.flags[creep.memory.party].pos;
+
                 if (targ !== null) {
-                    if (creep.pos.isNearTo(targ)) {
-                        targ.recycleCreep(creep);
+                    if (creep.pos.isEqualTo(targ)) {
+                        Game.getObjectById(creep.memory.recycleID).recycleCreep(creep);
                         return;
                     } else {
                         creep.moveTo(targ);

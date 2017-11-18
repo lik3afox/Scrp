@@ -24,6 +24,8 @@ function restingSpot(creep) {
             return new RoomPosition(21, 19, creep.memory.home);
         case '5982ff7ab097071b4adc2b7e':
             return new RoomPosition(33, 23, creep.memory.home);
+        case '5982ff21b097071b4adc2224':
+            return new RoomPosition(33, 29, creep.memory.home);
 
         default:
             return false;
@@ -41,8 +43,8 @@ function clearMemory(creep) {
 
 function doMining(creep) {
     let source = Game.getObjectById(creep.memory.sourceID);
-    if (creep.memory.level === 4 && creep.carryTotal !== creep.carryCapacity) {
-        if (source !== null && creep.harvest(source) == OK) {
+    if (creep.memory.level === 4) {
+        if (source !== null && creep.carryTotal < creep.carryCapacity && creep.harvest(source) == OK) {
             creep.memory.notThere = true;
             clearMemory(creep);
             creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {

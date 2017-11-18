@@ -7,10 +7,6 @@ function getCached(id) {
     return linksCache[id];
 }
 
-RoomPosition.prototype.lookForStructure = function(structureType) {
-    let structures = this.lookFor(LOOK_STRUCTURES);
-    return _.find(structures, { structureType: structureType });
-};
 module.exports = function() {
 
 
@@ -85,33 +81,6 @@ module.exports = function() {
 
     /*
      */
-    Object.defineProperty(Room.prototype, 'powerspawn', {
-        configurable: true,
-        get: function() {
-            if (this.memory.powerspawnID === undefined) {
-                let bb = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_POWER_SPAWN });
-                if (bb.length > 0)
-                    this.memory.powerspawnID = bb[0].id;
-            }
-            let zz = Game.getObjectById(this.memory.powerspawnID);
-            if (zz === null) this.memory.powerspawnID = undefined;
-            return zz;
-        }
-    });
-
-    Object.defineProperty(Room.prototype, 'nuke', {
-        configurable: true,
-        get: function() {
-            if (this.memory.nukeID === undefined) {
-                let bb = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_NUKER });
-                if (bb.length > 0)
-                    this.memory.nukeID = bb[0].id;
-            }
-            let zz = Game.getObjectById(this.memory.nukeID);
-            if (zz === null) this.memory.nukeID = undefined;
-            return zz;
-        }
-    });
         /*
                if (creep.memory.stats !== undefined) return;
 
@@ -198,47 +167,6 @@ module.exports = function() {
             });
         }
         return redFlags;
-    };
-
-
-    Room.prototype.dropped = function() {
-        var dEnergy;
-        if (this.memory.hostileID === undefined || this.memory.droppedScanTimer != Game.time) {
-            dEnergy = this.find(FIND_DROPPED_RESOURCES);
-            let badArray = [];
-            for (var e in dEnergy) {
-                let zz = dEnergy[e];
-                badArray.push(zz.id);
-            }
-            this.memory.droppedID = badArray;
-            this.memory.droppedScanTimer = Game.time;
-            return dEnergy;
-        }
-        dEnergy = [];
-        for (var v in this.memory.droppedID) {
-            dEnergy.push(Game.getObjectById(this.memory.droppedID[v]));
-        }
-        return dEnergy;
-    };
-
-    Room.prototype.hostilesHere = function() {
-        var bads;
-        if (this.memory.hostileID === undefined || this.memory.hostileScanTimer != Game.time) {
-            bads = this.find(FIND_HOSTILE_CREEPS);
-            let badArray = [];
-            for (var e in bads) {
-                let zz = bads[e];
-                badArray.push(zz.id);
-            }
-            this.memory.hostileID = badArray;
-            this.memory.hostileScanTimer = Game.time;
-            return bads;
-        }
-        bads = [];
-        for (var z in this.memory.hostileID) {
-            bads.push(Game.getObjectById(this.memory.hostileID[z]));
-        }
-        return bads;
     };
 
     Creep.prototype.totalCarry = function() {

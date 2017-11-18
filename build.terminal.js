@@ -46,7 +46,7 @@ var xStorage = {
         amount: 5000
     },
     XLHO2: {
-        amount: 4000
+        amount: 5500
     },
     //    XLH2O : {        amount:1000    },
 };
@@ -121,6 +121,7 @@ function adjustOldPrices() {
 
 function needEnergy(terminal) {
 
+    if(terminal.room.controller.level < 6) return false;
     /*    var always = ['E28S71', 'E38S72', 'W4S93'];
         if (Game.market.credits > 15000000) { // Disabled currently
             if (_.contains(always, terminal.room.name)) {
@@ -572,7 +573,7 @@ function sellMineralOrder() {
 
     let total = 0;
     for (var e in Memory.stats.totalMinerals) {
-        if (e == 'K' || e == 'U' || e == 'Z' || e == 'X' || e == 'L' || e == 'O') {
+        if (e == 'K' || e == 'U' || e == 'Z' || e == 'X' || e == 'L' || e == 'O'|| e == 'H') {
             if (Memory.stats.totalMinerals[e] > 150000) {
 
                 //                let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: e });
@@ -728,6 +729,12 @@ function energyCheck(terminal) {
 
 
     return false;
+}
+
+function newgetMostTerminal(mineralz,target) {
+    // get rooms that have terminal
+    // Sort it by the mineral
+    
 }
 
 function getMostTerminal(mineralz, target) {
@@ -1138,7 +1145,7 @@ function upgradeRoom(terminal) {
     return false;
 }
 
-var wanted = ['L'];
+
 function reduceTerminal(terminal){
     // first we get the most
     var min;
@@ -1164,7 +1171,21 @@ terminal.send(min, 5000, room, 'trade');
 
 }
 
+var wanted;
+
+
 function buyMineralsFromBUYORDER(terminal) {
+    var shard1Needed = require('commands.toSegment').getShardData();
+    wanted = [ ];
+        for (var need in shard1Needed.terminalRequest) {
+            if(shard1Needed.terminalRequest[need])
+                wanted.push(need);
+        }
+        if(wanted.length === 0 ){
+            console.log('nothing wanted');
+            return;
+        }
+
     var stor = terminal.room.storage;
     var eng = terminal.store[RESOURCE_ENERGY];
     var buy;

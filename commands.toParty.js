@@ -15,7 +15,7 @@ var basicParty = [
 
 var demoParty = [
     ['demolisher', require('army.demolisher'), 1, 2],
-//    ['thief', require('army.thief'), 1, 3],
+    //    ['thief', require('army.thief'), 1, 3],
 
 ];
 var scienceParty = [
@@ -591,20 +591,22 @@ function returnClosestRoom(roomName) {
     var distance = 100;
     var spawn;
 
-  //  switch (roomName) {
-  //      default:
-            for (var e in Game.spawns) {
-                if (Game.spawns[e].memory.alphaSpawn) {
-                    var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
-                    if (tempDis < distance && Game.spawns[e].room.name != 'E14S38') {
-                        distance = tempDis;
-                        spawn = Game.spawns[e];
-                    }
+    //  switch (roomName) {
+    //      default:
+    for (var e in Game.spawns) {
+        if (Game.spawns[e].memory.alphaSpawn) {
+            if(Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37') {
+                var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
+                if (tempDis < distance ) {
+                    distance = tempDis;
+                    spawn = Game.spawns[e];
                 }
             }
-            return spawn.room.name;
-            //  break;
-//    }
+        }
+    }
+    return spawn.room.name;
+    //  break;
+    //    }
 
 }
 
@@ -623,13 +625,11 @@ function findParty(flag) {
             }
         }
 
-        for (var a in currentParty) {
-            for (var o in Game.spawns) {
-                let spawnz = Game.spawns[o];
-                for (var z in spawnz.memory.warCreate) {
-                    if (currentParty[a][_name] == spawnz.memory.warCreate[z].memory.role && spawnz.memory.warCreate[z].memory.party == flag.name) {
-                        total[currentParty[a][_name]]++;
-                    }
+        for (var o in Game.spawns) {
+            let spawnz = Game.spawns[o];
+            for (var z in spawnz.memory.warCreate) {
+                if (currentParty[i][_name] == spawnz.memory.warCreate[z].memory.role && spawnz.memory.warCreate[z].memory.party == flag.name) {
+                    total[currentParty[i][_name]]++;
                 }
             }
         }
@@ -769,6 +769,10 @@ class partyInteract {
 
     static runFlag() {
 
+    }
+
+    static returnClosestRoom(roomName){
+        return returnClosestRoom(roomName);
     }
 
     static rally(flag) {
@@ -945,7 +949,7 @@ class partyInteract {
                         room: home, // This will return a room, and that room will add to alphaSpawn warstack.
 
                         spawn: home,
-                        name: currentParty[e][_name] + '!' + flag.name[rando]+ Game.shard.name[0]+ Game.shard.name[5],
+                        name: currentParty[e][_name] + '!' + flag.name[rando] + Game.shard.name[0] + Game.shard.name[5],
                         //                name: currentParty[e][_name]+,
                         memory: {
                             role: currentParty[e][_name],
@@ -956,25 +960,26 @@ class partyInteract {
                             level: currentParty[e][_level]
                         }
                     };
-                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81'||home == 'E38S72' ) ) {
+                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81' || home == 'E38S72')) {
                         var terminalStuff;
                         terminalStuff = 0;
-                        var term = Game.rooms.E38S81.terminal;
+                        var term = Game.rooms[home].terminal;
                         for (var eez in term.store) {
                             if (eez !== RESOURCE_ENERGY) {
                                 terminalStuff += term.store[eez];
                             }
-                        }/*
-                        var storageStuff;
-                        storageStuff = 0;
-                         term = Game.rooms.E38S81.storage;
-                        for (eez in term.store) {
-                            if (eez !== RESOURCE_ENERGY) {
-                                storageStuff += term.store[eez];
-                            }
-                        } */
-//                        console.log('MULE CHECK @ ROOM E38S81' + terminalStuff);
-                        if (terminalStuff > 1250 ) {
+                        }
+                        /*
+                                                var storageStuff;
+                                                storageStuff = 0;
+                                                 term = Game.rooms.E38S81.storage;
+                                                for (eez in term.store) {
+                                                    if (eez !== RESOURCE_ENERGY) {
+                                                        storageStuff += term.store[eez];
+                                                    }
+                                                } */
+                        //                        console.log('MULE CHECK @ ROOM E38S81' + terminalStuff);
+                        if (terminalStuff > 1250) {
                             let toSpawn = require('commands.toSpawn');
                             toSpawn.addToWarStack(temp);
                             totalParty[i]++;

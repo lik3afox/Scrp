@@ -1,3 +1,5 @@
+
+
 // Back line
 // Designed for healing.
 
@@ -156,9 +158,6 @@ class healerClass extends roleParent {
 
         if (super.isPowerParty(creep)) {
             creep.memory.waypoint = true;
-            if (creep.ticksToLive == 500) {
-                creep.memory.parent = returnClosestSpawn(creep.room.name).id;
-            }
             super.rebirth(creep);
             if (powerAction(creep))
                 return;

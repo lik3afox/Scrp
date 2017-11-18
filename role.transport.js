@@ -67,7 +67,13 @@ class transport extends roleParent {
         if (super.movement.runAway(creep)) {
             return;
         }
-        if (super.baseRun(creep)) return;
+        if (super.baseRun(creep)) {
+            if(creep.memory._move !== undefined) {
+                var report = creep.memory._move.path[0]+creep.memory._move.path[1] + ":"+creep.memory._move.path[2]+creep.memory._move.path[3]+" "+(creep.memory._move.path.length-4);
+                creep.say(report);
+            }
+            return;
+        }
 
         if (super.link.transfer(creep)) {
             creep.countReset();

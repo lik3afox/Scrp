@@ -9,19 +9,6 @@ function makeBody(carryNeeded) {
     return body;
 }
 
-let pSpawn; // = ['58b73f23d1542d5b246bb1f0','58e9cb537d23e0b93b4edcc0'];
-////function makeAttacker(attackNeeded) 
-// lowest ticks is 2700
-// ticks left tiil decay - 500
-// so 4500 = 4000
-// 2 mil / 4000
-// 500 damage per tick
-// 500 / 30 = 17 damage
-// if less than 20 do 20 damage
-// create attacker
-// create healer 
-
-
 // decay 25
 class PowerInteract {
 
@@ -30,7 +17,7 @@ class PowerInteract {
         let total = 0;
         for (var e in Game.rooms) {
             if (Game.rooms[e].memory.powerSpawnID !== undefined) {
-                let powerS = Game.getObjectById(Game.rooms[e].memory.powerSpawnID);
+                let powerS = Game.rooms[e].powerspawn;
                 if (powerS !== null) {
                     let room = Game.rooms[e];
                     if (room.memory.powerCount === undefined) room.memory.powerCount = 0;
@@ -39,11 +26,10 @@ class PowerInteract {
                         if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
                             room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
                         ) {
-                            //                        report = report + " " + room + "(" + room.memory.powerCount + ")";
                             if (powerS.processPower() == OK) {
                                 room.memory.powerCount++;
                                 total++;
-                                powerS.room.visual.text("!", powerS.pos, {
+                                powerS.room.visual.text("🔌", powerS.pos, {
                                     color: '#e42f43 ',
                                     stroke: '#000000 ',
                                     strokeWidth: 0.123,
@@ -77,16 +63,8 @@ class PowerInteract {
             }
         }
         if (total !== 0) {
-            //console.log(total+ " Power processed:"+report);
-            Memory.totalPowerProcessed = total;
+            Memory.stats.powerProcessed = total;
         }
-        /*
-        for(var e in pSpawn) {
-        let vv = Game.getObjectById(pSpawn[e]);
-        if(vv != undefined && vv.power != 0 && vv.energy >= 50) {
-            vv.processPower();
-        }
-        }*/
     }
 
     static findNewPowerParty(creep) {

@@ -143,7 +143,6 @@ class buildObserver {
         } else {
 
             let screeps = Game.rooms[target].find(FIND_CREEPS);
-//console.log(screeps.length,screeps[0].owner.username);
             screeps = _.filter(screeps, function(s) {
                 return s.owner.username == 'Screeps';
             });

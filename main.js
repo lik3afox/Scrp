@@ -24,7 +24,8 @@
     var market = require('build.terminal');
 
     var prototypes = [
-        require('prototype.creeps')
+        require('prototype.creeps'),
+        require('prototype.room')
     ];
 
     var roomCheck = 10;
@@ -299,7 +300,6 @@
         Memory.stats.cpu = Game.cpu;
         Memory.stats.cpu.used = Game.cpu.getUsed(); // AT END OF MAIN LOOP
 
-        Memory.stats.powerProcssed = Memory.totalPowerProcessed;
         Memory.stats.creepTotal = Memory.creepTotal;
 
         // Note: This is fragile and will change if the Game.gcl API changes
@@ -456,58 +456,73 @@
                     ccSpawn.renewCreep(Game.spawns[title]);
                 }
 
-                if(Game.spawns[title].memory.alphaSpawn && Game.flags[ Game.spawns[title].pos.roomName ] !== undefined && Game.flags[ Game.spawns[title].pos.roomName ].color === COLOR_WHITE &&
-                    Game.flags[ Game.spawns[title].pos.roomName ].secondaryColor === COLOR_GREEN) {
-                    //console.log('doing new Query',Game.spawns[title].pos.roomName);
+                if (Game.spawns[title].memory.alphaSpawn && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
+                    Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN) {
                     spawnsDo.spawnQuery(Game.spawns[title].id);
                     ccSpawn.createFromStack(Game.spawns[title]);
-                } else {
-
-
-                    if (Game.cpu.bucket > 500)
-                        if ((Game.spawns[title].spawning === null)) {
-                            if (Game.spawns[title].memory.alphaSpawn) {
-
-                                let zz = _.filter(Game.spawns, function(o) {
-                                    return (o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
-                                });
-                                if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
-
-                                if (anySpawn) {
-                                    if (Game.spawns[title].memory.checkCount === undefined) {
-                                        Game.spawns[title].memory.checkCount = countCheck;
-                                    }
-                                    if (Game.spawns[title].memory.checkCount < 0) {
-
-                                        let zz = spawnsDo.spawnCount(Game.spawns[title].id); // This gets creep totals.
-                                        spawnsDo.checkModules(Game.spawns[title], zz); // This uses that info and adds to query.
-                                        spawnsDo.checkExpand(Game.spawns[title], zz); // This uses creepTotal to do expansion stuff - and adds to expandQuery.
-
-
-                                        Game.spawns[title].memory.checkCount = countCheck;
-                                    }
-                                }
-
-                            }
-                            ccSpawn.createFromStack(Game.spawns[title]);
-
-                            if (Game.spawns[title].memory.lastSpawn === undefined)
-                                Game.spawns[title].memory.lastSpawn = 0;
-                            Game.spawns[title].memory.lastSpawn++;
-
-
-                        } else {
-                            Game.spawns[title].memory.lastSpawn = 0;
-                            let spawn = Game.spawns[title];
-                            spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
-                                color: '#97c39a ',
-                                stroke: '#000000 ',
-                                strokeWidth: 0.123,
-                                font: 0.5,
-                                align: RIGHT
-                            });
-                        }
                 }
+
+                if (Game.spawns[title].spawning !== null) {
+                    Game.spawns[title].memory.lastSpawn = 0;
+                    let spawn = Game.spawns[title];
+                    spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
+                        color: '#97c39a ',
+                        stroke: '#000000 ',
+                        strokeWidth: 0.123,
+                        font: 0.5,
+                        align: RIGHT
+                    });
+                }
+
+                /*
+                                else {
+                                    if (Game.spawns[title].memory.alphaSpawn)
+                                    if (Game.cpu.bucket > 500)
+                                        if ((Game.spawns[title].spawning === null)) {
+                                            if (Game.spawns[title].memory.alphaSpawn) {
+
+                                                let zz = _.filter(Game.spawns, function(o) {
+                                                    return (o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
+                                                });
+                                                if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
+
+                                                if (anySpawn) {
+                                                    if (Game.spawns[title].memory.checkCount === undefined) {
+                                                        Game.spawns[title].memory.checkCount = countCheck;
+                                                    }
+                                                    if (Game.spawns[title].memory.checkCount < 0) {
+
+                                                        let zz = spawnsDo.spawnCount(Game.spawns[title].id); // This gets creep totals.
+                                                        spawnsDo.checkModules(Game.spawns[title], zz); // This uses that info and adds to query.
+                                                        spawnsDo.checkExpand(Game.spawns[title], zz); // This uses creepTotal to do expansion stuff - and adds to expandQuery.
+
+
+                                                        Game.spawns[title].memory.checkCount = countCheck;
+                                                    }
+                                                }
+
+                                            }
+                                            ccSpawn.createFromStack(Game.spawns[title]);
+
+                                            if (Game.spawns[title].memory.lastSpawn === undefined)
+                                                Game.spawns[title].memory.lastSpawn = 0;
+                                            Game.spawns[title].memory.lastSpawn++;
+
+
+                                        } else {
+                                            Game.spawns[title].memory.lastSpawn = 0;
+                                            let spawn = Game.spawns[title];
+                                            spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
+                                                color: '#97c39a ',
+                                                stroke: '#000000 ',
+                                                strokeWidth: 0.123,
+                                                font: 0.5,
+                                                align: RIGHT
+                                            });
+                                        }
+                                }
+                */
+
                 if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
                     let spawn = Game.spawns[title];
                     let spawnStats = {
@@ -532,11 +547,12 @@
         Memory.stats.rooms = spawnReport;
         memoryStatsUpdate();
         link.run();
+        require('commands.toSegment').run();
 
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
             if (Game.cpu.bucket > 250) {
-                //            power.run();
+                power.run();
                 observer.run();
 
                 if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
@@ -553,13 +569,12 @@
             market.run();
         }
 
-        Memory.totalPowerProcessed = 0;
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
 
         if (Game.shard.name == 'shard1') {
             if (Game.spawns.Spawn1 !== undefined) {
                 let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-                console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('*****PP:' + Memory.stats.powerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 //            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
@@ -568,11 +583,84 @@
             if (Game.spawns.E38S81) {
                 //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
                 let dif;
-                console.log('*****PP:' + Memory.totalPowerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('*****PP:' + Memory.stats.powerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
         }
+        /*    let path = '293768';
+            var x,y, direction, dx, dy;
+            x = parseInt(path.substring(0, 2));
+            y = parseInt(path.substring(2, 4));
+            var result = [];
+            if(!path.length) {
+                return result;
+            }        
+
+            for (i = 4; i < path.length; i++) {
+                direction = parseInt(path.charAt(i));
+                console.log(direction);
+                if(!offsetsByDirection[direction]) {
+                    throw new Error('`path` is not a valid serialized path string');
+                }
+
+                dx = offsetsByDirection[direction][0];
+                dy = offsetsByDirection[direction][1];
+                if (i > 4) {
+                    x += dx;
+                    y += dy;
+                }
+                result.push({
+                    x, y,
+                    dx, dy,
+                    direction
+                });*/
+        //    }
+
+        //    console.log(x,y,path,result.length);
+
 
     });
+
+
+    /*
+    exports.deserializePath = function(path) {
+    if(!_.isString(path)) {
+        throw new Error('`path` is not a string');
+    }
+
+    var result = [];
+    if(!path.length) {
+        return result;
+    }
+    var x,y, direction, dx, dy;
+
+    x = parseInt(path.substring(0, 2));
+    y = parseInt(path.substring(2, 4));
+    if(_.isNaN(x) || _.isNaN(y)) {
+        throw new Error('`path` is not a valid serialized path string');
+    }
+
+    for (var i = 4; i < path.length; i++) {
+        direction = parseInt(path.charAt(i));
+        if(!offsetsByDirection[direction]) {
+            throw new Error('`path` is not a valid serialized path string');
+        }
+        dx = offsetsByDirection[direction][0];
+        dy = offsetsByDirection[direction][1];
+        if (i > 4) {
+            x += dx;
+            y += dy;
+        }
+        result.push({
+            x, y,
+            dx, dy,
+            direction
+        });
+    }
+
+
+    return result;
+};
+*/

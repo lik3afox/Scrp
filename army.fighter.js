@@ -191,7 +191,7 @@ function returnClosestSpawn(roomName) {
     var a = keys.length;
     while (a--) {
         var e = keys[a];
-        if (Game.spawns[e].memory.alphaSpawn) {
+        if (Game.spawns[e].memory.alphaSpawn && Game.spawns[e].room.name !== 'E14S38'&& Game.spawns[e].room.name !== 'E14S37') {
             var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
             if (tempDis < distance) {
                 distance = tempDis;
@@ -305,9 +305,6 @@ class fighterClass extends roleParent {
             }
 
             creep.memory.waypoint = true;
-            if (creep.ticksToLive == 500) {
-                creep.memory.parent = returnClosestSpawn(creep.room.name).id;
-            }
 
             super.rebirth(creep);
             if (powerAction(creep))

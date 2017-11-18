@@ -9,6 +9,7 @@ var links = require('build.link');
 var spawnsCC = require('commands.toSpawn');
 var labsBuild = require('build.labs');
 var power = require('commands.toPower');
+//var party = require('commands.toParty');
 var fox = require('foxGlobals');
 
 function getCost(module) {
@@ -214,6 +215,9 @@ class baseParent {
     static get labs() {
         return labsBuild;
     }
+//    static get party() {
+//        return party;
+//    }
 
     static get link() {
         return links;
@@ -1071,7 +1075,7 @@ class baseParent {
         while (p--) {
             var e = keys[p];
             if (e != RESOURCE_ENERGY && creep.carry[e] > 0) {
-                creep.say('has chzzburger');
+                creep.say(creep.carryTotal+'has chzzburger');
                 if (creep.pos.isNearTo(target)) {
                     creep.transfer(target, e);
                 } else {

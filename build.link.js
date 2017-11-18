@@ -111,6 +111,11 @@ class buildLink {
                     creep.memory.linkID = nlinkz[i].structure.id;
                     creep.transfer(nlinkz[i].structure, RESOURCE_ENERGY);
 
+                if (creep.room.memory.roomLinksID !== undefined && !_.contains(creep.room.memory.roomLinksID, nlinkz[i].structure.id)) {
+                    creep.room.memory.roomLinksID.push(nlinkz[i].structure.id);
+                }
+
+
                     if (creep.room.memory.masterLinkID !== undefined) {
                         let mLink = Game.getObjectById(creep.room.memory.masterLinkID);
                         if (mLink !== null) {

@@ -168,8 +168,25 @@ function doMasterLink(creep) {
     return false;
 }
 
+function doPowerSpawn(creep) {
+    if(creep.room.storage.store[RESOURCE_ENERGY] < 900000) return false;
+    if(creep.carryTotal !== creep.carry[RESOURCE_ENERGY]) return false;
+    let pspwn = creep.room.powerspawn;
+    if(pspwn !== null && pspwn.energy < 4000) {
+        if(creep.pos.isNearTo(pspwn)) {
+            creep.transfer(pspwn,RESOURCE_ENERGY);
+        } else {
+            creep.moveTo(pspwn);
+        }
+        creep.say('🔌');
+        return true;
+    }
+    return false;
+}
+
 
 function oneLinkRoom(creep, fill) {
+
     if (!fill) {
         if (constr.pickUpEnergy(creep)) return;
         if (!doMasterLink(creep)) {
@@ -177,7 +194,10 @@ function oneLinkRoom(creep, fill) {
         }
     } else {
         switch (creep.memory.roleID) {
-            default: toStorageOrTerminal(creep);
+            default: 
+            if(!doPowerSpawn(creep)) {
+                toStorageOrTerminal(creep);
+            }
             break;
         }
     }
@@ -273,10 +293,11 @@ if((lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000
 
     //    }
     if (!fill) {
+        creep.say(fill);
         switch (creep.memory.roleID) {
             default: 
             if (!constr.pickUpEnergy(creep))
-                if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000 && creep.room.storage.store[RESOURCE_ENERGY] > 3000 ) {
+                if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000 ) {
                     if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
                 }
             break;
@@ -315,7 +336,9 @@ if((lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000
 
                 if (target !== undefined) {
                     if (creep.pos.isNearTo(target)) {
-                        creep.transfer(target, RESOURCE_ENERGY);
+                        for(var eee in creep.carry){
+                            creep.transfer(target, eee);
+                        }
                     } else {
                         //                        creep.moveTo(target);
                     }
@@ -391,11 +414,16 @@ class roleLinker extends roleParent {
         if (creep.room.controller.level != 8 && creep.memory.roleID === 0) {
             creep.room.visual.text(creep.room.controller.progressTotal - creep.room.controller.progress, creep.room.controller.pos.x + 1, creep.room.controller.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: RIGHT });
         }
-        //        if (creep.room.name !== 'x' && creep.room.name !== 'E14S47')
 
-
-        if (super.spawnRecycle(creep)) return;
-
+        if(creep.room.name == 'E14S38'  && creep.carry.K > 0 ) {
+                if(creep.pos.isNearTo(creep.room.storage)) {
+                        creep.transfer(creep.room.storage,'K');
+                }else{
+                    creep.moveTo(creep.room.storage);
+                }
+                return;
+        } 
+//        if (super.depositNonEnergy(creep)) return true;
         super.renew(creep);
         // Linker goes to link and stores it at the storage.
         if (creep.carryTotal > 0) {
@@ -548,7 +576,9 @@ class roleLinker extends roleParent {
         }
 
         if (creep.room.controller.level === 8) {
-            oneLinkRoom(creep, creep.memory.full);
+            if (!super.power.getPowerToSpawn(creep)){
+                oneLinkRoom(creep, creep.memory.full);
+            }
             return;
         }
 

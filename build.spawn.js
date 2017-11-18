@@ -88,7 +88,6 @@ var Mod_E18S36 = [
     ['first', 1, 6],
     ['harvester', 2, 2],
     ['wallwork', 1, 5],
-    //    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['scientist', 1, 6],
     ['linker', 1, 4],
     ['minHarvest', 2, 7],
@@ -99,7 +98,6 @@ var Mod_E17S34 = [
     ['first', 1, 6],
     ['harvester', 2, 2],
     ['wallwork', 1, 5],
-    //    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['minHarvest', 1, 7],
     ['scientist', 1, 6],
     ['linker', 1, 4],
@@ -151,7 +149,6 @@ var Mod_E27S34 = [
     ['wallwork', 1, 6],
     ['upbuilder', 1, 8],
     ['minHarvest', 2, 7],
-    //    ['assistant', require('role.assistant'), 1, 0],
     ['linker', 1, 4],
     ['homeDefender', 1, 5]
 ];
@@ -161,8 +158,6 @@ var Mod_E13S34 = [
     ['wallwork', 1, 5],
     ['minHarvest', 2, 7],
     ['scientist', 1, 6],
-    //    ['assistant', require('role.assistant'), 1, 0],
-    //    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['linker', 1, 4],
     ['homeDefender', 1, 4]
 ];
@@ -172,7 +167,6 @@ var Mod_E17S45 = [
     ['scientist', 1, 6],
     ['wallwork', 1, 6],
     ['minHarvest', 2, 7],
-    //    ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', 1, 8],
     ['linker', 1, 4],
     ['homeDefender', 1, 5]
@@ -194,11 +188,7 @@ var Mod_E24S33 = [
     ['first', 1, 6],
     ['harvester', 2, 2],
     ['wallwork', 1, 5],
-
-
-
     ['minHarvest', 2, 7],
-    //    ['assistant', require('role.assistant'), 1, 0],
     ['upbuilder', 1, 8],
     ['scientist', 1, 6],
     ['linker', 1, 4],
@@ -210,10 +200,8 @@ var Mod_E14S43 = [
     ['first', 1, 5],
     ['wallwork', 1, 5],
     ['harvester', 2, 2],
-    //    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['minHarvest', 2, 7],
     ['scientist', 1, 6],
-    //    ['assistant', require('role.assistant'), 1, 0],
     ['linker', 1, 4],
     ['homeDefender', 1, 5]
 ];
@@ -221,7 +209,6 @@ var Mod_E25S47 = [
     ['first', 1, 6],
     ['wallwork', 1, 5],
     ['minHarvest', 1, 7],
-    //    ['assistant', require('role.assistant'), 1, 0],
     ['harvester', 2, 2],
     ['scientist', 1, 6],
     ['upbuilder', 1, 8],
@@ -232,9 +219,7 @@ var Mod_E14S47 = [
     ['first', 1, 6],
     ['wallwork', 1, 5],
     ['harvester', 1, 2],
-    //    ['upbuilder', require('role.upbuilder'), 1, 8],
     ['minHarvest', 2, 7],
-    //    ['assistant', require('role.assistant'), 1, 0],
     ['scientist', 1, 6],
     ['linker', 1, 4],
     ['homeDefender', 1, 3]
@@ -279,6 +264,7 @@ var Mod_E25S27 = [
 var Mod_E27S45 = [
     ['harvester', 2, 2],
     ['linker', 1, 4],
+    ['upbuilder', 1, 7],
     ['first', 1, 4],
     ['scientist', 1, 6],
     ['minHarvest', 1, 7],
@@ -290,6 +276,8 @@ var Mod_E29S48 = [
     ['first', 1, 4],
     ['scientist', 1, 6],
     ['harvester', 2, 2],
+    ['upbuilder', 1, 7],
+
     ['minHarvest', 1, 7],
     ['wallwork', 1, 4],
     ['linker', 1, 4],
@@ -637,7 +625,7 @@ function rebuildCreep(creep) {
 
     } else if (creep.memory.role == 'first' || creep.memory.role == 'harvester' || creep.memory.role == 'scientist') {
         
-        currentModule = getCurrentModule(Game.getObjectById(creep.memory.parent));
+        currentModule = getCurrentModule(creep.memory.home);
 
         for (var type in currentModule) {
             if (currentModule[type][_name] == creep.memory.role) {
@@ -763,38 +751,28 @@ function getNuke(spawn) {
     return spawn.room.nuke;
 }
 
-function getCurrentModule(spawn) {
-    if (Game.flags[spawn.room.name] !== undefined && Game.flags[spawn.room.name].color == COLOR_WHITE && Game.flags[spawn.room.name].secondaryColor == COLOR_GREEN) {
-        if (Game.flags[spawn.room.name].memory.module !== undefined) {
-            console.log('Room flag used', spawn.room.name);
-            return Game.flags[spawn.room.name].memory.module;
-        }
-    }
+function getCurrentModule(roomName) {
 
-
-    if (spawn.room.name == 'E38S72') {
+    if (roomName == 'E38S72') {
         return Mod_E38S72;
     }
-    if (spawn.room.name == 'E38S81') {
+    if (roomName == 'E38S81') {
         return Mod_E38S81;
     }
-    if (spawn.room.name == 'E27S45') {
+    if (roomName == 'E27S45') {
         return Mod_E27S45;
     }
-    if (spawn.room.name == 'E29S48') {
+    if (roomName == 'E29S48') {
         return Mod_E29S48;
     }
 
-    if (spawn.room.name == 'E25S27') {
+    if (roomName == 'E25S27') {
         return Mod_E25S27;
     }
-    if (spawn.room.name == 'E14S38') {
+    if (roomName == 'E14S38') {
         return [];
     }
-    if (spawn === null || spawn === undefined) return;
-    var currentModuleLevel = getModuleLevel(spawn);
-    if (spawn.room.controller.level >= 3) {
-        switch (spawn.pos.roomName) {
+        switch (roomName) {
             case 'E18S36':
                 return Mod_E18S36;
             case 'E17S34':
@@ -831,8 +809,7 @@ function getCurrentModule(spawn) {
             case 'E23S42':
                 return Mod_E23S42;
         }
-    }
-    return newbModLevel[currentModuleLevel];
+        return [];
 }
 
 
@@ -1045,10 +1022,11 @@ class theSpawn {
             return;
         }
 
-        // Flag Module Check
+        // Flag Module Check Add Module.
 
         if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
             if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
+				currentModule = getCurrentModule(spawn.room.name);            	
                 for (var ee in currentModule) {
                     Game.flags[spawn.pos.roomName].memory.module.push(currentModule[ee]);
                 }
@@ -1310,7 +1288,7 @@ class theSpawn {
 
         //        var currentModuleLevel = getModuleLevel(spawn);spawn.memory.buildLevel
 
-        currentModule = getCurrentModule(spawn);
+        currentModule = getCurrentModule(spawn.room.name);
         if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
             console.log('COLOR_GREEN');
             if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
@@ -1662,7 +1640,7 @@ class theSpawn {
             for (var zzzz in Game.creeps) {
                 if (Game.creeps[zzzz].memory.role === undefined && Game.creeps[zzzz].pos.roomName == 'E20S40') {
                     Game.creeps[zzzz].memory.role = 'mule';
-                    Game.creeps[zzzz].memory.party = 'hello22';
+                    Game.creeps[zzzz].memory.party = 'E23S38';
                 }
             }
         }
@@ -1703,6 +1681,12 @@ class theSpawn {
                         if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
+                            if(Game.creeps[name].memory.party !== undefined && Game.creeps[name].memory.party === 'powerbankX80' ){
+                                console.log(roomLink(Game.creeps[name].pos.roomName,'Finding party powerbankX80'));
+                            }
+                            if(Game.creeps[name].memory.role == 'fighter') {
+                                console.log(roomLink(Game.creeps[name].pos.roomName,'Finding party fighter'));
+                            }
                         }
                         if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
                         break;
