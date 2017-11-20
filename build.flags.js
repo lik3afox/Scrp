@@ -154,14 +154,15 @@
         power: undefined,
         upbuilder: undefined,
         first: undefined,
-        scientist    : undefined,
-        wallwork : undefined,
-        spawn : undefined,
-        upgrade : undefined,
+        scientist: undefined,
+        wallwork: undefined,
+        spawn: undefined,
+        sort: undefined,
+        upgrade: undefined,
         //           
         /*            linker   : undefined,
-*/
-        wait:undefined,
+         */
+        wait: undefined,
     };
 
     function killCreeps(room, role, level) {
@@ -226,8 +227,8 @@
                 if (ez === -1 && flag.room.controller.level !== 8) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
-                    if(flag.room.controller.level === 8){
-                        flag.memory.module.splice(ez,1);
+                    if (flag.room.controller.level === 8) {
+                        flag.memory.module.splice(ez, 1);
                     }
                 }
                 break;
@@ -240,7 +241,7 @@
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
                             // 
-                        break;
+                            break;
                         case 7:
                             if (flag.room.controller.level === 8) {
                                 flag.memory.module[ez][_level] = 8;
@@ -292,9 +293,13 @@
 
                 break;
 
+            case "sort":
+                flag.memory.module.sort();
+            break;
+
             case "wait":
                 flag.memory.checkWhat = -10;
-            break;
+                break;
             case 'power':
                 if (flag.room.controller.level === 8 && flag.room.memory.powerspawnID === undefined)
                     console.log(roomLink(flag.pos.roomName), 'FINDING SPAWN' + flag.room.powerspawn);
@@ -305,7 +310,6 @@
                 break;
             case 'spawn':
                 // This will setup the spawns.
-                console.log('FINDING spawn');
                 zzz = flag.room.find(FIND_MY_STRUCTURES);
                 zzz = _.filter(zzz, function(structure) {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
@@ -330,35 +334,35 @@
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
-                } else if(Game.shard.name === 'shard1'){
-switch(flag.memory.module[ez][_level]){
-    case 0:
-    if(roomEnergy >= 1250){ // At room controller lv 4 and extensions, with walls or ramparts
-                                    let vr = flag.room.find(FIND_STRUCTURES, {
-                                        filter: s => s.structureType == STRUCTURE_WALL || s.structureType == STRUCTURE_RAMPART
-                                    });
-                                    if(vr.length > 0){
-                                        flag.memory.module[ez][_level] = 2;
-                                        flag.memory.module[ez][_number] = 1;
-                                    }
-    }
-    break;
-    case 2:
-    if(roomEnergy >= 1750){
-        flag.memory.module[ez][_level] = 3;
-    }
-    break;
-    case 3:
-    if(roomEnergy >= 2250){
-        flag.memory.module[ez][_level] = 4;
-    }
-    break;
-    case 4:
-    if(roomEnergy >= 3250){
-        flag.memory.module[ez][_level] = 5;
-    }
-    break;
-}
+                } else if (Game.shard.name === 'shard1') {
+                    switch (flag.memory.module[ez][_level]) {
+                        case 0:
+                            if (roomEnergy >= 1250) { // At room controller lv 4 and extensions, with walls or ramparts
+                                let vr = flag.room.find(FIND_STRUCTURES, {
+                                    filter: s => s.structureType == STRUCTURE_WALL || s.structureType == STRUCTURE_RAMPART
+                                });
+                                if (vr.length > 0) {
+                                    flag.memory.module[ez][_level] = 2;
+                                    flag.memory.module[ez][_number] = 1;
+                                }
+                            }
+                            break;
+                        case 2:
+                            if (roomEnergy >= 1750) {
+                                flag.memory.module[ez][_level] = 3;
+                            }
+                            break;
+                        case 3:
+                            if (roomEnergy >= 2250) {
+                                flag.memory.module[ez][_level] = 4;
+                            }
+                            break;
+                        case 4:
+                            if (roomEnergy >= 3250) {
+                                flag.memory.module[ez][_level] = 5;
+                            }
+                            break;
+                    }
                 }
                 break;
 
@@ -417,7 +421,7 @@ switch(flag.memory.module[ez][_level]){
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
 
-                    if (flag.memory.module[ez][_number] === 0) {
+                    if (flag.memory.module[ez][_number] === 0 && flag.memory.module[ez][_level] === 0) {
                         let vr = flag.room.find(FIND_STRUCTURES, {
                             filter: s => s.structureType == STRUCTURE_SPAWN && s.memory.alphaSpawn
                         });
@@ -439,24 +443,24 @@ switch(flag.memory.module[ez][_level]){
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
-                } else if(Game.shard.name === 'shard1'){
+                } else if (Game.shard.name === 'shard1') {
                     if (flag.memory.module[ez][_level] === 0 && flag.room.memory.mineralContainID !== undefined && flag.room.memory.mineralID !== undefined && flag.room.memory.extractID !== undefined) {
                         flag.memory.module[ez][_level] = 4;
                         flag.memory.module[ez][_number] = 1;
                         flag.memory.module[_.findIndex(flag.memory.module, function(o) { return o[_name] == 'first'; })][_number] = 1;
-                        stopRebirth(flag.room,'first');
+                        stopRebirth(flag.room, 'first');
                     }
-                    switch( flag.memory.module[ez][_level] ){
+                    switch (flag.memory.module[ez][_level]) {
                         case 4:
                             if (roomEnergy >= 1200) {
                                 flag.memory.module[ez][_level] = 5;
                             }
-                        break;
+                            break;
                         case 5:
                             if (roomEnergy >= 2250) {
                                 flag.memory.module[ez][_level] = 6;
                             }
-                        break;
+                            break;
                     }
                 }
                 break;
@@ -509,7 +513,6 @@ switch(flag.memory.module[ez][_level]){
                 break;
             case 'harvester':
                 // Harvest Checking
-                console.log(roomLink(flag.room.name), 'FINDING harvester');
 
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
@@ -624,15 +627,18 @@ switch(flag.memory.module[ez][_level]){
                     var x = flag.pos.x + 1.5;
                     var y = flag.pos.y;
                     for (e in flag.memory.module) {
-                        var outThere;
-                        if (Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
-                            outThere = Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
-                        } else {
-                            outThere = 0;
-                        }
 
-                        flag.room.visual.text('Role :' + flag.memory.module[e][_name] + '(Lv:' + flag.memory.module[e][_level] + ') #:' + outThere + '/' + flag.memory.module[e][_number], x, y, font);
-                        y++;
+                        if (flag.memory.module[e][_number] !== 0) {
+                            var outThere;
+                            if (Memory.spawnCount[flag.memory.alphaSpawn] !== undefined && Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
+                                outThere = Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
+                            } else {
+                                outThere = 0;
+                            }
+
+                            flag.room.visual.text('(' + outThere + '/' + flag.memory.module[e][_number]+')'+ '[Lv:' + flag.memory.module[e][_level] + ']' + ':' + flag.memory.module[e][_name] , x, y, font);
+                            y++;
+                        }
                     }
                 } else {
                     flag.room.visual.text('Fail Module, is Flag name === Room name?', flag.pos.x + 1.5, flag.pos.y, font);
@@ -646,7 +652,7 @@ switch(flag.memory.module[ez][_level]){
         if (flag.memory.checkWhat === undefined) {
             flag.memory.checkWhat = -10;
         }
-        if(flag.secondaryColor === COLOR_GREEN)
+        if (flag.secondaryColor === COLOR_GREEN)
             flag.memory.checkWhat++;
         if (flag.memory.checkWhat >= Object.keys(roomer).length) {
             flag.memory.checkWhat = 0;

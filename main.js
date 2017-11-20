@@ -420,7 +420,6 @@
                     spawnsDo.checkBuild(Game.spawns[title]);
                 }
 
-
                 //                  if (Memory.war) {
                 if (Game.spawns[title].memory.alphaSpawn) {
                     doRoomReport(Game.spawns[title].room);
@@ -451,7 +450,7 @@
 
                 if (Game.spawns[title].memory.alphaSpawn && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN) {
-                    spawnsDo.spawnQuery(Game.spawns[title].id);
+                    spawnsDo.spawnQuery(Game.spawns[title]);
                 } 
 
                 if(Game.spawns[title].spawning === null){

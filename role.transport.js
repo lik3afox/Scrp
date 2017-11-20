@@ -51,6 +51,10 @@ function getBads(creep) {
     return bads;
 }
 
+function setMovePath(creep) {
+
+}
+
 class transport extends roleParent {
     static rebuildMe(creep) {
         super.rebuildMe(creep);
@@ -68,8 +72,8 @@ class transport extends roleParent {
             return;
         }
         if (super.baseRun(creep)) {
-            if(creep.memory._move !== undefined) {
-                var report = creep.memory._move.path[0]+creep.memory._move.path[1] + ":"+creep.memory._move.path[2]+creep.memory._move.path[3]+" "+(creep.memory._move.path.length-4);
+            if (creep.memory._move !== undefined) {
+                var report = creep.memory._move.path[0] + creep.memory._move.path[1] + ":" + creep.memory._move.path[2] + creep.memory._move.path[3] + " " + (creep.memory._move.path.length - 4);
                 creep.say(report);
             }
             return;
@@ -84,7 +88,7 @@ class transport extends roleParent {
             return;
         }
 
-//        super.shouldDie(creep);
+        //        super.shouldDie(creep);
 
         if (creep.memory.gohome === undefined) { creep.memory.gohome = false; }
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }
@@ -114,8 +118,7 @@ class transport extends roleParent {
 
             } else {
                 if (!super.constr.doCloseRoadRepair(creep)) {
-                    if (!super.constr.doCloseRoadBuild(creep)) {
-                    }
+                    if (!super.constr.doCloseRoadBuild(creep)) {}
                 }
 
                 let bads = getBads(creep);

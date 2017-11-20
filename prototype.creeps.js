@@ -81,7 +81,7 @@ module.exports = function() {
 
     /*
      */
-        /*
+    /*
                if (creep.memory.stats !== undefined) return;
 
                let wParts = _.filter(creep.body, { type: WORK }).length;
@@ -190,16 +190,16 @@ module.exports = function() {
         return false;
     };
     Creep.prototype.sleep = function(count) {
-        switch(count) {
+        switch (count) {
             case 1:
                 this.say('zZz');
-            break;
+                break;
             case 2:
                 this.say('zZzZ');
-            break;
+                break;
             default:
                 this.say('zZzZz');
-            break;
+                break;
         }
     };
 
@@ -318,10 +318,11 @@ module.exports = function() {
         //        if (this.hits !== this.hitsMax) return false;
         if (this.room.controller === undefined) {
             return false;
-        }/*
-        if (this.room.controller.owner === undefined) {
-            return false;
-        } */
+        }
+        /*
+                if (this.room.controller.owner === undefined) {
+                    return false;
+                } */
         if (this.room.controller !== undefined && this.room.controller.owner !== undefined &&
 
             _.contains(fox.friends, this.room.controller.owner.username)) return false;
@@ -330,28 +331,28 @@ module.exports = function() {
                 } */
         var struc = this.room.find(FIND_STRUCTURES);
 
-            var site = this.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-            site = _.filter(site, function(o) {
-                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progress > 2000;
-            });
-            if (site.length > 0) {
-                var zzz = this.pos.findClosestByRange(site);
-                this.moveTo(zzz);
-                return;
-            }
+        var site = this.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+        site = _.filter(site, function(o) {
+            return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progress > 2000;
+        });
+        if (site.length > 0) {
+            var zzz = this.pos.findClosestByRange(site);
+            this.moveTo(zzz);
+            return;
+        }
 
 
         if (this.memory.targetID === undefined) {
 
 
             var test2 = _.filter(struc, function(o) {
-                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_ROAD&& o.structureType !== STRUCTURE_CONTAINER && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+                return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_ROAD && o.structureType !== STRUCTURE_CONTAINER && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
             }); // This is something is not on a rampart
             if (test2.length !== 0) {
                 this.memory.targetID = this.pos.findClosestByRange(test2).id;
             } else {
                 var test = _.filter(struc, function(o) {
-                    return o.structureType !== STRUCTURE_WALL&& o.structureType !== STRUCTURE_CONTAINER && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && o.pos.lookForStructure(STRUCTURE_RAMPART);
+                    return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_CONTAINER && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && o.pos.lookForStructure(STRUCTURE_RAMPART);
                 });
                 if (test.length !== 0) {
                     this.memory.targetID = this.pos.findClosestByRange(test).id;
@@ -380,7 +381,7 @@ module.exports = function() {
             if (this.pos.isNearTo(close)) {
                 if (this.getActiveBodyparts(ATTACK) > 0) {
                     this.attack(close);
-                } else if(this.getActiveBodyparts(RANGED_ATTACK) > 0) {
+                } else if (this.getActiveBodyparts(RANGED_ATTACK) > 0) {
                     this.rangedMassAttack();
                 } else {
                     this.dismantle(close);
@@ -428,50 +429,50 @@ module.exports = function() {
         this.say('><', true);
     };
 
-/*    Spawn.prototype.deadCheck = function() {
-        // first off a spawn needs to have a memory check too make sure
-        // it wants to do this deadCheck
-        // Leveling rooms do not want this.
-        if (this.memory.deadCheck === undefined) {
-            if (this.room.name != 'E27S75') {
-                this.memory.deadCheck = true;
-            } else {
-                this.memory.deadCheck = false;
+    /*    Spawn.prototype.deadCheck = function() {
+            // first off a spawn needs to have a memory check too make sure
+            // it wants to do this deadCheck
+            // Leveling rooms do not want this.
+            if (this.memory.deadCheck === undefined) {
+                if (this.room.name != 'E27S75') {
+                    this.memory.deadCheck = true;
+                } else {
+                    this.memory.deadCheck = false;
+                }
             }
-        }
-        if (!this.memory.deadCheck) return;
-        if (this.spawning !== undefined) return;
+            if (!this.memory.deadCheck) return;
+            if (this.spawning !== undefined) return;
 
-        if (this.room.energyAvailable < 300 && this.memory.totalCreep < 5 && this.room.controller.level >= 4) {
-            if (this.room.memory.roomFailure === undefined)
+            if (this.room.energyAvailable < 300 && this.memory.totalCreep < 5 && this.room.controller.level >= 4) {
+                if (this.room.memory.roomFailure === undefined)
+                    this.room.memory.roomFailure = 0;
+                this.room.memory.roomFailure++;
+            } else {
                 this.room.memory.roomFailure = 0;
-            this.room.memory.roomFailure++;
-        } else {
-            this.room.memory.roomFailure = 0;
-        }
+            }
 
-        //console.log(this.room.memory.roomFailure);
-        if (this.room.memory.roomFailure > 10000) {
-            let body = [MOVE, CARRY, CARRY, MOVE];
-            let name = 'Emergcy';
-            let mem = {
-                role: 'first',
-                home: this.room.name,
-                parent: this.id,
-                level: 1
-            };
-            let zz = this.spawnCreep(body, name, mem);
-            if (zz === 0) this.room.memory.roomFailure = -1500;
-            console.log('Emergency creation, trying to create simple RESULT:');
-        }
+            //console.log(this.room.memory.roomFailure);
+            if (this.room.memory.roomFailure > 10000) {
+                let body = [MOVE, CARRY, CARRY, MOVE];
+                let name = 'Emergcy';
+                let mem = {
+                    role: 'first',
+                    home: this.room.name,
+                    parent: this.id,
+                    level: 1
+                };
+                let zz = this.spawnCreep(body, name, mem);
+                if (zz === 0) this.room.memory.roomFailure = -1500;
+                console.log('Emergency creation, trying to create simple RESULT:');
+            }
 
-        // If spawns haven't spawn in a while
-        //Game.spawns[title].memory.lastSpawn = 0;
-        // if creeps are less than 5
-        // spawn.memory.totalCreep
+            // If spawns haven't spawn in a while
+            //Game.spawns[title].memory.lastSpawn = 0;
+            // if creeps are less than 5
+            // spawn.memory.totalCreep
 
 
-    }; */
+        }; */
 
     //    var fox = require('foxGlobals');
     Creep.prototype.sing = function(lyrics, public) {
@@ -546,6 +547,135 @@ module.exports = function() {
         }
     };
 
+function spliceSlice(str, index, count, add) {
+  // We cannot pass negative indexes dirrectly to the 2nd slicing operation.
+  if (index < 0) {
+    index = str.length + index;
+    if (index < 0) {
+      index = 0;
+    }
+  }
+
+  return str.slice(0, index) + (add || "") + str.slice(index + count);
+}
+function serializePath(creep) {
+    // This function will take an object that is a _move.
+    // and turn into an object that is passed.
+    var report = 'E00S001199W00S002288123456789';
+    if(creep.memory._move === undefined) return false;
+    var move = creep.memory._move;
+    // Output would be nice
+    // Desintation 
+    // E00S00 4040 // combined.
+    var dest = "" + (move.dest.x < 10 ? "0" + move.dest.x : move.dest.x) +
+        (move.dest.y < 10 ? "0" + move.dest.y : move.dest.y) + move.dest.room;
+    // Current Location
+    // E00S00 + path - First 4 of the path is the first location.
+    var current = creep.pos.roomName;
+    /*
+    var move = {
+    dest = {
+    x:1,
+    y:2,
+    roomName:undefined
+    },
+    time: 123
+    path : 
+    room : 'E14S37'
+    }
+    */
+    var path = creep.memory._move.path;
+    // Getting the path after a moveTo needs to go back 1 space.
+    // first it needs to change the 0/1 2/3 units of the array to it's current.
+var future = new RoomPosition(parseInt(path[0]+path[1]),parseInt(path[2]+path[3]),creep.room.name);
+var dir = creep.pos.getDirectionTo(future);
+var ez = path.substring(0,4);
+console.log('old path',path,future);
+var xx,yy;
+    if(creep.pos.x < 10) {
+        ez[0] = 0;
+        ez[1] = creep.pos.x;
+    } else {
+        var z = creep.pos.x.toString();
+        ez[0] = z[0];
+        ez[1] = z[1];
+    }
+    if(creep.pos.y < 10) {
+        ez[2] = 0;
+        ez[3] = creep.pos.y;
+    } else {
+        var zz = creep.pos.x.toString();
+        ez[2] = zz[0];
+        ez[3] = zz[1];
+    }
+//3207 E23S38 E23S39 4804 88888
+//0123 456789 012345 6789 0 
+
+// then it needs to calcuate teh direction between current pos and the pos
+//console.log( path );
+var ee = path.substring(4,path.length);
+
+console.log("CHecked","path",path ,"c",creep.pos,ez,ee,"d:",dir,future.isEqualTo(creep.pos) );
+console.log(ez+dir+ee);
+//path =  spliceSlice(path, 20, 1, dir) ;
+// it needs to add to the array@
+    // that it think it's at.
+
+    var reported = dest + current + ez+dir+ee;
+    return reported;
+}
+
+function findSerializedPath(rawData, currentPos, goalPos) {
+    var test = rawData;
+    //    console.log(test.length,test);
+    if(test === undefined) return;
+    for (var i = 0; i < test.length; i++) {
+        if (test[i] == '+' && i !== test.length - 1) {
+            i++;
+            var destRoomX = parseInt(test[i + 5] + test[i + 6]);
+            var destRoomY = parseInt(test[i + 8] + test[i + 9]);
+            var goalRoom = test[i + 4] + destRoomX + test[i + 7] + destRoomY;
+            var currentRoomX = parseInt(test[i + 11] + test[i + 12]);
+            var currentRoomY = parseInt(test[i + 14] + test[i + 15]);
+            var currentRoom = test[i + 10] + currentRoomX + test[i + 13] + currentRoomY;
+            var goal = new RoomPosition(parseInt(test[i + 0] + test[i + 1]), parseInt(test[i + 2] + test[i + 3]), goalRoom);
+            var current = new RoomPosition(parseInt(test[i + 16] + test[i + 17]), parseInt(test[i + 18] + test[i + 19]), currentRoom);
+            if (current.isEqualTo(currentPos) && goal.isEqualTo(goalPos)) {
+                for (var e = i; e++; e < test.length) {
+                    if (test[e] == '+') {
+                        return rawData.substring(i, e);
+                    }
+
+                }
+
+            }
+        }
+    }
+}
+
+function getSerializedPath(rawData) {
+
+    var destRoomX = parseInt(rawData[5] + rawData[6]);
+    var destRoomY = parseInt(rawData[8] + rawData[9]);
+    var goalRoom = rawData[4] + destRoomX + rawData[7] + destRoomY;
+    var currentRoomX = parseInt(rawData[11] + rawData[12]);
+    var currentRoomY = parseInt(rawData[14] + rawData[15]);
+    var currentRoom = rawData[10] + currentRoomX + rawData[13] + currentRoomY;
+
+    var move = {
+        dest: {
+            x: parseInt(rawData[0] + rawData[1]),
+            y: parseInt(rawData[2] + rawData[3]),
+            roomName: goalRoom
+        },
+        room: currentRoom,
+        path: rawData.substring(20, rawData.length)
+    };
+    return move;
+    // Taking a
+}
+
+    var rawData = {};
     Creep.prototype.moveMe = function(target, options, xxx) {
 
         if (this.memory.standSpot !== undefined) {
@@ -562,8 +692,6 @@ module.exports = function() {
         }
 
         if (this.fatigue > 0) return;
-        //  if(targets)
-
 
         if (xxx !== undefined) {
             target = new RoomPosition(target, options, this.room.name);
@@ -585,10 +713,10 @@ module.exports = function() {
 
         if (stuck) {
             this.memory.stuckCount++;
-            if(this.memory.stuckCount > 5)
+            if (this.memory.stuckCount > 5)
                 this.memory.stuckCount = 5;
         } else {
-            if(this.memory.stuckCount > 0){
+            if (this.memory.stuckCount > 0) {
                 this.memory.stuckCount--;
             }
         }
@@ -616,7 +744,106 @@ module.exports = function() {
             }
         }
 
-        moveStatus = this.moveTo(target, options);
+
+
+
+
+        var doNew = ['E23S39'];//
+        if (!_.contains(doNew, this.room.name)) {
+            moveStatus = this.moveTo(target, options);
+        } else {
+            // new stuff
+            var segment = require('commands.toSegment');
+            var doPath = false;
+            var zz,test;
+//            console.log(this);
+            console.log('segment Search',this.name,this.pos.x,this.pos.y);
+            let home = this.memory.home;
+                if (rawData[home] === undefined) {
+                    rawData[home] = segment.getRawSegmentRoomData(home);
+                } // Now we have rawData[this.room.name], it should be empty in the beginning.
+       //          test = serializePath(this);
+//                    console.log('serial',rawData[home],this.pos.x, this.pos.y,test);
+     //            if(target.x === undefined){
+   //                 target = target.pos;
+ //                } 
+
+//                 zz = findSerializedPath(rawData[home], this.pos, target);
+//                 console.log('XXXXX',zz, this.pos,target);
+
+            if (this.pos.x === 0 || this.pos.x === 49 || this.pos.y === 0 || this.pos.y === 49) {
+                 if(target.x === undefined){
+                    target = target.pos;
+                 } 
+                 zz = findSerializedPath(rawData[home], this.pos, target);
+                 console.log('LINUSLINUSLINUS',zz, this.pos,target,rawData[home]);
+                if (zz === undefined) {
+                    // if we don't find the path then. 
+//                    doPath = true;
+                } else {
+                    // Then we use zz to set _move as;
+                    // this.memory._move = zz;
+                }
+
+            }
+
+            moveStatus = this.moveTo(target, options);
+//            test = serializePath(this);
+            if(doPath){
+                if(rawData[home] !== undefined) {
+                    test = serializePath(this);
+                    rawData[home] += test+'+';
+                    segment.setRoomSegmentData(home, rawData[home]);
+                    console.log(zz,'FINALSERIALIZEDPATH',test);
+                }
+            }
+
+        }
+
+        /*
+        Here we'll start the part of the code to look too see if cached
+        */
+
+
+        /*            var datadd = serializePath(creep);
+                    var newMove = getSerializedPath(datadd);
+                    console.log(datadd, creep.pos);
+                    console.log(newMove.dest.x, newMove.dest.y, newMove.dest.roomName);
+                    console.log(newMove.room, newMove.path);
+                    //4433 E24S34 E24S33 1134 6666656455555555
+                    var test = '+3221E19S31E19S31044133333222222222222222222222334+3910E15S45E15S4539107+4433E24S34E24S3311346666656455555555+0930E29S48E29S490331222228222222222222222222221122322+';
+                    var goalPos = new RoomPosition(44, 33, 'E24S34');
+                    var currentPos = new RoomPosition(11, 34, 'E24S33');
+                    console.log(test);
+                    var zz = findSerializedPath(test, currentPos, goalPos);
+                    console.log(zz, 'PathRETURNED');
+                    console.log( getSerializedPath(zz).room );
+                    console.log(serializePath(creep) ); */
+
+        //  in commands.ToSegment.
+        /* How it works is that there'll be an var that is the memory from
+        segment, that if an creep requests a path from it's home, it will have it in
+        an var stored in raw data.
+
+        When a creeps is at  x || y  === 0 || 49, it will request to segment to look 
+        a stored path in rawData. If it doesn't find one. It will create a moveTo, then
+        add it to rawData.
+        If it fines one then till will take the rawdata turn it into move and use it.
+
+        // Steps to take to get this done
+        // Pick a room
+        // The best place to look at locations is before a move, that is outside
+        // the room.
+        // Have it do the 0||49 posistion check to create move;
+        //  else it does normal move.
+
+        // Step 2 is look at the segment
+        // step 3 is to have creeps start taking it
+
+                    
+        */
+
+
 
         return moveStatus;
     };

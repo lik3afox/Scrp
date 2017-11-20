@@ -247,7 +247,9 @@ class SpawnInteract {
                     goTo++;
                     if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
                         goTo++;
-                    }
+                    } else if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_EXTENSION && targets[goTo].energy === targets[goTo].energyCapacity) {
+                        goTo++;
+                    } 
                     if (goTo > targets.length) return false;
                 } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
             } else {
@@ -256,7 +258,9 @@ class SpawnInteract {
                     goTo--;
                     if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
                         goTo--;
-                    }
+                    }else if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_EXTENSION && targets[goTo].energy === targets[goTo].energyCapacity) {
+                        goTo--;
+                    } 
                     if (goTo < 0) return false;
                 } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
             }

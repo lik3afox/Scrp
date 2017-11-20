@@ -383,11 +383,14 @@ function doDefault(creep) {
                     return true;
                 }
             }
-            if (!takeFromTerminalForStorage(creep))
-                constr.moveToPickUpEnergy(creep, 300);
+            if (!takeFromTerminalForStorage(creep)){
+             //   constr.moveToPickUpEnergy(creep, 300);
+             //   creep.say('<');
+            }
             return;
         } else {
             constr.moveToPickUpEnergy(creep, 300);
+                creep.say('>');
         }
     } else {
         toStorageOrTerminal(creep);
@@ -575,7 +578,7 @@ class roleLinker extends roleParent {
             }
         }
 
-        if (creep.room.controller.level === 8) {
+        if (creep.room.controller.level === 8||creep.room.name == 'E25S43'||creep.room.name == 'E14S37') {
             if (!super.power.getPowerToSpawn(creep)){
                 oneLinkRoom(creep, creep.memory.full);
             }

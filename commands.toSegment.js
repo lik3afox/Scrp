@@ -37,6 +37,11 @@ function setInterShardData() {
     }
 }
 
+
+function getSerializedPath() {
+    // Taking a
+}
+
 class segmentCommand {
     static roomToSegment(roomName) {
         return roomSegment[roomName] === undefined ? false : roomSegment[roomName];
@@ -55,21 +60,34 @@ class segmentCommand {
 
     static setRoomSegmentData(roomName, rawData) {
         if (roomSegment[roomName] !== undefined && segmentChange > 0) {
-            RawMemory.segments[roomSegment[roomName]] = rawData;
-            segmentChange--;
+            if (RawMemory.segments[roomSegment[roomName]] === undefined) {
+                RawMemory.setActiveSegments([roomSegment[roomName]]);
+                segmentChange--;
+            } else {
+                RawMemory.segments[roomSegment[roomName]] = rawData;
+            }
         } else {
-            console.log('RawSegmentRoomData FAILURE', roomName);
+            console.log('RawSegmentRoomData SET FAILURE', roomName);
             return;
         }
 
     }
     static getRawSegmentRoomData(roomName) {
         if (roomSegment[roomName] !== undefined) {
-            return RawMemory.segment[roomSegment[roomName]];
+            if (RawMemory.segments[roomSegment[roomName]] === undefined) {
+                RawMemory.setActiveSegments([roomSegment[roomName]]);
+            } else {
+
+                if (RawMemory.segments[roomSegment[roomName]][0] === undefined) {
+                    RawMemory.segments[roomSegment[roomName]] = '+';
+                }
+
+                return RawMemory.segments[roomSegment[roomName]];
+            }
         } else {
-            console.log('RawSegmentRoomData FAILURE', roomName);
-            return;
+            console.log('RawSegmentRoomData GET FAILURE', roomName);
         }
+        return false;
     }
 
     static getRawSegmentData(segment) {

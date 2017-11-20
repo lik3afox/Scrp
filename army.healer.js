@@ -53,7 +53,7 @@ function powerAction(creep) {
                 if (vv.length > 0) {
                     creep.memory.powerbankID = vv[0].id;
                 }
-                creep.memory.parent = returnClosestSpawn(creep.room.name).id;
+//                creep.memory.parent = returnClosestSpawn(creep.room.name).id;
             }
 
             let pBank = Game.getObjectById(creep.memory.powerbankID);

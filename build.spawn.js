@@ -23,7 +23,7 @@ var allModule = [
     ['minHarvest', require('role.mineral')],
     ['mineral', require('keeper.scientist')],
     ['engineer', require('army.engineer')],
-    
+
     ['scout', require('army.scout')],
     ['rampartGuard', require('army.rampartGuard')],
     ['homeDefender', require('role.defender2')],
@@ -610,7 +610,7 @@ function rebuildCreep(creep) {
     // expansion creep.
     let _body = [];
 
-    if (creep.memory.role == 'miner' || creep.memory.role == 'transport' || creep.memory.role == 'ztransport' ) {
+    if (creep.memory.role == 'miner' || creep.memory.role == 'transport' || creep.memory.role == 'ztransport') {
         let spawn = Game.getObjectById(creep.memory.parent);
         let _module;
         let goalInfo;
@@ -624,8 +624,11 @@ function rebuildCreep(creep) {
         }
 
     } else if (creep.memory.role == 'first' || creep.memory.role == 'harvester' || creep.memory.role == 'scientist') {
-        
-        currentModule = getCurrentModule(creep.memory.home);
+        if (Game.flags[creep.memory.home] !== undefined && Game.flags[creep.memory.home].color == COLOR_WHITE && Game.flags[creep.memory.home].secondaryColor == COLOR_GREEN) {
+            currentModule = Game.flags[creep.memory.home].memory.module;
+        } else {
+            currentModule = getCurrentModule(creep.memory.home);
+        }
 
         for (var type in currentModule) {
             if (currentModule[type][_name] == creep.memory.role) {
@@ -772,44 +775,44 @@ function getCurrentModule(roomName) {
     if (roomName == 'E14S38') {
         return [];
     }
-        switch (roomName) {
-            case 'E18S36':
-                return Mod_E18S36;
-            case 'E17S34':
-                return Mod_E17S34;
-            case 'E18S32':
-                return Mod_E18S32;
-            case 'E28S37':
-                return Mod_E28S37;
-            case 'E14S37':
-                return Mod_E14S37;
-            case 'E23S38':
-                return Mod_E23S38;
-            case 'E25S37':
-                return Mod_E25S37;
-            case 'E17S45':
-                return Mod_E17S45;
-            case 'E13S34':
-                return Mod_E13S34;
-            case 'E24S33':
-                return Mod_E24S33;
-            case 'E25S47':
-                return Mod_E25S47;
+    switch (roomName) {
+        case 'E18S36':
+            return Mod_E18S36;
+        case 'E17S34':
+            return Mod_E17S34;
+        case 'E18S32':
+            return Mod_E18S32;
+        case 'E28S37':
+            return Mod_E28S37;
+        case 'E14S37':
+            return Mod_E14S37;
+        case 'E23S38':
+            return Mod_E23S38;
+        case 'E25S37':
+            return Mod_E25S37;
+        case 'E17S45':
+            return Mod_E17S45;
+        case 'E13S34':
+            return Mod_E13S34;
+        case 'E24S33':
+            return Mod_E24S33;
+        case 'E25S47':
+            return Mod_E25S47;
 
-            case 'E14S43':
-                return Mod_E14S43;
-            case 'E25S43':
-                return Mod_E25S43;
-            case 'E27S34':
-                return Mod_E27S34;
-            case 'E14S47':
-                return Mod_E14S47;
-            case 'E28S42':
-                return Mod_E28S42;
-            case 'E23S42':
-                return Mod_E23S42;
-        }
-        return [];
+        case 'E14S43':
+            return Mod_E14S43;
+        case 'E25S43':
+            return Mod_E25S43;
+        case 'E27S34':
+            return Mod_E27S34;
+        case 'E14S47':
+            return Mod_E14S47;
+        case 'E28S42':
+            return Mod_E28S42;
+        case 'E23S42':
+            return Mod_E23S42;
+    }
+    return [];
 }
 
 
@@ -1006,27 +1009,24 @@ function calculateCPU(cpu, creep) {
 
 class theSpawn {
 
-    static spawnQuery(spawnID) {
+    static spawnQuery(spawn) {
         // Counting
         var totalCreeps;
-        var spawn = Game.getObjectById(spawnID);
         var type;
-        if (Memory.spawnCount[spawnID] !== undefined) {
-            let spawn = Game.getObjectById(spawnID);
-            if (spawn !== null) {
-                spawn.memory.TotalBuild = (Memory.spawnCount[spawnID].bodyCount * 3);
-                spawn.memory.totalCreep = Memory.spawnCount[spawnID].total;
-            }
-            totalCreeps = Memory.spawnCount[spawnID];
-        } else {
+        if (Memory.spawnCount[spawn.id] === undefined) {
             return;
         }
+        
+
+        spawn.memory.TotalBuild = (Memory.spawnCount[spawn.id].bodyCount * 3);
+        spawn.memory.totalCreep = Memory.spawnCount[spawn.id].total;
+        totalCreeps = Memory.spawnCount[spawn.id];
 
         // Flag Module Check Add Module.
 
         if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
             if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
-				currentModule = getCurrentModule(spawn.room.name);            	
+                currentModule = getCurrentModule(spawn.room.name);
                 for (var ee in currentModule) {
                     Game.flags[spawn.pos.roomName].memory.module.push(currentModule[ee]);
                 }
@@ -1040,8 +1040,9 @@ class theSpawn {
             let min = Game.getObjectById(spawn.room.memory.mineralID);
             let nuke = getNuke(spawn);
             var alertProhib = ['minHarvest', 'assistant', 'nuker'];
-
-            if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
+            if (currentModule[type][_number] === 0) {
+                // No count so don't count.
+            } else if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
 
             } else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
 
@@ -1050,10 +1051,10 @@ class theSpawn {
             } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
 
             } else {
-                if(totalCreeps[currentModule[type][_name]] === undefined) {
+                if (totalCreeps[currentModule[type][_name]] === undefined) {
                     totalCreeps[currentModule[type][_name]] = {
-                        count : 0,
-                        goal : []
+                        count: 0,
+                        goal: []
                     };
                 }
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
@@ -1681,11 +1682,11 @@ class theSpawn {
                         if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
-                            if(Game.creeps[name].memory.party !== undefined && Game.creeps[name].memory.party === 'powerbankX80' ){
-                                console.log(roomLink(Game.creeps[name].pos.roomName,'Finding party powerbankX80'));
+                            if (Game.creeps[name].memory.party !== undefined && Game.creeps[name].memory.party === 'powerbankX80') {
+                                console.log(roomLink(Game.creeps[name].pos.roomName, 'Finding party powerbankX80'));
                             }
-                            if(Game.creeps[name].memory.role == 'fighter') {
-                                console.log(roomLink(Game.creeps[name].pos.roomName,'Finding party fighter'));
+                            if (Game.creeps[name].memory.role == 'fighter') {
+                                console.log(roomLink(Game.creeps[name].pos.roomName, 'Finding party fighter'));
                             }
                         }
                         if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
