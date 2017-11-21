@@ -1,7 +1,13 @@
 // decay 25
 
 var roomSegment = {
+    // Shard0 
+    E38S72: 10,
+    E38S81: 11,
+    // Shard1
     E23S38: 10,
+    E25S37: 11,
+
 };
 var segmentChange = 0;
 var interShardData;
@@ -41,7 +47,7 @@ function setInterShardData() {
 function getSerializedPath() {
     // Taking a
 }
-
+var setActive ={};
 class segmentCommand {
     static roomToSegment(roomName) {
         return roomSegment[roomName] === undefined ? false : roomSegment[roomName];
@@ -59,24 +65,29 @@ class segmentCommand {
     }
 
     static setRoomSegmentData(roomName, rawData) {
-        if (roomSegment[roomName] !== undefined && segmentChange > 0) {
-            if (RawMemory.segments[roomSegment[roomName]] === undefined) {
+        if (roomSegment[roomName] !== undefined) {
+            if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined  && segmentChange > 0 ) {
                 RawMemory.setActiveSegments([roomSegment[roomName]]);
+                setActive[roomSegment[roomName]] = true;
                 segmentChange--;
-            } else {
+            } else if (RawMemory.segments[roomSegment[roomName]] !== undefined) {
                 RawMemory.segments[roomSegment[roomName]] = rawData;
             }
         } else {
-            console.log('RawSegmentRoomData SET FAILURE', roomName);
+            console.log('roomSegment Failure SET FAILURE',roomSegment[roomName], roomName,segmentChange);
             return;
         }
 
     }
+
     static getRawSegmentRoomData(roomName) {
-        if (roomSegment[roomName] !== undefined) {
-            if (RawMemory.segments[roomSegment[roomName]] === undefined) {
+        if (roomSegment[roomName] !== undefined ) {
+            if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined&& segmentChange > 0  ) {
                 RawMemory.setActiveSegments([roomSegment[roomName]]);
-            } else {
+                setActive[roomSegment[roomName]] = true;
+                segmentChange--;
+
+            } else  if (RawMemory.segments[roomSegment[roomName]] !== undefined){
 
                 if (RawMemory.segments[roomSegment[roomName]][0] === undefined) {
                     RawMemory.segments[roomSegment[roomName]] = '+';
@@ -85,9 +96,9 @@ class segmentCommand {
                 return RawMemory.segments[roomSegment[roomName]];
             }
         } else {
-            console.log('RawSegmentRoomData GET FAILURE', roomName);
+            console.log('roomSegment RawSegmentRoomData GET FAILURE', roomName,segmentChange);
         }
-        return false;
+        return;
     }
 
     static getRawSegmentData(segment) {

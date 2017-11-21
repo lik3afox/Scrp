@@ -118,13 +118,10 @@ class transport extends roleParent {
             if (creep.memory.home == creep.room.name) {
                 if (!super.containers.moveToStorage(creep)) {
                     if (!super.containers.moveToTerminal(creep)) {
-                        if (!super.spawns.moveToTransfer(creep)) {
                             if (!super.constr.doCloseBuild(creep)) {
                                 if (!super.containers.moveToTransfer(creep)) {
-                                    // if no containers then go to spawns
                                 }
                             }
-                        }
                     }
                 }
 
@@ -135,7 +132,7 @@ class transport extends roleParent {
 
                 let bads = getBads(creep);
                 if (bads.length === 0) {
-                    creep.moveMe(Game.getObjectById(creep.memory.parent), {
+                    creep.moveMe(Game.rooms[creep.memory.home].storage, {
                         reusePath: rePath
                     });
                 } else {
@@ -151,7 +148,26 @@ class transport extends roleParent {
                 if (creep.memory.workContain !== undefined) {
                     let zzz = Game.getObjectById(creep.memory.workContain);
                     if (zzz !== null)
-                        if (!creep.pos.isNearTo(zzz)) {
+                        if(creep.room.name !== zzz.pos.roomName) {
+                            let task = {};
+                            task.options = {
+                                reusePath: rePath,
+                                ignoreRoads: false,
+                                visualizePathStyle: {
+                                    fill: 'transparent',
+                                    stroke: '#ff0',
+                                    lineStyle: 'dashed',
+                                    strokeWidth: 0.15,
+                                    opacity: 0.5
+                                }
+                            };
+                            task.pos = _goal.pos;
+                            task.order = "moveTo";
+                            task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+                            task.energyPickup = true;
+                            task.rangeHappy = 2;
+                            creep.memory.task.push(task);
+                        } else if (!creep.pos.isNearTo(zzz)) {
                             let task = {};
                             task.options = {
                                 reusePath: rePath,
@@ -179,7 +195,7 @@ class transport extends roleParent {
                             if (creep.withdraw(zzz, o) == OK) {}
                         }
                     } else if (creep.pos.isNearTo(_goal)) {
-                        creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50 });
+                        creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 50, reusePath:1 });
                     } else {
                         creep.say('zZzZ', true);
                     }
@@ -210,21 +226,14 @@ class transport extends roleParent {
                     ignoreRoads: false,
                     visualizePathStyle: visPath
                 };
-                task.pos = _goal.pos;
+                task.pos = _goal !== null ? _goal.pos : super.movement.getRoomPos(creep.memory.goal) ;
                 task.order = "moveTo";
                 task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
                 task.energyPickup = true;
                 task.rangeHappy = 2;
                 creep.memory.task.push(task);
 
-            } else if (_goal === null) {
-                var goingTo = super.movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
-                creep.moveMe(goingTo, {
-                    ignoreRoads: false,
-                    reusePath: rePath,
-                    visualizePathStyle: visPath
-                });
-            }
+            } 
         }
     }
 }

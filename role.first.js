@@ -57,20 +57,23 @@ function isOnPath(creep) {
 
 function goToMovePath(creep, patrol) {
     if (creep.memory.patrolpath === undefined) {
-        creep.memory.patrolpath = makePatrol(creep, patrol);
+        creep.memory.patrolpath = Room.serializePath(makePatrol(creep, patrol));
+        //        creep.memory.patrolpath = makePatrol(creep, patrol);
     }
     // Creep will walk back to spawn until it matches one of those points
     var path = creep.memory.patrolpath; //spawn.room.findPath(spawn, source);
+    path = _.isString(path) ? Room.deserializePath(path) : path;
     let what = creep.moveByPath(path);
 
     switch (what) {
         case ERR_NOT_FOUND:
             if (creep.memory.pathClose === undefined) {
                 let pos = [];
-                var pathz = creep.memory.patrolpath;
-                var e = pathz.length;
+//                var pathz = creep.memory.patrolpath;
+//                pathz = _.isString(pathz) ? Room.deserializePath(pathz) : pathz;
+                var e = path.length;
                 while (e--) {
-                    pos.push(new RoomPosition(pathz[e].x, pathz[e].y, creep.room.name));
+                    pos.push(new RoomPosition(path[e].x, path[e].y, creep.room.name));
                 }
                 creep.memory.pathClose = creep.pos.findClosestByRange(pos);
             }
@@ -89,17 +92,18 @@ function moveOnPath(creep) {
     var patrol;
     if (creep.room.memory.alert) return false;
     switch (creep.room.name) {
-        case "E28S77":
+        case "E23S38":
             patrol = [
-                [7, 20],
-                [17, 18],
-                [17, 14],
-                [17, 11],
-                [15, 8],
-                [10, 8],
-                [8, 12],
-                [11, 14],
-                [11, 16]
+                [27, 8],
+                [22, 13],
+                [28, 20],
+                [31, 20],
+                [32, 19],
+                [30, 17],
+                [28, 9],
+                [31, 6],
+                [30, 5],
+
             ];
             goToMovePath(creep, patrol);
             return true;
@@ -137,7 +141,7 @@ class roleFirst extends roleParent {
         super.rebirth(creep);
         super.baseRun(creep);
 
-        if(creep.room.energyAvailable == creep.room.energyCapacityAvailable && Game.shard.name == 'shard0'){
+        if (creep.room.energyAvailable == creep.room.energyCapacityAvailable && Game.shard.name == 'shard0') {
             require('role.linker').run(creep);
             return;
         }
@@ -163,6 +167,8 @@ class roleFirst extends roleParent {
             if (!creep.pickUpEnergy()) {
                 if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
                     creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                } else if (creep.pos.isNearTo(creep.room.terminal)) {
+                    creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
                 } else {
                     if (!super.containers.withdrawFromStorage(creep)) {
                         if (!super.containers.withdrawFromTerminal(creep)) {

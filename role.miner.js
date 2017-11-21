@@ -75,10 +75,10 @@ function doWork(creep) {
                     creep.moveTo(38, 5);
                     break;
                 case '5982feeab097071b4adc1bc5':
-                    creep.moveTo(43,10);
+                    creep.moveTo(43, 10);
                     break;
                 case '5982fed0b097071b4adc18aa':
-                    creep.moveTo(19,33);
+                    creep.moveTo(19, 33);
                     break;
 
                 default:
@@ -104,26 +104,26 @@ class settler extends roleParent {
         if (super.movement.runAway(creep)) return;
         if (super.baseRun(creep)) return;
 
-        if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
+/*        if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
             if (super.boosted(creep, creep.memory.needBoost)) {
                 return;
             }
-        }
+        } */
 
         super.shouldDie(creep);
-
         super.movement.checkForBadsPlaceFlag(creep);
+
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
         if (creep.memory.level >= 2) super.rebirth(creep);
+
         if (super.keeperWatch(creep)) {
             return;
         }
+        
         var _source = Game.getObjectById(creep.memory.goal);
         if (creep.memory.goal == '5982ff7ab097071b4adc2b7d') {
             creep.memory.reportDeath = false;
         }
-
-        if (_source !== null && (_source.pos.roomName != creep.room.name)) creep.countDistance();
 
         if (creep.pos.isNearTo(_source)) {
             super.constr.pickUpEnergy(creep);
@@ -198,28 +198,24 @@ class settler extends roleParent {
         } else {
 
             if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.countDistance();
-
-                var goingTo = super.movement.getRoomPos(creep.memory.goal);
-                    if (_source !== null) {
-                        let task = {};
-                        task.options = {
-                            reusePath: 49,
-                            ignoreRoads: false,
-                            visualizePathStyle: {
-                                fill: 'transparent',
-                                stroke: '#ff0',
-                                lineStyle: 'dotted',
-                                strokeWidth: 0.15,
-                                opacity: 0.5
-                            }
-                        };
-                        task.pos = _source.pos;
-                        task.count = true;
-                        task.order = "moveTo";
-                        task.enemyWatch = true;
-                        task.rangeHappy = 1;
-                        creep.memory.task.push(task);
-                    }
+            let task = {};
+            task.options = {
+                reusePath: 49,
+                ignoreRoads: false,
+                visualizePathStyle: {
+                    fill: 'transparent',
+                    stroke: '#ff0',
+                    lineStyle: 'dotted',
+                    strokeWidth: 0.15,
+                    opacity: 0.5
+                }
+            };
+            task.pos = _source !== null ? _source.pos : super.movement.getRoomPos(creep.memory.goal);
+            task.count = true;
+            task.order = "moveTo";
+            task.enemyWatch = true;
+            task.rangeHappy = 1;
+            creep.memory.task.push(task);
         }
 
     }
