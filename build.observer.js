@@ -34,7 +34,7 @@ function doTask(tasks) {
                 }
                 if (ob !== null) {
                     var distance = Game.map.getRoomLinearDistance(ob.room.name, target);
-                           console.log(roomLink(target),"distance:",distance,ob,"doing the task of",task.order,"for "+task.options.timed+ "longer");
+                //           console.log(roomLink(target),"distance:",distance,ob,"doing the task of",task.order,"for "+task.options.timed+ "longer");
                     if (distance <= 10) {
                         if (ob.observeRoom(target) == OK) {
                             task.options.timed--;

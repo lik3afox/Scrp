@@ -636,7 +636,7 @@ function findParty(flag) {
         report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName);
 
     }
-    console.log(report);
+//    console.log(report);
 
     return total;
 }

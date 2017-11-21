@@ -141,7 +141,7 @@ class fighterClass extends roleParent {
             if (!creep.pos.isEqualTo(flag)) {
                 creep.moveMe(flag, {
                     ignoreCreeps: true,
-                    visualizePathStyl: {
+                    visualizePathStyle: {
                         stroke: '#fa0',
                         lineStyle: 'dotted',
                         strokeWidth: 0.1,

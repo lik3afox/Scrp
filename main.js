@@ -468,55 +468,6 @@
                     });
                 }
 
-                /*
-                                else {
-                                    if (Game.spawns[title].memory.alphaSpawn)
-                                    if (Game.cpu.bucket > 500)
-                                        if ((Game.spawns[title].spawning === null)) {
-                                            if (Game.spawns[title].memory.alphaSpawn) {
-
-                                                let zz = _.filter(Game.spawns, function(o) {
-                                                    return (o.spawning === null) && o.room.name == Game.spawns[title].room.name && !o.memory.alphaSpawn;
-                                                });
-                                                if (zz.length > 0 || Game.spawns[title].spawning === null) anySpawn = true;
-
-                                                if (anySpawn) {
-                                                    if (Game.spawns[title].memory.checkCount === undefined) {
-                                                        Game.spawns[title].memory.checkCount = countCheck;
-                                                    }
-                                                    if (Game.spawns[title].memory.checkCount < 0) {
-
-                                                        let zz = spawnsDo.spawnCount(Game.spawns[title].id); // This gets creep totals.
-                                                        spawnsDo.checkModules(Game.spawns[title], zz); // This uses that info and adds to query.
-                                                        spawnsDo.checkExpand(Game.spawns[title], zz); // This uses creepTotal to do expansion stuff - and adds to expandQuery.
-
-
-                                                        Game.spawns[title].memory.checkCount = countCheck;
-                                                    }
-                                                }
-
-                                            }
-                                            ccSpawn.createFromStack(Game.spawns[title]);
-
-                                            if (Game.spawns[title].memory.lastSpawn === undefined)
-                                                Game.spawns[title].memory.lastSpawn = 0;
-                                            Game.spawns[title].memory.lastSpawn++;
-
-
-                                        } else {
-                                            Game.spawns[title].memory.lastSpawn = 0;
-                                            let spawn = Game.spawns[title];
-                                            spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
-                                                color: '#97c39a ',
-                                                stroke: '#000000 ',
-                                                strokeWidth: 0.123,
-                                                font: 0.5,
-                                                align: RIGHT
-                                            });
-                                        }
-                                }
-                */
-
                 if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
                     let spawn = Game.spawns[title];
                     let spawnStats = {
@@ -577,43 +528,24 @@
             if (Game.spawns.E38S81) {
                 //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
                 let dif;
-                console.log('*****PP:' + Memory.stats.powerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('*****PP:' + 0 + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
         }
-        /*    let path = '293768';
-            var x,y, direction, dx, dy;
-            x = parseInt(path.substring(0, 2));
-            y = parseInt(path.substring(2, 4));
-            var result = [];
-            if(!path.length) {
-                return result;
-            }        
+/*if(Game.shard.name == 'shard1'){
+var pos1 = new RoomPosition(31,0,"E23S39");
+var pos2 = new RoomPosition(43,45,"E23S39");
+//var room = ;
+var ee = 'E23S39';
 
-            for (i = 4; i < path.length; i++) {
-                direction = parseInt(path.charAt(i));
-                console.log(direction);
-                if(!offsetsByDirection[direction]) {
-                    throw new Error('`path` is not a valid serialized path string');
-                }
+var path = Game.rooms[ee].findPath(pos1,pos2);
+console.log(Room.serializePath(path),pos1,pos2);
 
-                dx = offsetsByDirection[direction][0];
-                dy = offsetsByDirection[direction][1];
-                if (i > 4) {
-                    x += dx;
-                    y += dy;
-                }
-                result.push({
-                    x, y,
-                    dx, dy,
-                    direction
-                });*/
-        //    }
-
-        //    console.log(x,y,path,result.length);
-
+} */
+let zz = Game.getObjectById('5a1365e3eb064f77701bb2b0');
+if(zz !== null) zz.suicide();
 
     });
 

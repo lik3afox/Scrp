@@ -547,133 +547,132 @@ module.exports = function() {
         }
     };
 
-function spliceSlice(str, index, count, add) {
-  // We cannot pass negative indexes dirrectly to the 2nd slicing operation.
-  if (index < 0) {
-    index = str.length + index;
-    if (index < 0) {
-      index = 0;
+    function serializePath(creep) {
+        // This function will take an object that is a _move.
+        // and turn into an object that is passed.
+        var report = 'E00S001199W00S002288123456789';
+        if (creep.memory._move === undefined) return false;
+        var move = creep.memory._move;
+        // Output would be nice
+        // Desintation 
+        // E00S00 4040 // combined.
+        var dest = "" + (move.dest.x < 10 ? "0" + move.dest.x : move.dest.x) +
+            (move.dest.y < 10 ? "0" + move.dest.y : move.dest.y) + move.dest.room;
+        // Current Location
+        // E00S00 + path - First 4 of the path is the first location.
+        var currentRoom = creep.pos.roomName;
+        /*
+        var move = {
+        dest = {
+        x:1,
+        y:2,
+        roomName:undefined
+        },
+        time: 123
+        path : 
+        room : 'E14S37'
+        }
+        */
+        var path = creep.memory._move.path;
+        // Getting the path after a moveTo needs to go back 1 space.
+        // first it needs to change the 0/1 2/3 units of the array to it's current.
+        var future = new RoomPosition(parseInt(path[0] + path[1]), parseInt(path[2] + path[3]), creep.room.name);
+        var dir = creep.pos.getDirectionTo(future);
+        let currentPos = "";
+        var stringPosY = creep.pos.y.toString();
+        var stringPosX = creep.pos.x.toString();
+        if (stringPosX[1] === undefined) {
+            // Means that it's just 1 entry.
+            currentPos += 0;
+            currentPos += stringPosX[0];
+
+        } else {
+            currentPos += stringPosX[0];
+            currentPos += stringPosX[1];
+        }
+
+        if (stringPosY[1] === undefined) {
+            // Means that it's just 1 entry.
+            currentPos += 0;
+            currentPos += stringPosY[0];
+
+        } else {
+            currentPos += stringPosY[0];
+            currentPos += stringPosY[1];
+        }
+
+        //3207 E23S38 1234 E23S39 4804 88888
+        //0123 456789 0123 456789 
+
+        // then it needs to calcuate teh direction between current pos and the pos
+        //console.log( path );
+        var oldPath = path.substring(4, path.length);
+
+        console.log("CHecked", "path", path, "c", creep.pos, oldPath, "d:", dir, future.isEqualTo(creep.pos));
+        console.log(currentPos + dir + oldPath);
+        //path =  spliceSlice(path, 20, 1, dir) ;
+        // it needs to add to the array@
+        // that it think it's at.
+
+        var reported = dest + currentPos + currentRoom + path.substring(0, 4) + oldPath;
+        return reported;
     }
-  }
 
-  return str.slice(0, index) + (add || "") + str.slice(index + count);
-}
-function serializePath(creep) {
-    // This function will take an object that is a _move.
-    // and turn into an object that is passed.
-    var report = 'E00S001199W00S002288123456789';
-    if(creep.memory._move === undefined) return false;
-    var move = creep.memory._move;
-    // Output would be nice
-    // Desintation 
-    // E00S00 4040 // combined.
-    var dest = "" + (move.dest.x < 10 ? "0" + move.dest.x : move.dest.x) +
-        (move.dest.y < 10 ? "0" + move.dest.y : move.dest.y) + move.dest.room;
-    // Current Location
-    // E00S00 + path - First 4 of the path is the first location.
-    var current = creep.pos.roomName;
-    /*
-    var move = {
-    dest = {
-    x:1,
-    y:2,
-    roomName:undefined
-    },
-    time: 123
-    path : 
-    room : 'E14S37'
-    }
-    */
-    var path = creep.memory._move.path;
-    // Getting the path after a moveTo needs to go back 1 space.
-    // first it needs to change the 0/1 2/3 units of the array to it's current.
-var future = new RoomPosition(parseInt(path[0]+path[1]),parseInt(path[2]+path[3]),creep.room.name);
-var dir = creep.pos.getDirectionTo(future);
-var ez = path.substring(0,4);
-console.log('old path',path,future);
-var xx,yy;
-    if(creep.pos.x < 10) {
-        ez[0] = 0;
-        ez[1] = creep.pos.x;
-    } else {
-        var z = creep.pos.x.toString();
-        ez[0] = z[0];
-        ez[1] = z[1];
-    }
-    if(creep.pos.y < 10) {
-        ez[2] = 0;
-        ez[3] = creep.pos.y;
-    } else {
-        var zz = creep.pos.x.toString();
-        ez[2] = zz[0];
-        ez[3] = zz[1];
-    }
-//3207 E23S38 E23S39 4804 88888
-//0123 456789 012345 6789 0 
+    function findSerializedPath(rawData, currentPos, goalPos) {
+        var test = rawData;
+        //    console.log(test.length,test);
+        if (test === undefined) return;
+        for (var i = 0; i < test.length; i++) {
+            if (test[i] == '+' && i !== test.length - 1) {
+                i++;
+                var destRoomX = parseInt(test[i + 5] + test[i + 6]);
+                var destRoomY = parseInt(test[i + 8] + test[i + 9]);
+                var goalRoom = test[i + 4] + destRoomX + test[i + 7] + destRoomY;
 
-// then it needs to calcuate teh direction between current pos and the pos
-//console.log( path );
-var ee = path.substring(4,path.length);
+                var currentRoomX = parseInt(test[i + 15] + test[i + 16]);
+                var currentRoomY = parseInt(test[i + 18] + test[i + 19]);
+                var currentRoom = test[i + 14] + currentRoomX + test[i + 17] + currentRoomY;
 
-console.log("CHecked","path",path ,"c",creep.pos,ez,ee,"d:",dir,future.isEqualTo(creep.pos) );
-console.log(ez+dir+ee);
-//path =  spliceSlice(path, 20, 1, dir) ;
-// it needs to add to the array@
-    // that it think it's at.
+                var goal = new RoomPosition(parseInt(test[i + 0] + test[i + 1]), parseInt(test[i + 2] + test[i + 3]), goalRoom);
+                var current = new RoomPosition(parseInt(test[i + 10] + test[i + 11]), parseInt(test[i + 12] + test[i + 13]), currentRoom);
 
-    var reported = dest + current + ez+dir+ee;
-    return reported;
-}
-
-function findSerializedPath(rawData, currentPos, goalPos) {
-    var test = rawData;
-    //    console.log(test.length,test);
-    if(test === undefined) return;
-    for (var i = 0; i < test.length; i++) {
-        if (test[i] == '+' && i !== test.length - 1) {
-            i++;
-            var destRoomX = parseInt(test[i + 5] + test[i + 6]);
-            var destRoomY = parseInt(test[i + 8] + test[i + 9]);
-            var goalRoom = test[i + 4] + destRoomX + test[i + 7] + destRoomY;
-            var currentRoomX = parseInt(test[i + 11] + test[i + 12]);
-            var currentRoomY = parseInt(test[i + 14] + test[i + 15]);
-            var currentRoom = test[i + 10] + currentRoomX + test[i + 13] + currentRoomY;
-            var goal = new RoomPosition(parseInt(test[i + 0] + test[i + 1]), parseInt(test[i + 2] + test[i + 3]), goalRoom);
-            var current = new RoomPosition(parseInt(test[i + 16] + test[i + 17]), parseInt(test[i + 18] + test[i + 19]), currentRoom);
-            if (current.isEqualTo(currentPos) && goal.isEqualTo(goalPos)) {
-                for (var e = i; e++; e < test.length) {
-                    if (test[e] == '+') {
-                        return rawData.substring(i, e);
+                // So if the goalRoom doesn't equal currentRoom, and goalRoom == goalPos.roomName 
+                if (current.isEqualTo(currentPos)) {
+                    if ((goalRoom !== currentPos.roomName && goalPos.roomName === goalRoom)||goal.isEqualTo(goalPos)) {
+                        for (var e = i; e++; e < test.length) {
+                            if (test[e] == '+') {
+                                return rawData.substring(i, e);
+                            }
+                        }
                     }
+                } // && goalPos.roomName !== currentRoom)
 
-                }
 
             }
         }
     }
-}
 
-function getSerializedPath(rawData) {
+    function getSerializedPath(rawData) {
 
-    var destRoomX = parseInt(rawData[5] + rawData[6]);
-    var destRoomY = parseInt(rawData[8] + rawData[9]);
-    var goalRoom = rawData[4] + destRoomX + rawData[7] + destRoomY;
-    var currentRoomX = parseInt(rawData[11] + rawData[12]);
-    var currentRoomY = parseInt(rawData[14] + rawData[15]);
-    var currentRoom = rawData[10] + currentRoomX + rawData[13] + currentRoomY;
+        var destRoomX = parseInt(rawData[5] + rawData[6]);
+        var destRoomY = parseInt(rawData[8] + rawData[9]);
+        var goalRoom = rawData[4] + destRoomX + rawData[7] + destRoomY;
+        var currentRoomX = parseInt(rawData[11] + rawData[12]);
+        var currentRoomY = parseInt(rawData[14] + rawData[15]);
+        var currentRoom = rawData[10] + currentRoomX + rawData[13] + currentRoomY;
 
-    var move = {
-        dest: {
-            x: parseInt(rawData[0] + rawData[1]),
-            y: parseInt(rawData[2] + rawData[3]),
-            roomName: goalRoom
-        },
-        room: currentRoom,
-        path: rawData.substring(20, rawData.length)
-    };
-    return move;
-    // Taking a
-}
+        var move = {
+            dest: {
+                x: parseInt(rawData[0] + rawData[1]),
+                y: parseInt(rawData[2] + rawData[3]),
+                room: goalRoom
+            },
+            room: currentRoom,
+            path: rawData.substring(20, rawData.length)
+        };
+        return move;
+        // Taking a
+    }
 
     var rawData = {};
     Creep.prototype.moveMe = function(target, options, xxx) {
@@ -748,53 +747,71 @@ function getSerializedPath(rawData) {
 
 
 
-        var doNew = ['E23S39'];//
+        var doNew = ['E23S39']; //
         if (!_.contains(doNew, this.room.name)) {
             moveStatus = this.moveTo(target, options);
         } else {
             // new stuff
             var segment = require('commands.toSegment');
             var doPath = false;
-            var zz,test;
-//            console.log(this);
-            console.log('segment Search',this.name,this.pos.x,this.pos.y);
+            var zz, test;
+            //            console.log(this);
+            //            console.log('segment Search',this.name,this.pos.x,this.pos.y);
             let home = this.memory.home;
-                if (rawData[home] === undefined) {
-                    rawData[home] = segment.getRawSegmentRoomData(home);
-                } // Now we have rawData[this.room.name], it should be empty in the beginning.
-       //          test = serializePath(this);
-//                    console.log('serial',rawData[home],this.pos.x, this.pos.y,test);
-     //            if(target.x === undefined){
-   //                 target = target.pos;
- //                } 
-
-//                 zz = findSerializedPath(rawData[home], this.pos, target);
-//                 console.log('XXXXX',zz, this.pos,target);
-
-            if (this.pos.x === 0 || this.pos.x === 49 || this.pos.y === 0 || this.pos.y === 49) {
-                 if(target.x === undefined){
+            if (rawData[home] === undefined) {
+                rawData[home] = segment.getRawSegmentRoomData(home);
+            } // Now we have rawData[this.room.name], it should be empty in the beginning.
+            //          test = serializePath(this);
+            //                    console.log('serial',rawData[home],this.pos.x, this.pos.y,test);
+            //            if(target.x === undefined){
+            //                 target = target.pos;
+            //                } 
+            //                 zz = findSerializedPath(rawData[home], this.pos, target);
+            //                 console.log('XXXXX',zz, this.pos,target);
+            if (this.memory.cachePath !== undefined) {
+                path = _.isString(this.memory.cachePath) ? Room.deserializePath(this.memory.cachePath) : _move.path;
+                moveStatus = this.moveByPath(path,options);
+                path.shift();
+                this.memory.cachePath = Room.serializePath(path);
+                this.say('CACHE' + this.memory.cachePath.length, true);
+                if (this.memory.cachePath.length === 0) this.memory.cachePath = undefined;
+            } else if (this.pos.x === 0 || this.pos.x === 49 || this.pos.y === 0 || this.pos.y === 49) {
+                if (target.x === undefined) {
                     target = target.pos;
-                 } 
-                 zz = findSerializedPath(rawData[home], this.pos, target);
-                 console.log('LINUSLINUSLINUS',zz, this.pos,target,rawData[home]);
+                }
+                zz = findSerializedPath(rawData[home], this.pos, target);
+
                 if (zz === undefined) {
                     // if we don't find the path then. 
-//                    doPath = true;
+                    doPath = true;
                 } else {
                     // Then we use zz to set _move as;
-                    // this.memory._move = zz;
+                    let _move = getSerializedPath(zz);
+                    path = _.isString(_move.path) ? Room.deserializePath(_move.path) : _move.path;
+                    moveStatus = this.moveByPath(path,options);
+
+                    path.shift();
+                    if (path.length > 0)
+                        this.memory.cachePath = Room.serializePath(path);
+                    console.log('NEW NEW NEW NEW', moveStatus);
+                    //                    console.log("1", this.memory._move.path);
                 }
 
             }
+            if (moveStatus === undefined || moveStatus === -5) {
+                options.ignoreCreeps = true;
+                moveStatus = this.moveTo(target, options);
+                if (moveStatus === -5) {
+                    this.memory.cachePath = undefined;
+                }
+            }
 
-            moveStatus = this.moveTo(target, options);
-//            test = serializePath(this);
-            if(doPath){
-                if(rawData[home] !== undefined) {
+            if (doPath) {
+                if (rawData[home] !== undefined) {
                     test = serializePath(this);
-                    rawData[home] += test+'+';
+                    rawData[home] += test + '+';
                     segment.setRoomSegmentData(home, rawData[home]);
-                    console.log(zz,'FINALSERIALIZEDPATH',test);
+                    console.log(zz, 'FINALSERIALIZEDPATH', test);
                 }
             }
 

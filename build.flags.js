@@ -301,12 +301,16 @@
                 flag.memory.checkWhat = -10;
                 break;
             case 'power':
-                if (flag.room.controller.level === 8 && flag.room.memory.powerspawnID === undefined)
-                    console.log(roomLink(flag.pos.roomName), 'FINDING SPAWN' + flag.room.powerspawn);
+                if (flag.room.controller.level === 8 && flag.room.memory.powerspawnID === undefined){
+                    let zz = flag.room.powerspawn;
+                 //   console.log(roomLink(flag.pos.roomName), 'FINDING SPAWN' );
+                }
                 break;
             case 'nuke':
-                if (flag.room.controller.level === 8 && flag.room.memory.nukeID === undefined)
-                    console.log(roomLink(flag.pos.roomName), 'Finding Nuke' + flag.room.nuke);
+                if (flag.room.controller.level === 8 && flag.room.memory.nukeID === undefined){
+                    let zz = flag.room.nuke;
+                  //  console.log(roomLink(flag.pos.roomName), 'Finding Nuke');
+                }
                 break;
             case 'spawn':
                 // This will setup the spawns.
@@ -475,8 +479,8 @@
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
                             if (flag.room.controller.level >= 6 && (flag.room.memory.mineralID === undefined || flag.room.memory.extractID === undefined || flag.room.memory.mineralContainID === undefined)) {
-                                console.log(flag, 'FINDING mineral');
-                                // mineralContainID, mineralID, extractID
+//                                console.log(flag, 'FINDING mineral');
+//                                // mineralContainID, mineralID, extractID
 
                                 if (flag.room.memory.mineralID === undefined) {
                                     let vr = flag.room.find(FIND_MINERALS);
@@ -521,7 +525,7 @@
 
 
                     if (flag.memory.module[ez][_level] < 3) {
-                        console.log(flag.memory.module[ez][_name], 'Lvl:', flag.memory.module[ez][_level], 'Num', flag.memory.module[ez][_number]);
+//                        console.log(flag.memory.module[ez][_name], 'Lvl:', flag.memory.module[ez][_level], 'Num', flag.memory.module[ez][_number]);
 
                         switch (flag.memory.module[ez][_level]) {
                             case 0:

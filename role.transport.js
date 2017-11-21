@@ -72,10 +72,10 @@ class transport extends roleParent {
             return;
         }
         if (super.baseRun(creep)) {
-            if (creep.memory._move !== undefined) {
-                var report = creep.memory._move.path[0] + creep.memory._move.path[1] + ":" + creep.memory._move.path[2] + creep.memory._move.path[3] + " " + (creep.memory._move.path.length - 4);
-                creep.say(report);
-            }
+//            if (creep.memory._move !== undefined) {
+//                var report = creep.memory._move.path[0] + creep.memory._move.path[1] + ":" + creep.memory._move.path[2] + creep.memory._move.path[3] + " " + (creep.memory._move.path.length - 4);
+//                creep.say(report);
+//            }
             return;
         }
 
@@ -87,8 +87,20 @@ class transport extends roleParent {
         if (super.keeperWatch(creep)) {
             return;
         }
+        if(creep.room.name == 'E27S34'&&creep.carryTotal !== 0) {
+            var build = ['5a1314c061d4656ce67f703d','5a1314c161d4656ce67f703e'];
+            for(var ee in build){
+                let zz = Game.getObjectById(build[ee]);
+                if(zz !== null ){
+                    if(!creep.pos.isNearTo(zz)){
+                        creep.moveTo(zz);
+                    }
+                    creep.build(zz);
+                    return;
+                }
+            }
+        }
 
-        //        super.shouldDie(creep);
 
         if (creep.memory.gohome === undefined) { creep.memory.gohome = false; }
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }

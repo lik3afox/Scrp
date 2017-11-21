@@ -199,7 +199,6 @@ class roleHarvester extends roleParent {
 
     static run(creep) {
         if (super.baseRun(creep)) {
-
             return;
         }
         let goal = Game.getObjectById(creep.memory.sourceID);
@@ -227,9 +226,6 @@ class roleHarvester extends roleParent {
 
 
         super.rebirth(creep);
-        if (creep.memory.sourceID == '5982ff7ab097071b4adc2b7d') {
-            creep.memory.reportDeath = true;
-        }
 
         if (goal !== null && creep.carry.energy > creep.carryCapacity - creep.stats('mining') && creep.pos.isNearTo(goal)) {
             if (!super.link.deposit(creep)) {

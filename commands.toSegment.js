@@ -12,7 +12,7 @@ function grabInterShardData() {
         interShardData = JSON.parse(RawMemory.interShardSegment);
         RawMemory.interShardSegment = JSON.stringify(interShardData);
     }
-    console.log('SHARD0 getting request');
+//    console.log('SHARD0 getting request');
     return interShardData;
 }
 
@@ -33,7 +33,7 @@ function setInterShardData() {
                 K: Memory.stats.totalMinerals.K < 100000 ? true : false,
             }
         });
-        console.log('setting shard1 intershardData', segmentChange);
+//        console.log('setting shard1 intershardData', segmentChange);
     }
 }
 
@@ -116,7 +116,7 @@ class segmentCommand {
                 //                console.log('first Setting');
                 //                RawMemory.segments[0] = '{"foo": "bar", "counter": 15}';
 
-                console.log(RawMemory.segments[0], Game.time);
+//                console.log(RawMemory.segments[0], Game.time);
                 break;
 
         }

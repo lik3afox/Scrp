@@ -137,6 +137,12 @@ class roleFirst extends roleParent {
         super.rebirth(creep);
         super.baseRun(creep);
 
+        if(creep.room.energyAvailable == creep.room.energyCapacityAvailable && Game.shard.name == 'shard0'){
+            require('role.linker').run(creep);
+            return;
+        }
+
+
         if (creep.memory.deposit === undefined) { creep.memory.deposit = false; }
 
         if (!creep.memory.deposit && creep.carryTotal > creep.carryCapacity - 5) {

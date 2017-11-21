@@ -138,7 +138,6 @@ function needEnergy(terminal) {
     var e;
 //    console.log('xx',terminal.room.name);
     if (terminal.room.name == 'E14S38') {
-        console.log(terminal.room.storage.store[RESOURCE_ENERGY]);
         if (terminal.room.storage.store[RESOURCE_ENERGY] < 10000) {
             currentHigh = 0;
             for (e in s1LabRooms) {
@@ -1182,7 +1181,7 @@ function buyMineralsFromBUYORDER(terminal) {
                 wanted.push(need);
         }
         if(wanted.length === 0 ){
-            console.log('nothing wanted');
+//            console.log('nothing wanted');
             return;
         }
 
@@ -1190,12 +1189,12 @@ function buyMineralsFromBUYORDER(terminal) {
     var eng = terminal.store[RESOURCE_ENERGY];
     var buy;
     if (eng < 30000 && !anyLikeOrder(RESOURCE_ENERGY, terminal.pos.roomName)) {
-        console.log(terminal.room.name, 'needs energy in terminal');
+//        console.log(terminal.room.name, 'needs energy in terminal');
             Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 100000, terminal.pos.roomName);
     } else {
         for (var e in wanted) {
             if (terminal.store[wanted[e]] < 25000 || terminal.store[wanted[e]] === undefined) {
-                console.log(terminal.room.name, 'needs', wanted[e], ' in terminal', terminal.store[wanted[e]]);
+  //              console.log(terminal.room.name, 'needs', wanted[e], ' in terminal', terminal.store[wanted[e]]);
 
         if(!anyLikeOrder(wanted[e], terminal.pos.roomName) ){
             let average = getAverageMineralPrice(wanted[e], true);
@@ -1225,7 +1224,7 @@ class roleTerminal {
         adjustOldPrices();
         if (Game.shard.name == 'shard0') {
             for (var a in s0LabRooms) {
-                console.log(Game.rooms[s0LabRooms[a]], s0LabRooms[a]);
+//                console.log(Game.rooms[s0LabRooms[a]], s0LabRooms[a]);
                 if (Game.rooms[s0LabRooms[a]] !== undefined) {
                     let terminal = Game.rooms[s0LabRooms[a]].terminal;
                                     buyMineralsFromBUYORDER(terminal);
