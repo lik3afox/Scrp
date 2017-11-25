@@ -411,9 +411,10 @@ class StructureInteract {
                 let dont = ['59fbe02748c9197fc10e644d', '59ff0639c7b6aa287a1d62a2','59b095625c8a7135338571dc',
                             '59b0975c5313f514165f488a', '59b093ef6464a531ade0cadd','59fbc569eb27fe747ba9e81e',
                             '59ff2104a3108b2376afd515','5a008600fa1095636dc2bd56','59fcade7506dc4773aae5727',
-                            '59ff1d24565b463f26738a02', '59fc366cce18c1436f80fb61','59fbfabb84efd224ff7a6911',
-                            '59b972447d007f4ba160b9ca','59fbcc5e97eb5834fdd824f5','59ff1ee6a8ff37215efe15be',
-                            '59ff5cf3a2f6e5204df4f611','59ff234d39a21a77b5c0621e','59a9970b638ae67ed9705358',
+                            '59ff1d24565b463f26738a02', '59fc366cce18c1436f80fb61','59fbfabb84efd224ff7a6911','59a5eeee2db7e727290f6adf',
+                            '59feab819e579832fca19a96',
+                            '59b972447d007f4ba160b9ca','59fbcc5e97eb5834fdd824f5','59ff1ee6a8ff37215efe15be','59a5e8e52f25267ca5935a10',
+                            '59ff5cf3a2f6e5204df4f611','59ff234d39a21a77b5c0621e','59a9970b638ae67ed9705358','59fb962a3078c959e22f1857',
                             '59fc1166bbabcd0364db8965','59a98de6c8ce4d4496194cdb','59fc59c5092df50396a4b7a1','59ff0639c7b6aa287a1d62a2'];
                 if (!_.includes(dont, atFeet[i].structure.id))
                     if (creep.repair(atFeet[i].structure) == OK) {
