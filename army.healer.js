@@ -1,5 +1,3 @@
-
-
 // Back line
 // Designed for healing.
 
@@ -8,10 +6,10 @@ var classLevels = [
     [HEAL, MOVE, MOVE, MOVE], // 200
     [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL],
-    
-    [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL],
-    [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
+
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
+    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
     // BOOSTED heal
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, RANGED_ATTACK, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
@@ -53,7 +51,7 @@ function powerAction(creep) {
                 if (vv.length > 0) {
                     creep.memory.powerbankID = vv[0].id;
                 }
-//                creep.memory.parent = returnClosestSpawn(creep.room.name).id;
+                //                creep.memory.parent = returnClosestSpawn(creep.room.name).id;
             }
 
             let pBank = Game.getObjectById(creep.memory.powerbankID);
@@ -101,6 +99,29 @@ function powerAction(creep) {
     }
 
     return creep.memory.powerParty;
+}
+
+function banditAction(creep) {
+   if (Game.flags[creep.memory.party] !== undefined) {
+        if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+
+            good = creep.room.find(FIND_MY_CREEPS);
+            good = _.filter(good, function(o) {
+                return o.id !== creep.id;
+            });            
+            good.sort((a, b) => a.hits - b.hits);
+            if (good.length > 0) {
+                if (!creep.pos.isNearTo(good[0])) {
+                    creep.moveTo(good[0]);
+                }
+                creep.heal(good[0]);
+                creep.say(good.length+'xxx');
+                return true;
+            }
+
+        }
+        movement.flagMovement(creep);
+    }
 }
 
 
@@ -162,6 +183,12 @@ class healerClass extends roleParent {
             if (powerAction(creep))
                 return;
         }
+        if (creep.memory.party == 'Flag1') {
+            super.rebirth(creep);
+            creep.say('bandit');
+            banditAction(creep);
+            return;
+        }
         // creep.say('drugs'+creep.memory.level);
         if (creep.memory.level == 5) {
             if (super.boosted(creep, ['XLHO2', 'XGHO2'])) {
@@ -188,7 +215,7 @@ class healerClass extends roleParent {
             } else {
                 creep.memory.lastHealed = hurtz[0].id;
             }
-                doMove = true;
+            doMove = true;
 
         } else if (creep.hits < creep.hitsMax) {
             creep.say('2');
@@ -200,8 +227,7 @@ class healerClass extends roleParent {
             var last = Game.getObjectById(creep.memory.lastHealed);
             if (last !== null) {
                 creep.heal(last);
-                if (last.id !== creep.id) {
-                }
+                if (last.id !== creep.id) {}
             }
             doMove = true;
         }
@@ -218,12 +244,12 @@ class healerClass extends roleParent {
             } else if (doMove) {
                 movement.flagMovement(creep);
             }
-        }  else {
-        if (doMove) {
-            movement.flagMovement(creep);
+        } else {
+            if (doMove) {
+                movement.flagMovement(creep);
+            }
         }
-        }
-        
+
 
         /*        let zz = Game.getObjectById('595082872cf123870e614e0d');
         if (zz !== null && zz.hits > zz.hitsMax - 5) {
@@ -235,20 +261,20 @@ class healerClass extends roleParent {
         //  if(hurtz[0] == undefined)
 */
 
-/*        if (creep.room.name == 'E18S64') {
-            creep.selfHeal();
-            var spn = Game.getObjectById('594fc84a66235f5268eb6c6a');
-            if (spn !== null) {
-                creep.moveTo(spn);
-                return;
-            }
-            var tar = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-            if (tar.length > 0) {
-                let clost = creep.pos.findClosestByRange(tar);
-                creep.moveTo(clost);
-                return;
-            }
-        } */
+        /*        if (creep.room.name == 'E18S64') {
+                    creep.selfHeal();
+                    var spn = Game.getObjectById('594fc84a66235f5268eb6c6a');
+                    if (spn !== null) {
+                        creep.moveTo(spn);
+                        return;
+                    }
+                    var tar = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+                    if (tar.length > 0) {
+                        let clost = creep.pos.findClosestByRange(tar);
+                        creep.moveTo(clost);
+                        return;
+                    }
+                } */
 
     }
 }

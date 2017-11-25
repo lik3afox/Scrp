@@ -7,9 +7,27 @@ var roomSegment = {
     // Shard1
     E23S38: 10,
     E25S37: 11,
+    E24S33: 12,
+    E27S34: 13,
+    E18S32: 13,
+    E28S37: 14,
+    E25S27: 15,
+    E14S43: 16,
+    E18S36: 16,
+    E17S45: 17,
+    E14S47: 18,
+    E23S42: 19,
+    E14S37: 19,
+    E28S42: 20,
+    E29S48: 20,
+    E25S43: 21,
+    E27S45: 21,
+    E25S47: 21,
+    E17S34: 22,
+    E13S34: 22,
 
 };
-var segmentChange = 0;
+var segmentChange = 10;
 var interShardData;
 
 function grabInterShardData() {
@@ -18,7 +36,7 @@ function grabInterShardData() {
         interShardData = JSON.parse(RawMemory.interShardSegment);
         RawMemory.interShardSegment = JSON.stringify(interShardData);
     }
-//    console.log('SHARD0 getting request');
+    //    console.log('SHARD0 getting request');
     return interShardData;
 }
 
@@ -39,7 +57,7 @@ function setInterShardData() {
                 K: Memory.stats.totalMinerals.K < 100000 ? true : false,
             }
         });
-//        console.log('setting shard1 intershardData', segmentChange);
+        //        console.log('setting shard1 intershardData', segmentChange);
     }
 }
 
@@ -47,7 +65,7 @@ function setInterShardData() {
 function getSerializedPath() {
     // Taking a
 }
-var setActive ={};
+var setActive = {};
 class segmentCommand {
     static roomToSegment(roomName) {
         return roomSegment[roomName] === undefined ? false : roomSegment[roomName];
@@ -64,39 +82,56 @@ class segmentCommand {
         }
     }
 
+    static requestRoomSegmentData(roomName){
+        if (roomSegment[roomName] !== undefined) {
+
+
+            if (RawMemory.segments[roomSegment[roomName]] === undefined && !_.contains(Memory.shardNeed,roomSegment[roomName]) ) {
+                Memory.shardNeed.push(roomSegment[roomName]);
+                console.log(roomSegment[roomName]+':requesting a segment for the future:');
+                return true;
+            } else {
+  //              let zz = _.indexOf( Memory.shardNeed , roomSegment[roomName] );
+//                console.log(roomSegment[roomName] ,"doing index"+  zz);
+            }
+
+
+        }
+        return false;
+    }
+
     static setRoomSegmentData(roomName, rawData) {
         if (roomSegment[roomName] !== undefined) {
-            if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined  && segmentChange > 0 ) {
-                RawMemory.setActiveSegments([roomSegment[roomName]]);
+            if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined) {
+                Memory.shardNeed.push(roomSegment[roomName]);
                 setActive[roomSegment[roomName]] = true;
-                segmentChange--;
+                return false;
+
             } else if (RawMemory.segments[roomSegment[roomName]] !== undefined) {
                 RawMemory.segments[roomSegment[roomName]] = rawData;
             }
         } else {
-            console.log('roomSegment Failure SET FAILURE',roomSegment[roomName], roomName,segmentChange);
+            console.log('roomSegment Failure SET FAILURE', roomSegment[roomName], roomName, segmentChange);
             return;
         }
 
     }
 
     static getRawSegmentRoomData(roomName) {
-        if (roomSegment[roomName] !== undefined ) {
-            if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined&& segmentChange > 0  ) {
-                RawMemory.setActiveSegments([roomSegment[roomName]]);
+        if (roomSegment[roomName] !== undefined) {
+            if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined) {
+                Memory.shardNeed.push(roomSegment[roomName]);
                 setActive[roomSegment[roomName]] = true;
-                segmentChange--;
-
-            } else  if (RawMemory.segments[roomSegment[roomName]] !== undefined){
+                return false;
+            } else if (RawMemory.segments[roomSegment[roomName]] !== undefined) {
 
                 if (RawMemory.segments[roomSegment[roomName]][0] === undefined) {
                     RawMemory.segments[roomSegment[roomName]] = '+';
                 }
-
                 return RawMemory.segments[roomSegment[roomName]];
             }
         } else {
-            console.log('roomSegment RawSegmentRoomData GET FAILURE', roomName,segmentChange);
+            console.log('roomSegment RawSegmentRoomData GET FAILURE', roomName, segmentChange);
         }
         return;
     }
@@ -114,6 +149,9 @@ class segmentCommand {
         return grabInterShardData();
     }
     static run() {
+        if (Memory.shardNeed === undefined) {
+            Memory.shardNeed = [];
+        }
         segmentChange = 10; // This needs to always be set to 10 
         // Public Shard communication.
         switch (Game.shard.name) {
@@ -127,10 +165,22 @@ class segmentCommand {
                 //                console.log('first Setting');
                 //                RawMemory.segments[0] = '{"foo": "bar", "counter": 15}';
 
-//                console.log(RawMemory.segments[0], Game.time);
+                //                console.log(RawMemory.segments[0], Game.time);
+
+                Memory.shardNeed = _.uniq(Memory.shardNeed);
+                /*                console.log('ACTIVE SHARDS', Memory.shardNeed.length); */
+  //              if (Memory.shardNeed.length > 10) {
+//                }
+                while (Memory.shardNeed.length > 10) {
+                    Memory.shardNeed.shift();
+                }
+                RawMemory.setActiveSegments(Memory.shardNeed);
+
                 break;
 
         }
+
+
     }
 }
 module.exports = segmentCommand;

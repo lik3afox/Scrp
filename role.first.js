@@ -92,6 +92,18 @@ function moveOnPath(creep) {
     var patrol;
     if (creep.room.memory.alert) return false;
     switch (creep.room.name) {
+        case "E25S3xx7":
+            patrol = [
+                [14, 27],
+                [16, 33],
+                [18, 32],
+                [27, 8],
+                [23, 26],
+                [21, 23],
+                [14, 27],
+            ];
+            goToMovePath(creep, patrol);
+            return true;
         case "E23S38":
             patrol = [
                 [27, 8],

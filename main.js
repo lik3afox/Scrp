@@ -385,29 +385,29 @@
             global.roomLink = function(roomname) {
                 return '<a href=https://screeps.com/a/#!/room/shard1/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
             };
-            global.stringToRoomPos = function(string) { 
-            //input XXYYE12S23
-            //input 0123456789
-            if(string.length !== 10) return;
+            global.stringToRoomPos = function(string) {
+                //input XXYYE12S23
+                //input 0123456789
+                if (string.length !== 10) return;
                 var goalRoom = string[4] + string[5] + string[6] + string[7] + string[8] + string[9];
-                return new RoomPosition(parseInt(string[ 0] + string[1]), parseInt(string[ 2] + string[ 3]), goalRoom);
+                return new RoomPosition(parseInt(string[0] + string[1]), parseInt(string[2] + string[3]), goalRoom);
             };
             global.roomPosToString = function(roomPos) {
-                if(roomPos.x === undefined) return false;
+                if (roomPos.x === undefined) return false;
                 var xx = "";
-                if(roomPos.x > 10){
+                if (roomPos.x > 10) {
                     xx = roomPos.x;
                 } else {
-                    xx = "0"+roomPos.x;
+                    xx = "0" + roomPos.x;
                 }
                 var yy = "";
-                if(roomPos.y > 10){
+                if (roomPos.y > 10) {
                     yy = roomPos.y;
                 } else {
-                    yy = "0"+roomPos.y;
+                    yy = "0" + roomPos.y;
                 }
-                console.log(xx,yy);
-                return ""+xx+yy+roomPos.roomName;
+                console.log(xx, yy);
+                return "" + xx + yy + roomPos.roomName;
             };
 
         }
@@ -421,8 +421,8 @@
         }
         // for creeps.
         var total = 0;
-        require('commands.toSegment').run();
         spawnsDo.runCreeps();
+        require('commands.toSegment').run();
         addSpawnQuery(); // This will not work with old counting.
         var spawnReport = {};
         flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
@@ -477,12 +477,29 @@
                 if (Game.spawns[title].memory.alphaSpawn && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN) {
                     spawnsDo.spawnQuery(Game.spawns[title]);
-                } 
+                }
 
-                if(Game.spawns[title].spawning === null){
+                if (Game.spawns[title].spawning === null) {
                     ccSpawn.renewCreep(Game.spawns[title]);
-                    ccSpawn.createFromStack(Game.spawns[title]);
-                } else{
+                    var ed = 'E14S38';
+                    if (Game.spawns[title].id === '59b732634d5e4c649336e82e' && Game.spawns[title].room.energyAvailable > 10000 && Game.rooms[ed].controller !== undefined&& Game.rooms[ed].controller.level > 3 && Game.rooms[ed].controller.level < 6) {
+                        let spwn = Game.getObjectById('59b732634d5e4c649336e82e');
+                        if(spwn.memory.created === undefined) spwn.memory.created= 0;
+                            if (spwn !== null) {
+                                let ez = spwn.spawnCreep([MOVE, CLAIM, CLAIM], 'ezBread'+ spwn.memory.created++, {memory:{
+                                    role: 'mule',
+                                    home: 'E14S37',
+                                    party: 'Flag27',
+                                    parent: '599c7de1255bda6a7f60b395',
+                                    level: 2
+                                }});
+                                spwn.memory.CreatedMsg = 'LUCKY';
+                                console.log('trying LUCKY', ez);
+                        }
+                    } else {
+                        ccSpawn.createFromStack(Game.spawns[title]);
+                    }
+                } else {
                     Game.spawns[title].memory.lastSpawn = 0;
                     let spawn = Game.spawns[title];
                     spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
@@ -543,8 +560,15 @@
 
         if (Game.shard.name == 'shard1') {
             if (Game.spawns.Spawn1 !== undefined) {
+
+
+                    report = "";
+                    for (var a in Memory.shardNeed) {
+                        report += " " + Memory.shardNeed[a];
+                    }
+
                 let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-                console.log('*****PP:' + Memory.stats.powerProcessed + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('**S:' + Memory.shardNeed.length + '*PP:' + Memory.stats.powerProcessed + '***'+report+'***TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 //            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
@@ -553,28 +577,29 @@
             if (Game.spawns.E38S81) {
                 //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
                 let dif;
-  //              console.log('*****PP:' + 0 + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                //              console.log('*****PP:' + 0 + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
         }
-/*if(Game.shard.name == 'shard1'){
-var pos1 = new RoomPosition(31,0,"E23S39");
-var pos2 = new RoomPosition(43,45,"E23S39");
-//var room = ;
-var ee = 'E23S39';
 
-var path = Game.rooms[ee].findPath(pos1,pos2);
-console.log(Room.serializePath(path),pos1,pos2);
+        /*if(Game.shard.name == 'shard1'){
+        var pos1 = new RoomPosition(31,0,"E23S39");
+        var pos2 = new RoomPosition(43,45,"E23S39");
+        //var room = ;
+        var ee = 'E23S39';
 
-} 
-var zz = 
-'+1023E23S391500E23S391401645556564555455555555567768+0942E24S384400E23S39450144444+4345E23S393100E23S393001655555555555566665555555544445444444444455444+3207E23S384905E23S39480488888+0843E24S384400E23S39450144444+0646E24S384400E23S39450144444+4446E23S393000E23S3930015555555555555666655555555444454444444444554444+0646E24S384300E23S394401434444+4345E23S393000E23S393001555555555555566665555555544445444444444455444+0922E23S391500E23S3914016455565645554555555555677688+4446E23S393100E23S3930016555555555555666655555555444454444444444554444+1023E23S391400E23S391401545556564555455555555567768+3207E23S380500E24S390501566667+1346E24S360032E24S37013121111112222222222222222211111188+1346E24S363449E23S373448121122233332212222112+0942E24S380005E24S390105322222+0942E24S380649E24S3806481212228+1346E24S361649E24S361548888+3207E23S381600E24S37170144555555666666666666666665555556+1607E24S373349E23S373448221122233332212222112+3207E23S384938E23S3748387876656677776665565+0646E24S380649E24S380648128+3207E23S384932E23S374833655666656677776665565+2240E24S373449E23S3734481211222333322122343+2240E24S370038E24S370138333333333333444443333228+2140E24S370038E24S370138333333333333444443333218+1706E24S370038E24S37013721111111111112222222222222222218+3207E23S380600E24S390501666667+1346E24S363249E23S373348222122233332212222112+1346E24S363349E23S373448221122233332212222112+1706E24S374938E23S374837882112+1706E24S370032E24S37013121111112222222222222222218+0843E24S380649E24S380648121228+0546E24S380649E24S380648118+1245E24S361649E24S3615488888+1607E24S370038E24S370137211111111111122222222222222222186+1607E24S370032E24S370131211111122222222222222222186+1607E24S373249E23S373348222122233332212222112+3207E23S384933E23S37483465666656677776665566+2140E24S370032E24S3701334444443333334444433332287+1245E24S361549E24S3614488881+1245E24S360033E24S370132211111112222222222222222211111188+1706E24S370034E24S3701332111111112222222222222222218+3207E23S384934E23S3748356666656677776665565+1245E24S360034E24S3701332111111112222222222222222211111188+3207E23S381500E24S371601444555556666666666666666655555556+1607E24S370034E24S37013321111111122222222222222222186+1706E24S370033E24S370132211111112222222222222222218+0646E24S380549E24S380648228+3207E23S380700E24S3906016766667+0843E24S380549E24S380648221228+0546E24S380549E24S380648218+0843E24S384400E23S39450144444+1346E24S361649E24S361548888+0843E24S380649E24S380648121228+0646E24S384400E23S39450144444+3207E23S384938E23S3748387876656677776665565+0646E24S380005E24S390105322222+0646E24S380649E24S380648128+1706E24S373449E23S373448121122233332212222112+1706E24S370032E24S37013121111112222222222222222218+4345E23S393000E23S393001555555555555566665555555544445444444444455444+1607E24S373349E23S373448221122233332212222112+2240E24S373449E23S3734481211222333322122343+3207E23S380600E24S390501666667+3207E23S381600E24S3717014455555566666666666666666555555556+3207E23S384905E23S39480488888+1607E24S370032E24S370131211111122222222222222222186+2240E24S370038E24S370138333333333333444443333228+1023E23S391500E23S391401645556564555455555555567768+3207E23S381600E24S3717014455555566666666666666666555555556+0942E24S384400E23S39450144444+';
-var ee = zz.split("+");
-ee.pop();
-ee.shift();
-console.log(ee.length,ee[0]); */
+        var path = Game.rooms[ee].findPath(pos1,pos2);
+        console.log(Room.serializePath(path),pos1,pos2);
+
+        } 
+        var zz = 
+        '+1023E23S391500E23S391401645556564555455555555567768+0942E24S384400E23S39450144444+4345E23S393100E23S393001655555555555566665555555544445444444444455444+3207E23S384905E23S39480488888+0843E24S384400E23S39450144444+0646E24S384400E23S39450144444+4446E23S393000E23S3930015555555555555666655555555444454444444444554444+0646E24S384300E23S394401434444+4345E23S393000E23S393001555555555555566665555555544445444444444455444+0922E23S391500E23S3914016455565645554555555555677688+4446E23S393100E23S3930016555555555555666655555555444454444444444554444+1023E23S391400E23S391401545556564555455555555567768+3207E23S380500E24S390501566667+1346E24S360032E24S37013121111112222222222222222211111188+1346E24S363449E23S373448121122233332212222112+0942E24S380005E24S390105322222+0942E24S380649E24S3806481212228+1346E24S361649E24S361548888+3207E23S381600E24S37170144555555666666666666666665555556+1607E24S373349E23S373448221122233332212222112+3207E23S384938E23S3748387876656677776665565+0646E24S380649E24S380648128+3207E23S384932E23S374833655666656677776665565+2240E24S373449E23S3734481211222333322122343+2240E24S370038E24S370138333333333333444443333228+2140E24S370038E24S370138333333333333444443333218+1706E24S370038E24S37013721111111111112222222222222222218+3207E23S380600E24S390501666667+1346E24S363249E23S373348222122233332212222112+1346E24S363349E23S373448221122233332212222112+1706E24S374938E23S374837882112+1706E24S370032E24S37013121111112222222222222222218+0843E24S380649E24S380648121228+0546E24S380649E24S380648118+1245E24S361649E24S3615488888+1607E24S370038E24S370137211111111111122222222222222222186+1607E24S370032E24S370131211111122222222222222222186+1607E24S373249E23S373348222122233332212222112+3207E23S384933E23S37483465666656677776665566+2140E24S370032E24S3701334444443333334444433332287+1245E24S361549E24S3614488881+1245E24S360033E24S370132211111112222222222222222211111188+1706E24S370034E24S3701332111111112222222222222222218+3207E23S384934E23S3748356666656677776665565+1245E24S360034E24S3701332111111112222222222222222211111188+3207E23S381500E24S371601444555556666666666666666655555556+1607E24S370034E24S37013321111111122222222222222222186+1706E24S370033E24S370132211111112222222222222222218+0646E24S380549E24S380648228+3207E23S380700E24S3906016766667+0843E24S380549E24S380648221228+0546E24S380549E24S380648218+0843E24S384400E23S39450144444+1346E24S361649E24S361548888+0843E24S380649E24S380648121228+0646E24S384400E23S39450144444+3207E23S384938E23S3748387876656677776665565+0646E24S380005E24S390105322222+0646E24S380649E24S380648128+1706E24S373449E23S373448121122233332212222112+1706E24S370032E24S37013121111112222222222222222218+4345E23S393000E23S393001555555555555566665555555544445444444444455444+1607E24S373349E23S373448221122233332212222112+2240E24S373449E23S3734481211222333322122343+3207E23S380600E24S390501666667+3207E23S381600E24S3717014455555566666666666666666555555556+3207E23S384905E23S39480488888+1607E24S370032E24S370131211111122222222222222222186+2240E24S370038E24S370138333333333333444443333228+1023E23S391500E23S391401645556564555455555555567768+3207E23S381600E24S3717014455555566666666666666666555555556+0942E24S384400E23S39450144444+';
+        var ee = zz.split("+");
+        ee.pop();
+        ee.shift();
+        console.log(ee.length,ee[0]); */
 
     });
 

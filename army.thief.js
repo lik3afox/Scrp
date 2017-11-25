@@ -81,6 +81,61 @@ function powerAction(creep) {
 }
 
 
+function banditAction(creep) {
+    if(creep.memory.goHome === undefined) 
+        creep.memory.goHome = false;
+    if(Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
+
+    if(creep.carryTotal == creep.carryCapacity){
+    creep.memory.goHome = true;        
+    }
+    if(creep.carryTotal === 0){
+    creep.memory.goHome = false;        
+    }
+    if(creep.memory.goHome){
+        var stor =  Game.rooms[creep.memory.home].terminal;
+        if(creep.pos.isNearTo(stor)){
+            for(var eee in creep.carry){
+                if(creep.carry[eee]> 0){
+                creep.say( creep.transfer(stor,eee)+eee );
+                break;
+                }
+            }
+        } else {
+            creep.moveTo(stor,{reusePath:50});
+            }
+        return;
+    }
+    if (Game.flags[creep.memory.party] !== undefined) {
+        if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+
+            bads = creep.room.find(FIND_STRUCTURES);
+             var   cont = _.filter(bads, function(structure) {
+                    return (structure.structureType == STRUCTURE_CONTAINER && structure.total > 0 );
+                });
+
+            if (cont.length > 0) {
+                cont.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
+                if (creep.pos.isNearTo(cont[0])) {
+                    for(var e in cont[0].store){
+                        creep.withdraw(cont[0],e);
+                    }
+                } else {
+                    creep.moveTo(cont[0]);
+                }
+                return true;
+            }
+            if(cont.length === 0) {
+                creep.memory.goHome = true;
+                if(bads.length > 0){
+    //                Game.flags[creep.memory.party].remove();
+                }
+            }
+
+        }
+        movement.flagMovement(creep);
+    }
+}
 //STRUCTURE_POWER_BANK:
 class thiefClass extends roleParent {
 
@@ -91,13 +146,7 @@ class thiefClass extends roleParent {
     }
 
     static run(creep) {
-        creep.memory.waypoint = true;
-        if (super.doTask(creep)) {
-            return;
-        }
-        if (super.sayWhat(creep)) {
-            return;
-        }
+        if (super.baseRun(creep)) return;
 
         if (super.boosted(creep, boost)) {
             return;
@@ -106,7 +155,13 @@ class thiefClass extends roleParent {
         if (super.spawnRecycle(creep)) {
             return;
         }
+        if (creep.memory.party == 'Flag1') {
+            super.rebirth(creep);
+            creep.say('bandit');
+            banditAction(creep);
 
+            return;
+        }
         if (super.isPowerParty(creep)) {
             if (powerAction(creep)) return;
         }

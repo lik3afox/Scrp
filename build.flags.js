@@ -805,7 +805,7 @@
                             removeRA(flag);
                         }
                         if (flag.name == 'Flag27') {
-                            if (flag.room.storage.store[RESOURCE_ENERGY] < 100000) {
+                            if (flag.room.storage.store[RESOURCE_ENERGY] < 375000) {
                                 flag.memory.musterType = 'hmule';
                             } else {
                                 flag.memory.musterType = 'upgrademule';

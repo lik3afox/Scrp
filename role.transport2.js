@@ -43,7 +43,7 @@ var visPath = {
 
 
 function getBads(creep) {
-    var bads = creep.pos.findInRange(creep.room.hostilesHere, 4);
+    var bads = creep.pos.findInRange(creep.room.hostilesHere, 3);
     bads = _.filter(bads, function(object) {
         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
     });
@@ -57,19 +57,12 @@ function interactContainer(creep) {
     if (creep.memory.goHome) {
         if (creep.isHome && creep.pos.isNearTo(creep.room.storage)) {
             for (var e in creep.carry) {
-                if( creep.transfer(creep.room.storage, e) == OK){
-                    creep.countReset();
-                    break;
-                }
+                creep.transfer(creep.room.storage, e);
             }
         }
         if (creep.isHome && creep.pos.isNearTo(creep.room.terminal)) {
             for (var ez in creep.carry) {
-                if( creep.transfer(creep.room.terminal, ez) == OK){
-                    creep.countReset();
-                    break;
-                }
-
+                creep.transfer(creep.room.terminal, ez);
             }
         }
 
@@ -78,6 +71,7 @@ function interactContainer(creep) {
             let container = Game.getObjectById(creep.memory.workContain);
             if (container !== null) {
                 if (creep.pos.isNearTo(container) && container.total > 100) {
+
                     var keys = Object.keys(container.store); // Picking up
                     var z = keys.length;
                     while (z--) {
@@ -93,13 +87,12 @@ function interactContainer(creep) {
 }
 
 function updateMemory(creep) {
-    if(creep.hits <= 400) 
-        creep.suicide();
+
+
     if (creep.memory.goHome) {
         if (creep.carryTotal < 20) {
             creep.memory.goHome = false;
             creep.memory.cachePath = undefined;
-            creep.distance = 0;
         }
     } else {
         let container = Game.getObjectById(creep.memory.workContain);
@@ -108,19 +101,9 @@ function updateMemory(creep) {
             creep.memory.cachePath = undefined;
             creep.memory.position = undefined;
             creep.distance = 0;
-            // If it is getting ready to withdraw and 
-            /// 1250 - 500 = 750
-            if(container.store[RESOURCE_ENERGY] >= creep.carryCapacity - creep.carry[RESOURCE_ENERGY] ){
-                roleParent.segment.requestRoomSegmentData(creep.memory.home);
-            }
-            
-        }
-        if(withdrawing){
-//            segment.requestRoomSegmentData(creep.memory.home);
         }
         if (creep.carryTotal > creep.carryCapacity - 45) {
             creep.memory.goHome = true;
-
         }
 
         if (creep.memory.workContain === undefined && _goal !== null && creep.pos.inRangeTo(_goal, 4)) {
@@ -140,11 +123,7 @@ function updateMemory(creep) {
 }
 
 function movement(creep) {
-        let bads = [];
-    if(_goal !== null && _goal.energyCapacity === 4000){
-        bads =  getBads(creep);
-    }
-     
+    let bads = _goal.energyCapacity === 3000 ? [] : getBads(creep);
     if (bads.length !== 0) {
         creep.runFrom(bads);
     } else {
@@ -180,7 +159,7 @@ function movement(creep) {
                 task.rangeHappy = 2;
                 creep.memory.task.push(task);
                 roleParent.doTask(creep);
-            } else if (_goal !== null && creep.room.name === _goal.pos.roomName) {
+            } else if (creep.room.name === _goal.pos.roomName) {
                 if (!creep.pos.isNearTo(container)) {
                     creep.moveTo(container);
                 } else {
@@ -225,7 +204,7 @@ class transport extends roleParent {
         }
             _goal = Game.getObjectById(creep.memory.goal);
         if (_goal !== null && _goal.energyCapacity === 4000 && super.keeperWatch(creep)) return;
-        if (creep.carryTotal < creep.carryCapacity -10) {
+        if (creep.carryTotal !== creep.carryCapacity) {
             if (super.constr.moveToPickUpEnergyIn(creep, 7)) {
                 return;
             }

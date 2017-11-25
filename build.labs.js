@@ -153,7 +153,7 @@ var maxMinerals = {
             'XKH2O': 0, // Carry */
     'LH2O': 1000, // Repair
     //    'LH': 1000, // Repair
-    'XLH2O': 50000, // Repair *
+    'XLH2O': 80000, // Repair *
 
     'XGHO2': 325000,
     'GHO2': 10000, // Repair

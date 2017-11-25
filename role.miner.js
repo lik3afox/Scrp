@@ -35,6 +35,27 @@ function getBads(creep) {
     return bads;
 }
 
+function restingSpot(creep) {
+    switch (creep.memory.goal) {
+        case '5836b8268b8b9619519f18b1':
+            return new RoomPosition(33, 34, creep.room.name);
+        case '5982ff05b097071b4adc1f6a':
+            return new RoomPosition(38, 5, creep.room.name);
+        case '5982feeab097071b4adc1bc5':
+            return new RoomPosition(43, 10, creep.room.name);
+        case '5982fed0b097071b4adc18aa':
+            return new RoomPosition(19, 33, creep.room.name);
+        case '5982ff6bb097071b4adc298b':
+            return new RoomPosition(17, 6, creep.room.name);
+        case '5982ff86b097071b4adc2d27':
+            return new RoomPosition(32, 40, creep.room.name);
+        case '5982ff07b097071b4adc1fa2':
+            return new RoomPosition(33, 9, creep.room.name);
+        default:
+            return false;
+    }
+}
+
 function doWork(creep) {
     //    if(!super.guardRoom(creep)) false;
     if (creep.memory.keeperLairID !== undefined && creep.memory.keeperLairID != 'none') { // THis is obtained when 
@@ -66,26 +87,7 @@ function doWork(creep) {
                 }
             }
         } else {
-            //          creep.say('m');
-            switch (creep.memory.goal) {
-                case '5836b8268b8b9619519f18b1':
-                    creep.moveTo(33, 34);
-                    break;
-                case '5982ff05b097071b4adc1f6a':
-                    creep.moveTo(38, 5);
-                    break;
-                case '5982feeab097071b4adc1bc5':
-                    creep.moveTo(43, 10);
-                    break;
-                case '5982fed0b097071b4adc18aa':
-                    creep.moveTo(19, 33);
-                    break;
-
-                default:
-                    creep.moveTo(contain);
-                    break;
-            }
-
+            //creep.moveTo(contain);
         }
         // Deposit
     }
@@ -102,15 +104,15 @@ class settler extends roleParent {
 
     static run(creep) {
         if (super.movement.runAway(creep)) return;
+        super.shouldDie(creep);
         if (super.baseRun(creep)) return;
 
-/*        if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
-            if (super.boosted(creep, creep.memory.needBoost)) {
-                return;
-            }
-        } */
+        /*        if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
+                    if (super.boosted(creep, creep.memory.needBoost)) {
+                        return;
+                    }
+                } */
 
-        super.shouldDie(creep);
         super.movement.checkForBadsPlaceFlag(creep);
 
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
@@ -119,13 +121,21 @@ class settler extends roleParent {
         if (super.keeperWatch(creep)) {
             return;
         }
-        
+
         var _source = Game.getObjectById(creep.memory.goal);
         if (creep.memory.goal == '5982ff7ab097071b4adc2b7d') {
             creep.memory.reportDeath = false;
         }
 
-        if (creep.pos.isNearTo(_source)) {
+        var resting = restingSpot(creep);
+        // if(!resting ?creep.pos.isNearTo(_source):creep.pos.isEqualTo(resting)){
+        //  console.log('test good', resting);
+        //            if(!resting ?creep.pos.isNearTo(_source):creep.pos.isEqualTo(resting))
+        //          }
+        //}
+
+        //if (creep.pos.isNearTo(_source)) {
+        if (!resting ? creep.pos.isNearTo(_source) : creep.pos.isEqualTo(resting)) {
             super.constr.pickUpEnergy(creep);
             if (creep.carryTotal >= creep.carryCapacity - 15 && _source.energy !== 0) {
                 if (creep.memory.workContainer === undefined) {
@@ -196,26 +206,35 @@ class settler extends roleParent {
             }
 
         } else {
-
             if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.countDistance();
-            let task = {};
-            task.options = {
-                reusePath: 49,
-                ignoreRoads: false,
-                visualizePathStyle: {
-                    fill: 'transparent',
-                    stroke: '#ff0',
-                    lineStyle: 'dotted',
-                    strokeWidth: 0.15,
-                    opacity: 0.5
-                }
-            };
-            task.pos = _source !== null ? _source.pos : super.movement.getRoomPos(creep.memory.goal);
-            task.count = true;
-            task.order = "moveTo";
-            task.enemyWatch = true;
-            task.rangeHappy = 1;
-            creep.memory.task.push(task);
+            if (creep.room.name == super.movement.getRoomPos(creep.memory.goal).roomName) {
+                creep.moveTo(!resting ? _source : resting);
+            } else {
+                let task = {};
+                task.options = {
+                    reusePath: 49,
+                    ignoreCreep: true,
+                    segment: true,
+                    ignoreRoads: false,
+                    visualizePathStyle: {
+                        fill: 'transparent',
+                        stroke: '#ff0',
+                        lineStyle: 'dotted',
+                        strokeWidth: 0.15,
+                        opacity: 0.5
+                    }
+                };
+                task.pos = _source !== null ? _source.pos : super.movement.getRoomPos(creep.memory.goal);
+                task.count = true;
+                task.order = "moveTo";
+                task.enemyWatch = true;
+                task.rangeHappy = 1;
+                creep.memory.task.push(task);
+                roleParent.doTask(creep);
+                creep.say('added Task');
+            }
+
+
         }
 
     }

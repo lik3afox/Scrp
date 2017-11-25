@@ -1,15 +1,3 @@
-// This role is designed for moving into other rooms and taking over there controller or reserving it. 
-
-// To set claim a new room, you need to put in that room a flag 'Claim' once the controller moves there it will
-// claim instead of reserve.
-// Main 300
-// level 0 = 200
-// level 1 = 300 / 0
-// Level 2 = 550 / 5
-// Level 3 = 800 / 10
-// Level 4 = 1300 / 20
-// Level 5 = 1800 / 30
-
 var classLevels = [
     [CLAIM, MOVE], // 0 NIL
     [CLAIM, MOVE], // 1 NIL
@@ -22,9 +10,7 @@ var classLevels = [
 ];
 
 var roleParent = require('role.parent');
-var structure = require('commands.toStructure');
-var source = require('commands.toSource');
-var movement = require('commands.toMove');
+
 class controllerRole extends roleParent {
 
     static levels(level) {
@@ -33,26 +19,23 @@ class controllerRole extends roleParent {
     }
 
     static run(creep) {
-        var temp = Game.getObjectById(creep.memory.goal);
-        if (movement.runAway(creep)) {
-            return; }
+        var goal = Game.getObjectById(creep.memory.goal);
 
-        if ((temp !== null) && (creep.room.name == temp.room.name && creep.room.controller)) {
+        if (super.movement.runAway(creep)) {
+            return;
+        }
+
+        if (creep.room.name == super.movement.getRoomPos(creep.memory.goal).roomName && creep.room.controller) {
+
             if (creep.pos.isNearTo(creep.room.controller)) {
                 creep.reserveController(creep.room.controller);
                 super.signControl(creep);
             } else {
-                creep.moveTo(creep.room.controller, { maxRooms: 1, reusePath: 50 });
+                creep.moveMe(creep.room.controller, { segment:true,maxRooms: 1, reusePath: 50, ignoreCreeps: creep.isHome ? false:true  });
             }
 
         } else {
-            if ((temp !== null)) {
-
-                creep.moveMe(temp.pos, { reusePath: 50 });
-            } else {
-                 var goingTo = movement.getRoomPos(creep.memory.goal);
-                creep.moveMe(goingTo, {reusePath:50});
-            }
+                creep.moveMe(goal !== null ? goal.pos : super.movement.getRoomPos(creep.memory.goal), { reusePath: 50 ,segment:true, ignoreCreeps: creep.isHome ? false:true });
         }
     }
 }

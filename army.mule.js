@@ -26,12 +26,12 @@ class muleClass extends roleParent {
 
     static run(creep) {
         // First if it's home it will go to storage.
-        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && creep.memory.party !== 'hello22') {
+        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && creep.memory.party !== 'E23S38') {
             creep.say('P');
             creep.moveTo(Game.flags.portal);
             return;
         }
-        if (Game.flags.portal2 !== undefined && creep.room.name == Game.flags.portal2.pos.roomName && creep.memory.party !== 'hello22') {
+        if (Game.flags.portal2 !== undefined && creep.room.name == Game.flags.portal2.pos.roomName && creep.memory.party !== 'E23S38') {
             creep.say('P2');
             creep.moveTo(Game.flags.portal2);
             return;
@@ -83,7 +83,7 @@ class muleClass extends roleParent {
         if (total === 0 && creep.room.name !== creep.memory.home && creep.memory.level !== 3) creep.memory.goHome = true;
         if (total === 0 && creep.room.name == creep.memory.home) creep.memory.goHome = false;
 
-        if (creep.memory.party == 'hello22' && creep.carryTotal === 0 && creep.room.name == Game.flags.hello22.pos.roomName) {
+        if (creep.memory.party == 'E23S38' && creep.carryTotal === 0 && creep.room.name == Game.flags.E23S38.pos.roomName) {
             creep.say('blh');
             creep.memory.parent = '599a20fdea625865e74d453d';
             creep.memory.death = true;
@@ -111,7 +111,7 @@ class muleClass extends roleParent {
                     } else {
                         if (creep.room.storage !== undefined && creep.room.controller.level > 3 && creep.room.name !== 'E14S38') {
                             var target = creep.room.storage;
-                            if (creep.memory.party == 'hello22') {
+                            if (creep.memory.party == 'E23S38') {
                                 target = creep.room.terminal;
                             }
 
@@ -119,7 +119,7 @@ class muleClass extends roleParent {
                                 for (var bb in creep.carry) {
                                     creep.transfer(target, bb);
                                 }
-                                if (creep.memory.party != 'hello22') {
+                                if (creep.memory.party != 'E23S38') {
                                     creep.memory.goHome = true;
                                 }
 

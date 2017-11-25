@@ -75,12 +75,15 @@ var twoRange = [
 ];
 var lowFFH = [
     ['fighter', require('army.fighter'), 2, 10],
-    ['healer', require('army.healer'), 1, 5] // Healer    
+    ['healer', require('army.healer'), 1, 4] // Healer    
 ];
-var lowFFH = [
-    ['fighter', require('army.fighter'), 2, 10],
-    ['healer', require('army.healer'), 1, 5] // Healer    
+var banditParty = [
+    ['fighter', require('army.fighter'), 0, 10],
+    ['thief', require('army.thief'), 4, 3],
+    ['healer', require('army.healer'), 0, 4] // Healer    
 ];
+
+
 
 var lvl3Buster = [
     ['fighter', require('army.fighter'), 1, 11],
@@ -216,7 +219,7 @@ var upgrade2Party = [
 ];
 
 var upgradeRoomParty = [
-    ['Aupgrader', require('army.upgrader'), 6, 6]
+    ['Aupgrader', require('army.upgrader'), 5, 6]
 
 ];
 var muleParty = [
@@ -413,6 +416,9 @@ function getCurrentParty(flag) {
                 return harass2;
             case 'harass':
                 return harass;
+            case 'bandit':
+                return banditParty;
+
             case 'lowFFH':
                 return lowFFH;
             case 'lowFH':

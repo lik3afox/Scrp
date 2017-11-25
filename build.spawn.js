@@ -44,7 +44,7 @@ var allModule = [
     ['miner', require('role.miner')] // Harvester - experiemnt w/o carry
 ];
 
-var controllerLevel = 3500;
+var controllerLevel = 1500;
 var transportLevel = 20000;
 
 var expansionModule = [
@@ -881,8 +881,23 @@ class theSpawn {
                                     } else {
                                         level = 0;
                                     }
-
                                     if ((level < controllerLevel) || (sourcez.room.controller.level > 0)) {
+                                        let controlParts;/*
+                                        if(spawn.room.energyAvailable > 12000){
+                                            controlParts = 10;
+                                        } else*/ if (spawn.room.energyCapacityAvailable > 8000){
+                                            controlParts = 8;
+                                        }else if (spawn.room.energyCapacityAvailable > 6000){
+                                            controlParts = 5;
+                                        }
+                                        if(controlParts !== undefined) {
+                                            temp.build = [];
+                                            for(var i = 0;i<=controlParts;i++){
+                                                temp.build.push(CLAIM);
+                                                temp.build.push(MOVE);
+                                            }
+                                        }
+
                                         spawn.memory.expandCreate.push(temp);
                                         spawn.memory.roadsTo[ie][type] = true;
                                     }

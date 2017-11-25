@@ -580,7 +580,7 @@ destination Current Pos Path
             currentPos += stringPosY[0];
             currentPos += stringPosY[1];
         }
-        currentPos +=creep.pos.roomName;
+        currentPos += creep.pos.roomName;
         // then it needs to calcuate teh direction between current pos and the pos
 
         var move = creep.memory._move;
@@ -588,11 +588,12 @@ destination Current Pos Path
             (move.dest.y < 10 ? "0" + move.dest.y : move.dest.y) + move.dest.room;
 
 
-        console.log('Seralized Path',dest,currentPos,path);
+//        console.log('Seralized Path', dest, currentPos, path);
+
         return dest + currentPos + path;
     }
 
-    function simpleMatch(rawData, currentPos, goalPos,i) {
+    function simpleMatch(rawData, currentPos, goalPos, i) {
         /*
         of course we need to make sure the first match is - currentroomname !== goalPos
 destination Current Pos Path
@@ -600,7 +601,7 @@ destination Current Pos Path
 4345 E23S39 3100 E23S39 3001655555555555566665555555544445444444444455444
 xxxx yyyyyy yyyy yyyyyy x
 */
-var test = rawData;
+        var test = rawData;
 
         if (test[i + 4] !== goalPos.roomName[0]) return false;
         if (test[i + 5] !== goalPos.roomName[1]) return false;
@@ -648,34 +649,36 @@ var test = rawData;
         if (test === undefined) return;
         for (var i = 0; i < test.length; i++) {
             if (test[i] == '+' && i !== test.length - 1) {
-/*
-if(simpleMatch(rawData, currentPos, goalPos,i) ) {
-                        for (var e = i; e++; e < test.length) {
-                            if (test[e] == '+') {
-                                return rawData.substring(i, e);
-                            }
-                        }
-} else {
-    i+=20;
-    }
- 
-*/
+                /*
+                if(simpleMatch(rawData, currentPos, goalPos,i) ) {
+                                        for (var e = i; e++; e < test.length) {
+                                            if (test[e] == '+') {
+                                                return rawData.substring(i, e);
+                                            }
+                                        }
+                } else {
+                    i+=20;
+                    }
+                 
+                */
 
                 i++;
-  var goal = stringToRoomPos( rawData.substring(i+0,i+10) );
-var current = stringToRoomPos( rawData.substring(i+10,i+20) );
+                var goal = stringToRoomPos(rawData.substring(i + 0, i + 10));
+                var current = stringToRoomPos(rawData.substring(i + 10, i + 20));
                 // So current pos, and same room while not in the goal room.
                 // So if the goalRoom doesn't equal currentRoom, and goalRoom == goalPos.roomName 
                 if (current.isEqualTo(currentPos) && goal.isEqualTo(goalPos)) {
-                    console.log(simpleMatch(rawData, currentPos, goalPos,i),'There is a path, test Simplematch',current,goal);
-                        for (var e = i+19; e++; e < test.length) {
-                            if (test[e] == '+') {
-                                return rawData.substring(i, e);
-                            }
+                    //simpleMatch(rawData, currentPos, goalPos, i),
+
+                    for (var e = i + 19; e++; e < test.length) {
+                        if (test[e] == '+') {
+                            var tt = rawData.substring(i, e);
+                            return tt;
                         }
-                    }  else {
-                        i+=20;
                     }
+                } else {
+                    i += 20;
+                }
             }
         }
     }
@@ -702,13 +705,24 @@ var current = stringToRoomPos( rawData.substring(i+10,i+20) );
         // Taking a
     }
 
-    function nearContain(creep){
-        if(creep.memory.role !== 'transport') return false;
-        if(creep.memory.workContain === undefined) return false;
+    function nearContain(creep) {
+        if (creep.memory.role !== 'transport') return false;
+        if (creep.memory.workContain === undefined) return false;
+        if (creep.memory.empty) return false;
+        if (!creep.memory.goHome) return false;
         var zz = Game.getObjectById(creep.memory.workContain);
-        if(zz === null) return false;
-        if(creep.pos.isNearTo(zz)){
-            return true;
+        if (zz === null) return false;
+        if (!creep.pos.isNearTo(zz)) {
+            return false;
+        }
+        if (creep.pos.isEqualTo(zz)) {
+            return false;
+        }
+        var standingSpot = creep.room.lookAt(creep.pos.x, creep.pos.y);
+        for (var ez in standingSpot) {
+            if (standingSpot[ez].type == 'structure' && standingSpot[ez].structure.structureType == STRUCTURE_ROAD) {
+                return true;
+            }
         }
     }
 
@@ -716,7 +730,7 @@ var current = stringToRoomPos( rawData.substring(i+10,i+20) );
     var rawData;
     Creep.prototype.moveMe = function(target, options, xxx) {
 
-        if (this.memory.standSpot !== undefined) {
+/*        if (this.memory.standSpot !== undefined) {
             if (this.pos.isEqualTo(this.memory.standSpot)) {
                 return OK;
             } else {
@@ -727,7 +741,7 @@ var current = stringToRoomPos( rawData.substring(i+10,i+20) );
                 return moveStatus;
 
             }
-        }
+        } */
 
         if (this.fatigue > 0) return;
 
@@ -746,8 +760,6 @@ var current = stringToRoomPos( rawData.substring(i+10,i+20) );
             stuck = this.pos.isEqualTo(this.memory.position.x, this.memory.position.y);
         }
         this.memory.position = this.pos;
-        if (this.memory.stuckCount > 0)
-            this.say('St' + this.memory.stuckCount);
 
         if (stuck) {
             this.memory.stuckCount++;
@@ -758,6 +770,8 @@ var current = stringToRoomPos( rawData.substring(i+10,i+20) );
                 this.memory.stuckCount--;
             }
         }
+        if (this.memory.stuckCount > 0)
+            this.say('St' + this.memory.stuckCount);
 
         if (options.visualizePathStyle === undefined) {
             options.visualizePathStyle = {
@@ -774,41 +788,62 @@ var current = stringToRoomPos( rawData.substring(i+10,i+20) );
         }
 
 
-        if (options.ignoreCreeps) {
-            if (this.memory.stuckCount > 2) {
-                options.reusePath = 5;
-                this.memory.cachePath = undefined;
-                options.ignoreCreeps = false;
-                this.memory._move = undefined;
-            }
+        //        if (options.ignoreCreeps) {
+        if (this.memory.stuckCount > 2) {
+            options.reusePath = 5;
+            options.ignoreCreeps = false;
+            this.memory._move = undefined;
+            
+        }
+        //      } 
+
+
+// Start of segment fun.
+
+        if (options.segment === undefined) {
+            options.segment = false;
         }
 
-        var doNew = ['E23S38', 'E38S81', 'E38S72']; //
-        if (!_.contains(doNew, this.memory.home) || this.isHome || this.memory.stuckCount >2 ) {
+//        if(options.segment&&(this.memory._move !== undefined && this.memory._move.path.length < 4)||(this.memory.cachePath !== undefined&&this.memory.cachePath.length <4))
+        if(options.segment&&(this.pos.x === 1 ||this.pos.x === 48||this.pos.y === 1 ||this.pos.y === 48 ) )            
+        {
+            segment.requestRoomSegmentData(this.memory.home);
+        }
+
+        if (!segment.roomToSegment(this.memory.home) || !options.segment || this.memory.stuckCount > 2) {
+            this.memory.cachePath = undefined;
             moveStatus = this.moveTo(target, options);
         } else {
             // new stuff
             var doPath = false;
             var zz, test;
             let home = this.memory.home;
-
             if (this.memory.cachePath !== undefined) { // This has been done before and gotten a path.
+                if (stuck) {
+                    this.memory.cachePath = this.memory.oldCachePath;
+                }
+                if (_.isString(this.memory.cachePath)) {
+                    path = Room.deserializePath(this.memory.cachePath);
+                    this.memory.oldCachePath = this.memory.cachePath;
+                    moveStatus = this.moveByPath(path, options);
+                    if (moveStatus == OK) path.shift();
+                    this.memory.cachePath = Room.serializePath(path);
 
-                path = _.isString(this.memory.cachePath) ? Room.deserializePath(this.memory.cachePath) : _move.path;
-                moveStatus = this.moveByPath(path, options);
-                if (moveStatus == OK) path.shift();
-                this.memory.cachePath = Room.serializePath(path);
-                this.say('💰' + this.memory.cachePath.length, true);
-                if (this.memory.cachePath.length === 0) this.memory.cachePath = undefined;
-            } else if ((this.pos.x === 0 || this.pos.x === 49 || this.pos.y === 0 || this.pos.y === 49)||
-                nearContain(this)){
+                    this.say('💰' + this.memory.cachePath.length, true);
+                    if (this.memory.cachePath.length === 0) this.memory.cachePath = undefined;
+                }
+            } else if ((this.pos.x === 0 || this.pos.x === 49 || this.pos.y === 0 || this.pos.y === 49) ||
+                nearContain(this)) {
                 if (rawData === undefined) {
                     rawData = {};
                 }
-                if (rawData[home] === undefined) {
+                if (rawData[home] === undefined || !rawData[home]) { // False rawdata needs to be refreshed
                     rawData[home] = segment.getRawSegmentRoomData(home);
-//                    console.log('GRABBING SEGMENT AGAIN for ', home, this.pos, this.name);
-                } 
+                    //                    console.log('GRABBING SEGMENT AGAIN for ', home, this.pos, this.name);
+    //                if(!rawData[home]) {  // Fail on rawdata means that the segment will be available next tick
+  //                      console.log('here it should fail up so it doesn"t move maybe?');
+//                    }
+                }
 
                 if (target.x === undefined) {
                     target = target.pos;
@@ -820,11 +855,11 @@ var current = stringToRoomPos( rawData.substring(i+10,i+20) );
                     options.ignoreCreeps = true;
                     doPath = true;
                 } else {
+                    console.log(segment.roomToSegment( this.memory.home), this.memory.home, 'There is a path, C:', this.pos, "G:", target);
                     // Then we use zz to set _move as;
                     let _move = getSerializedPath(zz);
                     path = _.isString(_move.path) ? Room.deserializePath(_move.path) : _move.path;
                     moveStatus = this.moveByPath(path, options);
-
                     path.shift();
                     if (path.length > 0)
                         this.memory.cachePath = Room.serializePath(path);
@@ -837,16 +872,18 @@ var current = stringToRoomPos( rawData.substring(i+10,i+20) );
                 this.memory.cachePath = undefined;
                 moveStatus = this.moveTo(target, options);
             }
-
             if (doPath) {
-                if (rawData[home] !== undefined && this.memory._move !== undefined) {
+                if(!rawData[home]){   // Fail on rawdata means that the segment will be available next tick
+                    console.log(segment.roomToSegment(this.memory.home),'here Segment fail.',roomLink( this.room.name ),this.pos);
+                } else if (rawData[home] !== undefined && this.memory._move !== undefined) {
                     test = serializePath(this);
                     if (test !== undefined) {
                         rawData[home] += test + '+';
                         segment.setRoomSegmentData(home, rawData[home]);
-                        console.log('Added to',home, ' FINALSERIALIZED PATH', test);
+                        console.log(segment.roomToSegment(this.memory.home),this.pos, 'G', target, 'Added to', home, ' FINALSERIALIZED PATH:', test);
                     } else {
                         this.say('!@#');
+                        console.log('Failed Path', this.pos, roomLink(this.room.name));
                     }
                 }
             }

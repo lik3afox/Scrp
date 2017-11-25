@@ -9,6 +9,7 @@ var links = require('build.link');
 var spawnsCC = require('commands.toSpawn');
 var labsBuild = require('build.labs');
 var power = require('commands.toPower');
+var segment = require("commands.toSegment");
 //var party = require('commands.toParty');
 var fox = require('foxGlobals');
 
@@ -215,9 +216,9 @@ class baseParent {
     static get labs() {
         return labsBuild;
     }
-//    static get party() {
-//        return party;
-//    }
+        static get segment() {
+            return segment;
+        }
 
     static get link() {
         return links;
@@ -286,8 +287,8 @@ class baseParent {
 
     static shouldDie(creep) {
         if (creep.hits == creep.hitsMax) return;
-        
-        if( creep.getActiveBodyparts(MOVE) === 0) {
+
+        if (creep.getActiveBodyparts(MOVE) === 0) {
             creep.suicide();
         }
     }
@@ -356,6 +357,19 @@ class baseParent {
 
             case "roadMoveTo":
                 creep.say('T:rMove');
+
+                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
+                    if (creep.room.name == task.pos.roomName) {
+                        orderComplete = true;
+                        break;
+                    }
+                } else {
+                    if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
+                        orderComplete = true;
+                        break;
+                    }
+                }
+
                 if (!constr.doCloseRoadRepair(creep))
                     constr.doCloseRoadBuild(creep);
                 let tmp3 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
@@ -377,15 +391,6 @@ class baseParent {
 
                 }
 
-                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
-                    if (creep.room.name == task.pos.roomName) {
-                        orderComplete = true;
-                    }
-                } else {
-                    if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
-                        orderComplete = true;
-                    }
-                }
                 break;
 
             case "focusMoveTo":
@@ -415,6 +420,7 @@ class baseParent {
                 if (creep.room.name == creep.memory.portalDestination) {
                     orderComplete = true;
                     creep.memory.portalDestination = undefined;
+                    break;
                 }
 
                 break;
@@ -424,6 +430,17 @@ class baseParent {
                 // task.pos,task.options,task.order,task.happyRange
 
                 creep.say('T:Kmove');
+                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
+                    if (creep.room.name == task.pos.roomName) {
+                        orderComplete = true;
+                        break;
+                    }
+                } else {
+                    if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
+                        orderComplete = true;
+                        break;
+                    }
+                }
 
                 var tmp = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
 
@@ -431,15 +448,6 @@ class baseParent {
                     creep.moveMe(tmp, task.options);
                 } else {
                     creep.say('failG');
-                }
-                if (task.rangeHappy === undefined || task.rangeHappy === 0) {
-                    if (creep.room.name == task.pos.roomName) {
-                        orderComplete = true;
-                    }
-                } else {
-                    if (creep.pos.inRangeTo(task.pos, task.rangeHappy)) {
-                        orderComplete = true;
-                    }
                 }
                 break;
 
@@ -456,14 +464,33 @@ class baseParent {
                     }
                 } else if (creep.pos.inRangeTo(tmp2, task.rangeHappy)) {
                     orderComplete = true;
+                    break;
                 } else if (task.energyPickup && creep.carryTotal == creep.carryCapacity) {
                     orderComplete = true;
+                    break;
+                } else if (task.goHome && creep.carryTotal === 0) {
+                    orderComplete = true;
+                    break;
                 }
 
                 if (task.enemyWatch) {
                     let zzz = ['E25S36'];
                     let rng = _.indexOf(zzz, creep.room.name) >= 0 ? 6 : 4;
-                    let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+                    var range = 4;
+                    if ( creep.room.name == tmp2.roomName) {
+                        switch (creep.memory.role) {
+                            case 'transport':
+                                range = 6;
+                                break;
+                            case 'ztransport':
+                                range = 7;
+                                break;
+                            case 'miner':
+                                range = 5;
+                                break;
+                        }
+                    } 
+                    let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, range);
                     badz = _.filter(badz, function(object) {
                         return !_.contains(fox.friends, object.owner.username) && object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(RANGED_ATTACK) > 0;
                     });
@@ -497,23 +524,19 @@ class baseParent {
                             creep.memory._move.time++;
                         }
 
-                        //                        if (badz[0].owner.username !== 'Source Keeper' && badz[0].owner.username !== 'Invader') {
                         var close = creep.pos.findClosestByRange(badz);
                         var rnz = creep.pos.getRangeTo(close);
-                        creep.say(rnz);
-                        if (rnz == 4) {
-                            //  creep.runFrom(close);
-                        } else if (rnz < 4) {
+                        if (rnz == range) {
+                            
+                        } else if (rnz < range) {
                             creep.runFrom(close);
                         }
-                        // you can also use an array of targets, and it'll attempt to stay away from all of them
-                        //                        }
                     }
                 } else if (task.energyPickup) {
                     if (!constr.moveToPickUpEnergyIn(creep, 4)) {
                         if (creep.moveMe(tmp2, task.options) == OK) {
                             if (task.count) {
-                            creep.countDistance();
+                                creep.countDistance();
                             }
                         }
                     }
@@ -654,6 +677,8 @@ class baseParent {
             if (task.repeat) {
                 creep.memory.task.push(zz);
             }
+            creep.say('Task Completed');
+            return false;
         }
         return true;
     }
@@ -765,7 +790,7 @@ class baseParent {
             let dis = creep.pos.getRangeTo(newPos);
             if (dis > 8) return false;
 
-            if (keeper.ticksToSpawn === undefined || keeper.ticksToSpawn < 15 || keeper.ticksToSpawn > 285) {
+            if (keeper.ticksToSpawn === undefined || keeper.ticksToSpawn < 15) {
 
                 if (dis == 7) {
                     creep.say('zZzZ');
@@ -1075,7 +1100,7 @@ class baseParent {
         while (p--) {
             var e = keys[p];
             if (e != RESOURCE_ENERGY && creep.carry[e] > 0) {
-                creep.say(creep.carryTotal+'has chzzburger');
+                creep.say(creep.carryTotal + 'has chzzburger');
                 if (creep.pos.isNearTo(target)) {
                     creep.transfer(target, e);
                 } else {

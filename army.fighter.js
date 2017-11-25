@@ -191,7 +191,7 @@ function returnClosestSpawn(roomName) {
     var a = keys.length;
     while (a--) {
         var e = keys[a];
-        if (Game.spawns[e].memory.alphaSpawn && Game.spawns[e].room.name !== 'E14S38'&& Game.spawns[e].room.name !== 'E14S37') {
+        if (Game.spawns[e].memory.alphaSpawn && Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37') {
             var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
             if (tempDis < distance) {
                 distance = tempDis;
@@ -273,6 +273,32 @@ function powerAction(creep) {
 
 }
 
+function banditAction(creep) {
+    if (Game.flags[creep.memory.party] !== undefined) {
+        if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+
+            bads = creep.room.find(FIND_HOSTILE_CREEPS);
+            bads = _.filter(bads, function(o) {
+                return o.owner.username === 'Screeps';
+            });
+
+            if (bads.length > 0) {
+                bads.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
+                if (creep.pos.isNearTo(bads[0])) {
+                    creep.attack(bads[0]);
+                    creep.moveTo(bads[0]);
+                } else {
+                    creep.moveTo(bads[0]);
+                }
+                return true;
+            }
+
+        }
+        movement.flagMovement(creep);
+    }
+//            creep.say(bads.length);
+}
+
 var fox = require('foxGlobals');
 
 class fighterClass extends roleParent {
@@ -310,6 +336,14 @@ class fighterClass extends roleParent {
             if (powerAction(creep))
                 return;
         }
+        if (creep.memory.party == 'Flag1') {
+            super.rebirth(creep);
+            creep.say('bandit');
+            banditAction(creep);
+
+            return;
+        }
+
         if (creep.memory.level == 5) {
             if (super.boosted(creep, ['XUH2O', 'XGHO2'])) {
                 return;
