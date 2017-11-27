@@ -757,9 +757,14 @@ xxxx yyyyyy yyyy yyyyyy x
         var stuck = false;
 
         if (this.memory.position !== undefined) {
-            stuck = this.pos.isEqualTo(this.memory.position.x, this.memory.position.y);
+            if(_.isString(this.memory.position)){
+                var de = stringToRoomPos(this.memory.position);
+                stuck = this.pos.isEqualTo(de);
+            } else {
+                stuck = this.pos.isEqualTo(this.memory.position.x, this.memory.position.y);
+            }
         }
-        this.memory.position = this.pos;
+        this.memory.position = roomPosToString(this.pos );
 
         if (stuck) {
             this.memory.stuckCount++;
@@ -800,12 +805,9 @@ xxxx yyyyyy yyyy yyyyyy x
 
 // Start of segment fun.
 
-        if (options.segment === undefined) {
-            options.segment = false;
-        }
+        if (options.segment === undefined) options.segment = false;
 
-//        if(options.segment&&(this.memory._move !== undefined && this.memory._move.path.length < 4)||(this.memory.cachePath !== undefined&&this.memory.cachePath.length <4))
-        if(options.segment&&(this.pos.x === 1 ||this.pos.x === 48||this.pos.y === 1 ||this.pos.y === 48 ) )            
+        if (options.segment && (this.pos.x === 1 ||this.pos.x === 48||this.pos.y === 1 ||this.pos.y === 48 ) )            
         {
             segment.requestRoomSegmentData(this.memory.home);
         }
@@ -840,9 +842,6 @@ xxxx yyyyyy yyyy yyyyyy x
                 if (rawData[home] === undefined || !rawData[home]) { // False rawdata needs to be refreshed
                     rawData[home] = segment.getRawSegmentRoomData(home);
                     //                    console.log('GRABBING SEGMENT AGAIN for ', home, this.pos, this.name);
-    //                if(!rawData[home]) {  // Fail on rawdata means that the segment will be available next tick
-  //                      console.log('here it should fail up so it doesn"t move maybe?');
-//                    }
                 }
 
                 if (target.x === undefined) {

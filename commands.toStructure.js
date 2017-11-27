@@ -408,19 +408,22 @@ class StructureInteract {
             if (atFeet[i].type == 'structure' && atFeet[i].structure.structureType == STRUCTURE_ROAD &&
                 (atFeet[i].structure.hits < atFeet[i].structure.hitsMax - 500)) {
                 //                console.log(atFeet[i],atFeet[i].structure.structureType,i,atFeet[i].structure.hits,              );
-                let dont = ['59fbe02748c9197fc10e644d', '59ff0639c7b6aa287a1d62a2','59b095625c8a7135338571dc',
-                            '59b0975c5313f514165f488a', '59b093ef6464a531ade0cadd','59fbc569eb27fe747ba9e81e',
-                            '59ff2104a3108b2376afd515','5a008600fa1095636dc2bd56','59fcade7506dc4773aae5727',
-                            '59ff1d24565b463f26738a02', '59fc366cce18c1436f80fb61','59fbfabb84efd224ff7a6911','59a5eeee2db7e727290f6adf',
-                            '59feab819e579832fca19a96',
-                            '59b972447d007f4ba160b9ca','59fbcc5e97eb5834fdd824f5','59ff1ee6a8ff37215efe15be','59a5e8e52f25267ca5935a10',
-                            '59ff5cf3a2f6e5204df4f611','59ff234d39a21a77b5c0621e','59a9970b638ae67ed9705358','59fb962a3078c959e22f1857',
-                            '59fc1166bbabcd0364db8965','59a98de6c8ce4d4496194cdb','59fc59c5092df50396a4b7a1','59ff0639c7b6aa287a1d62a2'];
-                if (!_.includes(dont, atFeet[i].structure.id))
+                let dont = ['59b971e0b227f829edc017f6','5a19e17177233b71f60f628d','59fbae72fe5f970b5e13c8dc','59fe75cd2d8de24b0ecfe39e','59ff6f8dbd0070272c570363',
+                '59ff1118bd8e183a7f787657','59ff7deda806760a171bc5fb','59fd2a7019c1fc16515139dc','59fbd663a5e2821ec1641bb5','59fc63aa1aea08360f0be67b','59fb9256dbfa5c59f60092d7',
+                '59b1dd1874e1cf2a8cb60fe6','59fb92258681183fba23be0b','59fc7ace0a7e757d2a4e5f96','59fba19e97345c6c99079ef3','599ca7e7ff58dc1f1ccf54a4',
+                '59fec6d91686161b2d1e136a','59fb9f66d8ec4f0e3f15871f','59fc2f53165e9643a9e5d752','59fc15c1df24b3055dd7e128','59accaa09b399665e2a5ecbd','59acd0a82566262f1ef43d6a',
+                '59fec26b9788cd0b77447ede','59b8529fb7f84e7d6ae7afb9','59fcc054c854936b0d9cd4dc','59ff74c54bd4625aff10a12f','5a008e6f5c255c155932e1b7','59accec68f0b44553b9f411a',
+                '59fec1aa4e1f9c165bb29867','59acc14d79c0ad116b7e6428','59fca66bb1aaf4424aa6f866','59acc6242a69c6763ae326fd','59fc4628dc5c5d7135ad9cf1',
+                '59a4b5391f1c83650997408c','59a4af8179788f3a6e355b04','59a4aa5c69e3e26b666b16a3','59a4aaffde6d7560c31f0551'
+                ];
+                if (_.includes(dont, atFeet[i].structure.id)){
+                    creep.dismantle(atFeet[i].structure);
+                } else {
                     if (creep.repair(atFeet[i].structure) == OK) {
                         creep.memory.onRoad = true;
                         return true;
                     }
+                }
             } else {
                 creep.memory.onRoad = false;
             }

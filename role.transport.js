@@ -57,7 +57,7 @@ function interactContainer(creep) {
     if (creep.memory.goHome) {
         if (creep.isHome && creep.pos.isNearTo(creep.room.storage)) {
             for (var e in creep.carry) {
-                if( creep.transfer(creep.room.storage, e) == OK){
+                if (creep.transfer(creep.room.storage, e) == OK) {
                     creep.countReset();
                     break;
                 }
@@ -65,7 +65,7 @@ function interactContainer(creep) {
         }
         if (creep.isHome && creep.pos.isNearTo(creep.room.terminal)) {
             for (var ez in creep.carry) {
-                if( creep.transfer(creep.room.terminal, ez) == OK){
+                if (creep.transfer(creep.room.terminal, ez) == OK) {
                     creep.countReset();
                     break;
                 }
@@ -93,7 +93,7 @@ function interactContainer(creep) {
 }
 
 function updateMemory(creep) {
-    if(creep.hits <= 400) 
+    if (creep.hits <= 400)
         creep.suicide();
     if (creep.memory.goHome) {
         if (creep.carryTotal < 20) {
@@ -110,13 +110,13 @@ function updateMemory(creep) {
             creep.distance = 0;
             // If it is getting ready to withdraw and 
             /// 1250 - 500 = 750
-            if(container.store[RESOURCE_ENERGY] >= creep.carryCapacity - creep.carry[RESOURCE_ENERGY] ){
+            if (container.store[RESOURCE_ENERGY] >= creep.carryCapacity - creep.carry[RESOURCE_ENERGY]) {
                 roleParent.segment.requestRoomSegmentData(creep.memory.home);
             }
-            
+
         }
-        if(withdrawing){
-//            segment.requestRoomSegmentData(creep.memory.home);
+        if (withdrawing) {
+            //            segment.requestRoomSegmentData(creep.memory.home);
         }
         if (creep.carryTotal > creep.carryCapacity - 45) {
             creep.memory.goHome = true;
@@ -140,24 +140,24 @@ function updateMemory(creep) {
 }
 
 function movement(creep) {
-        let bads = [];
-    if(_goal !== null && _goal.energyCapacity === 4000){
-        bads =  getBads(creep);
+    let bads = [];
+    if (_goal !== null && _goal.energyCapacity === 4000) {
+        bads = getBads(creep);
     }
-     
+
     if (bads.length !== 0) {
         creep.runFrom(bads);
     } else {
         if (creep.memory.goHome) {
 
-            if (!creep.isHome&&  !roleParent.constr.doCloseRoadRepair(creep)) {
+            if (!creep.isHome && !roleParent.constr.doCloseRoadRepair(creep)) {
                 if (!roleParent.constr.doCloseRoadBuild(creep)) {}
             }
 
             creep.countDistance();
             creep.moveMe(Game.rooms[creep.memory.home].storage, {
                 reusePath: rePath,
-                segment:true,
+                segment: true,
                 ignoreCreeps: true,
                 visualizePathStyle: visPath
             });
@@ -168,7 +168,7 @@ function movement(creep) {
                 let task = {};
                 task.options = {
                     reusePath: rePath,
-                    segment:true,
+                    segment: true,
                     ignoreCreeps: true,
                     ignoreRoads: false,
                     visualizePathStyle: visPath
@@ -223,13 +223,24 @@ class transport extends roleParent {
             creep.countReset();
             return;
         }
-            _goal = Game.getObjectById(creep.memory.goal);
+        _goal = Game.getObjectById(creep.memory.goal);
         if (_goal !== null && _goal.energyCapacity === 4000 && super.keeperWatch(creep)) return;
-        if (creep.carryTotal < creep.carryCapacity -10) {
-            if (super.constr.moveToPickUpEnergyIn(creep, 7)) {
-                return;
+        if (creep.carryTotal < creep.carryCapacity - 10) {
+            let bads = [];
+            if (_goal !== null && _goal.energyCapacity === 4000) {
+                bads = getBads(creep);
+            }
+
+            if (bads.length !== 0) {
+                creep.runFrom(bads);
+            } else {
+
+                if (super.constr.moveToPickUpEnergyIn(creep, 7)) {
+                    return;
+                }
             }
         }
+
         interactContainer(creep);
         updateMemory(creep);
         movement(creep);

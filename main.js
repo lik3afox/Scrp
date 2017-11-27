@@ -406,7 +406,7 @@
                 } else {
                     yy = "0" + roomPos.y;
                 }
-                console.log(xx, yy);
+//                console.log(xx, yy);
                 return "" + xx + yy + roomPos.roomName;
             };
 
