@@ -241,11 +241,13 @@ class transportz extends roleParent {
                     }
                 }
             } else {
-
                 // If in the same room and with in a square of 5 away from goal. 
                 if (_goal !== null && _goal.room.name === creep.room.name) {
+creep.say('zzz2');
                     getEnergy(creep);
-                } else if (creep.memory.gotoID === undefined || (creep.carryTotal === 0 && creep.memory.home == creep.room.name)) {
+                } else  if (creep.memory.gotoID === undefined|| (creep.carryTotal === 0 && creep.memory.home == creep.room.name)){
+                    // )
+creep.say('zzz3');
                     var goingTo;
                     if (_goal === null) {
                         goingTo = super.movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
@@ -264,6 +266,12 @@ class transportz extends roleParent {
 
                     task.happyRange = 0;
                     creep.memory.task.push(task);
+                } else if (creep.memory.gotoID !== undefined ){
+                    var zze = Game.getObjectById(creep.memory.gotoID);
+                    if(zze !== null){
+                        creep.moveTo(zze,{reusePath:50});
+                    }
+
                 }
 
             }

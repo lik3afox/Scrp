@@ -123,7 +123,8 @@ function updateMemory(creep) {
 
         }
 
-        if (creep.memory.workContain === undefined && _goal !== null && creep.pos.inRangeTo(_goal, 4)) {
+        if (creep.memory.workContain === undefined && _goal !== null && _goal.pos.inRangeTo(_goal, 3)) {
+
             let contain = _goal.room.find(FIND_STRUCTURES, {
                 filter: {
                     structureType: STRUCTURE_CONTAINER
@@ -141,10 +142,9 @@ function updateMemory(creep) {
 
 function movement(creep) {
     let bads = [];
-    if (_goal !== null && _goal.energyCapacity === 4000) {
+    if (_goal !== null) {
         bads = getBads(creep);
     }
-
     if (bads.length !== 0) {
         creep.runFrom(bads);
     } else {
@@ -181,6 +181,7 @@ function movement(creep) {
                 creep.memory.task.push(task);
                 roleParent.doTask(creep);
             } else if (_goal !== null && creep.room.name === _goal.pos.roomName) {
+
                 if (!creep.pos.isNearTo(container)) {
                     creep.moveTo(container);
                 } else {
@@ -234,8 +235,7 @@ class transport extends roleParent {
             if (bads.length !== 0) {
                 creep.runFrom(bads);
             } else {
-
-                if (super.constr.moveToPickUpEnergyIn(creep, 7)) {
+                if (_goal !== null && _goal.energyCapacity === 4000  && super.constr.moveToPickUpEnergyIn(creep, 6)) {
                     return;
                 }
             }
@@ -244,6 +244,7 @@ class transport extends roleParent {
         interactContainer(creep);
         updateMemory(creep);
         movement(creep);
+
     }
 }
 module.exports = transport;

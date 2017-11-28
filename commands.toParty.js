@@ -78,9 +78,9 @@ var lowFFH = [
     ['healer', require('army.healer'), 1, 4] // Healer    
 ];
 var banditParty = [
-    ['fighter', require('army.fighter'), 0, 10],
-    ['thief', require('army.thief'), 4, 3],
-    ['healer', require('army.healer'), 0, 4] // Healer    
+    ['fighter', require('army.fighter'), 2, 10],
+    ['healer', require('army.healer'), 2, 4] // Healer    
+    ['thief', require('army.thief'), 3, 3],
 ];
 
 
@@ -934,8 +934,6 @@ class partyInteract {
     static create(flag) {
         var totalParty = findParty(flag);
         var currentParty = getCurrentParty(flag);
-        //        console.log('here',totalParty.length);
-        //        console.log(Game.flags.stage2.memory.wayPath.length);
         for (var e in currentParty) {
             for (var i in totalParty) {
                 //          console.log(currentParty[e][_name],i,totalParty[i] , currentParty[e][_number],totalParty[i] < currentParty[e][_number]);
@@ -953,10 +951,8 @@ class partyInteract {
                     let temp = {
                         build: build,
                         room: home, // This will return a room, and that room will add to alphaSpawn warstack.
-
                         spawn: home,
                         name: currentParty[e][_name] + '!' + flag.name[rando] + Game.shard.name[0] + Game.shard.name[5],
-                        //                name: currentParty[e][_name]+,
                         memory: {
                             role: currentParty[e][_name],
                             home: 'default',

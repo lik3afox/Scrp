@@ -72,7 +72,7 @@ class segmentCommand {
     }
 
     static setSegmentData(segment, rawData) {
-        console.log('Requesting Segment Change for segment#', segment, "Number of changes left this ticket ", segmentChange);
+//        console.log('Requesting Segment Change for segment#', segment, "Number of changes left this ticket ", segmentChange);
         if (segmentChange > 0) {
             RawMemory.segments[segment] = rawData;
             segmentChange--;
@@ -88,7 +88,7 @@ class segmentCommand {
 
             if (RawMemory.segments[roomSegment[roomName]] === undefined && !_.contains(Memory.shardNeed,roomSegment[roomName]) ) {
                 Memory.shardNeed.push(roomSegment[roomName]);
-                console.log(roomSegment[roomName]+':requesting a segment for the future:');
+//                console.log(roomSegment[roomName]+':requesting a segment for the future:');
                 return true;
             } else {
   //              let zz = _.indexOf( Memory.shardNeed , roomSegment[roomName] );
@@ -111,7 +111,7 @@ class segmentCommand {
                 RawMemory.segments[roomSegment[roomName]] = rawData;
             }
         } else {
-            console.log('roomSegment Failure SET FAILURE', roomSegment[roomName], roomName, segmentChange);
+//            console.log('roomSegment Failure SET FAILURE', roomSegment[roomName], roomName, segmentChange);
             return;
         }
 
@@ -131,7 +131,7 @@ class segmentCommand {
                 return RawMemory.segments[roomSegment[roomName]];
             }
         } else {
-            console.log('roomSegment RawSegmentRoomData GET FAILURE', roomName, segmentChange);
+//            console.log('roomSegment RawSegmentRoomData GET FAILURE', roomName, segmentChange);
         }
         return;
     }

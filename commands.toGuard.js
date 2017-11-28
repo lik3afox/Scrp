@@ -182,7 +182,7 @@ class partyInteract {
                         return sp.room.name == temp.room && sp.memory.alphaSpawn;
                     });
                     if (spawn.length > 0) {
-                        console.log('using new');
+//                        console.log('using new');
                         temp.memory.parent = spawn[0].id;
                         spawn[0].memory.expandCreate.unshift(temp);
                     } else {}

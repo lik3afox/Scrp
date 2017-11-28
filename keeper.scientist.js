@@ -39,10 +39,6 @@ class mineralRole extends roleParent {
     }
 
     static run(creep) {
-        var _goal; //= Game.getObjectById(creep.memory.goal);
-    //    if(_goal !== null && _goal.cooldown !== undefined && _goal.cooldown !== 0){
-  //          return;
-//        }
         if (super.doTask(creep)) {
             return;
         }
@@ -69,9 +65,8 @@ class mineralRole extends roleParent {
         if (creep.room.name == creep.memory.home && creep.ticksToLive < 200 && _.sum(creep.carry) === 0) {
             creep.memory.death = true;
         }
-//        if(_goal === null){
-            _goal = movement.getRoomPos(creep.memory.goal);
-  //      }
+        var _goal= movement.getRoomPos(creep.memory.goal);
+        var _source = Game.getObjectById(creep.memory.goal);
 
         this.rebirth(creep);
 
@@ -79,36 +74,8 @@ class mineralRole extends roleParent {
             return;
         }
 
-        // He's not in 5 spaces of his goal. so he needs to move there. 
         if (creep.memory.goHome) {
-
-            if (creep.room.terminal !== undefined && (creep.room.controller.owner !== undefined || creep.room.name == creep.memory.home)) {
-                if (creep.pos.isNearTo(creep.room.terminal)) {
-                    for (var a in creep.carry) {
-                        creep.transfer(creep.room.terminal, a);
-                    }
-                } else {
-                    creep.say('tt');
-                    creep.moveTo(creep.room.terminal, {
-                        reusePath: 30
-                    });
-                    return;
-                }
-            } else if (creep.room.storage !== undefined && creep.room.controller.owner !== undefined) {
-                if (creep.pos.isNearTo(creep.room.storage)) {
-                    for (var z in creep.carry) {
-                        creep.transfer(creep.room.storage, z);
-                    }
-                } else {
-                    //                        creep.say('m');
-                    creep.moveTo(creep.room.storage, {
-                        reusePath: 30
-                    });
-                    return;
-                }
-            } else if (creep.room.name != creep.memory.home) {
-                //                if (creep.memory.goal == '59834303d7922107c07815db'||creep.memory.goal == '59834303d7922107c078159d'||creep.memory.goal == '59834303d7922107c07815dd'||creep.memory.goal == '59834303d7922107c078159b') {
-                // So we look through the room or all creeps for ztransport that has matching goal.
+            if (creep.room.name != creep.memory.home) {
 
                 if (creep.memory.ztransportID !== undefined) {
                     let zz = Game.getObjectById(creep.memory.ztransportID);
@@ -149,28 +116,19 @@ class mineralRole extends roleParent {
 
         }
 
-        if (_goal === null) {
-            var goingTo = movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
-            creep.say('creepy');
-            creep.moveMe(goingTo, {
-                ignoreRoads: _ignoreRoad,
-                reusePath: 49,
-                visualizePathStyle: visPath
-            });
 
-        } else if (!(_goal.roomName == creep.room.name && creep.pos.inRangeTo(_goal.x, _goal.y, 4))) {
-
+        if (!creep.pos.isNearTo(_goal)) {
             if (!super.guardRoom(creep)) {
-                creep.moveTo(_goal, {
-                    reusePath: 30
+                creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep.memory.goal), {
+                    reusePath: 49,
+                    segment: true,
+//                    visualizePathStyle: visPath
                 });
-                creep.memory.distance++;
             }
+
         } else {
             // First he mines and fill up.
             if (creep.memory.mining) {
-                //                creep.say('fu',creep.memory.mining);
-                var _source = Game.getObjectById(creep.memory.goal);
                 if (_source !== null && _source.mineralAmount === 0) creep.memory.goHome = true;
 
                 if (creep.pos.isNearTo(_source)) {
@@ -196,26 +154,17 @@ class mineralRole extends roleParent {
                                 }
                             } else {
                                 let ez = Game.getObjectById(creep.memory.ztransportID);
-                                if(ez === null);
-                                    creep.memory.ztransportID = undefined;
+                                if (ez === null);
+                                creep.memory.ztransportID = undefined;
                             }
                         }
-                    }
-                } else {
-                    if (!super.guardRoom(creep)) {
-                        creep.moveTo(_source, {
-                            reusePath: 30
-                        });
                     }
                 }
             }
         }
 
-_goal = Game.getObjectById(creep.memory.goal);
-//    creep.say(_goal.coolDown);
-       if (_goal !== null && _goal.mineralAmount === 0) {
+        if (_source !== null && _source.mineralAmount === 0) {
             creep.suicide();
-
         }
 
 

@@ -31,6 +31,82 @@
     var roomCheck = 10;
     var countCheck = 3;
 
+    function returnClosestRoom(roomName) {
+        var distance = 100;
+        var spawn;
+        for (var e in Game.spawns) {
+            if (Game.spawns[e].memory.alphaSpawn) {
+                if (Game.spawns[e].room.name === 'E14S37') {
+                    var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
+                    if (tempDis < distance) {
+                        distance = tempDis;
+                        spawn = Game.spawns[e];
+                    }
+                }
+            }
+        }
+        return spawn;
+    }
+
+    function scanForRemoteSources() {
+        if (Game.shard.name !== 'shard1') return false;
+        if (Game.flags.remote === undefined) return false;
+
+        var flag = Game.flags.remote;
+        if (flag.memory.spawnRoom === undefined) {
+            flag.memory.spawnRoom = 'none';
+        }
+        if (flag.room === undefined) {
+            observer.reqestRoom(flag.pos.roomName, 5);
+        } else {
+            if (flag.memory.spawnRoom === 'none') {
+                flag.room.visual.text('SETROOM', flag.pos);
+            } else {
+                var source = flag.room.find(FIND_SOURCES);
+                var room = Game.rooms[flag.memory.spawnRoom];
+                var spwn = room.find(FIND_STRUCTURES);
+                spwn = _.filter(spwn, function(o) {
+                    return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
+                });
+                if (spwn.length === 1 && source.length > 0 && room !== undefined) {
+                    var remote = spwn[0].memory.roadsTo;
+                    var has;
+                    for (var eee in source) {
+                        for (var zzz in remote) {
+                            has = false;
+                            if (remote[zzz].source === source[eee].id) {
+                                has = true;
+                                break;
+                            }
+
+                        }
+                        if (!has) {
+                            console.log('spwn doesnt have remote info', source[eee].id);
+                            // Here we add info to spwn.
+                            var BUILD = {
+                                source: source[eee].id,
+                                sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
+                                miner: false,
+                                transport: false,
+                                expLevel: 10
+                            };
+                            if (parseInt(eee) === 0) {
+                                BUILD.controller = false;
+                            }
+                            remote.push(BUILD);
+                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos,spwn[0].room.name , 'Lvl:', BUILD.expLevel, remote.length);
+                        }
+                    }
+
+                    flag.memory.spawnRoom = 'none';
+                    flag.remove();
+                }
+
+            }
+        }
+
+    }
+
     function whoWorksFor(goal) {
         var keys = Object.keys(Game.creeps);
         var a = keys.length;
@@ -163,12 +239,26 @@
     function doUpgradeRooms() { //5836b82d8b8b9619519f19be
         if (Memory.war)
             return;
+        // Lets count how many ticks left for enhanced upgrading.
+
+
         let spwns = ['5a03400a3e83cd1e5374cf65']; //,''
         if (Game.flags.recontrol !== undefined) return;
         var e = spwns.length;
         while (e--) {
             let spawn = Game.getObjectById(spwns[e]);
             if (spawn === null) return;
+            var targets = spawn.room.find(FIND_MY_CREEPS);
+            targets = _.filter(targets, function(object) {
+                return (object.memory.boosted && object.memory.role == 'Aupgrader');
+            });
+
+            var total = 0;
+            for (var ze in targets) {
+                total += targets[ze].ticksToLive;
+            }
+            spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+
             let control = spawn.room.controller;
             if (control.level < 7) return;
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
@@ -311,6 +401,26 @@
 
     }
 
+    function getWallLow(roomName) {
+        if (Memory.wallCount === undefined) {
+            Memory.wallCount = 150;
+        }
+        Memory.wallCount--;
+        if (Memory.wallCount > 0) return;
+        Memory.wallCount = 150;
+        if (Game.rooms[roomName] === undefined) return false;
+        var room = Game.rooms[roomName];
+        var walls = _.filter(room.find(FIND_STRUCTURES), function(o) {
+            return o.structureType == STRUCTURE_WALL || (o.structureType == STRUCTURE_RAMPART && !o.isPublic);
+        });
+        walls.sort((a, b) => a.hits - b.hits);
+        if (walls.length > 2) {
+            //            console.log(roomName,"wall:",walls[1].hits);
+            return walls[1].hits;
+        }
+
+    }
+
     function addSpawnQuery() {
         for (var e in Game.spawns) {
             if (Game.spawns[e].memory.alphaSpawn && Memory.spawnCount[Game.spawns[e].id] !== undefined) {
@@ -406,7 +516,7 @@
                 } else {
                     yy = "0" + roomPos.y;
                 }
-//                console.log(xx, yy);
+                //                console.log(xx, yy);
                 return "" + xx + yy + roomPos.roomName;
             };
 
@@ -482,19 +592,21 @@
                 if (Game.spawns[title].spawning === null) {
                     ccSpawn.renewCreep(Game.spawns[title]);
                     var ed = 'E14S38';
-                    if (Game.spawns[title].id === '59b732634d5e4c649336e82e' && Game.spawns[title].room.energyAvailable > 10000 && Game.rooms[ed].controller !== undefined&& Game.rooms[ed].controller.level > 3 && Game.rooms[ed].controller.level < 6) {
+                    if (Game.spawns[title].id === '59b732634d5e4c649336e82e' && Game.spawns[title].room.energyAvailable > 10000 && Game.rooms[ed].controller !== undefined && Game.rooms[ed].controller.level > 3 && Game.rooms[ed].controller.level < 6) {
                         let spwn = Game.getObjectById('59b732634d5e4c649336e82e');
-                        if(spwn.memory.created === undefined) spwn.memory.created= 0;
-                            if (spwn !== null) {
-                                let ez = spwn.spawnCreep([MOVE, CLAIM, CLAIM], 'ezBread'+ spwn.memory.created++, {memory:{
+                        if (spwn.memory.created === undefined) spwn.memory.created = 0;
+                        if (spwn !== null) {
+                            let ez = spwn.spawnCreep([MOVE, CLAIM, CLAIM], 'ezBread' + spwn.memory.created++, {
+                                memory: {
                                     role: 'mule',
                                     home: 'E14S37',
                                     party: 'Flag27',
                                     parent: '599c7de1255bda6a7f60b395',
                                     level: 2
-                                }});
-                                spwn.memory.CreatedMsg = 'LUCKY';
-                                console.log('trying LUCKY', ez);
+                                }
+                            });
+                            spwn.memory.CreatedMsg = 'LUCKY';
+                            console.log('trying LUCKY', ez);
                         }
                     } else {
                         ccSpawn.createFromStack(Game.spawns[title]);
@@ -524,10 +636,10 @@
                         controllerLevel: spawn.room.controller.level,
                         createQ: spawn.memory.create.length,
                         warQ: spawn.memory.warCreate.length,
+                        wallSize: getWallLow(Game.spawns[title].room.name),
                         expandQ: spawn.memory.expandCreate.length
                     };
                     spawnReport[Game.spawns[title].room.name] = spawnStats;
-
                 }
             }
         } // End of Spawns Loops
@@ -555,6 +667,7 @@
             Memory.marketRunCounter = 10;
             market.run();
         }
+        scanForRemoteSources();
 
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
 
@@ -562,13 +675,13 @@
             if (Game.spawns.Spawn1 !== undefined) {
 
 
-                    report = "";
-                    for (var a in Memory.shardNeed) {
-                        report += " " + Memory.shardNeed[a];
-                    }
+                report = "";
+                for (var a in Memory.shardNeed) {
+                    report += " " + Memory.shardNeed[a];
+                }
 
                 let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-                console.log('**S:' + Memory.shardNeed.length + '*PP:' + Memory.stats.powerProcessed + '***'+report+'***TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('**S:' + Memory.shardNeed.length + '*PP:' + Memory.stats.powerProcessed + '***' + report + '***TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 //            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
@@ -577,69 +690,10 @@
             if (Game.spawns.E38S81) {
                 //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
                 let dif;
-                //              console.log('*****PP:' + 0 + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('*****PP:' + 0 + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
         }
-
-        /*if(Game.shard.name == 'shard1'){
-        var pos1 = new RoomPosition(31,0,"E23S39");
-        var pos2 = new RoomPosition(43,45,"E23S39");
-        //var room = ;
-        var ee = 'E23S39';
-
-        var path = Game.rooms[ee].findPath(pos1,pos2);
-        console.log(Room.serializePath(path),pos1,pos2);
-
-        } 
-        var zz = 
-        '+1023E23S391500E23S391401645556564555455555555567768+0942E24S384400E23S39450144444+4345E23S393100E23S393001655555555555566665555555544445444444444455444+3207E23S384905E23S39480488888+0843E24S384400E23S39450144444+0646E24S384400E23S39450144444+4446E23S393000E23S3930015555555555555666655555555444454444444444554444+0646E24S384300E23S394401434444+4345E23S393000E23S393001555555555555566665555555544445444444444455444+0922E23S391500E23S3914016455565645554555555555677688+4446E23S393100E23S3930016555555555555666655555555444454444444444554444+1023E23S391400E23S391401545556564555455555555567768+3207E23S380500E24S390501566667+1346E24S360032E24S37013121111112222222222222222211111188+1346E24S363449E23S373448121122233332212222112+0942E24S380005E24S390105322222+0942E24S380649E24S3806481212228+1346E24S361649E24S361548888+3207E23S381600E24S37170144555555666666666666666665555556+1607E24S373349E23S373448221122233332212222112+3207E23S384938E23S3748387876656677776665565+0646E24S380649E24S380648128+3207E23S384932E23S374833655666656677776665565+2240E24S373449E23S3734481211222333322122343+2240E24S370038E24S370138333333333333444443333228+2140E24S370038E24S370138333333333333444443333218+1706E24S370038E24S37013721111111111112222222222222222218+3207E23S380600E24S390501666667+1346E24S363249E23S373348222122233332212222112+1346E24S363349E23S373448221122233332212222112+1706E24S374938E23S374837882112+1706E24S370032E24S37013121111112222222222222222218+0843E24S380649E24S380648121228+0546E24S380649E24S380648118+1245E24S361649E24S3615488888+1607E24S370038E24S370137211111111111122222222222222222186+1607E24S370032E24S370131211111122222222222222222186+1607E24S373249E23S373348222122233332212222112+3207E23S384933E23S37483465666656677776665566+2140E24S370032E24S3701334444443333334444433332287+1245E24S361549E24S3614488881+1245E24S360033E24S370132211111112222222222222222211111188+1706E24S370034E24S3701332111111112222222222222222218+3207E23S384934E23S3748356666656677776665565+1245E24S360034E24S3701332111111112222222222222222211111188+3207E23S381500E24S371601444555556666666666666666655555556+1607E24S370034E24S37013321111111122222222222222222186+1706E24S370033E24S370132211111112222222222222222218+0646E24S380549E24S380648228+3207E23S380700E24S3906016766667+0843E24S380549E24S380648221228+0546E24S380549E24S380648218+0843E24S384400E23S39450144444+1346E24S361649E24S361548888+0843E24S380649E24S380648121228+0646E24S384400E23S39450144444+3207E23S384938E23S3748387876656677776665565+0646E24S380005E24S390105322222+0646E24S380649E24S380648128+1706E24S373449E23S373448121122233332212222112+1706E24S370032E24S37013121111112222222222222222218+4345E23S393000E23S393001555555555555566665555555544445444444444455444+1607E24S373349E23S373448221122233332212222112+2240E24S373449E23S3734481211222333322122343+3207E23S380600E24S390501666667+3207E23S381600E24S3717014455555566666666666666666555555556+3207E23S384905E23S39480488888+1607E24S370032E24S370131211111122222222222222222186+2240E24S370038E24S370138333333333333444443333228+1023E23S391500E23S391401645556564555455555555567768+3207E23S381600E24S3717014455555566666666666666666555555556+0942E24S384400E23S39450144444+';
-        var ee = zz.split("+");
-        ee.pop();
-        ee.shift();
-        console.log(ee.length,ee[0]); */
-
     });
-
-    /*
-    exports.deserializePath = function(path) {
-    if(!_.isString(path)) {
-        throw new Error('`path` is not a string');
-    }
-
-    var result = [];
-    if(!path.length) {
-        return result;
-    }
-    var x,y, direction, dx, dy;
-
-    x = parseInt(path.substring(0, 2));
-    y = parseInt(path.substring(2, 4));
-    if(_.isNaN(x) || _.isNaN(y)) {
-        throw new Error('`path` is not a valid serialized path string');
-    }
-
-    for (var i = 4; i < path.length; i++) {
-        direction = parseInt(path.charAt(i));
-        if(!offsetsByDirection[direction]) {
-            throw new Error('`path` is not a valid serialized path string');
-        }
-        dx = offsetsByDirection[direction][0];
-        dy = offsetsByDirection[direction][1];
-        if (i > 4) {
-            x += dx;
-            y += dy;
-        }
-        result.push({
-            x, y,
-            dx, dy,
-            direction
-        });
-    }
-
-
-    return result;
-};
-*/

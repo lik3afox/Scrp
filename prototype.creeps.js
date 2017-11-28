@@ -831,7 +831,7 @@ xxxx yyyyyy yyyy yyyyyy x
                     if (moveStatus == OK) path.shift();
                     this.memory.cachePath = Room.serializePath(path);
 
-                    this.say('💰' + this.memory.cachePath.length, true);
+                    this.say('💰' + this.memory.cachePath.length);
                     if (this.memory.cachePath.length === 0) this.memory.cachePath = undefined;
                 }
             } else if ((this.pos.x === 0 || this.pos.x === 49 || this.pos.y === 0 || this.pos.y === 49) ||
@@ -854,7 +854,7 @@ xxxx yyyyyy yyyy yyyyyy x
                     options.ignoreCreeps = true;
                     doPath = true;
                 } else {
-                    console.log(segment.roomToSegment( this.memory.home), this.memory.home, 'There is a path, C:', this.pos, "G:", target);
+//                    console.log(segment.roomToSegment( this.memory.home), this.memory.home, 'There is a path, C:', this.pos, "G:", target);
                     // Then we use zz to set _move as;
                     let _move = getSerializedPath(zz);
                     path = _.isString(_move.path) ? Room.deserializePath(_move.path) : _move.path;
@@ -862,7 +862,7 @@ xxxx yyyyyy yyyy yyyyyy x
                     path.shift();
                     if (path.length > 0)
                         this.memory.cachePath = Room.serializePath(path);
-                    this.say(moveStatus + "ST");
+                    this.say("💰" + moveStatus  );
                 }
 
             }
@@ -873,16 +873,16 @@ xxxx yyyyyy yyyy yyyyyy x
             }
             if (doPath) {
                 if(!rawData[home]){   // Fail on rawdata means that the segment will be available next tick
-                    console.log(segment.roomToSegment(this.memory.home),'here Segment fail.',roomLink( this.room.name ),this.pos);
+//                    console.log(segment.roomToSegment(this.memory.home),'here Segment fail.',roomLink( this.room.name ),this.pos);
                 } else if (rawData[home] !== undefined && this.memory._move !== undefined) {
                     test = serializePath(this);
                     if (test !== undefined) {
                         rawData[home] += test + '+';
                         segment.setRoomSegmentData(home, rawData[home]);
-                        console.log(segment.roomToSegment(this.memory.home),this.pos, 'G', target, 'Added to', home, ' FINALSERIALIZED PATH:', test);
+  //                      console.log(segment.roomToSegment(this.memory.home),this.pos, 'G', target, 'Added to', home, ' FINALSERIALIZED PATH:', test);
                     } else {
-                        this.say('!@#');
-                        console.log('Failed Path', this.pos, roomLink(this.room.name));
+            //            this.say('!@#');
+    //                    console.log('Failed Path', this.pos, roomLink(this.room.name));
                     }
                 }
             }

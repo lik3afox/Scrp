@@ -55,6 +55,10 @@ function restingSpot(creep) {
             return new RoomPosition(10, 13, creep.room.name);
         case '5982ff21b097071b4adc2227':
             return new RoomPosition(18, 6, creep.room.name);
+        case '5982feeab097071b4adc1bce':
+            return new RoomPosition(34, 17, creep.room.name);
+        case '5982ff50b097071b4adc2676':
+            return new RoomPosition(24, 20, creep.room.name);
         default:
             return false;
     }

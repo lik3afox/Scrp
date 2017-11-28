@@ -19,7 +19,7 @@ function getHostiles(creep) {
     if (creep.room.name == 'E11S36') {
         range = 49;
     }
-    var rng10 = ['E16S35', 'E25S26','E26S35','E16S44'];
+    var rng10 = ['E16S35', 'E25S26','E26S35','E16S44','E14S46'];
     if (_.contains(rng10, creep.room.name)) {
         range = 10;
     }
@@ -175,8 +175,10 @@ function moveCreep(creep) {
                     }
                 });
             } else {
+                
                 creep.moveMe(gota, {
                     reusePath: 7,
+                    ignoreCreeps: true,
                     visualizePathStyle: {
                         fill: 'transparent',
                         stroke: '#bf0',
