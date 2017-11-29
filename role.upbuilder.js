@@ -122,7 +122,7 @@ class roleUpbuilder extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-
+        super.rebirth(creep);
 
         if (Memory.war && creep.ticksToLive < 1300 || creep.room.memory.alert) {
             require('role.wallworker').run(creep);
