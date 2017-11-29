@@ -760,11 +760,19 @@ xxxx yyyyyy yyyy yyyyyy x
             if(_.isString(this.memory.position)){
                 var de = stringToRoomPos(this.memory.position);
                 stuck = this.pos.isEqualTo(de);
+                if(de === undefined ) {
+                    this.say(this.memory.position);
+                }
             } else {
                 stuck = this.pos.isEqualTo(this.memory.position.x, this.memory.position.y);
             }
         }
-        this.memory.position = roomPosToString(this.pos );
+        let zze;// = roomPosToString(this.pos );
+        if(zze !== undefined){
+            this.memory.position = zze;
+        }else {
+            this.memory.position = this.pos;
+        }
 
         if (stuck) {
             this.memory.stuckCount++;

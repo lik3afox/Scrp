@@ -23,7 +23,6 @@ var allModule = [
     ['minHarvest', require('role.mineral')],
     ['mineral', require('keeper.scientist')],
     ['engineer', require('army.engineer')],
-
     ['scout', require('army.scout')],
     ['rampartGuard', require('army.rampartGuard')],
     ['homeDefender', require('role.defender2')],
@@ -49,165 +48,50 @@ var transportLevel = 20000;
 
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
-    [ // 200 Energy required
-
-    ],
-    // sends a miner to build the cotainer
-    [ // 300 Energy Required
-        ['miner', 1, 2] // Harvester - experiemnt w/o carry
-    ],
-    // Adds transport once container is built.
-    [ // 550 Energy Max
+    [],  // Kept empty so nothing occurs and this can stay.
+    [ // Level 1 500 Carry/900 Energy Transports
         ['miner', 1, 2], // Harvester - experiemnt w/o carry
-        ['transport', 1, 2] // Gather and move - just carry 
-    ],
-    // Level 3 has a controller 
-    [ // 800 Energy Max.
-        ['miner', 1, 2], // Harvester - experiemnt w/o carry
-        // There are two transports because this is cock blocked by expansions.
-        ['transport', 1, 2], // Gather and move - just carry 
+        ['transport', 1, 0], // Gather and move - just carry 
         ['controller', 1, 1]
     ],
-
-    // four level When the spawn can create 1300 strong units. 
-    // The transport here will be designed for 1 square away - 
-    [ // 1300 Energy Max.
+    [ // Level 2 750 Carry 1250 Energy
         ['miner', 1, 3], // Harvester - experiemnt w/o carry
+        ['transport', 1, 1], // Gather and move - just carry 
+        ['controller', 1, 2]
+    ],
+    [ //Level 3 1000 Carry - 1750 Energy
+        ['miner', 1, 4], // Harvester - experiemnt w/o carry
+        // There are two transports because this is cock blocked by expansions.
+        ['transport', 1, 2], // Gather and move - just carry 
+        ['controller', 1, 3]
+    ],
+    [ // level 4  1550 Carry - 2600 Energy
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
         ['transport', 1, 3], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
-
-    // Level 5 or above means the area is constructed, 
-    // needing more transports because the distance is a bit further.
-
-    // Level five is an contructed fully area - rebuilder can be downgraded and more
-    // transports.
-    [ // 1800 Energy Max.
-        ['miner', 1, 3], // Harvester - experiemnt w/o carry
-        ['transport', 1, 3], // Gather and move - just carry 800
+    [// Lv 5 - 2x1000 Carry 
+        // Two transports @ 1000 Carry
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 2, 2], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
-    // Level six is a bit further - needing 2 heavy level transports.
-    [ // 1800 Energy Max.
-        ['miner', 1, 3], // Harvester - experiemnt w/o carry
-        ['transport', 1, 4], // Gather and move - just carry up to 1400
-        ['ztransport', 1, 0], // Gather and move - just carry up to 1400
-        ['controller', 1, 4]
-    ],
-
-    // Level seven is the highest distance away. 
-    [ // 1800 Energy Max.
-        ['miner', 1, 4], // Harvester - experiemnt w/o carry
-        ['transport', 1, 5], // Gather and move - just carry 
-        ['controller', 1, 5]
-    ],
-    [ // 1800 Energy Max.5836b8138b8b9619519f16b8
-        ['miner', 1, 4], // Harvester - experiemnt w/o carry
-        ['transport', 1, 6], // Gather and move - just carry up to 1400
-        ['controller', 1, 5]
-    ],
-
-    [ // LEVEL 9 is another expansion that has a spawn.
+    [// Lv 6 - 2X1550 Carry
+        // Two Transports @ 1550 Carry.
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['controller', 1, 5],
-        ['transport', 1, 5] // Gather and move - just carry 
-    ],
-    [ // LEVEL 10 is another expansion that has a spawn.5836b8168b8b9619519f1708
-        ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 1, 6], // Gather and move - just carry up to 1400
-        ['controller', 1, 5] // Gather and move - just carry 
-    ],
-
-    [ // LEVEL 11 is another expansion that has a spawn.
-        ['mineral', 1, 4],
-        ['ztransport', 1, 0],
-    ],
-
-    [ // LEVEL 12 is another expansion that has a spawn. 5836b8168b8b9619519f1708
-        ['mineral', 1, 5],
-        ['ztransport', 1, 0],
-    ],
-
-    [ // LEVEL 13 - for just a miner and transport.
-        ['mineral', 1, 7],
-        ['ztransport', 1, 0],
-    ],
-    [ // LEVEL 14 - for an mineral For spawn3
-        ['mineral', 1, 7],
-        ['ztransport', 1, 0],
-    ],
-    [ // LEVEL 15 - for an mineral for spawn1
-        ['miner', 1, 3], // Gather and move - just carry 
         ['transport', 2, 3], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
-    [ // LEVEL 16 - for just a miner and transport.
-        ['miner', 1, 5], // Gather and move - just carry 
-        ['transport', 2, 4], // Gather and move - just carry 
-        ['controller', 1, 4]
-    ], // al
-    [ // LEVEL 17 - for just a miner and transport. Weaker than lv 15
-        ['miner', 1, 5], // Gather and move - just carry 
-        ['transport', 2, 4], // Gather and move - just carry 
-        ['controller', 1, 4]
-    ], // al
-    [ // LEVEL 18 - for just a miner and transport. Weaker than lv 15
-        ['miner', 1, 5], // Gather and move - just carry 
-        ['transport', 2, 5] // Gather and move - just carry 
-    ],
-    [ // LEVEL 19 - for just a miner and transport.
-        ['miner', 1, 5], // Gather and move - just carry 
-        ['controller', 1, 4],
-        ['transport', 2, 6] // Gather and move - just carry 
-    ], // al
-    [ // LEVEL 20 - for just a miner and transport. Weaker than lv 15
-        ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 1, 6],
+    [], // Level seven
+    [], // Lv 8
+    [], // LEVEL 9 
+    [ // LEVEL 10  For Mineral Harvesting.
+        ['mineral', 1, 7],
         ['ztransport', 1, 0],
-    ], // 
-    [ // LEVEL 21 [E25S74 12,9]
-        ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 2, 6],
-        ['ztransport', 1, 0],
-    ], // 
-    [ // LEVEL 22 
-        ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 1, 6],
-    ], // 
-    [ // LEVEL 23  [E35S84 10,6]
-        ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 1, 4]
-    ], //
-    [ // LEVEL 24 
-        ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 1, 6],
-    ], // 
-    [ // LEVEL 25 
-        ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 1, 3] // 800 carry transport.
-
-    ], // 
-    [ // LEVEL 26 
-    ], // 
-    [ // LEVEL 27 
-    ],
-    [ // LEVEL 28 
-    ], // 
-    [ // LEVEL 29 
-    ], // 
-    [ // LEVEL 30 
-
     ]
 ];
 
-var overflow = ['upgrader', require('role.upgrader'), 0, 0];
-
-var party = require('commands.toParty');
-
-var _overflow = 0;
-
 var _require = 1; // Only All Module uses require
-
 var _name = 0;
 var _number = 1;
 var _level = 2;
@@ -243,110 +127,6 @@ function newGetExpandRole(creepRole, sourceID, totalCreeps) {
     return 0;
 }
 
-function getPossibleRole(spawn, creepRole, sourceID) {
-    let total = 0;
-
-    for (var e in spawn.memory.warCreate) {
-        if (spawn.memory.warCreate[e].memory.role == creepRole && spawn.memory.warCreate[e].memory.goal == sourceID)
-            total++;
-    }
-
-    for (var u in spawn.memory.expandCreate) {
-        if (spawn.memory.expandCreate[u].memory.role == creepRole && spawn.memory.expandCreate[u].memory.goal == sourceID)
-            total++;
-    }
-
-    for (var o in spawn.memory.create) {
-        if (spawn.memory.create[o].memory.role == creepRole && spawn.memory.create[o].memory.goal == sourceID)
-            total++;
-    }
-
-    return total;
-
-}
-
-function getExpandRole(creepRole, sourceID, totalCreeps) {
-    let count = 0;
-    for (var e in totalCreeps) {
-        for (var a in totalCreeps[e].goal) {
-            if (creepRole == e && totalCreeps[e].goal[a] == sourceID) {
-                count++;
-            }
-        }
-    }
-
-    return count;
-}
-
-function makeBody(carryNeeded) {
-    let body = [WORK, MOVE];
-
-    do {
-        body.push(MOVE);
-        body.push(CARRY);
-        carryNeeded--;
-    } while (carryNeeded > 0);
-    return body;
-}
-
-function analyzeSource(expand) {
-
-    expand.transInfo = undefined;
-    expand.mineInfo = undefined;
-    expand.allDistance = undefined;
-    expand.controlInfo = undefined;
-    return;
-    /*
-    if (expand.allDistance === undefined) expand.allDistance = [];
-
-    if (expand.allDistance.length > 30) {
-        expand.allDistance.sort(function(a, b) {
-            return a - b;
-        });
-        do {
-            expand.allDistance.shift();
-            expand.allDistance.pop();
-            expand.allDistance.shift();
-            expand.allDistance.pop();
-        } while (expand.allDistance.length > 30);
-        expand.aveDistance = Math.ceil((_.sum(expand.allDistance) / expand.allDistance.length));
-
-    }
-    let mining;
-    let miningInfo = {};
-    let source = Game.getObjectById(expand.source);
-    if (source !== null && source.energyCapacity == 4000) {
-        // 4000/300 + time away 40
-        mining = 32; // 16 * 2;
-        miningInfo.workNeeded = 11; // * 2 *2;
-    } else {
-        // 3000/300 = 10/2 = 5 work - back and forth distnce so. 
-        miningInfo.workNeeded = 7; // * 2 *2;
-        mining = 20;
-    }
-
-    if (expand.transportNum !== undefined) expand.transportNum = undefined;
-    if (expand.tranCarryNeed !== undefined) expand.tranCarryNeed = undefined;
-    if (expand.numOfParts !== undefined) expand.numOfParts = undefined;
-    if (expand.numOfCreep !== undefined) expand.numOfCreep = undefined;
-    if (expand.carryNeed !== undefined) expand.carryNeed = undefined;
-    if (expand.tranCarryNeed !== undefined) expand.tranCarryNeed = undefined;
-    if (expand.carryNeeded !== undefined) expand.carryNeeded = undefined;
-    if (expand.transportNum !== undefined) expand.transportNum = undefined;
-
-    let tInfo = {};
-    tInfo.carryNeeded = (expand.aveDistance * mining);
-    tInfo.tranCarryParts = Math.ceil(tInfo.carryNeeded / 50);
-    tInfo.transportNum = Math.ceil(tInfo.tranCarryParts / 32);
-    tInfo.carryPerTran = Math.ceil(tInfo.tranCarryParts / tInfo.transportNum);
-
-    expand.transInfo = tInfo;
-    expand.mineInfo = miningInfo;
-    expand.controlInfo = {};
-    */
-}
-
-
 function rebuildCreep(creep) {
     // Here we need to determine if it needs to be leveled up. 
     // Here we need to determine if the creep is an expansion creep or home creep.
@@ -369,7 +149,7 @@ function rebuildCreep(creep) {
     } else if (creep.memory.role == 'first' || creep.memory.role == 'harvester' || creep.memory.role == 'scientist') {
         if (Game.flags[creep.memory.home] !== undefined && Game.flags[creep.memory.home].color == COLOR_WHITE && Game.flags[creep.memory.home].secondaryColor == COLOR_GREEN) {
             currentModule = Game.flags[creep.memory.home].memory.module;
-        } 
+        }
 
         for (var type in currentModule) {
             if (currentModule[type][_name] == creep.memory.role) {
@@ -450,54 +230,6 @@ function rebuildCreep(creep) {
     return temp;
 }
 
-function addFromCreateStack(totalCreeps, role, spawn) {
-
-    var e;
-    if (totalCreeps[role] === undefined) {
-        totalCreeps[role] = {
-            count: 0,
-            goal: []
-        };
-    }
-    if (totalCreeps[role].count === undefined) {
-        totalCreeps[role].count = 0;
-    }
-    if (totalCreeps[role].goal === undefined) {
-        totalCreeps[role].goal = [];
-    }
-    for (e in spawn.memory.create) {
-        if (role == spawn.memory.create[e].memory.role) {
-            totalCreeps[role].count++;
-            totalCreeps[role].goal.push(spawn.memory.create[e].memory.goal);
-        }
-    }
-    for (e in spawn.memory.warCreate) {
-        if (role == spawn.memory.warCreate[e].memory.role) {
-            totalCreeps[role].count++;
-            if (spawn.memory.create[e] !== undefined)
-                totalCreeps[role].goal.push(spawn.memory.create[e].memory.goal);
-        }
-    }
-    for (e in spawn.memory.expandCreate) {
-        if (role == spawn.memory.expandCreate[e].memory.role) {
-            totalCreeps[role].count++;
-            totalCreeps[role].goal.push(spawn.memory.create[e].memory.goal);
-        }
-    }
-    return totalCreeps;
-}
-
-function getModuleLevel(spawn) {
-    return spawn.memory.buildLevel;
-}
-
-function getNuke(spawn) {
-    return spawn.room.nuke;
-}
-
-function getCurrentModule(roomName) {
-    return [];
-}
 
 
 function changeBuild(build, room) { // Input [body,body,carry],room
@@ -699,32 +431,32 @@ class theSpawn {
         var type;
         if (Memory.spawnCount[spawn.id] === undefined) {
             Memory.spawnCount[spawn.id] = {
-                bodyCount:0
+                bodyCount: 0
             };
         }
-        
+
 
         spawn.memory.TotalBuild = (Memory.spawnCount[spawn.id].bodyCount * 3);
         spawn.memory.totalCreep = Memory.spawnCount[spawn.id].total;
         totalCreeps = Memory.spawnCount[spawn.id];
 
         // Flag Module Check Add Module.
-
+/*
         if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
             if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
-                currentModule = getCurrentModule(spawn.room.name);
+                currentModule = [];//getCurrentModule(spawn.room.name);
                 for (var ee in currentModule) {
                     Game.flags[spawn.pos.roomName].memory.module.push(currentModule[ee]);
                 }
             }
-        }
+        } */
 
         currentModule = Game.flags[spawn.room.name].memory.module;
 
         for (type in currentModule) {
 
             let min = Game.getObjectById(spawn.room.memory.mineralID);
-            let nuke = getNuke(spawn);
+            let nuke = spawn.room.nuke;
             var alertProhib = ['minHarvest', 'assistant', 'nuker'];
             if (currentModule[type][_number] === 0) {
                 // No count so don't count.
@@ -786,6 +518,9 @@ class theSpawn {
 
             // Checking if room is visable and too observe it.
             if (spawn.memory.roadsTo[ie].expLevel > 0) {
+                if (spawn.memory.roadsTo[ie].expLevel > 10) {
+                    console.log(roomLink(spawn.pos.roomName), spawn.memory.roadsTo[ie].expLevel);
+                }
                 if (source === null) {
                     if (spawn.memory.roadsTo[ie].sourcePos !== undefined) {
                         let obser = require('build.observer');
@@ -882,17 +617,19 @@ class theSpawn {
                                         level = 0;
                                     }
                                     if ((level < controllerLevel) || (sourcez.room.controller.level > 0)) {
-                                        let controlParts;/*
-                                        if(spawn.room.energyAvailable > 12000){
-                                            controlParts = 10;
-                                        } else*/ if (spawn.room.energyCapacityAvailable > 8000){
+                                        let controlParts;
+                                        /*
+                                                                                if(spawn.room.energyAvailable > 12000){
+                                                                                    controlParts = 10;
+                                                                                } else*/
+                                        if (spawn.room.energyCapacityAvailable > 8000) {
                                             controlParts = 8;
-                                        }else if (spawn.room.energyCapacityAvailable > 6000){
+                                        } else if (spawn.room.energyCapacityAvailable > 6000) {
                                             controlParts = 5;
                                         }
-                                        if(controlParts !== undefined) {
+                                        if (controlParts !== undefined) {
                                             temp.build = [];
-                                            for(var i = 0;i<=controlParts;i++){
+                                            for (var i = 0; i <= controlParts; i++) {
                                                 temp.build.push(CLAIM);
                                                 temp.build.push(MOVE);
                                             }
@@ -1055,7 +792,7 @@ class theSpawn {
         var spawn = Game.getObjectById(creep.memory.parent);
         //                console.log( creep.rebuildMe(creep)+'aasdfffffffffffffffffffffffffffffffffffffff' );
         if (spawn !== null) {
-//            console.log('Reporting death,', creep.name, roomLink(creep.pos.roomName));
+            //            console.log('Reporting death,', creep.name, roomLink(creep.pos.roomName));
             switch (creep.memory.role) {
                 case "miner":
                 case "transport":
@@ -1107,9 +844,7 @@ class theSpawn {
                 }
             }
         }
-
         spawn.memory.analyzed = _.uniq(spawn.memory.analyzed);
-
         spawn.memory.newSpawn = false;
     }
 

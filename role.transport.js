@@ -1,16 +1,41 @@
+/*
+//3/4/5/6/
+Lv 3:
+- 500 Carry
+Lv 4:
+- 750 Carry
+Lv 5:
+- 1000 Carry
+Lv 6:
+- max level 1500/1550
+*/
+
+// lv 1 300
+// lv 2 550
+// lv 3 800
+// lv 4 1300
+// lv 5 1800
+// lv 6 2300
+// lv 7 5600
+// lv 8 12800
 var classLevels = [
     // Level 0
-    [MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], //  300
-    // Level 1
+//  Transport - 500 Carry/900 Energy
+    [MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,CARRY,CARRY,MOVE,CARRY,CARRY,MOVE,CARRY], //  300
+    // Level 1 - 750 Carry 1250 Energy
+[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
+    // Level 2 1000 Carry - 1750 Energy
+[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],    
 
-    [CARRY, CARRY, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE], //  550
-    // Level 2
-
-    [CARRY, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK, MOVE, CARRY, CARRY, MOVE],
-    // Level 3
-    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE,
-        CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE, WORK, CARRY, CARRY, MOVE
+    // Level 3 1550 carry 2600 Energy - Required Lv 7 
+  [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
+        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK,
+        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
+        MOVE, WORK
     ],
+
+// After lv 3 That's max
+
 
     // Level 4
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
@@ -181,17 +206,16 @@ function movement(creep) {
                 creep.memory.task.push(task);
                 roleParent.doTask(creep);
             } else if (_goal !== null && creep.room.name === _goal.pos.roomName) {
-
-                if (!creep.pos.isNearTo(container)) {
+                if (creep.pos.isNearTo(_goal)) {
+                    creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 10, reusePath: 1 });
+                } else if (!creep.pos.isNearTo(container)) {
                     creep.moveTo(container);
                 } else {
                     if (!withdrawing)
                         creep.sleep();
                 }
             } else { // If 
-                if (creep.pos.isNearTo(_goal)) {
-                    creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 10, reusePath: 1 });
-                } else if (creep.memory.workContain !== undefined) {
+                if (creep.memory.workContain !== undefined) {
                     let container = Game.getObjectById(creep.memory.workContain);
                     if (container !== null) {
                         creep.moveTo(container);
@@ -235,7 +259,7 @@ class transport extends roleParent {
             if (bads.length !== 0) {
                 creep.runFrom(bads);
             } else {
-                if (_goal !== null && _goal.energyCapacity === 4000  && super.constr.moveToPickUpEnergyIn(creep, 6)) {
+                if (_goal !== null && _goal.energyCapacity === 4000 && super.constr.moveToPickUpEnergyIn(creep, 6)) {
                     return;
                 }
             }

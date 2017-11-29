@@ -151,86 +151,28 @@ class buildObserver {
             if(screeps.length > 0){
                 let direction;
                 let troom = Game.rooms[target];
-                if(troom.memory.caravanPos === undefined) {
-                    if(screeps.length > 0) {
-                    troom.memory.caravanPos = new RoomPosition(screeps[0].pos.x,screeps[0].pos.y,screeps[0].pos.roomName);
-                    troom.memory.timedPos = screeps[0].ticksToLive;
-                    }
-                } else {
-                    var pos = new RoomPosition(troom.memory.caravanPos.x,troom.memory.caravanPos.y,troom.memory.caravanPos.roomName );
-                    if(!pos.isEqualTo(screeps[0].pos)&&(troom.memory.timedPos - screeps[0].ticksToLive) > 5 ){
-                        direction = pos.getDirectionTo(screeps[0].pos);
-                    }
-                }
 
-                if(direction !== undefined) {
-                    // Estimate the room the caravan will be in lets stay 300 ticks.
+if(screeps[0].ticksToLive > 1300) {
+    let roomName = screeps[0].pos.roomName;
+    if(roomName[2] === 1 ||roomName[2] === 1 ){
+        roomName[2] += 5;
+    } else if(roomName[2] === 9 ||roomName[2] === 8){
+        roomName[2] -= 5;
+    } else if(roomName[5] === 1 ||roomName[5] === 2){
+        roomName[5] += 5;
 
-         let xCor;
-         let yCor;
-         let parsedX;
-         let parsedY;
+    } else if(roomName[5] === 9 ||roomName[5] === 8){
+        roomName[5] -= 5;
+    } 
+    targetRoom = roomName;
+}
 
-                    switch(direction) {
-    case TOP: 
-    // Heading North;
-
-         // target is the room name - it gets +3 North rooms.
-         // So example if target is E10S32 - E10S29
-//         var target = 'E12S34';
-         xCor = target[1] + target[2];
-         yCor = target[4] + target[5];
-         parsedX = parseInt(xCor);
-         parsedY = parseInt(yCor)-3;
-         targetRoom = target[0]+parsedX+target[3]+parsedY;
-
-    break;
-    case BOTTOM: 
-    // Heading South
-         // target is the room name - it gets +3 south rooms.
-         // So example if target is E10S32 - E10S25 
-         // Place a flag in that room 
-         //targetRoom = parse
-          xCor = target[1] + target[2];
-          yCor = target[4] + target[5];
-          parsedX = parseInt(xCor);
-          parsedY = parseInt(yCor)+3;
-          targetRoom = target[0]+parsedX+target[3]+parsedY;
-
-    break;
-    case RIGHT:
-         xCor = target[1] + target[2];
-         yCor = target[4] + target[5];
-         parsedX = parseInt(xCor)+3;
-         parsedY = parseInt(yCor);
-          targetRoom = target[0]+parsedX+target[3]+parsedY;
-
-    // Heading East
-    break;
-    case LEFT: 
-    // Heading weest
-         xCor = target[1] + target[2];
-         yCor = target[4] + target[5];
-         parsedX = parseInt(xCor)-3;
-         parsedY = parseInt(yCor);
-          targetRoom = target[0]+parsedX+target[3]+parsedY;
-
-    break;
-
-    case TOP_RIGHT: 
-    case BOTTOM_RIGHT: 
-    case BOTTOM_LEFT: 
-    case TOP_LEFT:
-    break;
-                    }
-                }
-
-                console.log('FOUND CARAVAN: ',direction,screeps.length,screeps.pos,direction,'Estimated Interecpt room',targetRoom);
+                console.log('FOUND CARAVAN: ',screeps.length,roomLink(target),'Estimated Interecpt room',targetRoom);
 if(Game.flags.caravan === undefined) {
  //Game.rooms.sim.createFlag(5, 12, 'Flag1');   
      var request = { order: "observerFlag", options: { room: targetRoom, timed: 3 } }; 
 //      Memory.observerTask.push(request);
-      console.log('ADDED TASK');
+//      console.log('ADDED TASK');
 }
                 for (var o in observers) {
                     let stru = getCached(observers[o]);

@@ -107,7 +107,7 @@ function banditAction(creep) {
 
             good = creep.room.find(FIND_MY_CREEPS);
             good = _.filter(good, function(o) {
-                return o.id !== creep.id;
+                return o.id !== creep.id && creep.getActiveBodyParts(ATTACK) > 0;
             });            
             good.sort((a, b) => a.hits - b.hits);
             if (good.length > 0) {
@@ -187,6 +187,7 @@ class healerClass extends roleParent {
             super.rebirth(creep);
             creep.say('bandit');
             banditAction(creep);
+if(Game.flags[creep.memory.party] === undefined) creep.memory.death = true;            
             return;
         }
         // creep.say('drugs'+creep.memory.level);

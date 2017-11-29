@@ -340,7 +340,7 @@ class fighterClass extends roleParent {
             super.rebirth(creep);
             creep.say('bandit');
             banditAction(creep);
-
+        if(Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
             return;
         }
 

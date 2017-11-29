@@ -79,8 +79,8 @@ var lowFFH = [
 ];
 var banditParty = [
     ['fighter', require('army.fighter'), 2, 10],
-    ['healer', require('army.healer'), 2, 4] // Healer    
-    ['thief', require('army.thief'), 3, 3],
+    ['healer', require('army.healer'), 2, 4], // Healer    
+    ['thief', require('army.thief'), 2, 3],
 ];
 
 
@@ -289,8 +289,6 @@ function getSpawnCreating(flag) {
     }
 
     switch (flag.name) {
-        case 'control':
-            return 'E25S27';
         case 'recontrol':
             return 'E14S37';
         case 'engineer2':
@@ -642,7 +640,7 @@ function findParty(flag) {
         report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName);
 
     }
-//    console.log(report);
+    console.log(report);
 
     return total;
 }

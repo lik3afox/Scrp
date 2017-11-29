@@ -5,16 +5,14 @@
     // 1 Remove Visual and Low Grafana stats (Low Grafana means no calculations)
     // 1 Bare Visual
 
-    var fox = require('foxGlobals');
     var _showJobs = true;
     var _creepsReport = false;
+    var _last;
+    var fox = require('foxGlobals');
     var flag = require('build.flags');
     var tower = require('build.tower');
     var spawnsDo = require('build.spawn');
     var ccSpawn = require('commands.toSpawn');
-
-    var _last;
-
     var link = require('build.link');
     var observer = require('build.observer');
     var movement = require('commands.toMove');
@@ -88,13 +86,13 @@
                                 sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
                                 miner: false,
                                 transport: false,
-                                expLevel: 10
+                                expLevel: 4
                             };
-                            if (parseInt(eee) === 0) {
+                            if (parseInt(eee) === 0 && source[eee].room.controller !== undefined  ) {
                                 BUILD.controller = false;
                             }
                             remote.push(BUILD);
-                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos,spwn[0].room.name , 'Lvl:', BUILD.expLevel, remote.length);
+                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
                         }
                     }
 
@@ -248,24 +246,27 @@
         while (e--) {
             let spawn = Game.getObjectById(spwns[e]);
             if (spawn === null) return;
-            var targets = spawn.room.find(FIND_MY_CREEPS);
-            targets = _.filter(targets, function(object) {
-                return (object.memory.boosted && object.memory.role == 'Aupgrader');
-            });
-
-            var total = 0;
-            for (var ze in targets) {
-                total += targets[ze].ticksToLive;
-            }
-            spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
 
             let control = spawn.room.controller;
             if (control.level < 7) return;
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
-            if (control.level >= 7 && control.progress > 10900000 || control.level === 8) {
+            if ((control.level >= 7 && control.progress > 10000000) || control.level === 8) {
                 if (Game.flags.recontrol === undefined) {
-                    spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
+                    var targets = spawn.room.find(FIND_MY_CREEPS);
+                    targets = _.filter(targets, function(object) {
+                        return (object.memory.boosted && object.memory.role == 'Aupgrader');
+                    });
+
+                    var total = 0;
+                    for (var ze in targets) {
+                        total += targets[ze].ticksToLive;
+                    }
+                    spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+                    if (total > 6000) {
+                        spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
+                    }
                 }
+
             }
         }
     }
@@ -504,20 +505,20 @@
             };
             global.roomPosToString = function(roomPos) {
                 if (roomPos.x === undefined) return false;
-                var xx = "";
-                if (roomPos.x > 10) {
-                    xx = roomPos.x;
-                } else {
-                    xx = "0" + roomPos.x;
+                var xx = roomPos.x;
+                if(xx.length === 1) {
+                    xx = 0+xx;
                 }
-                var yy = "";
-                if (roomPos.y > 10) {
-                    yy = roomPos.y;
-                } else {
-                    yy = "0" + roomPos.y;
+                var yy = roomPos.y;
+                if(yy.length === 1) {
+                    yy = 0+yy;
                 }
-                //                console.log(xx, yy);
-                return "" + xx + yy + roomPos.roomName;
+                var ret =  xx + yy + roomPos.roomName;
+                if(ret.length > 10) {
+                    console.log(xx,yy,roomPos.roomName);
+                    return;
+                }
+                return ret;
             };
 
         }
