@@ -3,8 +3,8 @@ var classLevels = [
     [MOVE, WORK, WORK, WORK, MOVE, CARRY], //  450
     [MOVE, MOVE, WORK, WORK, WORK, WORK, MOVE, CARRY, WORK], // 550
     [WORK, WORK, WORK, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, CARRY], // 800
-    [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY], // 1300 
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY],
+    [MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY], // 1350 
+    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY], //1400
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY, CARRY]
 
 ];
@@ -37,6 +37,10 @@ function getBads(creep) {
 
 function restingSpot(creep) {
     switch (creep.memory.goal) {
+        case '5982ff6bb097071b4adc2990':
+            return new RoomPosition(9, 43, creep.room.name);
+        case '5982ffa4b097071b4adc2ff7':
+            return new RoomPosition(33, 22, creep.room.name);
         case '5982ff20b097071b4adc2212':
             return new RoomPosition(39, 42, creep.room.name);
         case '5836b8268b8b9619519f18b1':
@@ -97,7 +101,7 @@ function doWork(creep) {
                 }
             }
         } else {
-            //creep.moveTo(contain);
+            creep.moveTo(contain);
         }
         // Deposit
     }

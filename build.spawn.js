@@ -580,6 +580,11 @@ class theSpawn {
                             if (spawn.memory.created === undefined) {
                                 spawn.memory.created = 0;
                             }
+                            if( spawn.memory.roadsTo[ie].timed !== undefined) {
+                                spawn.memory.roadsTo[ie].timed--;
+                                if(spawn.memory.roadsTo[ie].timed < 0)
+                                    spawn.memory.roadsTo[ie].timed = undefined;
+                            }
                             spawn.memory.created++;
                             let needBoost = [];
                             let temp = {
@@ -654,6 +659,9 @@ class theSpawn {
 
                                 }
                             } else if (temp.memory.role == 'transport') {
+                                if( spawn.memory.roadsTo[ie].timed !== undefined) {
+                                    temp.memory.timed = spawn.memory.roadsTo[ie].timed;
+                                }
                                 spawn.memory.expandCreate.push(temp);
                                 spawn.memory.roadsTo[ie][type] = true;
                             } else {

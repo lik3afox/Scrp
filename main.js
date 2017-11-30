@@ -86,13 +86,14 @@
                                 sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
                                 miner: false,
                                 transport: false,
+                                timed: (parseInt(eee)*10000)+5000,
                                 expLevel: 4
                             };
                             if (parseInt(eee) === 0 && source[eee].room.controller !== undefined  ) {
                                 BUILD.controller = false;
                             }
                             remote.push(BUILD);
-                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
+                            console.log('Remote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
                         }
                     }
 
