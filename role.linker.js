@@ -57,12 +57,12 @@ function toStorageOrTerminal(creep) {
     }
     if (isItTier3(creep)) {
 
+    } else if (creep.room.terminal === undefined) {
+        containers.moveToStorage(creep);
     } else if (creep.room.terminal !== undefined && creep.room.terminal.total == 300000) {
         containers.moveToStorage(creep);
     } else if ((creep.carry[RESOURCE_ENERGY] === 0 && creep.carryTotal !== 0) || (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 5000)) {
         containers.moveToTerminal(creep);
-    } else if (creep.room.terminal === undefined) {
-        containers.moveToStorage(creep);
     } else if (creep.room.storage.store[RESOURCE_ENERGY] < 75000) {
         containers.moveToStorage(creep);
     } else if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 || creep.room.storage.store[RESOURCE_ENERGY] > 900000) {
