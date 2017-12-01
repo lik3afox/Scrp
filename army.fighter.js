@@ -274,9 +274,10 @@ function powerAction(creep) {
 }
 
 function banditAction(creep) {
+            creep.memory.reportDeath = true;
+    
     if (Game.flags[creep.memory.party] !== undefined) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
-
             bads = creep.room.find(FIND_HOSTILE_CREEPS);
             bads = _.filter(bads, function(o) {
                 return o.owner.username === 'Screeps';

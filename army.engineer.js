@@ -123,7 +123,9 @@ class engineerClass extends roleParent {
 
 
             if (creep.carry.energy < (creep.stats('mining') + 1)) {
-                creep.memory.building = false;
+                if (!super.constr.pickUpEnergy(creep, (500 * creep.memory.roleID))) {
+                    creep.memory.building = false;
+                }
                 creep.say('harvesting');
                 /*
                                                if (!super.constr.pickUpEnergy(creep)) {
@@ -162,13 +164,13 @@ class engineerClass extends roleParent {
                 if (creep.room.controller !== undefined && creep.room.controller.level !== 1) {
                     //    if(creep.room.controller.level < 4)
                     //                    if (!super._containers.moveToStorage(creep)) {
-                                        if (!spawn.moveToTransfer(creep,300)){
-                    if (!super.constr.moveToBuild(creep)) {
-                        if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(creep.room.controller);
+                    if (!spawn.moveToTransfer(creep, 300)) {
+                        if (!super.constr.moveToBuild(creep)) {
+                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(creep.room.controller);
+                            }
                         }
                     }
-                                      }                        
                     //                  }
                     //  }
                     creep.say('!');
@@ -198,15 +200,26 @@ class engineerClass extends roleParent {
                 //if(!super._constr.pickUpEnergy(creep,100))
 
                 if (creep.room.name == 'E14S38' || creep.room.name == 'E22S27') {
-//                    if (!super.constr.moveToPickUpEnergy(creep))
-                        if (!super.sources.moveToWithdraw(creep)) {
-                            //                        super.constr.moveToPickUpEnergy(creep);
-                        }
+                    //                    if (!super.constr.moveToPickUpEnergy(creep))
+                    if (!super.sources.moveToWithdraw(creep)) {
+                        //                        super.constr.moveToPickUpEnergy(creep);
+                    }
                 } else {
-                    if (!super.constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID) + 500)) {
-                        if (!super._containers.withdrawFromStorage(creep)) {
-                            if (!super.sources.moveToWithdraw(creep)) {
+                    if (creep.room.storage !== undefined) {
+                        if (!super.containers.withdrawFromStorage(creep)) {
+                            if (!super.constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID))) {
+                                if (!super.sources.moveToWithdraw(creep)) {
 
+                                }
+                            }
+                        }
+
+                    } else {
+                        if (!super.constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID))) {
+                            if (!super.containers.withdrawFromStorage(creep)) {
+                                if (!super.sources.moveToWithdraw(creep)) {
+
+                                }
                             }
                         }
                     }

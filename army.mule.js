@@ -59,13 +59,19 @@ class muleClass extends roleParent {
                     });
                     if (stru.length !== 0) {
                         creep.memory.recycleID = stru[0].id;
+                    } else {
+                    	creep.memory.recycleID = 'none';
                     }
                 }
                 var targ = Game.flags[creep.memory.party].pos;
 
                 if (targ !== null) {
                     if (creep.pos.isEqualTo(targ)) {
-                        Game.getObjectById(creep.memory.recycleID).recycleCreep(creep);
+                    	if(creep.memory.recycleID === 'none') {
+                    		creep.suicide();
+                    	} else {
+	                        Game.getObjectById(creep.memory.recycleID).recycleCreep(creep);
+                    	}
                         return;
                     } else {
                         creep.moveTo(targ);
@@ -105,10 +111,6 @@ class muleClass extends roleParent {
                         movement.flagMovement(creep);
                     }
                 } else {
-                    if (creep.memory.level === 2) {
-
-
-                    } else {
                         if (creep.room.storage !== undefined && creep.room.controller.level > 3 && creep.room.name !== 'E14S38') {
                             var target = creep.room.storage;
                             if (creep.memory.party == 'E23S38') {
@@ -134,7 +136,7 @@ class muleClass extends roleParent {
                                 creep.moveMe(Game.flags[creep.memory.party], { reusePath: 20, ignoreCreeps: true });
                             }
                         }
-                    }
+                    
 
                 }
 
@@ -154,16 +156,6 @@ class muleClass extends roleParent {
                         stor = creep.room.terminal;
                     }
                 }
-
-                /*
-                        var keys = Object.keys(linksID);
-                        var z = linksID.length;
-
-                            while (z--) {
-                                var zz = keys[z];
-                                LINK = Game.getObjectById(linksID[zz]);
-                */
-
 
                 if (creep.pos.isNearTo(stor)) {
                     if (Game.shard.name == 'shard0') {
@@ -192,7 +184,7 @@ class muleClass extends roleParent {
             if (creep.room.name == creep.memory.home) {
                 creep.memory.goHome = false;
             } else {
-                let zz = Game.getObjectById(creep.memory.parent);
+                let zz = Game.getObjectById(creep.memory.parent).room.storage;
                 if (zz !== null) {
                     creep.moveMe(zz, { reusePath: 50, ignoreCreeps: true });
 

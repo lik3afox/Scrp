@@ -349,6 +349,10 @@ class SpawnInteract {
                 spawn.memory.created = 0;
                 console.log('----------------Create Spawn Created Count----------------');
             }
+            if (spawn.memory.wantRenew === undefined) {
+                spawn.memory.wantRenew = [];
+                console.log('----------------Create Spawn wantRenew----------------');
+            }
 
             // Analyzed is an array of rooms that this spawn has looked at. 
             if (spawn.memory.analyzed === undefined) {

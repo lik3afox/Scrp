@@ -85,6 +85,7 @@ function banditAction(creep) {
     if(creep.memory.goHome === undefined) 
         creep.memory.goHome = false;
     if(Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
+            creep.memory.reportDeath = true;
 
     if(creep.carryTotal == creep.carryCapacity){
     creep.memory.goHome = true;        
@@ -155,11 +156,10 @@ class thiefClass extends roleParent {
         if (super.spawnRecycle(creep)) {
             return;
         }
-        if (creep.memory.party == 'Flag1') {
             super.rebirth(creep);
+        if (creep.memory.party == 'Flag1') {
             creep.say('bandit');
             banditAction(creep);
-
             return;
         }
         if (super.isPowerParty(creep)) {

@@ -46,6 +46,7 @@
         return spawn;
     }
 
+
     function scanForRemoteSources() {
         if (Game.shard.name !== 'shard1') return false;
         if (Game.flags.remote === undefined) return false;
@@ -86,14 +87,13 @@
                                 sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
                                 miner: false,
                                 transport: false,
-                                timed: (parseInt(eee)*10000)+5000,
                                 expLevel: 4
                             };
                             if (parseInt(eee) === 0 && source[eee].room.controller !== undefined  ) {
                                 BUILD.controller = false;
                             }
                             remote.push(BUILD);
-                            console.log('Remote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
+                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
                         }
                     }
 
@@ -674,6 +674,8 @@
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
 
         if (Game.shard.name == 'shard1') {
+//RawMemory.setActiveForeignSegment('xsinx',5);
+//console.log(RawMemory.foreignSegment);
             if (Game.spawns.Spawn1 !== undefined) {
 
 
@@ -698,4 +700,5 @@
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
         }
+
     });

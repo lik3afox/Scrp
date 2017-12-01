@@ -92,6 +92,32 @@ function doTask(tasks) {
 
     }
 }
+   function changeRoom(roomName,direction,amount){
+    var east = parseInt(roomName[1]+roomName[2]);
+    var north = parseInt(roomName[4]+roomName[5]);
+        if(amount === undefined) amount = 3;
+
+        switch(direction) {
+            case "s":
+            case "south":
+            north -= amount;
+            break;
+            case "n":
+            case "north":
+            north += amount;
+            break;
+            case "w":
+            case "west":
+            west += amount;
+            break;
+            case "e":
+            case "east":
+            east += amount;
+            break;
+        }
+        let rtn = roomName[0]+east+roomName[3]+north;
+        return rtn;
+    }
 
 class buildObserver {
 
@@ -151,35 +177,27 @@ class buildObserver {
             if(screeps.length > 0){
                 let direction;
                 let troom = Game.rooms[target];
-
+var dir;
 if(screeps[0].ticksToLive > 1300) {
     let roomName = screeps[0].pos.roomName;
     if(roomName[2] === 1 ||roomName[2] === 1 ){
-        roomName[2] += 5;
+        dir = 'e';
     } else if(roomName[2] === 9 ||roomName[2] === 8){
-        roomName[2] -= 5;
+        dir = 'w';
     } else if(roomName[5] === 1 ||roomName[5] === 2){
-        roomName[5] += 5;
+        dir = 'n';
 
     } else if(roomName[5] === 9 ||roomName[5] === 8){
-        roomName[5] -= 5;
+        dir = 's';
     } 
-    targetRoom = roomName;
+    targetRoom = changeRoom(roomName,dir,5);
 }
+
 
                 console.log('FOUND CARAVAN: ',screeps.length,roomLink(target),'Estimated Interecpt room',targetRoom);
-if(Game.flags.caravan === undefined) {
- //Game.rooms.sim.createFlag(5, 12, 'Flag1');   
-     var request = { order: "observerFlag", options: { room: targetRoom, timed: 3 } }; 
-//      Memory.observerTask.push(request);
-//      console.log('ADDED TASK');
+if(Game.flags.bandit === undefined) {
+ //Game.rooms[target].createFlag(25, 25, 'bandit',COLOR_GREEN,COLOR_GREEN);
 }
-                for (var o in observers) {
-                    let stru = getCached(observers[o]);
-                    if(stru !== null)
-                        stru.observeRoom(target);
-                }
-
 
             }
 

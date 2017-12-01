@@ -276,6 +276,10 @@ function getSpawnCreating(flag) {
         if (flag.memory.spawn)
             return returnClosestRoom(flag.pos.roomName);
     }
+    if (flag.name.substr(0, 6) == 'bandit') {
+        if (flag.memory.spawn)
+            return returnClosestRoom(flag.pos.roomName);
+    }
 
     // Rampart Defense, gotta create it where the flag appears.
     if (flag.name.substr(0, 5) == 'rampa') {

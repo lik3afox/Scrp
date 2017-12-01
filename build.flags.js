@@ -155,6 +155,7 @@
         upbuilder: undefined,
         first: undefined,
         scientist: undefined,
+        linker: undefined,
         wallwork: undefined,
         spawn: undefined,
         sort: undefined,
@@ -270,24 +271,42 @@
             case 'linker':
 
                 if (flag.room.storage === undefined) break;
+                if (flag.room.memory.masterLinkID === undefined && flag.room.controller.level > 4) {
+                    zzz = flag.room.find(FIND_MY_STRUCTURES);
+                    zzz = _.filter(zzz, function(structure) {
+                        return (structure.structureType == STRUCTURE_LINK && structure.pos.inRangeTo(flag.room.storage, 2));
+                    });
+
+                    if (zzz.length > 0) {
+                        console.log(flag, 'FOUND masterLink', zzz[e].structureType);
+                        flag.room.memory.masterLinkID = zzz[e].id;
+                    }
+                }
 
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
+                    switch (flag.memory.module[ez][_level]) {
+                        case 0:
+                            if (roomEnergy >= 700) {
+                                flag.memory.module[ez][_level] = 2;
+                                let source = flag.room.find(FIND_SOURCES);
+                                flag.memory.module[ez][_number] = source.length;
+                            }
+                            break;
+                        case 2:
+                            if (roomEnergy >= 750) {
+                                flag.memory.module[ez][_level] = 3;
+                            }
+                            break;
+                        case 3:
+                            if (roomEnergy >= 1200) {
+                                flag.memory.module[ez][_level] = 4;
+                            }
+                            break;
 
-                }
-
-                if (flag.room.controller.level < 5) break;
-
-                zzz = flag.room.find(FIND_MY_STRUCTURES);
-                zzz = _.filter(zzz, function(structure) {
-                    return (structure.structureType == STRUCTURE_LINK && structure.pos.inRangeTo(flag.room.storage, 2));
-                });
-
-                if (zzz.length > 0) {
-                    console.log(flag, 'FOUND masterLink', zzz[e].structureType);
-                    flag.room.memory.masterLinkID = zzz[e].id;
+                    }
                 }
 
 
@@ -295,21 +314,21 @@
 
             case "sort":
                 flag.memory.module.sort();
-            break;
+                break;
 
             case "wait":
-                flag.memory.checkWhat = -10;
+                flag.memory.checkWhat = -40;
                 break;
             case 'power':
-                if (flag.room.controller.level === 8 && flag.room.memory.powerspawnID === undefined){
+                if (flag.room.controller.level === 8 && flag.room.memory.powerspawnID === undefined) {
                     let zz = flag.room.powerspawn;
-                 //   console.log(roomLink(flag.pos.roomName), 'FINDING SPAWN' );
+                    //   console.log(roomLink(flag.pos.roomName), 'FINDING SPAWN' );
                 }
                 break;
             case 'nuke':
-                if (flag.room.controller.level === 8 && flag.room.memory.nukeID === undefined){
+                if (flag.room.controller.level === 8 && flag.room.memory.nukeID === undefined) {
                     let zz = flag.room.nuke;
-                  //  console.log(roomLink(flag.pos.roomName), 'Finding Nuke');
+                    //  console.log(roomLink(flag.pos.roomName), 'Finding Nuke');
                 }
                 break;
             case 'spawn':
@@ -377,12 +396,12 @@
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
                     roomEnergy = flag.room.energyCapacityAvailable;
-                    // flag.memory.module[ez][_number] = 2; Number gets reduced by scientist coming.
 
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
                             if (roomEnergy >= 550) {
                                 flag.memory.module[ez][_level] = 1;
+                                flag.memory.module[ez][_number] = 2; // Number gets reduced by scientist coming.
                             }
                             break;
                         case 1:
@@ -479,8 +498,8 @@
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
                             if (flag.room.controller.level >= 6 && (flag.room.memory.mineralID === undefined || flag.room.memory.extractID === undefined || flag.room.memory.mineralContainID === undefined)) {
-//                                console.log(flag, 'FINDING mineral');
-//                                // mineralContainID, mineralID, extractID
+                                //                                console.log(flag, 'FINDING mineral');
+                                //                                // mineralContainID, mineralID, extractID
 
                                 if (flag.room.memory.mineralID === undefined) {
                                     let vr = flag.room.find(FIND_MINERALS);
@@ -525,7 +544,7 @@
 
 
                     if (flag.memory.module[ez][_level] < 3) {
-//                        console.log(flag.memory.module[ez][_name], 'Lvl:', flag.memory.module[ez][_level], 'Num', flag.memory.module[ez][_number]);
+                        //                        console.log(flag.memory.module[ez][_name], 'Lvl:', flag.memory.module[ez][_level], 'Num', flag.memory.module[ez][_number]);
 
                         switch (flag.memory.module[ez][_level]) {
                             case 0:
@@ -627,9 +646,9 @@
 
                     var zze = Object.keys(roomer)[flag.memory.checkWhat];
 
-                    flag.room.visual.text('Module:' + flag.memory.alphaSpawn + ' Status:' + flag.memory.checkWhat + zze, flag.pos.x + 1.5, flag.pos.y - 1, font);
-                    var x = flag.pos.x + 1.5;
-                    var y = flag.pos.y;
+                    var x = 5; //flag.pos.x + 1.5;
+                    var y = 5; //flag.pos.y;
+                    flag.room.visual.text('Module:' + flag.memory.alphaSpawn + ' Status:' + flag.memory.checkWhat + zze, x, y - 1, font);
                     for (e in flag.memory.module) {
 
                         if (flag.memory.module[e][_number] !== 0) {
@@ -640,7 +659,7 @@
                                 outThere = 0;
                             }
 
-                            flag.room.visual.text('(' + outThere + '/' + flag.memory.module[e][_number]+')'+ '[Lv:' + flag.memory.module[e][_level] + ']' + ':' + flag.memory.module[e][_name] , x, y, font);
+                            flag.room.visual.text('(' + outThere + '/' + flag.memory.module[e][_number] + ')' + '[Lv:' + flag.memory.module[e][_level] + ']' + ':' + flag.memory.module[e][_name], x, y, font);
                             y++;
                         }
                     }
@@ -809,6 +828,19 @@
                                 flag.memory.musterType = 'hmule';
                             } else {
                                 flag.memory.musterType = 'upgrademule';
+                            }
+                        }
+                        if (flag.name == 'bandit') {
+                            if (flag.room !== undefined) {
+                                // So here we check if we remove the flag
+                                // We first give it an 1500 timer.
+                                if (flag.memory.timer === undefined) {
+                                    flag.memory.timer = 1200;
+                                }
+                                flag.memory.timer--;
+                                if (flag.memory.timer < 0) {
+                                    flag.remove();
+                                }
                             }
                         }
 
