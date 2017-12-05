@@ -48,7 +48,7 @@
 
 
     function scanForRemoteSources() {
-        if (Game.shard.name !== 'shard1') return false;
+//        if (Game.shard.name !== 'shard1') return false;
         if (Game.flags.remote === undefined) return false;
 
         var flag = Game.flags.remote;
@@ -251,7 +251,8 @@
             let control = spawn.room.controller;
             if (control.level < 7) return;
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
-            if ((control.level >= 7 && control.progress > 10000000) || control.level === 8) {
+
+            if (control.progress > 9000000) {
                 if (Game.flags.recontrol === undefined) {
                     var targets = spawn.room.find(FIND_MY_CREEPS);
                     targets = _.filter(targets, function(object) {
@@ -264,6 +265,8 @@
                     }
                     spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
                     if (total > 6000) {
+                        spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
+                    } else if(control.level === 8 || control.progress > 10900000){
                         spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
                     }
                 }
@@ -306,7 +309,9 @@
     //    var ALLIES = foxy.friends;
 
     function doRoomReport(room) {
-        if (room.name == 'E14S38' || room.controller.level >= 6) return;
+
+        if (room.name == 'E14S38' || room.controller.level <= 6) return;
+
         bads = room.find(FIND_HOSTILE_CREEPS);
         bads = _.filter(bads, function(creep) {
             return (!_.contains(fox.friends, creep.owner.username));
@@ -335,17 +340,22 @@
             }
             var spwns = room.find(FIND_STRUCTURES);
             spwns = _.filter(spwns, function(o) {
-                return o.structureType == STRUCTURE_SPAWN;
+                return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
             });
+        if(room.name == 'E38S72'){
+            console.log('wtfzz',goods.length,room.energyAvailable,spwns.length,spwns[0]);
+        }
             if (spwns.length > 0) {
-                if (!spwns[0].spawning && room.energyAvailable === 300) {
-                    spwns[0].spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir', {
+
+                if ( room.energyAvailable >= 300) {
+                   var zz = spwns[0].spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir',{memory:{
                         role: 'first',
                         roleID: 0,
                         home: spwns[0].pos.roomName,
                         parent: "none",
                         level: 3
-                    });
+                    }});
+                   console.log(zz);
                 }
             }
 
@@ -560,6 +570,7 @@
 
                 //                  if (Memory.war) {
                 if (Game.spawns[title].memory.alphaSpawn) {
+
                     doRoomReport(Game.spawns[title].room);
                 }
                 //                    }
@@ -649,12 +660,12 @@
         Memory.stats.rooms = spawnReport;
         memoryStatsUpdate();
         link.run();
+        observer.run();
 
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
             if (Game.cpu.bucket > 250) {
                 power.run();
-                observer.run();
 
                 if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
                 Memory.labsRunCounter--;
@@ -692,9 +703,15 @@
             }
         } else {
             if (Game.spawns.E38S81) {
+
+                report = "";
+                for (var ab in Memory.shardNeed) {
+                    report += " " + Memory.shardNeed[ab];
+                }
+
                 //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
                 let dif;
-                console.log('*****PP:' + 0 + '*****************TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('*****PP:' + 0 + '****'+report+'******TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;

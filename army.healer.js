@@ -109,15 +109,15 @@ function banditAction(creep) {
 
             good = creep.room.find(FIND_MY_CREEPS);
             good = _.filter(good, function(o) {
-                return o.id !== creep.id && creep.getActiveBodyParts(ATTACK) > 0;
+                return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0 ;
             });            
             good.sort((a, b) => a.hits - b.hits);
+                creep.say(good.length+'xxx');
             if (good.length > 0) {
                 if (!creep.pos.isNearTo(good[0])) {
                     creep.moveTo(good[0]);
                 }
                 creep.heal(good[0]);
-                creep.say(good.length+'xxx');
                 return true;
             }
 
@@ -185,7 +185,7 @@ class healerClass extends roleParent {
             if (powerAction(creep))
                 return;
         }
-        if (creep.memory.party == 'Flag1') {
+        if (creep.memory.party == 'bandit') {
             super.rebirth(creep);
             creep.say('bandit');
             banditAction(creep);

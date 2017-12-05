@@ -78,8 +78,8 @@ var lowFFH = [
     ['healer', require('army.healer'), 1, 4] // Healer    
 ];
 var banditParty = [
-    ['fighter', require('army.fighter'), 2, 10],
-    ['healer', require('army.healer'), 2, 4], // Healer    
+ //   ['fighter', require('army.fighter'), 2, 10],
+//    ['healer', require('army.healer'), 2, 4], // Healer    
     ['thief', require('army.thief'), 2, 3],
 ];
 
@@ -276,10 +276,6 @@ function getSpawnCreating(flag) {
         if (flag.memory.spawn)
             return returnClosestRoom(flag.pos.roomName);
     }
-    if (flag.name.substr(0, 6) == 'bandit') {
-        if (flag.memory.spawn)
-            return returnClosestRoom(flag.pos.roomName);
-    }
 
     // Rampart Defense, gotta create it where the flag appears.
     if (flag.name.substr(0, 5) == 'rampa') {
@@ -293,6 +289,9 @@ function getSpawnCreating(flag) {
     }
 
     switch (flag.name) {
+        case 'bandit':
+            return returnClosestRoom(flag.pos.roomName);
+
         case 'recontrol':
             return 'E14S37';
         case 'engineer2':
@@ -502,6 +501,8 @@ function getCurrentParty(flag) {
         switch (flag.name) {
             case 'Flag61':
                 return warparty3;
+            case 'bandit':
+                return banditParty;
 
             case 'oneFight':
                 return soloFighter;
@@ -603,7 +604,7 @@ function returnClosestRoom(roomName) {
     //      default:
     for (var e in Game.spawns) {
         if (Game.spawns[e].memory.alphaSpawn) {
-            if(Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37') {
+            if(Game.spawns[e].room.name !== 'E22S48' && Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37') {
                 var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
                 if (tempDis < distance ) {
                     distance = tempDis;

@@ -32,8 +32,8 @@ var classLevels = [
         MOVE, MOVE, MOVE, MOVE, MOVE,
         ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
         MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, MOVE,
         ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-        MOVE, MOVE, MOVE, MOVE, MOVE
     ],
     // Boosted fighter is level 11
     [TOUGH, TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, TOUGH, ATTACK, TOUGH, ATTACK, ATTACK,
@@ -280,9 +280,8 @@ function banditAction(creep) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
             bads = creep.room.find(FIND_HOSTILE_CREEPS);
             bads = _.filter(bads, function(o) {
-                return o.owner.username === 'Screeps';
+                return o.owner.username === 'Screeps' && o.getActiveBodyparts(ATTACK) === 0  && o.getActiveBodyparts(RANGED_ATTACK) === 0 ;
             });
-
             if (bads.length > 0) {
                 bads.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
                 if (creep.pos.isNearTo(bads[0])) {
@@ -293,6 +292,22 @@ function banditAction(creep) {
                 }
                 return true;
             }
+
+            bads = creep.room.find(FIND_HOSTILE_CREEPS);
+            bads = _.filter(bads, function(o) {
+                return o.owner.username === 'Screeps' ;
+            });
+            if (bads.length > 0) {
+                bads.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
+                if (creep.pos.isNearTo(bads[0])) {
+                    creep.attack(bads[0]);
+                    creep.moveTo(bads[0]);
+                } else {
+                    creep.moveTo(bads[0]);
+                }
+                return true;
+            }
+
 
         }
         movement.flagMovement(creep);
@@ -337,7 +352,7 @@ class fighterClass extends roleParent {
             if (powerAction(creep))
                 return;
         }
-        if (creep.memory.party == 'Flag1') {
+        if (creep.memory.party == 'bandit') {
             super.rebirth(creep);
             creep.say('bandit');
             banditAction(creep);

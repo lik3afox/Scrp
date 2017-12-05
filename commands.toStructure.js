@@ -380,7 +380,7 @@ class StructureInteract {
             }
         }
         // If none there, then create 1 road per creep.
-        if (!creep.memory.onRoad && creep.memory.cachePath !== undefined && creep.memory.home == 'E23S42') {
+        if (!creep.memory.onRoad && creep.memory.cachePath !== undefined && creep.memory.home == 'E22S48') {
             if (creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {}
         }
         creep.memory.onRoad = false;

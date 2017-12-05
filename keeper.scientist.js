@@ -95,6 +95,15 @@ class mineralRole extends roleParent {
                     }
                 }
                 creep.say('Looking for Ztransport');
+                if(creep.room.name == 'E14S38'){
+                    if(!creep.pos.isNearTo(creep.room.terminal)) {
+                        creep.moveTo(creep.room.terminal);
+                    }else {
+                        for(var aa in creep.carry){
+                            creep.transfer(creep.room.terminal,aa);
+                        }
+                    }
+                }
                 creep.memory.goHome = false;
                 creep.memory.mining = true;
                 if (creep.memory.ztransportID === undefined) {

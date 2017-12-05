@@ -29,6 +29,11 @@ class roleWallWorker extends roleParent {
             require('role.upbuilder').run(creep);
             return;
         }
+        if(creep.room.name == 'E22S48'){
+            if( super.boosted(creep,['XLH2O']) )
+                return;
+
+        }
         if(Game.shard.name == 'shard1'&& creep.ticksToLive > 1300 &&creep.room.controller !== undefined &&  creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 100000 ){
             require('role.upbuilder').run(creep);
             return;

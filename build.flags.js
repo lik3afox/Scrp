@@ -159,7 +159,8 @@
         wallwork: undefined,
         spawn: undefined,
         sort: undefined,
-        upgrade: undefined,
+        upgrader: undefined,
+        tower: undefined,
         //           
         /*            linker   : undefined,
          */
@@ -223,14 +224,34 @@
         var roomEnergy = flag.room.energyCapacityAvailable;
         //    console.log( roomer[ee],ee,flag.memory.checkWhat,'ADJUST CHECKING',flag.room.name);
         switch (ee) {
+            case "tower":
+                flag.room.memory.towers = [];
+
+                towers = flag.room.find(FIND_MY_STRUCTURES);
+                towers = _.filter(towers, function(o) {
+                    return o.structureType == STRUCTURE_TOWER;
+                });
+                for (var i in towers) {
+                    flag.room.memory.towers.push(towers[i].id);
+                }
+                break;
             case "upgrader":
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1 && flag.room.controller.level !== 8) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
-                    if (flag.room.controller.level === 8) {
-                        flag.memory.module.splice(ez, 1);
+                    /*
+                    switch (flag.memory.module[ez][_level]) {
+                        case 0:
+                            // 
+                            break;
+                        case 3:
+                            if (roomEnergy >= 2300) {
+                                flag.memory.module[ez][_level] = 5;
+                            }
+                            break;
                     }
+*/
                 }
                 break;
             case 'upbuilder':
@@ -258,12 +279,13 @@
 
                 zzz = flag.room.find(FIND_MY_STRUCTURES);
                 zzz = _.filter(zzz, function(structure) {
-                    return (structure.structureType == STRUCTURE_LAB && structure.pos.inRangeTo(flag.room.storage, 2) && structure.pos.inRangeTo(flag.room.terminal, 2));
+                    return (structure.structureType == STRUCTURE_LAB);
                 });
-
-                if (zzz.length > 0) {
-                    console.log(flag, 'FOUND MasterLab', zzz[e].structureType);
-                    flag.room.memory.boostLabID = zzz[e].id;
+                if(flag.room.memory.boostLabID === undefined ) {
+                    if (zzz.length > 0) {
+                        console.log(flag, 'FOUND MasterLab', zzz[e].structureType);
+                        flag.room.memory.boostLabID = zzz[e].id;
+                    }
                 }
 
                 break;
@@ -509,7 +531,8 @@
                                     let vr = flag.room.find(FIND_STRUCTURES, {
                                         filter: s => s.structureType == STRUCTURE_EXTRACTOR
                                     });
-                                    flag.room.memory.extractID = vr[0].id;
+                                    if(vr.length > 0)
+                                        flag.room.memory.extractID = vr[0].id;
                                 }
 
                                 if (flag.room.memory.mineralContainID === undefined && flag.room.memory.extractID !== undefined) {
@@ -831,16 +854,33 @@
                             }
                         }
                         if (flag.name == 'bandit') {
+/*                            if (flag.memory.timer === undefined) {
+                                flag.memory.timer = 1200;
+                            }
+                            flag.memory.timer--;
+                            if (flag.memory.timer < 0) {
+//                                flag.remove();
+                            } */
+                        console.log("Bandit set @ room:",roomLink(flag.pos.roomName));
                             if (flag.room !== undefined) {
                                 // So here we check if we remove the flag
                                 // We first give it an 1500 timer.
-                                if (flag.memory.timer === undefined) {
-                                    flag.memory.timer = 1200;
-                                }
-                                flag.memory.timer--;
-                                if (flag.memory.timer < 0) {
+                                var strucd = flag.room.find(FIND_STRUCTURES);
+                                var testz2 = _.filter(strucd, function(o) {
+                                    return o.structureType === STRUCTURE_CONTAINER;
+                                });
+                                if(testz2.length > 0 && flag.color === COLOR_GREEN){
+                                  //  flag.setColor(COLOR_WHITE,COLOR_WHITE);
+                                } 
+                                // Now we check to see if the containers are empty and
+                                var testz3 = _.filter(strucd, function(o) {
+                                    return o.structureType === STRUCTURE_CONTAINER && o.total === 0;
+                                });
+                                console.log('Bandit room available, containers found:',testz2.length,"emp:",testz3.length, flag.memory.timer);
+                                if(testz2.length !== 0 && testz2.length == testz3.length){
                                     flag.remove();
                                 }
+
                             }
                         }
 

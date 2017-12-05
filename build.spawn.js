@@ -452,7 +452,6 @@ class theSpawn {
         } */
 
         currentModule = Game.flags[spawn.room.name].memory.module;
-
         for (type in currentModule) {
 
             let min = Game.getObjectById(spawn.room.memory.mineralID);
@@ -475,8 +474,9 @@ class theSpawn {
                         goal: []
                     };
                 }
-                if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
 
+                if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
+if(spawn.memory.create === undefined) spawn.memory.create =[];
                     var theBuild = getModuleRole(currentModule[type][_name]).levels(currentModule[type][_level]);
                     let temp = {
                         build: theBuild,

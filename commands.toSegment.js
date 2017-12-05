@@ -25,7 +25,7 @@ var roomSegment = {
     E25S47: 21,
     E17S34: 23,
     E13S34: 22,
-
+    E22S48: 25,
 };
 var segmentChange = 10;
 var interShardData;
@@ -156,21 +156,16 @@ class segmentCommand {
         // Public Shard communication.
         switch (Game.shard.name) {
             case 'shard0':
+                Memory.shardNeed = _.uniq(Memory.shardNeed);
+                while (Memory.shardNeed.length > 10) {
+                    Memory.shardNeed.shift();
+                }
+                RawMemory.setActiveSegments(Memory.shardNeed);
                 break;
 
             case 'shard1':
                 setInterShardData();
-                // Doing segment Tests
-                // Writing Segment
-                //                console.log('first Setting');
-                //                RawMemory.segments[0] = '{"foo": "bar", "counter": 15}';
-
-                //                console.log(RawMemory.segments[0], Game.time);
-
                 Memory.shardNeed = _.uniq(Memory.shardNeed);
-                /*                console.log('ACTIVE SHARDS', Memory.shardNeed.length); */
-  //              if (Memory.shardNeed.length > 10) {
-//                }
                 while (Memory.shardNeed.length > 10) {
                     Memory.shardNeed.shift();
                 }

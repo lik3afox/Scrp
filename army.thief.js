@@ -157,7 +157,7 @@ class thiefClass extends roleParent {
             return;
         }
             super.rebirth(creep);
-        if (creep.memory.party == 'Flag1') {
+        if (creep.memory.party == 'bandit') {
             creep.say('bandit');
             banditAction(creep);
             return;

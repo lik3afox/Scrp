@@ -385,7 +385,8 @@ function doDefault(creep) {
         }
     } else {
         if (!toStorageOrTerminal(creep)) {
-            if (Game.flags[creep.memory.home] !== undefined) {
+            if (Game.flags[creep.memory.home] !== undefined && creep.room.storage === undefined) {
+                creep.say('*');
                 if (creep.pos.isEqualTo(Game.flags[creep.memory.home])) {
                     creep.drop(RESOURCE_ENERGY);
                 } else {

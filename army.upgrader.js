@@ -112,7 +112,7 @@ class upgraderzClass extends roleParent {
                     case 2: // Boost Spot - highest life
                         zz = new RoomPosition(33, 10, creep.room.name);
                         creep.say('boost');
-                        if (creep.room.controller.level > 5) {
+                        if (creep.room.controller.level > 5 && creep.room.controller.level !== 8) {
                             if (creep.carryTotal !== creep.carry[RESOURCE_ENERGY]) {
                                 for (var aa in creep.carry)
                                     creep.transfer(creep.room.terminal, aa);
@@ -146,7 +146,7 @@ class upgraderzClass extends roleParent {
 
 
                         if (creep.memory.waitTimer === undefined) {
-                            creep.memory.waitTimer = 40;
+                            creep.memory.waitTimer = 25;
                         }
                         creep.memory.waitTimer--;
                         switch (creep.memory.waitSpot) {
@@ -260,21 +260,27 @@ class upgraderzClass extends roleParent {
                                 var ggg;
                                 let count = 0;
                                 let aaa = _.filter(eee, function(object) {
-                                    return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot === 0 && ( object.memory.boosted === undefined || !object.memory.boosted)  );                                
+                                    return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot !== 2 && ( object.memory.boosted === undefined || !object.memory.boosted)  );                                
                                 }).sort((a, b) => a.ticksToLive - b.ticksToLive);
+if(aaa.length > 0) {
+    aaa[0].memory.upgradeSpot = 1;
+    aaa.shift();
+}
 
                                 for (ggg in aaa) {
                                     aaa[ggg].memory.waitSpot = count;
+                                    aaa[ggg].memory.upgradeSpot = 0;
   //                                  console.log('xxx',aaa[ggg].name,aaa[ggg].memory.waitSpot,aaa[ggg].ticksToLive, aaa[ggg].memory.boosted );
                                     count++;
                                 }
 
                                 let uuu = _.filter(eee, function(object) {
-                                    return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot === 0 && object.memory.boosted !== undefined && object.memory.boosted);
+                                    return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot !== 2 && object.memory.boosted !== undefined && object.memory.boosted);
                                 }).sort((a, b) => a.ticksToLive - b.ticksToLive);
 
                                 for(ggg in uuu){
                                     uuu[ggg].memory.waitSpot = count;
+                                    uuu[ggg].memory.upgradeSpot = 0;
 //                                    console.log('yyy',uuu[ggg].name,uuu[ggg].memory.waitSpot,uuu[ggg].ticksToLive, uuu[ggg].memory.boosted );
                                     count++;
                                 }
