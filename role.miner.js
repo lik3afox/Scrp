@@ -37,6 +37,10 @@ function getBads(creep) {
 
 function restingSpot(creep) {
     switch (creep.memory.goal) {
+
+        case '5836b8308b8b9619519f19f1':
+            return new RoomPosition(40, 40, creep.room.name);
+
         case '5982ff6bb097071b4adc2990':
             return new RoomPosition(9, 43, creep.room.name);
         case '5982ff20b097071b4adc2212':
@@ -126,6 +130,18 @@ class settler extends roleParent {
                         return;
                     }
                 } */
+                if(creep.room.name == 'E21S49'){
+                    let zz= Game.getObjectById('599b449d1fbcb148de2f75ab');
+                    if(zz !== null){
+                        if(creep.pos.isNearTo(zz)){
+                            creep.dismantle(zz);
+                        } else {
+                            creep.moveTo(zz);
+                        }
+                        return;
+                    }
+
+                }
 
         super.movement.checkForBadsPlaceFlag(creep);
 

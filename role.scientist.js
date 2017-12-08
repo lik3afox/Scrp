@@ -181,17 +181,13 @@ class scientistRole extends roleParent {
                         }
 
                         if (!otherThings) {
-
-
-                            if (!creep.pos.isNearTo(creep.room.terminal)) {
-                                creep.moveMe(creep.room.terminal);
-
-                            } else {
+      //                      if (!creep.pos.isNearTo(creep.room.terminal)) {
+    //                            creep.moveMe(creep.room.terminal);
+  //                          } else {
                                 creep.say('raiders', true);
-                                creep.memory.distance++;
                                 creep.room.memory.labsNeedWork = false;
                                 // Here we remove the flag if it's in this room.
-                            }
+//                            }
                         }
 
                     }

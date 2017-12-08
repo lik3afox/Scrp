@@ -22,7 +22,7 @@ class PowerInteract {
                     let room = Game.rooms[e];
                     if (room.memory.powerCount === undefined) room.memory.powerCount = 0;
 
-                    if (!Memory.war) {
+/*                    if (!Memory.war) {
                         if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
                             room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
                         ) {
@@ -37,7 +37,7 @@ class PowerInteract {
                                 });
                             }
                         }
-                    } else {
+                    } else { */
                         if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
                             room.terminal.total > 299000 && room.storage.store[RESOURCE_ENERGY] > 999000
                         ) {
@@ -54,7 +54,7 @@ class PowerInteract {
                             }
                         }
 
-                    }
+                //    }
 
 
                 } else {

@@ -250,6 +250,7 @@
 
             let control = spawn.room.controller;
             if (control.level < 7) return;
+            
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
 
             if (control.progress > 9000000) {
@@ -264,14 +265,14 @@
                         total += targets[ze].ticksToLive;
                     }
                     spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
-                    if (total > 6000) {
+                    if (total > 5000) {
                         spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                    } else if(control.level === 8 || control.progress > 10900000){
-                        spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                    }
+                    } 
                 }
 
-            }
+            }else if(control.level === 8 || control.progress > 10900000){
+                        spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
+                    }
         }
     }
 
@@ -565,8 +566,8 @@
                     if (Game.spawns[title].memory.newSpawn === undefined) {
                         spawnsDo.checkNewSpawn(Game.spawns[title]);
                     }
-                    spawnsDo.checkBuild(Game.spawns[title]);
                 }
+                    spawnsDo.checkBuild(Game.spawns[title]);
 
                 //                  if (Memory.war) {
                 if (Game.spawns[title].memory.alphaSpawn) {
@@ -664,8 +665,11 @@
 
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
+
             if (Game.cpu.bucket > 250) {
-                power.run();
+  //              if(Game.rooms.E14S38.controller.level < 6) {
+                    power.run();
+//                }
 
                 if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
                 Memory.labsRunCounter--;
@@ -716,6 +720,19 @@
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
+        }
+
+        if(Game.rooms.E18XXS46 !== undefined) {
+        var ava = Game.rooms.E18S46.find(FIND_STRUCTURES);
+        var ae;
+        for(ae in ava){
+            ava[ae].destroy();
+        }
+         ava = Game.rooms.E18S46.find(FIND_CONSTRUCTION_SITES);
+        for(ae in ava){
+            ava[ae].remove();
+        }
+
         }
 
     });

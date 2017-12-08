@@ -604,7 +604,7 @@ function returnClosestRoom(roomName) {
     //      default:
     for (var e in Game.spawns) {
         if (Game.spawns[e].memory.alphaSpawn) {
-            if(Game.spawns[e].room.name !== 'E22S48' && Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37') {
+            if(Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37' && Game.spawns[e].room.controller.level === 8 ) {
                 var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
                 if (tempDis < distance ) {
                     distance = tempDis;

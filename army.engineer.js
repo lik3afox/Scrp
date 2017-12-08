@@ -207,7 +207,7 @@ class engineerClass extends roleParent {
                 } else {
                     if (creep.room.storage !== undefined) {
                         if (!super.containers.withdrawFromStorage(creep)) {
-                            if (!super.constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID))) {
+                            if (!super.constr.moveToPickUpEnergy(creep, (500 * creep.memory.roleID)+100)) {
                                 if (!super.sources.moveToWithdraw(creep)) {
 
                                 }

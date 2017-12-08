@@ -17,7 +17,7 @@ let basic = [
     'KH', 'KH2O', 'XKH2O',
     'KO', 'KHO2', 'XKHO2',
 ];
-var s1LabRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37','E22S48',
+var s1LabRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37', 'E22S48',
     'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27', 'E27S45', 'E29S48'
 ];
 var s0LabRooms = ['E38S81', 'E38S72'];
@@ -1223,11 +1223,19 @@ class roleTerminal {
         cleanUpOrders();
         adjustOldPrices();
         if (Game.shard.name == 'shard0') {
+                    if(Game.rooms.E38S81.terminal.store[RESOURCE_ENERGY]< 20000){
+                    	Game.rooms.E38S72.terminal.send('energy', 10000, 'E38S81', 'trade');
+                    }
+
             for (var a in s0LabRooms) {
                 //                console.log(Game.rooms[s0LabRooms[a]], s0LabRooms[a]);
                 if (Game.rooms[s0LabRooms[a]] !== undefined) {
+                    s1LabRooms = s0LabRooms;
+
                     let terminal = Game.rooms[s0LabRooms[a]].terminal;
-                    buyMineralsFromBUYORDER(terminal);
+                    if (!shareEnergy(terminal)) { // Moves energy around
+                        buyMineralsFromBUYORDER(terminal);
+                    }
                 }
             }
             return;

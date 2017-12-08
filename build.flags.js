@@ -292,19 +292,6 @@
 
             case 'linker':
 
-                if (flag.room.storage === undefined) break;
-                if (flag.room.memory.masterLinkID === undefined && flag.room.controller.level > 4) {
-                    zzz = flag.room.find(FIND_MY_STRUCTURES);
-                    zzz = _.filter(zzz, function(structure) {
-                        return (structure.structureType == STRUCTURE_LINK && structure.pos.inRangeTo(flag.room.storage, 2));
-                    });
-
-                    if (zzz.length > 0) {
-                        console.log(flag, 'FOUND masterLink', zzz[e].structureType);
-                        flag.room.memory.masterLinkID = zzz[e].id;
-                    }
-                }
-
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
@@ -328,6 +315,18 @@
                             }
                             break;
 
+                    }
+                }
+                if (flag.room.storage === undefined) break;
+                if (flag.room.memory.masterLinkID === undefined && flag.room.controller.level > 4) {
+                    zzz = flag.room.find(FIND_MY_STRUCTURES);
+                    zzz = _.filter(zzz, function(structure) {
+                        return (structure.structureType == STRUCTURE_LINK && structure.pos.inRangeTo(flag.room.storage, 2));
+                    });
+
+                    if (zzz.length > 0) {
+                        console.log(flag, 'FOUND masterLink', zzz[e].structureType);
+                        flag.room.memory.masterLinkID = zzz[e].id;
                     }
                 }
 
@@ -360,8 +359,8 @@
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == STRUCTURE_SPAWN ||
                         structure.structureType == STRUCTURE_TOWER ||
-                        structure.structureType == STRUCTURE_LAB ||
-                        structure.structureType == STRUCTURE_POWER_SPAWN
+                        structure.structureType == STRUCTURE_LAB
+                        
                     );
                 });
 
