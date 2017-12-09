@@ -33,7 +33,8 @@ class hackerClass extends roleParent {
             if (creep.room.controller !== undefined) {
                 let what;
                 if (creep.getActiveBodyparts(CLAIM) >= 5) {
-                    what = creep.attackController(creep.room.controller);
+//                    what = creep.attackController(creep.room.controller);
+                    what = creep.claimController(creep.room.controller);
                     creep.say(what + 'a');
                 } else {
                     what = creep.claimController(creep.room.controller);

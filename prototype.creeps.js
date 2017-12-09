@@ -743,7 +743,10 @@ xxxx yyyyyy yyyy yyyyyy x
             }
         } */
 
-        if (this.fatigue > 0) return;
+        if (this.fatigue > 0) {
+            if(this.memory._move !== undefined)
+                this.memory._move.time = this.memory._move.time + 1;    
+            return;}
 
         if (xxx !== undefined) {
             target = new RoomPosition(target, options, this.room.name);

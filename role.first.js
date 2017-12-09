@@ -153,7 +153,8 @@ class roleFirst extends roleParent {
         super.rebirth(creep);
         super.baseRun(creep);
 
-        if (creep.room.energyAvailable == creep.room.energyCapacityAvailable && Game.shard.name == 'shard0') {
+        if ((creep.room.energyAvailable == creep.room.energyCapacityAvailable && Game.shard.name == 'shard0')||
+            (creep.room.energyAvailable == creep.room.energyCapacityAvailable && creep.room.name == 'E18S46')) {
             require('role.linker').run(creep);
             return;
         }

@@ -70,7 +70,7 @@ function newLinkTransfer() {
                     linksID.splice(zz, 1);
                 }
 
-                if(linksID[zz] == LINK.room.memory.masterLinkID) {
+                if(LINK.room !== null && linksID[zz] == LINK.room.memory.masterLinkID) {
                     linksID.splice(zz, 1);
                 }
 

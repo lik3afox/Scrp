@@ -359,13 +359,7 @@ class StructureInteract {
             if (atFeet[i].type == 'structure' && atFeet[i].structure.structureType == STRUCTURE_ROAD &&
                 (atFeet[i].structure.hits < atFeet[i].structure.hitsMax - 500)) {
                 //                console.log(atFeet[i],atFeet[i].structure.structureType,i,atFeet[i].structure.hits,              );
-                let dont = ['59b9cbff720ad030dcef2023', '59acca9b9df0482f1f246f8e', '59fcedd11c4c9206a36d6f72', '59fe75cd2d8de24b0ecfe39e', '59ff6f8dbd0070272c570363',
-                    '59ff1118bd8e183a7f787657', '59ff7deda806760a171bc5fb', '59fd2a7019c1fc16515139dc', '59fbd663a5e2821ec1641bb5', '59fc63aa1aea08360f0be67b', '59fb9256dbfa5c59f60092d7',
-                    '59b1dd1874e1cf2a8cb60fe6', '59fb92258681183fba23be0b', '59fc7ace0a7e757d2a4e5f96', '59fba19e97345c6c99079ef3', '599ca7e7ff58dc1f1ccf54a4',
-                    '59fec6d91686161b2d1e136a', '59fb9f66d8ec4f0e3f15871f', '59fc2f53165e9643a9e5d752', '59fc15c1df24b3055dd7e128', '59accaa09b399665e2a5ecbd', '59acd0a82566262f1ef43d6a',
-                    '59fec26b9788cd0b77447ede', '59b8529fb7f84e7d6ae7afb9', '59fcc054c854936b0d9cd4dc', '59ff74c54bd4625aff10a12f', '5a008e6f5c255c155932e1b7', '59accec68f0b44553b9f411a',
-                    '59fec1aa4e1f9c165bb29867', '59acc14d79c0ad116b7e6428', '59fca66bb1aaf4424aa6f866', '59acc6242a69c6763ae326fd', '59fc4628dc5c5d7135ad9cf1',
-                    '59a4b5391f1c83650997408c', '59a4af8179788f3a6e355b04', '59a4aa5c69e3e26b666b16a3', '59a4aaffde6d7560c31f0551'
+                let dont = ['59b9cbff720ad030dcef2023'
                 ];
                 if (_.includes(dont, atFeet[i].structure.id)) {
                     creep.dismantle(atFeet[i].structure);

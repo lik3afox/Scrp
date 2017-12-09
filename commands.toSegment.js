@@ -21,11 +21,11 @@ var roomSegment = {
     E28S42: 20,
     E29S48: 20,
     E25S43: 21,
-    E27S45: 21,
     E25S47: 21,
     E17S34: 23,
     E13S34: 22,
     E22S48: 25,
+    E27S45: 26,
 };
 var segmentChange = 10;
 var interShardData;

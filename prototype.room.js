@@ -46,6 +46,25 @@ module.exports = function() {
         }
     });
 
+    Object.defineProperty(Room.prototype, 'observer', {
+        configurable: true,
+        get: function() {
+            if(this._observer !== undefined) {
+                return this._observer;
+            } else {
+                if (this.memory.observerID === undefined) {
+                    let bb = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_OBSERVER });
+                    if (bb.length > 0)
+                        this.memory.observerID = bb[0].id;
+                }
+                this._observer = Game.getObjectById(this.memory.observerID);
+                if (this._observer === null) this.memory.observerID = undefined;
+                return this._observer;
+            }
+
+        }
+    });
+
 
     Room.prototype.dropped = function() {
         var dEnergy;

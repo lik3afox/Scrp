@@ -239,7 +239,17 @@
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1 && flag.room.controller.level !== 8) {
                     flag.memory.module.push([ee, 0, 0]);
-                } else {
+                } else if (flag.memory.module[ez] !== undefined) {
+
+                    if(roomEnergy > 2300) {
+                                flag.memory.module[ez][_level] = 5;
+                    } else if( roomEnergy === 2300) {
+                                flag.memory.module[ez][_level] = 4;
+                    } else if( roomEnergy >= 1800) {
+    //                            flag.memory.module[ez][_level] = 3;
+                    }else if( roomEnergy >= 1300) {
+      //                          flag.memory.module[ez][_level] = 2;
+                    }
                     /*
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
@@ -300,8 +310,8 @@
                     });
 
                     if (zzz.length > 0) {
-                        console.log(flag, 'FOUND masterLink', zzz[e].structureType);
-                        flag.room.memory.masterLinkID = zzz[e].id;
+                        console.log(flag, 'FOUND masterLink', zzz[0].structureType);
+                        flag.room.memory.masterLinkID = zzz[0].id;
                     }
                 }
 
@@ -360,8 +370,8 @@
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == STRUCTURE_SPAWN ||
                         structure.structureType == STRUCTURE_TOWER ||
-                        structure.structureType == STRUCTURE_LAB ||
-                        structure.structureType == STRUCTURE_POWER_SPAWN
+                        structure.structureType == STRUCTURE_LAB
+                        
                     );
                 });
 

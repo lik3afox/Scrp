@@ -20,21 +20,21 @@ Lv 6:
 // lv 8 12800
 var classLevels = [
     // Level 0
-//  Transport - 500 Carry/900 Energy
-    [MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,CARRY,CARRY,MOVE,CARRY,CARRY,MOVE,CARRY], //  300
+    //  Transport - 500 Carry/900 Energy
+    [MOVE, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY], //  300
     // Level 1 - 750 Carry 1250 Energy
-[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     // Level 2 1000 Carry - 1750 Energy
-[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY],    
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
 
     // Level 3 1550 carry 2600 Energy - Required Lv 7 
-  [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
+    [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
         MOVE, WORK
     ],
 
-// After lv 3 That's max
+    // After lv 3 That's max
 
 
     // Level 4
@@ -147,18 +147,19 @@ function updateMemory(creep) {
             creep.memory.goHome = true;
 
         }
+        if (_goal !== null && _goal.pos.inRangeTo(_goal, 3)) {
+            if (creep.memory.workContain === undefined) {
 
-        if (creep.memory.workContain === undefined && _goal !== null && _goal.pos.inRangeTo(_goal, 3)) {
-
-            let contain = _goal.room.find(FIND_STRUCTURES, {
-                filter: {
-                    structureType: STRUCTURE_CONTAINER
+                let contain = _goal.room.find(FIND_STRUCTURES, {
+                    filter: {
+                        structureType: STRUCTURE_CONTAINER
+                    }
+                });
+                contain = _goal.pos.findInRange(contain, 10);
+                contain = _goal.pos.findClosestByRange(contain);
+                if (contain !== null) {
+                    creep.memory.workContain = contain.id;
                 }
-            });
-            contain = _goal.pos.findInRange(contain, 10);
-            contain = _goal.pos.findClosestByRange(contain);
-            if (contain !== null) {
-                creep.memory.workContain = contain.id;
             }
             roleParent.keeperFind(creep);
         }
@@ -167,9 +168,7 @@ function updateMemory(creep) {
 
 function movement(creep) {
     let bads = [];
-    if (_goal !== null) {
         bads = getBads(creep);
-    }
     if (bads.length !== 0) {
         creep.runFrom(bads);
     } else {

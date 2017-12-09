@@ -250,6 +250,7 @@
 
             let control = spawn.room.controller;
             if (control.level < 7) return;
+            
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
 
             if (control.progress > 9000000) {
@@ -266,12 +267,12 @@
                     spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
                     if (total > 6000) {
                         spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                    } else if(control.level === 8 || control.progress > 10900000){
-                        spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                    }
+                    } 
                 }
 
-            }
+            }else if(control.level === 8 || control.progress > 10900000){
+                        spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
+                    }
         }
     }
 
@@ -666,6 +667,7 @@
             doUpgradeRooms();
             if (Game.cpu.bucket > 250) {
                 power.run();
+            }
 
                 if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
                 Memory.labsRunCounter--;
@@ -673,7 +675,7 @@
                     Memory.labsRunCounter = 10;
                     labs.run();
                 }
-            }
+
         }
         Memory.marketRunCounter--;
         if (Memory.marketRunCounter <= 0) {
