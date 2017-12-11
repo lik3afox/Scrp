@@ -16,6 +16,30 @@ var classLevels = [
 var boost = [];
 var roleParent = require('role.parent');
 
+function doNukeRamparts(creep){
+    creep.say('nUKEEE');
+            if (creep.memory.constructionID !== undefined) {
+                var strucs = Game.getObjectById(creep.memory.constructionID);
+
+                if (strucs !== null) {
+                    if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(strucs, { reusePath: 15 });
+                    }
+                } else {
+                    creep.memory.constructionID = undefined;
+                }
+            } else {
+                zzz = flag.room.find(FIND_MY_STRUCTURES);
+                zzz = _.filter(zzz, function(structure) {
+                    return (structure.structureType == STRUCTURE_RAMPART &&
+                        structure.pos.isNearTo(nuke,5)
+                        
+                    );
+                });                
+            }
+    return true;
+}
+
 class roleWallWorker extends roleParent {
 
     static levels(level, room) {
@@ -42,13 +66,22 @@ class roleWallWorker extends roleParent {
                 boost.push('LH');
 
                 _.uniq(boost);
+            } else if (creep.room.memory.nukeIncoming&& creep.ticksToLive == 1499) {
+                boost.push('XLH2O');
+                _.uniq(boost);
             }
+
 
         if (creep.memory.level >= 4 && super.boosted(creep, boost)) {
             return;
         }
 
         if (creep.memory.repair) {
+/*            if(creep.room.memory.nukeIncoming) {
+                if(doNukeRamparts(creep)) {
+                    return;
+                }
+            }*/
             if (creep.memory.constructionID !== undefined) {
                 var strucs = Game.getObjectById(creep.memory.constructionID);
                 if (strucs !== null) {

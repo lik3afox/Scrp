@@ -152,6 +152,16 @@ class roleFirst extends roleParent {
 
         super.rebirth(creep);
         super.baseRun(creep);
+        if(creep.room.name == 'E24S33') {
+            let nuke = Game.getObjectById('5a2c7974840ab15db16dc7a3');
+            if(nuke !== null) {
+                if(nuke.timeToLand < 50) {
+                    
+                    creep.say(creep.moveTo(Game.flags.Flag1.pos));
+                    return;
+                }
+            }
+        }
 
         if ((creep.room.energyAvailable == creep.room.energyCapacityAvailable && Game.shard.name == 'shard0')||
             (creep.room.energyAvailable == creep.room.energyCapacityAvailable && creep.room.name == 'E18S46')) {

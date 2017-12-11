@@ -328,7 +328,9 @@
 
         var nuke = room.find(FIND_NUKES);
         if (nuke.length > 0) {
-            Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:' + launchRoomName);
+            console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
+            room.memory.nukeIncoming = true;
+            Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
         }
 
         var goods = room.find(FIND_MY_CREEPS);
