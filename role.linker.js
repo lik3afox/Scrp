@@ -360,26 +360,28 @@ function doDefault(creep) {
 
             close = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
                 filter: function(object) {
-                    return !spn.pos.isNearTo(object) && object.amount > (creep.memory.roleID * 500) + 300;
+                    return !spn.pos.isNearTo(object) && object.amount > (creep.memory.roleID * 500) + 100;
                 }
             });
-
-            if (creep.pos.isNearTo(close)) {
-                creep.pickup(close, RESOURCE_ENERGY);
-            } else {
-                creep.moveMe(close, {
-                    maxRooms: 1,
-                    reusePath: 50,
-                    ignoreCreeps: true,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#f0fA',
-                        lineStyle: 'dashed',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                });
+            if (close !== null) {
+                if (creep.pos.isNearTo(close)) {
+                    creep.pickup(close, RESOURCE_ENERGY);
+                } else {
+                    creep.moveMe(close, {
+                        maxRooms: 1,
+                        reusePath: 50,
+                        ignoreCreeps: true,
+                        visualizePathStyle: {
+                            fill: 'transparent',
+                            stroke: '#f0fA',
+                            lineStyle: 'dashed',
+                            strokeWidth: 0.15,
+                            opacity: 0.5
+                        }
+                    });
+                }
             }
+
 
             creep.say('>' + close);
         }

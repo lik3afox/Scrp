@@ -160,6 +160,7 @@
         spawn: undefined,
         sort: undefined,
         upgrader: undefined,
+        lab: undefined,
         tower: undefined,
         //           
         /*            linker   : undefined,
@@ -239,7 +240,17 @@
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1 && flag.room.controller.level !== 8) {
                     flag.memory.module.push([ee, 0, 0]);
-                } else {
+                } else if (flag.memory.module[ez] !== undefined) {
+
+                    if (roomEnergy > 2300) {
+                        flag.memory.module[ez][_level] = 5;
+                    } else if (roomEnergy === 2300) {
+                        flag.memory.module[ez][_level] = 4;
+                    } else if (roomEnergy >= 1800) {
+                        //                            flag.memory.module[ez][_level] = 3;
+                    } else if (roomEnergy >= 1300) {
+                        //                          flag.memory.module[ez][_level] = 2;
+                    }
                     /*
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
@@ -275,22 +286,35 @@
                 break;
             case 'lab':
                 // Find lab that is within two distance of storage and terminal.
-                if (flag.room.storage === undefined || flag.room.terminal === undefined) break;
+                if (flag.room.terminal === undefined) break;
 
-                zzz = flag.room.find(FIND_MY_STRUCTURES);
-                zzz = _.filter(zzz, function(structure) {
-                    return (structure.structureType == STRUCTURE_LAB);
-                });
-                if(flag.room.memory.boostLabID === undefined ) {
-                    if (zzz.length > 0) {
-                        console.log(flag, 'FOUND MasterLab', zzz[e].structureType);
-                        flag.room.memory.boostLabID = zzz[e].id;
+                if (flag.room.memory.boostLabID === undefined) {
+                    zzz = flag.room.find(FIND_MY_STRUCTURES);
+                    zzz = _.filter(zzz, function(structure) {
+                        return (structure.structureType == STRUCTURE_LAB);
+                    });
+                    if (zzz.length === 1) {
+                        console.log(flag, 'FOUND MasterLab', zzz[0].structureType);
+                        flag.room.memory.boostLabID = zzz[0].id;
                     }
                 }
 
                 break;
 
             case 'linker':
+
+                if (flag.room.storage === undefined) break;
+                if (flag.room.memory.masterLinkID === undefined && flag.room.controller.level > 4) {
+                    zzz = flag.room.find(FIND_MY_STRUCTURES);
+                    zzz = _.filter(zzz, function(structure) {
+                        return (structure.structureType == STRUCTURE_LINK && structure.pos.inRangeTo(flag.room.storage, 2));
+                    });
+
+                    if (zzz.length > 0) {
+                        console.log(flag, 'FOUND masterLink', zzz[0].structureType);
+                        flag.room.memory.masterLinkID = zzz[0].id;
+                    }
+                }
 
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
@@ -315,18 +339,6 @@
                             }
                             break;
 
-                    }
-                }
-                if (flag.room.storage === undefined) break;
-                if (flag.room.memory.masterLinkID === undefined && flag.room.controller.level > 4) {
-                    zzz = flag.room.find(FIND_MY_STRUCTURES);
-                    zzz = _.filter(zzz, function(structure) {
-                        return (structure.structureType == STRUCTURE_LINK && structure.pos.inRangeTo(flag.room.storage, 2));
-                    });
-
-                    if (zzz.length > 0) {
-                        console.log(flag, 'FOUND masterLink', zzz[e].structureType);
-                        flag.room.memory.masterLinkID = zzz[e].id;
                     }
                 }
 
@@ -360,7 +372,7 @@
                         structure.structureType == STRUCTURE_SPAWN ||
                         structure.structureType == STRUCTURE_TOWER ||
                         structure.structureType == STRUCTURE_LAB
-                        
+
                     );
                 });
 
@@ -379,6 +391,9 @@
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else if (Game.shard.name === 'shard1') {
+                    if (flag.room.memory.nukeIncoming) {
+                        flag.memory.module[ez][_number] = 3;
+                    }
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
                             if (roomEnergy >= 1250) { // At room controller lv 4 and extensions, with walls or ramparts
@@ -530,7 +545,7 @@
                                     let vr = flag.room.find(FIND_STRUCTURES, {
                                         filter: s => s.structureType == STRUCTURE_EXTRACTOR
                                     });
-                                    if(vr.length > 0)
+                                    if (vr.length > 0)
                                         flag.room.memory.extractID = vr[0].id;
                                 }
 
@@ -853,14 +868,14 @@
                             }
                         }
                         if (flag.name == 'bandit') {
-/*                            if (flag.memory.timer === undefined) {
-                                flag.memory.timer = 1200;
-                            }
-                            flag.memory.timer--;
-                            if (flag.memory.timer < 0) {
-//                                flag.remove();
-                            } */
-                        console.log("Bandit set @ room:",roomLink(flag.pos.roomName));
+                            /*                            if (flag.memory.timer === undefined) {
+                                                            flag.memory.timer = 1200;
+                                                        }
+                                                        flag.memory.timer--;
+                                                        if (flag.memory.timer < 0) {
+                            //                                flag.remove();
+                                                        } */
+                            console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
                             if (flag.room !== undefined) {
                                 // So here we check if we remove the flag
                                 // We first give it an 1500 timer.
@@ -868,15 +883,15 @@
                                 var testz2 = _.filter(strucd, function(o) {
                                     return o.structureType === STRUCTURE_CONTAINER;
                                 });
-                                if(testz2.length > 0 && flag.color === COLOR_GREEN){
-                                  //  flag.setColor(COLOR_WHITE,COLOR_WHITE);
-                                } 
+                                if (testz2.length > 0 && flag.color === COLOR_GREEN) {
+                                    //  flag.setColor(COLOR_WHITE,COLOR_WHITE);
+                                }
                                 // Now we check to see if the containers are empty and
                                 var testz3 = _.filter(strucd, function(o) {
                                     return o.structureType === STRUCTURE_CONTAINER && o.total === 0;
                                 });
-                                console.log('Bandit room available, containers found:',testz2.length,"emp:",testz3.length, flag.memory.timer);
-                                if(testz2.length !== 0 && testz2.length == testz3.length){
+                                console.log('Bandit room available, containers found:', testz2.length, "emp:", testz3.length, flag.memory.timer);
+                                if (testz2.length !== 0 && testz2.length == testz3.length) {
                                     flag.remove();
                                 }
 

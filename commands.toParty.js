@@ -229,7 +229,7 @@ var upgradeMuleParty = [
     ['mule', require('army.mule'), 1, 1],
 ];
 var muleHealParty = [
-    ['mule', require('army.mule'), 3, 2],
+    ['mule', require('army.mule'), 2, 2],
 ];
 
 
@@ -604,7 +604,7 @@ function returnClosestRoom(roomName) {
     //      default:
     for (var e in Game.spawns) {
         if (Game.spawns[e].memory.alphaSpawn) {
-            if(Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37' && Game.spawns[e].room.controller.level === 8 ) {
+            if(Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37') {
                 var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
                 if (tempDis < distance ) {
                     distance = tempDis;

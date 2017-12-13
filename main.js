@@ -265,7 +265,7 @@
                         total += targets[ze].ticksToLive;
                     }
                     spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
-                    if (total > 5000) {
+                    if (total > 6000) {
                         spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
                     } 
                 }
@@ -328,7 +328,9 @@
 
         var nuke = room.find(FIND_NUKES);
         if (nuke.length > 0) {
-            Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:' + launchRoomName);
+            console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
+            room.memory.nukeIncoming = true;
+            Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
         }
 
         var goods = room.find(FIND_MY_CREEPS);
@@ -545,7 +547,9 @@
         // for creeps.
         var total = 0;
         spawnsDo.runCreeps();
+        if (Game.shard.name !== 'shard2') {
         require('commands.toSegment').run();
+        }
         addSpawnQuery(); // This will not work with old counting.
         var spawnReport = {};
         flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
@@ -566,8 +570,8 @@
                     if (Game.spawns[title].memory.newSpawn === undefined) {
                         spawnsDo.checkNewSpawn(Game.spawns[title]);
                     }
-                }
                     spawnsDo.checkBuild(Game.spawns[title]);
+                }
 
                 //                  if (Memory.war) {
                 if (Game.spawns[title].memory.alphaSpawn) {
@@ -659,17 +663,24 @@
         } // End of Spawns Loops
 
         Memory.stats.rooms = spawnReport;
+        if (Game.shard.name !== 'shard2') {
+
         memoryStatsUpdate();
         link.run();
         observer.run();
+        Memory.marketRunCounter--;
+        if (Memory.marketRunCounter <= 0) {
+            Memory.marketRunCounter = 10;
+            market.run();
+        }
+
+    }
 
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
-
             if (Game.cpu.bucket > 250) {
-  //              if(Game.rooms.E14S38.controller.level < 6) {
-                    power.run();
-//                }
+                power.run();
+            }
 
                 if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
                 Memory.labsRunCounter--;
@@ -677,20 +688,13 @@
                     Memory.labsRunCounter = 10;
                     labs.run();
                 }
-            }
-        }
-        Memory.marketRunCounter--;
-        if (Memory.marketRunCounter <= 0) {
-            Memory.marketRunCounter = 10;
-            market.run();
+
         }
         scanForRemoteSources();
 
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
 
         if (Game.shard.name == 'shard1') {
-//RawMemory.setActiveForeignSegment('xsinx',5);
-//console.log(RawMemory.foreignSegment);
             if (Game.spawns.Spawn1 !== undefined) {
 
 
@@ -700,11 +704,13 @@
                 }
 
                 let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-                console.log('**S:' + Memory.shardNeed.length + '*PP:' + Memory.stats.powerProcessed + '***' + report + '***TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('!!!!!!S:' + Memory.shardNeed.length + '!!PP:' + Memory.stats.powerProcessed + '***' + report + '***TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
 
                 Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
-                //            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
+        } else if(Game.shard.name == 'shard2'){
+                console.log('@@@@@@@@@@@@@@@@@@@@@@@@TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+
         } else {
             if (Game.spawns.E38S81) {
 
@@ -720,19 +726,6 @@
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
-        }
-
-        if(Game.rooms.E18XXS46 !== undefined) {
-        var ava = Game.rooms.E18S46.find(FIND_STRUCTURES);
-        var ae;
-        for(ae in ava){
-            ava[ae].destroy();
-        }
-         ava = Game.rooms.E18S46.find(FIND_CONSTRUCTION_SITES);
-        for(ae in ava){
-            ava[ae].remove();
-        }
-
         }
 
     });

@@ -172,7 +172,7 @@ class muleClass extends roleParent {
 
 
                     } else {
-                        if (creep.room.name == 'E14S37')
+//                        if (creep.room.name == 'E14S37')
                             creep.withdraw(stor, RESOURCE_ENERGY);
                     }
                 } else {

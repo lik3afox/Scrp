@@ -48,7 +48,7 @@ var transportLevel = 20000;
 
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
-    [],  // Kept empty so nothing occurs and this can stay.
+    [], // Kept empty so nothing occurs and this can stay.
     [ // Level 1 500 Carry/900 Energy Transports
         ['miner', 1, 2], // Harvester - experiemnt w/o carry
         ['transport', 1, 0], // Gather and move - just carry 
@@ -70,13 +70,13 @@ var expansionModule = [
         ['transport', 1, 3], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
-    [// Lv 5 - 2x1000 Carry 
+    [ // Lv 5 - 2x1000 Carry 
         // Two transports @ 1000 Carry
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
         ['transport', 2, 2], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
-    [// Lv 6 - 2X1550 Carry
+    [ // Lv 6 - 2X1550 Carry
         // Two Transports @ 1550 Carry.
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
         ['transport', 2, 3], // Gather and move - just carry 
@@ -441,15 +441,15 @@ class theSpawn {
         totalCreeps = Memory.spawnCount[spawn.id];
 
         // Flag Module Check Add Module.
-/*
-        if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
-            if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
-                currentModule = [];//getCurrentModule(spawn.room.name);
-                for (var ee in currentModule) {
-                    Game.flags[spawn.pos.roomName].memory.module.push(currentModule[ee]);
-                }
-            }
-        } */
+        /*
+                if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
+                    if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
+                        currentModule = [];//getCurrentModule(spawn.room.name);
+                        for (var ee in currentModule) {
+                            Game.flags[spawn.pos.roomName].memory.module.push(currentModule[ee]);
+                        }
+                    }
+                } */
 
         currentModule = Game.flags[spawn.room.name].memory.module;
         for (type in currentModule) {
@@ -476,28 +476,33 @@ class theSpawn {
                 }
 
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
-if(spawn.memory.create === undefined) spawn.memory.create =[];
-                    var theBuild = getModuleRole(currentModule[type][_name]).levels(currentModule[type][_level]);
-                    let temp = {
-                        build: theBuild,
-                        name: currentModule[type][_name] + totalCreeps[currentModule[type][_name]].count + "*" + spawn.memory.created,
-                        memory: {
-                            role: currentModule[type][_name],
-                            home: spawn.room.name,
-                            parent: spawn.id,
-                            level: currentModule[type][_level]
-                        }
-                    };
-                    if (currentModule[type][_name] == 'first' || currentModule[type][_name] == 'harvester') {
-                        spawn.memory.create.unshift(temp);
-                        totalCreeps[currentModule[type][_name]].count++;
-                        spawn.memory.created++;
-                    } else {
-                        spawn.memory.create.push(temp);
-                        totalCreeps[currentModule[type][_name]].count++;
-                        spawn.memory.created++;
+                    if (spawn.memory.create === undefined) spawn.memory.create = [];
+                    console.log(currentModule[type][_name]);
+                    let mod = getModuleRole(currentModule[type][_name]);
+                    if (mod !== undefined) {
+                        var theBuild = mod.levels(currentModule[type][_level]);
+                        let temp = {
+                            build: theBuild,
+                            name: currentModule[type][_name] + totalCreeps[currentModule[type][_name]].count + "*" + spawn.memory.created,
+                            memory: {
+                                role: currentModule[type][_name],
+                                home: spawn.room.name,
+                                parent: spawn.id,
+                                level: currentModule[type][_level]
+                            }
+                        };
+                        if (currentModule[type][_name] == 'first' || currentModule[type][_name] == 'harvester') {
+                            spawn.memory.create.unshift(temp);
+                            totalCreeps[currentModule[type][_name]].count++;
+                            spawn.memory.created++;
+                        } else {
+                            spawn.memory.create.push(temp);
+                            totalCreeps[currentModule[type][_name]].count++;
+                            spawn.memory.created++;
 
+                        }
                     }
+
                 }
             }
         }
@@ -692,8 +697,9 @@ if(spawn.memory.create === undefined) spawn.memory.create =[];
     // Id matches and returns an array of current count. 
 
     static runCreeps() {
+        var ee;
         if (Game.shard.name == 'shard0') {
-            for (var ee in Game.creeps) {
+            for (ee in Game.creeps) {
                 if (Game.creeps[ee].memory === undefined) {
                     Game.creeps[ee].memory = {
                         role: 'engineer',
@@ -716,6 +722,35 @@ if(spawn.memory.create === undefined) spawn.memory.create =[];
                     Game.creeps[zzzz].memory.party = 'E23S38';
                 }
             }
+        }
+        if (Game.shard.name == 'shard2') {
+            for (ee in Game.creeps) {
+                if (Game.creeps[ee].memory.role === undefined) {
+                    if (Game.creeps[ee].name.substr(0, 5) == 'engin') {
+                        Game.creeps[ee].memory.role = 'engineer';
+                    } else if (Game.creeps[ee].name.substr(0, 4) == 'mule') {
+                        Game.creeps[ee].memory.role = 'mule';
+                        Game.creeps[ee].memory.level = 2;
+                    }
+
+                }
+
+                if (Game.creeps[ee].memory === undefined) {
+                    Game.creeps[ee].memory = {
+                        //                        role: 'engineer',
+                        party: 'E19S49'
+                    };
+
+                }
+                
+                if (Game.creeps[ee].memory.party === undefined) {
+                    Game.creeps[ee].memory.party = 'E19S49';
+                }
+                if (Game.creeps[ee].memory.parent === undefined) {
+                    Game.creeps[ee].memory.parent = '5a301e5f5858c967fe338616';
+                }
+            }
+
         }
         if (Memory.creeps === undefined) return false;
 
