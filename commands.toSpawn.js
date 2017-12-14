@@ -183,7 +183,7 @@ class SpawnInteract {
     }
 
     static addToWarStack(newCreep) {
-//        console.log("WARSTACK", newCreep.room);
+        //        console.log("WARSTACK", newCreep.room);
         // for now it will only created at homeEmpire.
         for (var i in Game.spawns) {
             if (Game.spawns[i].memory.alphaSpawn && Game.spawns[i].room.name == newCreep.room) {
@@ -241,28 +241,30 @@ class SpawnInteract {
         if (creep.memory.goToSpawn === undefined) {
             let goTo = -1; //= creep.memory.roleID;
             var zz = creep.memory.roleID;
-            if(creep.memory.role == 'scientist') zz++;
-            if (zz) {
+            if (creep.memory.role == 'scientist') zz++;
+            if (zz) { // if(0) == false;
                 do {
                     goTo++;
                     if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
                         goTo++;
                     } else if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_EXTENSION && targets[goTo].energy === targets[goTo].energyCapacity) {
                         goTo++;
-                    } 
+                    }
                     if (goTo > targets.length) return false;
                 } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
             } else {
                 goTo = targets.length - 1;
-                do {
+                while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity) {
                     goTo--;
                     if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_TOWER && targets[goTo].energy > 500) {
                         goTo--;
-                    }else if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_EXTENSION && targets[goTo].energy === targets[goTo].energyCapacity) {
+                    } else if (targets[goTo] !== undefined && targets[goTo].structureType === STRUCTURE_EXTENSION && targets[goTo].energy === targets[goTo].energyCapacity) {
                         goTo--;
-                    } 
-                    if (goTo < 0) return false;
-                } while (targets[goTo] !== undefined && targets[goTo].energy === targets[goTo].energyCapacity);
+                    }
+                    if (goTo < 0) {
+                        return false;
+                    }
+                }
             }
             creep.memory.goToSpawn = goTo;
         }
@@ -408,7 +410,7 @@ class SpawnInteract {
             if (creepTarget === null) {
                 spawn.memory.wantRenew.splice(e, 1);
             } else if (creepTarget.ticksToLive < temp && creepTarget.pos.isNearTo(spawn)) {
-                //            	console.log( creepTarget.memory.role ,spawn.room.controller.level );
+                //              console.log( creepTarget.memory.role ,spawn.room.controller.level );
                 if (spawn.room.name === 'E14S38') {
 
                     if (spawn.room.controller.level > 5) {
@@ -433,7 +435,7 @@ class SpawnInteract {
         }
 
         if (temp < renewLimit) {
-                let rst = spawn.renewCreep(renewTarget);
+            let rst = spawn.renewCreep(renewTarget);
             //console.log('********* ',spawn,' am Renewing:',renewTarget.name,rst,'********* ');
             return true;
         } else {

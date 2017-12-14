@@ -71,12 +71,12 @@ class roleUpgrader extends roleParent {
         }
         if (super.depositNonEnergy(creep)) return;
         if (creep.memory.level > 5) super.renew(creep);
-        if (creep.room.name == 'E18S46') {
+        if (creep.room.name == 'E19S49') {
             var going;
             var pos = [
                 //                new RoomPosition(20, 23, creep.room.name),
-                new RoomPosition(33, 10, creep.room.name),
-                new RoomPosition(34, 10, creep.room.name),
+                new RoomPosition(28, 34, creep.room.name),
+                new RoomPosition(28, 33, creep.room.name),
                 new RoomPosition(35, 9, creep.room.name),
                 new RoomPosition(35, 8, creep.room.name),
             ];
@@ -133,6 +133,7 @@ class roleUpgrader extends roleParent {
         }
         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
             //        creep.moveTo(creep.room.controller);
+            creep.say('hh');
         }
     }
 }

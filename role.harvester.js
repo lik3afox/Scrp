@@ -10,6 +10,8 @@ var roleParent = require('role.parent');
 
 function restingSpot(creep) {
     switch (creep.memory.sourceID) {
+        case '59f1a45c82100e1594f3cd70':
+            return new RoomPosition(38, 34, creep.memory.home);
         case '5982ff96b097071b4adc2eab':
             return new RoomPosition(19, 31, creep.memory.home);
         case '5982ff21b097071b4adc2224':

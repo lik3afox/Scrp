@@ -223,7 +223,7 @@ var upgradeRoomParty = [
 
 ];
 var muleParty = [
-    ['mule', require('army.mule'), 4, 0],
+    ['mule', require('army.mule'), 2, 0],
 ];
 var upgradeMuleParty = [
     ['mule', require('army.mule'), 1, 1],
