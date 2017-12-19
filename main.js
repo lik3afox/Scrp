@@ -48,62 +48,120 @@
 
 
     function scanForRemoteSources() {
-//        if (Game.shard.name !== 'shard1') return false;
-        if (Game.flags.remote === undefined) return false;
+        //        if (Game.shard.name !== 'shard1') return false;
+        if (Game.flags.remote === undefined && Game.flags.mineral === undefined) return false;
 
         var flag = Game.flags.remote;
-        if (flag.memory.spawnRoom === undefined) {
-            flag.memory.spawnRoom = 'none';
-        }
-        if (flag.room === undefined) {
-            observer.reqestRoom(flag.pos.roomName, 5);
-        } else {
-            if (flag.memory.spawnRoom === 'none') {
-                flag.room.visual.text('SETROOM', flag.pos);
+        if (flag !== undefined) {
+            if (flag.memory.spawnRoom === undefined) {
+                flag.memory.spawnRoom = 'none';
+            }
+            if (flag.room === undefined) {
+                observer.reqestRoom(flag.pos.roomName, 5);
             } else {
-                var source = flag.room.find(FIND_SOURCES);
-                var room = Game.rooms[flag.memory.spawnRoom];
-                var spwn = room.find(FIND_STRUCTURES);
-                spwn = _.filter(spwn, function(o) {
-                    return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
-                });
-                if (spwn.length === 1 && source.length > 0 && room !== undefined) {
-                    var remote = spwn[0].memory.roadsTo;
-                    var has;
-                    for (var eee in source) {
-                        for (var zzz in remote) {
-                            has = false;
-                            if (remote[zzz].source === source[eee].id) {
-                                has = true;
-                                break;
-                            }
+                if (flag.memory.spawnRoom === 'none') {
+                    flag.room.visual.text('SETROOM', flag.pos);
+                } else {
+                    let source = flag.room.find(FIND_SOURCES);
+                    let room = Game.rooms[flag.memory.spawnRoom];
+                    let spwn = room.find(FIND_STRUCTURES);
+                    spwn = _.filter(spwn, function(o) {
+                        return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
+                    });
+                    if (spwn.length === 1 && source.length > 0 && room !== undefined) {
+                        let remote = spwn[0].memory.roadsTo;
+                        let has;
+                        for (let eee in source) {
+                            for (let zzz in remote) {
+                                has = false;
+                                if (remote[zzz].source === source[eee].id) {
+                                    has = true;
+                                    break;
+                                }
 
-                        }
-                        if (!has) {
-                            console.log('spwn doesnt have remote info', source[eee].id);
-                            // Here we add info to spwn.
-                            var BUILD = {
-                                source: source[eee].id,
-                                sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
-                                miner: false,
-                                transport: false,
-                                expLevel: 4
-                            };
-                            if (parseInt(eee) === 0 && source[eee].room.controller !== undefined  ) {
-                                BUILD.controller = false;
                             }
-                            remote.push(BUILD);
-                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
+                            if (!has) {
+                                console.log('spwn doesnt have remote info', source[eee].id);
+                                // Here we add info to spwn.
+                                let BUILD = {
+                                    source: source[eee].id,
+                                    sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
+                                    miner: false,
+                                    transport: false,
+                                    expLevel: 4
+                                };
+                                if (parseInt(eee) === 0 && source[eee].room.controller !== undefined) {
+                                    BUILD.controller = false;
+                                }
+                                remote.push(BUILD);
+                                console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
+                            }
                         }
+
+                        flag.memory.spawnRoom = 'none';
+                        flag.remove();
                     }
 
-                    flag.memory.spawnRoom = 'none';
-                    flag.remove();
+                }
+            }
+
+        }
+
+        flag = Game.flags.mineral;
+        if (flag !== undefined) {
+
+            if (flag.memory.spawnRoom === undefined) {
+                flag.memory.spawnRoom = 'none';
+            }
+            if (flag.room === undefined) {
+                observer.reqestRoom(flag.pos.roomName, 5);
+            } else {
+                if (flag.memory.spawnRoom === 'none') {
+                    flag.room.visual.text('SETROOM', flag.pos);
+                } else {
+                    let source = flag.room.find(FIND_MINERALS);
+                    let room = Game.rooms[flag.memory.spawnRoom];
+                    let spwn = room.find(FIND_STRUCTURES);
+                    spwn = _.filter(spwn, function(o) {
+                        return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
+                    });
+                    if (spwn.length === 1 && source.length > 0 && room !== undefined) {
+                        let remote = spwn[0].memory.roadsTo;
+                        let has;
+                        for (let eee in source) {
+                            for (let zzz in remote) {
+                                has = false;
+                                if (remote[zzz].source === source[eee].id) {
+                                    has = true;
+                                    break;
+                                }
+
+                            }
+                            if (!has) {
+                                console.log('spwn doesnt have remote info', source[eee].id);
+                                // Here we add info to spwn.
+                                let BUILD = {
+                                    source: source[eee].id,
+                                    sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
+                                    mineral: false,
+                                    ztransport: false,
+                                    expLevel: 10
+                                };
+                                if (parseInt(eee) === 0 && source[eee].room.controller !== undefined) {
+                                    BUILD.controller = false;
+                                }
+                                remote.push(BUILD);
+                                console.log('Minearl added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
+                            }
+                        }
+
+                        flag.memory.spawnRoom = 'none';
+                        flag.remove();
+                    }
                 }
 
             }
         }
-
     }
 
     function whoWorksFor(goal) {
@@ -250,7 +308,7 @@
 
             let control = spawn.room.controller;
             if (control.level < 7) return;
-            
+
             //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
 
             if (control.progress > 9000000) {
@@ -267,12 +325,12 @@
                     spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
                     if (total > 6000) {
                         spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                    } 
+                    }
                 }
 
-            }else if(control.level === 8 || control.progress > 10900000){
-                        spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                    }
+            } else if (control.level === 8 || control.progress > 10900000) {
+                spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
+            }
         }
     }
 
@@ -321,7 +379,6 @@
         if (numBads > 0 && bads[0].owner.username !== 'Invader') {
             var report = analyzeHostiles(bads); // Here we get a report of the bads.
             room.memory.alert = true; // This will force walls/ramparts to start looking at damage.
-
         } else {
             room.memory.alert = false;
         }
@@ -345,20 +402,22 @@
             spwns = _.filter(spwns, function(o) {
                 return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
             });
-        if(room.name == 'E38S72'){
-            console.log('wtfzz',goods.length,room.energyAvailable,spwns.length,spwns[0]);
-        }
+            if (room.name == 'E38S72') {
+                console.log('wtfzz', goods.length, room.energyAvailable, spwns.length, spwns[0]);
+            }
             if (spwns.length > 0) {
 
-                if ( room.energyAvailable >= 300) {
-                   var zz = spwns[0].spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir',{memory:{
-                        role: 'first',
-                        roleID: 0,
-                        home: spwns[0].pos.roomName,
-                        parent: "none",
-                        level: 3
-                    }});
-                   console.log(zz);
+                if (room.energyAvailable >= 300) {
+                    var zz = spwns[0].spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir', {
+                        memory: {
+                            role: 'first',
+                            roleID: 0,
+                            home: spwns[0].pos.roomName,
+                            parent: "none",
+                            level: 3
+                        }
+                    });
+                    console.log(zz);
                 }
             }
 
@@ -438,46 +497,54 @@
 
     function addSpawnQuery() {
         for (var e in Game.spawns) {
-            if (Game.spawns[e].memory.alphaSpawn && Memory.spawnCount[Game.spawns[e].id] !== undefined) {
-                let spwn = Game.spawns[e];
-                let spwnCount = Memory.spawnCount[Game.spawns[e].id];
-                let create = spwn.memory.create;
-                let war = spwn.memory.warCreate;
-                let expand = spwn.memory.expandCreate;
-                let a;
-                for (a in create) {
-                    if (spwnCount[create[a].memory.role] !== undefined) {
-                        spwnCount[create[a].memory.role].count++;
-                    } else {
-                        spwnCount[create[a].memory.role] = {
-                            count: 1,
-                            goal: []
-                        };
-                    }
+            if (Game.spawns[e].memory.alphaSpawn) {
+                if (Memory.spawnCount[Game.spawns[e].id] === undefined) {
+                    Memory.spawnCount[Game.spawns[e].id] = {
+                        bodyCount: 0
+                    };
                 }
-                for (a in war) {
-                    if (spwnCount[war[a].memory.role] !== undefined) {
-                        spwnCount[war[a].memory.role].count++;
-                    } else {
-                        spwnCount[war[a].memory.role] = {
-                            count: 1,
-                            goal: []
-                        };
+                if (Memory.spawnCount[Game.spawns[e].id] !== undefined) {
+                    let spwn = Game.spawns[e];
+                    let spwnCount = Memory.spawnCount[Game.spawns[e].id];
+                    let create = spwn.memory.create;
+                    let war = spwn.memory.warCreate;
+                    let expand = spwn.memory.expandCreate;
+                    let a;
+                    for (a in create) {
+                        if (spwnCount[create[a].memory.role] !== undefined) {
+                            spwnCount[create[a].memory.role].count++;
+                        } else {
+                            spwnCount[create[a].memory.role] = {
+                                count: 1,
+                                goal: []
+                            };
+                        }
                     }
-                }
-                for (a in expand) {
-                    if (spwnCount[expand[a].memory.role] !== undefined) {
-                        spwnCount[expand[a].memory.role].count++;
-                        spwnCount[expand[a].memory.role].goal.push(expand[a].memory.goal);
-                    } else {
-                        spwnCount[expand[a].memory.role] = {
-                            count: 1,
-                            goal: [expand[a].memory.goal]
-                        };
+                    for (a in war) {
+                        if (spwnCount[war[a].memory.role] !== undefined) {
+                            spwnCount[war[a].memory.role].count++;
+                        } else {
+                            spwnCount[war[a].memory.role] = {
+                                count: 1,
+                                goal: []
+                            };
+                        }
+                    }
+                    for (a in expand) {
+                        if (spwnCount[expand[a].memory.role] !== undefined) {
+                            spwnCount[expand[a].memory.role].count++;
+                            spwnCount[expand[a].memory.role].goal.push(expand[a].memory.goal);
+                        } else {
+                            spwnCount[expand[a].memory.role] = {
+                                count: 1,
+                                goal: [expand[a].memory.goal]
+                            };
 
+                        }
                     }
                 }
             }
+
         }
     }
 
@@ -501,7 +568,7 @@
 
         if (Memory.stats === undefined) Memory.stats = {};
 
-        if (Memory.war === undefined) Memory.war = true;
+        if (Memory.war === undefined) Memory.war = false;
 
         if (Memory.showInfo === undefined) Memory.showInfo = 5;
         var i = prototypes.length;
@@ -520,16 +587,16 @@
             global.roomPosToString = function(roomPos) {
                 if (roomPos.x === undefined) return false;
                 var xx = roomPos.x;
-                if(xx.length === 1) {
-                    xx = 0+xx;
+                if (xx.length === 1) {
+                    xx = 0 + xx;
                 }
                 var yy = roomPos.y;
-                if(yy.length === 1) {
-                    yy = 0+yy;
+                if (yy.length === 1) {
+                    yy = 0 + yy;
                 }
-                var ret =  xx + yy + roomPos.roomName;
-                if(ret.length > 10) {
-                    console.log(xx,yy,roomPos.roomName);
+                var ret = xx + yy + roomPos.roomName;
+                if (ret.length > 10) {
+                    console.log(xx, yy, roomPos.roomName);
                     return;
                 }
                 return ret;
@@ -547,7 +614,9 @@
         // for creeps.
         var total = 0;
         spawnsDo.runCreeps();
-        require('commands.toSegment').run();
+        if (Game.shard.name !== 'shard2') {
+            require('commands.toSegment').run();
+        }
         addSpawnQuery(); // This will not work with old counting.
         var spawnReport = {};
         flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
@@ -661,9 +730,18 @@
         } // End of Spawns Loops
 
         Memory.stats.rooms = spawnReport;
-        memoryStatsUpdate();
         link.run();
-        observer.run();
+        Memory.marketRunCounter--;
+        if (Memory.marketRunCounter <= 0) {
+            Memory.marketRunCounter = 10;
+            market.run();
+        }
+        if (Game.shard.name !== 'shard2') {
+
+            memoryStatsUpdate();
+            observer.run();
+
+        }
 
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
@@ -671,26 +749,30 @@
                 power.run();
             }
 
-                if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
-                Memory.labsRunCounter--;
-                if (Memory.labsRunCounter <= 0) {
-                    Memory.labsRunCounter = 10;
-                    labs.run();
-                }
+            if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
+            Memory.labsRunCounter--;
+            if (Memory.labsRunCounter <= 0) {
+                Memory.labsRunCounter = 10;
+                labs.run();
+            }
+            /*var rooms = [];
+            for(var e in Game.constructionSites){
+                let con = Game.constructionSites[e];
+                rooms.push(con.pos.roomName);
+            }
+            rooms = _.unique(rooms);
+            console.log(rooms.length);
+            for(var ee in rooms){
+                console.log(roomLink(rooms[ee]));
+            } */
+        }
 
-        }
-        Memory.marketRunCounter--;
-        if (Memory.marketRunCounter <= 0) {
-            Memory.marketRunCounter = 10;
-            market.run();
-        }
+
         scanForRemoteSources();
 
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
 
         if (Game.shard.name == 'shard1') {
-//RawMemory.setActiveForeignSegment('xsinx',5);
-//console.log(RawMemory.foreignSegment);
             if (Game.spawns.Spawn1 !== undefined) {
 
 
@@ -700,11 +782,13 @@
                 }
 
                 let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-                console.log('**S:' + Memory.shardNeed.length + '*PP:' + Memory.stats.powerProcessed + '***' + report + '***TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('<a style="color:#0afaff">!!!!!!S:' + Memory.shardNeed.length + '!!PP:' + Memory.stats.powerProcessed + '***' + report + '***TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
 
                 Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
-                //            Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
+        } else if (Game.shard.name == 'shard2') {
+            console.log('<a style="color:#00aaff">@@@@@@@@@@@@@@@@@@@@@@@@TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
+
         } else {
             if (Game.spawns.E38S81) {
 
@@ -715,7 +799,7 @@
 
                 //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
                 let dif;
-                console.log('*****PP:' + 0 + '****'+report+'******TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket);
+                console.log('<a style="color:#aaaaff">*****PP:' + 0 + '****' + report + '******TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
 
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;

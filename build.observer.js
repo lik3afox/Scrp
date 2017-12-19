@@ -165,7 +165,7 @@ class buildObserver {
             observers = Game.shard.name == 'shard0' ? s0_observers : s1_observers;
             for (var e in observers) {
                 let stru = getCached(observers[e]);
-                if (stru !== undefined) {
+                if (stru !== null) {
                     var distance = Game.map.getRoomLinearDistance(stru.room.name, target);
                     if (distance <= 10) {
                         stru.observeRoom(target);
@@ -184,7 +184,7 @@ class buildObserver {
                 let direction;
                 let troom = Game.rooms[target];
                 var dir;
-                if (screeps[0].ticksToLive > 1300) {
+                if (screeps[0].ticksToLive > 1200) {
                     let roomName = screeps[0].pos.roomName;
                     if (roomName[2] === 1 || roomName[2] === 1) {
                         dir = 'e';
@@ -195,14 +195,16 @@ class buildObserver {
 
                     } else if (roomName[5] === 9 || roomName[5] === 8) {
                         dir = 's';
+                    } 
+                    if(dir !== undefined){
+                        targetRoom = changeRoom(roomName, dir, 5);
                     }
-                    targetRoom = changeRoom(roomName, dir, 5);
                 }
 
 
                 console.log('FOUND CARAVAN: ', screeps.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
-                if (Game.flags.bandit === undefined) {
-                    //Game.rooms[target].createFlag(25, 25, 'bandit',COLOR_GREEN,COLOR_GREEN);
+                if (Game.flags.bandit === undefined && targetRoom !== undefined) {
+                    Game.rooms[target].createFlag(25, 25, 'bandit',COLOR_GREEN,COLOR_GREEN);
                 }
 
             }

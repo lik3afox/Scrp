@@ -223,13 +223,13 @@ var upgradeRoomParty = [
 
 ];
 var muleParty = [
-    ['mule', require('army.mule'), 4, 0],
+    ['mule', require('army.mule'), 3, 0],
 ];
 var upgradeMuleParty = [
     ['mule', require('army.mule'), 1, 1],
 ];
 var muleHealParty = [
-    ['mule', require('army.mule'), 3, 2],
+    ['mule', require('army.mule'), 2, 2],
 ];
 
 
@@ -623,7 +623,7 @@ function returnClosestRoom(roomName) {
 function findParty(flag) {
     var currentParty = getCurrentParty(flag);
     var total = [];
-    let report = flag.name + " Party:";
+//let report = flag.name + " Party:";
 
     for (var i in currentParty) {
         total[currentParty[i][_name]] = 0;
@@ -642,10 +642,10 @@ function findParty(flag) {
                 }
             }
         }
-        report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName);
+     //   report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName);
 
     }
-    console.log(report);
+//    console.log(report);
 
     return total;
 }

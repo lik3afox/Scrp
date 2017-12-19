@@ -101,7 +101,7 @@ class roleWallWorker extends roleParent {
         } else {
 
             super.constr.pickUpEnergy(creep);
-            if(creep.room.name == 'E29S48') {
+            if(creep.room.name == 'E29S48'||creep.room.name == 'E18S46') {
             if (!super.containers.withdrawFromTerminal(creep)) {
             }
 

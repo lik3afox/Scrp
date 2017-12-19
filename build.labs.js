@@ -1,4 +1,5 @@
-var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17S45', 'E28S37', 'E27S34', 'E24S33', 'E14S43', 'E28S42', 'E23S42', 'E25S43', 'E25S47', 'E14S47', 'E18S36', 'E14S38', 'E25S37', 'E25S27','E27S45','E29S48','E22S48'];
+var labRooms = ['E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14S37', 'E17S45', 'E28S37', 'E27S34', 'E24S33', 'E14S43', 'E28S42', 'E23S42', 'E25S43', 'E25S47', 'E14S47', 'E18S36', 'E14S38', 'E25S37', 'E25S27','E27S45','E29S48','E22S48'
+,'E18S46'];
 
 /*
 
@@ -155,7 +156,7 @@ var maxMinerals = {
     //    'LH': 1000, // Repair
     'XLH2O': 80000, // Repair *
 
-    'XGHO2': 325000,
+    'XGHO2': 350000,
     'GHO2': 10000, // Repair
     'GO': 10000, // Repair
 
@@ -1483,7 +1484,7 @@ function labDo(roomName, created, labz, laby) {
         }
     }    
     if (Memory.stats.totalMinerals !== undefined)
-        if (labs[created - 1].resource == 'XGHO2') console.log(Memory.stats.totalMinerals[labs[created - 1].resource], maxMinerals[labs[created - 1].resource], labs[created - 1].emptied);
+//        if (labs[created - 1].resource == 'XGHO2') console.log(Memory.stats.totalMinerals[labs[created - 1].resource], maxMinerals[labs[created - 1].resource], labs[created - 1].emptied);
 //    if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] && labs[created - 1].emptied) {
     if (Memory.stats.totalMinerals[labs[created - 1].resource] > maxMinerals[labs[created - 1].resource] ) {
 //        console.log("max Mineral Triggered", labs[created - 1].resource, maxMinerals[labs[created - 1].resource], Memory.stats.totalMinerals[labs[created - 1].resource],roomName);

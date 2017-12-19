@@ -18,7 +18,7 @@ let basic = [
     'KO', 'KHO2', 'XKHO2',
 ];
 var s1LabRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37', 'E22S48',
-    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27', 'E27S45', 'E29S48','E18S46'
+    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27', 'E27S45', 'E29S48', 'E18S46'
 ];
 var s0LabRooms = ['E38S81', 'E38S72'];
 
@@ -91,8 +91,8 @@ function shareEnergy(terminal) {
         }
     }
     //    console.log(terminal.room.name, 'needs found lowest', lowestStore);
-    if (lowestStore === undefined) return false;
-    if (currentLow > 899000) return false;
+    if (lowestStore === undefined) return true;
+    if (currentLow > 899000) return true;
 
 
     let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
@@ -238,8 +238,8 @@ function newTradeEnergy(terminal) {
         return (order.price > 0.01);
     });
     if (Orders.length === 0) {
-        console.log('ALERT - .01 energy low');
-        return false;
+        console.log('ALERT!! No orders above 0.01 energy');
+        return true;
     } else {
 
     }
@@ -269,7 +269,7 @@ function newTradeEnergy(terminal) {
             }
         }
     }
-    console.log('in newtrade', target.room, target.price);
+    //    console.log('in newtrade', target.room, target.price);
 
     let trans = EnergyNum; // (Math.floor(eTotal / (1 + target.cost)));
     if (trans > target.amount) trans = target.amount;
@@ -449,7 +449,7 @@ function newTradeEnergy(terminal) {
         */
 
     }
-
+    return false;
 }
 
 function tradeEnergy(terminal) {
@@ -460,7 +460,7 @@ function tradeEnergy(terminal) {
         let targetRoom = terminal.pos.roomName;
         //    if (Memory.termReport) console.log(terminal, 'has ', eTotal, targetRoom);
         let Orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: RESOURCE_ENERGY });
-        let target = { price: 0.0001, id: undefined, cost: 1000, amount: 1, room: undefined, trans: 1 };
+        let target = { price: 0.01, id: undefined, cost: 1000, amount: 1, room: undefined, trans: 1 };
         let EnergyNum = 100;
 
         for (var e in Orders) {
@@ -486,9 +486,10 @@ function tradeEnergy(terminal) {
         if (target.price == 0.01) {
             trans = trans * 0.5;
         }
-
-        let whatHappened = Game.market.deal(target.id, trans, targetRoom);
-        console.log("Max Energy Trade", whatHappened, 'profit:', target.price * trans, '#', trans, 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost), roomLink(terminal.room.name));
+        if (target.price > 0.01) {
+            let whatHappened = Game.market.deal(target.id, trans, targetRoom);
+            console.log("Max Energy Trade", whatHappened, 'profit:', target.price * trans, '@', trans, '(' + target.price + ')', 'EnergyCost', (target.price + target.cost), (target.price + target.cost) * trans, 'Profit per Energy', target.price / (1 + target.cost), roomLink(terminal.room.name));
+        }
     }
 
     //  var amountSending = terminal.store[RESOURCE_ENERGY] * 0.05;
@@ -573,7 +574,7 @@ function sellMineralOrder() {
     let total = 0;
     for (var e in Memory.stats.totalMinerals) {
         if (e == 'K' || e == 'U' || e == 'Z' || e == 'X' || e == 'L' || e == 'O' || e == 'H') {
-            if (Memory.stats.totalMinerals[e] > 150000) {
+            if (Memory.stats.totalMinerals[e] > 250000) {
 
                 //                let Orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: e });
                 let sellingPoint = getAverageMineralPrice(e, false); //= 1000;
@@ -866,13 +867,13 @@ function getAverageMineralPrice(resource, buy) {
     zz.sort((a, b) => a.price - b.price);
     let bb = 0;
     if (buy) {
-        if (zz[zz.length - 1].price !== 0.01)
+        if (zz[zz.length - 1] !== undefined && zz[zz.length - 1].price !== 0.01)
             bb += zz[zz.length - 1].price;
-        if (zz[zz.length - 2].price !== 0.01)
+        if (zz[zz.length - 2] !== undefined && zz[zz.length - 2].price !== 0.01)
             bb += zz[zz.length - 2].price;
-        if (zz[zz.length - 3].price !== 0.01)
+        if (zz[zz.length - 3] !== undefined && zz[zz.length - 3].price !== 0.01)
             bb += zz[zz.length - 3].price;
-        if (zz[zz.length - 4].price !== 0.01)
+        if (zz[zz.length - 4] !== undefined && zz[zz.length - 4].price !== 0.01)
             bb += zz[zz.length - 4].price;
     } else {
         if (zz[1] !== undefined && zz[1].price !== 0.01)
@@ -1172,6 +1173,13 @@ function reduceTerminal(terminal) {
 
 var wanted;
 
+function getPower(terminal) {
+    if (terminal.store[RESOURCE_POWER] === 0 || terminal.store[RESOURCE_POWER] === undefined ) {
+        console.log(roomLink(terminal.room.name), "getting power to process",terminal.store[RESOURCE_POWER]);
+        getMinerals(terminal, [RESOURCE_POWER]);
+    }
+}
+
 
 function buyMineralsFromBUYORDER(terminal) {
     var shard1Needed = require('commands.toSegment').getShardData();
@@ -1213,6 +1221,7 @@ function buyMineralsFromBUYORDER(terminal) {
 
 }
 
+
 class roleTerminal {
 
     static getStored() {
@@ -1223,9 +1232,9 @@ class roleTerminal {
         cleanUpOrders();
         adjustOldPrices();
         if (Game.shard.name == 'shard0') {
-                    if(Game.rooms.E38S81.terminal.store[RESOURCE_ENERGY]< 20000){
-                    	Game.rooms.E38S72.terminal.send('energy', 10000, 'E38S81', 'trade');
-                    }
+            if (Game.rooms.E38S81.terminal.store[RESOURCE_ENERGY] < 20000) {
+                Game.rooms.E38S72.terminal.send('energy', 10000, 'E38S81', 'trade');
+            }
 
             for (var a in s0LabRooms) {
                 //                console.log(Game.rooms[s0LabRooms[a]], s0LabRooms[a]);
@@ -1233,11 +1242,36 @@ class roleTerminal {
                     s1LabRooms = s0LabRooms;
 
                     let terminal = Game.rooms[s0LabRooms[a]].terminal;
-                    if (!shareEnergy(terminal)) { // Moves energy around
-                        buyMineralsFromBUYORDER(terminal);
+                    //                  if (!shareEnergy(terminal)) { // Moves energy around
+                    buyMineralsFromBUYORDER(terminal);
+                    //                    }
+                }
+            }
+            return;
+        }
+        if (Game.shard.name == 'shard2') {
+            var room = Game.rooms.E19S49;
+            var terminal = room.terminal;
+            if (terminal !== undefined) {
+                for (var eee in terminal.store) {
+                    if (terminal.store[eee] > 1000 && eee !== RESOURCE_ENERGY && eee !== 'XGH2O') {
+                        let zz = Game.market.getAllOrders({ type: (ORDER_BUY), resourceType: eee });
+                        if (zz.length > 0) {
+                            zz.sort((a, b) => a.price - b.price);
+                            if (zz[zz.length - 1].price > 0.51) {
+
+                                var deal = Game.market.deal(zz[zz.length - 1].id, 1000, 'E19S49');
+                                console.log('did deal in shard2', deal, zz[zz.length - 1].price, '4', eee);
+                                if (deal == OK) {
+                                    return;
+                                }
+                            }
+                        }
                     }
                 }
             }
+            s1LabRooms = ['E19S49'];
+            Memory.stats.totalMinerals = countTerminals();
             return;
         }
         //        focusMinerals(focusID, focusMin);
@@ -1247,7 +1281,7 @@ class roleTerminal {
         var newTrade = false;
         var upgradeTransfer = false;
         var upgradeGHTransfer = false;
-
+        var share = false;
         if (Game.rooms.E14S38.controller.level > 5 && Game.rooms.E14S38.terminal.store.K > 1000) {
             Game.rooms.E14S38.terminal.send('K', Game.rooms.E14S38.terminal.store.K, 'E17S45', 'trade');
         }
@@ -1260,7 +1294,6 @@ class roleTerminal {
                 let terminal = Game.rooms[s1LabRooms[e]].terminal;
 
 
-
                 if (terminal !== undefined && terminal.cooldown === 0 && s1LabRooms[e] !== 'E14S38') {
 
                     if (!upgradeGHTransfer)
@@ -1268,31 +1301,49 @@ class roleTerminal {
 
                     var energy = terminal.store[RESOURCE_ENERGY];
                     var total = terminal.total;
+                    if (!newTrade && energy > 21000) {
+                        if (!newTrade) {
+                            newTrade = newTradeEnergy(terminal);
+                        }
+                    }
                     if (total > 295000) {
                         if (energy > 21000) {
                             if (!upgradeTransfer) {
                                 upgradeTransfer = upgradeRoom(terminal);
                                 if (!upgradeTransfer) {
-                                    if (!shareEnergy(terminal)) { // Moves energy around
-                                        if (terminal.room.name !== 'E14S37')
-                                            if (!tradeEnergy(terminal)) {}
+                                    if (!share) {
+                                        share = shareEnergy(terminal);
+                                        if (!share) {
+                                            if (terminal.room.name !== 'E14S37') {
+                                                if (!tradeEnergy(terminal)) {
+
+                                                }
+                                            }
+                                        } else {
+                                            getPower(terminal);
+
+                                        }
                                     }
                                 }
                             } else {
-                                if (!shareEnergy(terminal)) { // Moves energy around
-                                    if (terminal.room.name !== 'E14S37')
-                                        if (!tradeEnergy(terminal)) {}
+                                if (!share) {
+                                    share = shareEnergy(terminal);
+                                    if (!share) {
+                                        if (terminal.room.name !== 'E14S37') {
+                                            if (!tradeEnergy(terminal)) {
+
+                                            }
+                                        }
+                                    } else {
+                                        getPower(terminal);
+
+                                    }
                                 }
+
 
                             }
 
-                        }
-                        /* else if (energy > 21000) {
-                                                    if (!newTrade) {
-                                                        newTrade = newTradeEnergy(terminal);
-                                                    }
-                                                }*/
-                        else {
+                        } else {
                             console.log(roomLink(terminal.room.name), "is full and less than 20K energy");
                             reduceTerminal(terminal);
 
@@ -1301,6 +1352,26 @@ class roleTerminal {
                     //                if (!focus) focus = focusRoom(terminal);
                     needEnergy(terminal);
                     let needed = labs.neededMinerals(terminal.pos.roomName);
+                    if (terminal.room.name === 'E22S48') {
+                        // This room is what moves minerals too Shard2
+                        if (Memory.stats.totalMinerals.L > 80000)
+                            needed.push('L');
+                        if (Memory.stats.totalMinerals.X > 80000)
+                            needed.push('X');
+                        if (Memory.stats.totalMinerals.H > 80000)
+                            needed.push('H');
+                        if (Memory.stats.totalMinerals.O > 80000)
+                            needed.push('O');
+                        if (Memory.stats.totalMinerals.U > 80000)
+                            needed.push('U');
+                        if (Memory.stats.totalMinerals.Z > 80000)
+                            needed.push('Z');
+                        if (Memory.stats.totalMinerals.K > 80000)
+                            needed.push('K');
+                        needed.push('XGH2O');
+
+                        needed = _.uniq(needed);
+                    }
                     getMinerals(terminal, needed);
 
                     if (terminal.room.memory.boost !== undefined) {
@@ -1311,22 +1382,6 @@ class roleTerminal {
                     }
                     //                forEveryTerminal(terminal);
                     forEveryStorage(terminal);
-
-
-
-
-                    /*            if (terminal.room.memory.powerSpawnID === undefined) {
-                                    let zz = terminal.room.find(FIND_STRUCTURES);
-                                    zz = _.filter(zz, function(o) {
-                                        return o.structureType == STRUCTURE_POWER_SPAWN;
-                                    });
-                                    if (zz.length === 0) {
-                                        //      doit = false;
-                                    } else {
-                                        terminal.room.memory.powerSpawnID = zz[0].id;
-                                    }
-                                }*/
-
                 }
 
             }

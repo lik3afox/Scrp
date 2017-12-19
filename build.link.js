@@ -55,7 +55,7 @@ function newLinkTransfer() {
 
                     }
 
-                    if (LINK.energy > 0 && LINK.cooldown === 0 ) {
+                    if (LINK.energy > 300 && LINK.cooldown === 0 ) {
                         if (LINK.room.memory.masterLinkID !== undefined) {
                             let mLink = Game.getObjectById(LINK.room.memory.masterLinkID);
                             if (mLink !== null && mLink.energy < 100) {

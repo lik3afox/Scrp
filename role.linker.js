@@ -300,6 +300,7 @@ function doDefault(creep) {
         if (creep.room.controller.level > 3 && creep.room.storage !== undefined) {
             creep.say('<');
             // First look for containers.
+       //     if(creep.pos.isNearTo(creep.room.storage)) creep.transfer(creep.room.storage,RESOURCE_ENERGY);
             if (creep.room.memory.masterLinkID !== undefined) {
 
                 if (creep.memory.roleID === 0) {
@@ -331,7 +332,7 @@ function doDefault(creep) {
 
                 close = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
                     filter: function(object) {
-                        return object.amount > (creep.memory.roleID * 500) + 300;
+                        return object.amount > (creep.memory.roleID * 500) + 100;
                     }
                 });
 
@@ -341,7 +342,7 @@ function doDefault(creep) {
                     creep.moveMe(close, {
                         maxRooms: 1,
                         reusePath: 50,
-                        ignoreCreeps: true,
+  //                      ignoreCreeps: true,
                         visualizePathStyle: {
                             fill: 'transparent',
                             stroke: '#f0fA',
@@ -360,26 +361,28 @@ function doDefault(creep) {
 
             close = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
                 filter: function(object) {
-                    return !spn.pos.isNearTo(object) && object.amount > (creep.memory.roleID * 500) + 300;
+                    return !spn.pos.isNearTo(object) && object.amount > (creep.memory.roleID * 500) + 100;
                 }
             });
-
-            if (creep.pos.isNearTo(close)) {
-                creep.pickup(close, RESOURCE_ENERGY);
-            } else {
-                creep.moveMe(close, {
-                    maxRooms: 1,
-                    reusePath: 50,
-                    ignoreCreeps: true,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#f0fA',
-                        lineStyle: 'dashed',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                });
+            if (close !== null) {
+                if (creep.pos.isNearTo(close)) {
+                    creep.pickup(close, RESOURCE_ENERGY);
+                } else {
+                    creep.moveMe(close, {
+                        maxRooms: 1,
+                        reusePath: 50,
+//                        ignoreCreeps: true,
+                        visualizePathStyle: {
+                            fill: 'transparent',
+                            stroke: '#f0fA',
+                            lineStyle: 'dashed',
+                            strokeWidth: 0.15,
+                            opacity: 0.5
+                        }
+                    });
+                }
             }
+
 
             creep.say('>' + close);
         }

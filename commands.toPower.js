@@ -274,7 +274,7 @@ class PowerInteract {
         if (powerBank.ticksToDecay < 4000) {
             console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
             return false;
-        } else if (powerBank.power < 5000) {
+        } else if (powerBank.power < 2500) {
             console.log('Not enough power@',powerBank.power , powerBank.pos);
             return false;
         }

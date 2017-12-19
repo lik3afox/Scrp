@@ -107,6 +107,7 @@ class roleUpbuilder extends roleParent {
 
     /** @param {Creep} creep **/
     static run(creep) {
+
         if (creep.saying == '⚡' && creep.carry.energy > 51) {
             if (creep.upgradeController(creep.room.controller) == OK)
                 creep.say('⚡', true);
@@ -123,7 +124,6 @@ class roleUpbuilder extends roleParent {
             return;
         }
         super.rebirth(creep);
-
         if (Memory.war && creep.ticksToLive < 1300 || creep.room.memory.alert) {
             require('role.wallworker').run(creep);
             return;
@@ -151,7 +151,6 @@ class roleUpbuilder extends roleParent {
         }
 
         if (super.depositNonEnergy(creep)) return;
-
 
 
         // Logic here to determine action.
@@ -231,7 +230,7 @@ class roleUpbuilder extends roleParent {
         }
 
         if (creep.memory.upgrading) {
-            var spawn = require('commands.toSpawn');
+//            var spawn = require('commands.toSpawn');
             var number = 0;
             var doNot = []; //'E14S43',
 

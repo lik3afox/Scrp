@@ -1,5 +1,5 @@
 var classLevels = [
-    [CARRY, MOVE, CARRY, MOVE, WORK], // 300
+    [CARRY, MOVE, CARRY, MOVE, CARRY,CARRY], // 300
 
     [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, CARRY, MOVE], // 550
 
