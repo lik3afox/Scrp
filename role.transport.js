@@ -68,7 +68,7 @@ var visPath = {
 
 
 function getBads(creep) {
-    var bads = creep.pos.findInRange(creep.room.hostilesHere, 4);
+    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
     bads = _.filter(bads, function(object) {
         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
     });

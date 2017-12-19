@@ -696,7 +696,7 @@ class baseParent {
         }
 
         //        creep.room.memory.boost.mineralType = 'none';
-
+creep.say(creep.memory.boostNeeded);
         if (creep.memory.boostNeeded.mineralType !== 'none' && creep.memory.home == creep.room.name) {
 
             var a = creep.memory.boostNeeded.length;

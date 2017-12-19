@@ -300,7 +300,7 @@ function doDefault(creep) {
         if (creep.room.controller.level > 3 && creep.room.storage !== undefined) {
             creep.say('<');
             // First look for containers.
-            if(creep.pos.isNearTo(creep.room.storage)) creep.transfer(creep.room.storage,RESOURCE_ENERGY);
+       //     if(creep.pos.isNearTo(creep.room.storage)) creep.transfer(creep.room.storage,RESOURCE_ENERGY);
             if (creep.room.memory.masterLinkID !== undefined) {
 
                 if (creep.memory.roleID === 0) {

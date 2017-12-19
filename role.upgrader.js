@@ -49,19 +49,21 @@ class roleUpgrader extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
+var boost = ['XGH2O'];
+//if(Game.shard.name == 'shard2')
+//    console.log(boost.length);
+                if (super.boosted(creep, boost)) {
+                    return;
+                }
 
-
-        if (creep.room.controller.level != 8 && creep.room.controller.level > 5) {
+/*        if (creep.room.controller.level != 8 && creep.room.controller.level > 5) {
             if (creep.room.name === '') {
                 if (super.boosted(creep, ['XGH2O'])) {
                     return;
                 }
             } else {
-                if (super.boosted(creep, ['XGH2O'])) {
-                    return;
-                }
             }
-        }
+        }*/
 
         if (creep.room.controller.level == 8) {
             creep.memory.death = true;
@@ -75,10 +77,10 @@ class roleUpgrader extends roleParent {
             var going;
             var pos = [
                 //                new RoomPosition(20, 23, creep.room.name),
-                new RoomPosition(28, 34, creep.room.name),
+//                new RoomPosition(28, 34, creep.room.name),
                 new RoomPosition(28, 33, creep.room.name),
-                new RoomPosition(35, 9, creep.room.name),
-                new RoomPosition(35, 8, creep.room.name),
+                new RoomPosition(29, 33, creep.room.name),
+                new RoomPosition(30, 33, creep.room.name),
             ];
             if (pos[creep.memory.roleID] !== undefined) {
                 going = pos[creep.memory.roleID];
@@ -124,8 +126,8 @@ class roleUpgrader extends roleParent {
             }
 
         }
-        if (creep.room.name == 'E18S46') {
-            let zz = Game.getObjectById('5a2c5a268ba03a51745f1dc7');
+        if (creep.room.name == 'E19S49') {
+            let zz = Game.getObjectById('5a382d821d1eb30ea473ed75');
             if (zz !== null) {
                 creep.build(zz);
                 return;

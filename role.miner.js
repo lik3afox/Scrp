@@ -38,6 +38,8 @@ function getBads(creep) {
 function restingSpot(creep) {
     switch (creep.memory.goal) {
 
+        case '5982feecb097071b4adc1bf5':
+            return new RoomPosition(37, 6, creep.room.name);
         case '5836b8308b8b9619519f19f1':
             return new RoomPosition(40, 40, creep.room.name);
 

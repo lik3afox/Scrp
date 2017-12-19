@@ -251,6 +251,15 @@
                     } else if (roomEnergy >= 1300) {
                         //                          flag.memory.module[ez][_level] = 2;
                     }
+
+                    if(flag.room.name == 'E19S49') {
+                        if(flag.room.storage.store.energy > 800000){
+                            flag.memory.module[ez][_number] = 3;
+                        } else if(flag.room.storage.store.energy > 500000){
+                            flag.memory.module[ez][_number] = 2;
+                        }
+
+                    }
                     /*
                     switch (flag.memory.module[ez][_level]) {
                         case 0:

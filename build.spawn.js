@@ -429,11 +429,8 @@ class theSpawn {
         // Counting
         var totalCreeps;
         var type;
-        if (Memory.spawnCount[spawn.id] === undefined) {
-            Memory.spawnCount[spawn.id] = {
-                bodyCount: 0
-            };
-        }
+//        if (Memory.spawnCount[spawn.id] === undefined) {
+//        }
 
 
         spawn.memory.TotalBuild = (Memory.spawnCount[spawn.id].bodyCount * 3);
