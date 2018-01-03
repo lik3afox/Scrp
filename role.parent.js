@@ -192,15 +192,32 @@ function getDeathSpot(roomName) {
     }
 }
 
+function cleanCreepMemory(creep) {
+
+        if(creep.memory.birthTime !== undefined) creep.memory.birthTime = undefined;
+        if(creep.memory._move !== undefined) {
+            if(Game.time > creep.memory._move.time) {
+                creep.memory._move = undefined;
+                creep.memory.position = undefined;
+                creep.memory.stuckCount = undefined;
+            }
+        }
+        if(creep.memory.needBoost !== undefined){
+            if(creep.ticksToLive < 1000) {
+                creep.memory.needBoost = undefined;
+            }
+        }
+}
+
 //5836b8138b8b9619519f16c1
 class baseParent {
 
     static run(creep) {
-        console.log(creep.memory.role, creep.name);
+//        console.log(creep.memory.role, creep.name);
     }
     static baseRun(creep) {
-        if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
-
+//        if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
+      //  cleanCreepMemory(creep);
         if (this.depositNonEnergy(creep)) return true;
         if (this.spawnRecycle(creep)) return true;
         if (this.doTask(creep)) return true;
@@ -287,8 +304,7 @@ class baseParent {
 
     static shouldDie(creep) {
         if (creep.hits == creep.hitsMax) return;
-
-        if (creep.getActiveBodyparts(MOVE) === 0) {
+        if( creep.hits < creep.hitsMax - 800) {
             creep.suicide();
         }
     }
@@ -1196,7 +1212,7 @@ creep.say(creep.memory.boostNeeded);
 
 
     static renew(creep) {
-        if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
+//        if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
 
         if (creep.ticksToLive > 750) return false;
         if (creep.memory.renewSpawnID == 'none') return false;

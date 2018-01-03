@@ -280,7 +280,7 @@ function banditAction(creep) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
             bads = creep.room.find(FIND_HOSTILE_CREEPS);
             bads = _.filter(bads, function(o) {
-                return o.owner.username === 'Screeps' && o.getActiveBodyparts(ATTACK) === 0  && o.getActiveBodyparts(RANGED_ATTACK) === 0 ;
+                return o.owner.username === 'Screeps' && o.getActiveBodyparts(ATTACK) === 0  && o.getActiveBodyparts(RANGED_ATTACK) === 0 && o.getActiveBodyparts(HEAL) === 2 ;
             });
             if (bads.length > 0) {
                 bads.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
@@ -299,8 +299,12 @@ function banditAction(creep) {
             });
             if (bads.length > 0) {
                 bads.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
-                if (creep.pos.isNearTo(bads[0])) {
-                    creep.attack(bads[0]);
+                if (creep.pos.isNearTo(bads[0]) ) {
+                    if(bads[0].getActiveBodyparts(ATTACK) > 0 && creep.hits > 2000) {
+                        creep.attack(bads[0]);
+                    } else if(bads[0].getActiveBodyparts(ATTACK) === 0){
+                        creep.attack(bads[0]);
+                    }
                     creep.moveTo(bads[0]);
                 } else {
                     creep.moveTo(bads[0]);

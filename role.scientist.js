@@ -3,7 +3,7 @@ var classLevels = [
 
     [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
 
-    [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY,CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY,  MOVE],
+    [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, MOVE],
     // 500
     [CARRY, CARRY, MOVE,
         CARRY, CARRY, MOVE,
@@ -85,22 +85,25 @@ class scientistRole extends roleParent {
 
     static run(creep) {
         if (creep.memory.party === undefined && !creep.room.memory.labsNeedWork) {
-        //	var newUse = ['E27S45','E13S34','E18S36','E23S38','E25S47','E28S42','E23S42','E14S43','E25S27','E14S47','E17S45'
-      //  	,'E17S34','E24S33','E28S37','E25S37','E25S43','E27S34','E18S32','E29S48','E14S37'];
-//            if (_.contains(newUse,creep.room.name) ) {
-                if (creep.room.memory.mineralContainID !== undefined) {
-                    var zz = Game.getObjectById(creep.room.memory.mineralContainID);
-                    if (zz !== undefined && zz.total > 1000) {
-                        require('role.assistant').run(creep);
-                        creep.say('bi');
+            if (creep.room.memory.mineralContainID !== undefined) {
+                var zz = Game.getObjectById(creep.room.memory.mineralContainID);
+                if (zz !== undefined && zz.total > 1000) {
+                    require('role.assistant').run(creep);
+                    creep.say('bi');
+                    return;
+                }
+            }
+            if (creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
+                require('role.first').run(creep);
+            } else {
+                if (creep.room.name == 'E27S45') {
+                    if (creep.room.nuke.ghodium !== creep.room.nuke.ghodiumCapacity && creep.room.nuke.energy !== creep.room.nuke.energyCapacity) {
+                        require('role.nuker').run(creep);
                         return;
                     }
                 }
-                require('role.first').run(creep);
-  //          } else {
-                creep.say('🏄🏽');
-    //        }
-
+            }
+//                console.log('xexx',creep.room.energyAvailable, creep.room.energyCapacityAvailable) ;
             return;
         }
 
@@ -181,13 +184,8 @@ class scientistRole extends roleParent {
                         }
 
                         if (!otherThings) {
-      //                      if (!creep.pos.isNearTo(creep.room.terminal)) {
-    //                            creep.moveMe(creep.room.terminal);
-  //                          } else {
-                                creep.say('raiders', true);
-                                creep.room.memory.labsNeedWork = false;
-                                // Here we remove the flag if it's in this room.
-//                            }
+                            creep.say('<3', true);
+                            creep.room.memory.labsNeedWork = false;
                         }
 
                     }

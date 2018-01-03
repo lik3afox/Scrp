@@ -90,7 +90,7 @@ function getEnergy(creep) {
             if (bads.length === 0) {
                 //if(!super.avoidArea(creep)) { 
 
-                creep.moveTo(target, {
+                creep.moveMe(target, {
                     ignoreRoads: _ignoreRoad,
                     maxRooms: 1,
                     reusePath: rePath,

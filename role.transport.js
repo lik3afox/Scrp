@@ -1,23 +1,3 @@
-/*
-//3/4/5/6/
-Lv 3:
-- 500 Carry
-Lv 4:
-- 750 Carry
-Lv 5:
-- 1000 Carry
-Lv 6:
-- max level 1500/1550
-*/
-
-// lv 1 300
-// lv 2 550
-// lv 3 800
-// lv 4 1300
-// lv 5 1800
-// lv 6 2300
-// lv 7 5600
-// lv 8 12800
 var classLevels = [
     // Level 0
     //  Transport - 500 Carry/900 Energy
@@ -26,8 +6,10 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     // Level 2 1000 Carry - 1750 Energy
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    // Level 3 1300 Carry - 2200 Energy.
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
 
-    // Level 3 1550 carry 2600 Energy - Required Lv 7 
+    // Level 4 1550 carry 2600 Energy - Required Lv 7 
     [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
@@ -75,15 +57,27 @@ function getBads(creep) {
     return bads;
 }
 
+function emptied(creep) {
+    if (creep.ticksToLive < creep.memory.distance * 2) {
+        if (!creep.memory.reportDeath) {
+            let spawnsDo = require('build.spawn');
+            spawnsDo.reportDeath(creep);
+        }
+        creep.suicide();
+    }
+    creep.countReset();
+}
+
 var withdrawing;
+var empting;
 
 function interactContainer(creep) {
-    withdrawing = false;
     if (creep.memory.goHome) {
         if (creep.isHome && creep.pos.isNearTo(creep.room.storage)) {
             for (var e in creep.carry) {
                 if (creep.transfer(creep.room.storage, e) == OK) {
-                    creep.countReset();
+                    emptied(creep);
+                    empting = true;
                     break;
                 }
             }
@@ -91,7 +85,8 @@ function interactContainer(creep) {
         if (creep.isHome && creep.pos.isNearTo(creep.room.terminal)) {
             for (var ez in creep.carry) {
                 if (creep.transfer(creep.room.terminal, ez) == OK) {
-                    creep.countReset();
+                    emptied(creep);
+                    empting = true;
                     break;
                 }
 
@@ -121,10 +116,11 @@ function updateMemory(creep) {
     if (creep.hits <= 400)
         creep.suicide();
     if (creep.memory.goHome) {
-        if (creep.carryTotal < 20) {
+        if (creep.carryTotal < 20 || empting) {
             creep.memory.goHome = false;
             creep.memory.cachePath = undefined;
-            creep.distance = 0;
+
+            emptied(creep);
         }
     } else {
         let container = Game.getObjectById(creep.memory.workContain);
@@ -140,12 +136,8 @@ function updateMemory(creep) {
             }
 
         }
-        if (withdrawing) {
-            //            segment.requestRoomSegmentData(creep.memory.home);
-        }
         if (creep.carryTotal > creep.carryCapacity - 45) {
             creep.memory.goHome = true;
-
         }
         if (_goal !== null && _goal.pos.inRangeTo(_goal, 3)) {
             if (creep.memory.workContain === undefined) {
@@ -168,7 +160,7 @@ function updateMemory(creep) {
 
 function movement(creep) {
     let bads = [];
-        bads = getBads(creep);
+    bads = getBads(creep);
     if (bads.length !== 0) {
         creep.runFrom(bads);
     } else {
@@ -205,13 +197,54 @@ function movement(creep) {
                 creep.memory.task.push(task);
                 roleParent.doTask(creep);
             } else if (_goal !== null && creep.room.name === _goal.pos.roomName) {
-                if (creep.pos.isNearTo(_goal)) {
+                if (!creep.pos.isNearTo(container)) {
+                    creep.moveTo(container, { maxRooms: 1 });
+                } else if (creep.pos.isNearTo(_goal)) {
                     creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 10, reusePath: 1 });
-                } else if (!creep.pos.isNearTo(container)) {
-                    creep.moveTo(container);
                 } else {
-                    if (!withdrawing)
+                    if (!withdrawing) {
                         creep.sleep();
+
+
+                        var partner = _.filter(creep.room.find(FIND_CREEPS), function(o) {
+                            return o.pos.isNearTo(creep) && o.ticksToLive < creep.ticksToLive && o.memory.role == 'transport';
+                        });
+                        if (partner.length > 0) {
+                            creep.transfer(partner[0], RESOURCE_ENERGY);
+                            if (partner[0].carryCapacity - partner[0].carry[RESOURCE_ENERGY] < creep.energy) {
+                                partner[0].say(':)'); // Breaks sleep.
+                                roleParent.segment.requestRoomSegmentData(partner[0].memory.home); // Request it for the broken sleeper to use.
+                            }
+
+                        }
+
+                        if (creep.room.memory.mineInfo === undefined) {
+                            creep.room.memory.mineInfo = {};
+                        }
+                        if (creep.room.memory.mineInfo[creep.memory.goal] === undefined) {
+                            creep.room.memory.mineInfo[creep.memory.goal] = 0;
+                        } else {
+                            if (creep.memory.expandLevel === undefined) {
+                                var spn = Game.getObjectById(creep.memory.parent);
+                                if (spn !== null) {
+                                    for (var e in spn.memory.roadsTo) {
+                                        let zz = spn.memory.roadsTo[e];
+                                        if (zz.source === creep.memory.goal) {
+                                            creep.memory.expandLevel = zz.expLevel;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (creep.memory.expandLevel > 4) {
+                                creep.room.memory.mineInfo[creep.memory.goal] -= 8;
+                            } else {
+                                creep.room.memory.mineInfo[creep.memory.goal] -= 16;
+                            }
+                        }
+
+                    }
                 }
             } else { // If 
                 if (creep.memory.workContain !== undefined) {
@@ -243,12 +276,18 @@ class transport extends roleParent {
         super.rebirth(creep);
         if (super.movement.runAway(creep)) return;
         if (super.baseRun(creep)) return;
+        empting = false;
+        withdrawing = false;
         if (super.link.transfer(creep)) {
-            creep.countReset();
-            return;
+            if(creep.carry[RESOURCE_ENERGY] > 800) {
+                return;
+            }
+            empting = true;
         }
+
         _goal = Game.getObjectById(creep.memory.goal);
         if (_goal !== null && _goal.energyCapacity === 4000 && super.keeperWatch(creep)) return;
+
         if (creep.carryTotal < creep.carryCapacity - 10) {
             let bads = [];
             if (_goal !== null && _goal.energyCapacity === 4000) {

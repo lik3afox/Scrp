@@ -567,6 +567,10 @@ class roleLinker extends roleParent {
             E14S38(creep, creep.carryTotal > 0);
             return;
         }
+        if(creep.room.name == 'E19S49'){
+            doDefault(creep, creep.carryTotal > 0);
+            return;
+        }
 
         if (creep.room.controller.level === 8 || creep.room.name == 'E25S43' || creep.room.name == 'E14S37') {
             if (!super.power.getPowerToSpawn(creep)) {

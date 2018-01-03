@@ -86,6 +86,9 @@ function getSpot(roomName) {
             return new RoomPosition(35, 8, roomName);
         case "E13S34":
             return new RoomPosition(37, 18, roomName);
+        case "E19S49":
+            return new RoomPosition(30, 33, roomName);
+
         default:
             return;
     }

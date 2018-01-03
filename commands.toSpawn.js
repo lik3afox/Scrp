@@ -82,7 +82,11 @@ function getStack(spawn) {
         spawn.memory.currentStack = 'create';
         //    console.log(spawn.memory.create.length , spawn.memory.expandCreate.length);
         if (spawn.memory.create.length === 0 && spawn.memory.warCreate.length > 0) {
-            spawn.memory.currentStack = 'war';
+            if (spawn.room.name == 'E22S48' && spawn.memory.expandCreate.length > 0) {
+                spawn.memory.currentStack = 'expand';
+            } else {
+                spawn.memory.currentStack = 'war';
+            }
         }
         //        if (Game.flags[rampart] === undefined && spawn.memory.create.length === 0 && spawn.memory.expandCreate.length > 0 && spawn.memory.warCreate.length === 0) {
         if (spawn.memory.create.length === 0 && spawn.memory.expandCreate.length > 0 && spawn.memory.warCreate.length === 0) {
@@ -99,15 +103,18 @@ function getStack(spawn) {
                 return spawn.memory.expandCreate;
         }
     } else {
-        for (var i in Game.spawns) {
-            if (Game.spawns[i].room.name == spawn.room.name && Game.spawns[i].memory.alphaSpawn) {
-                alpha = Game.spawns[i];
-                //                console.log(Game.spawns[i].room.name, spawn.room.name, Game.spawns[i].memory.alphaSpawn, alpha.memory.currentStack);
+        if (spawn.memory.alphaSpawnID !== undefined) {
 
+            alpha = Game.getObjectById(spawn.memory.alphaSpawnID);
 
+            if (alpha !== null) {
                 alpha.memory.currentStack = 'create';
                 if (alpha.memory.create !== undefined && alpha.memory.create.length === 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length > 0) {
-                    alpha.memory.currentStack = 'war';
+                    if (alpha.room.name == 'E22S48' && alpha.memory.expandCreate.length > 0) {
+                        alpha.memory.currentStack = 'expand';
+                    } else {
+                        alpha.memory.currentStack = 'war';
+                    }
                 }
 
                 if (alpha.memory.create !== undefined && Game.flags[rampart] === undefined && alpha.memory.create.length === 0 && alpha.memory.expandCreate.length > 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length === 0) {
@@ -123,9 +130,37 @@ function getStack(spawn) {
                     case 'expand':
                         return alpha.memory.expandCreate;
                 }
+            }
 
+        } else {
+            for (var i in Game.spawns) {
+                if (Game.spawns[i].room.name == spawn.room.name && Game.spawns[i].memory.alphaSpawn) {
+                    alpha = Game.spawns[i];
+
+
+                    alpha.memory.currentStack = 'create';
+                    if (alpha.memory.create !== undefined && alpha.memory.create.length === 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length > 0) {
+                        alpha.memory.currentStack = 'war';
+                    }
+
+                    if (alpha.memory.create !== undefined && Game.flags[rampart] === undefined && alpha.memory.create.length === 0 && alpha.memory.expandCreate.length > 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length === 0) {
+                        alpha.memory.currentStack = 'expand';
+                    }
+
+
+                    switch (alpha.memory.currentStack) {
+                        case 'create':
+                            return alpha.memory.create;
+                        case 'war':
+                            return alpha.memory.warCreate;
+                        case 'expand':
+                            return alpha.memory.expandCreate;
+                    }
+
+                }
             }
         }
+
 
     }
 }
@@ -190,10 +225,12 @@ class SpawnInteract {
                 newCreep.memory.home = Game.spawns[i].room.name;
                 newCreep.memory.parent = Game.spawns[i].id;
                 if (Game.spawns[i].memory.warCreate !== undefined) {
-                    if (newCreep.memory.role === 'rampartGuard') {
+                    var toTop = ['rampartGuard', 'fighter', 'healer'];
+                    if (_.contains(toTop, newCreep.memory.role)) {
                         Game.spawns[i].memory.warCreate.unshift(newCreep);
+                    } else {
+                        Game.spawns[i].memory.warCreate.push(newCreep);
                     }
-                    Game.spawns[i].memory.warCreate.push(newCreep);
                 }
 
                 //                                console.log(Game.spawns[i], 'adding to stack', Game.spawns[i].name, creep);
@@ -485,7 +522,10 @@ class SpawnInteract {
 
         if (STACK !== undefined && STACK.length > 0) {
             // Creation here.
-            if (spawn.canCreateCreep(STACK[0].build) == OK) {
+            //          if(STACK[0].build.body.length == 0)
+            //                STACK.shift();
+            var ee = spawn.canCreateCreep(STACK[0].build);
+            if (ee == OK) {
 
                 spawn.memory.CreatedMsg = STACK[0].memory.role;
                 let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);

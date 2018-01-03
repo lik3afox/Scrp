@@ -178,6 +178,7 @@
 
     var HardD = ['E35S83'];
 
+
     function rampartCheck(spawn) {
 
 
@@ -322,8 +323,9 @@
                     for (var ze in targets) {
                         total += targets[ze].ticksToLive;
                     }
-                    spawn.room.visual.text(total + "/7500", spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
-                    if (total > 6000) {
+                    var limit = 4000;
+                    spawn.room.visual.text(total + "/"+limit, spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+                    if (total > limit) {
                         spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
                     }
                 }
@@ -417,7 +419,7 @@
                             level: 3
                         }
                     });
-                    console.log(zz);
+//                    console.log(zz);
                 }
             }
 
@@ -491,6 +493,36 @@
         if (walls.length > 2) {
             //            console.log(roomName,"wall:",walls[1].hits);
             return walls[1].hits;
+        }
+
+    }
+
+    function cleanMemory() {
+        for (var e in Game.rooms) {
+            var room = Game.rooms[e];
+            var memory = room.memory;
+            if (room.controller !== undefined && room.controller.owner !== undefined && room.controller.owner.username === 'likeafox') {
+                console.log(room.controller.owner.username);
+            } else {
+                if (memory.roomLinksID !== undefined) {
+                    console.log('DEL roomLInk', roomLink(room.name));
+                    memory.roomLinksID = undefined;
+                }
+                if (memory.defenderSleepSpot !== undefined) {
+                    console.log('DEL Sleptspot', roomLink(room.name));
+                    memory.defenderSleepSpot = undefined;
+                }
+                if (Game.flags[memory.invasionFlag] === undefined) {
+                    if (memory.invasionFlag !== undefined) {
+                        memory.invasionFlag = undefined;
+                        memory.hostileID = undefined;
+                        memory.hostileScanTimer = undefined;
+                        console.log('DEL invasion Info', roomLink(room.name));
+                    }
+
+                }
+                console.log('not owned');
+            }
         }
 
     }
@@ -572,6 +604,8 @@
 
         if (Memory.showInfo === undefined) Memory.showInfo = 5;
         var i = prototypes.length;
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check B4 ProtoTypes");
+
         while (i--) {
             prototypes[i]();
             global.roomLink = function(roomname) {
@@ -613,18 +647,25 @@
         }
         // for creeps.
         var total = 0;
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check B4 run");
+
         spawnsDo.runCreeps();
         if (Game.shard.name !== 'shard2') {
             require('commands.toSegment').run();
         }
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 add spawn");
+
+
         addSpawnQuery(); // This will not work with old counting.
         var spawnReport = {};
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 flag");
         flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
 
 
         var keys = Object.keys(Game.spawns);
         var t = keys.length;
         var title;
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 spawn while loop.");        
         while (t--) { // Start of spawn Loop
             title = keys[t];
             if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
@@ -668,7 +709,6 @@
 
                 }
 
-
                 if (Game.spawns[title].memory.alphaSpawn && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN) {
                     spawnsDo.spawnQuery(Game.spawns[title]);
@@ -694,6 +734,7 @@
                             console.log('trying LUCKY', ez);
                         }
                     } else {
+
                         ccSpawn.createFromStack(Game.spawns[title]);
                     }
                 } else {
@@ -728,21 +769,25 @@
                 }
             }
         } // End of Spawns Loops
-
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 link");
         Memory.stats.rooms = spawnReport;
         link.run();
         Memory.marketRunCounter--;
+
         if (Memory.marketRunCounter <= 0) {
             Memory.marketRunCounter = 10;
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 market run");
             market.run();
         }
         if (Game.shard.name !== 'shard2') {
 
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 statusupdate and observer run");
             memoryStatsUpdate();
             observer.run();
 
         }
 
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 power,upgrade, lab");
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
             if (Game.cpu.bucket > 250) {
@@ -752,8 +797,8 @@
             if (Memory.labsRunCounter === undefined) Memory.labsRunCounter = 2;
             Memory.labsRunCounter--;
             if (Memory.labsRunCounter <= 0) {
-                Memory.labsRunCounter = 10;
                 labs.run();
+                Memory.labsRunCounter = 10;
             }
             /*var rooms = [];
             for(var e in Game.constructionSites){
@@ -767,7 +812,7 @@
             } */
         }
 
-
+//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 remote and report");
         scanForRemoteSources();
 
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
@@ -787,7 +832,7 @@
                 Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
             }
         } else if (Game.shard.name == 'shard2') {
-            console.log('<a style="color:#00aaff">@@@@@@@@@@@@@@@@@@@@@@@@TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
+  //          console.log('<a style="color:#00aaff">@@@@@@@@@@@@@@@@@@@@@@@@TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
 
         } else {
             if (Game.spawns.E38S81) {
@@ -799,11 +844,11 @@
 
                 //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
                 let dif;
-                console.log('<a style="color:#aaaaff">*****PP:' + 0 + '****' + report + '******TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
+//                console.log('<a style="color:#aaaaff">*****PP:' + 0 + '****' + report + '******TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
 
                 //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
                 Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
             }
         }
-
+//        cleanMemory();
     });

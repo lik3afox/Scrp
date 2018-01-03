@@ -3,7 +3,7 @@
 
 var classLevels = [ MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
     ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-    ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL,MOVE
+    HEAL, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, MOVE,HEAL
 ];
 
 var boost = [];
@@ -77,7 +77,9 @@ function attackCreep(creep, bads) {
         } else {
             if (creep.hits > 2600) {
                 creep.attack(enemy);
+            creep.rangedMassAttack();
             } else {
+            creep.rangedMassAttack();
                 creep.selfHeal();
             }
         }
@@ -176,18 +178,19 @@ function moveCreep(creep) {
                 });
             } else {
                 
-                creep.moveMe(gota, {
+                creep.moveTo(gota, {
                     reusePath: 7,
-                    ignoreCreeps: true,
+                    ignoreRoads:false,
+//                    ignoreCreeps: true,
                     visualizePathStyle: {
                         fill: 'transparent',
                         stroke: '#bf0',
-                        lineStyle: 'dashed',
+                        lineStyle: 'dotted',
                         strokeWidth: 0.15,
                         opacity: 0.5
                     }
                 });
-
+                creep.say('!!',true);
             }
 
         } else {
@@ -241,7 +244,7 @@ class roleGuard extends roleParent {
 
             creep.memory.goalPos = new RoomPosition(Game.flags[creep.memory.party].pos.x, Game.flags[creep.memory.party].pos.y, Game.flags[creep.memory.party].pos.roomName);
         }
-        if(creep.room.name == 'E16S45') {
+        if(creep.room.name == 'E1xx6S45') {
             var tgt = ['59fb79418186e6118f42450a','59fbcaf6f7357834b905524c','59a5e7701c644c60d16ddfda','59ff3b257492f940ea7d8bc3','5a002ce6e1b86178a4748301','59a5f92164f0f83b3a4a408d',
             '59b1a11a4c9a0c23e5809e7c','59fc82cba7467326e497ef0d','59a5ec335a0f0a6488cd69d2','5a19dea447419a61c5de201b','59a5e987f0297d23cc730f4d','59a5fdd3822ea74aacf9f546',
             '59a6ad34b5836a57a7a47a1f','59a6cd50b0642834030d7808','59a5eae2734d2e2583fc4b5a'];
@@ -290,7 +293,12 @@ class roleGuard extends roleParent {
 
 
             } else {
-                creep.selfHeal();
+                if(!creep.selfHeal()){
+
+                    if(creep.healOther(3)){
+                        console.log('healing others?!!');
+                    }
+                }
                 if (!movement.moveToDefendFlag(creep)) {
                     moveCreep(creep);
                 } else { // So if it has to move to a defend flag - it's seen an invader in the room.

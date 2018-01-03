@@ -62,7 +62,11 @@ function attackCreep(creep, bads) {
 }
 
 function restingSpot(creep) {
-    if(creep.room.memory.defenderSleepSpot === undefined) {
+    if(creep.room.memory.defenderSleepSpot !== undefined && creep.room.name !== creep.memory.home){
+        creep.room.memory.defenderSleepSpot = undefined;
+    }
+    if(creep.room.name !== creep.memory.home) return;
+    if(creep.room.memory.defenderSleepSpot === undefined && creep.room.name == creep.memory.home) {
         creep.room.memory.defenderSleepSpot = new RoomPosition(1,1,'none');
     }
     if(creep.room.memory.defenderSleepSpot.roomName !== 'none') {

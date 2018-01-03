@@ -257,6 +257,10 @@
                             flag.memory.module[ez][_number] = 3;
                         } else if(flag.room.storage.store.energy > 500000){
                             flag.memory.module[ez][_number] = 2;
+                        } else if(flag.room.storage.store.energy > 25000){
+                            flag.memory.module[ez][_number] = 1;
+                        } else {
+                            flag.memory.module[ez][_number] = 0;
                         }
 
                     }
@@ -892,9 +896,16 @@
                                 var testz2 = _.filter(strucd, function(o) {
                                     return o.structureType === STRUCTURE_CONTAINER;
                                 });
-                                if (testz2.length > 0 && flag.color === COLOR_GREEN) {
-                                    //  flag.setColor(COLOR_WHITE,COLOR_WHITE);
+
+                                // Start countingdown to see if bandits have failed to kill caravan.
+                                if(flag.memory.countDown === undefined) {
+                                    flag.memory.countDown = 1000;
                                 }
+                                flag.memory.countDown--;
+                                if(flag.memory.countDown < 0 && testz2.length === 0)  {
+                                    flag.remove();
+                                }
+
                                 // Now we check to see if the containers are empty and
                                 var testz3 = _.filter(strucd, function(o) {
                                     return o.structureType === STRUCTURE_CONTAINER && o.total === 0;
@@ -903,6 +914,14 @@
                                 if (testz2.length !== 0 && testz2.length == testz3.length) {
                                     flag.remove();
                                 }
+
+                                 strucd = flag.room.find(FIND_CREEPS);
+                                 testz2 = _.filter(strucd, function(o) {
+                                    return o.owner.username == 'Screeps';
+                                    });
+                                 if(testz2.length === 0) {
+                                  //  rally.memory.rallyCreateCount = 1000;
+                                 }
 
                             }
                         }

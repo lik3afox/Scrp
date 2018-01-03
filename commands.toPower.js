@@ -272,10 +272,10 @@ class PowerInteract {
     static analyzePowerBank(powerBank, room) {
 
         if (powerBank.ticksToDecay < 4000) {
-            console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
+//            console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
             return false;
         } else if (powerBank.power < 2500) {
-            console.log('Not enough power@',powerBank.power , powerBank.pos);
+  //          console.log('Not enough power@',powerBank.power , powerBank.pos);
             return false;
         }
         else {
@@ -289,8 +289,8 @@ class PowerInteract {
                 flagCol: COLOR_YELLOW,
                 flagCol2: COLOR_RED
                 };
-                console.log('We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
-                room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+let zz =                 room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+                console.log(zz,'We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
             } 
             return true;
         }

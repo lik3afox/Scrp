@@ -23,12 +23,6 @@ var classLevels = [
 ];
 
 var roleParent = require('role.parent');
-var containers = require('commands.toContainer');
-var constr = require('commands.toStructure');
-var spawn = require('commands.toSpawn');
-
-var sources = require('commands.toSource');
-var structures = require('commands.toStructure');
 
 class roleNuker extends roleParent {
     static levels(level) {
@@ -37,42 +31,10 @@ class roleNuker extends roleParent {
     }
 
     static run(creep) {
-        //  creep.say('nuke');
         let nuke = creep.room.nuke;
-        let total = _.sum(creep.carry);
-        if (super.spawnRecycle(creep)) {
-            return;
-        }
+        if (creep.carryTotal === 0) {
 
-        if (total === 0) {
-            creep.memory.filled = false;
-            if (nuke.ghodium == nuke.ghodiumCapacity && nuke.energy == nuke.energyCapacity) {
-                creep.memory.death = true;
-            }
-        } else {
-            creep.memory.filled = true;
-        }
-
-        if (!creep.memory.filled) {
-
-            //            creep.say('g'+total);
-            if (nuke.ghodium < nuke.ghodiumCapacity) {
-                if (creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.withdraw(creep.room.terminal, 'G');
-                } else {
-                    creep.moveTo(creep.room.terminal);
-                }
-
-            } else {
-                if (creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.transfer(creep.room.terminal, 'G');
-                } else {
-                    creep.moveTo(creep.room.terminal);
-                }
-
-            }
-
-            if (nuke.energy < nuke.energyCapacity) {
+           if (nuke.energy < nuke.energyCapacity) {
 
                 if (creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
                     if (creep.pos.isNearTo(creep.room.storage)) {
@@ -88,7 +50,13 @@ class roleNuker extends roleParent {
                         creep.moveTo(creep.room.terminal);
                     }
                 }
-            }
+            } /*else if (nuke.ghodium < nuke.ghodiumCapacity) {
+                if (creep.pos.isNearTo(creep.room.terminal)) {
+                    creep.withdraw(creep.room.terminal, 'G');
+                } else {
+                    creep.moveTo(creep.room.terminal);
+                }
+            }*/
 
         } else {
             if (creep.carry.G > 0 && nuke.ghodium == nuke.ghodiumCapacity && nuke.energy == nuke.energyCapacity) {
@@ -119,9 +87,7 @@ class roleNuker extends roleParent {
                 }
             }
         }
-
     }
 }
 
 module.exports = roleNuker;
-//5836b8168b8b9619519f170c

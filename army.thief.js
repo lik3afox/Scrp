@@ -104,6 +104,8 @@ function banditAction(creep) {
             }
         } else {
             creep.moveTo(stor,{reusePath:50});
+            creep.countDistance();
+
             }
         return;
     }
@@ -149,9 +151,9 @@ class thiefClass extends roleParent {
     static run(creep) {
         if (super.baseRun(creep)) return;
 
-        if (super.boosted(creep, boost)) {
-            return;
-        }
+//        if (super.boosted(creep, boost)) {
+  //          return;
+    //    }
 
         if (super.spawnRecycle(creep)) {
             return;

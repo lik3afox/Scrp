@@ -49,7 +49,7 @@ var transportLevel = 20000;
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
     [], // Kept empty so nothing occurs and this can stay.
-    [ // Level 1 500 Carry/900 Energy Transports
+    [ // Level 1 500 Carry 2 work transports. 
         ['miner', 1, 2], // Harvester - experiemnt w/o carry
         ['transport', 1, 0], // Gather and move - just carry 
         ['controller', 1, 1]
@@ -66,23 +66,28 @@ var expansionModule = [
         ['controller', 1, 3]
     ],
     [ // level 4  1550 Carry - 2600 Energy
-        ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 1, 3], // Gather and move - just carry 
+        ['miner', 1, 4], // Harvester - experiemnt w/o carry
+        ['transport', 1, 4], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
-    [ // Lv 5 - 2x1000 Carry 
+    [ // Lv 5 - 2000 Carry 
         // Two transports @ 1000 Carry
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
         ['transport', 2, 2], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
-    [ // Lv 6 - 2X1550 Carry
-        // Two Transports @ 1550 Carry.
+    [
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
         ['transport', 2, 3], // Gather and move - just carry 
         ['controller', 1, 4]
+
+    ], // Level seven
+    [ // Lv 7 - 3100 Carry
+        // Two Transports @ 1550 Carry.
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 2, 4], // Gather and move - just carry 
+        ['controller', 1, 4]
     ],
-    [], // Level seven
     [], // Lv 8
     [], // LEVEL 9 
     [ // LEVEL 10  For Mineral Harvesting.
@@ -474,7 +479,7 @@ class theSpawn {
 
                 if (totalCreeps[currentModule[type][_name]].count < currentModule[type][_number]) {
                     if (spawn.memory.create === undefined) spawn.memory.create = [];
-                    console.log(currentModule[type][_name]);
+
                     let mod = getModuleRole(currentModule[type][_name]);
                     if (mod !== undefined) {
                         var theBuild = mod.levels(currentModule[type][_level]);
@@ -515,6 +520,11 @@ class theSpawn {
         for (var ie in spawn.memory.roadsTo) {
 
             let xp = spawn.memory.roadsTo[ie].expLevel;
+
+
+//            if(spawn.memory.roadsTo[ie].expLevel === 6)
+//                spawn.memory.roadsTo[ie].expLevel = 7;
+
             _module = expansionModule[xp];
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 
@@ -785,6 +795,8 @@ class theSpawn {
                         if (Game.creeps[name].memory.role == 'mulxx') { countCPU = true; } else { countCPU = false; }
                         if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
+              //              if(Game.shard.name == 'shard1')
+            //                    console.log(Game.creeps[name].memory.role);
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }
                         if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }

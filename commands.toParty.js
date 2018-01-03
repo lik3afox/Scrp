@@ -61,7 +61,7 @@ var smallPowerParty = [
 ];
 
 var mageParty = [
-    ['mage', require('army.mage'), 1, 1]
+    ['mage', require('army.mage'), 1, 2]
     //    ['healer', require('army.healer'), 1, 4] // Healer
 
 ];
@@ -78,9 +78,9 @@ var lowFFH = [
     ['healer', require('army.healer'), 1, 4] // Healer    
 ];
 var banditParty = [
- //   ['fighter', require('army.fighter'), 2, 10],
-//    ['healer', require('army.healer'), 2, 4], // Healer    
-    ['thief', require('army.thief'), 2, 3],
+    ['fighter', require('army.fighter'), 2, 10],
+    ['mage', require('army.mage'), 2, 0],
+    ['thief', require('army.thief'), 4, 3],
 ];
 
 
@@ -223,7 +223,7 @@ var upgradeRoomParty = [
 
 ];
 var muleParty = [
-    ['mule', require('army.mule'), 3, 0],
+    ['mule', require('army.mule'), 5, 0],
 ];
 var upgradeMuleParty = [
     ['mule', require('army.mule'), 1, 1],
@@ -290,6 +290,7 @@ function getSpawnCreating(flag) {
 
     switch (flag.name) {
         case 'bandit':
+        case 'thief':
             return returnClosestRoom(flag.pos.roomName);
 
         case 'recontrol':
@@ -298,7 +299,6 @@ function getSpawnCreating(flag) {
             return 'E17S45';
         case 'fightHealer':
         case 'engineer':
-        case 'thief':
             return 'E25S37';
         case 'mule':
         case 'upgradeRoom':
@@ -358,14 +358,158 @@ function getSpawnCreating(flag) {
 }
 
 
-function getCurrentParty(flag) {
-    // Powerflags do not use this to create they will do it themselves.
-
+function getPartyModule(partyName) {
     if (flag.name.substr(0, 5) == 'power') {
         if (flag.memory.spawn) return smallPowerParty;
-        //        if (flag.memory.spawn) return bigPowerParty;
     }
+    if (flag.name.substr(0, 5) == 'rampa') {
+        return rampartParty;
+    }
+    if (flag.name.substr(0, 2) == 'RA') {
+        return soloGuard;
+    }
+    switch (partyName) {
+        case 'attackController':
+            return controlAttackParty;
+        case 'warparty333':
+            return warParty333;
+        case 'safemode':
+            return safemode;
+        case 'fightHealer':
+            return fightHealer;
 
+        case 'fight2Healer':
+            return fight2Healer;
+
+        case 'oneFight':
+            return soloFighter;
+        case 'troll':
+            return trollParty;
+        case 'test':
+            return testParty;
+        case 'warparty33':
+            return warParty33;
+        case 'tower':
+            return towerParty;
+        case 'upgradeRoom':
+            return upgradeRoomParty;
+        case 'warparty2':
+            return warParty2;
+        case 'warparty22':
+            return warParty22;
+        case 'warparty1':
+            return warParty;
+        case 'warparty4':
+            return warParty4;
+        case 'warparty5':
+            return warParty5;
+        case 'warparty3':
+            return warParty3;
+        case 'lvl5Buster':
+            return lvl5Buster;
+
+        case 'harass2':
+            return harass2;
+        case 'harass':
+            return harass;
+        case 'bandit':
+            return banditParty;
+
+        case 'lowFFH':
+            return lowFFH;
+        case 'lowFH':
+            return lowFFH;
+        case 'demo':
+            return demoParty;
+
+        case 'mule':
+        case 'mule2':
+
+            return muleParty;
+        case 'hMule':
+        case 'hmule':
+
+            return muleHealParty;
+
+        case 'kill':
+        case 'kill2':
+            return killParty;
+
+        case 'upgrade':
+            return upgradeParty;
+
+        case '2upgrade':
+            return upgrade2Party;
+
+        case '3upgrade':
+            return upgrade2Party;
+
+        case 'scout':
+        case 'scout2':
+
+            return scoutParty;
+
+        case 'mage':
+            return mageParty;
+        case 'engineer2':
+            return engineer2Party;
+        case 'engineer3':
+            return engineer2Party;
+
+        case 'rampartDefender':
+            return rampartParty;
+
+        case 'engineer':
+            return engineerParty;
+        case 'science':
+            return scienceParty;
+        case 'SCI':
+        case 'SCI2':
+            return scienceParty;
+
+        case 'fighter':
+            return fighterParty;
+
+        case 'demolish':
+            return demolishParty;
+
+
+        case 'control':
+            return controlParty;
+
+        case 'recontrol':
+            return recontrolParty;
+
+        case 'thief2':
+            return thief2Party;
+        case 'thief':
+            return thiefParty;
+        case 'upgrademule':
+            return upgradeMuleParty;
+
+        case 'thief3':
+        case 'thief4':
+        case 'thief5':
+            return thief2Party;
+    }
+}
+
+
+function getCurrentParty(flag) {
+    // Powerflags do not use this to create they will do it themselves.
+    if (flag.memory.partyModule !== undefined) {
+        flag.memory.partyModule = undefined;
+    }
+    /*  
+    flag.memory.partyModule = getPartyModule(flag.memory.musterType);
+    if(flag.memory.partyModule === undefined) {
+        getPartyModule(flag.name);
+    }
+    return flag.memory.partyModule;
+*/
+    if (flag.name.substr(0, 5) == 'power') {
+        if (flag.memory.spawn) return smallPowerParty;
+    }
     if (flag.name.substr(0, 5) == 'rampa') {
         return rampartParty;
     }
@@ -604,9 +748,9 @@ function returnClosestRoom(roomName) {
     //      default:
     for (var e in Game.spawns) {
         if (Game.spawns[e].memory.alphaSpawn) {
-            if(Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37') {
+            if (Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37') {
                 var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
-                if (tempDis < distance ) {
+                if (tempDis < distance) {
                     distance = tempDis;
                     spawn = Game.spawns[e];
                 }
@@ -623,7 +767,7 @@ function returnClosestRoom(roomName) {
 function findParty(flag) {
     var currentParty = getCurrentParty(flag);
     var total = [];
-//let report = flag.name + " Party:";
+    //let report = flag.name + " Party:";
 
     for (var i in currentParty) {
         total[currentParty[i][_name]] = 0;
@@ -642,10 +786,10 @@ function findParty(flag) {
                 }
             }
         }
-     //   report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName);
+        //   report += currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName);
 
     }
-//    console.log(report);
+    //    console.log(report);
 
     return total;
 }
@@ -780,7 +924,7 @@ class partyInteract {
 
     }
 
-    static returnClosestRoom(roomName){
+    static returnClosestRoom(roomName) {
         return returnClosestRoom(roomName);
     }
 

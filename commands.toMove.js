@@ -254,7 +254,7 @@ function moveToRallyFlag(creep) {
     if (moveToPos !== undefined) {
         if (creep.room.name == moveToPos.roomName) {
             if (!creep.pos.isEqualTo(moveToPos))
-                creep.moveMe(moveToPos, {  maxOpts: 100, reusePath: 2 });
+                creep.moveMe(moveToPos, { maxOpts: 100, reusePath: 2 });
         } else {
             if (!creep.pos.isEqualTo(moveToPos))
                 creep.moveMe(moveToPos, { reusePath: 50 });
@@ -264,9 +264,9 @@ function moveToRallyFlag(creep) {
 
     if (Game.flags[creep.memory.party] === undefined) return false;
     if (creep.room.name == Game.flags[creep.memory.party]) {
-        creep.moveMe(Game.flags[creep.memory.party], {  ignoreCreeps: true });
+        creep.moveMe(Game.flags[creep.memory.party], { ignoreCreeps: true });
     } else {
-        creep.moveMe(Game.flags[creep.memory.party], {  reusePath: 50 });
+        creep.moveMe(Game.flags[creep.memory.party], { reusePath: 50 });
     }
     //        creep.moveMe(Game.flags[creep.memory.party],{ignoreRoads: true,reusePath:50});
     creep.say('rally');
@@ -310,7 +310,7 @@ function atFlag(creep, flag) {
     return false;
 }
 
-   
+
 
 
 function getFormationPos(creep) {
@@ -467,14 +467,14 @@ class MoveInteract {
     }
 
     static isDefendFlag(spawn) {
-            for (var e in Game.flags) {
-                if (Game.flags[e].color == FLAG.DEFEND) {
-                    return true;
-                }
+        for (var e in Game.flags) {
+            if (Game.flags[e].color == FLAG.DEFEND) {
+                return true;
             }
-            return false;
         }
-        //      
+        return false;
+    }
+    //      
 
     static removeDefendFlag() {
         for (var e in Game.flags) {
@@ -502,11 +502,11 @@ class MoveInteract {
                     //              console.log(Game.spawns[i].memory.roadsTo[e].sourcePos.x);
 
                     if (Game.spawns[i].memory.roadsTo[e].sourcePos !== undefined)
-                    //              console.log(tempz);
+                        //              console.log(tempz);
 
                         creep.moveTo(Game.spawns[i].memory.roadsTo[e].sourcePos.x,
-                        Game.spawns[i].memory.roadsTo[e].sourcePos.y,
-                        Game.spawns[i].memory.roadsTo[e].sourcePos.roomName);
+                            Game.spawns[i].memory.roadsTo[e].sourcePos.y,
+                            Game.spawns[i].memory.roadsTo[e].sourcePos.roomName);
                     return true;
 
                 }
@@ -562,37 +562,15 @@ class MoveInteract {
         //        if (!createWayPath(creep)) {
         if (!healMovement(creep))
             if (!moveToRallyFlag(creep)) {}
-            //      }
+        //      }
     }
 
 
 
     static moveToDefendFlag(creep, bades) {
-        var guardRooms = ['E26S75', 'E25S74', 'E25S75', 'E25S76', 'E26S74', 'E26S76', 'E35S84', 'E35S74'];
-        var E26S76 = ['E26S75', 'E26S76', 'E25S76'];
-        var E26S75 = ['E25S75', 'E26S74', 'E26S76'];
-        var E26S74 = ['E26S75', 'E25S74'];
-        var E25S74 = ['E25S75', 'E26S74'];
-        var E25S76 = ['E25S75', 'E26S76'];
-        var E35S84 = ['E35S84', 'E35S85', 'E34S84'];
-        var E34S84 = ['E35S84', 'E35S85', 'E34S84'];
-
-        var E35S74 = ['E35S74', 'E35S75', 'E34S74', 'E36S74', 'E36S75'];
-        var E34S74 = ['E35S74', 'E34S74'];
-        var E36S74 = ['E35S74', 'E36S74', 'E36S75'];
-        var E36S75 = ['E35S74', 'E35S75', 'E36S74', 'E36S75'];
-        var E35S76 = ['E35S76', 'E34S76', 'E35S75'];
-        var E34S76 = ['E35S76', 'E34S76'];
-
-        var W4S94 = ['W4S94', 'W5S94'];
-        var W5S94 = ['W4S94', 'W5S94'];
-
-
-        var nonResponders = ['E24S74', 'E25S74', 'E26S74',
-            'E24S75', 'E25S75', 'E26S75',
-            'E24S76', 'E25S76', 'E26S76'
-        ]; // No, acutally what happens is that all creeps come and help kill range 
-        // This is for responders
+        var defendRooms = {
+            E16S45: ['E16S45', 'E15S45', 'E16S44'],
+        };
 
         let flagz = creep.defendFlags();
         let targetFlag;
@@ -621,31 +599,27 @@ class MoveInteract {
 
 
             } else if (creep.memory.role == 'guard' || creep.memory.role == 'shooter') {
-                switch (creep.room.name) {
-                    case 'E25S36':
-      //                  if (_.contains(W4S94, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-    //                    } else {
-  //                          maxDistance = 0;
-//                        }
-                        break;
-                    case 'W5S94':
-                        if (_.contains(W5S94, flagz[e].pos.roomName)) {
-                            maxDistance = 1;
-                        } else {
-                            maxDistance = 0;
-                        }
-                        break;
+                maxDistance = 1; //if(distance > 1) return false;
 
-                    default:
-      //                  if (!_.contains(guardRooms, flagz[e].pos.roomName)) {
-    //                        maxDistance = 0;
-  //                      } else {
-                            maxDistance = 1; //if(distance > 1) return false;
-//                        }
-                        break;
+                if (defendRooms[creep.room.name] !== undefined) {
+                    if (_.contains(defendRooms[creep.room.name], flagz[e].pos.roomName)) {
+                        maxDistance = 1;
+                    } else {
+                        maxDistance = 0;
+                    }
                 }
-
+                /*                switch (creep.room.name) {
+                                    case 'W5S94':
+                                        if (_.contains(W5S94, flagz[e].pos.roomName)) {
+                                            maxDistance = 1;
+                                        } else {
+                                            maxDistance = 0;
+                                        }
+                                        break;
+                                    default:
+                                        maxDistance = 1; //if(distance > 1) return false;
+                                        break;
+                                }*/
 
 
             }
@@ -676,7 +650,7 @@ class MoveInteract {
 
 
         if (Game.flags[creep.memory.party] === undefined) return false;
-        creep.moveMe(Game.flags[creep.memory.party], { ignoreRoads: creep.memory.role == 'mule'? true : false , reusePath: 75 });
+        creep.moveMe(Game.flags[creep.memory.party], { ignoreRoads: creep.memory.role == 'mule' ? true : false, reusePath: 75 });
         return true;
         /*
                 if (creep.memory.partyFlag === undefined) {

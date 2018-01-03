@@ -13,16 +13,29 @@ module.exports = function() {
     Object.defineProperty(Creep.prototype, "carryTotal", {
         configurable: true,
         get: function() {
-            if (this.memory.carryTotal === undefined || this.memory.carryTotalTimer != Game.time) {
-                this.memory.carryTotal = _.sum(this.carry);
-                this.memory.carryTotalTimer = Game.time;
+            if (this._carryTotal_sum !== undefined) {
+                return this._carryTotal_sum;
+            } else {
+                this._carryTotal_sum = _.sum(this.carry);
+                return this._carryTotal_sum;
             }
-            return this.memory.carryTotal;
+
+
 
         },
     });
-
-
+    Object.defineProperty(Creep.prototype, "level", {
+        configurable: true,
+        get: function() {
+                return this.memory.level;
+        },
+    });
+    Object.defineProperty(Creep.prototype, "party", {
+        configurable: true,
+        get: function() {
+                return this.memory.party;
+        },
+    });
 
     Object.defineProperty(Structure.prototype, "total", {
         configurable: true,
@@ -259,18 +272,12 @@ module.exports = function() {
     };
 
     Creep.prototype.selfHeal = function() {
-        if (this.hits == this.hitsMax) return false;
-        if (this.memory.hasHeal === undefined) {
-            this.memory.hasHeal = false;
-            for (var e in this.body) {
-                if (this.body[e].type == HEAL) {
-                    this.memory.hasHeal = true;
-                }
-
-            }
+        if ( this.getActiveBodyparts(HEAL) === 0 ) {
+            return false;
         }
-        if (!this.memory.hasHeal) return false;
         this.heal(this);
+        if (this.hits == this.hitsMax) return true;
+        return true;
     };
 
     Creep.prototype.attackMove = function(badguy, options) {
@@ -730,19 +737,6 @@ xxxx yyyyyy yyyy yyyyyy x
     var rawData;
     Creep.prototype.moveMe = function(target, options, xxx) {
 
-/*        if (this.memory.standSpot !== undefined) {
-            if (this.pos.isEqualTo(this.memory.standSpot)) {
-                return OK;
-            } else {
-
-                moveStatus = this.moveTo(this.memory.standSpot, options);
-                if (moveStatus == ERR_NO_PATH) {}
-
-                return moveStatus;
-
-            }
-        } */
-
         if (this.fatigue > 0) {
             if(this.memory._move !== undefined)
                 this.memory._move.time = this.memory._move.time + 1;    
@@ -891,10 +885,7 @@ xxxx yyyyyy yyyy yyyyyy x
                         rawData[home] += test + '+';
                         segment.setRoomSegmentData(home, rawData[home]);
   //                      console.log(segment.roomToSegment(this.memory.home),this.pos, 'G', target, 'Added to', home, ' FINALSERIALIZED PATH:', test);
-                    } else {
-            //            this.say('!@#');
-    //                    console.log('Failed Path', this.pos, roomLink(this.room.name));
-                    }
+                    } 
                 }
             }
 

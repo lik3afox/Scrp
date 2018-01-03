@@ -111,6 +111,12 @@ class muleClass extends roleParent {
         }
 
         if (!creep.memory.goHome) {
+ creep.sing(['!Never', '!gonna', 'give', 'you!',
+                        'up',
+                        '@Never', '@gonna', 'let', 'you@',
+                        'down',
+                        '#Never', '#gonna', 'run', 'around', 'and', 'desert', 'you#'
+                    ], true);            
             if (total === creep.carryCapacity && creep.memory.level !== 2) {
 
                 creep.say('bich');
@@ -219,8 +225,6 @@ for(var ze in Memory.stats.totalMinerals) {
         amount = Memory.stats.totalMinerals[ze];
     }
 }
-
-        //                var rando = Math.floor(Math.random() * needed.length );
 
                         creep.withdraw(stor, most);
                     } else {

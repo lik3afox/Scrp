@@ -42,9 +42,9 @@ Game.market.cancelOrder('59c72e66e6480025b1468a45');
 
 var cost = Game.market.calcTransactionCost(10000, 'E28S73', 'E28S71');
 
-Game.market.createOrder(ORDER_BUY, 'X', 0.1, 100000, "E24S33");
+Game.market.createOrder(ORDER_BUY, 'X', 0.01, 300000, "E24S33");
 
-Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.01, 4000000, "E18S32");
+Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.011, 1000000, "E19S49");
 
 Game.market.createOrder(ORDER_SELL, 'O', 0.82, 100000, "E18S36");
 

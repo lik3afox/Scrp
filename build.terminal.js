@@ -110,7 +110,7 @@ function adjustOldPrices() {
         for (var e in order) {
             if (order[e].resourceType !== RESOURCE_ENERGY) {
                 let amount = getAverageMineralPrice(order[e].resourceType, false);
-                if (amount !== undefined && amount < order[e].price) {
+                if (amount !== undefined && amount < order[e].price && order[e].price !== 0.01 ) {
                     console.log('switching average of order', order[e].id, 'too', amount);
                     Game.market.changeOrderPrice(order[e].id, amount);
                 }
@@ -736,6 +736,36 @@ function newgetMostTerminal(mineralz, target) {
     // Sort it by the mineral
 
 }
+function getLeastTerminal(mineralz, target) {
+    let highest = 300000;
+    var bested;
+    var e;
+    var mineral = mineralz; // = mineralz.toLowerCase();
+    if (target === undefined) {
+        e = s1LabRooms.length;
+        while (e--) {
+            let tmp = Game.rooms[s1LabRooms[e]].terminal;
+            if (tmp !== undefined && tmp.store[mineral] !== undefined && tmp.store[mineral] < highest && tmp.store[mineral] > 10000) {
+                highest = tmp.store[mineral];
+                bested = tmp;
+            }
+        }
+        return bested;
+
+    } else {
+        for (e in s1LabRooms) {
+            if (target.id != s1LabRooms[e]) {
+                let tmp = Game.rooms[s1LabRooms[e]].terminal;
+                if (tmp.store[mineral] !== undefined && tmp.store[mineral] < highest&& tmp.store[mineral] > 10000) {
+                    highest = tmp.store[mineral];
+                    bested = tmp;
+                }
+            }
+        }
+        return bested;
+    }
+
+}
 
 function getMostTerminal(mineralz, target) {
     let highest = 0;
@@ -792,6 +822,7 @@ function doDebt() {
         var debt = {
             room: 'test',
             type: 'E',
+            increment: 0,
             amount: 0
         };
         Memory.debts.push(debt);
@@ -809,7 +840,7 @@ function doDebt() {
     var mineral = Debt.type;
     var roomTarget = Debt.room;
     var debtAmount = Debt.amount;
-    var giver = getMostTerminal(Debt.type);
+    var giver = getLeastTerminal(Debt.type);
 
     var transferAmount = Debt.increment;
 
@@ -823,7 +854,7 @@ function doDebt() {
 
     } else {
         if (giver.store[Debt.type] < transferAmount * 10) {
-            console.log('Error in Debt, not enough funds', giver.store[Debt.type], transferAmount * 10);
+            console.log('Error in Debt, not enough funds',giver.pos, giver.store[Debt.type], transferAmount * 10);
             Memory.debts.push(Memory.debts.shift());
             return false;
         }
@@ -882,7 +913,7 @@ function getAverageMineralPrice(resource, buy) {
             bb += zz[2].price;
         if (zz[3] !== undefined && zz[3].price !== 0.01)
             bb += zz[3].price;
-        if (zz[0].price !== 0.01)
+        if (zz[0] !== undefined && zz[0].price !== 0.01)
             bb += zz[0].price;
     }
 
@@ -1174,8 +1205,8 @@ function reduceTerminal(terminal) {
 var wanted;
 
 function getPower(terminal) {
-    if (terminal.store[RESOURCE_POWER] === 0 || terminal.store[RESOURCE_POWER] === undefined ) {
-        console.log(roomLink(terminal.room.name), "getting power to process",terminal.store[RESOURCE_POWER]);
+    if (terminal.store[RESOURCE_POWER] === 0 || terminal.store[RESOURCE_POWER] === undefined) {
+        console.log(roomLink(terminal.room.name), "getting power to process", terminal.store[RESOURCE_POWER]);
         getMinerals(terminal, [RESOURCE_POWER]);
     }
 }
@@ -1221,6 +1252,26 @@ function buyMineralsFromBUYORDER(terminal) {
 
 }
 
+function doTrap() {
+    var trapMin = ['X', 'H', 'O', 'U', 'L', 'Z', 'K','XGH2O','OH'];
+
+    for (var e in trapMin) {
+        var orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: trapMin[e] });
+        if (orders.length === 0) {
+            console.log('TRAP BUY', trapMin[e],Game.shard.name,orders.length );
+            //So if no buy orders, we'll setup an real cheap buy order.
+            Game.market.createOrder(ORDER_BUY, trapMin[e] , 0.01, 100000, "E24S33");
+
+        }
+
+/*        orders = Game.market.getAllOrders({ type: ORDER_SELL, resourceType: trapMin[e] });
+        if (orders.length === 0) {
+            console.log('TRAP SELL', trapMin[e],Game.shard.name,orders.length );
+        } */
+    }
+
+}
+
 
 class roleTerminal {
 
@@ -1231,6 +1282,7 @@ class roleTerminal {
     static run() {
         cleanUpOrders();
         adjustOldPrices();
+//        doTrap();
         if (Game.shard.name == 'shard0') {
             if (Game.rooms.E38S81.terminal.store[RESOURCE_ENERGY] < 20000) {
                 Game.rooms.E38S72.terminal.send('energy', 10000, 'E38S81', 'trade');

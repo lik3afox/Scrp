@@ -39,9 +39,7 @@ class mineralRole extends roleParent {
     }
 
     static run(creep) {
-        if (super.doTask(creep)) {
-            return;
-        }
+        if (super.baseRun(creep)) return;
 
         let carry = _.sum(creep.carry);
 

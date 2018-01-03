@@ -4,39 +4,41 @@ var classLevels = [
     //1
     [WORK, MOVE, WORK, MOVE, CARRY, CARRY, MOVE],
     //2
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
     //3
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
     //4 /2300 Energy
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY],
     //5
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    //6 Super Level 6 - 40 Work, 5 carry 5 move
+    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
 ];
 
 var boost = [];
 var roleParent = require('role.parent');
 
-function doNukeRamparts(creep){
+function doNukeRamparts(creep) {
     creep.say('nUKEEE');
-            if (creep.memory.constructionID !== undefined) {
-                var strucs = Game.getObjectById(creep.memory.constructionID);
+    if (creep.memory.constructionID !== undefined) {
+        var strucs = Game.getObjectById(creep.memory.constructionID);
 
-                if (strucs !== null) {
-                    if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(strucs, { reusePath: 15 });
-                    }
-                } else {
-                    creep.memory.constructionID = undefined;
-                }
-            } else {
-                zzz = flag.room.find(FIND_MY_STRUCTURES);
-                zzz = _.filter(zzz, function(structure) {
-                    return (structure.structureType == STRUCTURE_RAMPART &&
-                        structure.pos.isNearTo(nuke,5)
-                        
-                    );
-                });                
+        if (strucs !== null) {
+            if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(strucs, { reusePath: 15 });
             }
+        } else {
+            creep.memory.constructionID = undefined;
+        }
+    } else {
+        zzz = flag.room.find(FIND_MY_STRUCTURES);
+        zzz = _.filter(zzz, function(structure) {
+            return (structure.structureType == STRUCTURE_RAMPART &&
+                structure.pos.isNearTo(nuke, 5)
+
+            );
+        });
+    }
     return true;
 }
 
@@ -49,27 +51,32 @@ class roleWallWorker extends roleParent {
 
     static run(creep) {
         if (super.baseRun(creep)) return;
-        if(Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
+        if (Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
             require('role.upbuilder').run(creep);
             return;
         }
-        if(creep.room.name == 'E22S48'){
-            if( super.boosted(creep,['XLH2O']) )
+        if (Game.shard.name == 'shard2' && creep.ticksToLive > 1450) {
+            require('role.upbuilder').run(creep);
+            return;
+        }
+        if(creep.memory.level == 6){
+            if (super.boosted(creep, ['XZHO2']))
                 return;
-
-        }
-        if(Game.shard.name == 'shard1'&& creep.ticksToLive > 1300 &&creep.room.controller !== undefined &&  creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 100000 ){
+        } else if (creep.room.name == 'E22S48') {
+            if (super.boosted(creep, ['XLH2O']))
+                return;
+        } else if (Game.shard.name == 'shard1' && creep.ticksToLive > 1300 && creep.room.controller !== undefined && creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 100000) {
             require('role.upbuilder').run(creep);
             return;
-        }  else if (Game.shard.name == 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
+        } else if (Game.shard.name == 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
 
-                boost.push('LH');
+            boost.push('LH');
 
-                _.uniq(boost);
-            } else if (creep.room.memory.nukeIncoming&& creep.ticksToLive == 1499) {
-                boost.push('XLH2O');
-                _.uniq(boost);
-            }
+            _.uniq(boost);
+        } else if (creep.room.memory.nukeIncoming && creep.ticksToLive == 1499) {
+            boost.push('XLH2O');
+            _.uniq(boost);
+        }
 
 
         if (creep.memory.level >= 4 && super.boosted(creep, boost)) {
@@ -77,11 +84,11 @@ class roleWallWorker extends roleParent {
         }
 
         if (creep.memory.repair) {
-/*            if(creep.room.memory.nukeIncoming) {
-                if(doNukeRamparts(creep)) {
-                    return;
-                }
-            }*/
+            /*            if(creep.room.memory.nukeIncoming) {
+                            if(doNukeRamparts(creep)) {
+                                return;
+                            }
+                        }*/
             if (creep.memory.constructionID !== undefined) {
                 var strucs = Game.getObjectById(creep.memory.constructionID);
                 if (strucs !== null) {
@@ -101,16 +108,15 @@ class roleWallWorker extends roleParent {
         } else {
 
             super.constr.pickUpEnergy(creep);
-            if(creep.room.name == 'E29S48'||creep.room.name == 'E18S46') {
-            if (!super.containers.withdrawFromTerminal(creep)) {
-            }
+            if (creep.room.name == 'E29S48' || creep.room.name == 'E18S46') {
+                if (!super.containers.withdrawFromTerminal(creep)) {}
 
             } else {
-            if (!super.containers.withdrawFromStorage(creep)) {
-                if (!super.containers.moveToWithdraw(creep)) {
-                    super.sources.moveToWithdraw(creep);
+                if (!super.containers.withdrawFromStorage(creep)) {
+                    if (!super.containers.moveToWithdraw(creep)) {
+                        super.sources.moveToWithdraw(creep);
+                    }
                 }
-            }
             }
 
             if (creep.carry.energy > creep.carryCapacity - 50) {
@@ -121,7 +127,7 @@ class roleWallWorker extends roleParent {
             }
 
         }
-        
+
     }
 
 }
