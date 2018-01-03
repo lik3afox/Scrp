@@ -3,11 +3,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
     grunt.initConfig({
-        creds: grunt.file.readJSON('config/screeps-creds.json'),
         screeps: {
             options: {
-                email: '<%= creds.email %>',
-                password: '<%= creds.password %>',
+                email: 'likeafox',
+                password: 'yohanl69',
                 branch: grunt.option('branch') || 'ewicko1',
                 ptr: false
             },
