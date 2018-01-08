@@ -22,7 +22,7 @@ class ContainerInteract {
             }
         });
         for (var e in containers) {
-            if (creep.withdraw(containers[e], RESOURCE_ENERGY) == OK) {
+            if (creep.withdrawing(containers[e], RESOURCE_ENERGY) == OK) {
                 return true;
             }
         }
@@ -62,7 +62,7 @@ class ContainerInteract {
             }
         });
         for (var e in containers) {
-            if (creep.withdraw(containers[e], RESOURCE_ENERGY) == OK) {
+            if (creep.withdrawing(containers[e], RESOURCE_ENERGY) == OK) {
                 return true;
             }
         }
@@ -82,7 +82,7 @@ class ContainerInteract {
     static fromTerminal(creep) {
         var terminal = creep.room.terminal;
         if (creep.pos.isNearTo(terminal)) {
-            if (creep.withdraw(terminal, RESOURCE_ENERGY) == OK) {
+            if (creep.withdrawing(terminal, RESOURCE_ENERGY) == OK) {
                 return true;
             }
         }
@@ -92,7 +92,7 @@ class ContainerInteract {
     static fromStorage(creep) {
         var terminal = creep.room.storage;
         if (creep.pos.isNearTo(terminal)) {
-            if (creep.withdraw(terminal, RESOURCE_ENERGY) == OK) {
+            if (creep.withdrawing(terminal, RESOURCE_ENERGY) == OK) {
                 return true;
             }
         }
@@ -156,7 +156,7 @@ class ContainerInteract {
         if (storage.store[RESOURCE_ENERGY] === 0) return false;
         if (creep.pos.isNearTo(storage)) {
             for (var e in creep.carry) {
-                creep.withdraw(storage, RESOURCE_ENERGY);
+                creep.withdrawing(storage, RESOURCE_ENERGY);
             }
         } else {
             creep.moveTo(storage);
@@ -178,7 +178,7 @@ class ContainerInteract {
 
         if (creep.pos.isNearTo(storage)) {
             for (var e in creep.carry) {
-                creep.withdraw(storage, e);
+                creep.withdrawing(storage, e);
             }
         } else {
             creep.moveTo(storage, { maxRooms: 1 });
@@ -231,7 +231,7 @@ class ContainerInteract {
                 }
 
                 if (creep.pos.isNearTo(contain)) {
-                    creep.withdraw(contain, RESOURCE_ENERGY);
+                    creep.withdrawing(contain, RESOURCE_ENERGY);
                     return true;
                 } else {
                     creep.moveTo(contain, { maxRooms: 1 });

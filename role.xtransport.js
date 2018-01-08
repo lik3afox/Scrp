@@ -6,7 +6,7 @@
 var roleParent = require('role.parent');
 // Main 300
 // level 0 = 200
-// level 1 = 300 / 0
+// leavel 1 = 300 / 0
 // Level 2 = 550 / 5
 // Level 3 = 800 / 10
 // Level 4 = 1300 / 20
@@ -257,7 +257,7 @@ class transport extends roleParent {
                             if (creep.pos.isNearTo(contain)) {
                                 if (_.sum(contain.store) > 0) {
                                     for (var e in contain.store) {
-                                        if (creep.withdraw(contain, e) === OK) {
+                                        if (creep.withdrawing(contain, e) === OK) {
                                             super.keeperFind(creep);
                                         }
                                     }

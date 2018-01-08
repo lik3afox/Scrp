@@ -22,7 +22,7 @@ function clearTerminal(creep) {
     let tgt = creep.room.terminal;
     if (creep.pos.isNearTo(tgt)) {
         for (var e in tgt.store) {
-            creep.withdraw(tgt, e);
+            creep.withdrawing(tgt, e);
             return true;
         }
     } else {
@@ -81,7 +81,7 @@ function getMineralForStorage(creep) {
             if (creep.room.terminal.store[e] > 0) {
                 console.log('1Linker thinks:', creep.room.storage.store[e], xStored[e].amount, creep.room.terminal.store[e], e);
                 if (creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.withdraw(creep.room.terminal, e);
+                    creep.withdrawing(creep.room.terminal, e);
 
                 } else {
                     creep.moveTo(creep.room.terminal);
@@ -98,7 +98,7 @@ function getMineralForStorage(creep) {
                 if (taken > creep.room.terminal.store[e]) taken = creep.room.terminal.store[e];
                 if (creep.room.terminal.store[e] > 0) {
                     if (creep.pos.isNearTo(creep.room.terminal)) {
-                        let zz = creep.withdraw(creep.room.terminal, e, taken);
+                        let zz = creep.withdrawing(creep.room.terminal, e, taken);
                         console.log(creep.room.name, zz, xStored[e].amount, creep.room.storage.store[e], '=', '2Linker thinks:', creep.room.storage.store[e], xStored[e].amount, creep.room.terminal.store[e], e);
                     } else {
                         creep.moveTo(creep.room.terminal);
@@ -120,7 +120,7 @@ function takeFromTerminalForStorage(creep) {
     var goto = creep.room.terminal;
     if (goto !== undefined && goto.store[RESOURCE_ENERGY] > 21000 && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
         creep.say('T');
-        if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.withdrawing(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(goto);
         }
         return true;
@@ -132,7 +132,7 @@ function doMasterLink(creep) {
     var term = creep.room.terminal;
     let goto = Game.getObjectById(creep.room.memory.masterLinkID);
     if (goto !== null && goto.energy > 0) {
-        if (creep.withdraw(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.withdrawing(goto, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(goto, {
                 reusePath: 20
             });
@@ -203,9 +203,9 @@ function E14S38(creep, fill) {
         if (!fill) {
             if (creep.room.storage.store.XGH2O > 0) {
 
-                creep.withdraw(creep.room.storage, 'XGH2O');
+                creep.withdrawing(creep.room.storage, 'XGH2O');
             } else {
-                creep.withdraw(creep.room.terminal, 'XGH2O');
+                creep.withdrawing(creep.room.terminal, 'XGH2O');
             }
         } else {
             if (creep.carry[RESOURCE_ENERGY] > 0) {
@@ -240,7 +240,7 @@ function E14S38(creep, fill) {
         switch (creep.memory.roleID) {
             default: if (!constr.pickUpEnergy(creep))
                 if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
-                    if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
+                    if (creep.withdrawing(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
                 }
             break;
         }
@@ -307,7 +307,7 @@ function doDefault(creep) {
                     let cc = Game.getObjectById(creep.room.memory.masterLinkID);
                     if (cc !== null && cc.energy > 0) {
                         if (creep.pos.isNearTo(cc)) {
-                            creep.withdraw(cc, RESOURCE_ENERGY);
+                            creep.withdrawing(cc, RESOURCE_ENERGY);
                         } else {
                             creep.moveTo(cc);
                         }
@@ -467,7 +467,7 @@ function boostLabWork(creep) {
             if (lab.mineralType !== undefined && lab.mineralType !== boost.mineralType && lab.mineralAmount > 0) {
                 creep.say('Empty');
                 if (creep.pos.isNearTo(lab)) {
-                    creep.withdraw(lab, lab.mineralType);
+                    creep.withdrawing(lab, lab.mineralType);
                 } else {
                     creep.moveTo(lab);
                 }
@@ -494,7 +494,7 @@ function boostLabWork(creep) {
                         amount = target.store[boost.mineralType];
 
                     if (amount !== 0) {
-                        let vv = creep.withdraw(target, boost.mineralType, amount);
+                        let vv = creep.withdrawing(target, boost.mineralType, amount);
                         //       console.log('takeT', amount, boost.mineralType, vv);
 
                     }

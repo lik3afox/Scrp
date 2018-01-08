@@ -77,7 +77,8 @@ function getEnergy(creep) {
 
             if (target.structureType === STRUCTURE_CONTAINER) {
                 for (var b in target.store) {
-                    creep.withdraw(target, b);
+                    if(target.store[b])
+                        creep.withdrawing(target, b);
                 }
                 creep.memory.gotoID = undefined;
 
@@ -155,7 +156,8 @@ class transportz extends roleParent {
                     let sci = Game.getObjectById(creep.memory.scientistID);
                     if (sci !== null && creep.pos.isNearTo(sci)) {
                         for (var e in sci.carry) {
-                            if (sci.transfer(creep, e) == OK)
+
+                            if (sci.carry[e] && sci.transfer(creep, e) == OK)
                                 return;
                         }
                     }

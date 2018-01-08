@@ -35,7 +35,7 @@ function clearLabs(creep) {
         let zzz = labs[0];
         if (creep.pos.isNearTo(zzz)) {
             if (zzz.mineralAmount > 0) {
-                creep.withdraw(zzz, zzz.mineralType);
+                creep.withdrawing(zzz, zzz.mineralType);
             } else {
                 //                creep.withdraw(zzz,RESOURCE_ENERGY);
             }
@@ -121,7 +121,7 @@ function banditAction(creep) {
                 cont.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
                 if (creep.pos.isNearTo(cont[0])) {
                     for(var e in cont[0].store){
-                        creep.withdraw(cont[0],e);
+                        creep.withdrawing(cont[0],e);
                     }
                 } else {
                     creep.moveTo(cont[0]);
@@ -262,7 +262,7 @@ class thiefClass extends roleParent {
 
             if (creep.pos.isNearTo(target)) {
                 //                console.log(creep.withdraw(target, getting),target,getting);
-                switch (creep.withdraw(target, getting)) {
+                switch (creep.withdrawing(target, getting)) {
                     case OK:
                         creep.say('ty', true);
                         break;

@@ -176,7 +176,7 @@ function getParts(creep) {
 function getDeathSpot(roomName) {
     switch (roomName) {
         case "E18S36":
-            return new RoomPosition(38, 24, roomName);
+            return new RoomPosition(37, 22, roomName);
         case "E14S37":
             return new RoomPosition(36, 30, roomName);
         case "E24S33":
@@ -304,6 +304,10 @@ class baseParent {
 
     static shouldDie(creep) {
         if (creep.hits == creep.hitsMax) return;
+        if(creep.getActiveBodyparts(MOVE) === 0) {
+            creep.suicide();
+            return;
+        }
         if( creep.hits < creep.hitsMax - 800) {
             creep.suicide();
         }
@@ -634,7 +638,7 @@ class baseParent {
                         if (target.structureType === undefined) {
                             creep.pickup(target);
                         } else {
-                            creep.withdraw(target, task.resource);
+                            creep.withdrawing(target, task.resource);
                         }
                     } else {
                         creep.moveTo(target);

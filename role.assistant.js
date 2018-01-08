@@ -45,7 +45,7 @@ function mineralContainerEmpty(creep) {
             if (targetContain.store[a] > 0) {
 
                 if (creep.pos.isNearTo(targetContain)) {
-                    creep.withdraw(targetContain, a);
+                    creep.withdrawing(targetContain, a);
                 } else {
                     creep.moveMe(targetContain, { reusePath: 15 });
                     return true;
@@ -60,7 +60,7 @@ function mineralContainerEmpty(creep) {
                                         var b = keyz[x];
                                         if (b != RESOURCE_ENERGY && creep.room.storage.store[b]) {
                                             if (creep.pos.isNearTo(creep.room.storage)) {
-                                                creep.withdraw(creep.room.storage, b);
+                                                creep.withdrawing(creep.room.storage, b);
                                             } else {
                                                 creep.moveMe(creep.room.storage);
                                             }

@@ -188,7 +188,7 @@ class roleUpbuilder extends roleParent {
 
                 }
             } else if (creep.pos.isNearTo(creep.room.storage)) {
-                creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                creep.withdrawing(creep.room.storage, RESOURCE_ENERGY);
                 //                super._containers.withdrawFromStorage(creep);
             } else /* if (creep.carry.energy === 0) */ {
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {

@@ -102,10 +102,10 @@ var boost = ['XGH2O'];
             }
 
             if (creep.pos.isNearTo(creep.room.terminal)) {
-                creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+                creep.withdrawing(creep.room.terminal, RESOURCE_ENERGY);
             } else {
                 if (creep.pos.isNearTo(creep.room.storage)) {
-                    creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                    creep.withdrawing(creep.room.storage, RESOURCE_ENERGY);
                 }
             }
 

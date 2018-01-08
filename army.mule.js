@@ -185,11 +185,11 @@ class muleClass extends roleParent {
                     if (Game.shard.name == 'shard0') {
                         var zz = Math.floor(Math.random() * 4);
                         if (zz !== 0) {
-                            creep.withdraw(stor, 'H');
+                            creep.withdrawing(stor, 'H');
                         } else {
                             for (var ae in stor.store) {
                                 if (ae !== RESOURCE_ENERGY) {
-                                    creep.withdraw(stor, ae);
+                                    creep.withdrawing(stor, ae);
                                 }
                             }
                         }
@@ -226,10 +226,10 @@ for(var ze in Memory.stats.totalMinerals) {
     }
 }
 
-                        creep.withdraw(stor, most);
+                        creep.withdrawing(stor, most);
                     } else {
                         //                        if (creep.room.name == 'E14S37')
-                        creep.withdraw(stor, RESOURCE_ENERGY);
+                        creep.withdrawing(stor, RESOURCE_ENERGY);
                     }
                 } else {
                     creep.moveTo(stor, { reusePath: 20 });

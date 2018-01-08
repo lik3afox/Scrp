@@ -67,33 +67,47 @@ var expansionModule = [
     ],
     [ // level 4  1550 Carry - 2600 Energy
         ['miner', 1, 4], // Harvester - experiemnt w/o carry
-        ['transport', 1, 4], // Gather and move - just carry 
+        ['transport', 1, 3], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
     [ // Lv 5 - 2000 Carry 
         // Two transports @ 1000 Carry
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 2, 2], // Gather and move - just carry 
+        ['transport', 1, 4], // Gather and move - just carry 
         ['controller', 1, 4]
     ],
     [
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
-        ['transport', 2, 3], // Gather and move - just carry 
+        ['transport', 2, 2], // Gather and move - just carry 
         ['controller', 1, 4]
 
     ], // Level seven
     [ // Lv 7 - 3100 Carry
-        // Two Transports @ 1550 Carry.
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 2, 3], // Gather and move - just carry 
+        ['controller', 1, 4]
+    ],
+    // lv 8
+    [
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
         ['transport', 2, 4], // Gather and move - just carry 
         ['controller', 1, 4]
-    ],
-    [], // Lv 8
-    [], // LEVEL 9 
+
+    ], // Lv 9
+    [
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 3, 3], // Gather and move - just carry 
+        ['controller', 1, 4]
+    ], 
     [ // LEVEL 10  For Mineral Harvesting.
+        ['miner', 1, 5], // Harvester - experiemnt w/o carry
+        ['transport', 3, 4], // Gather and move - just carry 
+        ['controller', 1, 4]
+    ],
+    [ // LEVEL 11  For Mineral Harvesting.
         ['mineral', 1, 7],
         ['ztransport', 1, 0],
-    ]
+    ],
 ];
 
 var _require = 1; // Only All Module uses require
@@ -142,6 +156,9 @@ function rebuildCreep(creep) {
         let spawn = Game.getObjectById(creep.memory.parent);
         let _module;
         let goalInfo;
+        if (Game.flags[creep.memory.home] !== undefined && Game.flags[creep.memory.home].color == COLOR_WHITE && Game.flags[creep.memory.home].secondaryColor == COLOR_GREEN) {
+            _module = Game.flags[creep.memory.home].memory.module;
+        }
         if (spawn !== null) {
             for (var o in _module) {
                 if (_module[o][_name] == creep.memory.role) {
@@ -520,19 +537,14 @@ class theSpawn {
         for (var ie in spawn.memory.roadsTo) {
 
             let xp = spawn.memory.roadsTo[ie].expLevel;
-
-
-//            if(spawn.memory.roadsTo[ie].expLevel === 6)
-//                spawn.memory.roadsTo[ie].expLevel = 7;
-
+if( spawn.memory.roadsTo[ie].mineral !== undefined) {
+    spawn.memory.roadsTo[ie].expLevel = 11;    
+}
             _module = expansionModule[xp];
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 
             // Checking if room is visable and too observe it.
             if (spawn.memory.roadsTo[ie].expLevel > 0) {
-                if (spawn.memory.roadsTo[ie].expLevel > 10) {
-                    console.log(roomLink(spawn.pos.roomName), spawn.memory.roadsTo[ie].expLevel);
-                }
                 if (source === null) {
                     if (spawn.memory.roadsTo[ie].sourcePos !== undefined) {
                         let obser = require('build.observer');
@@ -796,7 +808,7 @@ class theSpawn {
                         if (countCPU) { start = Game.cpu.getUsed(); }
                         if (!Game.creeps[name].spawning) {
               //              if(Game.shard.name == 'shard1')
-            //                    console.log(Game.creeps[name].memory.role);
+                //                console.log(Game.creeps[name].memory.role);
                             allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
                         }
                         if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }

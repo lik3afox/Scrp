@@ -76,7 +76,7 @@ function interactContainer(creep) {
                     var z = keys.length;
                     while (z--) {
                         var o = keys[z];
-                        if (creep.withdraw(container, o) == OK) {
+                        if (creep.withdrawing(container, o) == OK) {
                             withdrawing = true;
                         }
                     }

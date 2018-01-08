@@ -19,21 +19,18 @@ module.exports = function() {
                 this._carryTotal_sum = _.sum(this.carry);
                 return this._carryTotal_sum;
             }
-
-
-
         },
     });
     Object.defineProperty(Creep.prototype, "level", {
         configurable: true,
         get: function() {
-                return this.memory.level;
+            return this.memory.level;
         },
     });
     Object.defineProperty(Creep.prototype, "party", {
         configurable: true,
         get: function() {
-                return this.memory.party;
+            return this.memory.party;
         },
     });
 
@@ -272,7 +269,7 @@ module.exports = function() {
     };
 
     Creep.prototype.selfHeal = function() {
-        if ( this.getActiveBodyparts(HEAL) === 0 ) {
+        if (this.getActiveBodyparts(HEAL) === 0) {
             return false;
         }
         this.heal(this);
@@ -595,7 +592,7 @@ destination Current Pos Path
             (move.dest.y < 10 ? "0" + move.dest.y : move.dest.y) + move.dest.room;
 
 
-//        console.log('Seralized Path', dest, currentPos, path);
+        //        console.log('Seralized Path', dest, currentPos, path);
 
         return dest + currentPos + path;
     }
@@ -732,15 +729,32 @@ xxxx yyyyyy yyyy yyyyyy x
             }
         }
     }
+    Creep.prototype.withdrawing = function(target, resource, amount) {
+        //console.log('doing wrapped withdrawing',target,resource,amount);
+    //    if(Game.shard.name === 'shard0'){
+//        	return this.withdraw(target, resource, amount);
+  //      }
+        if (target.structureType !== STRUCTURE_LINK && target.store !== undefined) {
+            if ( target.store[resource] !== undefined) {
+            	return this.withdraw(target, resource, amount);
+            } 
+        } else {
+  //          console.log('doing wrapped withdrawing', target, resource, amount);
+            return this.withdraw(target, resource, amount);
+        }
+        return -6;
+
+    };
 
     var segment = require('commands.toSegment');
     var rawData;
     Creep.prototype.moveMe = function(target, options, xxx) {
 
         if (this.fatigue > 0) {
-            if(this.memory._move !== undefined)
-                this.memory._move.time = this.memory._move.time + 1;    
-            return;}
+            if (this.memory._move !== undefined)
+                this.memory._move.time = this.memory._move.time + 1;
+            return;
+        }
 
         if (xxx !== undefined) {
             target = new RoomPosition(target, options, this.room.name);
@@ -754,20 +768,20 @@ xxxx yyyyyy yyyy yyyyyy x
         var stuck = false;
 
         if (this.memory.position !== undefined) {
-            if(_.isString(this.memory.position)){
+            if (_.isString(this.memory.position)) {
                 var de = stringToRoomPos(this.memory.position);
                 stuck = this.pos.isEqualTo(de);
-                if(de === undefined ) {
+                if (de === undefined) {
                     this.say(this.memory.position);
                 }
             } else {
                 stuck = this.pos.isEqualTo(this.memory.position.x, this.memory.position.y);
             }
         }
-        let zze;// = roomPosToString(this.pos );
-        if(zze !== undefined){
+        let zze; // = roomPosToString(this.pos );
+        if (zze !== undefined) {
             this.memory.position = zze;
-        }else {
+        } else {
             this.memory.position = this.pos;
         }
 
@@ -803,17 +817,16 @@ xxxx yyyyyy yyyy yyyyyy x
             options.reusePath = 5;
             options.ignoreCreeps = false;
             this.memory._move = undefined;
-            
+
         }
         //      } 
 
 
-// Start of segment fun.
+        // Start of segment fun.
 
         if (options.segment === undefined) options.segment = false;
 
-        if (options.segment && (this.pos.x === 1 ||this.pos.x === 48||this.pos.y === 1 ||this.pos.y === 48 ) )            
-        {
+        if (options.segment && (this.pos.x === 1 || this.pos.x === 48 || this.pos.y === 1 || this.pos.y === 48)) {
             segment.requestRoomSegmentData(this.memory.home);
         }
 
@@ -859,7 +872,7 @@ xxxx yyyyyy yyyy yyyyyy x
                     options.ignoreCreeps = true;
                     doPath = true;
                 } else {
-//                    console.log(segment.roomToSegment( this.memory.home), this.memory.home, 'There is a path, C:', this.pos, "G:", target);
+                    //                    console.log(segment.roomToSegment( this.memory.home), this.memory.home, 'There is a path, C:', this.pos, "G:", target);
                     // Then we use zz to set _move as;
                     let _move = getSerializedPath(zz);
                     path = _.isString(_move.path) ? Room.deserializePath(_move.path) : _move.path;
@@ -867,7 +880,7 @@ xxxx yyyyyy yyyy yyyyyy x
                     path.shift();
                     if (path.length > 0)
                         this.memory.cachePath = Room.serializePath(path);
-                    this.say("💰" + moveStatus  );
+                    this.say("💰" + moveStatus);
                 }
 
             }
@@ -877,15 +890,15 @@ xxxx yyyyyy yyyy yyyyyy x
                 moveStatus = this.moveTo(target, options);
             }
             if (doPath) {
-                if(!rawData[home]){   // Fail on rawdata means that the segment will be available next tick
-//                    console.log(segment.roomToSegment(this.memory.home),'here Segment fail.',roomLink( this.room.name ),this.pos);
+                if (!rawData[home]) { // Fail on rawdata means that the segment will be available next tick
+                    //                    console.log(segment.roomToSegment(this.memory.home),'here Segment fail.',roomLink( this.room.name ),this.pos);
                 } else if (rawData[home] !== undefined && this.memory._move !== undefined) {
                     test = serializePath(this);
                     if (test !== undefined) {
                         rawData[home] += test + '+';
                         segment.setRoomSegmentData(home, rawData[home]);
-  //                      console.log(segment.roomToSegment(this.memory.home),this.pos, 'G', target, 'Added to', home, ' FINALSERIALIZED PATH:', test);
-                    } 
+                        //                      console.log(segment.roomToSegment(this.memory.home),this.pos, 'G', target, 'Added to', home, ' FINALSERIALIZED PATH:', test);
+                    }
                 }
             }
 

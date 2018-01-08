@@ -189,9 +189,9 @@ class roleFirst extends roleParent {
 
             if (!creep.pickUpEnergy()) {
                 if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
-                    creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                    creep.withdrawing(creep.room.storage, RESOURCE_ENERGY);
                 } else if (creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+                    creep.withdrawing(creep.room.terminal, RESOURCE_ENERGY);
                 } else {
                     if (!super.containers.withdrawFromStorage(creep)) {
                         if (!super.containers.withdrawFromTerminal(creep)) {

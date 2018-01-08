@@ -38,25 +38,25 @@ class roleNuker extends roleParent {
 
                 if (creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
                     if (creep.pos.isNearTo(creep.room.storage)) {
-                        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                        creep.withdrawing(creep.room.storage, RESOURCE_ENERGY);
                     } else {
                         creep.moveTo(creep.room.storage);
                     }
 
                 } else {
                     if (creep.pos.isNearTo(creep.room.terminal)) {
-                        creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+                        creep.withdrawing(creep.room.terminal, RESOURCE_ENERGY);
                     } else {
                         creep.moveTo(creep.room.terminal);
                     }
                 }
-            } /*else if (nuke.ghodium < nuke.ghodiumCapacity) {
+            } else if (nuke.ghodium < nuke.ghodiumCapacity ) { //&& terminal.store[RESOURCE_GHODIUM] !== undefined
                 if (creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.withdraw(creep.room.terminal, 'G');
+                  creep.withdrawing(creep.room.terminal, 'G');
                 } else {
                     creep.moveTo(creep.room.terminal);
                 }
-            }*/
+            }
 
         } else {
             if (creep.carry.G > 0 && nuke.ghodium == nuke.ghodiumCapacity && nuke.energy == nuke.energyCapacity) {

@@ -157,6 +157,7 @@ class buildLink {
     }
 
     static transfer(creep) {
+        if(!creep.carry[RESOURCE_ENERGY]) return false;
         let yy = creep.pos.y - 1;
         if (yy < 0) yy = 0;
         let yy2 = creep.pos.y + 1;

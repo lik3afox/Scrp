@@ -133,7 +133,7 @@ class PowerInteract {
             if (creep.pos.isNearTo(target)) {
                 let take = target.store[RESOURCE_POWER];
                 if (take > 100) take = 100;
-                creep.withdraw(target, RESOURCE_POWER, take);
+                creep.withdrawing(target, RESOURCE_POWER, take);
             } else {
                 creep.moveMe(target);
             }

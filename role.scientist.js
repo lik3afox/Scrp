@@ -64,7 +64,7 @@ function labNeedReducing(creep) {
         if (lab !== null && theplans[e].emptied && lab.room.name == creep.room.name && lab.mineralAmount >= 500) {
             creep.say('redo');
             if (creep.pos.isNearTo(lab)) {
-                creep.withdraw(lab, lab.mineralType);
+                creep.withdrawing(lab, lab.mineralType);
                 return true;
             } else {
                 creep.moveMe(lab.pos);
@@ -97,10 +97,10 @@ class scientistRole extends roleParent {
                 require('role.first').run(creep);
             } else {
                 if (creep.room.name == 'E27S45') {
-                    if (creep.room.nuke.ghodium !== creep.room.nuke.ghodiumCapacity && creep.room.nuke.energy !== creep.room.nuke.energyCapacity) {
+  //                  if (creep.room.nuke.ghodium !== creep.room.nuke.ghodiumCapacity && creep.room.nuke.energy !== creep.room.nuke.energyCapacity) {
                         require('role.nuker').run(creep);
                         return;
-                    }
+//                    }
                 }
             }
 //                console.log('xexx',creep.room.energyAvailable, creep.room.energyCapacityAvailable) ;
@@ -156,7 +156,7 @@ class scientistRole extends roleParent {
 
                             if (creep.pos.isNearTo(_labs[i])) {
                                 // need to check if the lab has mineral type wanted.
-                                if (creep.withdraw(_labs[i], _labs[i].mineralType) == OK) {
+                                if (creep.withdrawing(_labs[i], _labs[i].mineralType) == OK) {
                                     creep.memory.putaway = true;
                                 }
                             } else {
@@ -176,7 +176,7 @@ class scientistRole extends roleParent {
                             if (!_.contains(stored, e) && creep.room.storage.store[e]) {
                                 otherThings = true;
                                 if (creep.pos.isNearTo(creep.room.storage)) {
-                                    creep.withdraw(creep.room.storage, e);
+                                    creep.withdrawing(creep.room.storage, e);
                                 } else {
                                     creep.moveMe(creep.room.storage);
                                 }

@@ -20,10 +20,11 @@ function banditAction(creep) {
 
     if (Game.flags[creep.memory.party] !== undefined) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+            creep.rangedMassAttack();
 
             good = creep.room.find(FIND_MY_CREEPS);
             good = _.filter(good, function(o) {
-                return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0;
+                return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0 && o.memory.party === creep.memory.party;
             });
             good.sort((a, b) => a.hits - b.hits);
             creep.say(good.length + 'xxx');
@@ -31,8 +32,12 @@ function banditAction(creep) {
                 if (!creep.pos.isNearTo(good[0])) {
                     creep.moveTo(good[0]);
                 }
-                creep.heal(good[0]);
-                creep.rangedMassAttack();
+                if (good[0].hits === good[0].hitsMax && creep.hits < creep.hitsMax) {
+                    creep.selfHeal();
+                } else {
+                    creep.heal(good[0]);
+
+                }
                 return true;
             }
 
@@ -88,10 +93,10 @@ class rangerClass extends roleParent {
         if (super.spawnRecycle(creep)) {
             return;
         }
-        if(creep.memory.level > 1) {
-        //        if (super.boosted(creep, ['XGHO2'])) {
-        //              return;
-        //            }
+        if (creep.memory.level > 1) {
+            //        if (super.boosted(creep, ['XGHO2'])) {
+            //              return;
+            //            }
         }
         if (creep.memory.party == 'bandit') {
             super.rebirth(creep);

@@ -97,7 +97,7 @@ function shareEnergy(terminal) {
 
     let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
     let zz = terminal.send(RESOURCE_ENERGY, amount, lowestStore.room.name, 'Sharing Energy');
-    console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
+//    console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
     return true;
 }
 
@@ -1068,7 +1068,7 @@ function giveMinerals(terminal, mineral, amount) {
         if (sentResult == OK) {
             terminal.room.memory.didOrder = true;
         }
-        console.log('Sending Minerals:', sender, mineral, amount, targetRoom, sentResult);
+//        console.log('Sending Minerals:', sender, mineral, amount, targetRoom, sentResult);
         if (sentResult === 0) {
             terminal.room.visual.text('M_SENT', terminal.pos.x, terminal.pos.y, {
                 color: '#97c39a ',
@@ -1206,7 +1206,7 @@ var wanted;
 
 function getPower(terminal) {
     if (terminal.store[RESOURCE_POWER] === 0 || terminal.store[RESOURCE_POWER] === undefined) {
-        console.log(roomLink(terminal.room.name), "getting power to process", terminal.store[RESOURCE_POWER]);
+//        console.log(roomLink(terminal.room.name), "getting power to process", terminal.store[RESOURCE_POWER]);
         getMinerals(terminal, [RESOURCE_POWER]);
     }
 }
@@ -1313,7 +1313,7 @@ class roleTerminal {
                             if (zz[zz.length - 1].price > 0.51) {
 
                                 var deal = Game.market.deal(zz[zz.length - 1].id, 1000, 'E19S49');
-                                console.log('did deal in shard2', deal, zz[zz.length - 1].price, '4', eee);
+//                                console.log('did deal in shard2', deal, zz[zz.length - 1].price, '4', eee);
                                 if (deal == OK) {
                                     return;
                                 }

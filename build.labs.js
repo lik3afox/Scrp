@@ -1974,7 +1974,7 @@ class buildLab {
         if (wanted === undefined) return false;
         let howMuch = howMuchDoIget(creep, wanted);
 
-        if (creep.withdraw(creep.room.terminal, wanted) == ERR_NOT_IN_RANGE) {
+        if (creep.withdrawing(creep.room.terminal, wanted) == ERR_NOT_IN_RANGE) {
             creep.moveMe(creep.room.terminal);
         }
         return true;

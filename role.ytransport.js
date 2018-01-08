@@ -211,7 +211,7 @@ class transport extends roleParent {
                                 if (creep.pos.isNearTo(target)) {
 
                                     if (target.structureType === STRUCTURE_CONTAINER) {
-                                        creep.withdraw(target, RESOURCE_ENERGY);
+                                        creep.withdrawing(target, RESOURCE_ENERGY);
                                         creep.memory.gotoID = undefined;
                                     } else {
                                         creep.pickup(target);

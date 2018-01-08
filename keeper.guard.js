@@ -328,12 +328,6 @@ class roleGuard extends roleParent {
     	                creep.memory.keeperLair.push(Game.getObjectById('5982ff86b097071b4adc2d2a'));
 	                    creep.memory.keeperLair.push(Game.getObjectById('5982ff86b097071b4adc2d2c'));
                 	break; 
-                	case 'E16S34':
-    	                creep.memory.keeperLair.push(Game.getObjectById('5982fef8b097071b4adc1d8d'));
-                	break;
-                	case 'E14S34':
-    	                creep.memory.keeperLair.push(Game.getObjectById('5982fef8b097071b4adc1d8b'));
-                	break;
                 }
                 creep.memory.goTo = analyzeSourceKeeper(creep);
             }

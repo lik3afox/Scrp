@@ -731,7 +731,7 @@
                                 }
                             });
                             spwn.memory.CreatedMsg = 'LUCKY';
-                            console.log('trying LUCKY', ez);
+//                            console.log('trying LUCKY', ez);
                         }
                     } else {
 
@@ -816,39 +816,45 @@
         scanForRemoteSources();
 
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
-
-        if (Game.shard.name == 'shard1') {
-            if (Game.spawns.Spawn1 !== undefined) {
-
-
                 report = "";
                 for (var a in Memory.shardNeed) {
                     report += " " + Memory.shardNeed[a];
                 }
 
-                let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-                console.log('<a style="color:#0afaff">!!!!!!S:' + Memory.shardNeed.length + '!!PP:' + Memory.stats.powerProcessed + '***' + report + '***TICK REPORT:' + Game.time + '**********************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
+var color = '<a style="color:#0afaff">';
+var endColor = '</a>';
+var shard = Game.shard.name;
+var segmentNumUsed = Memory.shardNeed.length;
+segmentNumUsed = JSON.stringify(segmentNumUsed).padStart(2,"0");
+var powerProcessed = Memory.stats.powerProcessed;
+if(powerProcessed === undefined) powerProcessed = 0;
+var segmentsUsed = report;
+var gameTime = Game.time;
+gameTime = JSON.stringify(gameTime).padStart(8,"0");
+var creepTotal = Memory.creepTotal;
+creepTotal = JSON.stringify(creepTotal).padStart(3,"0");
+//var cpuUsed = dif;
+var cpuLimit = Game.cpu.limit;
+cpuLimit = JSON.stringify(cpuLimit).padStart(3,"0");
+var cpuCeil = Game.cpu.tickLimit;
+cpuCeil = JSON.stringify(cpuCeil).padStart(3,"0");
+var cpuBucket = Game.cpu.bucket;
+cpuBucket = JSON.stringify(cpuBucket).padStart(5,"0");
+var filler = "###"+Game.shard.name+"###";
+switch(Game.shard.name){
+    case "shard0":
+    color = '<a style="color:#00aaff">';
+    filler = "!!!"+Game.shard.name+"!!!";
+    break;
+    case "shard1":
+    break;
+    case "shard2":
+    color = '<a style="color:#aaaaff">';
+    filler = "%%%"+Game.shard.name+"%%%";
+    break;
+}
+console.log(color+shard+" "+filler+"  Tick #"+gameTime+"  Total Creeps:("+creepTotal+") Bucket: "+cpuBucket+" "+cpuLimit+"/"+cpuCeil+filler+" Seg#"+segmentNumUsed+" PP:"+powerProcessed);
 
-                Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
-            }
-        } else if (Game.shard.name == 'shard2') {
-  //          console.log('<a style="color:#00aaff">@@@@@@@@@@@@@@@@@@@@@@@@TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
-
-        } else {
-            if (Game.spawns.E38S81) {
-
-                report = "";
-                for (var ab in Memory.shardNeed) {
-                    report += " " + Memory.shardNeed[ab];
-                }
-
-                //            let dif = Game.cpu.limit + (Game.spawns.Spawn1.memory.lastBucket - Game.cpu.bucket);
-                let dif;
-//                console.log('<a style="color:#aaaaff">*****PP:' + 0 + '****' + report + '******TICK REPORT:' + Game.time + '**************' + Memory.creepTotal + '****' + dif + ':CPU|' + Game.cpu.limit + '|Max' + Game.cpu.tickLimit + '|buck:' + Game.cpu.bucket + '</a>');
-
-                //            Game.spawns.Spawn1.memory.lastBucket = Game.cpu.bucket;
-                Game.spawns.E38S81.memory.lastBucket = Game.cpu.bucket;
-            }
-        }
+     
 //        cleanMemory();
     });

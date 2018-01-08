@@ -6,9 +6,8 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     // Level 2 1000 Carry - 1750 Energy
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
-    // Level 3 1300 Carry - 2200 Energy.
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
-
+    // Level 3 1250 Carry - 2200 Energy.
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE , MOVE, MOVE , WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     // Level 4 1550 carry 2600 Energy - Required Lv 7 
     [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK,
@@ -16,7 +15,7 @@ var classLevels = [
         MOVE, WORK
     ],
 
-    // After lv 3 That's max
+    // After lv 4 This is what is ued by remote
 
 
     // Level 4
@@ -75,7 +74,8 @@ function interactContainer(creep) {
     if (creep.memory.goHome) {
         if (creep.isHome && creep.pos.isNearTo(creep.room.storage)) {
             for (var e in creep.carry) {
-                if (creep.transfer(creep.room.storage, e) == OK) {
+
+                if (creep.carry[e] && creep.transfer(creep.room.storage, e) == OK) {
                     emptied(creep);
                     empting = true;
                     break;
@@ -84,7 +84,7 @@ function interactContainer(creep) {
         }
         if (creep.isHome && creep.pos.isNearTo(creep.room.terminal)) {
             for (var ez in creep.carry) {
-                if (creep.transfer(creep.room.terminal, ez) == OK) {
+                if (creep.carry[ez]  && creep.transfer(creep.room.terminal, ez) == OK) {
                     emptied(creep);
                     empting = true;
                     break;
@@ -102,7 +102,8 @@ function interactContainer(creep) {
                     var z = keys.length;
                     while (z--) {
                         var o = keys[z];
-                        if (creep.withdraw(container, o) == OK) {
+
+                        if (creep.withdrawing(container, o) == OK) {
                             withdrawing = true;
                         }
                     }
@@ -113,8 +114,7 @@ function interactContainer(creep) {
 }
 
 function updateMemory(creep) {
-    if (creep.hits <= 400)
-        creep.suicide();
+
     if (creep.memory.goHome) {
         if (creep.carryTotal < 20 || empting) {
             creep.memory.goHome = false;
@@ -210,12 +210,18 @@ function movement(creep) {
                             return o.pos.isNearTo(creep) && o.ticksToLive < creep.ticksToLive && o.memory.role == 'transport';
                         });
                         if (partner.length > 0) {
-                            creep.transfer(partner[0], RESOURCE_ENERGY);
-                            if (partner[0].carryCapacity - partner[0].carry[RESOURCE_ENERGY] < creep.energy) {
-                                partner[0].say(':)'); // Breaks sleep.
-                                roleParent.segment.requestRoomSegmentData(partner[0].memory.home); // Request it for the broken sleeper to use.
-                            }
+                            if (creep.carry[RESOURCE_ENERGY]) {
 
+                                creep.transfer(partner[0], RESOURCE_ENERGY);
+                                if (partner[0].carryCapacity - partner[0].carry[RESOURCE_ENERGY] < creep.energy) {
+                                    partner[0].say(':)'); // Breaks sleep.
+                                    roleParent.segment.requestRoomSegmentData(partner[0].memory.home); // Request it for the broken sleeper to use.
+                                }
+                            }
+                        }
+                        if(partner.length > 1) {
+                            partner.sort((a, b) => a.carryTotal - b.carryTotal);
+                            partner[partner.length-1].memory.goHome = true;
                         }
 
                         if (creep.room.memory.mineInfo === undefined) {
@@ -238,9 +244,9 @@ function movement(creep) {
                             }
 
                             if (creep.memory.expandLevel > 4) {
-                                creep.room.memory.mineInfo[creep.memory.goal] -= 8;
+                                creep.room.memory.mineInfo[creep.memory.goal] -= 10;
                             } else {
-                                creep.room.memory.mineInfo[creep.memory.goal] -= 16;
+                                creep.room.memory.mineInfo[creep.memory.goal] -= 20;
                             }
                         }
 
@@ -271,7 +277,8 @@ class transport extends roleParent {
     static run(creep) {
         if (creep.memory.goHome === undefined) creep.memory.goHome = false;
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }
-
+    if (creep.getActiveBodyparts(MOVE)< 1)
+        creep.suicide();
 
         super.rebirth(creep);
         if (super.movement.runAway(creep)) return;
@@ -279,7 +286,7 @@ class transport extends roleParent {
         empting = false;
         withdrawing = false;
         if (super.link.transfer(creep)) {
-            if(creep.carry[RESOURCE_ENERGY] > 800) {
+            if (creep.carry[RESOURCE_ENERGY] > 800) {
                 return;
             }
             empting = true;

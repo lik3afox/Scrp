@@ -77,12 +77,13 @@ function getStack(spawn) {
     //    console.log('getting stack',spawn.memory.currentStack)
     //    console.log(spawn.memory.create.length,spawn.memory.warCreate.length,spawn.memory.expandCreate );
     var rampart = 'rampartD' + spawn.room.name;
+        var ExpandBeforeWar = ['E22S48','E38S72'];
     if (spawn.memory.alphaSpawn) {
 
         spawn.memory.currentStack = 'create';
         //    console.log(spawn.memory.create.length , spawn.memory.expandCreate.length);
         if (spawn.memory.create.length === 0 && spawn.memory.warCreate.length > 0) {
-            if (spawn.room.name == 'E22S48' && spawn.memory.expandCreate.length > 0) {
+            if (_.contains(ExpandBeforeWar, spawn.room.name) && spawn.memory.expandCreate.length > 0) {
                 spawn.memory.currentStack = 'expand';
             } else {
                 spawn.memory.currentStack = 'war';
@@ -110,7 +111,7 @@ function getStack(spawn) {
             if (alpha !== null) {
                 alpha.memory.currentStack = 'create';
                 if (alpha.memory.create !== undefined && alpha.memory.create.length === 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length > 0) {
-                    if (alpha.room.name == 'E22S48' && alpha.memory.expandCreate.length > 0) {
+                    if (_.contains(ExpandBeforeWar, alpha.room.name)  && alpha.memory.expandCreate.length > 0) {
                         alpha.memory.currentStack = 'expand';
                     } else {
                         alpha.memory.currentStack = 'war';
@@ -130,13 +131,15 @@ function getStack(spawn) {
                     case 'expand':
                         return alpha.memory.expandCreate;
                 }
+            } else {
+                spawn.memory.alphaSpawnID = undefined;
             }
 
         } else {
             for (var i in Game.spawns) {
                 if (Game.spawns[i].room.name == spawn.room.name && Game.spawns[i].memory.alphaSpawn) {
                     alpha = Game.spawns[i];
-
+                    spawn.memory.alphaSpawnID  = alpha.id;
 
                     alpha.memory.currentStack = 'create';
                     if (alpha.memory.create !== undefined && alpha.memory.create.length === 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length > 0) {
@@ -225,7 +228,7 @@ class SpawnInteract {
                 newCreep.memory.home = Game.spawns[i].room.name;
                 newCreep.memory.parent = Game.spawns[i].id;
                 if (Game.spawns[i].memory.warCreate !== undefined) {
-                    var toTop = ['rampartGuard', 'fighter', 'healer'];
+                    var toTop = ['rampartGuard', 'fighter', 'healer','mage'];
                     if (_.contains(toTop, newCreep.memory.role)) {
                         Game.spawns[i].memory.warCreate.unshift(newCreep);
                     } else {

@@ -284,6 +284,18 @@
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
+                    if(Game.shard.name !== 'shard1') {
+var storage = flag.room.storage;
+if(storage !== undefined) {
+    if(storage.store[RESOURCE_ENERGY] > 500000){
+        flag.memory.module[ez][_number] = 1;
+    } else {
+        flag.memory.module[ez][_number] = 0;
+    }
+}
+
+                    }else {
+
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
                             // 
@@ -294,6 +306,7 @@
                                 flag.memory.module[ez][_number] = 1;
                             }
                             break;
+                    }
                     }
                 }
                 break;
@@ -435,6 +448,17 @@
                             }
                             break;
                     }
+                } else {
+var storage2 = flag.room.storage;
+if(storage2 !== undefined) {
+    if(storage2.store[RESOURCE_ENERGY] > 250000){
+        flag.memory.module[ez][_number] = 1;
+    } else {
+        flag.memory.module[ez][_number] = 0;
+    }
+}
+
+
                 }
                 break;
 
