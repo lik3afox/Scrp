@@ -1088,6 +1088,7 @@ class partyInteract {
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
                     //Add to stack 
                     let rando = Math.floor(Math.random() * flag.name.length);
+                    let rando3 = Math.floor(Math.random() * 1000);
 
                     var death = false;
                     if (currentParty[e][_name] == 'first' || currentParty[e][_name] == 'scientist' || currentParty[e][_name] == 'wallwork') {
@@ -1099,7 +1100,7 @@ class partyInteract {
                         build: build,
                         room: home, // This will return a room, and that room will add to alphaSpawn warstack.
                         spawn: home,
-                        name: currentParty[e][_name] + '!' + flag.name[rando] + Game.shard.name[0] + Game.shard.name[5],
+                        name: currentParty[e][_name] + '!' + flag.name[rando]+rando3 + Game.shard.name[0] + Game.shard.name[5],
                         memory: {
                             role: currentParty[e][_name],
                             home: 'default',

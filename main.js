@@ -324,7 +324,7 @@
                         total += targets[ze].ticksToLive;
                     }
                     var limit = 4000;
-                    spawn.room.visual.text(total + "/"+limit, spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+                    spawn.room.visual.text(total + "/" + limit, spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
                     if (total > limit) {
                         spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
                     }
@@ -419,7 +419,7 @@
                             level: 3
                         }
                     });
-//                    console.log(zz);
+                    //                    console.log(zz);
                 }
             }
 
@@ -501,6 +501,15 @@
         for (var e in Game.rooms) {
             var room = Game.rooms[e];
             var memory = room.memory;
+            if(memory.invasionFlag !== undefined) {
+                memory.invasionFlag = undefined;
+            }
+            if(memory.hostileID !== undefined) {
+                memory.hostileID = undefined;
+            }
+            if(memory.hostileScanTimer !== undefined) {
+                memory.hostileScanTimer = undefined;
+            }
             if (room.controller !== undefined && room.controller.owner !== undefined && room.controller.owner.username === 'likeafox') {
                 console.log(room.controller.owner.username);
             } else {
@@ -604,41 +613,39 @@
 
         if (Memory.showInfo === undefined) Memory.showInfo = 5;
         var i = prototypes.length;
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check B4 ProtoTypes");
+        //if(Game.shard.name === 'shard1') console.log("CPU Limit check B4 ProtoTypes");
 
         while (i--) {
             prototypes[i]();
-            global.roomLink = function(roomname) {
-                return '<a href=https://screeps.com/a/#!/room/shard1/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
-            };
-            global.stringToRoomPos = function(string) {
-                //input XXYYE12S23
-                //input 0123456789
-                if (string.length !== 10) return;
-                var goalRoom = string[4] + string[5] + string[6] + string[7] + string[8] + string[9];
-                return new RoomPosition(parseInt(string[0] + string[1]), parseInt(string[2] + string[3]), goalRoom);
-            };
-            global.roomPosToString = function(roomPos) {
-                if (roomPos.x === undefined) return false;
-                var xx = roomPos.x;
-                if (xx.length === 1) {
-                    xx = 0 + xx;
-                }
-                var yy = roomPos.y;
-                if (yy.length === 1) {
-                    yy = 0 + yy;
-                }
-                var ret = xx + yy + roomPos.roomName;
-                if (ret.length > 10) {
-                    console.log(xx, yy, roomPos.roomName);
-                    return;
-                }
-                return ret;
-            };
-
         }
+        global.roomLink = function(roomname) {
+            return '<a href=https://screeps.com/a/#!/room/shard1/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
+        };
+        global.stringToRoomPos = function(string) {
+            //input XXYYE12S23
+            //input 0123456789
+            if (string.length !== 10) return;
+            var goalRoom = string[4] + string[5] + string[6] + string[7] + string[8] + string[9];
+            return new RoomPosition(parseInt(string[0] + string[1]), parseInt(string[2] + string[3]), goalRoom);
+        };
+        global.roomPosToString = function(roomPos) {
+            if (roomPos.x === undefined) return false;
+            var xx = roomPos.x;
+            if (xx.length === 1) {
+                xx = 0 + xx;
+            }
+            var yy = roomPos.y;
+            if (yy.length === 1) {
+                yy = 0 + yy;
+            }
+            var ret = xx + yy + roomPos.roomName;
+            if (ret.length > 10) {
+                console.log(xx, yy, roomPos.roomName);
+                return;
+            }
+            return ret;
+        };
 
-        var totalSpawn = 10;
         var report;
         var doSpawnChecks = false;
 
@@ -647,25 +654,25 @@
         }
         // for creeps.
         var total = 0;
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check B4 run");
+        //if(Game.shard.name === 'shard1') console.log("CPU Limit check B4 run");
 
         spawnsDo.runCreeps();
         if (Game.shard.name !== 'shard2') {
             require('commands.toSegment').run();
         }
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 add spawn");
+        //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 add spawn");
 
 
         addSpawnQuery(); // This will not work with old counting.
         var spawnReport = {};
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 flag");
+        //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 flag");
         flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
 
 
         var keys = Object.keys(Game.spawns);
         var t = keys.length;
         var title;
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 spawn while loop.");        
+        //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 spawn while loop.");        
         while (t--) { // Start of spawn Loop
             title = keys[t];
             if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
@@ -693,7 +700,6 @@
                     //                        console.log(Game.spawns[title].pos.roomName);
                     //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
 
-                    totalSpawn++;
                     tower.run(Game.spawns[title].pos.roomName); // Tower doing stuff.
 
                     if (Game.spawns[title].memory.roadsTo.length === 0) {
@@ -731,7 +737,7 @@
                                 }
                             });
                             spwn.memory.CreatedMsg = 'LUCKY';
-//                            console.log('trying LUCKY', ez);
+                            //                            console.log('trying LUCKY', ez);
                         }
                     } else {
 
@@ -769,25 +775,25 @@
                 }
             }
         } // End of Spawns Loops
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 link");
+        //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 link");
         Memory.stats.rooms = spawnReport;
         link.run();
         Memory.marketRunCounter--;
 
         if (Memory.marketRunCounter <= 0) {
             Memory.marketRunCounter = 10;
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 market run");
+            //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 market run");
             market.run();
         }
         if (Game.shard.name !== 'shard2') {
 
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 statusupdate and observer run");
+            //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 statusupdate and observer run");
             memoryStatsUpdate();
             observer.run();
 
         }
 
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 power,upgrade, lab");
+        //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 power,upgrade, lab");
         if (Game.shard.name == 'shard1') {
             doUpgradeRooms();
             if (Game.cpu.bucket > 250) {
@@ -812,49 +818,49 @@
             } */
         }
 
-//if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 remote and report");
+        //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 remote and report");
         scanForRemoteSources();
 
         if (Memory.marketRunCounter === undefined) Memory.marketRunCounter = 10;
-                report = "";
-                for (var a in Memory.shardNeed) {
-                    report += " " + Memory.shardNeed[a];
-                }
+        report = "";
+        for (var a in Memory.shardNeed) {
+            report += " " + Memory.shardNeed[a];
+        }
 
-var color = '<a style="color:#0afaff">';
-var endColor = '</a>';
-var shard = Game.shard.name;
-var segmentNumUsed = Memory.shardNeed.length;
-segmentNumUsed = JSON.stringify(segmentNumUsed).padStart(2,"0");
-var powerProcessed = Memory.stats.powerProcessed;
-if(powerProcessed === undefined) powerProcessed = 0;
-var segmentsUsed = report;
-var gameTime = Game.time;
-gameTime = JSON.stringify(gameTime).padStart(8,"0");
-var creepTotal = Memory.creepTotal;
-creepTotal = JSON.stringify(creepTotal).padStart(3,"0");
-//var cpuUsed = dif;
-var cpuLimit = Game.cpu.limit;
-cpuLimit = JSON.stringify(cpuLimit).padStart(3,"0");
-var cpuCeil = Game.cpu.tickLimit;
-cpuCeil = JSON.stringify(cpuCeil).padStart(3,"0");
-var cpuBucket = Game.cpu.bucket;
-cpuBucket = JSON.stringify(cpuBucket).padStart(5,"0");
-var filler = "###"+Game.shard.name+"###";
-switch(Game.shard.name){
-    case "shard0":
-    color = '<a style="color:#00aaff">';
-    filler = "!!!"+Game.shard.name+"!!!";
-    break;
-    case "shard1":
-    break;
-    case "shard2":
-    color = '<a style="color:#aaaaff">';
-    filler = "%%%"+Game.shard.name+"%%%";
-    break;
-}
-console.log(color+shard+" "+filler+"  Tick #"+gameTime+"  Total Creeps:("+creepTotal+") Bucket: "+cpuBucket+" "+cpuLimit+"/"+cpuCeil+filler+" Seg#"+segmentNumUsed+" PP:"+powerProcessed);
+        var color = '<a style="color:#0afaff">';
+        var endColor = '</a>';
+        var shard = Game.shard.name;
+        var segmentNumUsed = Memory.shardNeed.length;
+        segmentNumUsed = JSON.stringify(segmentNumUsed).padStart(2, "0");
+        var powerProcessed = Memory.stats.powerProcessed;
+        if (powerProcessed === undefined) powerProcessed = 0;
+        var segmentsUsed = report;
+        var gameTime = Game.time;
+        gameTime = JSON.stringify(gameTime).padStart(8, "0");
+        var creepTotal = Memory.creepTotal;
+        creepTotal = JSON.stringify(creepTotal).padStart(3, "0");
+        //var cpuUsed = dif;
+        var cpuLimit = Game.cpu.limit;
+        cpuLimit = JSON.stringify(cpuLimit).padStart(3, "0");
+        var cpuCeil = Game.cpu.tickLimit;
+        cpuCeil = JSON.stringify(cpuCeil).padStart(3, "0");
+        var cpuBucket = Game.cpu.bucket;
+        cpuBucket = JSON.stringify(cpuBucket).padStart(5, "0");
+        var filler = "###" + Game.shard.name + "###";
+        switch (Game.shard.name) {
+            case "shard0":
+                color = '<a style="color:#00aaff">';
+                filler = "!!!" + Game.shard.name + "!!!";
+                break;
+            case "shard1":
+                break;
+            case "shard2":
+                color = '<a style="color:#aaaaff">';
+                filler = "%%%" + Game.shard.name + "%%%";
+                break;
+        }
+        console.log(color + shard + " " + filler + "  Tick #" + gameTime + "  Total Creeps:(" + creepTotal + ") Bucket: " + cpuBucket + " " + cpuLimit + "/" + cpuCeil + filler + " Seg#" + segmentNumUsed + " PP:" + powerProcessed);
 
-     
+
 //        cleanMemory();
     });

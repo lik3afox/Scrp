@@ -108,7 +108,7 @@ function adjustOldPrices() {
     });
     if (order.length > 0) {
         for (var e in order) {
-            if (order[e].resourceType !== RESOURCE_ENERGY) {
+            if (order[e].resourceType !== RESOURCE_ENERGY &&order[e].resourceType !== "XGH2O" ) {
                 let amount = getAverageMineralPrice(order[e].resourceType, false);
                 if (amount !== undefined && amount < order[e].price && order[e].price !== 0.01 ) {
                     console.log('switching average of order', order[e].id, 'too', amount);

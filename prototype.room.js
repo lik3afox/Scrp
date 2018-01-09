@@ -86,23 +86,23 @@ module.exports = function() {
         return dEnergy;
     };
 
+        var badsHere;
     Room.prototype.hostilesHere = function() {
-        var bads;
-        if (this.memory.hostileID === undefined || this.memory.hostileScanTimer != Game.time) {
-            bads = this.find(FIND_HOSTILE_CREEPS);
-            let badArray = [];
-            for (var e in bads) {
+
+    //    if (this.memory.hostileID === undefined || this.memory.hostileScanTimer != Game.time) {
+  //          let badArray = [];
+/*            for (var e in bads) {
                 let zz = bads[e];
                 badArray.push(zz.id);
-            }
-            this.memory.hostileID = badArray;
-            this.memory.hostileScanTimer = Game.time;
-            return bads;
-        }
-        bads = [];
-        for (var z in this.memory.hostileID) {
-            bads.push(Game.getObjectById(this.memory.hostileID[z]));
-        }
-        return bads;
+            } */
+//            this.memory.hostileID = badArray;
+ //           this.memory.hostileScanTimer = Game.time;
+            return this.find(FIND_HOSTILE_CREEPS);
+   //     }
+      //  bads = [];
+      //  for (var z in this.memory.hostileID) {
+        //    bads.push(Game.getObjectById(this.memory.hostileID[z]));
+       // }
+       // return bads;
     };
 };

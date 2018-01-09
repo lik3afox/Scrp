@@ -699,11 +699,13 @@ class MoveInteract {
                 }
             }
 
-            if (Game.flags[creep.memory.runFrom] === undefined) {
-                creep.memory.runAway = false;
-            }
 
         }
+            if (creep.memory.runAway !== undefined && Game.flags[creep.memory.runFrom] === undefined) {
+                creep.memory.runAway = undefined;
+                creep.memory.runFrom = undefined;
+                return;
+            }
 
         return creep.memory.runAway;
     }

@@ -22,9 +22,13 @@
             } else {
                 flag.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);
             }
-            flag.room.memory.invasionFlag = flag.name;
+//            flag.room.memory.invasionFlag = flag.name;
 
             creeps = flag.pos.findInRange(FIND_MY_CREEPS, 15);
+    //        creeps = _.filter(creeps, function(o) {
+  //              return o.getActiveBodyParts(WORK) > 0 || o.getActiveBodyParts(CARRY) > 0;
+//            });
+
             if (creeps.length > 0) {
                 for (var a in creeps) {
                     creeps[a].memory.runAway = true;
@@ -46,6 +50,9 @@
             //            flag.room.memory.invasionFlag = flag.name;
 
             creeps = flag.pos.findInRange(FIND_MY_CREEPS, 15);
+    //        creeps = _.filter(creeps, function(o) {
+  //              return o.getActiveBodyParts(WORK) > 0 || o.getActiveBodyParts(CARRY) > 0;
+//            });
             if (creeps.length > 0) {
                 for (var b in creeps) {
                     creeps[b].memory.runAway = true;

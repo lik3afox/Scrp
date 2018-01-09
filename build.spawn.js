@@ -227,7 +227,7 @@ function rebuildCreep(creep) {
         memory: {
             role: creep.memory.role,
             home: creep.memory.home,
-            needBoost: needBoost,
+            needBoost:  needBoost,
             parent: creep.memory.parent,
             deathCount: creep.memory.deathCount,
             level: creep.memory.level,

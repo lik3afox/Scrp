@@ -15,6 +15,14 @@ var classLevels = [
 
 ];
 
+
+function getHostiles(creep) {
+    let range = 4;
+        let bads = creep.room.find(FIND_HOSTILE_CREEPS);
+        return creep.pos.findInRange(bads, range);
+
+}
+
 function getEnergy(creep) {
     if (creep.memory.gotoID === undefined) {
 
@@ -220,7 +228,10 @@ class transportz extends roleParent {
                             creep.memory.scientistID = undefined;
                         } else {
                             if (creep.room.name == sci.pos.roomName && !creep.pos.isNearTo(sci)) {
+var bads = getHostiles(creep);
+                            if(bads.length === 0)
                                 creep.moveTo(sci, { reusePath: 50, maxOpts: 100 });
+
                             }/* else if (creep.pos.isNearTo(sci) && sci.carryTotal > (creep.carryCapacity - creep.carryTotal)) {
                                 for (var z in sci.carry) {
                                     if (sci.transfer(creep, z) == OK)
@@ -245,11 +256,9 @@ class transportz extends roleParent {
             } else {
                 // If in the same room and with in a square of 5 away from goal. 
                 if (_goal !== null && _goal.room.name === creep.room.name) {
-creep.say('zzz2');
                     getEnergy(creep);
                 } else  if (creep.memory.gotoID === undefined|| (creep.carryTotal === 0 && creep.memory.home == creep.room.name)){
                     // )
-creep.say('zzz3');
                     var goingTo;
                     if (_goal === null) {
                         goingTo = super.movement.getRoomPos(creep.memory.goal); // this gets the goal pos.

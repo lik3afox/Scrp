@@ -709,6 +709,9 @@ class baseParent {
 
     static boosted(creep, boosted) {
         if (creep.ticksToLive < 1400) {
+            creep.memory.boostNeeded = undefined;
+            creep.memory.needBoost = undefined;
+            creep.memory.isBoosted = undefined;
             return false;
         }
         if (creep.memory.boostNeeded === undefined) {
@@ -716,7 +719,6 @@ class baseParent {
         }
 
         //        creep.room.memory.boost.mineralType = 'none';
-creep.say(creep.memory.boostNeeded);
         if (creep.memory.boostNeeded.mineralType !== 'none' && creep.memory.home == creep.room.name) {
 
             var a = creep.memory.boostNeeded.length;

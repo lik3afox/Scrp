@@ -275,6 +275,13 @@ class transport extends roleParent {
     }
 
     static run(creep) {
+        if(creep.memory.needBoost !== undefined && creep.memory.needBoost.length === 0) {
+            creep.memory.needBoost = undefined;
+        }
+  //      if(creep.memory._move !== undefined && creep.memory._move.time < Game.time){
+//            console.log("delete _move",creep.memory._move.time, Game.time,roomLink(creep.room.name),creep.pos);
+//            creep.memory._move = undefined;
+    //    }
         if (creep.memory.goHome === undefined) creep.memory.goHome = false;
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }
     if (creep.getActiveBodyparts(MOVE)< 1)

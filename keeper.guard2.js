@@ -13,34 +13,9 @@ var fox = require('foxGlobals');
 
 
 function getHostiles(creep) {
-    let range = 6;
-    if ( creep.room.name == 'E16S34') range = 4;
+    range = 10;
 
-    if (creep.room.name == 'E11S36') {
-        range = 49;
-    }
-    var rng10 = ['E16S35', 'E25S26','E26S35','E16S44','E14S46'];
-    if (_.contains(rng10, creep.room.name)) {
-        range = 10;
-    }
-    /*
-        let bads = creep.room.find(FIND_HOSTILE_CREEPS );
-
-        let player = _.filter(bads,function(o) {
-            return !_.contains(fox.friends, o.owner.username)&& o.owner.username !== 'Invader'&& o.owner.username !== 'Source Keeper' ;
-        } );
-        if(player.length > 0){
-            return player;
-        }
-
-         */
-    /*    let returned = creep.pos.findInRange(bads, range);
-
-        returned = _.filter(returned, function(o) {
-            return !_.contains(fox.friends, o.owner.username);
-        }); */
     let tgt = Game.getObjectById(creep.memory.playerTargetId);
-    //        console.log(tgt, 'tgt');
     if (tgt === null) {
         creep.memory.playerTargetId = null;
         let bads = creep.room.find(FIND_HOSTILE_CREEPS);
@@ -55,10 +30,8 @@ function getHostiles(creep) {
     } else {
         return [tgt];
     }
-
-    //    return returned;
-
 }
+
 function attackCreep(creep, bads) {
     if (bads.length === 0) {
         creep.memory.needed = undefined;
@@ -224,7 +197,16 @@ class roleGuard extends roleParent {
             return;
         }
 
-        var goalPos = new RoomPosition(Game.flags[creep.memory.party].pos.x, Game.flags[creep.memory.party].pos.y, Game.flags[creep.memory.party].pos.roomName);
+        if (creep.memory.keeperLair !== undefined && _.isObject(creep.memory.keeperLair[0])) {
+            creep.memory.keeperLair = undefined;
+            return;
+        }
+
+
+        if (creep.memory.goalPos === undefined && Game.flags[creep.memory.party] !== undefined) {
+
+            creep.memory.goalPos = new RoomPosition(Game.flags[creep.memory.party].pos.x, Game.flags[creep.memory.party].pos.y, Game.flags[creep.memory.party].pos.roomName);
+        }
 
         if (creep.memory.keeperLair) {
             let bads = getHostiles(creep);
@@ -250,7 +232,7 @@ class roleGuard extends roleParent {
                         creep.memory.goTo = undefined;
                 }
             }
-        } else if (goalPos !== undefined && creep.room.name != goalPos.roomName) {
+        } else if (creep.memory.goalPos !== undefined && creep.room.name != creep.memory.goalPos.roomName) {
             let bads = getHostiles(creep);
             if (bads.length > 0) {
                 attackCreep(creep, bads);
