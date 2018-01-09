@@ -22,12 +22,12 @@
             } else {
                 flag.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);
             }
-//            flag.room.memory.invasionFlag = flag.name;
+            //            flag.room.memory.invasionFlag = flag.name;
 
             creeps = flag.pos.findInRange(FIND_MY_CREEPS, 15);
-    //        creeps = _.filter(creeps, function(o) {
-  //              return o.getActiveBodyParts(WORK) > 0 || o.getActiveBodyParts(CARRY) > 0;
-//            });
+            //        creeps = _.filter(creeps, function(o) {
+            //              return o.getActiveBodyParts(WORK) > 0 || o.getActiveBodyParts(CARRY) > 0;
+            //            });
 
             if (creeps.length > 0) {
                 for (var a in creeps) {
@@ -50,9 +50,9 @@
             //            flag.room.memory.invasionFlag = flag.name;
 
             creeps = flag.pos.findInRange(FIND_MY_CREEPS, 15);
-    //        creeps = _.filter(creeps, function(o) {
-  //              return o.getActiveBodyParts(WORK) > 0 || o.getActiveBodyParts(CARRY) > 0;
-//            });
+            //        creeps = _.filter(creeps, function(o) {
+            //              return o.getActiveBodyParts(WORK) > 0 || o.getActiveBodyParts(CARRY) > 0;
+            //            });
             if (creeps.length > 0) {
                 for (var b in creeps) {
                     creeps[b].memory.runAway = true;
@@ -259,12 +259,12 @@
                         //                          flag.memory.module[ez][_level] = 2;
                     }
 
-                    if(flag.room.name == 'E19S49') {
-                        if(flag.room.storage.store.energy > 800000){
+                    if (flag.room.name == 'E19S49') {
+                        if (flag.room.storage.store.energy > 800000) {
                             flag.memory.module[ez][_number] = 3;
-                        } else if(flag.room.storage.store.energy > 500000){
+                        } else if (flag.room.storage.store.energy > 500000) {
                             flag.memory.module[ez][_number] = 2;
-                        } else if(flag.room.storage.store.energy > 25000){
+                        } else if (flag.room.storage.store.energy > 25000) {
                             flag.memory.module[ez][_number] = 1;
                         } else {
                             flag.memory.module[ez][_number] = 0;
@@ -291,29 +291,29 @@
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
-                    if(Game.shard.name !== 'shard1') {
-var storage = flag.room.storage;
-if(storage !== undefined) {
-    if(storage.store[RESOURCE_ENERGY] > 500000){
-        flag.memory.module[ez][_number] = 1;
-    } else {
-        flag.memory.module[ez][_number] = 0;
-    }
-}
-
-                    }else {
-
-                    switch (flag.memory.module[ez][_level]) {
-                        case 0:
-                            // 
-                            break;
-                        case 7:
-                            if (flag.room.controller.level === 8) {
-                                flag.memory.module[ez][_level] = 8;
+                    if (Game.shard.name !== 'shard1') {
+                        var storage = flag.room.storage;
+                        if (storage !== undefined) {
+                            if (storage.store[RESOURCE_ENERGY] > 500000) {
                                 flag.memory.module[ez][_number] = 1;
+                            } else {
+                                flag.memory.module[ez][_number] = 0;
                             }
-                            break;
-                    }
+                        }
+
+                    } else {
+
+                        switch (flag.memory.module[ez][_level]) {
+                            case 0:
+                                // 
+                                break;
+                            case 7:
+                                if (flag.room.controller.level === 8) {
+                                    flag.memory.module[ez][_level] = 8;
+                                    flag.memory.module[ez][_number] = 1;
+                                }
+                                break;
+                        }
                     }
                 }
                 break;
@@ -456,14 +456,14 @@ if(storage !== undefined) {
                             break;
                     }
                 } else {
-var storage2 = flag.room.storage;
-if(storage2 !== undefined) {
-    if(storage2.store[RESOURCE_ENERGY] > 250000){
-        flag.memory.module[ez][_number] = 1;
-    } else {
-        flag.memory.module[ez][_number] = 0;
-    }
-}
+                    var storage2 = flag.room.storage;
+                    if (storage2 !== undefined) {
+                        if (storage2.store[RESOURCE_ENERGY] > 250000) {
+                            flag.memory.module[ez][_number] = 1;
+                        } else {
+                            flag.memory.module[ez][_number] = 0;
+                        }
+                    }
 
 
                 }
@@ -671,6 +671,7 @@ if(storage2 !== undefined) {
     var _name = 0;
     var _number = 1;
     var _level = 2;
+    var spawnCount;
 
     function showInfo(flag) {
         var e;
@@ -734,11 +735,19 @@ if(storage2 !== undefined) {
 
                         if (flag.memory.module[e][_number] !== 0) {
                             var outThere;
-                            if (Memory.spawnCount[flag.memory.alphaSpawn] !== undefined && Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
-                                outThere = Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
-                            } else {
-                                outThere = 0;
-                            }
+                            if (spawnCount !== undefined) {
+                                if (spawnCount[flag.memory.alphaSpawn] !== undefined && spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
+                                    outThere = spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
+                                } else {
+                                    outThere = 0;
+                                }
+                            } /*else {
+                                if (Memory.spawnCount[flag.memory.alphaSpawn] !== undefined && Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
+                                    outThere = Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
+                                } else {
+                                    outThere = 0;
+                                } 
+                            }*/
 
                             flag.room.visual.text('(' + outThere + '/' + flag.memory.module[e][_number] + ')' + '[Lv:' + flag.memory.module[e][_level] + ']' + ':' + flag.memory.module[e][_name], x, y, font);
                             y++;
@@ -801,8 +810,8 @@ if(storage2 !== undefined) {
 
     class buildFlags {
 
-        static run() {
-
+        static run(spawncounted) {
+            spawnCount = spawncounted;
             let powerTotal = 0;
             let defendTotal = 0;
             if (Memory.clearFlag === undefined) Memory.clearFlag = 500;
@@ -929,11 +938,11 @@ if(storage2 !== undefined) {
                                 });
 
                                 // Start countingdown to see if bandits have failed to kill caravan.
-                                if(flag.memory.countDown === undefined) {
+                                if (flag.memory.countDown === undefined) {
                                     flag.memory.countDown = 1000;
                                 }
                                 flag.memory.countDown--;
-                                if(flag.memory.countDown < 0 && testz2.length === 0)  {
+                                if (flag.memory.countDown < 0 && testz2.length === 0) {
                                     flag.remove();
                                 }
 
@@ -946,13 +955,13 @@ if(storage2 !== undefined) {
                                     flag.remove();
                                 }
 
-                                 strucd = flag.room.find(FIND_CREEPS);
-                                 testz2 = _.filter(strucd, function(o) {
+                                strucd = flag.room.find(FIND_CREEPS);
+                                testz2 = _.filter(strucd, function(o) {
                                     return o.owner.username == 'Screeps';
-                                    });
-                                 if(testz2.length === 0) {
-                                  //  rally.memory.rallyCreateCount = 1000;
-                                 }
+                                });
+                                if (testz2.length === 0) {
+                                    //  rally.memory.rallyCreateCount = 1000;
+                                }
 
                             }
                         }

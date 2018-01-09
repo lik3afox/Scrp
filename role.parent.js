@@ -914,9 +914,12 @@ class baseParent {
     }
 
     static spawnRecycle(creep) {
+        if (!creep.memory.death) creep.memory.death = undefined;
+
         if (creep.memory.death === undefined) {
             //        creep.memory.returnSource = false;
-            creep.memory.death = false;
+            return false;
+         //   creep.memory.death = false;
         }
         if (creep.memory.returnSource || creep.memory.death) {
             creep.say('💀');

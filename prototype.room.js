@@ -8,6 +8,24 @@ RoomPosition.prototype.lookForStructure = function(structureType) {
 
 module.exports = function() {
 
+    Object.defineProperty(Room.prototype, 'alphaspawn', {
+        configurable: true,
+        get: function() {
+            if(this._alphaSpawn !== undefined) {
+                return this._alphaSpawn;
+            } else {
+                if (this.memory.alphaSpawnID === undefined) {
+                    let bb = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn });
+                    if (bb.length > 0)
+                        this.memory.alphaSpawnID = bb[0].id;
+                }
+                this._alphaspawn = Game.getObjectById(this.memory.alphaSpawnID);
+                if (this._alphaspawn === null) this.memory.alphaSpawnID = undefined;
+                return this._alphaspawn;
+            }
+
+        }
+    });
 
     Object.defineProperty(Room.prototype, 'powerspawn', {
         configurable: true,

@@ -570,6 +570,7 @@ class MoveInteract {
     static moveToDefendFlag(creep, bades) {
         var defendRooms = {
             E16S45: ['E16S45', 'E15S45', 'E16S44'],
+
         };
 
         let flagz = creep.defendFlags();
@@ -602,7 +603,7 @@ class MoveInteract {
                 maxDistance = 1; //if(distance > 1) return false;
 
                 if (defendRooms[creep.room.name] !== undefined) {
-                    if (_.contains(defendRooms[creep.room.name], flagz[e].pos.roomName)) {
+                    if (_.contains(defendRooms[creep.room.name], flagz[e].pos.roomName) || _.contains(defendRooms[creep.room.name], creep.memory.home)  ) {
                         maxDistance = 1;
                     } else {
                         maxDistance = 0;

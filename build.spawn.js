@@ -372,6 +372,37 @@ function doSpawnCount(creep) {
         return;
     }
     if (creep.memory.parent === undefined) return;
+   if (spawnCount[creep.memory.parent] === undefined) {
+        spawnCount[creep.memory.parent] = {};
+    }
+    if (spawnCount[creep.memory.parent][creep.memory.role] === undefined) {
+        spawnCount[creep.memory.parent][creep.memory.role] = {
+            count: 0,
+            goal: [],
+        };
+    }
+    if (spawnCount[creep.memory.parent].bodyCount === undefined) {
+        spawnCount[creep.memory.parent].bodyCount = 0;
+    }
+    if (spawnCount[creep.memory.parent].total === undefined) {
+        spawnCount[creep.memory.parent].total = 0;
+    }
+
+    //   if(creep.spawning){
+    //        console.log('spawn find');
+    //   }
+    //totalBuild = totalBuild + spawnCreeps[name].body.length
+    spawnCount[creep.memory.parent].bodyCount += creep.body.length;
+
+    creep.memory.roleID = spawnCount[creep.memory.parent][creep.memory.role].count;
+    spawnCount[creep.memory.parent][creep.memory.role].count++;
+    spawnCount[creep.memory.parent].total++;
+
+    if (creep.memory.goal !== undefined)
+        spawnCount[creep.memory.parent][creep.memory.role].goal.push(creep.memory.goal);
+/*
+
+
     if (Memory.spawnCount[creep.memory.parent] === undefined) {
         Memory.spawnCount[creep.memory.parent] = {};
     }
@@ -399,7 +430,9 @@ function doSpawnCount(creep) {
     Memory.spawnCount[creep.memory.parent].total++;
 
     if (creep.memory.goal !== undefined)
-        Memory.spawnCount[creep.memory.parent][creep.memory.role].goal.push(creep.memory.goal);
+        Memory.spawnCount[creep.memory.parent][creep.memory.role].goal.push(creep.memory.goal);*/
+    //return spawnCount;
+
 }
 
 function getModuleRole(role) {
@@ -445,9 +478,10 @@ function calculateCPU(cpu, creep) {
         return creep.memory.cpuCost;*/
 }
 
+    var spawnCount;
 class theSpawn {
 
-    static spawnQuery(spawn) {
+    static spawnQuery(spawn,spawnCount) {
         // Counting
         var totalCreeps;
         var type;
@@ -455,9 +489,16 @@ class theSpawn {
 //        }
 
 
-        spawn.memory.TotalBuild = (Memory.spawnCount[spawn.id].bodyCount * 3);
-        spawn.memory.totalCreep = Memory.spawnCount[spawn.id].total;
-        totalCreeps = Memory.spawnCount[spawn.id];
+        if(spawnCount === undefined) {
+  //          totalCreeps = Memory.spawnCount[spawn.id];
+//            spawn.memory.TotalBuild = (Memory.spawnCount[spawn.id].bodyCount * 3);
+    //        spawn.memory.totalCreep = Memory.spawnCount[spawn.id].total;
+        } else {
+//            console.log('Passed along and used.');
+            totalCreeps = spawnCount[spawn.id];
+            spawn.memory.TotalBuild = (spawnCount[spawn.id].bodyCount * 3);
+            spawn.memory.totalCreep = spawnCount[spawn.id].total;
+        }
 
         // Flag Module Check Add Module.
         /*
@@ -780,7 +821,9 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
         var keys = Object.keys(Memory.creeps);
         var e = keys.length;
         var name;
-        Memory.spawnCount = {};
+//        Memory.spawnCount = {};
+        spawnCount = {};
+
         while (e--) { // Start of Creep Loop
             name = keys[e];
 
@@ -836,6 +879,7 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
 
         }
         //        console.log(totalRoles);
+        return spawnCount;
     }
 
 

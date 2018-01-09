@@ -39,6 +39,8 @@ function restingSpot(creep) {
     switch (creep.memory.goal) {
         case '5982ff2eb097071b4adc236d':
             return new RoomPosition(3, 16, creep.room.name);
+        case '5a5423d4cb9ef847b379cf33':
+            return new RoomPosition(34, 5, creep.room.name);
         case '5982ff95b097071b4adc2ea4':
             return new RoomPosition(13, 19, creep.room.name);
         case '5982ff21b097071b4adc2221':
@@ -147,6 +149,7 @@ class settler extends roleParent {
 
     static run(creep) {
         super.shouldDie(creep);
+        super.rebirth(creep);
         if (super.movement.runAway(creep)) return;
         if (super.baseRun(creep)) return;
         /*        if (creep.memory.needBoost !== undefined && creep.memory.needBoost.length > 0) {
@@ -170,7 +173,6 @@ class settler extends roleParent {
         super.movement.checkForBadsPlaceFlag(creep);
 
         if (creep.memory.isThere === undefined) { creep.memory.isThere = false; }
-        if (creep.memory.level >= 2) super.rebirth(creep);
 
         if (super.keeperWatch(creep)) {
             return;
@@ -377,6 +379,8 @@ class settler extends roleParent {
 
 
         }
+
+        creep.cleanMe();
 
     }
 }

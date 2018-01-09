@@ -501,13 +501,13 @@
         for (var e in Game.rooms) {
             var room = Game.rooms[e];
             var memory = room.memory;
-            if(memory.invasionFlag !== undefined) {
+            if (memory.invasionFlag !== undefined) {
                 memory.invasionFlag = undefined;
             }
-            if(memory.hostileID !== undefined) {
+            if (memory.hostileID !== undefined) {
                 memory.hostileID = undefined;
             }
-            if(memory.hostileScanTimer !== undefined) {
+            if (memory.hostileScanTimer !== undefined) {
                 memory.hostileScanTimer = undefined;
             }
             if (room.controller !== undefined && room.controller.owner !== undefined && room.controller.owner.username === 'likeafox') {
@@ -536,8 +536,62 @@
 
     }
 
-    function addSpawnQuery() {
-        for (var e in Game.spawns) {
+    function addSpawnQuery(spawnCount) {
+        var e;
+        if (spawnCount !== undefined) {
+            for ( e in Game.spawns) {
+                if (Game.spawns[e].memory.alphaSpawn) {
+                    if (spawnCount[Game.spawns[e].id] === undefined) {
+                        spawnCount[Game.spawns[e].id] = {
+                            bodyCount: 0
+                        };
+                    }
+                    if (spawnCount[Game.spawns[e].id] !== undefined) {
+                        let spwn = Game.spawns[e];
+                        let spwnCount = spawnCount[Game.spawns[e].id];
+                        let create = spwn.memory.create;
+                        let war = spwn.memory.warCreate;
+                        let expand = spwn.memory.expandCreate;
+                        let a;
+                        for (a in create) {
+                            if (spwnCount[create[a].memory.role] !== undefined) {
+                                spwnCount[create[a].memory.role].count++;
+                            } else {
+                                spwnCount[create[a].memory.role] = {
+                                    count: 1,
+                                    goal: []
+                                };
+                            }
+                        }
+                        for (a in war) {
+                            if (spwnCount[war[a].memory.role] !== undefined) {
+                                spwnCount[war[a].memory.role].count++;
+                            } else {
+                                spwnCount[war[a].memory.role] = {
+                                    count: 1,
+                                    goal: []
+                                };
+                            }
+                        }
+                        for (a in expand) {
+                            if (spwnCount[expand[a].memory.role] !== undefined) {
+                                spwnCount[expand[a].memory.role].count++;
+                                spwnCount[expand[a].memory.role].goal.push(expand[a].memory.goal);
+                            } else {
+                                spwnCount[expand[a].memory.role] = {
+                                    count: 1,
+                                    goal: [expand[a].memory.goal]
+                                };
+
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+/*        for ( e in Game.spawns) {
             if (Game.spawns[e].memory.alphaSpawn) {
                 if (Memory.spawnCount[Game.spawns[e].id] === undefined) {
                     Memory.spawnCount[Game.spawns[e].id] = {
@@ -586,7 +640,9 @@
                 }
             }
 
-        }
+        }*/
+            return spawnCount;
+
     }
 
     function blackMagic(fn) {
@@ -656,17 +712,16 @@
         var total = 0;
         //if(Game.shard.name === 'shard1') console.log("CPU Limit check B4 run");
 
-        spawnsDo.runCreeps();
+        var spawnCount = spawnsDo.runCreeps();
         if (Game.shard.name !== 'shard2') {
             require('commands.toSegment').run();
         }
         //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 add spawn");
 
-
-        addSpawnQuery(); // This will not work with old counting.
+        spawnCount = addSpawnQuery(spawnCount); // This will not work with old counting.
         var spawnReport = {};
         //if(Game.shard.name === 'shard1') console.log("CPU Limit check b4 flag");
-        flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
+        flag.run(spawnCount); // We do this part of the first stuff so we can go and find things in the flag rooms
 
 
         var keys = Object.keys(Game.spawns);
@@ -717,7 +772,7 @@
 
                 if (Game.spawns[title].memory.alphaSpawn && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN) {
-                    spawnsDo.spawnQuery(Game.spawns[title]);
+                    spawnsDo.spawnQuery(Game.spawns[title],spawnCount);
                 }
 
                 if (Game.spawns[title].spawning === null) {
@@ -862,5 +917,5 @@
         console.log(color + shard + " " + filler + "  Tick #" + gameTime + "  Total Creeps:(" + creepTotal + ") Bucket: " + cpuBucket + " " + cpuLimit + "/" + cpuCeil + filler + " Seg#" + segmentNumUsed + " PP:" + powerProcessed);
 
 
-//        cleanMemory();
+        //        cleanMemory();
     });

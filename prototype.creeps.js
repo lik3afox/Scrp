@@ -745,6 +745,23 @@ xxxx yyyyyy yyyy yyyyyy x
         return -6;
 
     };
+    Creep.prototype.cleanMe = function() {
+        // What this function does is clean up memory and make it less.
+        if(this.ticksToLive < 1400) {
+            this.memory.needBoost = undefined;
+        }
+        if(this.memory._move !== undefined) {
+            if(this.memory._move.time < Game.time){
+                this.memory._move = undefined;
+                this.memory.oldCachePath = undefined;
+                this.memory.position = undefined;
+                this.memory.stuckCount = undefined;
+                this.memory.cachePath = undefined;
+                this.memory.closeRoadBuildTimer = undefined;
+                this.memory.onRoad = undefined;
+            }
+        }
+    };
 
     var segment = require('commands.toSegment');
     var rawData;

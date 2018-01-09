@@ -111,12 +111,6 @@ class muleClass extends roleParent {
         }
 
         if (!creep.memory.goHome) {
- creep.sing(['!Never', '!gonna', 'give', 'you!',
-                        'up',
-                        '@Never', '@gonna', 'let', 'you@',
-                        'down',
-                        '#Never', '#gonna', 'run', 'around', 'and', 'desert', 'you#'
-                    ], true);            
             if (total === creep.carryCapacity && creep.memory.level !== 2) {
 
                 creep.say('bich');
@@ -151,11 +145,17 @@ class muleClass extends roleParent {
                         }
 
                     } else {
+/*                        var zzee = Game.getObjectById('5a54d79f9ae2bd749a30a092');
+                        if(zzee !== null && creep.pos.isNearTo(zzee)) {
+                            creep.transfer(zzee,RESOURCE_ENERGY);
+//                            return;
+                        } */
                         if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {
                             creep.drop(RESOURCE_ENERGY);
                         } else {
-                            creep.moveMe(Game.flags[creep.memory.party], { reusePath: 20, ignoreCreeps: true });
+                            creep.moveMe(Game.flags[creep.memory.party], { reusePath: 20, ignoreCreeps: false });
                         }
+
                     }
 
 
@@ -167,7 +167,7 @@ class muleClass extends roleParent {
 
                 let stor = creep.room.storage;
                 //                constr.pickUpEnergy(creep);
-                if (stor.store[RESOURCE_ENERGY] < 1000) {
+                if (stor === undefined || stor.store[RESOURCE_ENERGY] < 1000) {
                     stor = creep.room.terminal;
                 }
                 if (Game.shard.name == 'shard0') {
@@ -236,6 +236,8 @@ for(var ze in Memory.stats.totalMinerals) {
                 }
 
             }
+
+
         } else {
             if (creep.room.name == creep.memory.home) {
                 creep.memory.goHome = false;
@@ -247,6 +249,13 @@ for(var ze in Memory.stats.totalMinerals) {
                 }
             }
         }
+ creep.sing(['!Never', '!gonna', 'give', 'you!',
+                        'up',
+                        '@Never', '@gonna', 'let', 'you@',
+                        'down',
+                        '#Never', '#gonna', 'run', 'around', 'and', 'desert', 'you#'
+                    ], true);            
+        
     }
 }
 

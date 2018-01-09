@@ -201,7 +201,7 @@ function caravanCheck(target) {
             var two = parseInt(roomName[2]);
             var five = parseInt(roomName[5]);
 
-            if (two === 0 && five === 0  && caravan[0].ticksToLive < 1000  && caravan[0].ticksToLive > 300) {
+            if (two === 0 && five === 0  && caravan[0].ticksToLive < 1000  && caravan[0].ticksToLive > 700) {
                 dir = 'none';
             } else if (two === 1 || two === 2 && caravan[0].ticksToLive > 1000) {
                 dir = 'e';
