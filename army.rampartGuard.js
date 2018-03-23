@@ -68,7 +68,14 @@ function findAttacker(enemies) {
 class fighterClass extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if( _.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level]) ) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {

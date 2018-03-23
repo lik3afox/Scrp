@@ -27,32 +27,42 @@ var roleParent = require('role.parent');
 class roleNuker extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if( _.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level]) ) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
         let nuke = creep.room.nuke;
+            if(nuke === undefined||nuke === null) return;
         if (creep.carryTotal === 0) {
-
            if (nuke.energy < nuke.energyCapacity) {
 
                 if (creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
                     if (creep.pos.isNearTo(creep.room.storage)) {
-                        creep.withdrawing(creep.room.storage, RESOURCE_ENERGY);
+                        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
                     } else {
                         creep.moveTo(creep.room.storage);
                     }
 
                 } else {
                     if (creep.pos.isNearTo(creep.room.terminal)) {
-                        creep.withdrawing(creep.room.terminal, RESOURCE_ENERGY);
+                        creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
                     } else {
                         creep.moveTo(creep.room.terminal);
                     }
                 }
             } else if (nuke.ghodium < nuke.ghodiumCapacity ) { //&& terminal.store[RESOURCE_GHODIUM] !== undefined
+                if(creep.room.terminal.store.G === undefined || creep.room.terminal.store.G === 0 ){
+                    _terminal_().requestMineral(creep.room.name,'G');
+                }
                 if (creep.pos.isNearTo(creep.room.terminal)) {
-                  creep.withdrawing(creep.room.terminal, 'G');
+                  creep.withdraw(creep.room.terminal, 'G');
                 } else {
                     creep.moveTo(creep.room.terminal);
                 }

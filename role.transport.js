@@ -5,9 +5,11 @@ var classLevels = [
     // Level 1 - 750 Carry 1250 Energy
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     // Level 2 1000 Carry - 1750 Energy
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
+        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, MOVE, MOVE, CARRY, CARRY, CARRY, MOVE, CARRY, WORK, WORK,
+    ],
     // Level 3 1250 Carry - 2200 Energy.
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE , MOVE, MOVE , WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     // Level 4 1550 carry 2600 Energy - Required Lv 7 
     [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK,
@@ -15,21 +17,27 @@ var classLevels = [
         MOVE, WORK
     ],
 
-    // After lv 4 This is what is ued by remote
-
-
-    // Level 4
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-        WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY
-    ],
 
     // Level 5
-    [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
-        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
-        CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, WORK, CARRY
-    ],
-    // MAX level 6 
+    {
+        body: [CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE,
+            CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE,
+            CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE,
+            CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE,
+        ],
+        boost: ['KH'],
+    },
+    // Level 6
+    {
+        body: [CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE,
+            CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE,
+            CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE,
+            CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE,
+            CARRY, MOVE, CARRY, MOVE
+        ],
+        boost: ['KH'],
+    },
+    // MAX level 7
     [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY,
         CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, WORK,
@@ -48,8 +56,23 @@ var visPath = {
 };
 
 
+function buildStarterRoad(creep) {
+    // this is called because it doesn't find a container.
+
+    let isBuilt = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3, {
+        filter: object => (object.structureType == STRUCTURE_ROAD)
+    });
+    // If you find a construction site
+    if (isBuilt.length > 0) {
+        creep.build(isBuilt[0]);
+    } else {
+        creep.room.createConstructionSite(creep.pos.x, creep.pos.y, STRUCTURE_ROAD);
+    }
+
+}
+
 function getBads(creep) {
-    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
     bads = _.filter(bads, function(object) {
         return (object.owner.username != 'zolox' && object.owner.username != 'admon');
     });
@@ -84,12 +107,11 @@ function interactContainer(creep) {
         }
         if (creep.isHome && creep.pos.isNearTo(creep.room.terminal)) {
             for (var ez in creep.carry) {
-                if (creep.carry[ez]  && creep.transfer(creep.room.terminal, ez) == OK) {
+                if (creep.carry[ez] && creep.transfer(creep.room.terminal, ez) == OK) {
                     emptied(creep);
                     empting = true;
                     break;
                 }
-
             }
         }
 
@@ -103,7 +125,7 @@ function interactContainer(creep) {
                     while (z--) {
                         var o = keys[z];
 
-                        if (creep.withdrawing(container, o) == OK) {
+                        if (creep.withdraw(container, o) == OK) {
                             withdrawing = true;
                         }
                     }
@@ -151,6 +173,22 @@ function updateMemory(creep) {
                 contain = _goal.pos.findClosestByRange(contain);
                 if (contain !== null) {
                     creep.memory.workContain = contain.id;
+
+                } else {
+                    let CONTAIN = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3, {
+                        filter: object => (object.structureType == STRUCTURE_CONTAINER)
+                    });
+                    // console.log(CONTAIN.length,creep.pos.isNearTo(CONTAIN) );
+                    if (CONTAIN.length > 0) {
+                        if (creep.pos.isNearTo(CONTAIN[0])) {
+                            buildStarterRoad(creep);
+                        } else {
+                            creep.moveTo(CONTAIN[0]);
+
+                        }
+                        return;
+                    }
+
                 }
             }
             roleParent.keeperFind(creep);
@@ -163,7 +201,9 @@ function movement(creep) {
     bads = getBads(creep);
     if (bads.length !== 0) {
         creep.runFrom(bads);
+        creep.memory.cachePath = undefined;
     } else {
+        var skRooms = ['E16S45'];
         if (creep.memory.goHome) {
 
             if (!creep.isHome && !roleParent.constr.doCloseRoadRepair(creep)) {
@@ -171,25 +211,42 @@ function movement(creep) {
             }
 
             creep.countDistance();
-            creep.moveMe(Game.rooms[creep.memory.home].storage, {
-                reusePath: rePath,
-                segment: true,
-                ignoreCreeps: true,
-                visualizePathStyle: visPath
-            });
-            //        creep.moveMe(Game.rooms[creep.memory.home].storage,{maxOps:50});
+            if (Game.rooms[creep.memory.home].storage.total !== 1000000) {
+                creep.moveMe(Game.rooms[creep.memory.home].storage, {
+                    reusePath: rePath,
+                    useSKPathing: _.contains(skRooms, creep.memory.home),
+                    segment: true,
+                    ignoreCreeps: true,
+                    visualizePathStyle: visPath
+                });
+            } else {
+                creep.moveMe(Game.rooms[creep.memory.home].terminal, {
+                    reusePath: rePath,
+                    segment: true,
+                    useSKPathing: _.contains(skRooms, creep.memory.home),
+                    ignoreCreeps: true,
+                    visualizePathStyle: visPath
+                });
+            }
         } else {
+            if (_goal !== null && _goal.energyCapacity === 4000 && roleParent.constr.withdrawFromTombstone(creep, 6)) {
+
+                creep.memory.cachePath = undefined;
+                return;
+            }
+
             let container = Game.getObjectById(creep.memory.workContain);
             if (_goal !== null && creep.room.name !== _goal.pos.roomName) {
                 let task = {};
+
                 task.options = {
                     reusePath: rePath,
                     segment: true,
                     ignoreCreeps: true,
-                    ignoreRoads: false,
-                    visualizePathStyle: visPath
+                    visualizePathStyle: visPath,
+                    useSKPathing: _.contains(skRooms, creep.memory.home),
                 };
-                task.pos = _goal !== null ? _goal.pos : roleParent.movement.getRoomPos(creep.memory.goal);
+                task.pos = _goal !== null ? _goal.pos : roleParent.movement.getRoomPos(creep);
                 task.order = "moveTo";
                 task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
                 task.energyPickup = true;
@@ -198,12 +255,13 @@ function movement(creep) {
                 roleParent.doTask(creep);
             } else if (_goal !== null && creep.room.name === _goal.pos.roomName) {
                 if (!creep.pos.isNearTo(container)) {
-                    creep.moveTo(container, { maxRooms: 1 });
+                    creep.moveTo(container, { maxOps: 30, maxRooms: 1 });
                 } else if (creep.pos.isNearTo(_goal)) {
-                    creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 10, reusePath: 1 });
+                    creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 30, reusePath: 1 });
                 } else {
                     if (!withdrawing) {
                         creep.sleep();
+                        creep.cleanMe();
 
 
                         var partner = _.filter(creep.room.find(FIND_CREEPS), function(o) {
@@ -219,9 +277,9 @@ function movement(creep) {
                                 }
                             }
                         }
-                        if(partner.length > 1) {
+                        if (partner.length > 1) {
                             partner.sort((a, b) => a.carryTotal - b.carryTotal);
-                            partner[partner.length-1].memory.goHome = true;
+                            partner[partner.length - 1].memory.goHome = true;
                         }
 
                         if (creep.room.memory.mineInfo === undefined) {
@@ -244,9 +302,9 @@ function movement(creep) {
                             }
 
                             if (creep.memory.expandLevel > 4) {
-                                creep.room.memory.mineInfo[creep.memory.goal] -= 10;
+                                creep.room.memory.mineInfo[creep.memory.goal] -= 15;
                             } else {
-                                creep.room.memory.mineInfo[creep.memory.goal] -= 20;
+                                creep.room.memory.mineInfo[creep.memory.goal] -= 30;
                             }
                         }
 
@@ -256,7 +314,7 @@ function movement(creep) {
                 if (creep.memory.workContain !== undefined) {
                     let container = Game.getObjectById(creep.memory.workContain);
                     if (container !== null) {
-                        creep.moveTo(container);
+                        creep.moveTo(container, { maxOps: 30 });
                     }
                 }
             }
@@ -271,28 +329,42 @@ class transport extends roleParent {
     }
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
-        if(creep.memory.needBoost !== undefined && creep.memory.needBoost.length === 0) {
-            creep.memory.needBoost = undefined;
-        }
-  //      if(creep.memory._move !== undefined && creep.memory._move.time < Game.time){
-//            console.log("delete _move",creep.memory._move.time, Game.time,roomLink(creep.room.name),creep.pos);
-//            creep.memory._move = undefined;
-    //    }
+
         if (creep.memory.goHome === undefined) creep.memory.goHome = false;
         if (creep.memory.keeperLairID == 'none') { creep.memory.keeperLairID = undefined; }
-    if (creep.getActiveBodyparts(MOVE)< 1)
-        creep.suicide();
+        if (creep.getActiveBodyparts(MOVE) < 1)
+            creep.suicide();
 
         super.rebirth(creep);
         if (super.movement.runAway(creep)) return;
         if (super.baseRun(creep)) return;
+
+        if (creep.ticksToLive > 1400 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
+            creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
+            //            creep.memory.boostNeeded = classLevels[creep.memory.level].boost;
+        } else if (super.boosted(creep, creep.memory.boostNeeded)) {
+            return;
+        }
+
         empting = false;
         withdrawing = false;
-        if (super.link.transfer(creep)) {
+        if (creep.room.name == 'E29xxS48' && super.link.newTransfer(creep)) {
+            if (creep.carry[RESOURCE_ENERGY] > 800) {
+                return;
+            }
+            empting = true;
+        } else if (super.link.transfer(creep)) {
             if (creep.carry[RESOURCE_ENERGY] > 800) {
                 return;
             }
@@ -300,7 +372,11 @@ class transport extends roleParent {
         }
 
         _goal = Game.getObjectById(creep.memory.goal);
-        if (_goal !== null && _goal.energyCapacity === 4000 && super.keeperWatch(creep)) return;
+        if (_goal !== null && _goal.energyCapacity === 4000 && super.keeperWatch(creep)) {
+
+            creep.memory.cachePath = undefined;
+            return;
+        }
 
         if (creep.carryTotal < creep.carryCapacity - 10) {
             let bads = [];
@@ -310,10 +386,9 @@ class transport extends roleParent {
 
             if (bads.length !== 0) {
                 creep.runFrom(bads);
+                creep.memory.cachePath = undefined;
             } else {
-                if (_goal !== null && _goal.energyCapacity === 4000 && super.constr.moveToPickUpEnergyIn(creep, 6)) {
-                    return;
-                }
+                //if (_goal !== null && _goal.energyCapacity === 4000 && super.constr.moveToPickUpEnergyIn(creep, 6)) {
             }
         }
 

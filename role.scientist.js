@@ -54,17 +54,17 @@ var classLevels = [
 
 var roleParent = require('role.parent');
 var labsBuild = require('build.labs');
-var constr = require('commands.toStructure');
 
 function labNeedReducing(creep) {
     var theplans = labsBuild.getPlans(creep.room.name);
+    if(theplans === undefined) return;
     var e = theplans.length;
     while (e--) {
         let lab = Game.getObjectById(theplans[e].id);
         if (lab !== null && theplans[e].emptied && lab.room.name == creep.room.name && lab.mineralAmount >= 500) {
             creep.say('redo');
             if (creep.pos.isNearTo(lab)) {
-                creep.withdrawing(lab, lab.mineralType);
+                creep.withdraw(lab, lab.mineralType);
                 return true;
             } else {
                 creep.moveMe(lab.pos);
@@ -77,10 +77,15 @@ function labNeedReducing(creep) {
 
 class scientistRole extends roleParent {
     static levels(level) {
-        if (level > classLevels.length - 1)
-            level = classLevels.length - 1;
-
-        return classLevels[level];
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if( _.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level]) ) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
@@ -96,14 +101,9 @@ class scientistRole extends roleParent {
             if (creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
                 require('role.first').run(creep);
             } else {
-                if (creep.room.name == 'E27S45') {
-  //                  if (creep.room.nuke.ghodium !== creep.room.nuke.ghodiumCapacity && creep.room.nuke.energy !== creep.room.nuke.energyCapacity) {
                         require('role.nuker').run(creep);
                         return;
-//                    }
-                }
             }
-//                console.log('xexx',creep.room.energyAvailable, creep.room.energyCapacityAvailable) ;
             return;
         }
 
@@ -115,7 +115,9 @@ class scientistRole extends roleParent {
             return;
         }
 
-        if (!creep.memory.party) {} else {
+        if (!creep.memory.party) {
+
+        } else {
             if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].room !== undefined &&
                 creep.room.name !== Game.flags[creep.memory.party].room.name) {
                 creep.suicide();
@@ -124,39 +126,42 @@ class scientistRole extends roleParent {
 
         creep.say('sci');
 
-        var total = _.sum(creep.carry);
+        var total = creep.carryTotal; 
         if (total === 0) {
             creep.memory.putaway = false;
-        }
-        if (total > 0) {
+        } else {
             creep.memory.putaway = true;
         }
 
         if (creep.memory.putaway) {
             if (!labsBuild.moveToTransfer(creep)) {
-                if (creep.room.name == 'E33S76') {
+
+                if (creep.room.terminal.total === 300000||(creep.room.name == 'E33S76' )) {
                     super.containers.moveToStorage(creep);
                 } else {
+                    creep.say('term');
                     super.containers.moveToTerminal(creep);
                 }
+                return;
             }
+                           //     super.containers.moveToStorage(creep);
+
         } else {
 
             var _labs = labsBuild.getLabs(creep.room.name);
-
+            creep.say(_labs.length);
             if (!labNeedReducing(creep))
                 if (_labs.length > 0) { // If there are labs. 
                     var i = _labs.length;
+                        var plan = labsBuild.getPlans(_labs[0].pos.roomName); // get the plans
                     while (i--) { // go through them
-
-                        var plan = labsBuild.getPlans(_labs[i].pos.roomName); // get the plans
-
-                        if (plan[i].id == _labs[i].id && (plan[i].resource != _labs[i].mineralType) && (_labs[i].mineralAmount > 0)) {
+                        
+                        if ( plan[i].id == _labs[i].id && (plan[i].resource !== _labs[i].mineralType) && (_labs[i].mineralAmount >  plan[i].emptied ? 500 : 0) && _labs[i].id !== creep.room.memory.boostLabID) {
                             creep.say('clear');
 
                             if (creep.pos.isNearTo(_labs[i])) {
                                 // need to check if the lab has mineral type wanted.
-                                if (creep.withdrawing(_labs[i], _labs[i].mineralType) == OK) {
+                                if (creep.withdraw(_labs[i], _labs[i].mineralType) == OK) {
                                     creep.memory.putaway = true;
                                 }
                             } else {
@@ -168,6 +173,8 @@ class scientistRole extends roleParent {
 
                     if (!labsBuild.getFromTerminal(creep)) {
                         let otherThings = false;
+                        if(!creep.room.memory.simple){
+                            
                         var keys = Object.keys(creep.room.storage.store);
                         var n = keys.length;
                         while (n--) {
@@ -176,13 +183,14 @@ class scientistRole extends roleParent {
                             if (!_.contains(stored, e) && creep.room.storage.store[e]) {
                                 otherThings = true;
                                 if (creep.pos.isNearTo(creep.room.storage)) {
-                                    creep.withdrawing(creep.room.storage, e);
+                                    creep.withdraw(creep.room.storage, e);
                                 } else {
                                     creep.moveMe(creep.room.storage);
                                 }
                             }
                         }
 
+                        }
                         if (!otherThings) {
                             creep.say('<3', true);
                             creep.room.memory.labsNeedWork = false;

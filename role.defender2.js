@@ -2,7 +2,7 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, CARRY, RANGED_ATTACK, ATTACK, HEAL], // 0
     [MOVE, MOVE, MOVE, MOVE, CARRY, RANGED_ATTACK, ATTACK, HEAL], // 1
     [MOVE, MOVE, MOVE, MOVE, CARRY, RANGED_ATTACK, ATTACK, HEAL], // 2
-    [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,ATTACK,ATTACK,ATTACK,RANGED_ATTACK,RANGED_ATTACK,HEAL], // 3
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL], // 3
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, ATTACK, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL], // 4
 
     //5
@@ -62,14 +62,14 @@ function attackCreep(creep, bads) {
 }
 
 function restingSpot(creep) {
-    if(creep.room.memory.defenderSleepSpot !== undefined && creep.room.name !== creep.memory.home){
+    if (creep.room.memory.defenderSleepSpot !== undefined && creep.room.name !== creep.memory.home) {
         creep.room.memory.defenderSleepSpot = undefined;
     }
-    if(creep.room.name !== creep.memory.home) return;
-    if(creep.room.memory.defenderSleepSpot === undefined && creep.room.name == creep.memory.home) {
-        creep.room.memory.defenderSleepSpot = new RoomPosition(1,1,'none');
+    if (creep.room.name !== creep.memory.home) return;
+    if (creep.room.memory.defenderSleepSpot === undefined && creep.room.name == creep.memory.home) {
+        creep.room.memory.defenderSleepSpot = new RoomPosition(1, 1, 'none');
     }
-    if(creep.room.memory.defenderSleepSpot.roomName !== 'none') {
+    if (creep.room.memory.defenderSleepSpot.roomName !== 'none') {
         return creep.room.memory.defenderSleepSpot;
     }
     switch (creep.memory.home) {
@@ -157,8 +157,8 @@ function rampartDefense(creep) {
         creep.memory.rampartDefense = false;
     }
 
-    let zz = creep.room.lookForAtArea(LOOK_CREEPS, creep.y - 1, creep.x - 1, creep.y + 1, creep.x + 1);
-    console.log(zz.length, 'looking for other creeps,');
+//    let zz = creep.room.lookForAtArea(LOOK_CREEPS, creep.y - 1, creep.x - 1, creep.y + 1, creep.x + 1);
+ //   console.log(zz.length, 'looking for other creeps,');
     // so if it finds zz it will back up and just range shoot, other wise it will stay up front.
     var bads2 = getHostiles(creep);
     if (bads2.length > 0) {
@@ -177,25 +177,33 @@ var roleParent = require('role.parent');
 class roleNewDefender extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
-        if( super.baseRun(creep) ) return;
+        if (super.baseRun(creep)) return;
 
         // So this guy will stay by his spawn
-        if (creep.memory.renewSpawnID === undefined) {
+        if (creep.memory.renewSpawnID === undefined && !creep.room.memory.simple) {
             let _struct = creep.room.find(FIND_MY_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_SPAWN);
                 }
             });
+            if(_struct.length){
             creep.memory.renewSpawnID = _struct[_struct.length - 1].id;
             var ccSpawn = require('commands.toSpawn');
             ccSpawn.wantRenew(creep);
+            }
         }
-        
-        super.constr.pickUpNonEnergy(creep);
+
 
         // If no defend flag then
 
@@ -208,10 +216,17 @@ class roleNewDefender extends roleParent {
             }
 
             creep.memory.active = true;
+            return true;
         } else { // go to mom and renew
             creep.memory.active = false;
 
             if (creep.hits < creep.hitsMax) creep.heal(creep);
+if(creep.carryTotal > 0 && creep.isHome){
+            creep.moveToTransfer(creep.room.storage,creep.carrying);
+            return;
+} else if(!creep.isHome){
+            if (super.constr.withdrawFromTombstone(creep, 5)) return true;
+}
 
             let rest = restingSpot(creep); // If this has an assign spot in a room.
             if (!rest) {
@@ -224,16 +239,13 @@ class roleNewDefender extends roleParent {
                     }
                 }
             } else {
-                if (creep.pos.isEqualTo(new RoomPosition(rest.x,rest.y,rest.roomName) )) {
+                if (creep.pos.isEqualTo(new RoomPosition(rest.x, rest.y, rest.roomName))) {
                     creep.sleep(3);
                 } else {
-                    creep.moveTo(new RoomPosition(rest.x,rest.y,rest.roomName) );
+                    creep.moveTo(new RoomPosition(rest.x, rest.y, rest.roomName));
                 }
 
             }
-
-
-
         }
 
     }

@@ -45,7 +45,7 @@ function mineralContainerEmpty(creep) {
             if (targetContain.store[a] > 0) {
 
                 if (creep.pos.isNearTo(targetContain)) {
-                    creep.withdrawing(targetContain, a);
+                    creep.withdraw(targetContain, a);
                 } else {
                     creep.moveMe(targetContain, { reusePath: 15 });
                     return true;
@@ -78,10 +78,15 @@ function mineralContainerEmpty(creep) {
 
 class scientistRole extends roleParent {
     static levels(level) {
-        if (level > classLevels.length - 1)
-            level = classLevels.length - 1;
-
-        return classLevels[level];
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if( _.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level]) ) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
@@ -121,7 +126,6 @@ class scientistRole extends roleParent {
             }
 
         } else {
-            struc.pickUpEnergy(creep);
             mineralContainerEmpty(creep);
         }
     }

@@ -1,12 +1,10 @@
     var party = require('commands.toParty');
     var FLAG = require('foxGlobals');
-    var delayBetweenScan = 3;
+    var delayBetweenScan = 10;
 
     function doDefendThings(flag) {
         if (flag.room === undefined) return;
 
-        // = _.filter(flag.room.hostileInRoom(),function(o){return o.owner.username == 'Invader'} ) ;
-        // FIND_HOSTILE_CREEPS //flag.room.hostileInRoom()
         var hostiles;
         var creeps;
         if (flag.secondaryColor == COLOR_RED) {
@@ -169,9 +167,6 @@
         upgrader: undefined,
         lab: undefined,
         tower: undefined,
-        //           
-        /*            linker   : undefined,
-         */
         wait: undefined,
     };
 
@@ -204,7 +199,6 @@
         });
 
     }
-
 
     function adjustModule(flag) {
         /*            harvester  : flag.room.energyCapacityAvailable,
@@ -250,13 +244,13 @@
                 } else if (flag.memory.module[ez] !== undefined) {
 
                     if (roomEnergy > 2300) {
-                        flag.memory.module[ez][_level] = 5;
+                        flag.memory.module[ez][_level] = 6;
                     } else if (roomEnergy === 2300) {
-                        flag.memory.module[ez][_level] = 4;
+                        flag.memory.module[ez][_level] = 5;
                     } else if (roomEnergy >= 1800) {
-                        //                            flag.memory.module[ez][_level] = 3;
+                        flag.memory.module[ez][_level] = 4;
                     } else if (roomEnergy >= 1300) {
-                        //                          flag.memory.module[ez][_level] = 2;
+                        flag.memory.module[ez][_level] = 3;
                     }
 
                     if (flag.room.name == 'E19S49') {
@@ -292,12 +286,14 @@
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
                     if (Game.shard.name !== 'shard1') {
-                        var storage = flag.room.storage;
-                        if (storage !== undefined) {
-                            if (storage.store[RESOURCE_ENERGY] > 500000) {
-                                flag.memory.module[ez][_number] = 1;
-                            } else {
-                                flag.memory.module[ez][_number] = 0;
+                        if (Game.shard.name === 'shard0') {
+                            var storage = flag.room.storage;
+                            if (storage !== undefined) {
+                                if (storage.store[RESOURCE_ENERGY] > 500000) {
+                                    flag.memory.module[ez][_number] = 1;
+                                } else {
+                                    flag.memory.module[ez][_number] = 0;
+                                }
                             }
                         }
 
@@ -458,7 +454,7 @@
                 } else {
                     var storage2 = flag.room.storage;
                     if (storage2 !== undefined) {
-                        if (storage2.store[RESOURCE_ENERGY] > 250000) {
+                        if (storage2.store[RESOURCE_ENERGY] > 100000) {
                             flag.memory.module[ez][_number] = 1;
                         } else {
                             flag.memory.module[ez][_number] = 0;
@@ -529,7 +525,7 @@
                             filter: s => s.structureType == STRUCTURE_SPAWN && s.memory.alphaSpawn
                         });
 
-                        if (vr.length > 0) {
+                        if (vr.length > 0 && vr[0].memory.roadsTo.length > 0) {
                             if (vr[0].memory.roadsTo[0].source !== 'xxxx') {
                                 flag.memory.module[ez][_level] = 4;
                                 flag.memory.module[ez][_number] = 1;
@@ -589,8 +585,12 @@
                                     let vr = flag.room.find(FIND_STRUCTURES, {
                                         filter: s => s.structureType == STRUCTURE_EXTRACTOR
                                     });
-                                    if (vr.length > 0)
+                                    if (vr.length > 0) {
                                         flag.room.memory.extractID = vr[0].id;
+                                        flag.memory.module[ez][_number] = 1;
+                                    } else {
+                                        break;
+                                    }
                                 }
 
                                 if (flag.room.memory.mineralContainID === undefined && flag.room.memory.extractID !== undefined) {
@@ -607,7 +607,7 @@
                                 }
                                 if (flag.room.memory.mineralContainID !== undefined && flag.room.memory.mineralID !== undefined && flag.room.memory.extractID !== undefined) {
                                     flag.memory.module[ez][_level] = 7;
-                                    flag.memory.module[ez][_number] = 1;
+                                    //        flag.memory.module[ez][_number] = 1;
                                 }
 
                             }
@@ -655,15 +655,10 @@
                 break;
 
         }
+    }
 
-        // Linker Checking
 
-        // First Checking
-
-        // Upgrader Checking
-
-        // Defender Checking
-
+    function lowCPUAdjustModule(flag) {
 
     }
 
@@ -714,7 +709,7 @@
                                 }
                             }
                         }
-                        //flag.room.visual.text(report, xx, ++yy,font); 
+                        //                        flag.room.visual.text(report, xx, ++yy,font); 
 
                     }
                 }
@@ -723,40 +718,44 @@
             case COLOR_RED:
                 flag.room.visual.text('Hard Setting Memory', flag.pos.x + 1.5, flag.pos.y, font);
                 break;
+            case COLOR_PURPLE:
             case COLOR_GREEN:
-                if (flag.memory.module !== undefined && flag.memory.module.length !== 0) {
-
-                    var zze = Object.keys(roomer)[flag.memory.checkWhat];
-
-                    var x = 5; //flag.pos.x + 1.5;
-                    var y = 5; //flag.pos.y;
-                    flag.room.visual.text('Module:' + flag.memory.alphaSpawn + ' Status:' + flag.memory.checkWhat + zze, x, y - 1, font);
-                    for (e in flag.memory.module) {
-
-                        if (flag.memory.module[e][_number] !== 0) {
-                            var outThere;
-                            if (spawnCount !== undefined) {
-                                if (spawnCount[flag.memory.alphaSpawn] !== undefined && spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
-                                    outThere = spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
-                                } else {
-                                    outThere = 0;
-                                }
-                            } /*else {
-                                if (Memory.spawnCount[flag.memory.alphaSpawn] !== undefined && Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
-                                    outThere = Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
-                                } else {
-                                    outThere = 0;
-                                } 
-                            }*/
-
-                            flag.room.visual.text('(' + outThere + '/' + flag.memory.module[e][_number] + ')' + '[Lv:' + flag.memory.module[e][_level] + ']' + ':' + flag.memory.module[e][_name], x, y, font);
-                            y++;
-                        }
-                    }
-                } else {
-                    flag.room.visual.text('Fail Module, is Flag name === Room name?', flag.pos.x + 1.5, flag.pos.y, font);
-                }
                 break;
+                /*                if (flag.memory.module !== undefined && flag.memory.module.length !== 0) {
+
+                                    var zze = Object.keys(roomer)[flag.memory.checkWhat];
+
+                                    var x = 5; //flag.pos.x + 1.5;
+                                    var y = 5; //flag.pos.y;
+                                    flag.room.visual.text('Module:' + flag.memory.alphaSpawn + ' Status:' + flag.memory.checkWhat + zze, x, y - 1, font);
+                                    for (e in flag.memory.module) {
+
+                                        if (flag.memory.module[e][_number] !== 0) {
+                                            var outThere;
+                                            if (spawnCount !== undefined) {
+                                                if (spawnCount[flag.memory.alphaSpawn] !== undefined && spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
+                                                    outThere = spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
+                                                } else {
+                                                    outThere = 0;
+                                                }
+                                            }
+                                            /*else {
+                                                                           if (Memory.spawnCount[flag.memory.alphaSpawn] !== undefined && Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]] !== undefined) {
+                                                                               outThere = Memory.spawnCount[flag.memory.alphaSpawn][flag.memory.module[e][_name]].count;
+                                                                           } else {
+                                                                               outThere = 0;
+                                                                           } 
+                                                                       }*/
+
+                /*
+                                            flag.room.visual.text('(' + outThere + '/' + flag.memory.module[e][_number] + ')' + '[Lv:' + flag.memory.module[e][_level] + ']' + ':' + flag.memory.module[e][_name], x, y, font);
+                                            y++;
+                                        }
+                                    }
+                                } else {
+                                    flag.room.visual.text('Fail Module, is Flag name === Room name?', flag.pos.x + 1.5, flag.pos.y, font);
+                                }*/
+                //   break;
 
         }
     }
@@ -765,33 +764,95 @@
         if (flag.memory.checkWhat === undefined) {
             flag.memory.checkWhat = -10;
         }
-        if (flag.secondaryColor === COLOR_GREEN)
+        if (flag.secondaryColor === COLOR_GREEN || flag.secondaryColor === COLOR_PURPLE)
             flag.memory.checkWhat++;
         if (flag.memory.checkWhat >= Object.keys(roomer).length) {
             flag.memory.checkWhat = 0;
         }
-
         // Whiteflag functions as a control for that room.
         // When the secondary is set to white - nothing occurs.
         switch (flag.secondaryColor) {
             case COLOR_WHITE:
                 // Nothing, maybe even clearing it. 
+
+
                 break;
             case COLOR_GREY:
                 // Resets it's memory. 
                 softSetMemory(flag);
+                flag.room.memory.simple = undefined;
                 break;
             case COLOR_GREEN:
                 // Runs off of flag memory. 
                 // This color also means that it's pulled as module for build.spaw
                 if (flag.memory.checkWhat >= 0)
                     adjustModule(flag);
+                //                flag.room.memory.simple = undefined;
+
                 break;
 
             case COLOR_RED:
                 hardSetMemory(flag);
+                flag.room.memory.simple = undefined;
+
                 break;
             case COLOR_PURPLE:
+                // Purple will mean that it's setup for low CPU usage.
+                if (flag.room !== undefined) {
+                    if (flag.room.controller.level === 8) {
+                        flag.memory.module = [
+                            ['linker', 1, 5],
+                            ['harvester', 1, 4],
+                            ['minHarvest', 1, 7]
+                        ];
+                        if (flag.room.stats.storageEnergy > 100000) {
+                            flag.memory.module.push(['wallwork', 1, 5]);
+                        }
+                        if (flag.room.controller.ticksToDowngrade < 50000) {
+                            flag.memory.module.push(['upbuilder', 1, 8]);
+                        }
+                        if (flag.room.storage.store[RESOURCE_ENERGY] > 900000) {
+                            flag.memory.module.push(['upbuilder', 1, 8]);
+                        }
+                        if (flag.room.stats.creepNumber > 10) {
+                            //                        flag.memory.module.push(['upbuilder', 1, 8]);
+                        }
+                        if (flag.room.alphaSpawn.memory.roadsTo[0] !== undefined && flag.room.alphaSpawn.memory.roadsTo[0].source === 'xxxx') {
+                            flag.room.alphaSpawn.memory.roadsTo.splice(0, 1);
+                        }
+                        //                        console.log('doing roads to',flag.room.alphaSpawn.memory.roadsTo.length);
+                        if (flag.room.alphaSpawn.memory.roadsTo.length > 0) {
+                            flag.memory.module.push(['homeDefender', 1, 7]);
+                        }
+                        flag.room.memory.simple = true;
+                        //                    console.log( flag.room.stats.parts,'parts',flag.room.name);
+
+                        if (flag.room.stats.parts > 850) {
+                            flag.memory.module.push(['first', 1, 6]);
+                        }
+                        if (flag.room.stats.parts > 1500) {
+                            flag.room.memory.simple = false;
+                        }
+                        if (flag.room.stats.parts > 2000) {
+                            // Linker becomes specialized. Like other non simple.
+                            flag.room.memory.simple = false;
+                            flag.memory.module.push(['scientist', 1, 6]);
+                        }
+                        if (flag.room.stats.parts > 3500) {}
+                        /*     flag.room.memory.towers = [];
+
+                             towers = flag.room.find(FIND_MY_STRUCTURES);
+                             towers = _.filter(towers, function(o) {
+                                 return o.structureType == STRUCTURE_TOWER;
+                             });
+                             for (var i in towers) {
+                                 flag.room.memory.towers.push(towers[i].id);
+                             }*/
+
+                    } else { adjustModule(flag); }
+                }
+
+
                 break;
             case COLOR_BLUE:
                 break;
@@ -808,27 +869,285 @@
 
     }
 
+    function findFlagTarget(flag) {
+        if (flag.room === undefined) return;
+        let strucs = flag.room.find(FIND_STRUCTURES);
+        let filter = [STRUCTURE_SPAWN, STRUCTURE_TOWER, STRUCTURE_LAB, STRUCTURE_LINK, STRUCTURE_POWER_SPAWN, STRUCTURE_OBSERVER, STRUCTURE_NUKER, STRUCTURE_EXTENSION];
+        var test2 = _.filter(strucs, function(o) {
+            return !o.pos.lookForStructure(STRUCTURE_RAMPART) && _.contains(filter, o.structureType);
+        }); // Kill all structures not on rampart. 
+        if (test2.length > 0) {
+            flag.memory.target = test2[0].id;
+        } else {
+            filter = [STRUCTURE_CONTAINER, STRUCTURE_EXTRACTOR]; // Any towers
+            test2 = _.filter(strucs, function(o) {
+                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && _.contains(filter, o.structureType);
+            });
+            if (test2.length > 0) {
+                flag.memory.target = test2[0].id;
+            } else {
+                let bads = flag.room.find(FIND_HOSTILE_CREEPS);
+                bads = _.filter(bads, function(o) {
+                    return !_.contains(require('foxGlobals').friends, o.owner.username);
+                }); // Kill all creeps
+                if (bads.length > 0) {
+                    flag.memory.target = bads[0].id;
+                } else {
+                    test2 = _.filter(strucs, function(o) {
+                        return o.structureType == STRUCTURE_SPAWN;
+                    });
+                    if (test2.length > 0) {
+                        flag.memory.target = test2[0].id;
+                    } else {
+                        filter = [STRUCTURE_TOWER]; // Any towers
+                        test2 = _.filter(strucs, function(o) {
+                            return _.contains(filter, o.structureType);
+                        });
+                        if (test2.length > 0) {
+                            flag.memory.target = test2[0].id;
+                        } else {
+                            filter = [STRUCTURE_RAMPART, STRUCTURE_ROAD]; // Any ramparts and raods
+                            test2 = _.filter(strucs, function(o) {
+                                return _.contains(filter, o.structureType);
+                            });
+                            if (test2.length > 0) {
+                                flag.memory.target = test2[0].id;
+                            } else {
+                                filter = [STRUCTURE_STORAGE, STRUCTURE_TERMINAL]; // Anything but Storage/terminal
+                                test2 = _.filter(strucs, function(o) {
+                                    return !_.contains(filter, o.structureType);
+                                });
+                                if (test2.length > 0) {
+                                    flag.memory.target = test2[0].id;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
     class buildFlags {
 
         static run(spawncounted) {
-            spawnCount = spawncounted;
+            //  spawnCount = spawncounted;
             let powerTotal = 0;
             let defendTotal = 0;
-            if (Memory.clearFlag === undefined) Memory.clearFlag = 500;
             Memory.clearFlag--;
             if (Memory.clearFlag < 0) {
                 Memory.clearFlag = 50;
                 clearFlagMemory();
             }
 
-            let zFlags = _.filter(Game.flags, function(o) {
-                return o.color != COLOR_GREY && o.color != COLOR_CYAN;
-            });
+            let zFlags = _.filter(Game.flags, function(o) { return o.color != COLOR_GREY && o.color != COLOR_CYAN; });
+
             //o.color != COLOR_WHITE
-            var e = zFlags.length;
+            //           var e = zFlags.length;
             var flag;
-            while (e--) {
-                flag = zFlags[e];
+            for (let i = 0, iMax = zFlags.length; i < iMax; i++) {
+                flag = zFlags[i];
+
+                if (flag.name === 'nuke') {
+
+                    if (flag.memory.nukeRooms === undefined) {
+                        flag.memory.nukeRooms = [];
+                    }
+
+                    return;
+                }
+
+                if (flag.pos.roomName === flag.name) {
+                    if (flag.room !== undefined) {
+
+                    } else if (flag.secondaryColor === COLOR_WHITE && flag.room === undefined) {
+                        //set color
+                        flag.memory.setColor = {
+                            color: COLOR_YELLOW,
+                            secondaryColor: COLOR_YELLOW,
+                        };
+                        // set memory
+                        flag.memory.musterRoom = close;
+                        flag.memory.party = [
+                            ['engineer', 1, 10], // Builder Engineer
+                            ['mule', 1, 11],
+                        ];
+
+                    }
+                }
+
+                if (flag.memory.delaySpawn !== undefined) {
+                    if (flag.memory.delaySpawn > 0) {
+                        flag.memory.delaySpawn--;
+                        if (flag.memory.color !== COLOR_BROWN) {
+                            flag.memory.setColor = {
+                                color: COLOR_BROWN,
+                                secondaryColor: COLOR_BROWN,
+                            };
+                        }
+                    } else if (flag.color === COLOR_BROWN) {
+                        if (flag.memory.color !== COLOR_YELLOW) {
+                            flag.memory.setColor = {
+                                color: COLOR_YELLOW,
+                                secondaryColor: COLOR_YELLOW,
+                            };
+                        }
+                    }
+                }
+                if (flag.memory.setColor !== undefined && flag.memory.setColor.color !== flag.color) {
+                    flag.setColor(flag.memory.setColor.color, flag.memory.setColor.secondaryColor);
+                } else {
+                    flag.memory.setColor = undefined;
+                }
+                if (flag.name === 'recontrol') {
+                    flag.memory.musterType = 'recontrol';
+                    flag.memory.musterRoom = 'E14S37';
+                }
+                if (flag.name === 'Flag27') {
+                    if(flag.room.controller.level < 6 && flag.room.controller.level > 3 && flag.color !== COLOR_YELLOW) {
+                        flag.memory.setColor  = {
+                            color:COLOR_YELLOW,
+                            secondaryColor:COLOR_YELLOW,
+                        };
+                    } else if(flag.color !== COLOR_WHITE) {
+                        flag.memory.setColor = {
+                            color:COLOR_WHITE,
+                            secondaryColor:COLOR_WHITE,
+                        };
+                    }
+                }
+                switch (flag.secondaryColor) {
+                    case COLOR_GREEN:
+                            // Setting up target
+                            if(flag.room !== undefined) {
+                            let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
+                            for (let ee in res) {
+                                if (res[ee].structure !== undefined) {
+                                    flag.memory.target = res[ee].structure.id;
+                                    break;
+                                }
+                            }
+                            }
+                            // Lets add some targets to next
+                            break;
+                    case COLOR_ORANGE: // This color is for squad running, leave empty due to it being to the creep.run role;
+                        var squad;
+                        //                   if (flag.memory.squadID === undefined || flag.memory.squadID.length !== flag.memory.totalNumber) {
+                        // This is setup by the commands.toParty.rally section.
+                        ///                      } else {
+                        squad = _.filter(Game.creeps, function(o) {
+                            return o.memory.party === flag.name;
+                        });
+                        if (squad !== undefined && squad.length > 0) {
+                            if (squad.length === 1) {
+                                let strucs = flag.room.find(FIND_STRUCTURES);
+
+                                var towers = _.filter(strucs, function(o) {
+                                    return o.structureType == STRUCTURE_TOWER && o.energy > 0;
+                                });
+                                var spawns = _.filter(strucs, function(o) {
+                                    return o.structureType == STRUCTURE_SPAWN;
+                                });
+                                var bads = squad[0].room.find(FIND_CREEPS);
+                                bads = _.filter(bads, function(o) {
+                                    return !_.contains(require('foxGlobals').friends, o.owner.username);
+                                });
+                                if (spawns.length === 0 && bads.length === 0) {
+                                    flag.memory.party = [
+                                        ['fighter', 2, 10]
+                                    ];
+                                }
+                                if (spawns.length === 0 && bads.length === 0 && tower.length === 0) {
+                                    flag.memory.party = [
+                                        ['fighter', 2, 10],
+
+                                    ];
+                                }
+                                // Kill all structures not on rampart.                                 
+                                // Here we can analyze the room for changes in how squad is setup. 
+                                // If no spawns.
+                                // When do we determine if there is no more healing needed?
+                                // If no towers.
+                                // When do we determine if we need to start controller?
+                                // When room is uncontrolled we are done.
+
+                            }
+                            require('commands.toSquad').runSquad(squad);
+                        } else {
+                            console.log('Empty squad change colors');
+                            flag.memory.setColor = {
+                                color: COLOR_YELLOW,
+                                secondaryColor: COLOR_YELLOW
+                            };
+                        }
+
+                        // Here we determine targets for the flag. 
+
+                        flag.memory.killBase = false; // Always false - we don't turn this on until. 
+
+                        if (flag.room !== undefined) {
+                            if (flag.memory.nextTargets.length > 0) {
+                                // Visualization of X's.
+                                let zzzzz = Game.getObjectById(flag.memory.target);
+                                if (zzzzz !== null) {
+                                    for (let za in flag.memory.nextTargets) {
+                                        let tar = Game.getObjectById(flag.memory.nextTargets[za]);
+                                        if (tar !== null) {
+                                            flag.room.visual.text('X' + za, tar.pos);
+
+                                        } else {
+                                            flag.memory.nextTargets.splice(za, 1);
+                                            continue;
+                                        }
+                                    }
+                                }
+                            } else {}
+
+                            if (flag.memory.target === undefined) {
+                                // Setting up target
+                                let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
+                                for (var ee in res) {
+                                    if (res[ee].structure !== undefined) {
+                                        flag.memory.target = res[ee].structure.id;
+                                        break;
+                                    }
+                                }
+                                // Lets add some targets to next
+                                findFlagTarget(flag);
+                            }
+                            /*
+                             let bads = flag.room.find(FIND_HOSTILE_CREEPS);
+                                            bads = _.filter(bads, function(o) {
+                                                return !_.contains(require('foxGlobals').friends, o.owner.username);
+                                            }); // Kill all creeps
+                                            if (bads.length > 0) {
+                                                flag.memory.target = bads[0].id;
+                                            } */
+
+                            let zz = Game.getObjectById(flag.memory.target);
+                            let strng = "";
+
+                            if (zz === null) {
+                                flag.memory.target = flag.memory.nextTargets.shift();
+                                flag.memory.attackDirection = false;
+                            } else if (!flag.pos.isEqualTo(zz)) {
+                                flag.setPosition(zz.pos);
+                            } else if (zz !== null) { // Visualization of hp and stuff.
+                                if (zz.room !== undefined && zz.room.memory.targetLastHits !== undefined) {
+                                    let tmp = zz.hits - zz.room.memory.targetLastHits;
+                                    strng = zz.hits + "/" + tmp + "=" + (tmp === 0 ? 0 : Math.ceil((zz.hits / (tmp)) * -1));
+                                    zz.room.visual.text(strng, zz.pos.x + 1, zz.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });
+                                }
+                                if (zz.room !== undefined)
+                                    zz.room.memory.targetLastHits = zz.hits;
+                            }
+
+                        }
+
+                        break;
+                }
+
 
                 switch (flag.color) {
                     case COLOR_WHITE:
@@ -841,46 +1160,11 @@
                             defendTotal++;
                         break;
 
-                    case FLAG.PARTY:
-                        if (flag.memory.formation === undefined) {
-                            flag.memory.formation = [];
-                        }
-                        if (flag.memory.wallTarget === undefined) {
-                            flag.memory.wallTarget = 'none';
-                        }
-                        if (flag.memory.wallTarget !== 'none') {
-                            if (flag.room !== undefined) { // Only do this if room is visable. 
-                                var target = Game.getObjectById(flag.memory.wallTarget);
-                                //                                console.log('wall trying to find, ', target, target.hits, target.pos);
-                                if (target === null) {
-                                    var struc = flag.room.find(FIND_STRUCTURES);
-                                    var bads;
+                        // squad color is orange, it occurs when a squad is at the rally(yellow) flag. 
 
-                                    var test2 = _.filter(struc, function(o) {
-                                        return o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_CONTROLLER && !o.pos.lookForStructure(STRUCTURE_RAMPART);
-                                    }); // This is something is not on a 
+                    case COLOR_ORANGE:
 
-                                    if (test2.length !== 0) {
-                                        var close = flag.pos.findClosestByRange(test2);
-                                        flag.memory.wallTarget = close.id;
-                                        flag.setPosition(close.pos);
-                                    }
-                                    // thing is dead and get a new target.
-                                } else {
-                                    console.log('attacking', target, 'hp:', target.hits);
-                                    // Thing is still alive
-                                }
-                            }
 
-                        }
-                        if (flag.memory.formation.length === 0) {
-                            var Party = {
-                                role: 'none',
-                                posistion: 1,
-                                number: 1
-                            };
-                            flag.memory.formation.push(Party);
-                        }
                         break;
 
                     case FLAG.GUARD:
@@ -905,6 +1189,7 @@
                             if (Memory.showInfo > 1)
                                 powerTotal++;
                             power.calcuate(flag);
+                            //console.log(flag,roomLink(flag.pos.roomName));
                         }
 
                         if (flag.secondaryColor == COLOR_PURPLE) {
@@ -918,6 +1203,32 @@
                                 flag.memory.musterType = 'hmule';
                             } else {
                                 flag.memory.musterType = 'upgrademule';
+                            }
+                        }
+
+
+
+
+                        if (flag.memory.killBase === undefined) {
+                            flag.memory.killBase = false;
+                        }
+                        if (flag.memory.squadLogic === undefined) {
+                            flag.memory.squadLogic = false;
+                        }
+                        if (flag.memory.nextTargets === undefined) {
+                            flag.memory.nextTargets = [];
+                        }
+
+                        if (flag.memory.killBase) {
+                            if (flag.memory.target === undefined) {
+                                findFlagTarget(flag);
+                            } else {
+                                let zz = Game.getObjectById(flag.memory.target);
+                                if (zz !== null && !flag.pos.isEqualTo(zz)) {
+                                    flag.setPosition(zz.pos);
+                                } else {
+                                    findFlagTarget(flag);
+                                }
                             }
                         }
                         if (flag.name == 'bandit') {
@@ -954,13 +1265,22 @@
                                 if (testz2.length !== 0 && testz2.length == testz3.length) {
                                     flag.remove();
                                 }
-
-                                strucd = flag.room.find(FIND_CREEPS);
-                                testz2 = _.filter(strucd, function(o) {
+                                var cara = _.filter(flag.room.find(FIND_CREEPS), function(o) {
                                     return o.owner.username == 'Screeps';
                                 });
-                                if (testz2.length === 0) {
-                                    //  rally.memory.rallyCreateCount = 1000;
+                                if (testz2.length > 0 && cara.length === 0) {
+                                    for (var eae in flag.memory.party) {
+                                        if (flag.memory.party[eae][1] > 0 && flag.memory.party[eae][0] !== 'thief') {
+                                            flag.memory.party[eae][1] = 0;
+                                        }
+                                    }
+
+                                    _.map(flag.room.find(FIND_MY_CREEPS), function(o) {
+                                        if ((o.memory.role == 'fighter' || o.memory.role == 'mage') && o.memory.party == flag.name) {
+                                            o.memory.death = true;
+                                        }
+                                    });
+
                                 }
 
                             }
@@ -971,14 +1291,15 @@
                             if (rally.memory.rallyCreateCount === undefined) {
                                 rally.memory.rallyCreateCount = 0;
                             }
+                            //                            if(Game.cpu.bucket > 600)
                             rally.memory.rallyCreateCount--;
                             if (rally.memory.rallyCreateCount < 0) {
                                 party.create(flag);
-                                party.rally(flag);
                                 rally.memory.rallyCreateCount = delayBetweenScan;
                             }
                         }
 
+                        party.rally(flag);
                         break;
 
                 }

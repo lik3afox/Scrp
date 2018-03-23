@@ -12,30 +12,37 @@ var roleParent = require('role.parent');
 //STRUCTURE_POWER_BANK:
 class hackerClass extends roleParent {
     static levels(level) {
-        if (level > classLevels.length) level = classLevels.length;
-        return classLevels[level];
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
         if (super.goToPortal(creep)) return;
 
-        if(Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName) {
-        	creep.memory.party = 'there';
-        	creep.say('P');
-        	creep.moveTo(Game.flags.portal);
-        	return;
-        }
-// E23S38
+        // E23S38
         console.log('Control checking in', creep.pos);
+        if (this.spawnRecycle(creep)) {
+            return false;
+        }
 
         //console.log('acon',Game.flags.control , creep.pos.roomName , Game.flags.control.pos.roomName);
         if (Game.flags[creep.memory.party] !== undefined && creep.pos.roomName == Game.flags[creep.memory.party].pos.roomName) {
             if (creep.room.controller !== undefined) {
                 let what;
                 if (creep.getActiveBodyparts(CLAIM) >= 5) {
-//                    what = creep.attackController(creep.room.controller);
+                    //                    what = creep.attackController(creep.room.controller);
                     what = creep.claimController(creep.room.controller);
                     creep.say(what + 'a');
+                    if (creep.room.name == 'E19S48' && creep.room.controller.upgradeBlocked > 900){
+                                creep.memory.death = true;
+                    }
                 } else {
                     what = creep.claimController(creep.room.controller);
                     creep.say(what + 'c');
@@ -47,6 +54,8 @@ class hackerClass extends roleParent {
                         if (creep.getActiveBodyparts(CLAIM) < 5) {
                             Game.flags[creep.memory.party].remove();
                         }
+                        creep.memory._move = undefined;
+                        creep.memory.cachePath = undefined;
                         break;
 
                     case ERR_NOT_IN_RANGE:
@@ -55,9 +64,15 @@ class hackerClass extends roleParent {
                         break;
 
                     default:
-
-                        if (creep.attackController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                        let attk = creep.attackController(creep.room.controller);
+                        if (attk == ERR_NOT_IN_RANGE) {
                             creep.moveTo(creep.room.controller);
+                        }
+                        if (attk === OK) {
+                            creep.partyFlag.memory.delaySpawn = 650;
+                        } else if (attk == -7) {
+                            if (creep.room.name == 'E19S48')
+                                creep.memory.death = true;
                         }
 
                         break;
@@ -68,8 +83,10 @@ class hackerClass extends roleParent {
         } else {
 
 
-            if (!super.avoidArea(creep))
-                movement.flagMovement(creep);
+            if (!super.avoidArea(creep)){
+                creep.moveMe(creep.partyFlag,{useSKPathing:true,reusePath:50});
+//                            movement.flagMovement(creep);
+            }
         }
 
     }

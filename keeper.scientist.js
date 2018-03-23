@@ -1,7 +1,7 @@
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
-var source = require('commands.toSource');
+
 var containers = require('commands.toContainer');
 
 var boost = ['KH'];
@@ -35,7 +35,15 @@ function memoryCheck(creep) {
 
 class mineralRole extends roleParent {
     static levels(level) {
-        return classLevels[level];
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if( _.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level]) ) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
@@ -63,7 +71,7 @@ class mineralRole extends roleParent {
         if (creep.room.name == creep.memory.home && creep.ticksToLive < 200 && _.sum(creep.carry) === 0) {
             creep.memory.death = true;
         }
-        var _goal= movement.getRoomPos(creep.memory.goal);
+        var _goal= movement.getRoomPos(creep);
         var _source = Game.getObjectById(creep.memory.goal);
 
         this.rebirth(creep);
@@ -126,7 +134,7 @@ class mineralRole extends roleParent {
 
         if (!creep.pos.isNearTo(_goal)) {
             if (!super.guardRoom(creep)) {
-                creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep.memory.goal), {
+                creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep), {
                     reusePath: 49,
                     segment: true,
 //                    visualizePathStyle: visPath

@@ -3,7 +3,7 @@ function use() { "use strict"; }
 var gameCache = [];
 
 function getCached(id) {
-    if (gameCache[id] !== undefined) {
+    /*if (gameCache[id] !== undefined) {
         if (gameCache[id] === null) {
             //        console.log( 'Null Linked Cache',id);
             return null;
@@ -11,22 +11,22 @@ function getCached(id) {
             //        console.log('returned cache',gameCache[id],id);
             return gameCache[id];
         }
-    }
-    let zzz = Game.getObjectById(id);
+    } */
+    return Game.getObjectById(id);
     //    console.log('Created Cache');
-    gameCache[id] = zzz;
-    return zzz; //Game.getObjectById(id);
+    //    gameCache[id] = zzz;
+    //    return zzz; //Game.getObjectById(id);
 }
 
 function newLinkTransfer() {
     var LINK;
-    for (var e in Game.rooms) {
-        if (Game.rooms[e].controller !== undefined && Game.rooms[e].controller.owner !== undefined && Game.rooms[e].controller.owner.username === 'likeafox') {
-            if (Game.rooms[e].memory.roomLinksID === undefined) {
-                Game.rooms[e].memory.roomLinksID = [];
+    for (var roomName in Game.rooms) {
+        if (Game.rooms[roomName].controller !== undefined && Game.rooms[roomName].controller.owner !== undefined && Game.rooms[roomName].controller.owner.username === 'likeafox') {
+            if (Game.rooms[roomName].memory.roomLinksID === undefined) {
+                Game.rooms[roomName].memory.roomLinksID = [];
             }
-            if (Game.rooms[e].memory.roomLinksID.length > 0) {
-                var linksID = Game.rooms[e].memory.roomLinksID;
+            if (Game.rooms[roomName].memory.roomLinksID.length > 0) {
+                var linksID = Game.rooms[roomName].memory.roomLinksID;
                 var keys = Object.keys(linksID);
                 var z = linksID.length;
 
@@ -59,10 +59,15 @@ function newLinkTransfer() {
                         if (LINK.energy > 300 && LINK.cooldown === 0) {
                             if (LINK.room.memory.masterLinkID !== undefined) {
                                 let mLink = Game.getObjectById(LINK.room.memory.masterLinkID);
-                                if (mLink !== null && mLink.energy < 100) {
-                                    LINK.room.visual.line(LINK.pos, mLink.pos, { color: 'white' });
-                                    if (LINK.transferEnergy(mLink) == OK) {
-                                        break;
+                                if (LINK.structureType !== STRUCTURE_LINK) {
+                                    linksID.splice(zz, 1);
+                                } else {
+                                    if (mLink !== null && mLink.energy < 100) {
+                                        LINK.room.visual.line(LINK.pos, mLink.pos, { color: 'white' });
+                                        //                                        console.log(LINK,LINK.structureType,LINK.pos);
+                                        if (LINK.transferEnergy(mLink) == OK) {
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -76,7 +81,7 @@ function newLinkTransfer() {
                     }
 
                 }
-                Game.rooms[e].memory.chainLinks = undefined;
+                Game.rooms[roomName].memory.chainLinks = undefined;
             }
 
         }
@@ -86,9 +91,114 @@ function newLinkTransfer() {
 class buildLink {
 
     /** @param {Creep} creep **/
-    static run() {
-        newLinkTransfer();
-        gameCache = []; // cleaning up cache for this tick.
+    //   static run() {
+    //       newLinkTransfer();
+    //       gameCache = []; // cleaning up cache for this tick.
+    //  }
+
+    static roomRun(roomName) {
+
+        if (Game.rooms[roomName] === undefined) return;
+        if (Game.rooms[roomName].controller.level < 5) return;
+        var LINK;
+        if (Game.rooms[roomName].controller !== undefined && Game.rooms[roomName].controller.owner !== undefined && Game.rooms[roomName].controller.owner.username === 'likeafox') {
+            if (Game.rooms[roomName].memory.roomLinksID === undefined) {
+                Game.rooms[roomName].memory.roomLinksID = [];
+            }
+            if (Game.rooms[roomName].memory.roomLinksID.length > 0) {
+                var linksID = Game.rooms[roomName].memory.roomLinksID;
+                var keys = Object.keys(linksID);
+                var z = linksID.length;
+
+                while (z--) {
+                    var zz = keys[z];
+                    LINK = Game.getObjectById(linksID[zz]);
+                    //                LINK.room.visual.text(LINK.cooldown, LINK.pos.x, LINK.pos.y + 1, { color: '#00000a ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 }); 
+                    if (LINK !== null && LINK.structureType === STRUCTURE_LINK) {
+                        LINK.room.visual.text(LINK.cooldown === undefined ? 0 : LINK.cooldown, LINK.pos.x, LINK.pos.y + 1, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+                        if (LINK.energy !== 800) {
+
+                            let targets = LINK.pos.findInRange(FIND_MY_CREEPS, 1);
+                            targets = _.filter(targets, function(s) {
+                                return (s.carry[RESOURCE_ENERGY] > 0 && (s.memory.role == 'transport' || s.memory.role == 'ztransport')); //&& s.memory.linkID == linksID[zz]
+                            });
+                            if (targets.length !== 0) {
+
+                                if (targets.length > 1)
+                                    targets.sort((a, b) => a.carry[RESOURCE_ENERGY] - b.carry[RESOURCE_ENERGY]);
+
+                                let ttarget = targets[0];
+
+                                if (ttarget !== undefined) {
+                                    let vv = ttarget.transfer(LINK, RESOURCE_ENERGY);
+                                }
+                            }
+
+                        }
+
+                        if (LINK.energy > 300 && LINK.cooldown === 0) {
+                            if (LINK.room.memory.masterLinkID !== undefined) {
+                                let mLink = Game.getObjectById(LINK.room.memory.masterLinkID);
+                                if (LINK.structureType !== STRUCTURE_LINK) {
+                                    linksID.splice(zz, 1);
+                                } else {
+                                    if (mLink !== null && mLink.energy < 100) {
+                                        LINK.room.visual.line(LINK.pos, mLink.pos, { color: 'white' });
+                                        //                                        console.log(LINK,LINK.structureType,LINK.pos);
+                                        if (LINK.transferEnergy(mLink) == OK) {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        linksID.splice(zz, 1);
+                    }
+
+                    if (LINK !== null && linksID[zz] == LINK.room.memory.masterLinkID) {
+                        linksID.splice(zz, 1);
+                    }
+
+                }
+                Game.rooms[roomName].memory.chainLinks = undefined;
+            }
+
+        }
+
+
+    }
+    static newTransfer(creep) {
+        if (creep.carry[RESOURCE_ENERGY] === 0) return false;
+        if (creep.room.controller === undefined) return false;
+        if (creep.room.controller.level < 5) return false;
+        let n = 0;
+        var ret = ulamSpiral(n);
+        while (true) {
+            ret = ulamSpiral(n);
+            n += 1;
+            if (ret.x > -1 || ret.x < 50 || rey.y > -1 || rey.y < 50) {
+                return true;
+              /*  let nlinkz = creep.room.lookAt(ret.x, ret.y);
+
+                for (var i in nlinkz) {
+                    //            if (nlinkz[i].structure !== undefined && nlinkz[i].structure.structureType == 'link' && nlinkz[i].structure.energy < 800) {
+                    if (nlinkz[i].structure !== undefined && nlinkz[i].structure.energy !== undefined && nlinkz[i].structure.energy !== nlinkz[i].structure.energyCapacity) {
+
+                        if (creep.room.memory.roomLinksID !== undefined && !_.contains(creep.room.memory.roomLinksID, nlinkz[i].structure.id) && nlinkz[i].structure.structureType == 'link') {
+                            creep.room.memory.roomLinksID.push(nlinkz[i].structure.id);
+                        }
+
+                        if (creep.transfer(nlinkz[i].structure, RESOURCE_ENERGY) == OK) {
+                            if (nlinkz[i].structure.structureType == 'link' && nlinkz[i].structure.cooldown === 0) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    }
+                }*/
+            }
+        }
     }
 
     static deposit(creep) { // Used by harvesters
@@ -157,27 +267,26 @@ class buildLink {
     }
 
     static transfer(creep) {
-        if(!creep.carry[RESOURCE_ENERGY]) return false;
-        let yy = creep.pos.y - 1;
-        if (yy < 0) yy = 0;
-        let yy2 = creep.pos.y + 1;
-        if (yy2 > 49) yy2 = 49;
-        let xx = creep.pos.x - 1;
-        if (xx < 0) xx = 0;
-        let xx2 = creep.pos.x + 1;
-        if (xx2 > 49) xx2 = 49;
+        if (!creep.carry[RESOURCE_ENERGY]) return false;
+        let yy = coronateCheck(creep.pos.y - 1);
+        let yy2 = coronateCheck(creep.pos.y + 1);
+        let xx = coronateCheck(creep.pos.x - 1);
+        let xx2 = coronateCheck(creep.pos.x + 1);
         var nlinkz = creep.room.lookForAtArea(LOOK_STRUCTURES, yy, xx, yy2, xx2, true);
 
         for (var i in nlinkz) {
-            if (nlinkz[i].structure !== undefined && nlinkz[i].structure.structureType == 'link' && nlinkz[i].structure.energy < 800) {
-                if (creep.room.memory.roomLinksID !== undefined && !_.contains(creep.room.memory.roomLinksID, nlinkz[i].structure.id)) {
+            //            if (nlinkz[i].structure !== undefined && nlinkz[i].structure.structureType == 'link' && nlinkz[i].structure.energy < 800) {
+            if (nlinkz[i].structure !== undefined && nlinkz[i].structure.energy !== undefined && nlinkz[i].structure.energy !== nlinkz[i].structure.energyCapacity) {
+
+                if (creep.room.memory.roomLinksID !== undefined && !_.contains(creep.room.memory.roomLinksID, nlinkz[i].structure.id) && nlinkz[i].structure.structureType == 'link') {
                     creep.room.memory.roomLinksID.push(nlinkz[i].structure.id);
                 }
 
                 if (creep.transfer(nlinkz[i].structure, RESOURCE_ENERGY) == OK) {
-                    if (nlinkz[i].structure.cooldown === 0)
+                    if (nlinkz[i].structure.structureType == 'link' && nlinkz[i].structure.cooldown === 0) {
                         return true;
-
+                    }
+                    return false;
                 }
             }
         }

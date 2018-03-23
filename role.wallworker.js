@@ -12,7 +12,10 @@ var classLevels = [
     //5
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     //6 Super Level 6 - 40 Work, 5 carry 5 move
-    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
+    {
+        body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
+        boost: ['XZHO2', 'XLH2O'],
+    }
 ];
 
 var boost = [];
@@ -44,46 +47,77 @@ function doNukeRamparts(creep) {
 
 class roleWallWorker extends roleParent {
 
-    static levels(level, room) {
+    static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
         if (super.baseRun(creep)) return;
-        if (Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
+        if (creep.room.memory.simple && creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
+            if( creep.memory.boostNeeded === undefined) {
+                creep.memory.boostNeeded = ['LH'];
+            }
             require('role.upbuilder').run(creep);
             return;
-        }
-        if (Game.shard.name == 'shard2' && creep.ticksToLive > 1450) {
+        } else if (Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
             require('role.upbuilder').run(creep);
             return;
-        }
-        if(creep.memory.level == 6){
-            if (super.boosted(creep, ['XZHO2']))
-                return;
-        } else if (creep.room.name == 'E22S48') {
-            if (super.boosted(creep, ['XLH2O']))
-                return;
-        } else if (Game.shard.name == 'shard1' && creep.ticksToLive > 1300 && creep.room.controller !== undefined && creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 100000) {
+        } else if (Game.shard.name == 'shard2' && creep.ticksToLive > 1450) {
             require('role.upbuilder').run(creep);
+            return;
+        } else if (Game.shard.name == 'shard1' && creep.ticksToLive > 1300 && creep.room.controller !== undefined && creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 10000) {
+            creep.memory.role = 'upbuilder';
+            creep.memory.reportDeath = true;
             return;
         } else if (Game.shard.name == 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
-
             boost.push('LH');
-
             _.uniq(boost);
         } else if (creep.room.memory.nukeIncoming && creep.ticksToLive == 1499) {
             boost.push('XLH2O');
             _.uniq(boost);
         }
+if(creep.room.name === 'E1S11'){
+	if (super.boosted(creep,['XLH2O'])) {
+            return;
+        }
+}
 
+        if (creep.ticksToLive > 1400 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
 
-        if (creep.memory.level >= 4 && super.boosted(creep, boost)) {
+creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
+//            creep.memory.boostNeeded = classLevels[creep.memory.level].boost;
+        } else if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
 
-        if (creep.memory.repair) {
+        var target = (creep.room.name == 'E29S48' || creep.room.name == 'E18S46') ? creep.room.storage : creep.room.terminal;
+        if(creep.room.name == 'E11S47' || creep.room.name == 'E19S49' ) {
+            target =  creep.room.storage;
+        }
+        if (creep.carry.energy > creep.carryCapacity - 50 && creep.pos.isNearTo(target)) {
+          //  creep.memory.repair = true;
+        } else if (creep.carry.energy < creep.stats('work')) {
+            if (creep.pos.isNearTo(target)) {
+            	creep.say('t:'+target.structureType);
+                creep.withdraw(target, RESOURCE_ENERGY);
+                let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+                if (strucs !== null) creep.memory.constructionID = strucs.id;
+                creep.memory.wallTargetID = undefined;
+            } else {
+                creep.moveTo(target);
+            }
+            return;
+        }
+
+      //  if (creep.memory.repair) {
             /*            if(creep.room.memory.nukeIncoming) {
                             if(doNukeRamparts(creep)) {
                                 return;
@@ -96,37 +130,20 @@ class roleWallWorker extends roleParent {
                         creep.moveTo(strucs, { reusePath: 15 });
                     }
                 } else {
+                    creep.room.memory.spawnTargets = undefined;
                     creep.memory.constructionID = undefined;
                 }
             } else {
                 super.constr.moveToRepairWall(creep);
             }
 
-            if (creep.carry.energy === 0) {
-                creep.memory.repair = false;
-            }
-        } else {
+       //     if (creep.carry.energy === 0) {
+     //           creep.memory.repair = false;
+        //    }
+  //      } else {
 
-            super.constr.pickUpEnergy(creep);
-            if (creep.room.name == 'E29S48' || creep.room.name == 'E18S46') {
-                if (!super.containers.withdrawFromTerminal(creep)) {}
 
-            } else {
-                if (!super.containers.withdrawFromStorage(creep)) {
-                    if (!super.containers.moveToWithdraw(creep)) {
-                        super.sources.moveToWithdraw(creep);
-                    }
-                }
-            }
-
-            if (creep.carry.energy > creep.carryCapacity - 50) {
-                creep.memory.repair = true;
-                let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-                if (strucs !== null) creep.memory.constructionID = strucs.id;
-                creep.memory.wallTargetID = undefined;
-            }
-
-        }
+//        }
 
     }
 

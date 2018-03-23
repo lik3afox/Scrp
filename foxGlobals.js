@@ -2,18 +2,16 @@
 var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var constr = require('commands.toStructure');
-var source = require('commands.toSource');
 var containers = require('commands.toContainer');
 #ffe56d
 */
-var console = require('market');
 
 module.exports = {
-    friends: ['SteveTrov','Issacar','Totalschaden','Geir1983','omnomwombat','InvisoBlack','weaves','admon','ART999','o4kapuk', 'Baj', 'Zeekner', 'ponka', 'zolox', 'NobodysNightmare', 'Vlahn', 'Power Bank', 'likeafox', 'daboross'],
+    friends: ['Kamots','SteveTrov','Issacar','Totalschaden','Geir1983','omnomwombat','InvisoBlack','weaves','admon','ART999','o4kapuk', 'Baj', 'Zeekner', 'ponka', 'zolox', 'NobodysNightmare', 'Vlahn', 'Power Bank', 'likeafox', 'daboross'],
     enemies: ['Atavus', 'Trepidimous'],
-    RETREAT: COLOR_BROWN, // Flag that certain creeps use to defend too.
+//    RETREAT: COLOR_BROWN, // Flag that certain creeps use to defend too.
     DEFEND: COLOR_RED, // Everyone will defend to this.
-    PARTY: COLOR_ORANGE, // Before Rally creeps will stop by this.
+    SQUAD: COLOR_ORANGE, // Squad based AI for creeps of this color. 
     ATTACK: COLOR_GREEN, // All creeps go to it
     RISK: COLOR_GREY, // NOt certain if it's in use
     RALLY: COLOR_YELLOW, // If this flag has a name on it will create an party

@@ -13,122 +13,21 @@ function getNonEmptyContain(creep) {
 }
 
 class ContainerInteract {
-    constructor() {}
-
-    static fromContainer(creep) {
-        var containers = creep.pos.findInRange(FIND_STRUCTURES, 1, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER);
-            }
-        });
-        for (var e in containers) {
-            if (creep.withdrawing(containers[e], RESOURCE_ENERGY) == OK) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-    static getSortNotFull(creep) {
-        var containers = getNonEmptyContain(creep);
-        //containers.sort((a, b) => a.hits - b.hits);
-        return containers;
-    }
-
-
-    static moveToTransfer(creep) {
-        //console.log('used sued');
-        var containers = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => {
-
-                return (structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) != structure.storeCapacity);
-            }
-        });
-        if (containers === undefined || containers === null) return false;
-
-        if (creep.pos.isNearTo(containers)) {
-            creep.transfer(containers, RESOURCE_ENERGY);
-        } else {
-            creep.moveTo(containers);
-        }
-
-        return true;
-
-    }
-    static toWithdraw(creep) {
-        var containers = creep.pos.findInRange(FIND_STRUCTURES, 1, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER);
-            }
-        });
-        for (var e in containers) {
-            if (creep.withdrawing(containers[e], RESOURCE_ENERGY) == OK) {
-                return true;
-            }
-        }
-        return false;
-
-
-    }
-    static toStorage(creep) {
-        var storage = creep.room.storage;
-        if (creep.pos.isNearTo(storage)) {
-            if (creep.transfer(storage, RESOURCE_ENERGY) == OK) {
-                return true;
-            }
-        }
-        return false;
-    }
-    static fromTerminal(creep) {
-        var terminal = creep.room.terminal;
-        if (creep.pos.isNearTo(terminal)) {
-            if (creep.withdrawing(terminal, RESOURCE_ENERGY) == OK) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-    static fromStorage(creep) {
-        var terminal = creep.room.storage;
-        if (creep.pos.isNearTo(terminal)) {
-            if (creep.withdrawing(terminal, RESOURCE_ENERGY) == OK) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
     static moveToTerminal(creep) {
+
+//creep.moveToTransfer(creep.room.terminal,creep.carrying,{reusePath:20});
+//creep.countStop();
+
         var terminal = creep.room.terminal;
         if (creep.pos.isNearTo(terminal)) {
-            for (var e in creep.carry) {
                 creep.countStop();
-                creep.transfer(terminal, e);
-            }
+                creep.transfer(terminal, creep.carrying);
+                return true;
         } else {
             creep.moveTo(terminal, { reusePath: 20 });
         }
+        return false;
     }
-
-    static moveToNuke(creep) {
-        if (creep.room.memory.nukeID === undefined) {
-            let zz = creep.room.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_NUKE });
-            if (zz.length !== 0) {
-                creep.room.memory.nukeID = zz[0].id;
-            }
-        }
-        if (creep.room.memory.nukeID === undefined) return false;
-        let nuke = Game.getObjectById(creep.room.memory.nukeID);
-        if (nuke !== null)
-            if (creep.pos.isNearTo(nuke)) {
-                creep.transfer(nuke, RESOURCE_ENERGY);
-            } else {
-                creep.moveMe(nuke);
-            }
-    }
-
 
     static moveToStorage(creep) {
         //        creep.say('2Storage');
@@ -156,7 +55,7 @@ class ContainerInteract {
         if (storage.store[RESOURCE_ENERGY] === 0) return false;
         if (creep.pos.isNearTo(storage)) {
             for (var e in creep.carry) {
-                creep.withdrawing(storage, RESOURCE_ENERGY);
+                creep.withdraw(storage, RESOURCE_ENERGY);
             }
         } else {
             creep.moveTo(storage);
@@ -175,31 +74,14 @@ class ContainerInteract {
         }
 
         creep.say(storage.store[RESOURCE_ENERGY]);
-
         if (creep.pos.isNearTo(storage)) {
-            for (var e in creep.carry) {
-                creep.withdrawing(storage, e);
-            }
+                creep.withdraw(storage, creep.carrying);
         } else {
-            creep.moveTo(storage, { maxRooms: 1 });
+            creep.say(creep.moveTo(storage, { maxRooms: 1 }));
+            
         }
 
         return true;
-    }
-
-    static depositTreasure(creep) {
-        if (_.sum(creep.carry) > 0) {
-            // go home and deposit.
-            if (creep.memory.home != creep.room.name) {
-                creep.moveTo(Game.getObjectById(creep.memory.parent));
-            } else {
-                container.moveToTerminal(creep);
-            }
-            creep.say('loot');
-            return true;
-        } else {
-            return false;
-        }
     }
 
     static moveToWithdraw(creep) {
@@ -231,7 +113,7 @@ class ContainerInteract {
                 }
 
                 if (creep.pos.isNearTo(contain)) {
-                    creep.withdrawing(contain, RESOURCE_ENERGY);
+                    creep.withdraw(contain, RESOURCE_ENERGY);
                     return true;
                 } else {
                     creep.moveTo(contain, { maxRooms: 1 });

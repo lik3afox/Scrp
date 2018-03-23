@@ -1,5 +1,5 @@
 var classLevels = [
-    [CARRY, MOVE, CARRY, MOVE, CARRY,CARRY], // 300
+    [CARRY, MOVE, CARRY, MOVE, CARRY, CARRY], // 300
 
     [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, CARRY, MOVE], // 550
 
@@ -69,8 +69,6 @@ function goToMovePath(creep, patrol) {
         case ERR_NOT_FOUND:
             if (creep.memory.pathClose === undefined) {
                 let pos = [];
-//                var pathz = creep.memory.patrolpath;
-//                pathz = _.isString(pathz) ? Room.deserializePath(pathz) : pathz;
                 var e = path.length;
                 while (e--) {
                     pos.push(new RoomPosition(path[e].x, path[e].y, creep.room.name));
@@ -92,15 +90,12 @@ function moveOnPath(creep) {
     var patrol;
     if (creep.room.memory.alert) return false;
     switch (creep.room.name) {
-        case "E25S3xx7":
+        case "E32S34x":
             patrol = [
-                [14, 27],
-                [16, 33],
-                [18, 32],
-                [27, 8],
-                [23, 26],
-                [21, 23],
-                [14, 27],
+                [39, 32],
+                [32, 24],
+                [34, 22],
+                [41, 29],
             ];
             goToMovePath(creep, patrol);
             return true;
@@ -136,34 +131,36 @@ function getExtendEnergy(creep) {
 class roleFirst extends roleParent {
 
     static levels(level) {
-        var total = 0;
-        for (var e in Game.creeps) {
-            if (Game.creeps[e].memory.role == 'first') {
-                total++;
-            }
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
         }
-        if (total === 0) {
-            return classLevels[0];
-        } else if (level > classLevels.length - 1) level = classLevels.length - 1;
-
-        return classLevels[level];
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
-    static run(creep) {
 
+    static run(creep) {
+        if (creep.room.memory.simple) {
+            creep.memory.reportDeath = true;
+        }
         super.rebirth(creep);
-        super.baseRun(creep);
-        if(creep.room.name == 'E24S33') {
+        if (super.baseRun(creep)) {
+            return;
+        }
+        if (creep.room.name == 'E24S33') {
             let nuke = Game.getObjectById('5a2c7974840ab15db16dc7a3');
-            if(nuke !== null) {
-                if(nuke.timeToLand < 50) {
-                    
+            if (nuke !== null) {
+                if (nuke.timeToLand < 50) {
                     creep.say(creep.moveTo(Game.flags.Flag1.pos));
                     return;
                 }
             }
         }
 
-        if ((creep.room.energyAvailable == creep.room.energyCapacityAvailable && Game.shard.name == 'shard0')||
+        if ((creep.room.energyAvailable == creep.room.energyCapacityAvailable && Game.shard.name == 'shard0') ||
             (creep.room.energyAvailable == creep.room.energyCapacityAvailable && creep.room.name == 'E18S46')) {
             require('role.linker').run(creep);
             return;
@@ -187,24 +184,19 @@ class roleFirst extends roleParent {
 
         if (!creep.memory.deposit) {
 
-            if (!creep.pickUpEnergy()) {
-                if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
-                    creep.withdrawing(creep.room.storage, RESOURCE_ENERGY);
-                } else if (creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.withdrawing(creep.room.terminal, RESOURCE_ENERGY);
-                } else {
-                    if (!super.containers.withdrawFromStorage(creep)) {
-                        if (!super.containers.withdrawFromTerminal(creep)) {
-                            if (!super.containers.moveToWithdraw(creep)) {
-                                if (!super.constr.moveToPickUpEnergyIn(creep, 2)) {
-                                    if (!super.constr.moveToPickUpEnergy(creep, creep.memory.roleID * 40) + 300) {
-                                        if (!super.sources.moveToWithdraw(creep)) {
+            if (creep.room.name == 'E33S54' && creep.room.controller.level !== 8) {
+                if (!super.containers.withdrawFromTerminal(creep)) {}
+                return;
+            }
 
-                                        }
-                                    }
-                                }
-                            }
-                        }
+            if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
+                creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+            } else if (creep.pos.isNearTo(creep.room.terminal) && creep.room.terminal.store[RESOURCE_ENERGY] !== 0) {
+                creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+            } else {
+                if (!super.containers.withdrawFromStorage(creep)) {
+                    if (!super.containers.withdrawFromTerminal(creep)) {
+                        if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES, creep.memory.roleID * 40)) {}
                     }
                 }
             }
@@ -214,6 +206,9 @@ class roleFirst extends roleParent {
 
         } else {
             if (creep.room.energyAvailable == creep.room.energyCapacityAvailable) {
+                if (creep.pos.isEqualTo(Game.flags[creep.memory.home])) {
+                    creep.moveTo(creep.room.controller);
+                }
                 creep.sleep();
                 return;
             }

@@ -1,36 +1,53 @@
 var s1_observers = ['59aee0acae855116d42aaff7', '59c1d51712c6322c527647d1', '59b8299536dabe15ba6d1f99', '59a2fa6f51963d5833d4b53a'];
 var s0_observers = ['5a1b24d46ea97155dbbcfc78'];
+var s2_observers = ['5a41b5c16464bd403cbb6036'];
 
-var s1_obserRooms = ['E25S37', 'E17S45', 'E25S43', 'E18S36', 'E23S42'];
+var s1_obserRooms = ['E25S37', 'E17S45', 'E25S43', 'E18S36', 'E23S42', 'E28S37'];
+var s2_obserRooms = ['E19S49'];
+
 //'E32S70',
 var roomsObserve = [
     'E20S40',
     'E29S40', 'E28S40', 'E27S40', 'E26S40', 'E25S40', 'E24S40', 'E23S40', 'E22S40', 'E21S40',
-    'E20S30', 'E11S30', 'E12S30', 'E21S30', 'E29S30', 'E28S30', // North side
+    'E20S30', 'E11S30', 'E12S30',
+    'E21S30', 'E22S30', 'E23S30', 'E24S30', 'E25S30', 'E26S30', 'E28S30', 'E29S30', // North side
     'E20S31', 'E20S32', 'E20S33', 'E20S34', 'E20S35', 'E20S36', 'E20S37', 'E20S38', 'E20S39',
-    'E30S40', 'E30S41', 'E30S42', 'E30S48', 'E30S49', 'E30S50', // East south
+    'E30S40', 'E30S41', 'E30S42', 'E30S43', 'E30S44', 'E30S45', 'E30S46', 'E30S47', 'E30S48', 'E30S49', 'E30S50', // East south
     'E11S40', 'E12S40', 'E13S40', 'E14S40', 'E15S40', 'E16S40', 'E17S40', 'E18S40', 'E19S40',
-    'E20S50', 'E30S50', 'E21S50', 'E22S50', 'E28S50', 'E29S50', // South
+    'E20S50', 'E30S50',
+    'E21S50', 'E22S50', 'E23S50', 'E24S50', 'E25S50', 'E26S50', 'E27S50', 'E28S50', 'E29S50', 'E30S50',
+    'E28S50', 'E29S50', // South
     'E20S41', 'E20S42', 'E20S43', 'E20S44', 'E20S45', 'E20S46', 'E20S47', 'E20S48', 'E20S49',
-    'E30S39', 'E30S38', 'E30S31', 'E30S32',
+    'E30S39', 'E30S38',
+    'E30S30', 'E30S31', 'E30S32', 'E30S43', 'E30S44', 'E30S45', 'E30S46', 'E30S32', 'E30S33', 'E30S34', 'E30S35', 'E30S36', 'E30S37', 'E30S38', 'E30S39',
+    'E11S50', 'E12S50', 'E13S50', 'E14S50', 'E15S50', 'E16S50', 'E17S50', 'E18S50', 'E19S50',
+    'E17S30', 'E18S30', 'E19S30',
+    'E10S45', 'E10S46', 'E10S47', 'E10S48', 'E10S49', 'E10S50',
 ];
 var powerRooms = [
-    'E20S40',
+    'E30S40', 'E30S41', 'E30S42', 'E30S43', 'E30S44', 'E30S45', 'E30S46', 'E30S47', 'E30S48', 'E30S49', 'E30S50',
+    'E21S30', 'E22S30', 'E23S30', 'E24S30', 'E25S30', 'E26S30', 'E28S30', 'E29S30',
+    'E11S50', 'E12S50', 'E13S50', 'E14S50', 'E15S50', 'E16S50', 'E17S50', 'E18S50', 'E19S50',
+    'E21S50', 'E22S50', 'E23S50', 'E24S50', 'E25S50', 'E26S50', 'E27S50', 'E28S50', 'E29S50', 'E30S50',
+    'E20S40', 'E20S50',
+    'E30S30', 'E30S31', 'E30S32', 'E30S33', 'E30S34', 'E30S35', 'E30S36', 'E30S37', 'E30S38', 'E30S39', 'E20S30',
     'E29S40', 'E28S40', 'E27S40', 'E26S40', 'E25S40', 'E24S40', 'E23S40', 'E22S40', 'E21S40',
     'E20S31', 'E20S32', 'E20S33', 'E20S34', 'E20S35', 'E20S36', 'E20S37', 'E20S38', 'E20S39',
     'E11S40', 'E12S40', 'E13S40', 'E14S40', 'E15S40', 'E16S40', 'E17S40', 'E18S40', 'E19S40',
-    'E20S41', 'E20S42', 'E20S43', 'E20S44', 'E20S45', 'E20S46', 'E20S47', 'E20S48', 'E20S49',
+    'E20S41', 'E20S42', 'E20S43', 'E20S44', 'E20S45', 'E20S46', 'E20S47', 'E20S48', 'E20S49', 'E17S30', 'E18S30', 'E19S30',
+    'E10S45', 'E10S46', 'E10S47', 'E10S48', 'E10S49', 'E10S50',
 ];
 /*
+'E30S32','E30S33','E30S34','E30S35','E30S36','E30S37','E30S38','E30S39',
 
 */
-var linksCache = [];
+//var linksCache = [];
 
 function getCached(id) {
-    if (linksCache[id] === undefined) {
-        linksCache[id] = Game.getObjectById(id);
-    }
-    return linksCache[id];
+    //    if (linksCache[id] === undefined) {
+    //      linksCache[id] = Game.getObjectById(id);
+    //}
+    return Game.getObjectById(id);
 }
 
 function doTask(tasks) {
@@ -69,6 +86,7 @@ function doTask(tasks) {
 
                         if (ob.observeRoom(target) == OK) {
                             if (Game.flags.bandit !== undefined) {
+                                Game.flags.bandit.memory.musterType = 'bandit';
                                 tasks.shift();
                                 return;
                             }
@@ -81,7 +99,18 @@ function doTask(tasks) {
             break;
         case "observer":
             options = task.order.options;
-            observers = Game.shard.name == 'shard0' ? s0_observers : s1_observers;
+            switch (Game.shard.name) {
+                case 'shard1':
+                    observers = s1_observers;
+                    break;
+                case 'shard2':
+                    observers = s2_observers;
+                    break;
+                case 'shard0':
+//                    observers = s0_observers;
+                    break;
+            }
+            observers = s0_observers;
             for (a in observers) {
                 let ob = getCached(observers[a]);
                 for (e in task.options) {
@@ -120,7 +149,6 @@ function doTask(tasks) {
                 if (ob !== null) {
                     if (Game.rooms[target] !== undefined) {
                         // Place flag here.
-                        console.log('does it every come here danit.');
                         Game.rooms[target].createFlag(25, 25, 'caravan');
                         break;
                     }
@@ -176,6 +204,7 @@ function changeRoom(roomName, direction, amount) {
 }
 
 function caravanCheck(target) {
+    if(Game.shard.name !== 'shard1') return false;
     if (Game.rooms[target] === undefined) return false;
     let screeps = Game.rooms[target].find(FIND_CREEPS);
     let caravan = _.filter(screeps, function(s) {
@@ -195,13 +224,12 @@ function caravanCheck(target) {
         let direction;
         let troom = Game.rooms[target];
         var dir;
-
-        if (caravan[0].ticksToLive < 1350    ) {
+        if (caravan[0].ticksToLive < 1400) {
             let roomName = caravan[0].pos.roomName;
             var two = parseInt(roomName[2]);
             var five = parseInt(roomName[5]);
-
-            if (two === 0 && five === 0  && caravan[0].ticksToLive < 1000  && caravan[0].ticksToLive > 700) {
+            //console.log(five === 9);
+            if (two === 0 && five === 0 && caravan[0].ticksToLive < 1000 && caravan[0].ticksToLive > 700) {
                 dir = 'none';
             } else if (two === 1 || two === 2 && caravan[0].ticksToLive > 1000) {
                 dir = 'e';
@@ -242,8 +270,17 @@ function caravanCheck(target) {
 
     }
 }
-
+function controllerCheck(target) {
+    if(Game.rooms[target] === undefined) return false;
+    if(Game.rooms[target].controller === undefined) return false;
+    var controller = Game.rooms[target].controller;
+    if(controller.owner !== undefined){
+        console.log( controller.owner.username,'@',target);
+    }
+}
 function powerbankCheck(target) {
+    if(Game.shard.name === 'shard2') return false;
+    if(Game.shard.name === 'shard0') return false;
     if (Game.rooms[target] === undefined) return false;
     //    console.log(roomLink( target ),'is target in power room',_.contains(powerRooms,target));
     if (!_.contains(powerRooms, target)) return false;
@@ -275,6 +312,44 @@ function powerbankCheck(target) {
 
 }
 
+function getRandomRoom(room, max) {
+/*    if (Game.rooms[room].memory.randomN === undefined) {
+        Game.rooms[room].memory.randomN = 0;
+        ret = ulamSpiral(Game.rooms[room].memory.randomN);
+    }
+    ret = ulamSpiral(Game.rooms[room].memory.randomN); */
+
+    let parsed = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(room);
+    let _we = parsed[1];
+    let _we_num = parsed[2];
+    let _ns = parsed[3];
+    let _ns_num = parsed[4];
+
+//    _we_num = ret.x;
+//    _ns_num = ret.y;
+    _we_num = parseInt(_we_num) + Math.ceil(Math.random() * (2 * max)) - max;
+    _ns_num = parseInt(_ns_num) + Math.ceil(Math.random() * (2 * max)) - max;
+    if (_we_num < 0) {
+        if (_we === 'W') {
+            _we = 'E';
+        } else {
+            _we = 'W';
+        }
+        _we_num = (_we_num + 1) * -1;
+    }
+    if (_ns_num < 0) {
+        if (_ns === 'N') {
+            _ns = 'S';
+        } else {
+            _ns = 'N';
+        }
+        _ns_num = (_ns_num + 1) * -1;
+    }
+
+    Game.rooms[room].memory.randomN += 1;
+    return _we + _we_num + _ns + _ns_num;
+}
+
 class buildObserver {
 
     static reqestRoom(theroom, thetimed) {
@@ -295,25 +370,50 @@ class buildObserver {
         }
     }
 
-    static run() {
-        if (Memory.observerNum === undefined) {
-            Memory.observerNum = 0;
+    static runRoom2(roomName) {
+        let room = Game.rooms[roomName]        ;
+        if(room === undefined) return;
+        if(room.controller !== undefined && room.controller.level < 8) return;
+        if(room.observer === undefined) return;
+   //     console.log('roomname is doing new observer!',room.memory.observeTarget,Game.rooms[room.memory.observeTarget]);
+        if(room.memory.observeTarget === undefined) {
+            room.memory.observeTarget = getRandomRoom(roomName,10);
         }
-        if (Memory.observerTask === undefined) {
-            Memory.observerTask = [];
+        if(Game.rooms[room.memory.observeTarget] === undefined) {
+            room.observer.observeRoom(room.memory.observeTarget);
+        } else {
+            caravanCheck(room.memory.observeTarget);
+            powerbankCheck(room.memory.observeTarget);
+            controllerCheck(room.memory.observeTarget);
+
+
+            room.memory.observeTarget = getRandomRoom(roomName,10);
         }
+
+        if (Memory.observerTask.length > 0) {
+            doTask(Memory.observerTask);
+            return;
+        }
+    }
+
+    static runRoom(roomName) {
 
         let observeRooms;
         switch (Game.shard.name) {
             case 'shard1':
                 observeRooms = s1_obserRooms;
                 break;
+            case 'shard2':
+
+                observeRooms = s2_obserRooms;
+                break;
         }
         var roomsSeen = [];
         var lookFlag = Game.flags.look !== undefined;
-
-        for (let a in observeRooms) {
-            let room = Game.rooms[observeRooms[a]];
+        //        console.log('it shoulud run', Memory.observerTask.length, _.contains(observeRooms, roomName));
+        //        for (let a in observeRooms) {
+        if (_.contains(observeRooms, roomName)) {
+            let room = Game.rooms[roomName];
             let doObserve = true;
             if (lookFlag) {
                 if (room.observer !== undefined) {
@@ -382,12 +482,105 @@ class buildObserver {
 
             }
         }
+        if (Memory.observerTask.length > 0) {
+            doTask(Memory.observerTask);
+            return;
+        }
+    }
 
-        /*        if (Memory.observerTask.length === 0) {
-                    var request = { order: "banditFlag", options: { room: 'E20S37' } };
-                    Memory.observerTask.push(request);
-                    //    return false;
-                }*/
+    static runTask() {
+        /*    if (Memory.observerNum === undefined) {
+                Memory.observerNum = 0;
+            }
+            if (Memory.observerTask === undefined) {
+                Memory.observerTask = [];
+            }
+
+            let observeRooms;
+            switch (Game.shard.name) {
+                case 'shard1':
+                    observeRooms = s1_obserRooms;
+                    break;
+            }
+            var roomsSeen = [];
+            var lookFlag = Game.flags.look !== undefined;
+
+            for (let a in observeRooms) {
+                let room = Game.rooms[observeRooms[a]];
+                let doObserve = true;
+                if (lookFlag) {
+                    if (room.observer !== undefined) {
+                        let distance = Game.map.getRoomLinearDistance(room.name, Game.flags.look.pos.roomName);
+
+                        if (distance <= 10) {
+                            if (Game.flags.look.room !== undefined) {
+                                console.log(Game.flags.look.room.name, 'found room w/ look flag', room.name);
+                                caravanCheck(Game.flags.look.room.name);
+                                powerbankCheck(Game.flags.look.room.name);
+
+                            }
+                            room.observer.observeRoom(Game.flags.look.pos.roomName);
+                            console.log(Game.flags.look.room, 'OB at look flag', room.name);
+                            lookFlag = false;
+                            doObserve = false;
+                        }
+                    }
+                }
+                if (room.observer !== undefined && doObserve) {
+                    if (room.memory._observe === undefined) {
+                        room.memory._observe = {
+                            lookAt: Math.floor(Math.random() * roomsObserve.length),
+                        };
+                    }
+                    let mem = room.memory._observe;
+                    if (mem.lookAt < 0) mem.lookAt = 0;
+                    let target = roomsObserve[mem.lookAt];
+                    //                    console.log(target,':',roomsSeen,_.contains(roomsSeen,target));
+                    if (room !== undefined && target !== undefined && !_.contains(roomsSeen, target)) {
+                        let distance = Game.map.getRoomLinearDistance(room.name, target);
+                        if (distance <= 10) {
+                            if (Game.rooms[target] === undefined) {
+                                let zz = room.observer.observeRoom(target);
+                                //   console.log(room.name, 'observe room Undefined',Game.rooms[target],roomsObserve[mem.lookAt],mem.lookAt,'Try again', zz);
+                            } else {
+                                roomsSeen.push(target);
+                                //     console.log(room.name, 'room Check', target);
+                                caravanCheck(target);
+                                powerbankCheck(target);
+                                mem.lookAt++;
+                                if (mem.lookAt >= roomsObserve.length) mem.lookAt = 0;
+
+                                if (Game.map.getRoomLinearDistance(room.name, roomsObserve[mem.lookAt]) <= 10) {
+                                    room.observer.observeRoom(roomsObserve[mem.lookAt]);
+                                } else {
+                                    mem.lookAt++;
+                                }
+
+                            }
+                        } else {
+                            //   console.log(room.name, 'Room to far', target);
+                            mem.lookAt++;
+                            if (mem.lookAt >= roomsObserve.length) mem.lookAt = 0;
+                            if (Game.map.getRoomLinearDistance(room.name, roomsObserve[mem.lookAt]) <= 10) {
+                                room.observer.observeRoom(roomsObserve[mem.lookAt]);
+                            } else {
+                                mem.lookAt++;
+                            }
+                        }
+                    } else {
+                        mem.lookAt += Math.floor(Math.random() * 5); // = 0;
+                    }
+
+                    if (mem.lookAt >= roomsObserve.length) mem.lookAt = 0;
+
+                }
+            }
+
+            /*        if (Memory.observerTask.length === 0) {
+                        var request = { order: "banditFlag", options: { room: 'E20S37' } };
+                        Memory.observerTask.push(request);
+                        //    return false;
+                    }*/
 
         if (Memory.observerTask.length > 0) {
             doTask(Memory.observerTask);

@@ -27,7 +27,7 @@ var boost = ['XGH2O'];
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-var sources = require('commands.toSource');
+
 var constr = require('commands.toStructure');
 var spawn = require('commands.toSpawn');
 var contain = require('commands.toContainer');
@@ -35,7 +35,14 @@ var contain = require('commands.toContainer');
 class upgraderzClass extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
@@ -59,22 +66,25 @@ class upgraderzClass extends roleParent {
         } else {
 
             if (creep.carry.energy < creep.stats('upgrading')) {
-
-
-                if (creep.pos.isNearTo(creep.room.storage)) {
-                    creep.withdrawing(creep.room.storage, RESOURCE_ENERGY);
-                } else if (creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.withdrawing(creep.room.terminal, RESOURCE_ENERGY);
+                if (creep.room.controller.level < 4) {
+                    if (creep.room.storage.store.energy > 0 && creep.pos.isNearTo(creep.room.storage)) {
+                        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                    }
+                    if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES, 0)) {
+                        roleParent.constr.withdrawFromTombstone(creep);
+                    }
+                } else {
+                    if (creep.pos.isNearTo(creep.room.storage)) {
+                        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                    } else if (creep.pos.isNearTo(creep.room.terminal)) {
+                        creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+                    }
                 }
+
 
             }
 
-            //            if (!constr.moveToBuild(creep)) {
-            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {}
-            //          } else {
-            //                creep.withdraw(creep.room.storage,RESOURCE_ENERGY);
-            //        }
-            constr.pickUpEnergy(creep);
+            creep.upgradeController(creep.room.controller);
 
 
 
@@ -89,22 +99,24 @@ class upgraderzClass extends roleParent {
                 switch (creep.memory.upgradeSpot) {
                     case 1: // renew spot.
                         zz = new RoomPosition(32, 9, creep.room.name);
+                        let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
                         if (creep.room.controller.level > 5 && ((!creep.memory.boosted) || (creep.memory.boosted && creep.ticksToLive < 5))) {
                             creep.say('renew');
-                            let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
                             if (spawn !== null && creep.ticksToLive < 1489) {
-                                if (spawn.renewCreep(creep) == OK)
+                                let memb = _.filter(creep.room.find(FIND_CREEPS), function(o) {
+                                    return o.memory.party == creep.memory.party;
+                                });
+                                creep.say(memb.length + " " + creep.partyFlag.memory.totalNumber);
+                                if (memb.length <= creep.partyFlag.memory.totalNumber && spawn.renewCreep(creep) == OK)
                                     creep.memory.boosted = false;
+
                             } else if (creep.ticksToLive > 1490) {
                                 creep.memory.upgradeSpot = 2; // Moving to boost spot.
                             }
-                        } else if (creep.room.storage.store[RESOURCE_ENERGY] === 0) {
-                            var spawned = Game.getObjectById('5a03400a3e83cd1e5374cf65');
-                            if (spawned !== null && creep.pos.isEqualTo(new RoomPosition(32, 9, creep.room.name))) {
-                                spawned.recycleCreep(creep);
+                        } else if (creep.room.storage.store[RESOURCE_ENERGY] === 0 && creep.carry[RESOURCE_ENERGY] === 0) {
+                            if (spawn !== null && creep.pos.isEqualTo(new RoomPosition(32, 9, creep.room.name))) {
+                                spawn.recycleCreep(creep);
                             }
-                        } else {
-                            creep.say();
                         }
 
                         break;
@@ -260,17 +272,17 @@ class upgraderzClass extends roleParent {
                                 var ggg;
                                 let count = 0;
                                 let aaa = _.filter(eee, function(object) {
-                                    return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot !== 2 && ( object.memory.boosted === undefined || !object.memory.boosted)  );                                
+                                    return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot !== 2 && (object.memory.boosted === undefined || !object.memory.boosted));
                                 }).sort((a, b) => a.ticksToLive - b.ticksToLive);
-if(aaa.length > 0) {
-    aaa[0].memory.upgradeSpot = 1;
-    aaa.shift();
-}
+                                if (aaa.length > 0) {
+                                    aaa[0].memory.upgradeSpot = 1;
+                                    aaa.shift();
+                                }
 
                                 for (ggg in aaa) {
                                     aaa[ggg].memory.waitSpot = count;
                                     aaa[ggg].memory.upgradeSpot = 0;
-  //                                  console.log('xxx',aaa[ggg].name,aaa[ggg].memory.waitSpot,aaa[ggg].ticksToLive, aaa[ggg].memory.boosted );
+                                    //                                  console.log('xxx',aaa[ggg].name,aaa[ggg].memory.waitSpot,aaa[ggg].ticksToLive, aaa[ggg].memory.boosted );
                                     count++;
                                 }
 
@@ -278,10 +290,10 @@ if(aaa.length > 0) {
                                     return (object.memory.role === 'Aupgrader' && object.memory.upgradeSpot !== 2 && object.memory.boosted !== undefined && object.memory.boosted);
                                 }).sort((a, b) => a.ticksToLive - b.ticksToLive);
 
-                                for(ggg in uuu){
+                                for (ggg in uuu) {
                                     uuu[ggg].memory.waitSpot = count;
                                     uuu[ggg].memory.upgradeSpot = 0;
-//                                    console.log('yyy',uuu[ggg].name,uuu[ggg].memory.waitSpot,uuu[ggg].ticksToLive, uuu[ggg].memory.boosted );
+                                    //                                    console.log('yyy',uuu[ggg].name,uuu[ggg].memory.waitSpot,uuu[ggg].ticksToLive, uuu[ggg].memory.boosted );
                                     count++;
                                 }
 

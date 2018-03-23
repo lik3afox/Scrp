@@ -4,7 +4,7 @@ Game.market.calcTransactionCost(1000, 'W39N68', 'W28S73');
 
 Game.market.deal('59b6cf25655799687523c272', 5000, 'E17S45');
 
-Game.market.deal('583ee4c0d934dd3652132183', 1000, 'E28S71');
+Game.market.deal('5aa029d13d4a72434fff2e94', 10000, 'E14S47');
 Game.market.deal('591c9806be13d2530e2d9d20', 5000, 'E28S71');
 Game.market.deal('588b9067dab725f87b0f1afc', 4000, 'E26S77');
 
@@ -12,17 +12,28 @@ Game.rooms.E28S73.terminal.send(RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE, 500, 'E26
 
 Game.rooms.E29S79.terminal.send(RESOURCE_POWER, 10000, 'E37S75', 'trade');
 
-Game.rooms.E28S37.terminal.send('energy', 150000, 'E14S38', 'trade');
+Game.rooms.E13S34.terminal.send('energy', 100000, 'E9N3', 'trade');
+Game.rooms.E17S34.terminal.send('energy', 100000, 'E9N3', 'trade');
+
+Game.rooms.E32S34.terminal.send('energy', 50000, 'E21S31', 'trade');
+Game.rooms.E18S32.terminal.send('energy', 100000, 'E21S31', 'trade');
 
 
 
 
-Game.rooms.E24S33.terminal.send('X', 90000, 'E22S48', 'trade');
+
+Game.rooms.E25S37.terminal.send('Z', 5000, 'E22S48', 'trade');
+
+Game.rooms.E25S43.terminal.send('ZO', 3000, 'E22S48', 'trade');
+
+Game.rooms.E25S37.terminal.send('Z', 20000, 'E22S48', 'trade');
+
+
 Game.rooms.E24S33.terminal.send('U', 21000, 'E22S48', 'trade');
 
 Game.rooms.E25S43.terminal.send('O', 30000, 'E25S37', 'trade');
 
-Game.rooms.E25S37.terminal.send('Z', 20000, 'E9S42', 'trade');
+Game.rooms.E25S37.terminal.send('Z', 20700, 'E6S28', 'trade');
 
 Game.rooms.E28S71.terminal.send('X', 15000, 'E5N7', 'trade');
 
@@ -42,9 +53,9 @@ Game.market.cancelOrder('59c72e66e6480025b1468a45');
 
 var cost = Game.market.calcTransactionCost(10000, 'E28S73', 'E28S71');
 
-Game.market.createOrder(ORDER_BUY, 'X', 0.01, 300000, "E24S33");
+Game.market.createOrder(ORDER_SELL, 'XGH2O', 7.0, 10000, "E19S49");
 
-Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.011, 1000000, "E19S49");
+Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.03, 500000, "E18S32");
 
 Game.market.createOrder(ORDER_SELL, 'O', 0.82, 100000, "E18S36");
 

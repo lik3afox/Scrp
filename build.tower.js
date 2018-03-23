@@ -436,9 +436,6 @@ class roleTower {
             towers.push(zz);
         }
 
-        if (Memory.towerTarget === undefined) {
-            Memory.towerTarget = 'none';
-        }
         if (Memory.towerTarget !== 'none') {
             let zzz = Game.getObjectById(Memory.towerTarget);
             //        console.log(zzz,zzz.roomName,towers[0].room.name,Memory.towerTarget);
@@ -512,7 +509,9 @@ class roleTower {
             if (hostiles.length > 0) {
                 for (var e in hostiles) {
                     if (hostiles[e].owner.username !== 'Invader') {
-                        if (estimateDamageAndAttack(hostiles[e], mycreeps, towers)) {
+//                        if(mycreeps === undefined) mycreeps = ;
+
+                        if (estimateDamageAndAttack(hostiles[e], hostiles[e].room.find(FIND_MY_CREEPS), towers)) {
                             console.log("KILLING", hostiles[e].room.name);
                             return;
                         }

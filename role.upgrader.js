@@ -22,24 +22,111 @@ var classLevels = [
     [WORK, WORK, CARRY, WORK, WORK, CARRY, MOVE], // 550
     //2
     [CARRY, WORK, CARRY, MOVE, WORK, WORK, CARRY, WORK, WORK, CARRY, MOVE], // 800
-    //3  - Energy enough for 1800 @ lv 5 room.
+    //3
+    [WORK,WORK,WORK,WORK,WORK,CARRY, WORK, CARRY, MOVE, WORK, WORK, CARRY, WORK, WORK, CARRY, MOVE], // 1300
+    
+    //4  - Energy enough for 1800 @ lv 5 room.
     [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY],
-    //4
-    [MOVE, WORK, MOVE, WORK, WORK, CARRY, CARRY, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, WORK, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
     //5
+    [MOVE, WORK, MOVE, WORK, WORK, CARRY, CARRY, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, WORK, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
+    //6
     [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE],
 ];
 
 var containers = require('commands.toContainer');
-var sources = require('commands.toSource');
 var structures = require('commands.toStructure');
 var roleParent = require('role.parent');
+
+function doUpgradeIn(creep) {
+    var pos;
+
+    switch (creep.pos.roomName) {
+        case "E1S11":
+            pos = [
+//                new RoomPosition(31, 22, creep.room.name),
+                new RoomPosition(32, 24, creep.room.name),
+                new RoomPosition(33, 24, creep.room.name),
+                new RoomPosition(33, 22, creep.room.name),
+                new RoomPosition(33, 20, creep.room.name),
+                new RoomPosition(32, 20, creep.room.name),
+///                new RoomPosition(31, 22, creep.room.name),
+//                new RoomPosition(31, 21, creep.room.name),
+            ];
+            break;
+        case "E33S54":
+            pos = [
+//                new RoomPosition(31, 22, creep.room.name),
+                new RoomPosition(36, 42, creep.room.name),
+                new RoomPosition(36, 41, creep.room.name),
+                new RoomPosition(35, 41, creep.room.name),
+                new RoomPosition(34, 41, creep.room.name),
+                new RoomPosition(33, 41, creep.room.name),
+//                new RoomPosition(31, 22, creep.room.name),
+//                new RoomPosition(31, 21, creep.room.name),
+            ];
+            break;
+        case "E11S47":
+            pos = [
+//                new RoomPosition(13, 5, creep.room.name),
+                new RoomPosition(13, 6, creep.room.name),
+                new RoomPosition(13, 7, creep.room.name),
+                new RoomPosition(12, 7, creep.room.name),
+                new RoomPosition(11, 7, creep.room.name),
+//                new RoomPosition(11, 6, creep.room.name),
+                //                new RoomPosition(26, 40, creep.room.name),
+                //              new RoomPosition(26, 41, creep.room.name),
+            ];
+                break        ;
+        default:
+            return false;
+
+    }
+
+for(let ee in pos){
+    creep.room.visual.text(ee,pos[ee], {color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+}
+
+    going = pos[creep.memory.roleID];
+    if (going !== undefined) {
+        if (!creep.pos.isEqualTo(going)) {
+            creep.moveTo(going, {
+                visualizePathStyle: {
+                    fill: 'transparent',
+                    stroke: '#bf0',
+                    lineStyle: 'dashed',
+                    strokeWidth: 0.15,
+                    opacity: 0.5
+                }
+            });
+        }
+
+    } else {
+
+    }
+
+    if (creep.pos.isNearTo(creep.room.terminal)) {
+        creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
+    } else {
+        if (creep.pos.isNearTo(creep.room.storage)) {
+            creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+        }
+    }
+
+}
+        var going;
 
 class roleUpgrader extends roleParent {
 
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
 
@@ -49,21 +136,21 @@ class roleUpgrader extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-var boost = ['XGH2O'];
-//if(Game.shard.name == 'shard2')
-//    console.log(boost.length);
-                if (super.boosted(creep, boost)) {
-                    return;
-                }
+        var boost = ['XGH2O'];
+        //if(Game.shard.name == 'shard2')
+        //    console.log(boost.length);
+        if (super.boosted(creep, boost)) {
+            return;
+        }
 
-/*        if (creep.room.controller.level != 8 && creep.room.controller.level > 5) {
-            if (creep.room.name === '') {
-                if (super.boosted(creep, ['XGH2O'])) {
-                    return;
-                }
-            } else {
-            }
-        }*/
+        /*        if (creep.room.controller.level != 8 && creep.room.controller.level > 5) {
+                    if (creep.room.name === '') {
+                        if (super.boosted(creep, ['XGH2O'])) {
+                            return;
+                        }
+                    } else {
+                    }
+                }*/
 
         if (creep.room.controller.level == 8) {
             creep.memory.death = true;
@@ -73,56 +160,26 @@ var boost = ['XGH2O'];
         }
         if (super.depositNonEnergy(creep)) return;
         if (creep.memory.level > 5) super.renew(creep);
-        if (creep.room.name == 'E19S49') {
-            var going;
-            var pos = [
-                //                new RoomPosition(20, 23, creep.room.name),
-//                new RoomPosition(28, 34, creep.room.name),
-                new RoomPosition(28, 33, creep.room.name),
-                new RoomPosition(29, 33, creep.room.name),
-                new RoomPosition(30, 33, creep.room.name),
-            ];
-            if (pos[creep.memory.roleID] !== undefined) {
-                going = pos[creep.memory.roleID];
-            }
+        going = undefined;
 
-            if (going !== undefined) {
-                if (!creep.pos.isEqualTo(going)) {
-                    creep.moveTo(going, {
-                        visualizePathStyle: {
-                            fill: 'transparent',
-                            stroke: '#bf0',
-                            lineStyle: 'dashed',
-                            strokeWidth: 0.15,
-                            opacity: 0.5
-                        }
-                    });
-                }
-
-            }
-
-            if (creep.pos.isNearTo(creep.room.terminal)) {
-                creep.withdrawing(creep.room.terminal, RESOURCE_ENERGY);
-            } else {
-                if (creep.pos.isNearTo(creep.room.storage)) {
-                    creep.withdrawing(creep.room.storage, RESOURCE_ENERGY);
-                }
-            }
-
-        } else {
+        if (!doUpgradeIn(creep)) {
             if (creep.carry.energy < creep.stats('upgrading') + 1) {
 
-                if (!structures.pickUpEnergy(creep)) {
-                    if (!containers.fromStorage(creep)) {
-                        if (!containers.fromTerminal(creep)) {
+ if (going === undefined){
+//                if (!structures.pickUpEnergy(creep)) {
+      //              if (!containers.fromStorage(creep)) {
+//                        if (!containers.fromTerminal(creep)) {
                             if (!containers.withdrawFromStorage(creep)) {
                                 if (!containers.moveToWithdraw(creep)) {
-                                    sources.moveToWithdraw(creep);
                                 }
                             }
-                        }
-                    }
-                }
+          //              }
+          //          }
+           //     }
+} else {
+    
+}
+
             }
 
         }
@@ -134,9 +191,13 @@ var boost = ['XGH2O'];
             }
         }
         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-            //        creep.moveTo(creep.room.controller);
+            if (going === undefined){
+                creep.moveTo(creep.room.controller);
+            }
             creep.say('hh');
         }
+          //  if (going !== undefined)
+             //   creep.moveTo(going);
     }
 }
 

@@ -3,13 +3,6 @@ var guardParty = [
 ];
 var shooterParty = [
     ['shooter', require('keeper.shooter'), 1, 4]
-    //['guard',require('keeper.guard'), 0, 0]
-];
-var invasionParty = [
-    ['responder', require('keeper.responder'), 1, 0]
-];
-var playerParty = [
-    ['responder', require('keeper.responder'), 1, 1]
 ];
 
 
@@ -35,65 +28,20 @@ function getSpawnCreating(flag) {
     if(flag.memory.spawnRoom === undefined) flag.memory.spawnRoom = 'none';
     if (flag.memory.spawnRoom !== 'none') {
         return flag.memory.spawnRoom;
-    } else {
-        switch (flag.name) {
-            case 'Flag8':
-                return 'E24S33';
-
-            case 'Flag14':
-                return 'E17S45';
-            case 'Flag17':
-                return 'E14S37';
-            case 'Flag21':
-                return 'E13S34';
-            case 'Flag15':
-
-                return 'E25S37';
-            case 'Flag26':
-            case 'Flag29':
-                return 'E27S34';
-            default:
-                return '';
-        }
-    }
+    } 
 
 } // Game.flags.Flag22.pos;
 // E36S75
 function getCurrentParty(flag) {
-    if (flag.memory.musterType !== 'none') {
         switch (flag.memory.musterType) {
             case 'guard':
                 return guardParty;
-            case 'invasion':
-                return invasionParty;
             case 'shooter':
-                return shooterParty;
-            case 'player':
-                return playerParty;
-        }
-    } else {
-        switch (flag.name) {
-            case 'Flag13':
-            case 'Flag8':
-            case 'Flag14':
-            case 'Flag29':
-            case 'Flag21':
-            case 'Flag15':
-            case 'Flag16':
-            case 'Flag17':
-            case 'Flag22':
-            case 'Flag26':
-                return guardParty;
-            case 'Flag53':
-                return invasionParty;
-            case 'Flag53':
                 return shooterParty;
             default:
                 return guardParty;
-        }
-    }
 }
-
+}
 
 function findParty(flag) {
     var currentParty = getCurrentParty(flag);

@@ -5,7 +5,7 @@
 // This module is where the require counts and what really determines the behavior.
 // The role (1) here will be linked to the require run.
 var allModule = [
-    ['harass', require('keeper.harass')],
+    ['harass', require('army.harass')],
     ['assistant', require('role.assistant')],
     ['troll', require('army.troll')],
     ['recontroller', require('army.recontroller')],
@@ -15,11 +15,12 @@ var allModule = [
     ['mule', require('army.mule')],
     ['Acontroller', require('army.controller')],
     ['healer', require('army.healer')], // Gather and move - just carry 
+
+
     ['nuker', require('role.nuker')],
     ['mage', require('army.mage')],
     ['shooter', require('keeper.shooter')],
     ['tower', require('role.tower')],
-    ['responder', require('keeper.responder')],
     ['minHarvest', require('role.mineral')],
     ['mineral', require('keeper.scientist')],
     ['engineer', require('army.engineer')],
@@ -35,7 +36,7 @@ var allModule = [
     ['upgrader', require('role.upgrader')],
     ['Aupgrader', require('army.upgrader')],
     ['wallwork', require('role.wallworker')],
-    ['guard', require('keeper.guard')],
+    ['guard', require('keeper.guard2')],
     ['linker', require('role.linker')],
     ['first', require('role.first')], // Should never have more firsts than containers...maybe..mmmm
     ['harvester', require('role.harvester')],
@@ -45,7 +46,7 @@ var allModule = [
 
 var controllerLevel = 1500;
 var transportLevel = 20000;
-
+var squad = require('commands.toSquad');
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
     [], // Kept empty so nothing occurs and this can stay.
@@ -98,7 +99,7 @@ var expansionModule = [
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
         ['transport', 3, 3], // Gather and move - just carry 
         ['controller', 1, 4]
-    ], 
+    ],
     [ // LEVEL 10  For Mineral Harvesting.
         ['miner', 1, 5], // Harvester - experiemnt w/o carry
         ['transport', 3, 4], // Gather and move - just carry 
@@ -119,7 +120,7 @@ var currentModule;
 
 var showEveryone = true;
 var countCPU = false;
-
+/*
 function cpuCount(creep, time) {
     if (creep.memory === undefined) return;
     if (creep.memory.cpu === undefined) {
@@ -132,7 +133,7 @@ function cpuCount(creep, time) {
         creep.memory.cpu.push(time);
     if (creep.memory.cpu.length > 30) creep.memory.cpu.shift();
 }
-
+*/
 // Give it a role, and SourceID
 // Returns all creeps that match that role and source ID
 
@@ -155,21 +156,22 @@ function rebuildCreep(creep) {
     if (creep.memory.role == 'miner' || creep.memory.role == 'transport' || creep.memory.role == 'ztransport') {
         let spawn = Game.getObjectById(creep.memory.parent);
         let _module;
-        let goalInfo;
-        if (Game.flags[creep.memory.home] !== undefined && Game.flags[creep.memory.home].color == COLOR_WHITE && Game.flags[creep.memory.home].secondaryColor == COLOR_GREEN) {
-            _module = Game.flags[creep.memory.home].memory.module;
-        }
         if (spawn !== null) {
-            for (var o in _module) {
-                if (_module[o][_name] == creep.memory.role) {
-                    _body = getModuleRole(_module[o][_name]).levels(_module[o][_level], spawn.room);
-                    break;
+            for (let type in spawn.memory.roadsTo) {
+                if (spawn.memory.roadsTo[type].source === creep.memory.goal) {
+                    _module = expansionModule[spawn.memory.roadsTo[type].expLevel];
+                    for (var uo in _module) {
+                        if (_module[uo][_name] === creep.memory.role) {
+                            _body = getModuleRole(_module[uo][_name]).levels(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room);
+                        }
+                    }
                 }
             }
         }
 
     } else if (creep.memory.role == 'first' || creep.memory.role == 'harvester' || creep.memory.role == 'scientist') {
-        if (Game.flags[creep.memory.home] !== undefined && Game.flags[creep.memory.home].color == COLOR_WHITE && Game.flags[creep.memory.home].secondaryColor == COLOR_GREEN) {
+        if (Game.flags[creep.memory.home] !== undefined && Game.flags[creep.memory.home].color == COLOR_WHITE && (Game.flags[creep.memory.home].secondaryColor == COLOR_GREEN ||
+                Game.flags[creep.memory.home].secondaryColor == COLOR_PURPLE)) {
             currentModule = Game.flags[creep.memory.home].memory.module;
         }
 
@@ -188,6 +190,7 @@ function rebuildCreep(creep) {
     }
 
     if (_body.length === 0) {
+        console.log(creep.name, "Didn't get body from module");
         for (var u in creep.body) {
             _body.push(creep.body[u].type);
         }
@@ -196,38 +199,37 @@ function rebuildCreep(creep) {
     if (creep.memory.deathCount === undefined) { creep.memory.deathCount = 0; }
     creep.memory.deathCount++;
 
-    let rando = Math.floor(Math.random() * creep.memory.parent.length);
-    var needBoost;
-    var isModded = false;
-    var doBoost = ['E25xxS37'];
-    if (creep.memory.needBoost === undefined || creep.memory.needBoost.length === 0) { // this pretty much says if it's gotten a boost before.
-        if (_.contains(doBoost, creep.memory.home) &&
-            (creep.memory.role == 'miner') && _body.length > 6) {
-            var cBuild = [];
-            //                console.log(_body,'ray');
-            cBuild = changeBuild(_body, Game.rooms[creep.memory.home]);
-            //                console.log(cBuild,'rayray',Game.rooms[creep.memory.home].memory.tempBoost);
+    let rando = Math.floor(Math.random() * 1000);
+    //    var needBoost;
+    //    var isModded = false;
+    //    var doBoost = ['E25xxS37'];
+    /*    if (creep.memory.needBoost === undefined || creep.memory.needBoost.length === 0) { // this pretty much says if it's gotten a boost before.
+            if (_.contains(doBoost, creep.memory.home) &&
+                (creep.memory.role == 'miner') && _body.length > 6) {
+                var cBuild = [];
+                //                console.log(_body,'ray');
+                cBuild = changeBuild(_body, Game.rooms[creep.memory.home]);
+                //                console.log(cBuild,'rayray',Game.rooms[creep.memory.home].memory.tempBoost);
 
-            if (cBuild.length != _body.length) {
-                _body = cBuild;
-                isModded = true;
-                needBoost = Game.rooms[creep.memory.home].memory.tempBoost;
+                if (cBuild.length != _body.length) {
+                    _body = cBuild;
+                    isModded = true;
+                    needBoost = Game.rooms[creep.memory.home].memory.tempBoost;
+                }
             }
-        }
-    } else {
-        needBoost = creep.memory.needBoost;
-    }
+        } else { */
+    //        needBoost = creep.memory.needBoost;
+    //    }
 
 
 
 
     let temp = {
         build: _body,
-        name: creep.memory.role[0] + creep.memory.role[1] + creep.memory.role[2] + creep.memory.deathCount + ':' + creep.memory.parent[rando],
+        name: creep.memory.role[0] + creep.memory.role[1] + creep.memory.role[2] + creep.memory.deathCount + ':' + rando,
         memory: {
             role: creep.memory.role,
             home: creep.memory.home,
-            needBoost:  needBoost,
             parent: creep.memory.parent,
             deathCount: creep.memory.deathCount,
             level: creep.memory.level,
@@ -235,6 +237,7 @@ function rebuildCreep(creep) {
             party: creep.memory.party
         }
     };
+
 
     /*            if(creep.memory.workContainer != undefined) {
                     temp.memory.workContainer = creep.memory.workContainer;
@@ -313,7 +316,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
         //        room.memory.calledMinerals.ZO += needed * 30;
     } else {
         needed = Math.ceil(otherParts.length * 0.5); // This is to still fix the move parts to be lower incase other changes have occured.
-        console.log(needed, 'no boost change into');
+        //        console.log(needed, 'no boost change into');
         let moveParts = [];
         do {
             moveParts.push(MOVE);
@@ -324,7 +327,7 @@ function changeBuild(build, room) { // Input [body,body,carry],room
         //        build = build.concat(carryParts);
     }
 
-    console.log('in the end', room.memory.tempBoost);
+    //console.log('in the end', room.memory.tempBoost);
 
     // Uses this memory point in order to pass more than 1 variable.
     // Returns the body, and adds to the room.memory.tempBoost in order to the creep to get it to boost with.
@@ -368,11 +371,10 @@ function buildTransport(carryParts) {
 
 function doSpawnCount(creep) {
     if (creep === undefined) {
-        //  console.log('bad creep',creep);
         return;
     }
     if (creep.memory.parent === undefined) return;
-   if (spawnCount[creep.memory.parent] === undefined) {
+    if (spawnCount[creep.memory.parent] === undefined) {
         spawnCount[creep.memory.parent] = {};
     }
     if (spawnCount[creep.memory.parent][creep.memory.role] === undefined) {
@@ -387,11 +389,6 @@ function doSpawnCount(creep) {
     if (spawnCount[creep.memory.parent].total === undefined) {
         spawnCount[creep.memory.parent].total = 0;
     }
-
-    //   if(creep.spawning){
-    //        console.log('spawn find');
-    //   }
-    //totalBuild = totalBuild + spawnCreeps[name].body.length
     spawnCount[creep.memory.parent].bodyCount += creep.body.length;
 
     creep.memory.roleID = spawnCount[creep.memory.parent][creep.memory.role].count;
@@ -400,39 +397,6 @@ function doSpawnCount(creep) {
 
     if (creep.memory.goal !== undefined)
         spawnCount[creep.memory.parent][creep.memory.role].goal.push(creep.memory.goal);
-/*
-
-
-    if (Memory.spawnCount[creep.memory.parent] === undefined) {
-        Memory.spawnCount[creep.memory.parent] = {};
-    }
-    if (Memory.spawnCount[creep.memory.parent][creep.memory.role] === undefined) {
-        Memory.spawnCount[creep.memory.parent][creep.memory.role] = {
-            count: 0,
-            goal: [],
-        };
-    }
-    if (Memory.spawnCount[creep.memory.parent].bodyCount === undefined) {
-        Memory.spawnCount[creep.memory.parent].bodyCount = 0;
-    }
-    if (Memory.spawnCount[creep.memory.parent].total === undefined) {
-        Memory.spawnCount[creep.memory.parent].total = 0;
-    }
-
-    //   if(creep.spawning){
-    //        console.log('spawn find');
-    //   }
-    //totalBuild = totalBuild + spawnCreeps[name].body.length
-    Memory.spawnCount[creep.memory.parent].bodyCount += creep.body.length;
-
-    creep.memory.roleID = Memory.spawnCount[creep.memory.parent][creep.memory.role].count;
-    Memory.spawnCount[creep.memory.parent][creep.memory.role].count++;
-    Memory.spawnCount[creep.memory.parent].total++;
-
-    if (creep.memory.goal !== undefined)
-        Memory.spawnCount[creep.memory.parent][creep.memory.role].goal.push(creep.memory.goal);*/
-    //return spawnCount;
-
 }
 
 function getModuleRole(role) {
@@ -478,38 +442,23 @@ function calculateCPU(cpu, creep) {
         return creep.memory.cpuCost;*/
 }
 
-    var spawnCount;
+var spawnCount;
+var roleIndex;
 class theSpawn {
 
-    static spawnQuery(spawn,spawnCount) {
-        // Counting
+    static spawnQuery(spawn, spawnCount) {
+
         var totalCreeps;
         var type;
-//        if (Memory.spawnCount[spawn.id] === undefined) {
-//        }
 
 
-        if(spawnCount === undefined) {
-  //          totalCreeps = Memory.spawnCount[spawn.id];
-//            spawn.memory.TotalBuild = (Memory.spawnCount[spawn.id].bodyCount * 3);
-    //        spawn.memory.totalCreep = Memory.spawnCount[spawn.id].total;
-        } else {
-//            console.log('Passed along and used.');
+        if (spawnCount !== undefined) {
             totalCreeps = spawnCount[spawn.id];
             spawn.memory.TotalBuild = (spawnCount[spawn.id].bodyCount * 3);
             spawn.memory.totalCreep = spawnCount[spawn.id].total;
         }
 
         // Flag Module Check Add Module.
-        /*
-                if (Game.flags[spawn.pos.roomName] !== undefined && Game.flags[spawn.pos.roomName].secondaryColor == COLOR_GREEN) {
-                    if (Game.flags[spawn.pos.roomName].memory.module !== undefined && Game.flags[spawn.pos.roomName].memory.module.length === 0) {
-                        currentModule = [];//getCurrentModule(spawn.room.name);
-                        for (var ee in currentModule) {
-                            Game.flags[spawn.pos.roomName].memory.module.push(currentModule[ee]);
-                        }
-                    }
-                } */
 
         currentModule = Game.flags[spawn.room.name].memory.module;
         for (type in currentModule) {
@@ -551,7 +500,14 @@ class theSpawn {
                                 level: currentModule[type][_level]
                             }
                         };
-                        if (currentModule[type][_name] == 'first' || currentModule[type][_name] == 'harvester') {
+                        if (currentModule[type][_name] == 'upbuilderxx') {
+                            if (spawn.room.controller.ticksToDowngrade < 50000 || Game.shard.name == 'shard2') {
+                                spawn.memory.create.push(temp);
+                                totalCreeps[currentModule[type][_name]].count++;
+                                spawn.memory.created++;
+                            }
+                        } else
+                        if (currentModule[type][_name] == 'first' || currentModule[type][_name] == 'linker') {
                             spawn.memory.create.unshift(temp);
                             totalCreeps[currentModule[type][_name]].count++;
                             spawn.memory.created++;
@@ -578,9 +534,9 @@ class theSpawn {
         for (var ie in spawn.memory.roadsTo) {
 
             let xp = spawn.memory.roadsTo[ie].expLevel;
-if( spawn.memory.roadsTo[ie].mineral !== undefined) {
-    spawn.memory.roadsTo[ie].expLevel = 11;    
-}
+            if (spawn.memory.roadsTo[ie].mineral !== undefined) {
+                spawn.memory.roadsTo[ie].expLevel = 11;
+            }
             _module = expansionModule[xp];
             var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
 
@@ -624,7 +580,10 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
                         let currentCount = newGetExpandRole(expandRole[e], spawn.memory.roadsTo[ie].source, totalCreeps);
                         //console.log('new Expand Check',expandRole[e],currentCount,'/',maxRole[expandRole[e]], source,'@', spawn.memory.roadsTo[ie][expandRole[e]]);
                         if (currentCount < maxRole[expandRole[e]]) {
+
+                            // This is where it does the creation of the unit.
                             spawn.memory.roadsTo[ie][expandRole[e]] = false;
+
                         }
 
 
@@ -758,59 +717,100 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
 
     static runCreeps() {
         var ee;
+        var portalInRooms; // Rooms that will have creeps coming through too.
+        var roomTarget;
         if (Game.shard.name == 'shard0') {
-            for (ee in Game.creeps) {
-                if (Game.creeps[ee].memory === undefined) {
-                    Game.creeps[ee].memory = {
-                        role: 'engineer',
-                        party: 'hello'
-                    };
 
-                }
-                if (Game.creeps[ee].memory.role === undefined) {
-                    Game.creeps[ee].memory.role = 'engineer';
-                }
-                if (Game.creeps[ee].memory.party === undefined) {
-                    Game.creeps[ee].memory.party = 'hello';
-                }
-            }
+            // Currently has no creeps going to shard0
+            /*
+                        for (ee in Game.creeps) {
+                            if (Game.creeps[ee].memory === undefined) {
+                                Game.creeps[ee].memory = {
+                                    role: 'engineer',
+                                    party: 'hello'
+                                };
+
+                            }
+                            if (Game.creeps[ee].memory.role === undefined) {
+                                Game.creeps[ee].memory.role = 'engineer';
+                            }
+                            if (Game.creeps[ee].memory.party === undefined) {
+                                Game.creeps[ee].memory.party = 'hello';
+                            }
+                        }
+            */
+
         }
         if (Game.shard.name == 'shard1') {
-            for (var zzzz in Game.creeps) {
-                if (Game.creeps[zzzz].memory.role === undefined && Game.creeps[zzzz].pos.roomName == 'E20S40') {
-                    Game.creeps[zzzz].memory.role = 'mule';
-                    Game.creeps[zzzz].memory.party = 'E23S38';
+            portalInRooms = ['E20S40', 'E20S50'];
+            roomTarget = ['E23S38', 'E22S48'];
+
+            for (let i = 0, iMax = portalInRooms.length; i < iMax; i++) {
+                if (Game.rooms[portalInRooms[i]] !== undefined) {
+                    let crps = Game.rooms[portalInRooms[i]].find(FIND_MY_CREEPS);
+                    if (crps.length > 0) {
+                        for (let e = 0, eMax = crps.length; e < eMax; e++) {
+                            if (crps[e].memory.role === undefined) {
+                                if (crps[e].name.substr(0, 5) == 'engin') {
+                                    crps[e].memory.role = 'engineer';
+                                } else if (crps[e].name.substr(0, 4) == 'mule') {
+                                    crps[e].memory.role = 'mule';
+                                    crps[e].memory.level = 2;
+                                }
+                                crps[e].memory.party = roomTarget[i];
+                                if (crps[e].memory.parent === undefined) {
+                                    crps[e].memory.parent = Game.rooms[roomTarget[i]].alphaSpawn.id;
+                                }
+                                if (crps[e].memory.home === undefined) {
+                                    crps[e].memory.home = portalInRooms[i];
+                                }
+
+                                crps[e].memory.didPortal = true;
+                            }
+                        }
+                    }
                 }
             }
         }
         if (Game.shard.name == 'shard2') {
-            for (ee in Game.creeps) {
-                if (Game.creeps[ee].memory.role === undefined) {
-                    if (Game.creeps[ee].name.substr(0, 5) == 'engin') {
-                        Game.creeps[ee].memory.role = 'engineer';
-                    } else if (Game.creeps[ee].name.substr(0, 4) == 'mule') {
-                        Game.creeps[ee].memory.role = 'mule';
-                        Game.creeps[ee].memory.level = 2;
+            portalInRooms = ['E20S50'];
+            roomTarget = ['E19S49'];
+            for (let i = 0, iMax = portalInRooms.length; i < iMax; i++) {
+                if (Game.rooms[portalInRooms[i]] !== undefined) {
+                    let crps = Game.rooms[portalInRooms[i]].find(FIND_MY_CREEPS);
+                    if (crps.length > 0) {
+                        for (let e = 0, eMax = crps.length; e < eMax; e++) {
+                            if (crps[e].memory.role === undefined) {
+                                if (crps[e].name.substr(0, 5) == 'engin') {
+                                    crps[e].memory.role = 'engineer';
+                                } else if (crps[e].name.substr(0, 4) == 'mule') {
+                                    crps[e].memory.role = 'mule';
+                                    crps[e].memory.level = 2;
+                                }
+                                crps[e].memory.didPortal = true;
+                            }
+                            if (crps[e].memory.parent === undefined) {
+                                crps[e].memory.parent = '5a301e5f5858c967fe338616';
+                            }
+                            if (crps[e].memory.home === undefined) {
+                                crps[e].memory.home = portalInRooms[i];
+                            }
+                            if (crps[e].memory.party === undefined) {
+                                crps[e].memory.party = roomTarget[i];
+                            }
+
+
+                        }
                     }
-
-                }
-
-                if (Game.creeps[ee].memory === undefined) {
-                    Game.creeps[ee].memory = {
-                        //                        role: 'engineer',
-                        party: 'E19S49'
-                    };
-
-                }
-                
-                if (Game.creeps[ee].memory.party === undefined) {
-                    Game.creeps[ee].memory.party = 'E19S49';
-                }
-                if (Game.creeps[ee].memory.parent === undefined) {
-                    Game.creeps[ee].memory.parent = '5a301e5f5858c967fe338616';
                 }
             }
 
+
+
+            //            delete portalInRooms;
+            portalInRooms = undefined;
+            //          delete roomTarget;
+            roomTarget = undefined;
         }
         if (Memory.creeps === undefined) return false;
 
@@ -821,19 +821,20 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
         var keys = Object.keys(Memory.creeps);
         var e = keys.length;
         var name;
-//        Memory.spawnCount = {};
         spawnCount = {};
+        if (roleIndex === undefined) roleIndex = {};
 
         while (e--) { // Start of Creep Loop
             name = keys[e];
 
             if (Memory.showInfo > 4)
                 start = Game.cpu.getUsed();
-            doSpawnCount(Game.creeps[name]); // THis is where the creeps are counted.
+
 
             if (!Game.creeps[name]) { // Check to see if this needs deletion
                 delete Memory.creeps[name]; // If it does then it does.
             } else {
+                doSpawnCount(Game.creeps[name]); // THis is where the creeps are counted.
                 if (Game.creeps[name] === undefined) {
                     console.log('got undefined Memory');
                 }
@@ -842,22 +843,34 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
                     totalRoles[Game.creeps[name].memory.role]++;
                     Memory.creepTotal++;
                 }
-
-
-                var type = allModule.length;
-                while (type--) {
-                    if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
-                        if (Game.creeps[name].memory.role == 'mulxx') { countCPU = true; } else { countCPU = false; }
-                        if (countCPU) { start = Game.cpu.getUsed(); }
-                        if (!Game.creeps[name].spawning) {
-              //              if(Game.shard.name == 'shard1')
-                //                console.log(Game.creeps[name].memory.role);
-                            allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
+                if ((Game.creeps[name].memory.sleeping !== undefined && Game.creeps[name].memory.sleeping > 0)) {
+                    if(Game.creeps[name].memory.sleeping < 1000) {
+                        Game.creeps[name].say('💤' + Game.creeps[name].memory.sleeping);
+                        Game.creeps[name].memory.sleeping--;
+                    } else {
+                        if(Game.time >= Game.creeps[name].memory.sleeping){
+                            Game.creeps[name].memory.sleeping = undefined;
+                        } else {
+                            Game.creeps[name].say('💤' + (Game.creeps[name].memory.sleeping-Game.time) );
                         }
-                        if (countCPU) { cpuCount(Game.creeps[name], Math.floor((Game.cpu.getUsed() - start) * 100)); }
-                        break;
+                    }
+                } else if (Game.creeps[name].memory.follower) {
+                    // So here instead of doing what the creep normally does, it will want to see if it can find it's party 
+                } else if (!Game.creeps[name].spawning) {
+                    if (roleIndex[Game.creeps[name].memory.role] === undefined) {
+                        var type = allModule.length;
+                        while (type--) {
+                            if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
+                                roleIndex[Game.creeps[name].memory.role] = type;
+                                allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
+                                break;
+                            }
+                        }
+                    } else {
+                        allModule[roleIndex[Game.creeps[name].memory.role]][_require].run(Game.creeps[name]); // Then run the require of that role.     
                     }
                 }
+
             }
             if (Game.creeps[name] !== undefined && Memory.showInfo > 4) {
                 let zzz = name; //[0] + name[1] + name[2] + "@" + Game.creeps[name].pos.roomName + ',' + Game.creeps[name].pos.x + "," + Game.creeps[name].pos.y;
@@ -882,7 +895,9 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
         return spawnCount;
     }
 
-
+    static allModule() {
+        return allModule;
+    }
 
 
     // Okay here, false means that there is no creep
@@ -890,9 +905,7 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
 
     static reportDeath(creep) {
         var spawn = Game.getObjectById(creep.memory.parent);
-        //                console.log( creep.rebuildMe(creep)+'aasdfffffffffffffffffffffffffffffffffffffff' );
         if (spawn !== null) {
-            //            console.log('Reporting death,', creep.name, roomLink(creep.pos.roomName));
             switch (creep.memory.role) {
                 case "miner":
                 case "transport":
@@ -901,12 +914,12 @@ if( spawn.memory.roadsTo[ie].mineral !== undefined) {
                     spawn.memory.expandCreate.push(rebuildCreep(creep));
                     break;
 
-                case "harvester":
                 case "first":
                 case "linker":
                     spawn.memory.create.unshift(rebuildCreep(creep));
                     break;
                 case "scientist":
+                case "harvester":
                     spawn.memory.create.push(rebuildCreep(creep));
                     break;
                 case "guard":

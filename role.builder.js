@@ -25,12 +25,18 @@ var classLevels = [
 var roleParent = require('role.parent');
 var constr = require('commands.toStructure');
 var containers = require('commands.toContainer');
-var sources = require('commands.toSource');
 
 class roleBuilder extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     /** @param {Creep} creep **/
@@ -48,22 +54,17 @@ class roleBuilder extends roleParent {
             creep.memory.building = true;
         }
         if (creep.carry.energy < 4) {
-            constr.pickUpEnergy(creep);
-            //            containers.fromContainer(creep)
-            //                if (!constr.moveToPickUpEnergy(creep, 100)) {
             if (!containers.withdrawFromStorage(creep)) {
-                //                if(!containers.withdrawFromStorage(creep)) {
 
 
                 if (!containers.moveToWithdraw(creep)) {
-                    sources.moveToWithdraw(creep);
+                    //sources.moveToWithdraw(creep);
+                    creep.moveToWithdrawSource();
                 }
             }
-            //              }
 
         }
 
-        //     console.log('testing',creep.memory.building,_.sum(creep.carry), creep.carryCapacity);
 
 
         // Action

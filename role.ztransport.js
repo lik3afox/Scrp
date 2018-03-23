@@ -18,12 +18,15 @@ var classLevels = [
 
 function getHostiles(creep) {
     let range = 4;
-        let bads = creep.room.find(FIND_HOSTILE_CREEPS);
-        return creep.pos.findInRange(bads, range);
+    let bads = creep.room.find(FIND_HOSTILE_CREEPS);
+    return creep.pos.findInRange(bads, range);
 
 }
 
 function getEnergy(creep) {
+    if (roleParent.constr.withdrawFromTombstone(creep)) {
+        return;
+    }
     if (creep.memory.gotoID === undefined) {
 
 
@@ -85,8 +88,8 @@ function getEnergy(creep) {
 
             if (target.structureType === STRUCTURE_CONTAINER) {
                 for (var b in target.store) {
-                    if(target.store[b])
-                        creep.withdrawing(target, b);
+                    if (target.store[b])
+                        creep.withdraw(target, b);
                 }
                 creep.memory.gotoID = undefined;
 
@@ -102,6 +105,7 @@ function getEnergy(creep) {
                 creep.moveMe(target, {
                     ignoreRoads: _ignoreRoad,
                     maxRooms: 1,
+                    useSKPathing: true,
                     reusePath: rePath,
                     visualizePathStyle: {
                         fill: 'transparent',
@@ -128,7 +132,14 @@ class transportz extends roleParent {
 
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
     static run(creep) {
         if (creep.memory.keeperLairID === 'none') {
@@ -137,7 +148,7 @@ class transportz extends roleParent {
         if (creep.memory.gohome === undefined) {
             creep.memory.gohome = false;
         }
-
+        //        creep.memory.task = [];
         if (super.doTask(creep)) {
             return;
         }
@@ -196,6 +207,7 @@ class transportz extends roleParent {
                 task.options = {
                     ignoreRoads: creep.room.name == 'E35S85' ? false : _ignoreRoad,
                     reusePath: rePath,
+                    useSKPathing: true,
                     visualizePathStyle: pathVis
                 };
                 task.pos = Game.getObjectById(creep.memory.parent).pos;
@@ -215,7 +227,7 @@ class transportz extends roleParent {
                     if (creep.memory.scientistID === undefined) {
                         if (!super.guardRoom(creep)) {
                             if (!creep.pos.inRangeTo(_goal, 3)) {
-                                creep.moveMe(_goal, { reusePath: 50 });
+                                creep.moveMe(_goal, { reusePath: 50, useSKPathing: true, });
                             }
                         }
                         creep.say('mv Min');
@@ -228,16 +240,11 @@ class transportz extends roleParent {
                             creep.memory.scientistID = undefined;
                         } else {
                             if (creep.room.name == sci.pos.roomName && !creep.pos.isNearTo(sci)) {
-var bads = getHostiles(creep);
-                            if(bads.length === 0)
-                                creep.moveTo(sci, { reusePath: 50, maxOpts: 100 });
+                                var bads = getHostiles(creep);
+                                if (bads.length === 0)
+                                    creep.moveTo(sci, { reusePath: 50, maxOpts: 100 });
 
-                            }/* else if (creep.pos.isNearTo(sci) && sci.carryTotal > (creep.carryCapacity - creep.carryTotal)) {
-                                for (var z in sci.carry) {
-                                    if (sci.transfer(creep, z) == OK)
-                                        return;
-                                }
-                            } */ else {
+                            } else {
                                 super.keeperFind(creep);
                             }
                             creep.say('go sci');
@@ -257,11 +264,11 @@ var bads = getHostiles(creep);
                 // If in the same room and with in a square of 5 away from goal. 
                 if (_goal !== null && _goal.room.name === creep.room.name) {
                     getEnergy(creep);
-                } else  if (creep.memory.gotoID === undefined|| (creep.carryTotal === 0 && creep.memory.home == creep.room.name)){
+                } else if (creep.memory.gotoID === undefined || (creep.carryTotal === 0 && creep.memory.home == creep.room.name)) {
                     // )
                     var goingTo;
                     if (_goal === null) {
-                        goingTo = super.movement.getRoomPos(creep.memory.goal); // this gets the goal pos.
+                        goingTo = super.movement.getRoomPos(creep); // this gets the goal pos.
                     } else {
                         goingTo = _goal.pos;
                     }
@@ -270,6 +277,7 @@ var bads = getHostiles(creep);
                     task.options = {
                         ignoreRoads: _ignoreRoad,
                         reusePath: rePath,
+                        useSKPathing: true,
                         visualizePathStyle: pathVis
                     };
                     task.pos = goingTo;
@@ -277,10 +285,10 @@ var bads = getHostiles(creep);
 
                     task.happyRange = 0;
                     creep.memory.task.push(task);
-                } else if (creep.memory.gotoID !== undefined ){
+                } else if (creep.memory.gotoID !== undefined) {
                     var zze = Game.getObjectById(creep.memory.gotoID);
-                    if(zze !== null){
-                        creep.moveTo(zze,{reusePath:50});
+                    if (zze !== null) {
+                        creep.moveMe(zze, { reusePath: 50, useSKPathing: true, });
                     }
 
                 }

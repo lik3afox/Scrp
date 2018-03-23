@@ -1,24 +1,120 @@
 // Back line
 // Designed for healing.
-
 var classLevels = [
-    [HEAL, MOVE],
-    [HEAL, MOVE, MOVE, MOVE], // 200
-    [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
+// Level 0
+[MOVE, HEAL],
+// Level 1 10/10
+[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL],
+// Level 2 15/15
+[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL],
+// Level 3 20/20
+[MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
+// Level 4
+[HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, RANGED_ATTACK,],
+// Level 5
+{
+body:[HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,], 
+boost:[],
+},
+// Level 6
+{
+body:[HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,], 
+boost:['LO'],
+},
+// Level 7
+{
+body:[HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,], 
+boost:['XLHO2'],
+},
+// Level 8
+{
+body:[HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],    
+boost:['XZHO2', 'XLHO2'],
+},
+// Level 9
+{
+body:[      HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, HEAL, HEAL,], 
+boost:['LO'],
+},
 
-//5
-    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
-    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
-    // BOOSTED heal
-//7
-    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
-//8
-    [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, RANGED_ATTACK, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+{
+body:[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE, HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,], 
+boost:['XLHO2'],
+},
+// Level 10
+{
+body:[TOUGH, TOUGH, TOUGH, TOUGH, HEAL, TOUGH, TOUGH, TOUGH, HEAL, TOUGH, TOUGH, HEAL, TOUGH, HEAL, HEAL,
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],    
+boost:['XLHO2','XGHO2', 'XZHO2'],
+},
+// Level 11
+{
+body:[TOUGH, TOUGH, TOUGH, TOUGH, HEAL, TOUGH, TOUGH, TOUGH, HEAL, TOUGH, TOUGH, HEAL,
+            TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, HEAL, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],    
+boost:['XGHO2', 'XZHO2', 'XLHO2'],
+},
+// Level 12
+{
+body:[TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
+            TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],    
+boost:['XGHO2', 'XZHO2', 'XLHO2'],
+},
+// Level 13
+{
+body:[],    
+boost:[],
+},
 
 ];
-var boost = [];
 
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
@@ -72,10 +168,31 @@ function powerAction(creep) {
 
             if (creep.pos.inRangeTo(pBank, 6)) {
                 creep.memory.notThere = true;
-                creep.healOther(7);
+                if(creep.id == creep.memory.partner){
+                    creep.memory.partner = undefined;
+                }
+                if (creep.memory.partner !== undefined) {
+                    let zz = Game.getObjectById(creep.memory.partner);
+                    if (zz !== null) {
+                        creep.heal(zz);
+                        if(!creep.pos.isNearTo(zz))
+                        	creep.moveTo(zz);
+                    }
+                } else {
+                    creep.healOther(7);
+                }
             }
         } else {
-            creep.healOther(7);
+
+            if (creep.memory.partner !== undefined) {
+                let zz = Game.getObjectById(creep.memory.partner);
+                if (!creep.pos.isNearTo) {
+                    creep.moveTo(zz);
+                }
+                    creep.heal(zz);
+            } else {
+                creep.healOther(7);
+            }
             creep.countDistance();
             movement.flagMovement(creep);
 
@@ -105,17 +222,17 @@ function powerAction(creep) {
 }
 
 function banditAction(creep) {
-            creep.memory.reportDeath = true;
-    
-   if (Game.flags[creep.memory.party] !== undefined) {
+    creep.memory.reportDeath = true;
+
+    if (Game.flags[creep.memory.party] !== undefined) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
 
             good = creep.room.find(FIND_MY_CREEPS);
             good = _.filter(good, function(o) {
-                return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0 ;
-            });            
+                return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0;
+            });
             good.sort((a, b) => a.hits - b.hits);
-                creep.say(good.length+'xxx');
+            creep.say(good.length + 'xxx');
             if (good.length > 0) {
                 if (!creep.pos.isNearTo(good[0])) {
                     creep.moveTo(good[0]);
@@ -167,7 +284,14 @@ var doMove;
 class healerClass extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if (_.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level])) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
@@ -176,38 +300,28 @@ class healerClass extends roleParent {
         if (super.spawnRecycle(creep)) {
             return;
         }
+        if (creep.ticksToLive > 1495 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
+//            creep.memory.boostNeeded = classLevels[creep.memory.level].boost;
+creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);        } 
+        if (super.boosted(creep, creep.memory.boostNeeded)) {
+            return;
+        }
         if (super.doTask(creep)) {
             return;
         }
-        if (super.goToPortal(creep)) return;
-        //  if(super.boosted(creep,boost)) { return;}   
-
         if (super.isPowerParty(creep)) {
             creep.memory.waypoint = true;
-            super.rebirth(creep);
             if (powerAction(creep))
                 return;
         }
         if (creep.memory.party == 'bandit') {
-            super.rebirth(creep);
+//            super.rebirth(creep);
             creep.say('bandit');
             banditAction(creep);
-if(Game.flags[creep.memory.party] === undefined) creep.memory.death = true;            
+            if (Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
             return;
         }
-        // creep.say('drugs'+creep.memory.level);
-        if (creep.memory.level == 5) {
-            if (super.boosted(creep, ['XLHO2', 'XGHO2'])) {
-                return;
-            }
-        }
 
-        if (creep.memory.level == 6) {
-            if (super.boosted(creep, ['XLHO2', 'XGHO2', 'XZHO2'])) {
-                return;
-            }
-        }
-        //  creep.heal(creep);
         var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 7);
         hurtz = _.filter(hurtz, function(object) {
             return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'Baj');
@@ -237,6 +351,11 @@ if(Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
             }
             doMove = true;
         }
+        if (super.rallyFirst(creep)) return;
+        if (super.goToPortal(creep)) return;
+
+        //  creep.heal(creep);
+
 
         if (creep.room.name == 'E11xS36') {
             var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);

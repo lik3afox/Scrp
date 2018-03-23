@@ -1,3 +1,5 @@
+var transportCall = 600000;
+
 function makeBody(carryNeeded) {
     let body = [];
 
@@ -12,6 +14,37 @@ function makeBody(carryNeeded) {
 // decay 25
 class PowerInteract {
 
+    static roomRun(roomName) {
+        if (Game.rooms[roomName].controller.level < 8) return false;
+
+        if (Game.rooms[roomName].powerspawn !== undefined) {
+            let powerS = Game.rooms[roomName].powerspawn;
+            if (powerS !== undefined) {
+                let room = Game.rooms[roomName];
+                if (room.memory.powerCount === undefined) room.memory.powerCount = 0;
+
+                if (room.controller.level == 8 && powerS !== undefined && powerS.power !== 0 && powerS.energy >= 50 &&
+                    room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
+                ) {
+                    if (powerS.processPower() == OK) {
+                        Memory.stats.powerProcessed++;
+                        powerS.room.visual.text("🔌", powerS.pos, {
+                            color: '#e42f43 ',
+                            stroke: '#000000 ',
+                            strokeWidth: 0.123,
+                            font: 0.5
+                        });
+                    }
+                }
+
+
+
+            } else {
+                Game.rooms[roomName].memory.powerSpawnID = undefined;
+            }
+        }
+    }
+
     static run() {
         let report = '';
         let total = 0;
@@ -23,6 +56,10 @@ class PowerInteract {
                     if (room.memory.powerCount === undefined) room.memory.powerCount = 0;
 
                     if (!Memory.war) {
+                        //       if(e === 'E11S47'){
+                        //           console.log(room.controller.level,powerS.power,powerS.energy ,
+                        //            room.terminal.store[RESOURCE_ENERGY] , room.storage.store[RESOURCE_ENERGY]);
+                        //        }
                         if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
                             room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
                         ) {
@@ -100,62 +137,71 @@ class PowerInteract {
     }
 
     static getPowerToSpawn(creep) {
-
-        if (creep.memory.powerSpawnID === undefined) {
-            let zz = creep.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_SPAWN });
-            if (zz.length !== 0) {
-                creep.memory.powerSpawnID = zz[0].id;
-            } else {
-                creep.memory.powerSpawnID = 'none';
-            }
+        if (creep.room.powerspawn === undefined) {
+            return false;
         }
-        if (creep.memory.powerSpawnID === undefined || creep.memory.powerSpawnID == 'none') return false;
+        if(Memory.stats.totalMinerals.power < 500 && (creep.room.terminal.store[RESOURCE_POWER] === undefined||creep.room.terminal.store[RESOURCE_POWER] === 0)&&creep.carry[RESOURCE_POWER] === undefined ){
+        	return false;
+        }
+        let powerspawn = creep.room.powerspawn;
 
-        let powerSpawn = Game.getObjectById(creep.memory.powerSpawnID);
-        if (powerSpawn === null) return false;
-        if (powerSpawn.power > 10) return false;
+        if (powerspawn.power >= 10 && powerspawn.energy > 50) return false;
 
         var target;
         var noPower = true;
-        if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_POWER] > 0) {
-            target = creep.room.terminal;
-            noPower = false;
-        } else if (creep.room.storage !== undefined && creep.room.storage.store[RESOURCE_POWER] !== undefined && creep.room.storage.store[RESOURCE_POWER] > 0) {
-            target = creep.room.storage;
-            noPower = false;
-        } else if (creep.carry[RESOURCE_POWER] > 0) {
-            noPower = false;
-        }
-        if (noPower) return false;
-        if (creep.carry[RESOURCE_POWER] === 0) return false;
-        // First find the powerspawn
-        if (_.sum(creep.carry) === 0) {
-            if (creep.pos.isNearTo(target)) {
-                let take = target.store[RESOURCE_POWER];
-                if (take > 100) take = 100;
-                creep.withdrawing(target, RESOURCE_POWER, take);
-            } else {
-                creep.moveMe(target);
+        if (creep.room.terminal.store[RESOURCE_POWER] === undefined && creep.room.powerspawn.power === 0 && creep.carry[RESOURCE_POWER] === undefined ||creep.carry[RESOURCE_POWER] === 0) {
+            if(!_terminal_().requestMineral(creep.room.name, RESOURCE_POWER)){
+            	return false;
             }
-            return true;
+        } 
+    	creep.say('pw2Sp');
+        if (creep.carryTotal === 0) {
+        	creep.say('g');
+            if (powerspawn.power < 10 && creep.room.terminal.store[RESOURCE_POWER] > 0) {
+                let amt = 100;
+                if (amt > creep.room.terminal.store[RESOURCE_POWER]) {
+                    amt = creep.room.terminal.store[RESOURCE_POWER];
+                }
+                creep.moveToWithdraw(creep.room.terminal, RESOURCE_POWER, amt);
+                creep.say('gP'+amt);
+	            return true;
 
-        } else if (creep.carry[RESOURCE_POWER] > 0) {
-            creep.say('hP');
-            if (creep.pos.isNearTo(powerSpawn)) {
-                creep.transfer(powerSpawn, RESOURCE_POWER);
-            } else {
-                creep.moveMe(powerSpawn);
+            } else if (powerspawn.energy < 50) {
+                creep.moveToWithdraw(creep.room.terminal, RESOURCE_ENERGY);
+                creep.say('gE');
+	            return true;
             }
-            return true;
+        } else {
+            if (creep.carry[RESOURCE_POWER] > 0 && powerspawn.power < 100) {
+                creep.say('PP');
+                if (creep.pos.isNearTo(powerspawn)) {
+                    if (creep.carry[RESOURCE_POWER] > 0) {
+                        creep.transfer(powerspawn, RESOURCE_POWER);
+                    }
 
-        } else if (creep.carry[RESOURCE_ENERGY] > 0) {
-            if (creep.pos.isNearTo(creep.room.storage)) {
-                creep.transfer(creep.room.storage, RESOURCE_ENERGY);
-            } else {
-                creep.moveTo(creep.room.storage);
-            }
-            return true;
+                } else {
+                    creep.moveMe(powerspawn);
+                }
+                return true;
+
+            } else if (creep.carry[RESOURCE_ENERGY] > 0  && powerspawn.energy < 4000) {
+                creep.say('PE');
+                if (creep.pos.isNearTo(powerspawn)) {
+                    creep.transfer(powerspawn, RESOURCE_ENERGY);
+                } else {
+                    creep.moveTo(powerspawn);
+                }
+                return true;
+            } /*else if (creep.carry[RESOURCE_ENERGY] > 0  && powerspawn.energy >= 4000){
+/*
+            	for(var e in creep.carry){
+	            	creep.moveToTransfer(creep.room.terminal,e);
+	            	return true;
+            	} */
+
+//            }
         }
+        return false;
     }
 
     static calcuate(flag) {
@@ -185,8 +231,13 @@ class PowerInteract {
             theRoom.memory.transSent = false;
             let zz = flag.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
             //    console.log(zz.length,zz[0].resourceType,zz[1].resourceType);
-            if (zz.length === 0)
+            for (var e in flag.memory.party) {
+                flag.memory.party[e][1] = 0;
+            }
+            if (zz.length === 0){
+                flag.memory = undefined;
                 flag.remove();
+            }
             return;
         }
         let damageDone = theRoom.memory.powerHits - powerB.hits;
@@ -208,34 +259,19 @@ class PowerInteract {
                         } */
         // So here when decay is at 1000 we will start creating the transports
         //                    theRoom.memory.transSent = undefined;
-        if (powerB.hits < 350000 && !theRoom.memory.transSent) {
+        if (powerB.hits < transportCall && !theRoom.memory.transSent) {
 
-            let carryNeeded = Math.ceil(powerB.power / 50);
+            let carryAmount = 100;
+            let boost = ['KH'];
+            let carryNeeded = Math.ceil(powerB.power / carryAmount);
             let numOfcreep = Math.ceil(carryNeeded / 25);
             //     console.log (numOfcreep,"creeps with ",carryNeeded*.5 , "# of parts needed");
             //get spawnID - find the creeps around powerB
             let creep = powerB.pos.findInRange(FIND_MY_CREEPS, 2);
             if (creep.length === 0) return;
             let spawnID = creep[0].memory.parent;
-            let dist = Game.map.getRoomLinearDistance(powerB.room.name, creep[0].memory.home);
             let spawn = require('commands.toSpawn');
-            let count = numOfcreep;
             let carryNeed = Math.ceil(carryNeeded / numOfcreep);
-            let maxCarry;
-            if (dist < 2) {
-                maxCarry = 2;
-            } else if (dist < 4) {
-                maxCarry = 3;
-            } else {
-                maxCarry = 4;
-            }
-            if (count > maxCarry) {
-                count = maxCarry;
-                carryNeed = 25;
-            }
-            if (powerB.power > 5000) count++;
-            if (powerB.power > 9000) count++;
-
 
             do {
                 let transport = {
@@ -245,14 +281,15 @@ class PowerInteract {
                         home: creep[0].memory.home,
                         parent: spawnID,
                         powerParty: true,
-                        level: 9,
+                        level: 6,
+                        boostNeeded:_.clone( boost ),
                         goal: powerB.id,
                         party: flag.name
                     }
                 };
                 spawn.requestCreep(transport, spawnID);
-                count--;
-            } while (count > 0);
+                numOfcreep--;
+            } while (numOfcreep > 0);
             //            console.log(theRoom.memory.transSent);
             theRoom.memory.transSent = true;
             //          console.log(theRoom.memory.transSent);
@@ -272,26 +309,25 @@ class PowerInteract {
     static analyzePowerBank(powerBank, room) {
 
         if (powerBank.ticksToDecay < 4000) {
-//            console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
+            //            console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
             return false;
         } else if (powerBank.power < 2500) {
-  //          console.log('Not enough power@',powerBank.power , powerBank.pos);
+            //          console.log('Not enough power@',powerBank.power , powerBank.pos);
             return false;
-        }
-        else {
+        } else {
             let rando = Math.floor(Math.random() * 100) + 1;
             var name = 'powerbankX' + rando;
             console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);
-            if (Game.flags[name] === undefined &&(room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === null)) {
+            if (Game.flags[name] === undefined && (room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === null)) {
                 var mem = {
-                flagName: name,
-                flagPos: new RoomPosition(powerBank.pos.x, powerBank.pos.y, powerBank.pos.roomName),
-                flagCol: COLOR_YELLOW,
-                flagCol2: COLOR_RED
+                    flagName: name,
+                    flagPos: new RoomPosition(powerBank.pos.x, powerBank.pos.y, powerBank.pos.roomName),
+                    flagCol: COLOR_YELLOW,
+                    flagCol2: COLOR_RED
                 };
-let zz =                 room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
-                console.log(zz,'We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
-            } 
+                let zz = room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+                console.log(zz, 'We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+            }
             return true;
         }
 

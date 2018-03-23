@@ -274,7 +274,14 @@ class roleGuard extends roleParent {
 
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        return classLevels[level];
+        if( _.isArray(classLevels[level])) {
+            return classLevels[level];
+        }
+        if (_.isObject(classLevels[level]) ) {
+            return classLevels[level].body;
+        } else {
+            return classLevels[level];
+        }
     }
 
     static run(creep) {
@@ -346,7 +353,9 @@ class roleGuard extends roleParent {
                 attackCreep(creep, bads);
             } else {
                 creep.selfHeal();
-                movement.guardFlagMove(creep);
+//                movement.guardFlagMove(creep);
+            creep.moveMe(creep.partyFlag,{reusePath:50,segment:true});
+
             }
             if (creep.memory.distance === undefined) {
                 creep.memory.distance = 0;
