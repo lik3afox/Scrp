@@ -114,7 +114,6 @@ var classLevels = [
 ];
 var movement = require('commands.toMove');
 var roleParent = require('role.parent');
-var sources = require('commands.toSource');
 var constr = require('commands.toStructure');
 var spawn = require('commands.toSpawn');
 var contain = require('commands.toContainer');

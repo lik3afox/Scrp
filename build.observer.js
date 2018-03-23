@@ -275,7 +275,13 @@ function controllerCheck(target) {
     if(Game.rooms[target].controller === undefined) return false;
     var controller = Game.rooms[target].controller;
     if(controller.owner !== undefined){
-        console.log( controller.owner.username,'@',target);
+    var fox = require('foxGlobals');        
+        if(!_.contains(fox.friends, controller.owner.username)){
+//Memory.hostile_rooms = [];
+            Memory.hostile_rooms.push(target);
+            _.uniq(Memory.hostile_rooms);
+            console.log('hostile room added to global hostile_rooms',target,controller.owner.username);
+        }
     }
 }
 function powerbankCheck(target) {

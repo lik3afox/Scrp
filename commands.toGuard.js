@@ -1,5 +1,5 @@
 var guardParty = [
-    ['guard', require('keeper.guard'), 1, 0]
+    ['guard', require('keeper.guard2'), 1, 0]
 ];
 var shooterParty = [
     ['shooter', require('keeper.shooter'), 1, 4]

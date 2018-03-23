@@ -424,8 +424,11 @@ function labDo(roomName, created, labz, laby) {
             console.log(lab3.room.name, 'tigger1');
             lab3.room.memory.labsNeedWork = true;
         }
-        if ((!labs[labz - 1].emptied && (lab2.mineralAmount < 150 || lab2.mineralAmount === null) && lab2.room.terminal.store[labs[labz - 1].resource] > 1) ||
-            (!labs[laby - 1].emptied && (lab3.mineralAmount < 150 || lab3.mineralAmount === null) && lab3.room.terminal.store[labs[laby - 1].resource] > 1)) {
+        if(lab3.room.name == 'E17S45'){
+         console.log(labs[labz - 1].emptied,lab2.mineralAmount,  lab2.room.terminal.store[labs[labz - 1].resource]);
+        }
+        if ((!labs[labz - 1].emptied && (lab2.mineralAmount < 150 || lab2.mineralAmount === null) && (lab2.room.terminal.store[labs[labz - 1].resource] > 1)) ||
+            (!labs[laby - 1].emptied && (lab3.mineralAmount < 150 || lab3.mineralAmount === null) && ( lab3.room.terminal.store[labs[laby - 1].resource] > 1))) {
             console.log(lab3.room.name, 'tigger2');
             lab3.room.memory.labsNeedWork = true;
         }
@@ -589,30 +592,7 @@ function switchLabMode(roomName) {
                 return;
             }
             break;
-        case "UL":
-            if (Memory.stats.totalMinerals.U < 5000) {
-                room.memory.lab2Mode = 'U';
-                console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
-                return;
-            }
-            if (Memory.stats.totalMinerals.L < 5000) {
-                room.memory.lab2Mode = 'L';
-                console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
-                return;
-            }
-            break;
-        case "ZK":
-            if (Memory.stats.totalMinerals.Z < 5000) {
-                room.memory.lab2Mode = 'Z';
-                console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
-                return;
-            }
-            if (Memory.stats.totalMinerals.K < 5000) {
-                room.memory.lab2Mode = 'K';
-                console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
-                return;
-            }
-            break;
+
     }
     Game.rooms[roomName].memory.labShift-= 5;
     console.log(roomLink(roomName), 'FAILED an lab switch for', roomName, room.memory.lab2Mode,Game.rooms[roomName].memory.labShift);

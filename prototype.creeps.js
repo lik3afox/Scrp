@@ -541,6 +541,7 @@ module.exports = function() {
             }
             this.memory.reHealID = tgt.id;
         } else {
+            if(this.memory.role === 'guard') return false;
             // Echo Healing.
             let tgt = Game.getObjectById(this.memory.reHealID);
             if (tgt === null) {
