@@ -113,7 +113,6 @@ module.exports = function() {
                     return undefined;
                 }
                 this._boostLab = Game.getObjectById(this.memory.boostLabID);
-//                console.log(this.memory.boostLabID,this._boostLab);
                 if (this._boostLab === null) this.memory.boostLabID = undefined;
                 return this._boostLab;
             }

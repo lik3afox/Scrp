@@ -281,9 +281,10 @@ class transportz extends roleParent {
                         visualizePathStyle: pathVis
                     };
                     task.pos = goingTo;
-                    task.order = "keeperMoveTo";
-
-                    task.happyRange = 0;
+                    task.energyPickup = true;
+                    task.order = "moveTo";
+                    task.enemyWatch = true;
+                    task.happyRange = 1;
                     creep.memory.task.push(task);
                 } else if (creep.memory.gotoID !== undefined) {
                     var zze = Game.getObjectById(creep.memory.gotoID);

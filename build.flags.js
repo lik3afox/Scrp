@@ -182,7 +182,7 @@
             });
 
         }
-        console.log('SUCIDE FIND', screeps.length);
+//        console.log('SUCIDE FIND', screeps.length);
         for (var ea in screeps) {
             screeps[ea].suicide();
         }
@@ -323,7 +323,7 @@
                         return (structure.structureType == STRUCTURE_LAB);
                     });
                     if (zzz.length === 1) {
-                        console.log(flag, 'FOUND MasterLab', zzz[0].structureType);
+//                        console.log(flag, 'FOUND MasterLab', zzz[0].structureType);
                         flag.room.memory.boostLabID = zzz[0].id;
                     }
                 }
@@ -340,7 +340,7 @@
                     });
 
                     if (zzz.length > 0) {
-                        console.log(flag, 'FOUND masterLink', zzz[0].structureType);
+                   //     console.log(flag, 'FOUND masterLink', zzz[0].structureType);
                         flag.room.memory.masterLinkID = zzz[0].id;
                     }
                 }
@@ -944,11 +944,8 @@
             let zFlags = _.filter(Game.flags, function(o) { return o.color != COLOR_GREY && o.color != COLOR_CYAN; });
 
         for(let a in Memory.flags) {
-         //   var flag = Memory.flags[a];
             if (Game.flags[a] === undefined) {
               delete Memory.flags[a];  
-            } else {
-//            console.log(Game.flags[a]);
             }
         }
 
@@ -1085,7 +1082,6 @@
                             }
                             require('commands.toSquad').runSquad(squad);
                         } else {
-                            console.log('Empty squad change colors');
                             flag.memory.setColor = {
                                 color: COLOR_YELLOW,
                                 secondaryColor: COLOR_YELLOW
@@ -1199,7 +1195,6 @@
                             if (Memory.showInfo > 1)
                                 powerTotal++;
                             power.calcuate(flag);
-                            //console.log(flag,roomLink(flag.pos.roomName));
                         }
 
                         if (flag.secondaryColor == COLOR_PURPLE) {
@@ -1249,7 +1244,7 @@
                                                         if (flag.memory.timer < 0) {
                             //                                flag.remove();
                                                         } */
-                            console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
+//                            console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
                             if (flag.room !== undefined) {
                                 // So here we check if we remove the flag
                                 // We first give it an 1500 timer.
@@ -1271,7 +1266,7 @@
                                 var testz3 = _.filter(strucd, function(o) {
                                     return o.structureType === STRUCTURE_CONTAINER && o.total === 0;
                                 });
-                                console.log('Bandit room available, containers found:', testz2.length, "emp:", testz3.length, flag.memory.timer);
+//                                console.log('Bandit room available, containers found:', testz2.length, "emp:", testz3.length, flag.memory.timer);
                                 if (testz2.length !== 0 && testz2.length == testz3.length) {
                                     flag.remove();
                                 }

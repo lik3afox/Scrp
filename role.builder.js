@@ -59,7 +59,7 @@ class roleBuilder extends roleParent {
 
                 if (!containers.moveToWithdraw(creep)) {
                     //sources.moveToWithdraw(creep);
-                    creep.moveToWithdrawSource();
+//                    creep.moveToWithdrawSource();
                 }
             }
 

@@ -122,7 +122,6 @@ class MoveInteract {
             if (distance <= maxDistance) {
                 let zz = new RoomPosition(flagz[e].pos.x, flagz[e].pos.y, flagz[e].pos.roomName);
                 let xx = creep.moveTo(zz, { reusePath: 40 });
-                //console.log(xx,flagz[e].pos.x,flagz[e].pos.y,flagz[e].pos.roomName ,maxDistance);
                 creep.say(maxDistance + '/D!' + flagz[e].pos.roomName);
                 //        targetFlag;
                 return true;
@@ -184,7 +183,6 @@ class MoveInteract {
             bads = _.filter(bads, function(o) {
                 return o.owner.username == 'Invader';
             });
-            //            console.log(bads.length, 'checkForBadsPlaceFlag', creep.room);
             if (bads.length > 0) {
 
                 if (creep.room.memory.mining !== undefined) {

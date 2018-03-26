@@ -211,9 +211,9 @@ class muleClass extends roleParent {
                 }
 
             } else {
-                if (!super.avoidArea(creep)) {
+//                if (!super.avoidArea(creep)) {
                     movement.flagMovement(creep);
-                }
+  //              }
             }
             return;
         }

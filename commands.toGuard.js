@@ -65,9 +65,7 @@ function findParty(flag) {
                 let spawnz = Game.spawns[e];
 
                 for (var u in spawnz.memory.warCreate) {
-                    if (spawnz.memory.warCreate[u] === undefined) {
-                        console.log('error', spawnz.memory.warCreate[u], spawnz);
-                    } else {
+                    if (spawnz.memory.warCreate[u] !== undefined) {
                         if (currentParty[a][_name] == spawnz.memory.warCreate[u].memory.role &&
                             spawnz.memory.warCreate[u].memory.party == flag.name) {
                             total[currentParty[a][_name]]++;
@@ -75,9 +73,7 @@ function findParty(flag) {
                     }
                 }
                 for (var z in spawnz.memory.expandCreate) {
-                    if (spawnz.memory.expandCreate[z] === undefined) {
-                        console.log('error', spawnz.memory.expandCreate[z], spawnz);
-                    } else {
+                    if (spawnz.memory.expandCreate[z] !== undefined) {
                         if (currentParty[a][_name] == spawnz.memory.expandCreate[z].memory.role &&
                             spawnz.memory.expandCreate[z].memory.party == flag.name) {
                             total[currentParty[a][_name]]++;
@@ -130,7 +126,7 @@ class partyInteract {
                         return sp.room.name == temp.room && sp.memory.alphaSpawn;
                     });
                     if (spawn.length > 0) {
-//                        console.log('using new');
+
                         temp.memory.parent = spawn[0].id;
                         spawn[0].memory.expandCreate.unshift(temp);
                     } else {}

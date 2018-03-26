@@ -28,8 +28,6 @@ class trollClass extends roleParent {
 
         let attk = Math.floor(Math.random() * 5) + 1;
         let rnge = 5 - attk;
-        //        let work = Math.floor(Math.random() * (5 - attk - rnge));
-
         let a;
         a = attk;
         while (a--) {
@@ -39,11 +37,6 @@ class trollClass extends roleParent {
         while (a--) {
             build.push(RANGED_ATTACK);
         }
-        /*        a = work;
-                while (a--) {
-                    build.push(WORK);
-                } */
-        //        console.log(build.length);
         return build;
     }
 

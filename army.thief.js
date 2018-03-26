@@ -143,7 +143,6 @@ function powerAction(creep) {
         if (Game.flags[creep.memory.party] !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party], 4)) {
 
             let resource = creep.room.find(FIND_DROPPED_RESOURCES);
-            console.log(resource.length);
             resource = _.filter(resource, function(o) {
                 return o.resourceType === RESOURCE_POWER;
             });
@@ -272,7 +271,7 @@ class thiefClass extends roleParent {
 
     static run(creep) {
         if (this.doTask(creep)) return true;
-        if (this.sayWhat(creep)) return true;
+//        if (this.sayWhat(creep)) return true;
         if (super.spawnRecycle(creep)) {
             return;
         }

@@ -27,7 +27,7 @@ class hackerClass extends roleParent {
         if (super.goToPortal(creep)) return;
 
         // E23S38
-        console.log('Control checking in', creep.pos);
+//        console.log('Control checking in', creep.pos);
         if (this.spawnRecycle(creep)) {
             return false;
         }
@@ -83,10 +83,10 @@ class hackerClass extends roleParent {
         } else {
 
 
-            if (!super.avoidArea(creep)){
+//            if (!super.avoidArea(creep)){
                 creep.moveMe(creep.partyFlag,{useSKPathing:true,reusePath:50});
 //                            movement.flagMovement(creep);
-            }
+  //          }
         }
 
     }

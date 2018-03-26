@@ -178,7 +178,6 @@ function updateMemory(creep) {
                     let CONTAIN = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3, {
                         filter: object => (object.structureType == STRUCTURE_CONTAINER)
                     });
-                    // console.log(CONTAIN.length,creep.pos.isNearTo(CONTAIN) );
                     if (CONTAIN.length > 0) {
                         if (creep.pos.isNearTo(CONTAIN[0])) {
                             buildStarterRoad(creep);

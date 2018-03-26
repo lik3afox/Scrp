@@ -247,15 +247,6 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
         if (super.goToPortal(creep)) return;
 
         if (!doAttack(creep)) {
-            if (creep.room.name == 'W5S34') {
-                var roads = creep.pos.findInRange(FIND_STRUCTURES, 3);
-                console.log("ROD", roads.length);
-                roads = _.filter(roads, function(o) {
-                    return o.structureType == STRUCTURE_ROAD || o.structureType == STRUCTURE_CONTAINER;
-                });
-                console.log("ROD", roads.length);
-                creep.rangedAttack(roads[0]);
-            }
         }
 
         creep.say(creep.memory.party);

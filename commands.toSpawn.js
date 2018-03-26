@@ -19,7 +19,6 @@ function getTargets(creep) {
                 structure.structureType == STRUCTURE_SPAWN ||
                 structure.structureType == STRUCTURE_TOWER ||
                 structure.structureType == STRUCTURE_LAB
-                //||structure.structureType == STRUCTURE_POWER_SPAWN
             );
         });
 
@@ -33,7 +32,6 @@ function getTargets(creep) {
     }
 
 
-    //  if (roomCache[creep.room.name] === undefined) {
     let zzz = [];
     var e = creep.room.memory.spawnTargets.length;
     while (e--) {
@@ -42,13 +40,8 @@ function getTargets(creep) {
             zzz.push(target);
         }
     }
-  //  roomCache[creep.room.name] = zzz;
-    //        console.log('Room isn"t cached',creep.room.name,roomCache[creep.room.name].length);
 
     return zzz;
-    //    } else {
-    //        return roomCache[creep.room.name];
-    //    }
 
 }
 
@@ -66,14 +59,12 @@ function getCost(module) {
 
 function getStack(spawn) {
     // Here we return the stack that is wanted 
-    //    console.log('getting stack',spawn.memory.currentStack)
-    //    console.log(spawn.memory.create.length,spawn.memory.warCreate.length,spawn.memory.expandCreate );
     var rampart = 'rampartD' + spawn.room.name;
     var ExpandBeforeWar = ['E38S72'];
     if (spawn.memory.alphaSpawn) {
 
         spawn.memory.currentStack = 'create';
-        //    console.log(spawn.memory.create.length , spawn.memory.expandCreate.length);
+        
         if (spawn.memory.create.length === 0 && spawn.memory.warCreate.length > 0) {
             if (_.contains(ExpandBeforeWar, spawn.room.name) && spawn.memory.expandCreate.length > 0) {
                 spawn.memory.currentStack = 'expand';
@@ -86,7 +77,7 @@ function getStack(spawn) {
             spawn.memory.currentStack = 'expand';
         }
 
-        //        console.log(spawn.memory.currentStack);
+
         switch (spawn.memory.currentStack) {
             case 'create':
                 return spawn.memory.create;
@@ -150,6 +141,7 @@ function checkAround(creep) {
 }
 
 function determineAlphaSpawn(spawn) {
+    if(spawn.room.alphaSpawn !== undefined) return true;
     if (spawn.memory.alphaSpawn !== undefined) return true;
 
     let spwns = spawn.room.find(FIND_STRUCTURES, {
@@ -175,7 +167,7 @@ class SpawnInteract {
     static requestCreep(creepWanted, spawnID) {
         let spawn = Game.getObjectById(spawnID);
         if (spawn !== null) {
-            console.log('request happening', spawn, creepWanted.build);
+//            console.log('request happening', spawn, creepWanted.build);
             spawn.memory.warCreate.push(creepWanted);
             return true;
         }
@@ -222,11 +214,11 @@ class SpawnInteract {
         if (yy2 > 49) yy2 = 49;
         if (xx2 > 49) xx2 = 49;
         var around = creep.room.lookAtArea(yy, xx, yy2, xx2, true);
-        //  console.log(around.length);
+        
         var e = around.length;
         while (e--) {
             if (around[e].type == 'structure') {
-                //          console.log(around[e].structure.energy , around[e].structure.energyCapacity);
+        
                 if ((around[e].structure.structureType != STRUCTURE_LINK && around[e].structure.structureType != STRUCTURE_NUKER) && around[e].structure.energy < around[e].structure.energyCapacity) {
                     if (creep.transfer(around[e].structure, RESOURCE_ENERGY) == OK) {
                         if (creep.carry[RESOURCE_ENERGY] < 51) {
@@ -368,7 +360,7 @@ class SpawnInteract {
             }
 
             // Analyzed is an array of rooms that this spawn has looked at. 
-            if (spawn.memory.analyzed === undefined) {
+/*            if (spawn.memory.analyzed === undefined) {
                 for (var e in Game.spawns) {
                     if (Game.spawns[e].homeEmpire) {
                         spawn.memory.analyzed = Game.spawns[e].analyzed;
@@ -377,7 +369,7 @@ class SpawnInteract {
                 spawn.memory.analyzed = [];
                 console.log('----------------Create Spawn Analyzed STACK----------------');
             }
-
+*/
             // roadsTo is an array of sources in other rooms that have roads to them. 
             if (spawn.memory.roadsTo === undefined) {
                 spawn.memory.roadsTo = [];
@@ -429,7 +421,7 @@ class SpawnInteract {
             if (creepTarget === null) {
                 spawn.memory.wantRenew.splice(e, 1);
             } else if (creepTarget.ticksToLive < temp && creepTarget.pos.isNearTo(spawn)) {
-                //              console.log( creepTarget.memory.role ,spawn.room.controller.level );
+                
                 if (spawn.room.name === 'E14S38') {
 
                     if (spawn.room.controller.level > 5) {
@@ -455,7 +447,7 @@ class SpawnInteract {
 
         if (temp < renewLimit) {
             let rst = spawn.renewCreep(renewTarget);
-            //console.log('********* ',spawn,' am Renewing:',renewTarget.name,rst,'********* ');
+            
             return true;
         } else {
             return false;
@@ -491,7 +483,7 @@ class SpawnInteract {
         var e = zz.length;
         while (e--) {
             if (zz[e] == creep.id) {
-                //                console.log(e, zz[e], "removecreep");
+                
                 zz.splice(e, 1);
                 break;
             }
@@ -505,11 +497,8 @@ class SpawnInteract {
             spawn.memory.spawnDir = 1;
         }
         if (STACK !== undefined && STACK.length > 0) {
-            // Creation here.
-            //          if(STACK[0].build.body.length == 0)
-            //                STACK.shift();
             if (!_.isArray(STACK[0].build)) {
-                console.log('clearing stak of error', STACK[0].build);
+             //   console.log('clearing stak of error', STACK[0].build);
                 STACK.shift();
             }
             var ee = spawn.canCreateCreep(STACK[0].build);
@@ -519,13 +508,8 @@ class SpawnInteract {
                 spawn.memory.CreatedMsg = STACK[0].name;
                 let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
                 if (ez == -3) {
-                    //            console.log(STACK[0].name, Game.creeps[STACK[0].name].pos);
                     STACK[0].name = STACK[0].name + Math.floor(Math.random() * 9);
-                    //                if(STACK[0].name.length > 0){
-                    //                      STACK[0].name = STACK[0].name[0]+STACK[0].name[1]+STACK[0].name[2]+STACK[0].name[3]+STACK[0].name[4]+STACK[0].name[5]+STACK[0].name[6]+STACK[0].name[7];
-                    //                    }
-                    //                    ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
-                    console.log('ERROR NAME', STACK[0].name, 'REBUILD ATTEMPT', ez,roomLink(spawn.room.name));
+//                    console.log('ERROR NAME', STACK[0].name, 'REBUILD ATTEMPT', ez,roomLink(spawn.room.name));
                 } else {
                     STACK.shift();
                 }
@@ -535,15 +519,13 @@ class SpawnInteract {
                     count++;
                     STACK[0].build.shift();
                 } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
-                console.log('><><>>>>-=-=-DOWNGRADE MODULE X' + count + '-=-=-=-=<<<<><><');
-
+         //       console.log('><><>>>>-=-=-DOWNGRADE MODULE X' + count + '-=-=-=-=<<<<><><');
             } else if (STACK[0].length === undefined && STACK[0].length === 0) {
 
                 console.log("ERROR", spawn, spawn.pos);
-                console.log("ERROR");
-                console.log("ERROR");
-                //STACK.shift();
-
+              //  console.log("ERROR");
+              //  console.log("ERROR");
+//
             }
 
         }

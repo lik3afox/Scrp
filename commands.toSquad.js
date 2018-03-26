@@ -74,7 +74,7 @@ function squadMemory(squaded, bads, analysis) {
             let ae = squadSpots.length;
             while (ae--) {
                 var loc = getFormationPos(squad[0].partyFlag, squadSpots[ae].pos);
-                //    console.log(loc, squadSpots[ae].pos, squadSpots[ae].role, attackDir);
+
                 var show = true;
                 let atFeet = squad[0].room.lookAt(loc);
                 for (var i in atFeet) {
@@ -104,15 +104,15 @@ function squadMemory(squaded, bads, analysis) {
 
             //squad[0] = point;
             //squad[1] = healer;
-            //            console.log('spots before the 2 main', squadSpots.length, squad.length);
+
             for (let z in squad) {
                 if (squad[z].memory.point && squadSpots.length > 0) {
-                    //      console.log(squad[z].memory.role,squadSpots.length, squadSpots[0].role,'Ptest ');
+
                     if (!squad[z].pos.inRangeTo(squad[z].partyFlag, 3) && runMovement === undefined) {
                         squad[z].partyFlag.memory.squadMode = 'travel';
                     }
                     squad[z].memory.formationPos = squadSpots.shift().pos;
-                    //        console.log( squad[z].memory.role, squad[z].memory.formationPos,'point SUCESS');
+
 
                     squad.splice(z, 1);
                     break;
@@ -120,41 +120,38 @@ function squadMemory(squaded, bads, analysis) {
             }
 
             for (let z in squad) {
-                //              console.log(squad[z].memory.role,squadSpots.length, squadSpots[0].role,'heal TEST');
+
                 if ((squad[z].memory.role == 'mage' || squad[z].memory.role == 'healer') && squadSpots.length > 0 && squadSpots[0].role == 'healer') {
                     squad[z].memory.formationPos = squadSpots.shift().pos;
-                    //                console.log( squad[z].memory.role, squad[z].memory.formationPos,'heal SUCESS');
+
                     squad.splice(z, 1);
                     break;
                 }
             }
 
             for (let z in squad) {
-                //                console.log(squad[z].memory.role,squadSpots.length, squadSpots[0].role,'melee TEST');
+
                 if ((squad[z].memory.role == 'fighter' || squad[z].memory.role == 'demolisher') && squadSpots.length > 0 && squadSpots[0].role == 'melee') {
 
                     squad[z].memory.formationPos = squadSpots.shift().pos;
-                    //                    console.log( squad[z].memory.role, squad[z].memory.formationPos,'melee SUCESS');
+
 
                     squad.splice(z, 1);
-                    //                    break;
+
                 }
-                /* else {
-                                    squad[z].memory.formationPos = undefined;
-                                } */
             }
 
 
             for (let z in squad) {
                 if (squadSpots.length > 0) {
                     squad[z].memory.formationPos = squadSpots.shift().pos;
-                    //      console.log( squad[z].memory.role, squad[z].memory.formationPos,'other');
+                    
                 } else {
                     squad[z].memory.formationPos = undefined;
                 }
             }
 
-            //console.log('spots after the 2 main', squadSpots.length, squad.length);
+            
 
             bads = _.filter(bads, function(o) {
                 return (o.getActiveBodyparts(ATTACK) > 0 || o.getActiveBodyparts(RANGED_ATTACK) > 0);
@@ -174,7 +171,7 @@ function squadMemory(squaded, bads, analysis) {
             if (close !== undefined) {
                 var distance = point.pos.getRangeTo(close);
 
-                //      console.log('distance close bad', distance);
+                
                 if (distance < 3) {
                     var dire = point.pos.getDirectionTo(close);
                     dire = dire + 4;
@@ -249,9 +246,9 @@ function squadMovement(creep) {
         case 'battle':
                 if (runMovement !== undefined) {
                     if (runMovement === 0) {
-                        console.log('creep doing run movement', runMovement);
+//                        console.log('creep doing run movement', runMovement);
                     } else {
-                        console.log('creep doing run movement', runMovement, creep.move(runMovement));
+                        creep.move(runMovement);
                     }
                     creep.say('r');
                 } else {
@@ -361,7 +358,7 @@ function setTravelSquad(squad) {
 
 
     // Here we setup the travel caravan;
-    console.log('SETTING CARAVAN', healers.length, others.length, point);
+//    console.log('SETTING CARAVAN', healers.length, others.length, point);
 
     var caravan = [];
     caravan.push(point);
@@ -384,13 +381,13 @@ function setTravelSquad(squad) {
             caravan.push(others.shift());
         }
     }
-    console.log('AFTERSETTING CARAVAN', caravan.length);
+//    console.log('AFTERSETTING CARAVAN', caravan.length);
     flag.memory.squadID = [];
     for (let a = 0; a < caravan.length; a++) {
 
         var ne = 1 + a;
         var af = ne - 2;
-//        console.log(a, caravan[a], caravan[ne], caravan[af]);
+
         flag.memory.squadID.push(caravan[a].id);
         if (a === 0) {
             caravan[a].memory.directingID = caravan[ne].id;
@@ -446,7 +443,7 @@ class commandsToSquad {
 
 
         // Here we setup the travel caravan;
-        console.log('SETTING CARAVAN', healers.length, others.length, point);
+//        console.log('SETTING CARAVAN', healers.length, others.length, point);
 
         var caravan = [];
         caravan.push(point);
@@ -469,13 +466,12 @@ class commandsToSquad {
                 caravan.push(others.shift());
             }
         }
-        console.log('AFTERSETTING CARAVAN', caravan.length);
+//        console.log('AFTERSETTING CARAVAN', caravan.length);
         flag.memory.squadID = [];
         for (let a = 0; a < caravan.length; a++) {
 
             var ne = 1 + a;
             var af = ne - 2;
-            console.log(a, caravan[a], caravan[ne], caravan[af]);
             flag.memory.squadID.push(caravan[a].id);
             if (a === 0) {
                 caravan[a].memory.directingID = caravan[ne].id;

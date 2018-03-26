@@ -127,7 +127,7 @@ function findNewParty(creep) {
     for (var a in pbFlags) {
         let dis = Game.map.getRoomLinearDistance(creep.room.name, pbFlags[a].pos.roomName);
         if (dis <= 5 && pbFlags[a].name != creep.memory.party) {
-            console.log(creep, "Has switched to new party", pbFlags[a].name, 'from', creep.memory.party);
+//            console.log(creep, "Has switched to new party", pbFlags[a].name, 'from', creep.memory.party);
             creep.memory.party = pbFlags[a].name;
             creep.memory.reportDeath = true;
             creep.memory.powerbankID = undefined;
@@ -296,7 +296,7 @@ class healerClass extends roleParent {
 
     static run(creep) {
         doMove = false;
-        if (super.sayWhat(creep)) return;
+//        if (super.sayWhat(creep)) return;
         if (super.spawnRecycle(creep)) {
             return;
         }

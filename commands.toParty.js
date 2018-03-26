@@ -207,7 +207,7 @@ function getCurrentParty(flag) {
         if (allParty[flag.memory.musterType] !== undefined) {
             party = allParty[flag.memory.musterType];
         } else {
-            console.log(flag, 'doesn"t have party or musterType', roomLink(flag.pos.roomName));
+//            console.log(flag, 'doesn"t have party or musterType', roomLink(flag.pos.roomName));
         }
         return party;
     }
@@ -293,7 +293,6 @@ class partyInteract {
     }
 
     static rally(flag) {
-        //          console.log('Checking Rally',flag);
         var currentParty; // = getCurrentParty(flag);
         if (flag.memory.portal === undefined) {
             flag.memory.portal = false; // This needs to be set true in order for creeps to rally then portal.
@@ -329,7 +328,6 @@ class partyInteract {
             if (flag.memory.rallyFlag === 'home') {
                 var home = getSpawnCreating(flag);
                 rallied = Game.flags[home];
-                //                console.log(home, rallied);
             } else {
                 rallied = Game.flags[flag.memory.rallyFlag];
             }
@@ -404,7 +402,7 @@ class partyInteract {
 
 
                         // Here we setup the travel caravan;
-                        console.log('SETTING CARAVAN', healers.length, others.length, point);
+//                        console.log('SETTING CARAVAN', healers.length, others.length, point);
 
                         var caravan = [];
                         caravan.push(point);
@@ -427,13 +425,12 @@ class partyInteract {
                                 caravan.push(others.shift());
                             }
                         }
-                        console.log('AFTERSETTING CARAVAN', caravan.length);
+//                        console.log('AFTERSETTING CARAVAN', caravan.length);
                         flag.memory.squadID = [];
                         for (let a = 0; a < caravan.length; a++) {
 
                             var ne = 1 + a;
                             var af = ne - 2;
-//                            console.log(a, caravan[a], caravan[ne], caravan[af]);
                             flag.memory.squadID.push(caravan[a].id);
                             if (a === 0) {
                                 caravan[a].memory.directingID = caravan[ne].id;
@@ -467,7 +464,7 @@ class partyInteract {
                     }
                 }
             } else {
-                console.log('ERROR for These creeps, enable squadLogic',flag.name,roomLink(flag.pos.roomName));
+//                console.log('ERROR for These creeps, enable squadLogic',flag.name,roomLink(flag.pos.roomName));
             }
 
             //              break;
@@ -482,12 +479,10 @@ class partyInteract {
         for (let e in flag.memory.party) {
             totalPartyed += flag.memory.party[e][1];
         }
-        //console.log( _.sumBy(flag.memory.party, function(o) { return o.n[1]; }),"x" );        
         flag.memory.totalNumber = totalPartyed;
 
         if (flag.memory.party === undefined) {
             flag.memory.party = currentParty;
-            //   console.log('testing', flag.memory.party, flag.name, currentParty);
         }
         for (var e in currentParty) {
             for (var i in totalParty) {

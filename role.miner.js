@@ -81,6 +81,16 @@ function markDeath(sourceID) {
     });
 
 }
+    function shouldDie(creep) {
+        if (creep.hits == creep.hitsMax) return;
+        if (creep.getActiveBodyparts(MOVE) === 0) {
+            creep.suicide();
+            return;
+        }
+        if (creep.hits < creep.hitsMax - 800) {
+            creep.suicide();
+        }
+    }
 
 class settler extends roleParent {
     static levels(level) {
@@ -96,7 +106,7 @@ class settler extends roleParent {
     }
 
     static run(creep) {
-        super.shouldDie(creep);
+        shouldDie(creep);
         super.rebirth(creep);
         if (super.movement.runAway(creep)) return;
         if (super.baseRun(creep)) return;
@@ -133,7 +143,6 @@ class settler extends roleParent {
 
         var resting; // = restingSpot(creep);
         // if(!resting ?creep.pos.isNearTo(_source):creep.pos.isEqualTo(resting)){
-        //  console.log('test good', resting);
         //            if(!resting ?creep.pos.isNearTo(_source):creep.pos.isEqualTo(resting))
         //          }
         //}
@@ -201,7 +210,6 @@ class settler extends roleParent {
                             creep.room.memory.mineInfo[creep.memory.goal] = -2000;
                             markDeath(creep.memory.goal);
                         } else if(creep.room.memory.mineInfo[creep.memory.goal] > 5000 && zz.expLevel === maxLevel ) {
-//                            console.log(creep.room.memory.mineInfo[creep.memory.goal],creep.memory.goal,'maxed and wants more, maybe distable this one.',roomLink( creep.room.name) );
                         }
                         string = string + "[" + zz.expLevel + "]";
                     }

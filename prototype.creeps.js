@@ -213,7 +213,7 @@ module.exports = function() {
 
                     return zzzz;
                 default:
-                    console.log('requested stat not existant');
+//                    console.log('requested stat not existant');
                     break;
             }
         } else {
@@ -384,7 +384,7 @@ module.exports = function() {
         var target = Game.getObjectById(this.partyFlag.memory.target);
         if (target !== null) {
             if (this.pos.isNearTo(target)) {
-                //console.log(this.dismantle(target));
+
                 this.dismantle(target);
                 return true;
             }
@@ -685,12 +685,8 @@ module.exports = function() {
         return true;
     };
 
-    Creep.prototype.killBase = function(options) {
+/*    Creep.prototype.killBase = function(options) {
         //        if (this.hits !== this.hitsMax) return false;
-        /*
-                if (this.room.controller.owner === undefined) {
-                    return false;
-                } */
 
         if (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.friends, this.room.controller.owner.username)) {
             return;
@@ -717,8 +713,8 @@ module.exports = function() {
 
             _.contains(fox.friends, this.room.controller.owner.username)) return false;
         /*        if (this.memory.role == 'demolisher') {
-                    console.log(this.room.controller);
-                } */
+
+                } 
         var struc = this.room.find(FIND_STRUCTURES);
 
         var site = this.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
@@ -797,7 +793,7 @@ module.exports = function() {
                 var tester2 = _.filter(this.room.find(FIND_STRUCTURES), function(o) {
                     return o.structureType === STRUCTURE_ROAD && o.structureType === STRUCTURE_CONTAINER;
                 }); // This is something is not on a rampart
-                //                console.log('come here?', tester2.length);
+
                 if (tester2.length !== 0) {
                     this.memory.targetID = tester2[0].id;
                 }
@@ -808,7 +804,7 @@ module.exports = function() {
         }
         close = Game.getObjectById(this.memory.targetID);
         //    this.say('blah'+this.memory.targetID);
-        //        console.log(this.hits, this.hitsMax);
+
         if (close !== null) {
             if (this.getActiveBodyparts(ATTACK) > 0) {
                 if (this.pos.isNearTo(close)) {
@@ -837,7 +833,7 @@ module.exports = function() {
             this.memory.targetID = undefined;
         }
         return false;
-    };
+    };*/
     /*
         Creep.prototype.dragHealer = function(options) {
             if (this.memory.healerID !== undefined) {
@@ -856,10 +852,10 @@ module.exports = function() {
             let target = this.pos.findClosestByRange(badguy);
             badguy = target;
         }
-        //console.log(badguy.pos, badguy, this.pos);
+
 
         //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
-        //        console.log('runfrom', this.pos.getDirectionTo(result.path[0]), result.length);
+
         //this.move(this.pos.getDirectionTo(result.path[0]))
         //        this.move(this.pos.getDirectionTo(result.path[0]));
         var direction = this.pos.getDirectionTo(badguy);
@@ -877,10 +873,10 @@ module.exports = function() {
                 let target = this.pos.findClosestByRange(badguy);
                 badguy = target;
             }
-            //console.log(badguy.pos, badguy, this.pos);
+
 
             //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
-            //        console.log('runfrom', this.pos.getDirectionTo(result.path[0]), result.length);
+
             //this.move(this.pos.getDirectionTo(result.path[0]))
             //        this.move(this.pos.getDirectionTo(result.path[0]));
             var direction = this.pos.getDirectionTo(badguy);
@@ -914,7 +910,7 @@ module.exports = function() {
                 this.room.memory.roomFailure = 0;
             }
 
-            //console.log(this.room.memory.roomFailure);
+
             if (this.room.memory.roomFailure > 10000) {
                 let body = [MOVE, CARRY, CARRY, MOVE];
                 let name = 'Emergcy';
@@ -926,7 +922,7 @@ module.exports = function() {
                 };
                 let zz = this.spawnCreep(body, name, mem);
                 if (zz === 0) this.room.memory.roomFailure = -1500;
-                console.log('Emergency creation, trying to create simple RESULT:');
+
             }
 
             // If spawns haven't spawn in a while
@@ -939,10 +935,6 @@ module.exports = function() {
 
     //    var fox = require('foxGlobals');
     Creep.prototype.sing = function(lyrics, public) {
-        /*        if (!_.isArray(lyrics)) {
-                    console.log('Give me an array', this);
-                }
-                if (this.saying !== undefined) { */
         var word = _.indexOf(lyrics, this.saying) + 1;
         this.say(lyrics[word >= lyrics.length ? 0 : word], public);
         //        }
@@ -1006,7 +998,7 @@ module.exports = function() {
                 Exits.push(FIND_EXIT_TOP);
             }
         }
-
+/*
         switch (this.roomName) {
             case "W58S29":
                 Exits = [
@@ -1016,7 +1008,7 @@ module.exports = function() {
                 ];
                 break;
         }
-
+*/
 
         for (var e in Exits) {
             const exit = this.pos.findClosestByRange(Exits[e]);
@@ -1104,8 +1096,6 @@ destination Current Pos Path
         if (direction === undefined) { return; }
 
         var looking = creep.room.lookForAt(LOOK_CREEPS, getFormationPos(creep, direction))[0];
-        if (creep.room.name == 'E15S45')
-            console.log(creep.memory.role, 'trying to do swap', direction, looking, creep.pos, getFormationPos(creep, direction), roomLink(creep.room.name));
 
         if (looking === undefined) { return; }
 
@@ -1246,7 +1236,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
     }
     /*
         Creep.prototype.withdrawing = function(target, resource, amount) {
-            //console.log('doing wrapped withdrawing',target,resource,amount);
+
             //    if(Game.shard.name === 'shard0'){
             //          return this.withdraw(target, resource, amount);
             //      }
@@ -1392,7 +1382,6 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 if (this.room.memory.exitPoints[this.memory.inter_room_exitTarget] !== undefined) {
                     var newz = new RoomPosition(this.room.memory.exitPoints[this.memory.inter_room_exitTarget].x, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].y, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].roomName);
                     let zz = this.moveTo(newz); // Never needs to be segmented.
-                    //                    if (zz === -2) console.log(newz);
                     this.say('🚏' + zz);
                     return zz;
                 }
@@ -1446,7 +1435,6 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         }
 
         //        target = new RoomPosition(25,25,room_name);
-        //        console.log(25, 25, this.memory.inter_room_target);
         /*if(this.memory.inter_room_target !== undefined){
                   target = new RoomPosition(25,25,this.memory.inter_room_target);
                   this.say(this.memory.inter_room_target);
@@ -1781,7 +1769,6 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
         // Start of segment fun.
 
-        //        if (this.memory.role == 'scout' || this.memory.role == 'thief'|| this.memory.role == 'mule') console.log(options.segment, 'seggy',this.memory.role);
 
         if (options.segment === undefined) options.segment = false;
 
@@ -1877,7 +1864,6 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             }
             if (doPath) {
                 if (!rawData[home]) { // Fail on rawdata means that the segment will be available next tick
-                    //                    console.log(segment.roomToSegment(this.memory.home),'here Segment fail.',roomLink( this.room.name ),this.pos);
                 } else if (rawData[home] !== undefined && this.memory._move !== undefined) {
                     test = serializePath(this);
                     if (test !== undefined) {

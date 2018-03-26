@@ -26,7 +26,7 @@ class hacker2Class extends roleParent {
     }
 
     static run(creep) {
-console.log('RECONTROLLER',creep.pos,roomLink(creep.room.name));
+//console.log('RECONTROLLER',creep.pos,roomLink(creep.room.name));
         if (Game.flags.recontrol !== undefined && creep.pos.roomName == Game.flags.recontrol.pos.roomName) {
             creep.say('there?');
 

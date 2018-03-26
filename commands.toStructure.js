@@ -40,7 +40,7 @@ function build(controller) {
                             }
                         }
                         if (makeConSite) {
-                            console.log(a, lvlBuild[a][i].length, a, lvlBuild[a][i][o].x, lvlBuild[a][i][o].y, makeConSite);
+
                             controller.room.createConstructionSite(lvlBuild[a][i][o].x, lvlBuild[a][i][o].y, a);
                         }
                     }
@@ -114,7 +114,7 @@ class StructureInteract {
                 if (tombStone.total-tombStone.store.energy === 0) creep.memory.tombStoneID = undefined;
             }
             if (!creep.pos.inRangeTo(tombStone, range)) creep.memory.tombStoneID = undefined;
-            if (tombStone.ticksToDecay < 0) console.log("BUGGY @", roomLink(tombStone.pos.roomName));
+
             if (creep.pos.isNearTo(tombStone)) {
                 for (let e in tombStone.store) {
                     if (energy) {
@@ -155,7 +155,7 @@ class StructureInteract {
                 };
                 Game.rooms[roomName].memory.snapshot.push(matrix);
             }
-            console.log('Created SnapShot for room', roomName, '# of entries:', strucs.length);
+
         }
     }
 
@@ -167,7 +167,7 @@ class StructureInteract {
             var location = new RoomPosition(snapShot[e].x, snapShot[e].y, roomName);
             if (!_.find(location.lookFor(LOOK_STRUCTURES), { structureType: snapShot[e].type })) {
                 Game.rooms[roomName].createConstructionSite(location.x, location.y, snapShot[e].type);
-                console.log('will place createConstructionSite', location.x, location.y, snapShot[e].type);
+            
             }
         }
         //let structures = this.lookFor(LOOK_STRUCTURES);
@@ -181,7 +181,7 @@ class StructureInteract {
         for (var i in atFeet) {
             if (atFeet[i].type == 'structure' && atFeet[i].structure.structureType == STRUCTURE_ROAD &&
                 (atFeet[i].structure.hits < atFeet[i].structure.hitsMax - 500)) {
-                //                console.log(atFeet[i],atFeet[i].structure.structureType,i,atFeet[i].structure.hits,              );
+
                 let dont = ['59b9cbff720ad030dcef2023'];
                 if (_.includes(dont, atFeet[i].structure.id)) {
                     creep.dismantle(atFeet[i].structure);

@@ -56,10 +56,6 @@ class PowerInteract {
                     if (room.memory.powerCount === undefined) room.memory.powerCount = 0;
 
                     if (!Memory.war) {
-                        //       if(e === 'E11S47'){
-                        //           console.log(room.controller.level,powerS.power,powerS.energy ,
-                        //            room.terminal.store[RESOURCE_ENERGY] , room.storage.store[RESOURCE_ENERGY]);
-                        //        }
                         if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
                             room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
                         ) {
@@ -126,7 +122,7 @@ class PowerInteract {
         let find = closeFlag.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
 
         if (find.length > 0) {
-            console.log(creep, "Has switched to new party", closeFlag.name, 'from', creep.memory.party);
+//            console.log(creep, "Has switched to new party", closeFlag.name, 'from', creep.memory.party);
             creep.memory.party = closeFlag.name;
             creep.memory.reportDeath = true;
             creep.memory.powerbankID = undefined;
@@ -233,7 +229,6 @@ class PowerInteract {
             flag.memory.spawn = false;
             theRoom.memory.transSent = false;
             let zz = flag.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
-            //    console.log(zz.length,zz[0].resourceType,zz[1].resourceType);
             for (var e in flag.memory.party) {
                 flag.memory.party[e][1] = 0;
             }
@@ -246,7 +241,6 @@ class PowerInteract {
         if (powerB.hits === 2000000) {
             if (flag.memory.party !== undefined) {
                 for (let ee in flag.memory.party) {
-                    console.log(flag.memory.party[ee][0],flag.memory.party[ee][1],roomLink(roomName));
                     if (flag.memory.party[ee][0] === 'fighter' && flag.memory.party[ee][1] === 0) {
                         flag.memory.party[ee][1] = 1;
                     } else if (flag.memory.party[ee][0] === 'healer' && flag.memory.party[ee][1] === 0) {
@@ -280,7 +274,6 @@ class PowerInteract {
             let boost = ['KH2O'];
             let carryNeeded = Math.ceil(powerB.power / carryAmount);
             let numOfcreep = Math.ceil(carryNeeded / 25);
-            //     console.log (numOfcreep,"creeps with ",carryNeeded*.5 , "# of parts needed");
             //get spawnID - find the creeps around powerB
             let creep = powerB.pos.findInRange(FIND_MY_CREEPS, 2);
             if (creep.length === 0) return;
@@ -305,20 +298,9 @@ class PowerInteract {
                 spawn.requestCreep(transport, spawnID);
                 numOfcreep--;
             } while (numOfcreep > 0);
-            //            console.log(theRoom.memory.transSent);
             theRoom.memory.transSent = true;
-            //          console.log(theRoom.memory.transSent);
 
         }
-
-
-        //               let damageNeed = powerB.hits/powerB.ticksToDecay;
-        //                console.log(powerB,damageNeed);
-        /*
-// now parts needed is 
-// console.log(Math.ceil(powerB.power/50)); This is the number of parts needed. 
-// find the closest spawn and request transports with a party of this so it can 
-*/
         theRoom.memory.powerHits = powerB.hits;
 
     }
@@ -326,15 +308,13 @@ class PowerInteract {
     static analyzePowerBank(powerBank, room) {
 
         if (powerBank.ticksToDecay < 3000) {
-            //            console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
             return false;
         } else if (powerBank.power < 2000) {
-            //          console.log('Not enough power@',powerBank.power , powerBank.pos);
             return false;
         } else {
             let rando = Math.floor(Math.random() * 100) + 1;
             var name = 'powerbankX' + rando;
-            console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);
+//            console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);
             if (Game.flags[name] === undefined && (room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === null)) {
                 var mem = {
                     flagName: name,
@@ -343,7 +323,7 @@ class PowerInteract {
                     flagCol2: COLOR_RED
                 };
                 let zz = room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
-                console.log(zz, 'We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+//                console.log(zz, 'We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
             }
             return true;
         }

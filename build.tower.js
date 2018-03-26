@@ -80,7 +80,7 @@ function getTowerDamage(target, towers) {
             } else {
                 range -= 5;
                 var damage = 150 + 30 * range;
-                //            console.log(totalDamage, target.pos, damage, range, "Yo");
+
                 totalDamage += damage;
             }
         }
@@ -131,7 +131,7 @@ function estimateDamageAndAttack(target, allies, towers) {
     target.room.visual.text(calcuateDamage(target.body, totalDamage), target.pos, { color: 'green', font: 0.8 });
     if (damageTotal + currentLossHp < totalToughHp) return false;
 
-    console.log('est damage', target, totalToughHp, damageTotal, damageTotal > totalToughHp);
+//    console.log('est damage', target, totalToughHp, damageTotal, damageTotal > totalToughHp);
     target.room.visual.text(calcuateDamage(target.body, totalDamage), target.pos, { color: 'green', font: 0.8 });
     var e;
     for (e in towers) {
@@ -244,14 +244,13 @@ function defendRoom(towers, hostiles) {
 }
 
 function healRoom(towers, hurt) {
-    //    console.log(towers[0].room.name);
     if (hurt.length === 0) return false;
     if (hurt.length > 0) {
         var e = towers.length;
         while (e--) {
             if (towers[e].energy > 0) {
 
-                showTowerRange(towers[e]);
+               // showTowerRange(towers[e]);
                 towers[e].heal(hurt[0]);
             }
         }
@@ -263,9 +262,7 @@ function repairRoom(towers) { // This function is given all the towers in a room
     if (towers[0].room.memory.repairQuery === undefined) {
         towers[0].room.memory.repairQuery = [];
     }
-    //  console.log('scan repair tower',towers[0].room.memory.repairQuery.length,towers.length);
     if (towers[0].room.memory.repairQuery.length === 0) return false;
-    //    console.log('Towers repairing');
     let needs = towers[0].room.memory.repairQuery;
     let towerNum = 0;
     let towerMax = towers.length - 1;
@@ -284,7 +281,6 @@ function repairRoom(towers) { // This function is given all the towers in a room
                 showTowerRange(towers[towerNum]);
             }
             towerNum++;
-            //        if(towerNum > towerMax) return;
         }
     }
 
@@ -347,7 +343,6 @@ function scanForRepair(troom) {
     }
     if (troom.memory.timedScan > 0) {
         troom.memory.timedScan--;
-        //        console.log('no scan',troom.memory.timedScan);
         return false;
     }
     troom.memory.timedScan = scanDelay;
@@ -372,7 +367,6 @@ function scanForRepair(troom) {
 
 
     troom.memory.repairQuery = _.uniq(troom.memory.repairQuery);
-    //console.log(troom,'scanned',troom.memory.repairQuery.length);
 }
 
 function repairRampart(towers) {
@@ -438,7 +432,6 @@ class roleTower {
 
         if (Memory.towerTarget !== 'none') {
             let zzz = Game.getObjectById(Memory.towerTarget);
-            //        console.log(zzz,zzz.roomName,towers[0].room.name,Memory.towerTarget);
             if (zzz !== null && zzz.room.name == towers[0].room.name) {
                 var a = towers.length;
                 while (a--) {
@@ -487,7 +480,7 @@ class roleTower {
                     }
                 }
             } else {
-                //                console.log(towers.length,hostiles.length);
+                
                 if (!defendRoom(towers, hostiles)) {
                     if (!healRoom(towers, hurt)) {
                         repairRoom(towers);
@@ -512,7 +505,7 @@ class roleTower {
 //                        if(mycreeps === undefined) mycreeps = ;
 
                         if (estimateDamageAndAttack(hostiles[e], hostiles[e].room.find(FIND_MY_CREEPS), towers)) {
-                            console.log("KILLING", hostiles[e].room.name);
+                          //  console.log("KILLING", hostiles[e].room.name);
                             return;
                         }
 

@@ -176,7 +176,6 @@ module.exports = function() {
         }
         var ret = xx + yy + roomPos.roomName;
         if (ret.length > 10) {
-            //                console.log(xx, yy, roomPos.roomName);
             return;
         }
         return ret;

@@ -282,7 +282,6 @@ class upgraderzClass extends roleParent {
                                 for (ggg in aaa) {
                                     aaa[ggg].memory.waitSpot = count;
                                     aaa[ggg].memory.upgradeSpot = 0;
-                                    //                                  console.log('xxx',aaa[ggg].name,aaa[ggg].memory.waitSpot,aaa[ggg].ticksToLive, aaa[ggg].memory.boosted );
                                     count++;
                                 }
 
@@ -293,7 +292,6 @@ class upgraderzClass extends roleParent {
                                 for (ggg in uuu) {
                                     uuu[ggg].memory.waitSpot = count;
                                     uuu[ggg].memory.upgradeSpot = 0;
-                                    //                                    console.log('yyy',uuu[ggg].name,uuu[ggg].memory.waitSpot,uuu[ggg].ticksToLive, uuu[ggg].memory.boosted );
                                     count++;
                                 }
 

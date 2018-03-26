@@ -118,7 +118,7 @@ function getMineralForStorage(creep) {
                 if (creep.room.terminal.store[e] > 0) {
                     if (creep.pos.isNearTo(creep.room.terminal)) {
                         let zz = creep.withdraw(creep.room.terminal, e, taken);
-              //          console.log(creep.room.name, zz, xStored[e].amount, creep.room.storage.store[e], '=', '2Linker thinks:', creep.room.storage.store[e], xStored[e].amount, creep.room.terminal.store[e], e);
+              
                     } else {
                         creep.moveTo(creep.room.terminal);
                     }
@@ -130,7 +130,7 @@ function getMineralForStorage(creep) {
             if (amount > creep.carryCapacity) amount = creep.carryCapacity;
             if (creep.pos.isNearTo(creep.room.storage)) {
                 var result = creep.withdraw(creep.room.storage, e, amount);
-             //   console.log(result, 'empty storage', e, amount, creep.room.storage.store[e], xStored[e].amount, roomLink(creep.room.name));
+
             } else {
                 creep.moveTo(creep.room.storage);
             }

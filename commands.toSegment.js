@@ -46,7 +46,6 @@ function grabInterShardData() {
         interShardData = JSON.parse(RawMemory.interShardSegment);
         RawMemory.interShardSegment = JSON.stringify(interShardData);
     }
-    //    console.log('SHARD0 getting request');
     return interShardData;
 }
 
@@ -66,7 +65,6 @@ function setInterShardData() {
                 K: Memory.stats.totalMinerals.K < 100000 ? true : false,
             }
         });
-        //        console.log('setting shard1 intershardData', segmentChange);
     }
 }
 
@@ -81,7 +79,6 @@ function checkSegmentClear() {
             if (RawMemory.segments[e] !== undefined) {
                 RawMemory.segments[e] = "+";
                 Memory.assignedPartySegment[e] = 'none';
-                console.log('cleaning segment', e);
             } else {
                 if (e !== undefined)
                     Memory.shardNeed.push(e);
@@ -138,8 +135,6 @@ function partyNameToSegmentNumber(partyName) {
             return i;
         }
     }
-
-    //   console.log('Failure to set party?',partyName);
 }
 
 
@@ -212,21 +207,17 @@ function analyzeOtherPlayerSegment() {
 
     // This will get the object of the player segement. 
     var obj = require('commands.toSegment').getObjectPlayerSegment(alliedList[Memory.otherPlayerSegmentCount][0], alliedList[Memory.otherPlayerSegmentCount][1]);
-//    console.log(Memory.otherPlayerSegmentCount, , 'Commands to segment', obj);
 
     if (obj !== undefined) {
         var basic = obj.basicTrading;
-        console.log(alliedList[Memory.otherPlayerSegmentCount][0],"@", alliedList[Memory.otherPlayerSegmentCount][1],basic, 'Doing basicTrading:');
+//        console.log(alliedList[Memory.otherPlayerSegmentCount][0],"@", alliedList[Memory.otherPlayerSegmentCount][1],basic, 'Doing basicTrading:');
         if (basic !== undefined) {
             for (var resource in basic) {
-                //console.log('want to send ', resource, basic[resource], '@', basic.room, '#:', 100);
                 if (basic[resource]) {
 
                     if (Memory.stats.totalMinerals[resource] > acceptNum && _.contains(acceptable, resource)) {
-
                         // Here we do the sending logic.
-                        //console.log('zzes',basic.room, resource,100);
-                        console.log('FULFILLING TERMINAL REQUEST',resource, basic[resource], '@', basic.room, '#:', 101, _terminal.requestMineral(basic.room, resource, 101));
+  //                      console.log('FULFILLING TERMINAL REQUEST',resource, basic[resource], '@', basic.room, '#:', 101, _terminal.requestMineral(basic.room, resource, 101));
                     }
                 }
             }
@@ -236,7 +227,7 @@ function analyzeOtherPlayerSegment() {
             Memory.otherPlayerSegmentCount = 0;
         }
     } else {
-        console.log(notSeen,'Trying to look at',alliedList[Memory.otherPlayerSegmentCount][0], alliedList[Memory.otherPlayerSegmentCount][1]);
+    //    console.log(notSeen,'Trying to look at',alliedList[Memory.otherPlayerSegmentCount][0], alliedList[Memory.otherPlayerSegmentCount][1]);
         if(notSeen === undefined) notSeen = 0;
         notSeen++;
         if(notSeen > 2) {
@@ -273,7 +264,6 @@ class segmentCommand {
 
     static requestPartySegmentData(partyName) {
         var seg = partyNameToSegmentNumber(partyName);
-        //console.log("party segment request",seg,partyName);
         let zz = _.indexOf(Memory.shardNeed, seg);
         if (RawMemory.segments[seg] === undefined && zz === -1) {
             if (seg !== undefined)
@@ -284,7 +274,6 @@ class segmentCommand {
             if (zz !== undefined) {
                 Memory.shardNeed.push(zze);
             }
-            //            console.log('index of',zz,'Splice and pushed on top');
         }
         return false;
     }
@@ -293,7 +282,6 @@ class segmentCommand {
         if (roomSegment[roomName] !== undefined) {
 
             let zz = _.indexOf(Memory.shardNeed, roomSegment[roomName]);
-            //        console.log(roomSegment[roomName],zz,Memory.shardNeed);
 
             if (RawMemory.segments[roomSegment[roomName]] === undefined && zz === -1) {
                 Memory.shardNeed.push(roomSegment[roomName]);
@@ -306,9 +294,6 @@ class segmentCommand {
     }
 
     static setRoomSegmentData(roomName, rawData) {
-
-        //        console.log('setting raw data');
-
 
         if (roomSegment[roomName] !== undefined) {
             if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined) {
@@ -326,7 +311,7 @@ class segmentCommand {
     }
     static setPartySegmentData(partyName, rawData) {
         var seg = partyNameToSegmentNumber(partyName);
-        console.log("set party segment", seg, RawMemory.segments[seg]);
+//        console.log("set party segment", seg, RawMemory.segments[seg]);
 
         if (RawMemory.segments[seg] === undefined) {
             if (seg !== undefined)
@@ -340,7 +325,7 @@ class segmentCommand {
     }
     static getRawSegmentPartyData(partyName) {
         var seg = partyNameToSegmentNumber(partyName);
-        console.log("get party segment", seg, RawMemory.segments[seg]);
+  //      console.log("get party segment", seg, RawMemory.segments[seg]);
 
         if (RawMemory.segments[seg] === undefined) {
             if (seg !== undefined)
@@ -357,7 +342,7 @@ class segmentCommand {
 
     static getRawSegmentRoomData(roomName) {
         if (Game.rooms[roomName] === undefined) {
-            console.log('failed get raw', roomName);
+
             return;
         }
         if (Game.rooms[roomName].memory.segmentReset === undefined) {
@@ -366,7 +351,6 @@ class segmentCommand {
         Game.rooms[roomName].memory.segmentReset--;
 
 
-        //        console.log('getting raw data', Game.rooms[roomName].memory.segmentReset);
         if (roomSegment[roomName] !== undefined) {
             if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined) {
                 Memory.shardNeed.push(roomSegment[roomName]);
@@ -375,7 +359,6 @@ class segmentCommand {
             } else if (RawMemory.segments[roomSegment[roomName]] !== undefined) {
                 if (Game.rooms[roomName].memory.segmentReset < 0) {
                     Game.rooms[roomName].memory.segmentReset = 100000 + Math.floor(Math.random() * 100000);
-                    console.log('roomName segment # ', roomSegment[roomName], 'has been reset');
                     RawMemory.segments[roomSegment[roomName]] = '+';
                 }
 
@@ -385,7 +368,7 @@ class segmentCommand {
                 return RawMemory.segments[roomSegment[roomName]];
             }
         } else {
-            //            console.log('roomSegment RawSegmentRoomData GET FAILURE', roomName, segmentChange);
+
         }
         return;
     }
@@ -455,13 +438,9 @@ class segmentCommand {
                 }
 
                 Memory.shardNeed = _.uniq(Memory.shardNeed);
-                //                console.log('shard1 segment needed',Memory.shardNeed.length );
                 while (Memory.shardNeed.length > 10) {
                     Memory.shardNeed.shift();
                 }
-                //            for(var e in Memory.shardNeed){
-                //                  if(Memory.shardNeed[e] === undefined)
-                //                }
                 RawMemory.setActiveSegments(Memory.shardNeed);
 
                 break;

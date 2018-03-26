@@ -138,7 +138,6 @@ class roleUpgrader extends roleParent {
         }
         var boost = ['XGH2O'];
         //if(Game.shard.name == 'shard2')
-        //    console.log(boost.length);
         if (super.boosted(creep, boost)) {
             return;
         }

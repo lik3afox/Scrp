@@ -71,7 +71,7 @@ function doTask(tasks) {
                 }
                 if (ob !== null) {
                     distance = Game.map.getRoomLinearDistance(ob.room.name, target);
-                    console.log("Bandit check", roomLink(target), "distance:", distance, ob, "doing the task of", task.order);
+//                    console.log("Bandit check", roomLink(target), "distance:", distance, ob, "doing the task of", task.order);
                     if (distance <= 10) {
 
                         if (Game.rooms[target] !== undefined) {
@@ -80,7 +80,7 @@ function doTask(tasks) {
                             if (Game.flags.bandit === undefined) {
                                 var bca = new RoomPosition(20, 25, target);
                                 var zzz = Game.rooms[target].createFlag(bca, 'bandit', COLOR_YELLOW, COLOR_YELLOW);
-                                console.log(zzz, 'Flag has been placed?');
+//                                console.log(zzz, 'Flag has been placed?');
                             }
                         }
 
@@ -154,7 +154,7 @@ function doTask(tasks) {
                     }
 
                     var distance2 = Game.map.getRoomLinearDistance(ob.room.name, target);
-                    console.log(roomLink(target), "distance:", distance2, ob, "doing the task of", task.order, "for " + task.options.timed + "longer");
+//                    console.log(roomLink(target), "distance:", distance2, ob, "doing the task of", task.order, "for " + task.options.timed + "longer");
                     if (distance2 <= 10) {
                         if (ob.observeRoom(target) == OK) {
                             task.options.timed--;
@@ -212,7 +212,6 @@ function caravanCheck(target) {
     });
     var targetRoom;
     var string = target + " " + 'LOOKING FOR Screeps:' + " " + caravan.length + " " + screeps.length;
-    //console.log(string);
     Game.rooms[target].visual.text(string, 25, 25, {
         color: '#10c3ba ',
         stroke: '#000000 ',
@@ -228,7 +227,6 @@ function caravanCheck(target) {
             let roomName = caravan[0].pos.roomName;
             var two = parseInt(roomName[2]);
             var five = parseInt(roomName[5]);
-            //console.log(five === 9);
             if (two === 0 && five === 0 && caravan[0].ticksToLive < 1200 && caravan[0].ticksToLive > 700) {
                 dir = 'none';
             } else if (two === 1 || two === 2 && caravan[0].ticksToLive > 1000) {
@@ -249,11 +247,11 @@ function caravanCheck(target) {
 
         }
         if (dir === undefined) {
-            console.log(dir, 'OLD FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
+    //        console.log(dir, 'OLD FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
         } else if (dir === 'fail') {
-            console.log(dir, 'BUGGED FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
+  //          console.log(dir, 'BUGGED FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
         } else {
-            console.log(dir, 'FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
+//            console.log(dir, 'FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
         }
         if (dir !== undefined && dir === 'none') {
             caravan[0].room.createFlag(25, 25, 'bandit', COLOR_YELLOW, COLOR_YELLOW);
@@ -280,7 +278,7 @@ function controllerCheck(target) {
 //Memory.hostile_rooms = [];
             Memory.hostile_rooms.push(target);
             Memory.hostile_rooms = _.uniq(Memory.hostile_rooms);
-            console.log('hostile room added to global hostile_rooms',target,controller.owner.username);
+//            console.log('hostile room added to global hostile_rooms',target,controller.owner.username);
         }
     }
 }
@@ -427,13 +425,13 @@ class buildObserver {
 
                     if (distance <= 10) {
                         if (Game.flags.look.room !== undefined) {
-                            console.log(Game.flags.look.room.name, 'found room w/ look flag', room.name);
+//                            console.log(Game.flags.look.room.name, 'found room w/ look flag', room.name);
                             caravanCheck(Game.flags.look.room.name);
                             powerbankCheck(Game.flags.look.room.name);
 
                         }
                         room.observer.observeRoom(Game.flags.look.pos.roomName);
-                        console.log(Game.flags.look.room, 'OB at look flag', room.name);
+//                        console.log(Game.flags.look.room, 'OB at look flag', room.name);
                         lookFlag = false;
                         doObserve = false;
                     }
@@ -520,13 +518,13 @@ class buildObserver {
 
                         if (distance <= 10) {
                             if (Game.flags.look.room !== undefined) {
-                                console.log(Game.flags.look.room.name, 'found room w/ look flag', room.name);
+//                                console.log(Game.flags.look.room.name, 'found room w/ look flag', room.name);
                                 caravanCheck(Game.flags.look.room.name);
                                 powerbankCheck(Game.flags.look.room.name);
 
                             }
                             room.observer.observeRoom(Game.flags.look.pos.roomName);
-                            console.log(Game.flags.look.room, 'OB at look flag', room.name);
+//                            console.log(Game.flags.look.room, 'OB at look flag', room.name);
                             lookFlag = false;
                             doObserve = false;
                         }

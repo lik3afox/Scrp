@@ -3,19 +3,7 @@ function use() { "use strict"; }
 var gameCache = [];
 
 function getCached(id) {
-    /*if (gameCache[id] !== undefined) {
-        if (gameCache[id] === null) {
-            //        console.log( 'Null Linked Cache',id);
-            return null;
-        } else {
-            //        console.log('returned cache',gameCache[id],id);
-            return gameCache[id];
-        }
-    } */
     return Game.getObjectById(id);
-    //    console.log('Created Cache');
-    //    gameCache[id] = zzz;
-    //    return zzz; //Game.getObjectById(id);
 }
 
 function newLinkTransfer() {
@@ -64,7 +52,7 @@ function newLinkTransfer() {
                                 } else {
                                     if (mLink !== null && mLink.energy < 100) {
                                         LINK.room.visual.line(LINK.pos, mLink.pos, { color: 'white' });
-                                        //                                        console.log(LINK,LINK.structureType,LINK.pos);
+                                        
                                         if (LINK.transferEnergy(mLink) == OK) {
                                             break;
                                         }
@@ -144,7 +132,7 @@ class buildLink {
                                 } else {
                                     if (mLink !== null && mLink.energy < 100) {
                                         LINK.room.visual.line(LINK.pos, mLink.pos, { color: 'white' });
-                                        //                                        console.log(LINK,LINK.structureType,LINK.pos);
+                                        
                                         if (LINK.transferEnergy(mLink) == OK) {
                                             break;
                                         }

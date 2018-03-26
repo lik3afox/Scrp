@@ -1,4 +1,3 @@
-
 function returnClosestRoom(roomName) {
     var distance = 100;
     var spawn;
@@ -18,10 +17,10 @@ function returnClosestRoom(roomName) {
 
 
 function scanForRemoteSources() {
-    
-    
-    
-    
+
+
+
+
     var observer = require('build.observer');
 
     if (Game.flags.remote === undefined && Game.flags.mineral === undefined) return false;
@@ -29,7 +28,7 @@ function scanForRemoteSources() {
     if (flag !== undefined) {
         if (flag.memory.spawnRoom === undefined) {
             var zz;
-            
+
             flag.memory.spawnRoom = 'none';
         }
         if (flag.room === undefined) {
@@ -58,7 +57,7 @@ function scanForRemoteSources() {
 
                         }
                         if (!has) {
-                            console.log('spwn doesnt have remote info', source[eee].id);
+
                             // Here we add info to spwn.
                             let BUILD = {
                                 source: source[eee].id,
@@ -71,7 +70,7 @@ function scanForRemoteSources() {
                                 BUILD.controller = false;
                             }
                             remote.push(BUILD);
-                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
+                            //                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
                         }
                     }
 
@@ -118,7 +117,7 @@ function scanForRemoteSources() {
 
                         }
                         if (!has) {
-                            console.log('spwn doesnt have remote info', source[eee].id);
+
                             // Here we add info to spwn.
                             let BUILD = {
                                 source: source[eee].id,
@@ -131,7 +130,7 @@ function scanForRemoteSources() {
                                 BUILD.controller = false;
                             }
                             remote.push(BUILD);
-                            console.log('Minearl added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
+//                            console.log('Minearl added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
                         }
                     }
 
@@ -153,7 +152,7 @@ function scanForCleanRoom() {
         return o.structureType !== STRUCTURE_NUKER && o.structureType !== STRUCTURE_STORAGE && o.structureType !== STRUCTURE_TERMINAL && o.structureType !== STRUCTURE_CONTROLLER;
     });
     for (let a in test2) {
-        console.log('desotrying', test2[a].structureType, test2[a].destroy());
+        test2[a].destroy();
 
     }
     if (test2.length === 0) Game.flags.clearRoom.remove();
@@ -168,7 +167,7 @@ function whoWorksFor(goal) {
     while (a--) {
         e = keys[a];
         if (Game.creeps[e].memory.goal == goal) {
-            console.log(goal, Game.creeps[e].memory.home, Game.creeps[e].name, Game.creeps[e].memory.role, Game.creeps[e].pos, "lvl:", Game.creeps[e].memory.level);
+//            console.log(goal, Game.creeps[e].memory.home, Game.creeps[e].name, Game.creeps[e].memory.role, Game.creeps[e].pos, "lvl:", Game.creeps[e].memory.level);
         }
     }
 }
@@ -205,7 +204,7 @@ function rampartCheck(spawn) {
         if (nearRampart.length > 0) {
             for (var a in nearRampart) {
                 if (Game.flags[named] === undefined) {
-                    //                        console.log('lets place a flag here for defense');
+
                     spawn.room.createFlag(nearRampart[a].pos, named, COLOR_YELLOW, COLOR_PURPLE);
                 } else {
                     // It exists,but does it have any bad guys? If not then relocatie
@@ -226,11 +225,11 @@ function rampartCheck(spawn) {
 
 
                     if (Game.flags[named2] === undefined) {
-                        console.log('extra rampart is available for guy');
-                        //        console.log(Game.flags[named2] , Game.flags[named].memory.invaderTimed,Game.flags[named].memory.invaderTimed );
+
+
                         if (Game.flags[named].memory.invaderTimed !== undefined &&
                             Game.flags[named].memory.invaderTimed > 15) {
-                            //                        console.log(nearRampart[a].pos,Game.flags[named].pos);
+
                             if (!nearRampart[a].pos.isEqualTo(Game.flags[named].pos))
                                 spawn.room.createFlag(nearRampart[a].pos, named2, COLOR_YELLOW, COLOR_WHITE);
                         } else {
@@ -306,7 +305,7 @@ function safemodeCheck(spawn) {
 function doUpgradeRooms() { //5836b82d8b8b9619519f19be
     if (Memory.war)
         return;
-        if (Game.shard.name !== 'shard1') return;
+    if (Game.shard.name !== 'shard1') return;
 
     // Lets count how many ticks left for enhanced upgrading.
 
@@ -347,7 +346,7 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
         let control = spawn.room.controller;
         if (control.level < 7) return;
 
-        //    console.log(spawn, spawn.id, 'upgradde', control.level, control.progress, min.mineralAmount);
+
 
         if (control.progress > 9000000) {
             if (Game.flags.recontrol === undefined) {
@@ -376,7 +375,7 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
 
 function isBoost(body) {
     for (var e in body) {
-        //            console.log(body[e].boost, body[e].boost);
+
         if (body[e].boost !== undefined)
             return true;
     }
@@ -394,12 +393,12 @@ function analyzeHostiles(bads) {
     }
     var fox = require('foxGlobals');
 
-    if (Memory.testing === undefined) {
-        var message = _.toString(boost + ':boost ' + bads.length + ':Bad guys found @' + bads[0].room + 'from:' + bads[0].owner.username);
-        Game.notify(message);
-        Memory.testing = 1;
-    }
-    console.log(boost, ':boost ', bads.length, ':Bad guys found @', bads[0].room, 'from:', bads[0].owner.username);
+//    if (Memory.testing === undefined) {
+//        var message = _.toString(boost + ':boost ' + bads.length + ':Bad guys found @' + bads[0].room + 'from:' + bads[0].owner.username);
+//        Game.notify(message);
+  //      Memory.testing = 1;
+//    }
+    //    console.log(boost, ':boost ', bads.length, ':Bad guys found @', bads[0].room, 'from:', bads[0].owner.username);
     if (bads.length > 0 && !_.contains(fox.friends, bads[0].owner.username)) {}
     return {};
 }
@@ -410,7 +409,7 @@ var loaded = Game.time;
 
 function doRoomReport(room) {
 
-    //console.log(room.memory.labMode,room.memory.lab2Mode,roomLink(room.name) );
+
 
     if (room.name == 'E14S38') return;
     var fox = require('foxGlobals');
@@ -429,13 +428,13 @@ function doRoomReport(room) {
 
     var nuke = room.find(FIND_NUKES);
     if (nuke.length > 0) {
-        console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
+//        console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
         room.memory.nukeIncoming = true;
-        Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
+//        Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
     }
 
     //   if (room.controller.level === 8 && room.controller.ticksToDowngrade < 100000) {
-    //     console.log(roomLink(room.name), "has controller issues", room.controller.ticksToDowngrade);
+
     /*            let spwns = room.find(FIND_STRUCTURES);
                 spwns = _.filter(spwns, function(o) {
                     return o.structureType == STRUCTURE_SPAWN && o.spawning === null;
@@ -451,7 +450,7 @@ function doRoomReport(room) {
                                 level: 2
                             }
                         });
-                        console.log(zz);            
+
                 } */
     //    }
 
@@ -473,10 +472,6 @@ function doRoomReport(room) {
             spwns = _.filter(spwns, function(o) {
                 return o.structureType == STRUCTURE_SPAWN && o.spawning === null;
             });
-//            console.log(goods.length, room, spwns.length);
-      //      if (room.name == 'E38S72') {
-  //              console.log('wtfzz', goods.length, room.energyAvailable, spwns.length, spwns[0]);
-    //        }
             if (spwns.length > 0) {
 
                 if (room.energyAvailable >= 300) {
@@ -489,7 +484,6 @@ function doRoomReport(room) {
                             level: 3
                         }
                     });
-//                    console.log(zz);
                 }
             }
 
@@ -538,9 +532,9 @@ function consoleLogReport() {
             break;
     }
     if (Game.cpu.getHeapStatistics !== undefined) {
-        console.log(color + shard+"[" + ticksInARow+"]" + filler + "  Tick #" + gameTime + "  Total Creeps:(" + creepTotal + ") Bucket: " + cpuBucket + " " + cpuLimit + "/" + cpuCeil + filler + " Seg#" + segmentNumUsed + " PP:" + powerProcessed + "#" + (`Used ${Game.cpu.getHeapStatistics().total_heap_size} / ${Game.cpu.getHeapStatistics().heap_size_limit}`));
+        console.log(color + shard + "[" + ticksInARow + "]" + filler + "  Tick #" + gameTime + "  Total Creeps:(" + creepTotal + ") Bucket: " + cpuBucket + " " + cpuLimit + "/" + cpuCeil + filler + " Seg#" + segmentNumUsed + " PP:" + powerProcessed + "#" + (`Used ${Game.cpu.getHeapStatistics().total_heap_size} / ${Game.cpu.getHeapStatistics().heap_size_limit}`));
     } else {
-        
+
         console.log(color + shard + filler + "  Tick #" + gameTime + "  Total Creeps:(" + creepTotal + ") Bucket: " + cpuBucket + " " + cpuLimit + "/" + cpuCeil + filler + " Seg#" + segmentNumUsed + " PP:" + powerProcessed);
 
     }
@@ -549,7 +543,7 @@ function consoleLogReport() {
 
 function doRoomVisual(room) {
     if (Memory.stats.totalMinerals === undefined) return;
-    //console.log(room.memory.labMode.substr(0, 5));
+
     if (room.memory.labMode !== undefined &&
         room.memory.labMode.substr(0, 5) === 'shift') {
 
@@ -627,8 +621,9 @@ function getWallLow(roomName) {
         return o.structureType == STRUCTURE_WALL || (o.structureType == STRUCTURE_RAMPART && !o.isPublic);
     });
     walls.sort((a, b) => a.hits - b.hits);
+
     if (walls.length > 2) {
-        //            console.log(roomName,"wall:",walls[1].hits);
+
         return walls[1].hits;
     }
 
@@ -648,30 +643,31 @@ function cleanMemory() {
             memory.hostileScanTimer = undefined;
         }
         if (room.controller !== undefined && room.controller.owner !== undefined && room.controller.owner.username === 'likeafox') {
-            //                console.log(room.controller.owner.username);
+
         } else {
             if (memory.roomLinksID !== undefined) {
-                console.log('DEL roomLInk', roomLink(room.name));
+//                console.log('DEL roomLInk', roomLink(room.name));
                 memory.roomLinksID = undefined;
-            }
-            if (memory.defenderSleepSpot !== undefined) {
-                console.log('DEL Sleptspot', roomLink(room.name));
-                memory.defenderSleepSpot = undefined;
             }
             if (Game.flags[memory.invasionFlag] === undefined) {
                 if (memory.invasionFlag !== undefined) {
                     memory.invasionFlag = undefined;
                     memory.hostileID = undefined;
                     memory.hostileScanTimer = undefined;
-                    console.log('DEL invasion Info', roomLink(room.name));
+  //                  console.log('DEL invasion Info', roomLink(room.name));
                 }
 
             }
-            console.log('not owned');
         }
     }
 
 }
+    const {log} = console;
+        console.log = function(v) {
+                        if(v === false) log.call(this, new Error().stack);
+                        if(v === "false") log.call(this, new Error().stack);
+            log.apply(this,arguments);
+        };
 
 function addSpawnQuery(spawnCount) {
     var e;
@@ -775,23 +771,24 @@ function doMemory() {
 
 }
 var ticksInARow;
+
 function blackMagic(fn) {
     let memory;
     let tick;
     return () => {
 
-            if (tick && tick + 1 === Game.time && memory) {
-                delete global.Memory;
-                Memory = memory;
-            }
-            memory = Memory;
-            tick = Game.time;
-            fn();
-            if(ticksInARow === undefined) {
-                ticksInARow = 0;
-            }
-            ticksInARow++;
-            RawMemory._parsed = Memory;
+        if (tick && tick + 1 === Game.time && memory) {
+            delete global.Memory;
+            Memory = memory;
+        }
+        memory = Memory;
+        tick = Game.time;
+        fn();
+        if (ticksInARow === undefined) {
+            ticksInARow = 0;
+        }
+        ticksInARow++;
+        RawMemory._parsed = Memory;
     };
 }
 
@@ -826,22 +823,18 @@ module.exports.loop = blackMagic(function() {
         console.log('XXXX XXXXX 200 tick break after flag logic XXXX XXXX');
         return;
     }
-
     var spawnCount = addSpawnQuery(spawnsDo.runCreeps()); // This will not work with old counting.
     var spawnReport = {};
     require('commands.toSegment').run();
-//    console.log(require('commands.toSegment').getRawPlayerSegment('Geir1983', 99),'seg request','Geir1983', 99);
+
     var title;
     Memory.stats.powerProcessed = 0;
 
     for (title in Game.spawns) {
-        if (Game.spawns[title].memory.newSpawn === undefined) {
-            spawnsDo.checkNewSpawn(Game.spawns[title]);
-        }
 
         if (Game.spawns[title].memory.alphaSpawn) {
             //                      var constr = require('commands.toStructure');
-            //                        console.log(Game.spawns[title].pos.roomName);
+
             //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
             doRoomReport(Game.spawns[title].room);
             let roomName = Game.spawns[title].pos.roomName;
@@ -849,14 +842,12 @@ module.exports.loop = blackMagic(function() {
             labs.roomLab(roomName);
             power.roomRun(roomName);
             link.roomRun(roomName);
-            spawnsDo.jobList(roomName);
-if(Game.shard.name == 'shard2') {
-            observer.runRoom2(roomName);
-} else {
-            observer.runRoom(roomName);
-}
+            if (Game.shard.name == 'shard2') {
+                observer.runRoom2(roomName);
+            } else {
+                observer.runRoom(roomName);
+            }
             if (isTenTime === 0 && Game.shard.name == 'shard1') {
-
                 if (Game.spawns[title].room.memory.simple) {
                     _terminal.runSimple(roomName);
                 } else {
@@ -866,8 +857,9 @@ if(Game.shard.name == 'shard2') {
 
         }
 
+
         if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
-            doRoomVisual(Game.spawns[title].room);
+//            doRoomVisual(Game.spawns[title].room);
             rampartCheck(Game.spawns[title]);
             if (Game.cpu.bucket > 1000) {
                 safemodeCheck(Game.spawns[title]);
@@ -880,7 +872,6 @@ if(Game.shard.name == 'shard2') {
                     (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
                     spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
                 }
-
             }
 
 
@@ -919,6 +910,10 @@ if(Game.shard.name == 'shard2') {
             }
         }
     } // End of Spawns Loops
+
+
+
+
     Memory.stats.rooms = spawnReport;
 
     if (isTenTime === 0) {
@@ -929,11 +924,10 @@ if(Game.shard.name == 'shard2') {
         observer.runTask();
     }
 
-              doUpgradeRooms();
+    doUpgradeRooms();
     resetCounters();
     scanForRemoteSources();
     scanForCleanRoom();
     consoleLogReport();
     //        cleanMemory();
-
 });

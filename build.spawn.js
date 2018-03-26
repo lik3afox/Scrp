@@ -120,20 +120,6 @@ var currentModule;
 
 var showEveryone = true;
 var countCPU = false;
-/*
-function cpuCount(creep, time) {
-    if (creep.memory === undefined) return;
-    if (creep.memory.cpu === undefined) {
-        creep.memory.cpu = [];
-    }
-    let avg = _.sum(creep.memory.cpu) / creep.memory.cpu.length;
-    if (showEveryone) console.log('CPU used by ' + creep + ' is a ' + creep.memory.role +
-        ' Time : ' + 'avg:' + Math.floor(_.sum(creep.memory.cpu) / creep.memory.cpu.length), '/lst:', time, creep.pos, creep.carryTotal, creep.memory.goal);
-    if ((creep.memory.cpu.length === 0 && time === 0) || (time !== 0))
-        creep.memory.cpu.push(time);
-    if (creep.memory.cpu.length > 30) creep.memory.cpu.shift();
-}
-*/
 // Give it a role, and SourceID
 // Returns all creeps that match that role and source ID
 
@@ -190,7 +176,6 @@ function rebuildCreep(creep) {
     }
 
     if (_body.length === 0) {
-        console.log(creep.name, "Didn't get body from module");
         for (var u in creep.body) {
             _body.push(creep.body[u].type);
         }
@@ -207,9 +192,7 @@ function rebuildCreep(creep) {
             if (_.contains(doBoost, creep.memory.home) &&
                 (creep.memory.role == 'miner') && _body.length > 6) {
                 var cBuild = [];
-                //                console.log(_body,'ray');
                 cBuild = changeBuild(_body, Game.rooms[creep.memory.home]);
-                //                console.log(cBuild,'rayray',Game.rooms[creep.memory.home].memory.tempBoost);
 
                 if (cBuild.length != _body.length) {
                     _body = cBuild;
@@ -549,7 +532,7 @@ class theSpawn {
                     }
                 } else {
                     if (source.room === undefined) {
-                        console.log('ERROR source.room not available:checkexpand', spawn.pos);
+//                        console.log('ERROR source.room not available:checkexpand', spawn.pos);
                     }
                 }
             }
@@ -698,8 +681,6 @@ class theSpawn {
     }
 
     static checkBuild(spawn) {
-        //        let constr = require()
-        //console.log('here?',spawn.memory.buildLevel, spawn.room.controller.level);
         if (spawn.memory.buildLevel != spawn.room.controller.level) {
             var constr = require('commands.toStructure');
             constr.buildConstrLevel(spawn.room.controller);
@@ -835,9 +816,6 @@ class theSpawn {
                 delete Memory.creeps[name]; // If it does then it does.
             } else {
                 doSpawnCount(Game.creeps[name]); // THis is where the creeps are counted.
-                if (Game.creeps[name] === undefined) {
-                    console.log('got undefined Memory');
-                }
                 if (Memory.showInfo > 1) {
                     if (totalRoles[Game.creeps[name].memory.role] === undefined) totalRoles[Game.creeps[name].memory.role] = 0;
                     totalRoles[Game.creeps[name].memory.role]++;
@@ -898,7 +876,6 @@ class theSpawn {
             }
 
         }
-        //        console.log(totalRoles);
         return spawnCount;
     }
 
@@ -971,7 +948,7 @@ class theSpawn {
             var creeps = _.filter(bads, function(o) {
                 return o.memory.home === roomName && _.contains(roles, o.memory.role);
             });
-            console.log('Doing joblist, have ', creeps.length, 'Number in room:', roomName);
+//            console.log('Doing joblist, have ', creeps.length, 'Number in room:', roomName);
             for (var e in job) {
                 if (job[e] === null) {
                     // Here we find a creep for this job.
@@ -992,7 +969,6 @@ class theSpawn {
         // This should only be checked while the controller level is 1
         if (!spawn.memory.alphaSpawn) {
             spawn.memory.newSpawn = false;
-
             return false;
         }
         for (var i in Game.spawns) {
