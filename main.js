@@ -849,6 +849,7 @@ module.exports.loop = blackMagic(function() {
             labs.roomLab(roomName);
             power.roomRun(roomName);
             link.roomRun(roomName);
+            spawnsDo.jobList(roomName);
 if(Game.shard.name == 'shard2') {
             observer.runRoom2(roomName);
 } else {

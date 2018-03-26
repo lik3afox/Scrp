@@ -1367,14 +1367,14 @@ function doTrap(roomname) {
 }
 
 function trackSegmentSharing() {
-    if (Game.time % 67 !== 0) return;
+//    if (Game.time % 67 !== 0) return;
     if (Memory.segmentTransactions === undefined) {
         Memory.segmentTransactions = {
             lastIncommingTs: 0,
             lastOutgoingTs: 0,
         };
     }
-
+console.log("Tracking Sharing");
     var incommingTrans = Game.market.incomingTransactions;
     var latestTransaction;
     var transaction;
@@ -1462,7 +1462,7 @@ class roleTerminal {
                                 }
                                 let sentResult = term.send(mineral, amount, targetRoom , msg);
     //                            console.log('request for mineral @', targetRoom, sentResult, mineral, term.store[mineral] - 1);
-                                if (sentResult === OK) return true;
+                                if (sentResult === OK) return sentResult;
 
                             }
                         }

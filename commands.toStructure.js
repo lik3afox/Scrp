@@ -69,7 +69,7 @@ class StructureInteract {
                 tombStone = creep.room.find(FIND_TOMBSTONES);
             }
             tombStone = _.filter(tombStone, function(o) {
-                return o.total > 200;
+                return o.total > 100;
             });
             if (tombStone.length === 0) return false;
             //          creep.say('⚰️' + tombStone.length);

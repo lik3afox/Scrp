@@ -156,8 +156,8 @@ class roleUpbuilder extends roleParent {
         // && _.contains(doUpgrade, creep.room.name)
         if (Game.shard.name == 'shard1' && creep.ticksToLive === 1499 && (creep.memory.level === 8 || creep.memory.level === 4)) {
             boost = [];
-            if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.XGH2O > 200000) {
-                boost.push('XGH2O');
+            if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH2O > 50000) {
+                boost.push('GH2O');
             } else if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH > 85000) {
                 boost.push('GH');
             }

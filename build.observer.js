@@ -229,7 +229,7 @@ function caravanCheck(target) {
             var two = parseInt(roomName[2]);
             var five = parseInt(roomName[5]);
             //console.log(five === 9);
-            if (two === 0 && five === 0 && caravan[0].ticksToLive < 1000 && caravan[0].ticksToLive > 700) {
+            if (two === 0 && five === 0 && caravan[0].ticksToLive < 1200 && caravan[0].ticksToLive > 700) {
                 dir = 'none';
             } else if (two === 1 || two === 2 && caravan[0].ticksToLive > 1000) {
                 dir = 'e';
@@ -279,7 +279,7 @@ function controllerCheck(target) {
         if(!_.contains(fox.friends, controller.owner.username)){
 //Memory.hostile_rooms = [];
             Memory.hostile_rooms.push(target);
-            _.uniq(Memory.hostile_rooms);
+            Memory.hostile_rooms = _.uniq(Memory.hostile_rooms);
             console.log('hostile room added to global hostile_rooms',target,controller.owner.username);
         }
     }

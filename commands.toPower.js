@@ -1,4 +1,4 @@
-var transportCall = 600000;
+var transportCall = 700000;
 
 function makeBody(carryNeeded) {
     let body = [];
@@ -140,8 +140,8 @@ class PowerInteract {
         if (creep.room.powerspawn === undefined) {
             return false;
         }
-        if(Memory.stats.totalMinerals.power < 500 && (creep.room.terminal.store[RESOURCE_POWER] === undefined||creep.room.terminal.store[RESOURCE_POWER] === 0)&&creep.carry[RESOURCE_POWER] === undefined ){
-        	return false;
+        if (Memory.stats.totalMinerals.power < 500 && (creep.room.terminal.store[RESOURCE_POWER] === undefined || creep.room.terminal.store[RESOURCE_POWER] === 0) && creep.carry[RESOURCE_POWER] === undefined) {
+            return false;
         }
         let powerspawn = creep.room.powerspawn;
 
@@ -149,27 +149,27 @@ class PowerInteract {
 
         var target;
         var noPower = true;
-        if (creep.room.terminal.store[RESOURCE_POWER] === undefined && creep.room.powerspawn.power === 0 && creep.carry[RESOURCE_POWER] === undefined ||creep.carry[RESOURCE_POWER] === 0) {
-            if(!_terminal_().requestMineral(creep.room.name, RESOURCE_POWER)){
-            	return false;
+        if (creep.room.terminal.store[RESOURCE_POWER] === undefined && creep.room.powerspawn.power === 0 && creep.carry[RESOURCE_POWER] === undefined || creep.carry[RESOURCE_POWER] === 0) {
+            if (!_terminal_().requestMineral(creep.room.name, RESOURCE_POWER)) {
+                return false;
             }
-        } 
-    	creep.say('pw2Sp');
+        }
+        creep.say('pw2Sp');
         if (creep.carryTotal === 0) {
-        	creep.say('g');
+            creep.say('g');
             if (powerspawn.power < 10 && creep.room.terminal.store[RESOURCE_POWER] > 0) {
                 let amt = 100;
                 if (amt > creep.room.terminal.store[RESOURCE_POWER]) {
                     amt = creep.room.terminal.store[RESOURCE_POWER];
                 }
                 creep.moveToWithdraw(creep.room.terminal, RESOURCE_POWER, amt);
-                creep.say('gP'+amt);
-	            return true;
+                creep.say('gP' + amt);
+                return true;
 
             } else if (powerspawn.energy < 50) {
                 creep.moveToWithdraw(creep.room.terminal, RESOURCE_ENERGY);
                 creep.say('gE');
-	            return true;
+                return true;
             }
         } else {
             if (creep.carry[RESOURCE_POWER] > 0 && powerspawn.power < 100) {
@@ -184,7 +184,7 @@ class PowerInteract {
                 }
                 return true;
 
-            } else if (creep.carry[RESOURCE_ENERGY] > 0  && powerspawn.energy < 4000) {
+            } else if (creep.carry[RESOURCE_ENERGY] > 0 && powerspawn.energy < 4000) {
                 creep.say('PE');
                 if (creep.pos.isNearTo(powerspawn)) {
                     creep.transfer(powerspawn, RESOURCE_ENERGY);
@@ -192,14 +192,15 @@ class PowerInteract {
                     creep.moveTo(powerspawn);
                 }
                 return true;
-            } /*else if (creep.carry[RESOURCE_ENERGY] > 0  && powerspawn.energy >= 4000){
+            }
+            /*else if (creep.carry[RESOURCE_ENERGY] > 0  && powerspawn.energy >= 4000){
 /*
-            	for(var e in creep.carry){
-	            	creep.moveToTransfer(creep.room.terminal,e);
-	            	return true;
-            	} */
+                for(var e in creep.carry){
+                    creep.moveToTransfer(creep.room.terminal,e);
+                    return true;
+                } */
 
-//            }
+            //            }
         }
         return false;
     }
@@ -225,6 +226,8 @@ class PowerInteract {
         }
 
         let powerB = Game.getObjectById(theRoom.memory.powerbankID);
+
+
         if (powerB === null) {
             theRoom.memory.powerbankID = undefined;
             flag.memory.spawn = false;
@@ -234,11 +237,23 @@ class PowerInteract {
             for (var e in flag.memory.party) {
                 flag.memory.party[e][1] = 0;
             }
-            if (zz.length === 0){
+            if (zz.length === 0) {
                 flag.memory = undefined;
                 flag.remove();
             }
             return;
+        }
+        if (powerB.hits === 2000000) {
+            if (flag.memory.party !== undefined) {
+                for (let ee in flag.memory.party) {
+                    console.log(flag.memory.party[ee][0],flag.memory.party[ee][1],roomLink(roomName));
+                    if (flag.memory.party[ee][0] === 'fighter' && flag.memory.party[ee][1] === 0) {
+                        flag.memory.party[ee][1] = 1;
+                    } else if (flag.memory.party[ee][0] === 'healer' && flag.memory.party[ee][1] === 0) {
+                        flag.memory.party[ee][1] = 1;
+                    }
+                }
+            }
         }
         let damageDone = theRoom.memory.powerHits - powerB.hits;
         if (damageDone === 0) {
@@ -282,7 +297,7 @@ class PowerInteract {
                         parent: spawnID,
                         powerParty: true,
                         level: 6,
-                        boostNeeded:_.clone( boost ),
+                        boostNeeded: _.clone(boost),
                         goal: powerB.id,
                         party: flag.name
                     }
@@ -295,6 +310,8 @@ class PowerInteract {
             //          console.log(theRoom.memory.transSent);
 
         }
+
+
         //               let damageNeed = powerB.hits/powerB.ticksToDecay;
         //                console.log(powerB,damageNeed);
         /*
@@ -308,10 +325,10 @@ class PowerInteract {
 
     static analyzePowerBank(powerBank, room) {
 
-        if (powerBank.ticksToDecay < 4000) {
+        if (powerBank.ticksToDecay < 3000) {
             //            console.log('Powerbank too old@',powerBank.ticksToDecay, powerBank.pos);
             return false;
-        } else if (powerBank.power < 2500) {
+        } else if (powerBank.power < 2000) {
             //          console.log('Not enough power@',powerBank.power , powerBank.pos);
             return false;
         } else {

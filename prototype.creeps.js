@@ -220,7 +220,7 @@ module.exports = function() {
             return this.memory.stats[stat];
         }
     };
-  /*  var redFlags;
+    /*  var redFlags;
     Creep.prototype.defendFlags = function() {
         if (redFlags === undefined) {
             redFlags = _.filter(Game.flags, function(f) {
@@ -256,15 +256,23 @@ module.exports = function() {
                 opacity: 0.5
             },
         });
-
         var close;
         if (this.memory.pickUpId === undefined) {
             if (amount === undefined) amount = 0;
-            close = this.pos.findClosestByRange(FIND, {
-                filter: function(object) {
-                    return object.amount > amount;
-                }
-            });
+            if (FIND === FIND_DROPPED_RESOURCES) {
+                close = this.pos.findClosestByRange(FIND, {
+                    filter: function(object) {
+                        return object.amount > amount && object.resourceType !== 'energy';
+                    }
+                });
+            } else {
+                close = this.pos.findClosestByRange(FIND, {
+                    filter: function(object) {
+                        return object.amount > amount;
+                    }
+                });
+            }
+
         } else {
             close = Game.getObjectById(this.memory.pickUpId);
         }
@@ -282,7 +290,7 @@ module.exports = function() {
 
         return false;
     };
-    
+
     Creep.prototype.sleep = function(count) {
         if (count === undefined) count = 3;
         this.cleanMe();
@@ -309,7 +317,7 @@ module.exports = function() {
         if (source === null || source.energy === 0 || source.energy === undefined) {
             var total = this.room.find(FIND_SOURCES_ACTIVE);
             this.say('FINDING' + total.length);
-            if(total.length === 0)
+            if (total.length === 0)
                 return false;
             if (total.length === 1) {
                 this.memory.sourceID = total[0].id;
@@ -541,7 +549,7 @@ module.exports = function() {
             }
             this.memory.reHealID = tgt.id;
         } else {
-            if(this.memory.role === 'guard') return false;
+            if (this.memory.role === 'guard') return false;
             // Echo Healing.
             let tgt = Game.getObjectById(this.memory.reHealID);
             if (tgt === null) {
@@ -603,8 +611,8 @@ module.exports = function() {
             return false;
         }
         return this.heal(this);
-//        if (this.hits == this.hitsMax) return true;
-//        return true;
+        //        if (this.hits == this.hitsMax) return true;
+        //        return true;
     };
 
     Creep.prototype.attackMove = function(badguy, options) {
@@ -648,18 +656,18 @@ module.exports = function() {
 
     var fox = require('foxGlobals');
     Creep.prototype.moveToTransfer = function(target, resource, options) {
-        if (target === undefined || target === null) {            return false;        }
+        if (target === undefined || target === null) { return false; }
         if (this.carry[resource] === undefined || this.carry[resource] === 0) return false;
 
         if (options === undefined) options = {
             reusePath: 10,
         };
         if (this.pos.isNearTo(target)) {
-          return  this.transfer(target, resource);
+            return this.transfer(target, resource);
         } else {
-          return  this.moveTo(target, options);
+            return this.moveTo(target, options);
         }
-//        return true;
+        //        return true;
     };
     Creep.prototype.moveToWithdraw = function(target, resource, amount, options) {
         if (target === undefined || target === null || target.store === undefined) {
@@ -830,17 +838,17 @@ module.exports = function() {
         }
         return false;
     };
-/*
-    Creep.prototype.dragHealer = function(options) {
-        if (this.memory.healerID !== undefined) {
-            heal = Game.getObjectById(this.memory.healerID);
-            if (this.memory.healerID === null) {
-                this.memory.healerID = undefined;
-            } else {
-                this.move(heal.pos.getDirectionTo(this), options);
+    /*
+        Creep.prototype.dragHealer = function(options) {
+            if (this.memory.healerID !== undefined) {
+                heal = Game.getObjectById(this.memory.healerID);
+                if (this.memory.healerID === null) {
+                    this.memory.healerID = undefined;
+                } else {
+                    this.move(heal.pos.getDirectionTo(this), options);
+                }
             }
-        }
-    };*/
+        };*/
 
     Creep.prototype.runFrom = function(badguy, options) {
 
@@ -862,27 +870,27 @@ module.exports = function() {
         this.say('><', true);
 
     };
-/*
-    Creep.prototype.runFrom = function(badguy, options) {
+    /*
+        Creep.prototype.runFrom = function(badguy, options) {
 
-        if (_.isArray(badguy)) {
-            let target = this.pos.findClosestByRange(badguy);
-            badguy = target;
-        }
-        //console.log(badguy.pos, badguy, this.pos);
+            if (_.isArray(badguy)) {
+                let target = this.pos.findClosestByRange(badguy);
+                badguy = target;
+            }
+            //console.log(badguy.pos, badguy, this.pos);
 
-        //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
-        //        console.log('runfrom', this.pos.getDirectionTo(result.path[0]), result.length);
-        //this.move(this.pos.getDirectionTo(result.path[0]))
-        //        this.move(this.pos.getDirectionTo(result.path[0]));
-        var direction = this.pos.getDirectionTo(badguy);
-        direction = direction + 4;
-        if (direction > 8)
-            direction = direction - 8;
-        var moveStatus = this.move(direction, options);
-        this.memory.cachePath = undefined;
-        this.say('><', true);
-    };*/
+            //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
+            //        console.log('runfrom', this.pos.getDirectionTo(result.path[0]), result.length);
+            //this.move(this.pos.getDirectionTo(result.path[0]))
+            //        this.move(this.pos.getDirectionTo(result.path[0]));
+            var direction = this.pos.getDirectionTo(badguy);
+            direction = direction + 4;
+            if (direction > 8)
+                direction = direction - 8;
+            var moveStatus = this.move(direction, options);
+            this.memory.cachePath = undefined;
+            this.say('><', true);
+        };*/
 
     /*    Spawn.prototype.deadCheck = function() {
             // first off a spawn needs to have a memory check too make sure
@@ -1096,8 +1104,8 @@ destination Current Pos Path
         if (direction === undefined) { return; }
 
         var looking = creep.room.lookForAt(LOOK_CREEPS, getFormationPos(creep, direction))[0];
-        if(creep.room.name == 'E15S45')
-                   console.log(creep.memory.role, 'trying to do swap', direction, looking, creep.pos, getFormationPos(creep, direction), roomLink(creep.room.name));
+        if (creep.room.name == 'E15S45')
+            console.log(creep.memory.role, 'trying to do swap', direction, looking, creep.pos, getFormationPos(creep, direction), roomLink(creep.room.name));
 
         if (looking === undefined) { return; }
 
@@ -1236,22 +1244,22 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             }
         }
     }
-/*
-    Creep.prototype.withdrawing = function(target, resource, amount) {
-        //console.log('doing wrapped withdrawing',target,resource,amount);
-        //    if(Game.shard.name === 'shard0'){
-        //          return this.withdraw(target, resource, amount);
-        //      }
-        if (target.structureType !== STRUCTURE_LINK && target.store !== undefined) {
-            if (target.store[resource] !== undefined) {
+    /*
+        Creep.prototype.withdrawing = function(target, resource, amount) {
+            //console.log('doing wrapped withdrawing',target,resource,amount);
+            //    if(Game.shard.name === 'shard0'){
+            //          return this.withdraw(target, resource, amount);
+            //      }
+            if (target.structureType !== STRUCTURE_LINK && target.store !== undefined) {
+                if (target.store[resource] !== undefined) {
+                    return this.withdraw(target, resource, amount);
+                }
+            } else {
                 return this.withdraw(target, resource, amount);
             }
-        } else {
-            return this.withdraw(target, resource, amount);
-        }
-        return -6;
+            return -6;
 
-    };*/
+        };*/
 
     Creep.prototype.cleanMe = function() {
         // What this function does is clean up memory and make it less.
@@ -1384,7 +1392,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 if (this.room.memory.exitPoints[this.memory.inter_room_exitTarget] !== undefined) {
                     var newz = new RoomPosition(this.room.memory.exitPoints[this.memory.inter_room_exitTarget].x, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].y, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].roomName);
                     let zz = this.moveTo(newz); // Never needs to be segmented.
-//                    if (zz === -2) console.log(newz);
+                    //                    if (zz === -2) console.log(newz);
                     this.say('🚏' + zz);
                     return zz;
                 }
@@ -1438,7 +1446,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         }
 
         //        target = new RoomPosition(25,25,room_name);
-//        console.log(25, 25, this.memory.inter_room_target);
+        //        console.log(25, 25, this.memory.inter_room_target);
         /*if(this.memory.inter_room_target !== undefined){
                   target = new RoomPosition(25,25,this.memory.inter_room_target);
                   this.say(this.memory.inter_room_target);
@@ -1674,9 +1682,10 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                                         }
 
                                     }
-                                } /* else if (c.structureType === STRUCTURE_ROAD) {
-                                    costMatrix.set(c.pos.x, c.pos.y, 1);
-                                }*/
+                                }
+                                /* else if (c.structureType === STRUCTURE_ROAD) {
+                                                                   costMatrix.set(c.pos.x, c.pos.y, 1);
+                                                               }*/
                             }
                         );
                         room.find(FIND_CONSTRUCTION_SITES).forEach(

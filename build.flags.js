@@ -943,6 +943,16 @@
 
             let zFlags = _.filter(Game.flags, function(o) { return o.color != COLOR_GREY && o.color != COLOR_CYAN; });
 
+        for(let a in Memory.flags) {
+         //   var flag = Memory.flags[a];
+            if (Game.flags[a] === undefined) {
+              delete Memory.flags[a];  
+            } else {
+//            console.log(Game.flags[a]);
+            }
+        }
+
+      //  }
             //o.color != COLOR_WHITE
             //           var e = zFlags.length;
             var flag;
@@ -1010,7 +1020,7 @@
                             color:COLOR_YELLOW,
                             secondaryColor:COLOR_YELLOW,
                         };
-                    } else if(flag.color !== COLOR_WHITE) {
+                    } else if(flag.room.controller.level > 5 &&  flag.color !== COLOR_WHITE) {
                         flag.memory.setColor = {
                             color:COLOR_WHITE,
                             secondaryColor:COLOR_WHITE,

@@ -59,7 +59,8 @@ Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.03, 500000, "E18S32");
 
 Game.market.createOrder(ORDER_SELL, 'O', 0.82, 100000, "E18S36");
 
-Game.market.createOrder(ORDER_SELL, 'K', 0.86, 20000, "E17S45");
+Game.market.createOrder(ORDER_BUY, 'U', 0.091, 100000, "E23S42");
+
 
 Game.market.createOrder(ORDER_BUY, 'H', 1, 40000, "E14S43");
 Game.market.changeOrderPrice('59b6c6351d0e513fdacac4b9', 1.10);

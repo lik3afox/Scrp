@@ -844,14 +844,21 @@ class theSpawn {
                     Memory.creepTotal++;
                 }
                 if ((Game.creeps[name].memory.sleeping !== undefined && Game.creeps[name].memory.sleeping > 0)) {
-                    if(Game.creeps[name].memory.sleeping < 1000) {
+                    if (Game.creeps[name].memory.sleeping < 1000) {
+                        if (Game.creeps[name].ticksToLive <= Game.creeps[name].memory.sleeping) {
+                            Game.creeps[name].suicide();
+                        }
                         Game.creeps[name].say('💤' + Game.creeps[name].memory.sleeping);
                         Game.creeps[name].memory.sleeping--;
                     } else {
-                        if(Game.time >= Game.creeps[name].memory.sleeping){
+                        if (Game.time >= Game.creeps[name].memory.sleeping) {
                             Game.creeps[name].memory.sleeping = undefined;
                         } else {
-                            Game.creeps[name].say('💤' + (Game.creeps[name].memory.sleeping-Game.time) );
+                            if (Game.creeps[name].ticksToLive <= Game.creeps[name].memory.sleeping - Game.time) {
+                                Game.creeps[name].suicide();
+                            }
+                            Game.creeps[name].say('💤' + (Game.creeps[name].memory.sleeping - Game.time));
+
                         }
                     }
                 } else if (Game.creeps[name].memory.follower) {
@@ -940,7 +947,45 @@ class theSpawn {
     }
 
 
+    static jobList(roomName) {
+        if (roomName !== '') return false;
+        if (Game.rooms[roomName] === undefined) return false;
+        var alpha = Game.rooms[roomName].alphaSpawn;
+        if (alpha.memory.jobList === undefined) {
+            alpha.memory.jobList = {
+                first: {
+                    linker: null,
+                    scientist: null,
+                    first: null,
+                },
+                harvester: {
+                    source1: null,
+                    source2: null,
+                }
+            };
+        }
 
+        for (var i in alpha.memory.jobList) {
+            var job = alpha.memory.jobList[i];
+            var roles = ['linker', 'first', 'scientist'];
+            var creeps = _.filter(bads, function(o) {
+                return o.memory.home === roomName && _.contains(roles, o.memory.role);
+            });
+            console.log('Doing joblist, have ', creeps.length, 'Number in room:', roomName);
+            for (var e in job) {
+                if (job[e] === null) {
+                    // Here we find a creep for this job.
+                    // Once we find them, we will
+
+                } else {
+                    // Here let's test if this creep is alive or not. 
+                    // and if it is maybe here we can also do it's 'job' or role.
+
+                }
+            }
+        }
+
+    }
 
     static checkNewSpawn(spawn) {
         // This function is created when a spawn is new.

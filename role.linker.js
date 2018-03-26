@@ -190,6 +190,10 @@ function doPowerSpawn(creep) {
 
 function oneLinkRoom(creep, fill) {
     if (!fill) {
+        if ( creep.moveToPickUp(FIND_DROPPED_RESOURCES) ){
+            creep.say('zzes');
+            return;
+        }
         if (roleParent.constr.withdrawFromTombstone(creep)) {
             return;
         }
@@ -564,6 +568,11 @@ function simple(creep) {
 
 
     if (creep.memory.empty) {
+
+        if ( creep.moveToPickUp(FIND_DROPPED_RESOURCES) ){
+            creep.say('drp');
+            return;
+        }
         var zz = Game.getObjectById(creep.room.memory.mineralContainID);
         if (zz !== null && zz.total > 1000) {
             require('role.assistant').run(creep);
@@ -716,6 +725,17 @@ class roleLinker extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
+/*
+        if(creep.ticksLeftToLive === 1 ) {
+            // Right before death, we find the one to follow the link. Which will now be the first.
+            var my = creep.room.find(FIND_MY_CREEPS);
+                my = _.filter(my, function(o) {
+                              return o.memory.role === 'first';
+                          });
+                if(my.length){
+                    my[0].memory.role === 'first';
+                }
+        } */
 
         if (creep.room.name == 'E29xxS48') {
             let term = creep.room.terminal;

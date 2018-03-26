@@ -91,9 +91,7 @@ if(creep.room.name === 'E1S11'){
 }
 
         if (creep.ticksToLive > 1400 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
-
-creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
-//            creep.memory.boostNeeded = classLevels[creep.memory.level].boost;
+            creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
         } else if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }

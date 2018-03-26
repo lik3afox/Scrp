@@ -146,7 +146,7 @@ function partyNameToSegmentNumber(partyName) {
 function makeRequestString() {
     var rtrn = {
         basicTrading: {
-            room: 'E1S11',
+            room: 'E27S34',
             energy: false,
             H: false,
             O: false,
@@ -192,18 +192,19 @@ function setMyPublicSegment(array) {
         }
     }
 }
-
+var notSeen;
 function analyzeOtherPlayerSegment() {
     if (Game.shard.name !== 'shard1') return;
     // Reason this is an array instead of object, is that it's easy to use the keys in an array across multiple ticks.
     var alliedList = [
         ['Issacar', 99],
         ['Geir1983', 99],
+        ['Lolzor', 99],
     ];
 
     // Appectable array is the resources you are willing to trade out.
     var acceptable = ['X', 'O', 'H', 'L', 'U', 'K', 'Z'];
-    var acceptNum = 190000; // The minimum you have of the above mineral befor eyou trade.
+    var acceptNum = 100000; // The minimum you have of the above mineral befor eyou trade.
 
     if (Memory.otherPlayerSegmentCount === undefined || Memory.otherPlayerSegmentCount >= alliedList.length) {
         Memory.otherPlayerSegmentCount = 0;
@@ -220,11 +221,12 @@ function analyzeOtherPlayerSegment() {
             for (var resource in basic) {
                 //console.log('want to send ', resource, basic[resource], '@', basic.room, '#:', 100);
                 if (basic[resource]) {
+
                     if (Memory.stats.totalMinerals[resource] > acceptNum && _.contains(acceptable, resource)) {
 
                         // Here we do the sending logic.
                         //console.log('zzes',basic.room, resource,100);
-                        console.log('FULFILLING TERMINAL REQUEST', _terminal.requestMineral(basic.room, resource, 101));
+                        console.log('FULFILLING TERMINAL REQUEST',resource, basic[resource], '@', basic.room, '#:', 101, _terminal.requestMineral(basic.room, resource, 101));
                     }
                 }
             }
@@ -233,8 +235,18 @@ function analyzeOtherPlayerSegment() {
         if (Memory.otherPlayerSegmentCount >= alliedList.length) {
             Memory.otherPlayerSegmentCount = 0;
         }
+    } else {
+        console.log(notSeen,'Trying to look at',alliedList[Memory.otherPlayerSegmentCount][0], alliedList[Memory.otherPlayerSegmentCount][1]);
+        if(notSeen === undefined) notSeen = 0;
+        notSeen++;
+        if(notSeen > 2) {
+            notSeen = 0;
+            Memory.otherPlayerSegmentCount++;
+            if (Memory.otherPlayerSegmentCount >= alliedList.length) {
+                Memory.otherPlayerSegmentCount = 0;
+            }
+        }
     }
-
     RawMemory.setActiveForeignSegment(alliedList[Memory.otherPlayerSegmentCount][0], alliedList[Memory.otherPlayerSegmentCount][1]);
 }
 
