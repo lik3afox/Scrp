@@ -103,7 +103,7 @@ function moveToWithdraw(creep) {
                     total.sort((a, b) => a.ticksToRegeneration - b.ticksToRegeneration);
                 }
                 if (creep.pos.isNearTo(total[0].pos)) {
-                    creep.sleep(Game.time+total[0].ticksToRegeneration-1);
+                    creep.sleep(3);
                 } else {
                     creep.moveMe(total[0], { maxRooms: 1, maxOpts: 10 });
                 }
@@ -149,7 +149,7 @@ function moveToWithdraw(creep) {
 
         } else {
             if (creep.pos.isNearTo(source)) {
-                creep.sleep(Game.time+source.ticksToRegeneration-1);
+                creep.sleep(3);
             } else {
                 creep.moveMe(source);
             }
