@@ -276,8 +276,8 @@ class PowerInteract {
         //                    theRoom.memory.transSent = undefined;
         if (powerB.hits < transportCall && !theRoom.memory.transSent) {
 
-            let carryAmount = 100;
-            let boost = ['KH'];
+            let carryAmount = 150;
+            let boost = ['KH2O'];
             let carryNeeded = Math.ceil(powerB.power / carryAmount);
             let numOfcreep = Math.ceil(carryNeeded / 25);
             //     console.log (numOfcreep,"creeps with ",carryNeeded*.5 , "# of parts needed");

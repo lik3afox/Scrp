@@ -56,29 +56,45 @@ class StructureInteract {
         build(spawn, level);
     }
 
-    static withdrawFromTombstone(creep, range) {
+    static withdrawFromTombstone(creep, range, energy) {
         var tombStone;
-        if(creep.carryTotal === creep.carryCapacity) {
-            creep.memory.tombStoneID =undefined;
+        if (creep.carryTotal === creep.carryCapacity) {
+            creep.memory.tombStoneID = undefined;
             return false;
         }
+        if (energy === undefined) energy = true;
         if (creep.memory.tombStoneID === undefined) {
             if (range !== undefined) {
                 tombStone = creep.pos.findInRange(FIND_TOMBSTONES, range);
             } else {
                 tombStone = creep.room.find(FIND_TOMBSTONES);
             }
-            tombStone = _.filter(tombStone, function(o) {
-                return o.total > 100;
-            });
+            if (energy) {
+                tombStone = _.filter(tombStone, function(o) {
+                    return o.total > 100;
+                });
+            } else {
+                tombStone = _.filter(tombStone, function(o) {
+                    return (o.total - o.store[RESOURCE_ENERGY]) > 0;
+                });
+
+            }
+
             if (tombStone.length === 0) return false;
             //          creep.say('⚰️' + tombStone.length);
             if (tombStone.length > 0) {
                 //                creep.room.visual.line(creep.pos, tombStone[0].pos, { color: 'red' });
                 creep.memory.tombStoneID = tombStone[0].id;
                 if (creep.pos.isNearTo(tombStone[0])) {
-                    for (let e in tombStone[0].store) {
-                        creep.withdraw(tombStone, e);
+                    if (energy) {
+                        for (let e in tombStone[0].store) {
+                            creep.withdraw(tombStone, e);
+                        }
+                    } else {
+                        for (let e in tombStone[0].store) {
+                            if( e !== RESOURCE_ENERGY)
+                                creep.withdraw(tombStone, e);
+                        }
                     }
                 } else {
                     creep.say(creep.moveTo(tombStone[0]), { reusePath: 50 });
@@ -91,17 +107,26 @@ class StructureInteract {
         tombStone = Game.getObjectById(creep.memory.tombStoneID);
         if (tombStone !== null) {
             creep.say('⚰️');
-            if (creep.room.name == 'E17S45')
-                console.log(tombStone.pos.roomName, tombStone.ticksToDecay, tombStone.total);
             creep.room.visual.line(creep.pos, tombStone.pos, { color: 'red' });
-            if (tombStone.total === 0) creep.memory.tombStoneID = undefined;
-            if (!creep.pos.inRangeTo(tombStone,range)) creep.memory.tombStoneID = undefined;
+            if(energy){
+                if (tombStone.total === 0) creep.memory.tombStoneID = undefined;
+            } else {
+                if (tombStone.total-tombStone.store.energy === 0) creep.memory.tombStoneID = undefined;
+            }
+            if (!creep.pos.inRangeTo(tombStone, range)) creep.memory.tombStoneID = undefined;
             if (tombStone.ticksToDecay < 0) console.log("BUGGY @", roomLink(tombStone.pos.roomName));
             if (creep.pos.isNearTo(tombStone)) {
                 for (let e in tombStone.store) {
-                    if (tombStone.store[e] > 0) {
-                        creep.withdraw(tombStone, e);
-                        return true;
+                    if (energy) {
+                        if (tombStone.store[e] > 0) {
+                            creep.withdraw(tombStone, e);
+                            return true;
+                        }
+                    } else {
+                        if (tombStone.store[e] > 0 && e !== RESOURCE_ENERGY) {
+                            creep.withdraw(tombStone, e);
+                            return true;
+                        }
                     }
                 }
             } else {
@@ -173,18 +198,18 @@ class StructureInteract {
         // If none there, then create 1 road per creep.
         //        var doFor = ['E32S34','E28S37','E25S37','E25S43'];&& _.contains(doFor,creep.memory.home) 
         if (!creep.memory.onRoad && creep.memory.goHome) {
-            if ((creep.memory.cachePath !== undefined)&&(creep.memory._move === undefined)) {
-                if(creep.room.name !== 'E16S45'&&creep.room.name !== 'E16Sxx45'){
+            if ((creep.memory.cachePath !== undefined) && (creep.memory._move === undefined)) {
+                if (creep.room.name !== 'E16S45' && creep.room.name !== 'E16Sxx45') {
 
                     if (creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {
 
-                }
                     }
-            } 
+                }
+            }
             //else if ((creep.memory.cachePath === undefined)&&(creep.memory._move !== undefined && creep.memory._move.path !== undefined)) {
-              //  if (creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {
+            //  if (creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD) == OK) {
 
-                //}
+            //}
             //}
         }
         creep.memory.onRoad = false;
@@ -279,7 +304,7 @@ class StructureInteract {
                 //                  tagets[0].setPublic(true);
                 //            }
                 if (creep.repair(targets[0]) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0],{ignoreCreeps:true,reusePath:20});
+                    creep.moveTo(targets[0], { ignoreCreeps: true, reusePath: 20 });
                 }
                 return;
             } else {

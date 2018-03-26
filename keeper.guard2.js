@@ -196,23 +196,30 @@ class roleGuard extends roleParent {
 
         if (creep.memory.keeperLair) {
             let bads;
-            if (creep.room.name == creep.partyFlag.pos.roomName) {
-                bads = getHostiles(creep);
-            } else {
-                bads = getHostiles(creep, 6);
-            }
-            if (bads !== undefined && bads.length > 0) {
-                if (creep.hits < 400) {
-                    creep.selfHeal();
+            if (!movement.moveToDefendFlag2(creep)) {
+                if (creep.room.name == creep.partyFlag.pos.roomName) {
+                    bads = getHostiles(creep);
                 } else {
-                    attackCreep(creep, bads);
+                    bads = getHostiles(creep, 6);
                 }
-                creep.memory.goTo = undefined;
-                return;
-            } else {
-                creep.smartHeal();
-                if (!movement.moveToDefendFlag(creep)) {
+                if (bads !== undefined && bads.length > 0) {
+                    if (creep.hits < 400) {
+                        creep.selfHeal();
+                    } else {
+                        attackCreep(creep, bads);
+                    }
+                    creep.memory.goTo = undefined;
+                    return;
+                } else {
+                    creep.smartHeal();
                     moveCreep(creep);
+                }
+            } else {
+                bads = getHostiles(creep);
+                if (bads !== undefined && bads.length > 0) {
+                    attackCreep(creep, bads);
+                    creep.memory.goTo = undefined;
+                    return;
                 }
             }
         } else if (creep.room.name != creep.partyFlag.pos.roomName) {

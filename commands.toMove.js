@@ -3,7 +3,7 @@
 var FLAG = require('foxGlobals');
 
 function getRetreatFlag(creep) {
-    if(creep.homeFlag !== undefined){
+    if (creep.homeFlag !== undefined) {
         let zz = new RoomPosition(creep.homeFlag.pos.x, creep.homeFlag.pos.y, creep.homeFlag.pos.roomName);
         return zz;
     }
@@ -60,17 +60,37 @@ class MoveInteract {
         }
     }
 
+
+    static moveToDefendFlag2(creep, bades) {
+        let maxDistance = 1;
+        let redFlags = _.filter(Game.flags, function(f) {
+            return f.color == COLOR_RED && Game.map.getRoomLinearDistance(f.pos.roomName, creep.room.name) <= maxDistance;
+        });
+
+        if (redFlags.length) {
+            // This is set true, so it's up to the defender/guard to get guys.
+            if(creep.room.name === redFlags[0].pos.roomName) return true;
+                let zz = new RoomPosition(25, 25, redFlags[0].pos.roomName);
+                let xx = creep.moveTo(zz, { reusePath: 40 });
+                creep.say(maxDistance + '/D2!' + redFlags[0].pos.roomName);
+                return true;
+        }
+        return false;
+    }
+
+
     static moveToDefendFlag(creep, bades) {
-        var defendRooms = {
+        console.log('DEFEND FLAG HAS BEEN DISCONTINUED, FIX',creep.memory.role);
+    /*    var defendRooms = {
             E16S45: ['E16S45', 'E15S45', 'E16S44'],
 
         };
 
-  //      if (redFlags === undefined) {
-            redFlags = _.filter(Game.flags, function(f) {
-                return f.color == COLOR_RED;
-            });
-//        }
+        //      if (redFlags === undefined) {
+        redFlags = _.filter(Game.flags, function(f) {
+            return f.color == COLOR_RED;
+        });
+        //        }
 
         let flagz = redFlags;
         let targetFlag;
@@ -109,7 +129,7 @@ class MoveInteract {
             }
 
         }
-        return false;
+        return false; */
     }
 
     static runAway(creep) {
