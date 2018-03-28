@@ -53,9 +53,9 @@ function clearMemory(creep) {
 
 function doMining(creep) {
     let source = Game.getObjectById(creep.memory.sourceID);
-        creep.pickUpEnergy();
+    creep.pickUpEnergy();
     if (creep.memory.level >= 4) {
-        if (source !== null && creep.carryTotal < (creep.carryCapacity-creep.stats('work')) && creep.harvest(source) == OK) {
+        if (source !== null && creep.carryTotal < (creep.carryCapacity - creep.stats('work')) && creep.harvest(source) == OK) {
             creep.memory.notThere = true;
             clearMemory(creep);
             creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
@@ -70,7 +70,7 @@ function doMining(creep) {
         }
 
     } else {
-        if (source !== null && creep.carryTotal < (creep.carryCapacity-creep.stats('work')) && creep.harvest(source) == OK) {
+        if (source !== null && creep.carryTotal < (creep.carryCapacity - creep.stats('work')) && creep.harvest(source) == OK) {
             creep.memory.notThere = true;
             clearMemory(creep);
             creep.room.visual.text(source.energy + "/" + source.ticksToRegeneration, source.pos.x + 1, source.pos.y, {
@@ -103,7 +103,9 @@ function moveToWithdraw(creep) {
                     total.sort((a, b) => a.ticksToRegeneration - b.ticksToRegeneration);
                 }
                 if (creep.pos.isNearTo(total[0].pos)) {
-                    creep.sleep(3);
+                    if(creep.memory.sourceID === undefined){
+                        creep.sleep(3);
+                    }
                 } else {
                     creep.moveMe(total[0], { maxRooms: 1, maxOpts: 10 });
                 }
@@ -138,7 +140,6 @@ function moveToWithdraw(creep) {
     }
 
     if (source !== null && source.energy === 0) {
-        creep.pickUpEnergy();
         if (creep.memory.level >= 4) {
             let link = Game.getObjectById(creep.memory.linkID);
             if (link !== null) {
@@ -149,7 +150,7 @@ function moveToWithdraw(creep) {
 
         } else {
             if (creep.pos.isNearTo(source)) {
-                creep.sleep(3);
+                creep.sleep(Game.time+source.ticksToRegeneration-1);
             } else {
                 creep.moveMe(source);
             }
@@ -225,22 +226,19 @@ class roleHarvester extends roleParent {
             return;
         }
         let goal = Game.getObjectById(creep.memory.sourceID);
-        if (creep.saying == "⛏️" && creep.memory.sourceID !== undefined && creep.room.memory.masterLinkID !== undefined) {
-            if (goal.energy > 0 && creep.carryTotal <= creep.carryCapacity - creep.stats('mining')) {
+        if (creep.saying == "⛏️" && creep.memory.sourceID !== undefined && creep.room.memory.masterLinkID !== undefined &&
+            goal !== undefined && goal.energy > 0) {
+            if (creep.carry.energy <= creep.carryCapacity - creep.stats('mining')) {
                 creep.harvest(goal);
                 creep.cleanMe();
                 creep.say("⛏️", true);
-            } else if(goal.energy === 0){
-                if (creep.pos.isNearTo(goal))
-                    creep.sleep(Game.time+goal.ticksToRegeneration-1);
-            }
+            } 
             if (creep.carry.energy >= creep.carryCapacity - creep.stats('mining')) {
                 let link = Game.getObjectById(creep.memory.linkID);
-                if (link !== null&&creep.pos.isNearTo(link)) {
+                if (link !== null && creep.pos.isNearTo(link)) {
                     creep.transfer(link, RESOURCE_ENERGY);
                     if (link.energy > 650 && link.cooldown === undefined) {
-                        let master = Game.getObjectById(creep.room.memory.masterLinkID);
-                        link.transferEnergy(master);
+                        link.transferEnergy(creep.room.masterLink);
                     }
                 }
             }
@@ -252,7 +250,7 @@ class roleHarvester extends roleParent {
         }
         super.rebirth(creep);
 
-        if (goal !== null && creep.carry.energy > creep.carryCapacity - (creep.stats('mining') ) && creep.pos.isNearTo(goal)) {
+        if (goal !== null && creep.carry.energy > creep.carryCapacity - (creep.stats('mining')) && creep.pos.isNearTo(goal)) {
             if (!super.link.deposit(creep)) {
                 if (!depositContain(creep)) {}
             }

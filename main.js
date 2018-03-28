@@ -314,25 +314,25 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
         let flag = Game.flags.upgradeRoom;
         let room = flag.room;
         if (room.controller.level > 3) {
-            if (room.controller.level > 5) {
+//            if (room.controller.level > 5) {
                 let total = room.storage.store[RESOURCE_ENERGY] + room.terminal.store[RESOURCE_ENERGY];
                 room.visual.text(total, room.storage.pos);
                 if (total > 1200000) {
-                    flag.memory.party[0][1] = 5;
-
-                } else if (total > 1100000) {
-                    flag.memory.party[0][1] = 4;
-
-                } else if (total > 900000) {
                     flag.memory.party[0][1] = 3;
 
-                } else if (total > 700000) {
+                } else if (total > 1100000) {
                     flag.memory.party[0][1] = 2;
+
+                } else if (total > 900000) {
+                    flag.memory.party[0][1] = 2;
+
+                } else if (total > 700000) {
+                    flag.memory.party[0][1] = 1;
                 } else if (total > 500000) {
                     flag.memory.party[0][1] = 1;
                 }
             }
-        }
+        //}
 
     }
 

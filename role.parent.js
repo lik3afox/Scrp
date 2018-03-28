@@ -37,7 +37,7 @@ function numberOfBody(creep, boost) {
     var total = 0;
     let type;
     if (boost === undefined) {
-//        console.log(creep, "trying to do boost for:", boost);
+        //        console.log(creep, "trying to do boost for:", boost);
         return;
     }
     switch (boost) {
@@ -117,12 +117,12 @@ function creepParts(creep, boost) {
             break;
         case "GO":
         case "GHO2":
-        case "XKHO2":
+        case "XGHO2":
             type = TOUGH;
             break;
         default:
-            return false;
-
+        type = WORK;
+        break;
     }
     var e = creep.body.length;
     while (e--) {
@@ -130,8 +130,7 @@ function creepParts(creep, boost) {
             return true;
         }
     }
-
-    return true;
+    return false;
 }
 
 
@@ -308,7 +307,7 @@ class baseParent {
 
                 break;
             default:
-//                console.log('Trying to do task that doesnt exist', task.order);
+                //                console.log('Trying to do task that doesnt exist', task.order);
                 break;
         }
         if (orderComplete) {
@@ -334,27 +333,27 @@ class baseParent {
         if (creep.memory.boostNeeded !== undefined && creep.memory.boostNeeded.length > 0 && creep.memory.home == creep.room.name) {
             if (creep.memory.boostNeeded.length > 0) {
                 var neededMin = numberOfBody(creep, creep.memory.boostNeeded[0]) * 30;
-                if (creepParts(creep, creep.memory.boostNeeded[0])) { // this checks an existanced boost already happened.
-                    if (neededMin !== 0) {
-                        creep.room.memory.boost = {
-                            mineralType: creep.memory.boostNeeded[0],
-                            timed: 20,
-                            mineralAmount: neededMin
-                        };
+                var needBoost = creepParts(creep, creep.memory.boostNeeded[0]);
+                if (needBoost && neededMin) { // this checks an existanced boost already happened.
+                    creep.room.memory.boost = {
+                        mineralType: creep.memory.boostNeeded[0],
+                        timed: 20,
+                        mineralAmount: neededMin
+                    };
 
-                        if (creep.room.memory.boostLabID !== undefined) {
-                            let laber = creep.room.boostLab;
-                            if (laber !== null) {
-                                if (!creep.pos.isNearTo(laber)) {
-                                    creep.moveTo(laber);
-                                }
-                                creep.room.visual.line(creep.pos, laber.pos);
-                                return true;
+                    if (creep.room.memory.boostLabID !== undefined) {
+                        let laber = creep.room.boostLab;
+                        if (laber !== null) {
+                            if (!creep.pos.isNearTo(laber)) {
+                                creep.moveTo(laber);
                             }
+                            creep.room.visual.line(creep.pos, laber.pos);
+                            return true;
                         }
-                    } else {
-//                        console.log('boosting failure min needed @ 0 ', roomLink(creep.pos.roomName), creep.memory.role);
                     }
+
+                } else {
+                    console.log(needBoost, neededMin,'boosting failure min needed @ 0 ', roomLink(creep.pos.roomName), creep.memory.role);
                 }
             }
 
@@ -477,7 +476,7 @@ class baseParent {
             if (parent !== null) {
                 creep.moveMe(parent, {
                     reusePath: 25,
-                    ignoreCreeps:true,
+                    ignoreCreeps: true,
                     visualizePathStyle: {
                         stroke: '#fa0',
                         lineStyle: 'dotted',

@@ -195,6 +195,7 @@ function analyzeOtherPlayerSegment() {
         ['Issacar', 99],
         ['Geir1983', 99],
         ['Lolzor', 99],
+        ['W4rl0ck', 99],
     ];
 
     // Appectable array is the resources you are willing to trade out.
@@ -210,14 +211,15 @@ function analyzeOtherPlayerSegment() {
 
     if (obj !== undefined) {
         var basic = obj.basicTrading;
-//        console.log(alliedList[Memory.otherPlayerSegmentCount][0],"@", alliedList[Memory.otherPlayerSegmentCount][1],basic, 'Doing basicTrading:');
         if (basic !== undefined) {
+        console.log(alliedList[Memory.otherPlayerSegmentCount][0],"@",basic.room, alliedList[Memory.otherPlayerSegmentCount][1],basic, 'Doing basicTrading:');
             for (var resource in basic) {
                 if (basic[resource]) {
 
                     if (Memory.stats.totalMinerals[resource] > acceptNum && _.contains(acceptable, resource)) {
                         // Here we do the sending logic.
-  //                      console.log('FULFILLING TERMINAL REQUEST',resource, basic[resource], '@', basic.room, '#:', 101, _terminal.requestMineral(basic.room, resource, 101));
+                        let zz = _terminal.requestMineral(basic.room, resource, 101);
+                        console.log('FULFILLING TERMINAL REQUEST',resource, basic[resource], '@', basic.room, '#:', 101, zz);
                     }
                 }
             }

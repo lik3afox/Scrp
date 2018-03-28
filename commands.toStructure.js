@@ -280,6 +280,12 @@ class StructureInteract {
                 }
             ).sort((a, b) => a.hits - b.hits);
 
+            targets = _.filter(targets,
+                function(object) {
+                    return object.structureType == STRUCTURE_RAMPART && object.isPublic && object.hits < 1000000;
+                }
+            ).sort((a, b) => a.hits - b.hits);
+            
             if (targets.length === 0) {
 
                 targets = creep.room.find(FIND_STRUCTURES);
@@ -299,12 +305,16 @@ class StructureInteract {
             }
             creep.say(targets.length);
             if (targets.length > 0) {
+        //    console.log(targets[0].id);
+//            ,_.minBy(targets,function(o) { return o.hits; }) 
                 creep.memory.wallTargetID = targets[0].id;
                 //                if(targets[0].structureType === STRUCTURE_RAMPART && !targets[0].isPublic){
                 //                  tagets[0].setPublic(true);
                 //            }
                 if (creep.repair(targets[0]) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], { ignoreCreeps: true, reusePath: 20 });
+                    creep.moveMe(targets[0], { ignoreCreeps: true, reusePath: 20 });
+                }else {
+                    creep.cleanMe();
                 }
                 return;
             } else {
@@ -320,8 +330,9 @@ class StructureInteract {
             if (target.hits < 300000000) {
                 if (creep.pos.inRangeTo(target, 3)) {
                     creep.repair(target);
+                    creep.cleanMe();
                 } else {
-                    creep.moveTo(target, { reusePath: 10 });
+                    creep.moveMe(target, {ignoreCreeps: true, reusePath: 20 });
                 }
             } else {
                 creep.memory.wallTargetID = undefined;

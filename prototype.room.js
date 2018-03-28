@@ -44,6 +44,29 @@ module.exports = function() {
         }
     });
 
+    Object.defineProperty(Room.prototype, 'masterLink', {
+        configurable: true,
+        get: function() {
+            if (this._masterLink !== undefined && this._masterLink !== null) {
+                return this._masterLink;
+            } else {
+                if (this.memory.masterLinkID === undefined) {
+                    let bb = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_LINK });
+                    if (bb.length === 0){
+                        this.memory.masterLinkID = bb[0].id;
+                        return bb[0];
+                    }
+                }
+                this._masterLink = Game.getObjectById(this.memory.masterLinkID);
+                if (this._masterLink === null) {
+                    this.memory.masterLinkID = undefined;
+                    return undefined;
+                }
+                return this._masterLink;
+            }
+        }
+    });
+
     Object.defineProperty(Room.prototype, 'powerspawn', {
         configurable: true,
         get: function() {

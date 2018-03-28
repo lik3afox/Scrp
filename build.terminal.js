@@ -1310,7 +1310,7 @@ function doTrap(roomname) {
 }
 
 function trackSegmentSharing() {
-    if (Game.time % 67 !== 0) return;
+//    if (Game.time % 67 !== 0) return;
     if (Memory.segmentTransactions === undefined) {
         Memory.segmentTransactions = {
             lastIncommingTs: 0,

@@ -12,6 +12,37 @@ module.exports = function() {
             }
         },
     });
+    Object.defineProperty(Creep.prototype, "powerSpawn", {
+        configurable: true,
+        get: function() {
+            return Game.rooms[this.memory.home].powerSpawn;
+        },
+    });
+    Object.defineProperty(Creep.prototype, "roomName", {
+        configurable: true,
+        get: function() {
+            return this.pos.roomName;
+        },
+    });
+    Object.defineProperty(Creep.prototype, "roomName", {
+        configurable: true,
+        get: function() {
+            return this.pos.roomName;
+        },
+    });
+
+    Object.defineProperty(Creep.prototype, "homeRoom", {
+        configurable: true,
+        get: function() {
+            return Game.rooms[this.memory.home];
+        },
+    });
+    Object.defineProperty(Creep.prototype, "atFlagRoom", {
+        configurable: true,
+        get: function() {
+            return this.room.name === this.partyFlag.pos.roomName;
+        },
+    });
 
     Object.defineProperty(Creep.prototype, "partyFlag", {
         configurable: true,
@@ -55,28 +86,7 @@ module.exports = function() {
         },
     });
 
-    Object.defineProperty(Structure.prototype, "total", {
-        configurable: true,
-        get: function() {
-            if (this._storage_sum !== undefined) {
-                return this._storage_sum;
-            } else {
-                this._storage_sum = _.sum(this.store);
-                return this._storage_sum;
-            }
-        },
-    });
-    Object.defineProperty(Tombstone.prototype, "total", {
-        configurable: true,
-        get: function() {
-            if (this._storage_sum !== undefined) {
-                return this._storage_sum;
-            } else {
-                this._storage_sum = _.sum(this.store);
-                return this._storage_sum;
-            }
-        },
-    });
+
     Object.defineProperty(Creep.prototype, "isHome", {
         configurable: true,
         get: function() {
@@ -165,6 +175,29 @@ module.exports = function() {
                };
 */
 
+
+    Object.defineProperty(Structure.prototype, "total", {
+        configurable: true,
+        get: function() {
+            if (this._storage_sum !== undefined) {
+                return this._storage_sum;
+            } else {
+                this._storage_sum = _.sum(this.store);
+                return this._storage_sum;
+            }
+        },
+    });
+    Object.defineProperty(Tombstone.prototype, "total", {
+        configurable: true,
+        get: function() {
+            if (this._storage_sum !== undefined) {
+                return this._storage_sum;
+            } else {
+                this._storage_sum = _.sum(this.store);
+                return this._storage_sum;
+            }
+        },
+    });
     Creep.prototype.stats = function(stat) {
         if (this.memory.stats === undefined) {
             this.memory.stats = {};

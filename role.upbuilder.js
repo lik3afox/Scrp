@@ -267,6 +267,7 @@ class roleUpbuilder extends roleParent {
                         let zz = creep.upgradeController(creep.room.controller);
                         if (zz == OK) {
                             creep.say('⚡');
+                            creep.cleanMe();
                         }
                         creep.memory._move = undefined;
                     } else {
