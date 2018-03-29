@@ -86,7 +86,7 @@
 
             if (bads.length === 0) {
                 if (flag.memory.invadeDelay === undefined)
-                    flag.memory.invadeDelay = 2000;
+                    flag.memory.invadeDelay = 100;
 
                 if (flag.memory.invadeDelay < 0) {
                     //                    var constr = require('commands.toStructure');
@@ -101,7 +101,7 @@
 
             } else {
                 if (flag.memory.invadeDelay === undefined)
-                    flag.memory.invadeDelay = 2000;
+                    flag.memory.invadeDelay = 100;
             }
         }
         flag.memory.invaderTimed++;

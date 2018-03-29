@@ -1293,7 +1293,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
     };
 
-    var getExitPos = function(creep, room_name) {
+    var getExitPos = function(creep) {
 
         if (creep.memory._move && creep.memory._move.path.length === 0) {
             creep.memory._move = undefined;
@@ -1330,7 +1330,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         _.defaults(move_opts, {
             useSKPathing: true,
             reusePath: 50,
-            //            maxRooms: 2,
+            maxRooms: 2,
             segment: false,
             simpleExit: false,
         });
@@ -1443,7 +1443,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         }
 
         if (this.room.name !== this.memory.inter_room_target && move_opts.simpleExit) {
-            target = getExitPos(this, this.memory.inter_room_target);
+            target = getExitPos(this);
         } else {
             // Get next room in the path
             let index = this.memory.inter_room_path.indexOf(this.memory.inter_room_target);
@@ -1458,10 +1458,13 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             }
             this.memory.inter_room_target = this.memory.inter_room_path[index + 1];
             this.memory.inter_room_exitTarget = this.memory.inter_room_exit[index + 1];
-            if (move_opts.simpleExit) target = getExitPos(this, this.memory.inter_room_target);
+            if (move_opts.simpleExit) target = getExitPos(this);
+        }
+        if(!move_opts.simpleExit){
+             target = new RoomPosition(25,25,this.memory.inter_room_target);
         }
 
-        //        target = new RoomPosition(25,25,room_name);
+        //       
         /*if(this.memory.inter_room_target !== undefined){
                   target = new RoomPosition(25,25,this.memory.inter_room_target);
                   this.say(this.memory.inter_room_target);

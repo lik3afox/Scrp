@@ -17,10 +17,6 @@ function returnClosestRoom(roomName) {
 
 
 function scanForRemoteSources() {
-
-
-
-
     var observer = require('build.observer');
 
     if (Game.flags.remote === undefined && Game.flags.mineral === undefined) return false;
@@ -172,10 +168,10 @@ function whoWorksFor(goal) {
     }
 }
 
-var HardD = ['E35S83'];
 
 
 function rampartCheck(spawn) {
+var HardD = ['E35S83'];
 
     var fox = require('foxGlobals');
 
@@ -406,10 +402,6 @@ function analyzeHostiles(bads) {
     return {};
 }
 
-var loaded = Game.time;
-
-//    var ALLIES = foxy.friends;
-
 function doRoomReport(room) {
 
 
@@ -431,35 +423,10 @@ function doRoomReport(room) {
 
     var nuke = room.find(FIND_NUKES);
     if (nuke.length > 0) {
-        //        console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
+        console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
         room.memory.nukeIncoming = true;
-        //        Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
+        Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
     }
-
-    //   if (room.controller.level === 8 && room.controller.ticksToDowngrade < 100000) {
-
-    /*            let spwns = room.find(FIND_STRUCTURES);
-                spwns = _.filter(spwns, function(o) {
-                    return o.structureType == STRUCTURE_SPAWN && o.spawning === null;
-                });
-                if(spwns.length > 0){
-                        var zz = spwns[0].spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK], 'emegyUpg' + Math.random(), {
-                            memory: {
-                                role: 'upgrader',
-                                roleID: 0,
-                                home: spwns[0].pos.roomName,
-                                parent: "none",
-                                reportDeath: true,
-                                level: 2
-                            }
-                        });
-
-                } */
-    //    }
-
-    //   if (room.boostLab !== undefined) {
-    //       room.visual.text('X', room.boostLab.pos);
-    //  }
 
     if (room.controller.level > 3) {
 
@@ -623,7 +590,7 @@ function getWallLow(roomName) {
     let walls = _.filter(room.find(FIND_STRUCTURES), function(o) {
         return o.structureType == STRUCTURE_WALL || (o.structureType == STRUCTURE_RAMPART && !o.isPublic);
     });
-    let highest = _.max(walls, a => a.hits);
+    let highest = _.min(walls, a => a.hits);
     return highest.hits;
 
 }
@@ -661,12 +628,6 @@ function cleanMemory() {
     }
 
 }
-const { log } = console;
-console.log = function(v) {
-    if (v === false) log.call(this, new Error().stack);
-    if (v === "false") log.call(this, new Error().stack);
-    log.apply(this, arguments);
-};
 
 function addSpawnQuery(spawnCount) {
     var e;
@@ -912,17 +873,12 @@ module.exports.loop = blackMagic(function() {
         }
     } // End of Spawns Loops
 
-
-
-
     Memory.stats.rooms = spawnReport;
-
     if (isTenTime === 0) {
         _terminal.run();
     }
     if (Game.shard.name !== 'shard2') {
         memoryStatsUpdate();
-//        observer.runTask();
     }
 
     doUpgradeRooms();

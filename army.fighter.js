@@ -225,10 +225,10 @@ function powerAction(creep) {
 
         } else {
             creep.countDistance();
-            movement.flagMovement(creep);
+//            movement.flagMovement(creep);
             let task = {};
             task.options = {
-                reusePath: 100
+                reusePath: 50
             };
             task.pos = Game.flags[creep.memory.party].pos;
             task.order = "moveTo";
@@ -340,7 +340,6 @@ class fighterClass extends roleParent {
 
         if (super.rallyFirst(creep)) return;
         if (super.goToPortal(creep)) return;
-//        creep.memory.death = creep.partyFlag === undefined;
 
         enemy = creep.room.hostilesHere();
         enemy = _.filter(enemy,

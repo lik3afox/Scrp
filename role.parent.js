@@ -107,7 +107,7 @@ function creepParts(creep, boost) {
             break;
         case "ZO":
         case "ZHO2":
-        case "XKHO2":
+        case "XZHO2":
             type = MOVE;
             break;
         case "KH":
@@ -331,10 +331,9 @@ class baseParent {
         creep.say('💊' + creep.memory.boostNeeded.length);
 
         if (creep.memory.boostNeeded !== undefined && creep.memory.boostNeeded.length > 0 && creep.memory.home == creep.room.name) {
-            if (creep.memory.boostNeeded.length > 0) {
                 var neededMin = numberOfBody(creep, creep.memory.boostNeeded[0]) * 30;
-                var needBoost = creepParts(creep, creep.memory.boostNeeded[0]);
-                if (needBoost && neededMin) { // this checks an existanced boost already happened.
+//                var needBoost = creepParts(creep, creep.memory.boostNeeded[0]);
+           //     if (neededMin) { // this checks an existanced boost already happened.
                     creep.room.memory.boost = {
                         mineralType: creep.memory.boostNeeded[0],
                         timed: 20,
@@ -351,12 +350,6 @@ class baseParent {
                             return true;
                         }
                     }
-
-                } else {
-                    console.log(needBoost, neededMin,'boosting failure min needed @ 0 ', roomLink(creep.pos.roomName), creep.memory.role);
-                }
-            }
-
         }
     }
 

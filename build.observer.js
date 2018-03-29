@@ -33,7 +33,7 @@ var powerRooms = [
     'E30S30', 'E30S31', 'E30S32', 'E30S33', 'E30S34', 'E30S35', 'E30S36', 'E30S37', 'E30S38', 'E30S39', 'E20S30',
     'E29S40', 'E28S40', 'E27S40', 'E26S40', 'E25S40', 'E24S40', 'E23S40', 'E22S40', 'E21S40',
     'E20S31', 'E20S32', 'E20S33', 'E20S34', 'E20S35', 'E20S36', 'E20S37', 'E20S38', 'E20S39',
-    'E11S40', 'E12S40', 'E13S40', 'E14S40', 'E15S40', 'E16S40', 'E17S40', 'E18S40', 'E19S40',
+     'E12S40', 'E13S40', 'E14S40', 'E15S40', 'E16S40', 'E17S40', 'E18S40', 'E19S40',
     'E20S41', 'E20S42', 'E20S43', 'E20S44', 'E20S45', 'E20S46', 'E20S47', 'E20S48', 'E20S49', 'E17S30', 'E18S30', 'E19S30',
     'E10S45', 'E10S46', 'E10S47', 'E10S48', 'E10S49', 'E10S50',
 ];
@@ -85,15 +85,20 @@ function newDoTask(roomName) {
                     if (e == 'room') target = task.options[e];
                 }
                 distance = Game.map.getRoomLinearDistance(ob.room.name, target);
-                if (distance <= 10) {
-                    console.log(roomLink(target), "distance:", distance, ob, "doing the task of", task.order, "for " + task.options.timed + "longer");
+                if (distance < 10) {
+                    console.log(roomLink(target),'looking @',target, "distance:", distance, ob, "doing the task of", task.order, "for " + task.options.timed + "longer");
                     if (ob.observeRoom(target) == OK) {
-                        task.options.timed = 0;
+                        task.options.timed--;
                         if (task.options.timed === 0) {
                             tasks.shift();
                         }
                         return true;
                     }
+                }else {
+                    /*task.options.timed--;
+                        if (task.options.timed === 0) {
+                            tasks.shift();
+                        }*/
                 }
             break;
     }

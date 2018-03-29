@@ -156,7 +156,7 @@ function powerAction(creep) {
             }
         } else {
             if (Game.flags[creep.memory.party] !== undefined) {
-                creep.moveTo(Game.flags[creep.memory.party], { reusePath: 100 });
+                creep.moveMe(Game.flags[creep.memory.party], {ignoreCreeps:true, reusePath: 100 });
             } else {
                 creep.memory.death = true;
             }
@@ -179,10 +179,10 @@ function powerAction(creep) {
                     creep.transfer(target, e);
                 }
             } else {
-                creep.moveTo(target, { reusePath: 50 });
+                creep.moveMe(target, { reusePath: 50 });
             }
         } else {
-            creep.moveTo(Game.getObjectById(creep.memory.parent).room.terminal, { reusePath: 100 });
+            creep.moveMe(Game.getObjectById(creep.memory.parent).room.terminal, {ignoreCreeps:true, reusePath: 100 });
         }
     }
     return true;
@@ -355,7 +355,7 @@ class thiefClass extends roleParent {
                 var parent = Game.getObjectById(creep.memory.parent);
                 //            if (!super.avoidArea(creep)) {
                 //                    creep.moveTo(parent, { reusePath: 75 });
-                creep.tuskenTo(parent, creep.partyFlag.pos.roomName, { moveToExit: true, useMapPath: true, });
+                creep.tuskenTo(parent, creep.partyFlag.pos.roomName);
                 //                creep.moveTo(parent, { reusePath: 75 });
                 //              }
                 creep.countDistance();
@@ -364,7 +364,7 @@ class thiefClass extends roleParent {
                 //        if (!super.avoidArea(creep)) {
                 //              movement.flagMovement(creep);
                 //            }
-                let zz = creep.tuskenTo(creep.partyFlag, creep.memory.home, { moveToExit: true, useMapPath: true, });
+                let zz = creep.tuskenTo(creep.partyFlag, creep.memory.home);
                 //                let zz = creep.moveTo(creep.partyFlag, { reusePath: 75 });
                 //                creep.say('thief'+zz);
 

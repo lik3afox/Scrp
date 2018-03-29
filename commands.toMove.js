@@ -29,7 +29,6 @@ function moveToRallyFlag(creep) {
     } else {
         creep.moveMe(Game.flags[creep.memory.party], { reusePath: 50 });
     }
-    //        creep.moveMe(Game.flags[creep.memory.party],{ignoreRoads: true,reusePath:50});
     creep.say('rally');
     return true;
 

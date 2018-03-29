@@ -1,3 +1,6 @@
+const scanDelay = 250;
+var fox = require('foxGlobals');
+
 function scanHostileBelowToughness(target, toughness) {
 
     if (target.hits < (target.hitsMax - (toughness * 100))) {
@@ -125,17 +128,21 @@ function estimateDamageAndAttack(target, allies, towers) {
     var totalDamage = 0;
     totalDamage += getTowerDamage(target, towers);
     totalDamage += getCreepDamage(target, allies);
-    var totalToughHp = getBoostTough(target.body) * 100;
+    var toughParts = getBoostTough(target.body);
+    var totalToughHp = toughParts * 100;
     var damageTotal = calcuateDamage(target.body, totalDamage);
     var currentLossHp = target.hitsMax - target.hits;
-    target.room.visual.text(calcuateDamage(target.body, totalDamage), target.pos, { color: 'green', font: 0.8 });
-    if (damageTotal + currentLossHp < totalToughHp) return false;
+    target.room.visual.text(damageTotal, target.pos, { color: 'green', font: 0.8 });
+    if (damageTotal + currentLossHp < totalToughHp && toughParts > 0) {
+        return false;
+    }
 
-//    console.log('est damage', target, totalToughHp, damageTotal, damageTotal > totalToughHp);
-    target.room.visual.text(calcuateDamage(target.body, totalDamage), target.pos, { color: 'green', font: 0.8 });
+    //    console.log('est damage', target, totalToughHp, damageTotal, damageTotal > totalToughHp);
+    target.room.visual.text(damageTotal, target.pos, { color: 'red', font: 0.8 });
+    //    console.log(damageTotal, target.pos);
     var e;
     for (e in towers) {
-        towers[e].attack(target);
+        console.log(towers[e].attack(target), 'focus fire @',target);
     }
     for (e in allies) {
         if (allies[e].getActiveBodyparts(ATTACK) > 0) {
@@ -250,7 +257,7 @@ function healRoom(towers, hurt) {
         while (e--) {
             if (towers[e].energy > 0) {
 
-               // showTowerRange(towers[e]);
+                // showTowerRange(towers[e]);
                 towers[e].heal(hurt[0]);
             }
         }
@@ -286,7 +293,6 @@ function repairRoom(towers) { // This function is given all the towers in a room
 
 }
 
-var scanDelay = 250;
 
 
 function doTowerVis(tower) {
@@ -376,8 +382,8 @@ function repairRampart(towers) {
 
         targets = _.filter(targets, function(object) {
             return (object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART);
-        });//.sort((a, b) => a.hits - b.hits);
-        lowest = _.min(targets,o => o.hits);
+        }); //.sort((a, b) => a.hits - b.hits);
+        lowest = _.min(targets, o => o.hits);
         towers[0].room.memory.towerRepairID = lowest.id;
     }
     if (_.isArray(towers)) {
@@ -397,11 +403,6 @@ function repairRampart(towers) {
     }
 }
 
-
-
-var constr = require('commands.toStructure');
-var fox = require('foxGlobals');
-//var towerSafe =  ['zolox','admon84']
 class roleTower {
     /*
         static rescan(tower) {
@@ -428,8 +429,7 @@ class roleTower {
         towers = [];
         for (var ea in room.memory.towers) {
             var zz = Game.getObjectById(room.memory.towers[ea]);
-            if(zz !== null)
-            towers.push(zz);
+            if (zz !== null) towers.push(zz);
         }
 
         if (Memory.towerTarget !== 'none') {
@@ -477,12 +477,9 @@ class roleTower {
                 // SO we should just repair and make it longer
                 if (!healRoom(towers, hurt)) {
                     if (!defendRoom(towers, hostiles)) {}
-                    if (zz.memory.invaderTimed > 350) {
-//                        repairRampart(towers);
-                    }
                 }
             } else {
-                
+
                 if (!defendRoom(towers, hostiles)) {
                     if (!healRoom(towers, hurt)) {
                         repairRoom(towers);
@@ -490,24 +487,11 @@ class roleTower {
                 }
             }
 
-            /*            if (Game.rooms[roomName].memory.alert && Game.rooms[roomName].controller.safeMode !== undefined) {
-
-                            if (!healRoom(towers, hurt)) {
-                                if (!defendRoom(towers, hostiles)) {
-                                    repairRoom(towers);
-                                }
-                            }
-
-                        } */
-
-
             if (hostiles.length > 0) {
                 for (var e in hostiles) {
                     if (hostiles[e].owner.username !== 'Invader') {
-//                        if(mycreeps === undefined) mycreeps = ;
-
                         if (estimateDamageAndAttack(hostiles[e], hostiles[e].room.find(FIND_MY_CREEPS), towers)) {
-                          //  console.log("KILLING", hostiles[e].room.name);
+                            console.log("KILLING", hostiles[e].room.name);
                             return;
                         }
 

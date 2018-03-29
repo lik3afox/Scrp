@@ -328,7 +328,6 @@ class settler extends roleParent {
                     reusePath: 49,
                     ignoreCreep: true,
                     segment: true,
-                    ignoreRoads: false,
                     visualizePathStyle: {
                         fill: 'transparent',
                         stroke: '#ff0',
