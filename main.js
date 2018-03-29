@@ -308,6 +308,9 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
     if (Game.shard.name !== 'shard1') return;
 
     // Lets count how many ticks left for enhanced upgrading.
+    if(Memory.stats.playerTrade === undefined) {
+        Memory.stats.playerTrade = {};
+    }
 
 
     if (Game.flags.upgradeRoom !== undefined) {
@@ -876,6 +879,7 @@ module.exports.loop = blackMagic(function() {
                 ccSpawn.createFromStack(Game.spawns[title]);
             } else {
                 Game.spawns[title].memory.lastSpawn = 0;
+                Game.spawns[title].spawning.setDirections(Game.spawns[title].memory.spawnDir);
                 let spawn = Game.spawns[title];
                 spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
                     color: '#97c39a ',

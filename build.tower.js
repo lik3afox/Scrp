@@ -478,7 +478,7 @@ class roleTower {
                 if (!healRoom(towers, hurt)) {
                     if (!defendRoom(towers, hostiles)) {}
                     if (zz.memory.invaderTimed > 350) {
-                        repairRampart(towers);
+//                        repairRampart(towers);
                     }
                 }
             } else {

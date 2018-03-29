@@ -303,7 +303,7 @@ class upgraderzClass extends roleParent {
                 }
                 if (zz !== undefined) {
                     if (!creep.pos.isEqualTo(zz)) {
-                        creep.moveTo(zz, { ignoreCreep: true });
+                        creep.moveMe(zz);
                         let isThere = creep.room.lookAt(zz);
 
                         for (var a in isThere) {

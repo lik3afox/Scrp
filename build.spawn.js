@@ -425,6 +425,8 @@ function calculateCPU(cpu, creep) {
         return creep.memory.cpuCost;*/
 }
 
+function newExpandCheck(spawn, totalCreeps) {}
+
 var spawnCount;
 var roleIndex;
 class theSpawn {
@@ -506,129 +508,77 @@ class theSpawn {
             }
         }
 
-
         // Expand check
         if (spawn.memory.roadsTo.length === 0) return;
-
-        var _module;
-        var report = '';
-
-
-        for (var ie in spawn.memory.roadsTo) {
-
-            let xp = spawn.memory.roadsTo[ie].expLevel;
-            if (spawn.memory.roadsTo[ie].mineral !== undefined) {
-                spawn.memory.roadsTo[ie].expLevel = 11;
-            }
-            _module = expansionModule[xp];
-            var source = Game.getObjectById(spawn.memory.roadsTo[ie].source);
-
+        
+        for (let mod in spawn.memory.roadsTo) {
+            let remoteInfo = spawn.memory.roadsTo[mod];
+            let source = Game.getObjectById(remoteInfo.source);
             // Checking if room is visable and too observe it.
-            if (spawn.memory.roadsTo[ie].expLevel > 0) {
-                if (source === null) {
-                    if (spawn.memory.roadsTo[ie].sourcePos !== undefined) {
-                        let obser = require('build.observer');
-                        obser.reqestRoom(spawn.memory.roadsTo[ie].sourcePos.roomName, 5);
-                    }
-                } else {
-                    if (source.room === undefined) {
-//                        console.log('ERROR source.room not available:checkexpand', spawn.pos);
-                    }
+            if (remoteInfo.expLevel === 0) continue;
+            if (source === null) {
+                if (remoteInfo.sourcePos !== undefined) {
+                    let obser = require('build.observer');
+                    obser.reqestRoom(remoteInfo.sourcePos.roomName, 2);
                 }
+                return;
             }
 
             // Expand Module Check.
-            if (source !== null) {
 
-                if (spawn.memory.roadsTo[ie].sourcePos === undefined) {
-                    spawn.memory.roadsTo[ie].sourcePos = source.pos;
-                }
-                var expandRole = ['miner', 'controller', 'transport', 'ztransport', 'mineral'];
-                var maxRole = {};
-                var e;
-                for (e in expandRole) {
-                    if (maxRole[expandRole[e]] === undefined) {
-                        maxRole[expandRole[e]] = 0;
-                    }
-                } // This creates maxRole={miner:0,transport:0,ztransport:0}
+            if (remoteInfo.sourcePos === undefined) {
+                remoteInfo.sourcePos = source.pos;
+            }
+            var expandRole = ['miner', 'controller', 'transport', 'ztransport', 'mineral'];
+            var roleInfo = {};
+            var e;
 
-                for (e in _module) {
-                    maxRole[_module[e][_name]] = _module[e][_number];
-                }
-
-                for (e in expandRole) {
-                    if (spawn.memory.roadsTo[ie][expandRole[e]] !== undefined) {
-                        let transportBuild;
-
-                        let currentCount = newGetExpandRole(expandRole[e], spawn.memory.roadsTo[ie].source, totalCreeps);
-                        //console.log('new Expand Check',expandRole[e],currentCount,'/',maxRole[expandRole[e]], source,'@', spawn.memory.roadsTo[ie][expandRole[e]]);
-                        if (currentCount < maxRole[expandRole[e]]) {
-
-                            // This is where it does the creation of the unit.
-                            spawn.memory.roadsTo[ie][expandRole[e]] = false;
-
-                        }
-
-
-                    }
-                }
-
-
+            let _module = expansionModule[remoteInfo.expLevel];
+            for (e in _module) {
+                roleInfo[_module[e][_name]] = {
+                    max: _module[e][_number],
+                    level: _module[e][_level],
+                };
             }
 
-            // Going through Expand and Modules.
-            for (type in spawn.memory.roadsTo[ie]) {
-                for (var uo in _module) {
+            for (e in expandRole) {
+                if (roleInfo[expandRole[e]] !== undefined && roleInfo[expandRole[e]].max > 0) {
 
-                    // Find the expansions
-                    if (type == _module[uo][_name]) {
-                        // Instead of checking roadsTo - you can check the expansion #
-                        if (!spawn.memory.roadsTo[ie][type]) {
-                            if (spawn.memory.created === undefined) {
-                                spawn.memory.created = 0;
+                    let currentCount = newGetExpandRole(expandRole[e], remoteInfo.source, totalCreeps);
+                    if (currentCount < roleInfo[expandRole[e]].max) {
+                        // This is where it does the creation of the unit.
+                        if (spawn.memory.created === undefined) {
+                            spawn.memory.created = 0;
+                        }
+                        spawn.memory.created++;
+                        let temp = {
+                            build: getModuleRole(expandRole[e]).levels(roleInfo[expandRole[e]].level),
+                            name: expandRole[e] + "-" + spawn.memory.created + "v",
+                            memory: {
+                                role: expandRole[e],
+                                home: spawn.room.name,
+                                parent: spawn.id,
+                                goal: remoteInfo.source,
+                                level: roleInfo[expandRole[e]].level
                             }
-                            spawn.memory.created++;
-                            let needBoost = [];
-                            let temp = {
-                                build: getModuleRole(_module[uo][_name]).levels(_module[uo][_level], spawn.memory.roadsTo[ie], spawn.room),
-                                name: type + "-" + spawn.memory.created + "v",
-                                memory: {
-                                    needBoost: needBoost,
-                                    role: _module[uo][_name],
-                                    home: spawn.room.name,
-                                    parent: spawn.id,
-                                    goal: spawn.memory.roadsTo[ie].source,
-                                    level: _module[uo][_level]
-                                }
-                            };
+                        };
 
-                            // Here, we'll check to see if the controller needs to be created
-
-                            // For expansions here we can determine special requirements needed to
-                            // create an unit
-
-                            if (temp.memory.role == 'miner') {
+                        switch (expandRole[e]) {
+                            case 'miner':
                                 spawn.memory.expandCreate.unshift(temp);
-                                spawn.memory.roadsTo[ie][type] = true;
-                            }
-                            // Controller needs it's target reservation to go below 2000
-                            else if (temp.memory.role == 'controller') {
-                                var level;
-                                let sourcez = Game.getObjectById(spawn.memory.roadsTo[ie].source);
-                                var controlLeft;
-                                if (sourcez !== null) {
-                                    controlLeft = sourcez.room.controller;
-                                    if (sourcez.room.controller !== undefined && sourcez.room.controller.reservation !== undefined) {
-                                        level = sourcez.room.controller.reservation.ticksToEnd;
+                                break;
+                            case 'controller':
+                                if (remoteInfo.controller !== undefined && source.energyCapacity === 3000) {
+                                    var level;
+                                    let controlLeft = source.room.controller;
+                                    if (source.room.controller !== undefined && source.room.controller.reservation !== undefined) {
+                                        level = source.room.controller.reservation.ticksToEnd;
                                     } else {
                                         level = 0;
                                     }
-                                    if ((level < controllerLevel) || (sourcez.room.controller.level > 0)) {
+                                    if ((level < controllerLevel) || (source.room.controller.level > 0)) {
                                         let controlParts;
-                                        /*
-                                                                                if(spawn.room.energyAvailable > 12000){
-                                                                                    controlParts = 10;
-                                                                                } else*/
+
                                         if (spawn.room.energyCapacityAvailable > 8000) {
                                             controlParts = 8;
                                         } else if (spawn.room.energyCapacityAvailable > 6000) {
@@ -641,43 +591,28 @@ class theSpawn {
                                                 temp.build.push(MOVE);
                                             }
                                         }
-
                                         spawn.memory.expandCreate.push(temp);
-                                        spawn.memory.roadsTo[ie][type] = true;
                                     }
-
                                 }
-                            } else if (temp.memory.role == 'mineral') {
-                                let min = Game.getObjectById(spawn.memory.roadsTo[ie].source);
+                                break;
+                            case 'mineral':
+                                let min = Game.getObjectById(remoteInfo.source);
                                 if (min !== null && min.mineralAmount > 0 &&
                                     min.room.controller !== undefined && min.room.controller.level >= 6) {
                                     spawn.memory.expandCreate.push(temp);
-                                    spawn.memory.roadsTo[ie][type] = true;
-
                                 } else if (min !== null && min.mineralAmount > 0 && min.room.controller === undefined) {
                                     spawn.memory.expandCreate.push(temp);
-                                    spawn.memory.roadsTo[ie][type] = true;
-                                } else {
-
                                 }
-                            } else if (temp.memory.role == 'transport') {
+                                break;
+                            default:
                                 spawn.memory.expandCreate.push(temp);
-                                spawn.memory.roadsTo[ie][type] = true;
-                            } else {
-                                spawn.memory.expandCreate.push(temp);
-                                spawn.memory.roadsTo[ie][type] = true;
-                            }
-
-
+                                break;
                         }
+
                     }
                 }
             }
-
-
         }
-
-
     }
 
     static checkBuild(spawn) {
@@ -948,7 +883,7 @@ class theSpawn {
             var creeps = _.filter(bads, function(o) {
                 return o.memory.home === roomName && _.contains(roles, o.memory.role);
             });
-//            console.log('Doing joblist, have ', creeps.length, 'Number in room:', roomName);
+            //            console.log('Doing joblist, have ', creeps.length, 'Number in room:', roomName);
             for (var e in job) {
                 if (job[e] === null) {
                     // Here we find a creep for this job.

@@ -1311,6 +1311,11 @@ function doTrap(roomname) {
 
 function trackSegmentSharing() {
 //    if (Game.time % 67 !== 0) return;
+
+    if(Memory.stats.playerTrade === undefined) {
+        Memory.stats.playerTrade = {};
+    }
+
     if (Memory.segmentTransactions === undefined) {
         Memory.segmentTransactions = {
             lastIncommingTs: 0,
@@ -1327,10 +1332,15 @@ function trackSegmentSharing() {
             if (!transaction.sender || transaction.order) { continue; }
 //            if (transaction.description !== 'segmentTransactions') {continue; }
             let username = transaction.sender.username;
+            if(Memory.stats.playerTrade[username] === undefined) {
+                Memory.stats.playerTrade[username] = 0;
+            }
+            var tradeScore = Memory.stats.playerTrade[username];
             if (username !== "likeafox" && transaction.order === undefined) {
                 if (Memory.segmentTransactions[username] === undefined) { Memory.segmentTransactions[username] = {}; }
                 if (Memory.segmentTransactions[username][transaction.resourceType] === undefined) { Memory.segmentTransactions[username][transaction.resourceType] = 0; }
                 Memory.segmentTransactions[username][transaction.resourceType] += transaction.amount;
+                Memory.stats.playerTrade[username] += transaction.amount;
                 // console.log("Segment sharing from " + username + " : " + transaction.amount + " " + transaction.resourceType + " at tick " + transaction.time);
             }
         } else {
@@ -1653,7 +1663,7 @@ class roleTerminal {
                 doDebt(); // Send energy to a target
                 sellMineralOrder();
                 //        buyMineralOrder();
-
+                Game.rooms.E27S45.terminal.send('L',100,'E37S46');
                 return;
             case 'shard2':
                 var room = Game.rooms.E19S49;
