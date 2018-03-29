@@ -835,6 +835,8 @@ module.exports.loop = blackMagic(function() {
             //                      var constr = require('commands.toStructure');
 
             //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
+
+            spawnsDo.checkBuild(Game.spawns[title]);
             doRoomReport(Game.spawns[title].room);
             let roomName = Game.spawns[title].pos.roomName;
             tower.run(roomName); // Tower doing stuff.
@@ -864,7 +866,6 @@ module.exports.loop = blackMagic(function() {
                 safemodeCheck(Game.spawns[title]);
             }
             ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
-            spawnsDo.checkBuild(Game.spawns[title]);
 
             if (Game.spawns[title].memory.alphaSpawn) {
                 if (Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
@@ -878,10 +879,10 @@ module.exports.loop = blackMagic(function() {
                 ccSpawn.renewCreep(Game.spawns[title]);
                 ccSpawn.createFromStack(Game.spawns[title]);
             } else {
-                Game.spawns[title].memory.lastSpawn = 0;
+//                Game.spawns[title].memory.lastSpawn = 0;
                 Game.spawns[title].spawning.setDirections(Game.spawns[title].memory.spawnDir);
                 let spawn = Game.spawns[title];
-                spawn.room.visual.text("🔧" + spawn.memory.CreatedMsg, spawn.pos.x + 1, spawn.pos.y, {
+                spawn.room.visual.text("🔧" + spawn.spawning.name, spawn.pos.x + 1, spawn.pos.y, {
                     color: '#97c39a ',
                     stroke: '#000000 ',
                     strokeWidth: 0.123,
@@ -896,7 +897,7 @@ module.exports.loop = blackMagic(function() {
                     storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
                     terminalEnergy: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.store[RESOURCE_ENERGY],
                     terminalTotal: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.total,
-                    parts: spawn.memory.TotalBuild,
+                    parts: spawn.memory.totalParts,
                     creepNumber: spawn.memory.totalCreep,
                     energy: spawn.room.energyAvailable,
                     maxEnergy: spawn.room.energyCapacityAvailable,
@@ -921,7 +922,7 @@ module.exports.loop = blackMagic(function() {
     }
     if (Game.shard.name !== 'shard2') {
         memoryStatsUpdate();
-        observer.runTask();
+//        observer.runTask();
     }
 
     doUpgradeRooms();

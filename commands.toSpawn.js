@@ -63,29 +63,18 @@ function getStack(spawn) {
     var ExpandBeforeWar = ['E38S72'];
     if (spawn.memory.alphaSpawn) {
 
-        spawn.memory.currentStack = 'create';
-        
         if (spawn.memory.create.length === 0 && spawn.memory.warCreate.length > 0) {
             if (_.contains(ExpandBeforeWar, spawn.room.name) && spawn.memory.expandCreate.length > 0) {
-                spawn.memory.currentStack = 'expand';
+                return spawn.memory.expandCreate;
             } else {
-                spawn.memory.currentStack = 'war';
+                return spawn.memory.warCreate;
             }
         }
-        //        if (Game.flags[rampart] === undefined && spawn.memory.create.length === 0 && spawn.memory.expandCreate.length > 0 && spawn.memory.warCreate.length === 0) {
         if (spawn.memory.create.length === 0 && spawn.memory.expandCreate.length > 0 && spawn.memory.warCreate.length === 0) {
-            spawn.memory.currentStack = 'expand';
+            return spawn.memory.expandCreate;
         }
 
-
-        switch (spawn.memory.currentStack) {
-            case 'create':
-                return spawn.memory.create;
-            case 'war':
-                return spawn.memory.warCreate;
-            case 'expand':
-                return spawn.memory.expandCreate;
-        }
+        return spawn.memory.create;
     } else {
         //        if (spawn.memory.alphaSpawnID !== undefined) {
         spawn.memory.alphaSpawnID = undefined;
@@ -93,30 +82,21 @@ function getStack(spawn) {
         //            Game.getObjectById(spawn.memory.alphaSpawnID);
 
         if (alpha !== undefined) {
-            alpha.memory.currentStack = 'create';
             if (alpha.memory.expandCreate === undefined) {
                 alpha.memory.expandCreate = [];
             }
             if (alpha.memory.create !== undefined && alpha.memory.create.length === 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length > 0) {
                 if (_.contains(ExpandBeforeWar, alpha.room.name) && alpha.memory.expandCreate.length > 0) {
-                    alpha.memory.currentStack = 'expand';
+                    return alpha.memory.expandCreate;
                 } else {
-                    alpha.memory.currentStack = 'war';
+                    return alpha.memory.warCreate;
                 }
             }
 
             if (alpha.memory.create !== undefined && Game.flags[rampart] === undefined && alpha.memory.create.length === 0 && alpha.memory.expandCreate.length > 0 && alpha.memory.warCreate !== undefined && alpha.memory.warCreate.length === 0) {
-                alpha.memory.currentStack = 'expand';
+                return alpha.memory.expandCreate;
             }
-
-            switch (alpha.memory.currentStack) {
-                case 'create':
-                    return alpha.memory.create;
-                case 'war':
-                    return alpha.memory.warCreate;
-                case 'expand':
-                    return alpha.memory.expandCreate;
-            }
+            return alpha.memory.create;
         }
     }
 }
@@ -141,7 +121,7 @@ function checkAround(creep) {
 }
 
 function determineAlphaSpawn(spawn) {
-    if(spawn.room.alphaSpawn !== undefined) return true;
+    if (spawn.room.alphaSpawn !== undefined) return true;
     if (spawn.memory.alphaSpawn !== undefined) return true;
 
     let spwns = spawn.room.find(FIND_STRUCTURES, {
@@ -167,7 +147,7 @@ class SpawnInteract {
     static requestCreep(creepWanted, spawnID) {
         let spawn = Game.getObjectById(spawnID);
         if (spawn !== null) {
-//            console.log('request happening', spawn, creepWanted.build);
+            //            console.log('request happening', spawn, creepWanted.build);
             spawn.memory.warCreate.push(creepWanted);
             return true;
         }
@@ -214,11 +194,11 @@ class SpawnInteract {
         if (yy2 > 49) yy2 = 49;
         if (xx2 > 49) xx2 = 49;
         var around = creep.room.lookAtArea(yy, xx, yy2, xx2, true);
-        
+
         var e = around.length;
         while (e--) {
             if (around[e].type == 'structure') {
-        
+
                 if ((around[e].structure.structureType != STRUCTURE_LINK && around[e].structure.structureType != STRUCTURE_NUKER) && around[e].structure.energy < around[e].structure.energyCapacity) {
                     if (creep.transfer(around[e].structure, RESOURCE_ENERGY) == OK) {
                         if (creep.carry[RESOURCE_ENERGY] < 51) {
@@ -296,19 +276,19 @@ class SpawnInteract {
 
                 if (targets[goTo] !== undefined && targets[goTo].energy !== targets[goTo].energyCapacity) {
                     if (!creep.pos.isNearTo(targets[goTo]))
-                        creep.moveMe(targets[goTo], { maxOpts: 100,ignoreCreeps:true, reusePath: 1 });
+                        creep.moveMe(targets[goTo], { maxOpts: 100, ignoreCreeps: true, reusePath: 1 });
                     return true;
                 }
-          //      roomCache[creep.room.name] = undefined;
+                //      roomCache[creep.room.name] = undefined;
             } else if (zzz == -8) {
-             //   roomCache[creep.room.name] = undefined;
+                //   roomCache[creep.room.name] = undefined;
                 creep.memory.goToSpawn = undefined;
             }
             creep.say('^' + zzz);
         } else {
             this.toTransfer(creep);
             creep.moveMe(targets[goTo], {
-                ignoreCreeps:true,
+                ignoreCreeps: true,
                 visualizePathStyle: visPath
             });
             creep.say('^');
@@ -323,10 +303,6 @@ class SpawnInteract {
 
         if (spawn.memory.alphaSpawn) {
             // Mode is to determine what is being built and also controller level so build.
-            if (spawn.memory.mode === undefined) {
-                spawn.memory.mode = 'beginning';
-                console.log('----------------Create mode Variable----------------');
-            }
             if (spawn.memory.buildLevel === undefined) {
                 spawn.memory.buildLevel = 0;
                 console.log('----------------Create buildLevel Variable----------------');
@@ -334,10 +310,6 @@ class SpawnInteract {
             // If there is no memory.create array then create it.
             // Create is an array to hold what will be created.
 
-            if (spawn.memory.currentStack === undefined) {
-                spawn.memory.currentStack = 'create';
-                console.log('----------------Create CurrentStack Variable----------------');
-            }
             if (spawn.memory.create === undefined) {
                 spawn.memory.create = [];
                 console.log('----------------Create Spawn Stack----------------');
@@ -360,27 +332,27 @@ class SpawnInteract {
             }
 
             // Analyzed is an array of rooms that this spawn has looked at. 
-/*            if (spawn.memory.analyzed === undefined) {
-                for (var e in Game.spawns) {
-                    if (Game.spawns[e].homeEmpire) {
-                        spawn.memory.analyzed = Game.spawns[e].analyzed;
-                    }
-                }
-                spawn.memory.analyzed = [];
-                console.log('----------------Create Spawn Analyzed STACK----------------');
-            }
-*/
+            /*            if (spawn.memory.analyzed === undefined) {
+                            for (var e in Game.spawns) {
+                                if (Game.spawns[e].homeEmpire) {
+                                    spawn.memory.analyzed = Game.spawns[e].analyzed;
+                                }
+                            }
+                            spawn.memory.analyzed = [];
+                            console.log('----------------Create Spawn Analyzed STACK----------------');
+                        }
+            */
             // roadsTo is an array of sources in other rooms that have roads to them. 
             if (spawn.memory.roadsTo === undefined) {
                 spawn.memory.roadsTo = [];
                 console.log('----------------Create Spawn RoadsTo ----------------');
-/*                var BUILD = {
-                    source: 'xxxx',
-                    sourcePos: new RoomPosition(5, 5, 'S25W55'),
-                    miner: false,
-                    transport: false,
-                    expLevel: 0
-                };*/
+                /*                var BUILD = {
+                                    source: 'xxxx',
+                                    sourcePos: new RoomPosition(5, 5, 'S25W55'),
+                                    miner: false,
+                                    transport: false,
+                                    expLevel: 0
+                                };*/
                 Game.spawns[title].memory.roadsTo.push(BUILD);
             }
 
@@ -421,7 +393,7 @@ class SpawnInteract {
             if (creepTarget === null) {
                 spawn.memory.wantRenew.splice(e, 1);
             } else if (creepTarget.ticksToLive < temp && creepTarget.pos.isNearTo(spawn)) {
-                
+
                 if (spawn.room.name === 'E14S38') {
 
                     if (spawn.room.controller.level > 5) {
@@ -447,7 +419,7 @@ class SpawnInteract {
 
         if (temp < renewLimit) {
             let rst = spawn.renewCreep(renewTarget);
-            
+
             return true;
         } else {
             return false;
@@ -474,42 +446,41 @@ class SpawnInteract {
 
         return true;
     }
-/*
-    static removeRenew(creep) {
+    /*
+        static removeRenew(creep) {
 
-        let spawn = Game.getObjectById(creep.memory.renewSpawnID);
-        if (spawn === null) return;
-        let zz = spawn.memory.wantRenew;
-        var e = zz.length;
-        while (e--) {
-            if (zz[e] == creep.id) {
-                
-                zz.splice(e, 1);
-                break;
+            let spawn = Game.getObjectById(creep.memory.renewSpawnID);
+            if (spawn === null) return;
+            let zz = spawn.memory.wantRenew;
+            var e = zz.length;
+            while (e--) {
+                if (zz[e] == creep.id) {
+                    
+                    zz.splice(e, 1);
+                    break;
+                }
             }
-        }
 
-    }
- */
+        }
+     */
     static createFromStack(spawn) {
         var STACK = getStack(spawn);
-        if(spawn.memory.spawnDir === undefined) {
+        if (spawn.memory.spawnDir === undefined) {
             spawn.memory.spawnDir = 1;
         }
         if (STACK !== undefined && STACK.length > 0) {
             if (!_.isArray(STACK[0].build)) {
-             //   console.log('clearing stak of error', STACK[0].build);
+                //   console.log('clearing stak of error', STACK[0].build);
                 STACK.shift();
             }
             var ee = spawn.canCreateCreep(STACK[0].build);
-//                console.log("spawn, dry run", spawn.spawnCreep(STACK[0].build,build[0].name, {memory:STACK[0].memory,direction:spawn.memory.spawnDir,dryRun:true}) );
+            //                console.log("spawn, dry run", spawn.spawnCreep(STACK[0].build,build[0].name, {memory:STACK[0].memory,direction:spawn.memory.spawnDir,dryRun:true}) );
             if (ee == OK) {
 
-                spawn.memory.CreatedMsg = STACK[0].name;
                 let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
                 if (ez == -3) {
                     STACK[0].name = STACK[0].name + Math.floor(Math.random() * 9);
-//                    console.log('ERROR NAME', STACK[0].name, 'REBUILD ATTEMPT', ez,roomLink(spawn.room.name));
+                    //                    console.log('ERROR NAME', STACK[0].name, 'REBUILD ATTEMPT', ez,roomLink(spawn.room.name));
                 } else {
                     STACK.shift();
                 }
@@ -519,13 +490,13 @@ class SpawnInteract {
                     count++;
                     STACK[0].build.shift();
                 } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
-         //       console.log('><><>>>>-=-=-DOWNGRADE MODULE X' + count + '-=-=-=-=<<<<><><');
+                //       console.log('><><>>>>-=-=-DOWNGRADE MODULE X' + count + '-=-=-=-=<<<<><><');
             } else if (STACK[0].length === undefined && STACK[0].length === 0) {
 
                 console.log("ERROR", spawn, spawn.pos);
-              //  console.log("ERROR");
-              //  console.log("ERROR");
-//
+                //  console.log("ERROR");
+                //  console.log("ERROR");
+                //
             }
 
         }

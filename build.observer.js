@@ -37,21 +37,10 @@ var powerRooms = [
     'E20S41', 'E20S42', 'E20S43', 'E20S44', 'E20S45', 'E20S46', 'E20S47', 'E20S48', 'E20S49', 'E17S30', 'E18S30', 'E19S30',
     'E10S45', 'E10S46', 'E10S47', 'E10S48', 'E10S49', 'E10S50',
 ];
-/*
-'E30S32','E30S33','E30S34','E30S35','E30S36','E30S37','E30S38','E30S39',
 
-*/
-//var linksCache = [];
-
-function getCached(id) {
-    //    if (linksCache[id] === undefined) {
-    //      linksCache[id] = Game.getObjectById(id);
-    //}
-    return Game.getObjectById(id);
-}
-
-function doTask(tasks) {
+function newDoTask(roomName) {
     var target;
+    var tasks = Memory.observerTask;
     if (tasks.length === 0) {
         return false;
     }
@@ -60,120 +49,55 @@ function doTask(tasks) {
     var distance;
     var observers;
     var a, e;
+    let ob = Game.rooms[roomName].observer;
+            options = task.order.options;
+    if(!ob) return;
     switch (task.order) {
         case "banditFlag":
-            options = task.order.options;
-            observers = Game.shard.name == 'shard0' ? s0_observers : s1_observers;
-            for (a in observers) {
-                let ob = getCached(observers[a]);
-                for (e in task.options) {
-                    if (e == 'room') target = task.options[e];
-                }
-                if (ob !== null) {
-                    distance = Game.map.getRoomLinearDistance(ob.room.name, target);
-//                    console.log("Bandit check", roomLink(target), "distance:", distance, ob, "doing the task of", task.order);
-                    if (distance <= 10) {
-
-                        if (Game.rooms[target] !== undefined) {
-                            var font = { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT, backgroundColor: '#0F0F0F' };
-                            Game.rooms[target].visual.text('LOOKING to place flag:' + Game.flags.bandit, 25, 25, font);
-                            if (Game.flags.bandit === undefined) {
-                                var bca = new RoomPosition(20, 25, target);
-                                var zzz = Game.rooms[target].createFlag(bca, 'bandit', COLOR_YELLOW, COLOR_YELLOW);
-//                                console.log(zzz, 'Flag has been placed?');
-                            }
-                        }
-
-                        if (ob.observeRoom(target) == OK) {
-                            if (Game.flags.bandit !== undefined) {
-                                Game.flags.bandit.memory.musterType = 'bandit';
-                                tasks.shift();
-                                return;
-                            }
-                        }
-
-                    }
-                }
+            for (e in task.options) {
+                if (e == 'room') target = task.options[e];
             }
+                distance = Game.map.getRoomLinearDistance(ob.room.name, target);
+                if (distance <= 10) {
+                    if (Game.rooms[target] !== undefined) {
+                        var font = { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT, backgroundColor: '#0F0F0F' };
+                        Game.rooms[target].visual.text('LOOKING to place flag:' + Game.flags.bandit, 25, 25, font);
+                        if (Game.flags.bandit === undefined) {
+                            var bca = new RoomPosition(20, 25, target);
+                            var zzz = Game.rooms[target].createFlag(bca, 'bandit', COLOR_YELLOW, COLOR_YELLOW);
+                        }
+                    }
+
+                    if (ob.observeRoom(target) == OK) {
+                        if (Game.flags.bandit !== undefined) {
+                            Game.flags.bandit.memory.musterType = 'bandit';
+                            tasks.shift();
+                            return true;
+                        }
+                    }
+
+                }
+            
 
             break;
         case "observer":
-            options = task.order.options;
-            switch (Game.shard.name) {
-                case 'shard1':
-                    observers = s1_observers;
-                    break;
-                case 'shard2':
-                    observers = s2_observers;
-                    break;
-                case 'shard0':
-//                    observers = s0_observers;
-                    break;
-            }
-            observers = s0_observers;
-            for (a in observers) {
-                let ob = getCached(observers[a]);
                 for (e in task.options) {
                     if (e == 'room') target = task.options[e];
                 }
-                if (ob !== null) {
-                    distance = Game.map.getRoomLinearDistance(ob.room.name, target);
-                    //           console.log(roomLink(target),"distance:",distance,ob,"doing the task of",task.order,"for "+task.options.timed+ "longer");
-                    if (distance <= 10) {
-                        if (ob.observeRoom(target) == OK) {
-                            task.options.timed--;
-                            if (task.options.timed === 0) {
-                                tasks.shift();
-                            }
-                            return;
-                        }
-                    } else {
-                        task.options.timed--;
+                distance = Game.map.getRoomLinearDistance(ob.room.name, target);
+                if (distance <= 10) {
+                    console.log(roomLink(target), "distance:", distance, ob, "doing the task of", task.order, "for " + task.options.timed + "longer");
+                    if (ob.observeRoom(target) == OK) {
+                        task.options.timed = 0;
                         if (task.options.timed === 0) {
                             tasks.shift();
                         }
+                        return true;
                     }
                 }
-            }
-
             break;
-        case "observerFlag":
-            tasks.shift();
-            options = task.order.options;
-            observers = Game.shard.name == 'shard0' ? s0_observers : s1_observers;
-            for (var zz in observers) {
-                let ob = getCached(observers[zz]);
-                for (var ee in task.options) {
-                    if (ee == 'room') target = task.options[ee];
-                }
-                if (ob !== null) {
-                    if (Game.rooms[target] !== undefined) {
-                        // Place flag here.
-                        Game.rooms[target].createFlag(25, 25, 'caravan');
-                        break;
-                    }
-
-                    var distance2 = Game.map.getRoomLinearDistance(ob.room.name, target);
-//                    console.log(roomLink(target), "distance:", distance2, ob, "doing the task of", task.order, "for " + task.options.timed + "longer");
-                    if (distance2 <= 10) {
-                        if (ob.observeRoom(target) == OK) {
-                            task.options.timed--;
-                            if (task.options.timed === 0) {
-                                tasks.shift();
-                            }
-                            return;
-                        }
-                    } else {
-                        task.options.timed--;
-                        if (task.options.timed === 0) {
-                            tasks.shift();
-                        }
-                    }
-                }
-            }
-            break;
-
     }
+    return false;
 }
 
 function changeRoom(roomName, direction, amount) {
@@ -204,7 +128,7 @@ function changeRoom(roomName, direction, amount) {
 }
 
 function caravanCheck(target) {
-    if(Game.shard.name !== 'shard1') return false;
+    if (Game.shard.name !== 'shard1') return false;
     if (Game.rooms[target] === undefined) return false;
     let screeps = Game.rooms[target].find(FIND_CREEPS);
     let caravan = _.filter(screeps, function(s) {
@@ -228,7 +152,7 @@ function caravanCheck(target) {
             var two = parseInt(roomName[2]);
             var five = parseInt(roomName[5]);
             if (two === 0 && five === 0 && caravan[0].ticksToLive < 1200 && caravan[0].ticksToLive > 700) {
-           //     dir = 'none';
+                //     dir = 'none';
             } else if (two === 1 || two === 2 && caravan[0].ticksToLive > 1000) {
                 dir = 'e';
             } else if (two === 9 || two === 8 && caravan[0].ticksToLive > 1000) {
@@ -247,11 +171,11 @@ function caravanCheck(target) {
 
         }
         if (dir === undefined) {
-    //        console.log(dir, 'OLD FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
+            //        console.log(dir, 'OLD FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
         } else if (dir === 'fail') {
-  //          console.log(dir, 'BUGGED FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
+            //          console.log(dir, 'BUGGED FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
         } else {
-//            console.log(dir, 'FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
+            //            console.log(dir, 'FOUND CARAVAN: ', caravan[0].ticksToLive, caravan.length, roomLink(target), 'Estimated Interecpt room', targetRoom);
         }
         if (dir !== undefined && dir === 'none') {
             caravan[0].room.createFlag(25, 25, 'bandit', COLOR_YELLOW, COLOR_YELLOW);
@@ -268,23 +192,25 @@ function caravanCheck(target) {
 
     }
 }
+
 function controllerCheck(target) {
-    if(Game.rooms[target] === undefined) return false;
-    if(Game.rooms[target].controller === undefined) return false;
+    if (Game.rooms[target] === undefined) return false;
+    if (Game.rooms[target].controller === undefined) return false;
     var controller = Game.rooms[target].controller;
-    if(controller.owner !== undefined){
-    var fox = require('foxGlobals');        
-        if(!_.contains(fox.friends, controller.owner.username)){
-//Memory.hostile_rooms = [];
+    if (controller.owner !== undefined) {
+        var fox = require('foxGlobals');
+        if (!_.contains(fox.friends, controller.owner.username)) {
+            //Memory.hostile_rooms = [];
             Memory.hostile_rooms.push(target);
             Memory.hostile_rooms = _.uniq(Memory.hostile_rooms);
-//            console.log('hostile room added to global hostile_rooms',target,controller.owner.username);
+            //            console.log('hostile room added to global hostile_rooms',target,controller.owner.username);
         }
     }
 }
+
 function powerbankCheck(target) {
-    if(Game.shard.name === 'shard2') return false;
-    if(Game.shard.name === 'shard0') return false;
+    if (Game.shard.name === 'shard2') return false;
+    if (Game.shard.name === 'shard0') return false;
     if (Game.rooms[target] === undefined) return false;
     //    console.log(roomLink( target ),'is target in power room',_.contains(powerRooms,target));
     if (!_.contains(powerRooms, target)) return false;
@@ -307,7 +233,7 @@ function powerbankCheck(target) {
         power.analyzePowerBank(powerBank[0], Game.rooms[target]);
         observers = Game.shard.name == 'shard0' ? s0_observers : s1_observers;
         for (var oe in observers) {
-            let stru = getCached(observers[oe]);
+            let stru = Game.getObjectById(observers[oe]);
             if (stru !== null)
                 stru.observeRoom(target);
         }
@@ -317,11 +243,11 @@ function powerbankCheck(target) {
 }
 
 function getRandomRoom(room, max) {
-/*    if (Game.rooms[room].memory.randomN === undefined) {
-        Game.rooms[room].memory.randomN = 0;
-        ret = ulamSpiral(Game.rooms[room].memory.randomN);
-    }
-    ret = ulamSpiral(Game.rooms[room].memory.randomN); */
+    /*    if (Game.rooms[room].memory.randomN === undefined) {
+            Game.rooms[room].memory.randomN = 0;
+            ret = ulamSpiral(Game.rooms[room].memory.randomN);
+        }
+        ret = ulamSpiral(Game.rooms[room].memory.randomN); */
 
     let parsed = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(room);
     let _we = parsed[1];
@@ -329,8 +255,8 @@ function getRandomRoom(room, max) {
     let _ns = parsed[3];
     let _ns_num = parsed[4];
 
-//    _we_num = ret.x;
-//    _ns_num = ret.y;
+    //    _we_num = ret.x;
+    //    _ns_num = ret.y;
     _we_num = parseInt(_we_num) + Math.ceil(Math.random() * (2 * max)) - max;
     _ns_num = parseInt(_ns_num) + Math.ceil(Math.random() * (2 * max)) - max;
     if (_we_num < 0) {
@@ -366,24 +292,21 @@ class buildObserver {
         Memory.observerTask.push(request);
     }
 
-    static doRoom(theroom) {
-        var observers = Game.shard.name == 'shard0' ? s0_observers : s1_observers;
-        for (var e in observers) {
-            let stru = getCached(observers[e]);
-            stru.observeRoom(theroom);
-        }
-    }
-
     static runRoom2(roomName) {
-        let room = Game.rooms[roomName]        ;
-        if(room === undefined) return;
-        if(room.controller !== undefined && room.controller.level < 8) return;
-        if(room.observer === undefined) return;
-   //     console.log('roomname is doing new observer!',room.memory.observeTarget,Game.rooms[room.memory.observeTarget]);
-        if(room.memory.observeTarget === undefined) {
-            room.memory.observeTarget = getRandomRoom(roomName,10);
+        if (Memory.observerTask.length > 0) {
+            if(newDoTask(roomName)){
+                return;
+            }
         }
-        if(Game.rooms[room.memory.observeTarget] === undefined) {
+        let room = Game.rooms[roomName];
+        if (room === undefined) return;
+        if (room.controller !== undefined && room.controller.level < 8) return;
+        if (room.observer === undefined) return;
+        //     console.log('roomname is doing new observer!',room.memory.observeTarget,Game.rooms[room.memory.observeTarget]);
+        if (room.memory.observeTarget === undefined) {
+            room.memory.observeTarget = getRandomRoom(roomName, 10);
+        }
+        if (Game.rooms[room.memory.observeTarget] === undefined) {
             room.observer.observeRoom(room.memory.observeTarget);
         } else {
             caravanCheck(room.memory.observeTarget);
@@ -391,24 +314,23 @@ class buildObserver {
             controllerCheck(room.memory.observeTarget);
 
 
-            room.memory.observeTarget = getRandomRoom(roomName,10);
-        }
-
-        if (Memory.observerTask.length > 0) {
-            doTask(Memory.observerTask);
-            return;
+            room.memory.observeTarget = getRandomRoom(roomName, 10);
         }
     }
 
     static runRoom(roomName) {
 
+        if (Memory.observerTask.length > 0) {
+            if(newDoTask(roomName)){
+                return;
+            }
+        }
         let observeRooms;
         switch (Game.shard.name) {
             case 'shard1':
                 observeRooms = s1_obserRooms;
                 break;
             case 'shard2':
-
                 observeRooms = s2_obserRooms;
                 break;
         }
@@ -425,13 +347,13 @@ class buildObserver {
 
                     if (distance <= 10) {
                         if (Game.flags.look.room !== undefined) {
-//                            console.log(Game.flags.look.room.name, 'found room w/ look flag', room.name);
+                            //                            console.log(Game.flags.look.room.name, 'found room w/ look flag', room.name);
                             caravanCheck(Game.flags.look.room.name);
                             powerbankCheck(Game.flags.look.room.name);
 
                         }
                         room.observer.observeRoom(Game.flags.look.pos.roomName);
-//                        console.log(Game.flags.look.room, 'OB at look flag', room.name);
+                        //                        console.log(Game.flags.look.room, 'OB at look flag', room.name);
                         lookFlag = false;
                         doObserve = false;
                     }
@@ -486,115 +408,8 @@ class buildObserver {
 
             }
         }
-        if (Memory.observerTask.length > 0) {
-            doTask(Memory.observerTask);
-            return;
-        }
+
     }
-
-    static runTask() {
-        /*    if (Memory.observerNum === undefined) {
-                Memory.observerNum = 0;
-            }
-            if (Memory.observerTask === undefined) {
-                Memory.observerTask = [];
-            }
-
-            let observeRooms;
-            switch (Game.shard.name) {
-                case 'shard1':
-                    observeRooms = s1_obserRooms;
-                    break;
-            }
-            var roomsSeen = [];
-            var lookFlag = Game.flags.look !== undefined;
-
-            for (let a in observeRooms) {
-                let room = Game.rooms[observeRooms[a]];
-                let doObserve = true;
-                if (lookFlag) {
-                    if (room.observer !== undefined) {
-                        let distance = Game.map.getRoomLinearDistance(room.name, Game.flags.look.pos.roomName);
-
-                        if (distance <= 10) {
-                            if (Game.flags.look.room !== undefined) {
-//                                console.log(Game.flags.look.room.name, 'found room w/ look flag', room.name);
-                                caravanCheck(Game.flags.look.room.name);
-                                powerbankCheck(Game.flags.look.room.name);
-
-                            }
-                            room.observer.observeRoom(Game.flags.look.pos.roomName);
-//                            console.log(Game.flags.look.room, 'OB at look flag', room.name);
-                            lookFlag = false;
-                            doObserve = false;
-                        }
-                    }
-                }
-                if (room.observer !== undefined && doObserve) {
-                    if (room.memory._observe === undefined) {
-                        room.memory._observe = {
-                            lookAt: Math.floor(Math.random() * roomsObserve.length),
-                        };
-                    }
-                    let mem = room.memory._observe;
-                    if (mem.lookAt < 0) mem.lookAt = 0;
-                    let target = roomsObserve[mem.lookAt];
-                    //                    console.log(target,':',roomsSeen,_.contains(roomsSeen,target));
-                    if (room !== undefined && target !== undefined && !_.contains(roomsSeen, target)) {
-                        let distance = Game.map.getRoomLinearDistance(room.name, target);
-                        if (distance <= 10) {
-                            if (Game.rooms[target] === undefined) {
-                                let zz = room.observer.observeRoom(target);
-                                //   console.log(room.name, 'observe room Undefined',Game.rooms[target],roomsObserve[mem.lookAt],mem.lookAt,'Try again', zz);
-                            } else {
-                                roomsSeen.push(target);
-                                //     console.log(room.name, 'room Check', target);
-                                caravanCheck(target);
-                                powerbankCheck(target);
-                                mem.lookAt++;
-                                if (mem.lookAt >= roomsObserve.length) mem.lookAt = 0;
-
-                                if (Game.map.getRoomLinearDistance(room.name, roomsObserve[mem.lookAt]) <= 10) {
-                                    room.observer.observeRoom(roomsObserve[mem.lookAt]);
-                                } else {
-                                    mem.lookAt++;
-                                }
-
-                            }
-                        } else {
-                            //   console.log(room.name, 'Room to far', target);
-                            mem.lookAt++;
-                            if (mem.lookAt >= roomsObserve.length) mem.lookAt = 0;
-                            if (Game.map.getRoomLinearDistance(room.name, roomsObserve[mem.lookAt]) <= 10) {
-                                room.observer.observeRoom(roomsObserve[mem.lookAt]);
-                            } else {
-                                mem.lookAt++;
-                            }
-                        }
-                    } else {
-                        mem.lookAt += Math.floor(Math.random() * 5); // = 0;
-                    }
-
-                    if (mem.lookAt >= roomsObserve.length) mem.lookAt = 0;
-
-                }
-            }
-
-            /*        if (Memory.observerTask.length === 0) {
-                        var request = { order: "banditFlag", options: { room: 'E20S37' } };
-                        Memory.observerTask.push(request);
-                        //    return false;
-                    }*/
-
-        if (Memory.observerTask.length > 0) {
-            doTask(Memory.observerTask);
-            return;
-        }
-    }
-
-
 }
 
 module.exports = buildObserver;
-
-// 11,14 E25S74 Game.flags.bandit.pos

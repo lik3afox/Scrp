@@ -954,7 +954,6 @@ module.exports = function() {
             }
 
             // If spawns haven't spawn in a while
-            //Game.spawns[title].memory.lastSpawn = 0;
             // if creeps are less than 5
             // spawn.memory.totalCreep
 
