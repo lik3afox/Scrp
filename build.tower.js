@@ -370,13 +370,15 @@ function scanForRepair(troom) {
 }
 
 function repairRampart(towers) {
+    let lowest;
     if (towers[0].room.memory.towerRepairID === undefined) {
         let targets = towers[0].room.find(FIND_STRUCTURES);
 
         targets = _.filter(targets, function(object) {
             return (object.structureType == STRUCTURE_WALL || object.structureType == STRUCTURE_RAMPART);
-        }).sort((a, b) => a.hits - b.hits);
-        towers[0].room.memory.towerRepairID = targets[0].id;
+        });//.sort((a, b) => a.hits - b.hits);
+        lowest = _.min(targets,o => o.hits);
+        towers[0].room.memory.towerRepairID = lowest.id;
     }
     if (_.isArray(towers)) {
 

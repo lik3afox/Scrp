@@ -227,13 +227,17 @@ function banditAction(creep) {
                     });
 
                     if (cont.length > 0) {
-                        cont.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
-                        if (creep.pos.isNearTo(cont[0])) {
-                            for (var e in cont[0].store) {
-                                creep.withdraw(cont[0], e);
+                        var cunt = _.min(cont, o=>o.pos.getRangeTo(creep));
+
+                        if (creep.pos.isNearTo(cunt)) {
+                            for (var e in cunt.store) {
+                                if(cunt.store[e] > 0){
+                                creep.withdraw(cunt, e);
+                                break;
+                            }
                             }
                         } else {
-                            creep.moveTo(cont[0]);
+                            creep.moveTo(cunt);
                         }
                         return true;
                     }

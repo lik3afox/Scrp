@@ -229,7 +229,6 @@ function movement(creep) {
             }
         } else {
             if (_goal !== null && _goal.energyCapacity === 4000 && roleParent.constr.withdrawFromTombstone(creep, 6)) {
-
                 creep.memory.cachePath = undefined;
                 return;
             }
@@ -255,7 +254,7 @@ function movement(creep) {
             } else if (_goal !== null && creep.room.name === _goal.pos.roomName) {
                 if (!creep.pos.isNearTo(container)) {
                     creep.moveTo(container, { maxOps: 30, maxRooms: 1 });
-                } else if (creep.pos.isNearTo(_goal)) {
+                } else if (creep.pos.isEqualTo(container)) {
                     creep.moveTo(Game.getObjectById(creep.memory.parent), { maxOps: 30, reusePath: 1 });
                 } else {
                     if (!withdrawing) {
@@ -277,8 +276,8 @@ function movement(creep) {
                             }
                         }
                         if (partner.length > 1) {
-                            partner.sort((a, b) => a.carryTotal - b.carryTotal);
-                            partner[partner.length - 1].memory.goHome = true;
+                            var max = _.max(partner,a=> a.carryTotal);
+                            max.memory.goHome = true;
                         }
 
                         if (creep.room.memory.mineInfo === undefined) {

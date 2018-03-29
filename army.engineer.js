@@ -79,23 +79,23 @@ var classLevels = [
 
     {
         body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
-        boost: [ 'XLH2O', 'KO'],
+        boost: ['XLH2O', 'KO'],
     },
     // Level 10
     {
-        body: [CARRY, CARRY, CARRY, CARRY,CARRY , CARRY, CARRY, CARRY,CARRY , CARRY, CARRY, WORK, WORK, WORK, WORK,WORK,
+        body: [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, WORK, WORK, WORK, WORK, WORK,
             WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
             MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
         ],
-        boost: ['XZHO2','XLH2O','XKH2O'],
+        boost: ['XZHO2', 'XLH2O', 'XKH2O'],
     },
     // Level 11
     {
-        body: [CARRY, CARRY, CARRY, CARRY,CARRY , CARRY, CARRY, CARRY,CARRY , CARRY, CARRY, WORK, WORK, WORK, WORK,WORK,
+        body: [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, WORK, WORK, WORK, WORK, WORK,
             WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
             MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
         ],
-        boost: ['XZHO2','XGH2O','XKH2O'],
+        boost: ['XZHO2', 'XGH2O', 'XKH2O'],
     },
     // Level 12
     {
@@ -145,14 +145,14 @@ function repairWalls(creep) {
     var test2 = _.filter(struc, function(o) {
         return o.structureType === STRUCTURE_WALL;
     }); // This is something is not on a rampart
-    test2.sort((a, b) => a.hits - b.hits);
-    creep.say(test2.length);
     if (test2.length > 0) {
-        let vv = test2[0];
-        if (creep.pos.inRangeTo(vv, 3)) {
-            creep.repair(vv);
+
+        var tar = _.min(test2, o => o.hits);
+        creep.say(tar);
+        if (creep.pos.inRangeTo(tar, 3)) {
+            creep.repair(tar);
         } else {
-            creep.moveTo(vv);
+            creep.moveTo(tar);
         }
         //              creep.memory.targetID = test2[0];
     }
@@ -202,8 +202,8 @@ class engineerClass extends roleParent {
             }
         }
         if (creep.ticksToLive > 1495 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
-creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
-//            creep.memory.boostNeeded = classLevels[creep.memory.level].boost;
+            creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
+            //            creep.memory.boostNeeded = classLevels[creep.memory.level].boost;
         } else if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
@@ -227,10 +227,10 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
         creep.say(isThere);
         if (!isThere) {
 
-    //        if (!super.avoidArea(creep)) {
-  //              movement.flagMovement(creep);
-//            }
-            creep.moveMe(creep.partyFlag,{reusePath:50,useSKPathing:true});
+            //        if (!super.avoidArea(creep)) {
+            //              movement.flagMovement(creep);
+            //            }
+            creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true });
         } else {
 
             if (creep.memory.renewSpawnID === undefined) {
@@ -240,7 +240,6 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
                 });
                 if (finded.length > 0) {
                     creep.memory.renewSpawnID = finded[0].id;
-                    //                    finded[0].wantRenew.push(creep.id);
                 } else {
                     creep.memory.renewSpawnID = 'none';
                 }
@@ -296,9 +295,9 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
                                     creep.moveTo(creep.room.conttroller);
                                 }
                             }
-if(creep.room.name == 'E1S11'){
-    creep.moveTo( 31,22);
-}
+                            if (creep.room.name == 'E1S11') {
+                                creep.moveTo(31, 22);
+                            }
                         }
                     }
                     //                  }
@@ -323,42 +322,40 @@ if(creep.room.name == 'E1S11'){
                     }
 
                 }
-                if(creep.room.name == 'E1S11'){
+                if (creep.room.name == 'E1S11') {
                     var zzzz = Game.getObjectById('5a81ec83dd808617c9f18493');
-//                        if( super.constr.pickUpEnergy(creep,100) ) return;
-                    if(zzzz !== null && zzzz.store[RESOURCE_ENERGY]> 400){
+                    //                        if( super.constr.pickUpEnergy(creep,100) ) return;
+                    if (zzzz !== null && zzzz.store[RESOURCE_ENERGY] > 400) {
 
-                    if(creep.pos.isNearTo(zzzz)){
-                        creep.withdraw(zzzz,RESOURCE_ENERGY);
-                    } else {
-                        creep.moveTo(zzzz);
-                    }
-                    return;
+                        if (creep.pos.isNearTo(zzzz)) {
+                            creep.withdraw(zzzz, RESOURCE_ENERGY);
+                        } else {
+                            creep.moveTo(zzzz);
+                        }
+                        return;
                     }
                 }
                 if (creep.room.name == 'E14Sxx38' || creep.room.name == 'E22xxS27') {
-//                    if (!super.sources.moveToWithdraw(creep)) {
-                                    if(!creep.moveToWithdrawSource()){
-                    }
+                    //                    if (!super.sources.moveToWithdraw(creep)) {
+                    if (!creep.moveToWithdrawSource()) {}
                 } else {
                     if (creep.room.storage !== undefined) {
-                            if (!super.containers.withdrawFromStorage(creep)) {
-                            if(!creep.moveToPickUp(FIND_DROPPED_RESOURCES,(500 * creep.memory.roleID) + 100)) {
-//                                if (!super.sources.moveToWithdraw(creep)) {
-                                    if(!creep.moveToWithdrawSource()){
-                                }
+                        if (!super.containers.withdrawFromStorage(creep)) {
+                            if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES, (500 * creep.memory.roleID) + 100)) {
+                                //                                if (!super.sources.moveToWithdraw(creep)) {
+                                if (!creep.moveToWithdrawSource()) {}
                             }
                         }
 
                     } else {
-                        if(!creep.moveToPickUp(FIND_DROPPED_RESOURCES,(500 * creep.memory.roleID) + 100)) {
+                        if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES, (500 * creep.memory.roleID) + 100)) {
 
                             if (!super.containers.withdrawFromTerminal(creep))
                                 if (!super.containers.withdrawFromStorage(creep)) {
                                     if (!super.containers.moveToWithdraw(creep)) {
 
-//                                        if (!super.sources.moveToWithdraw(creep)) {
-                                          if(!creep.moveToWithdrawSource()){
+                                        //                                        if (!super.sources.moveToWithdraw(creep)) {
+                                        if (!creep.moveToWithdrawSource()) {
 
                                             if (!creep.pos.isNearTo(Game.flags[creep.memory.party])) {
                                                 movement.flagMovement(creep);

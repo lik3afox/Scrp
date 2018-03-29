@@ -24,12 +24,6 @@ module.exports = function() {
             return this.pos.roomName;
         },
     });
-    Object.defineProperty(Creep.prototype, "roomName", {
-        configurable: true,
-        get: function() {
-            return this.pos.roomName;
-        },
-    });
 
     Object.defineProperty(Creep.prototype, "homeRoom", {
         configurable: true,
@@ -612,19 +606,20 @@ module.exports = function() {
         hurtz = _.filter(hurtz, function(object) {
             return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'baj');
         });
-        hurtz.sort((a, b) => a.hits - b.hits);
+
         if (hurtz.length > 0) {
-            if (!this.pos.isNearTo(hurtz[0])) {
-                this.rangedHeal(hurtz[0]);
-                this.room.visual.line(this.pos, hurtz[0].pos);
-                this.moveTo(hurtz[0], { maxOpts: 100 });
+            var hurted = _.min(hurtz, a=> a.hits);
+            if (!this.pos.isNearTo(hurted)) {
+                this.rangedHeal(hurted);
+                this.room.visual.line(this.pos, hurted.pos);
+                this.moveTo(hurted, { maxOpts: 100 });
             } else {
-                this.heal(hurtz[0]);
+                this.heal(hurted);
             }
-            this.memory.reHealID = hurtz[0].id;
-            if (this.memory.role == 'healer' && this.memory.partner === undefined && hurtz[0].memory.role == 'fighter' && hurtz[0].memory.party === this.memory.party) {
-                this.memory.partner = hurtz[0].id;
-                hurtz[0].memory.partner = this.id;
+            this.memory.reHealID = hurted.id;
+            if (this.memory.role == 'healer' && this.memory.partner === undefined && hurted.memory.role == 'fighter' && hurted.memory.party === this.memory.party) {
+                this.memory.partner = hurted.id;
+                hurted.memory.partner = this.id;
             }
             return true;
         } else {

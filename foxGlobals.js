@@ -32,7 +32,8 @@ font: 0.5}
             filter: object => (object.structureType == STRUCTURE_CONTAINER &&
                                 spawn.pos.isNearBy(object))
             });
-*/ //containers.sort((a, b) => a.hits - b.hits);
+
 //Game.market.deal('58765c84289f0256300749e8', 5000, "E26S73"); 
 
 //var targets = creep.room.find(FIND_STRUCTURES, {filter: s => s.structureType == STRUCTURE_CONTAINER && _.sum(s.store) < s.storeCapacity})
+*/

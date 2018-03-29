@@ -31,11 +31,7 @@ function newLinkTransfer() {
                                 return (s.carry[RESOURCE_ENERGY] > 0 && (s.memory.role == 'transport' || s.memory.role == 'ztransport')); //&& s.memory.linkID == linksID[zz]
                             });
                             if (targets.length !== 0) {
-
-                                if (targets.length > 1)
-                                    targets.sort((a, b) => a.carry[RESOURCE_ENERGY] - b.carry[RESOURCE_ENERGY]);
-
-                                ttarget = targets[0];
+                                ttarget = _.min(targets, o=>o.carry[RESOURCE_ENERGY]);
 
                                 if (ttarget !== undefined) {
                                     let vv = ttarget.transfer(LINK, RESOURCE_ENERGY);
@@ -112,14 +108,8 @@ class buildLink {
                             });
                             if (targets.length !== 0) {
 
-                                if (targets.length > 1)
-                                    targets.sort((a, b) => a.carry[RESOURCE_ENERGY] - b.carry[RESOURCE_ENERGY]);
-
-                                let ttarget = targets[0];
-
-                                if (ttarget !== undefined) {
-                                    let vv = ttarget.transfer(LINK, RESOURCE_ENERGY);
-                                }
+                                let ttarget = _.min(targets,o=>o.carry[RESOURCE_ENERGY]);
+                                let vv = ttarget.transfer(LINK, RESOURCE_ENERGY);
                             }
 
                         }

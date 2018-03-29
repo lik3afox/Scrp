@@ -100,16 +100,17 @@ function moveToWithdraw(creep) {
             } else {
                 total = creep.room.find(FIND_SOURCES);
                 if (total.length > 1) {
-                    total.sort((a, b) => a.ticksToRegeneration - b.ticksToRegeneration);
-                }
-                if (creep.pos.isNearTo(total[0].pos)) {
-                    if(creep.memory.sourceID === undefined){
-                        creep.sleep(3);
+                    let lowest = _.min(total,a=>a.ticksToRegeneration);
+                    if (creep.pos.isNearTo(lowest.pos)) {
+                        if (creep.memory.sourceID === undefined) {
+                            creep.sleep(3);
+                        }
+                    } else {
+                        creep.moveMe(lowest, {ignoreCreeps:true, maxRooms: 1, maxOpts: 30 });
                     }
-                } else {
-                    creep.moveMe(total[0], { maxRooms: 1, maxOpts: 10 });
+                    return;
                 }
-                return;
+
             }
 
         } else {
@@ -150,7 +151,7 @@ function moveToWithdraw(creep) {
 
         } else {
             if (creep.pos.isNearTo(source)) {
-                creep.sleep(Game.time+source.ticksToRegeneration-1);
+                creep.sleep(Game.time + source.ticksToRegeneration - 1);
             } else {
                 creep.moveMe(source);
             }
@@ -232,7 +233,7 @@ class roleHarvester extends roleParent {
                 creep.harvest(goal);
                 creep.cleanMe();
                 creep.say("⛏️", true);
-            } 
+            }
             if (creep.carry.energy >= creep.carryCapacity - creep.stats('mining')) {
                 let link = Game.getObjectById(creep.memory.linkID);
                 if (link !== null && creep.pos.isNearTo(link)) {

@@ -257,12 +257,13 @@ function banditAction(creep) {
                 return o.owner.username === 'Screeps' && o.getActiveBodyparts(ATTACK) === 0 && o.getActiveBodyparts(RANGED_ATTACK) === 0 && o.getActiveBodyparts(HEAL) === 2;
             });
             if (bads.length > 0) {
-                bads.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
-                if (creep.pos.isNearTo(bads[0])) {
-                    creep.attack(bads[0]);
-                    creep.moveTo(bads[0]);
+
+                let tgt = _.min(bads,o => o.pos.getRangeTo(creep));
+                if (creep.pos.isNearTo(tgt)) {
+                    creep.attack(tgt);
+                    creep.moveTo(tgt);
                 } else {
-                    creep.moveTo(bads[0]);
+                    creep.moveTo(tgt);
                 }
                 return true;
             }
@@ -272,16 +273,17 @@ function banditAction(creep) {
                 return o.owner.username === 'Screeps';
             });
             if (bads.length > 0) {
-                bads.sort((a, b) => a.pos.getRangeTo(creep) - b.pos.getRangeTo(creep));
-                if (creep.pos.isNearTo(bads[0])) {
-                    if (bads[0].getActiveBodyparts(ATTACK) > 0 && creep.hits > 2000) {
-                        creep.attack(bads[0]);
-                    } else if (bads[0].getActiveBodyparts(ATTACK) === 0) {
-                        creep.attack(bads[0]);
+
+                let tgt = _.min(bads,o => o.pos.getRangeTo(creep));
+                if (creep.pos.isNearTo(tgt)) {
+                    if (tgt.getActiveBodyparts(ATTACK) > 0 && creep.hits > 2000) {
+                        creep.attack(tgt);
+                    } else if (tgt.getActiveBodyparts(ATTACK) === 0) {
+                        creep.attack(tgt);
                     }
-                    creep.moveTo(bads[0]);
+                    creep.moveTo(tgt);
                 } else {
-                    creep.moveTo(bads[0]);
+                    creep.moveTo(tgt);
                 }
                 return true;
             }
@@ -338,7 +340,7 @@ class fighterClass extends roleParent {
 
         if (super.rallyFirst(creep)) return;
         if (super.goToPortal(creep)) return;
-        creep.memory.death = creep.partyFlag === undefined;
+//        creep.memory.death = creep.partyFlag === undefined;
 
         enemy = creep.room.hostilesHere();
         enemy = _.filter(enemy,

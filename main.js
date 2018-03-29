@@ -130,7 +130,7 @@ function scanForRemoteSources() {
                                 BUILD.controller = false;
                             }
                             remote.push(BUILD);
-//                            console.log('Minearl added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
+                            //                            console.log('Minearl added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
                         }
                     }
 
@@ -167,7 +167,7 @@ function whoWorksFor(goal) {
     while (a--) {
         e = keys[a];
         if (Game.creeps[e].memory.goal == goal) {
-//            console.log(goal, Game.creeps[e].memory.home, Game.creeps[e].name, Game.creeps[e].memory.role, Game.creeps[e].pos, "lvl:", Game.creeps[e].memory.level);
+            //            console.log(goal, Game.creeps[e].memory.home, Game.creeps[e].name, Game.creeps[e].memory.role, Game.creeps[e].pos, "lvl:", Game.creeps[e].memory.level);
         }
     }
 }
@@ -314,24 +314,24 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
         let flag = Game.flags.upgradeRoom;
         let room = flag.room;
         if (room.controller.level > 3) {
-//            if (room.controller.level > 5) {
-                let total = room.storage.store[RESOURCE_ENERGY] + room.terminal.store[RESOURCE_ENERGY];
-                room.visual.text(total, room.storage.pos);
-                if (total > 1200000) {
-                    flag.memory.party[0][1] = 3;
+            //            if (room.controller.level > 5) {
+            let total = room.storage.store[RESOURCE_ENERGY] + room.terminal.store[RESOURCE_ENERGY];
+            room.visual.text(total, room.storage.pos);
+            if (total > 1200000) {
+                flag.memory.party[0][1] = 3;
 
-                } else if (total > 1100000) {
-                    flag.memory.party[0][1] = 2;
+            } else if (total > 1100000) {
+                flag.memory.party[0][1] = 2;
 
-                } else if (total > 900000) {
-                    flag.memory.party[0][1] = 2;
+            } else if (total > 900000) {
+                flag.memory.party[0][1] = 2;
 
-                } else if (total > 700000) {
-                    flag.memory.party[0][1] = 1;
-                } else if (total > 500000) {
-                    flag.memory.party[0][1] = 1;
-                }
+            } else if (total > 700000) {
+                flag.memory.party[0][1] = 1;
+            } else if (total > 500000) {
+                flag.memory.party[0][1] = 1;
             }
+        }
         //}
 
     }
@@ -393,11 +393,11 @@ function analyzeHostiles(bads) {
     }
     var fox = require('foxGlobals');
 
-//    if (Memory.testing === undefined) {
-//        var message = _.toString(boost + ':boost ' + bads.length + ':Bad guys found @' + bads[0].room + 'from:' + bads[0].owner.username);
-//        Game.notify(message);
-  //      Memory.testing = 1;
-//    }
+    //    if (Memory.testing === undefined) {
+    //        var message = _.toString(boost + ':boost ' + bads.length + ':Bad guys found @' + bads[0].room + 'from:' + bads[0].owner.username);
+    //        Game.notify(message);
+    //      Memory.testing = 1;
+    //    }
     //    console.log(boost, ':boost ', bads.length, ':Bad guys found @', bads[0].room, 'from:', bads[0].owner.username);
     if (bads.length > 0 && !_.contains(fox.friends, bads[0].owner.username)) {}
     return {};
@@ -428,9 +428,9 @@ function doRoomReport(room) {
 
     var nuke = room.find(FIND_NUKES);
     if (nuke.length > 0) {
-//        console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
+        //        console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
         room.memory.nukeIncoming = true;
-//        Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
+        //        Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
     }
 
     //   if (room.controller.level === 8 && room.controller.ticksToDowngrade < 100000) {
@@ -620,12 +620,8 @@ function getWallLow(roomName) {
     let walls = _.filter(room.find(FIND_STRUCTURES), function(o) {
         return o.structureType == STRUCTURE_WALL || (o.structureType == STRUCTURE_RAMPART && !o.isPublic);
     });
-    walls.sort((a, b) => a.hits - b.hits);
-
-    if (walls.length > 2) {
-
-        return walls[1].hits;
-    }
+    let highest = _.max(walls, a => a.hits);
+    return highest.hits;
 
 }
 
@@ -646,7 +642,7 @@ function cleanMemory() {
 
         } else {
             if (memory.roomLinksID !== undefined) {
-//                console.log('DEL roomLInk', roomLink(room.name));
+                //                console.log('DEL roomLInk', roomLink(room.name));
                 memory.roomLinksID = undefined;
             }
             if (Game.flags[memory.invasionFlag] === undefined) {
@@ -654,7 +650,7 @@ function cleanMemory() {
                     memory.invasionFlag = undefined;
                     memory.hostileID = undefined;
                     memory.hostileScanTimer = undefined;
-  //                  console.log('DEL invasion Info', roomLink(room.name));
+                    //                  console.log('DEL invasion Info', roomLink(room.name));
                 }
 
             }
@@ -662,12 +658,12 @@ function cleanMemory() {
     }
 
 }
-    const {log} = console;
-        console.log = function(v) {
-                        if(v === false) log.call(this, new Error().stack);
-                        if(v === "false") log.call(this, new Error().stack);
-            log.apply(this,arguments);
-        };
+const { log } = console;
+console.log = function(v) {
+    if (v === false) log.call(this, new Error().stack);
+    if (v === "false") log.call(this, new Error().stack);
+    log.apply(this, arguments);
+};
 
 function addSpawnQuery(spawnCount) {
     var e;
@@ -859,7 +855,7 @@ module.exports.loop = blackMagic(function() {
 
 
         if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
-//            doRoomVisual(Game.spawns[title].room);
+            //            doRoomVisual(Game.spawns[title].room);
             rampartCheck(Game.spawns[title]);
             if (Game.cpu.bucket > 1000) {
                 safemodeCheck(Game.spawns[title]);

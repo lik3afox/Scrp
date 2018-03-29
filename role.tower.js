@@ -25,15 +25,12 @@ function getEnergy(creep) {
             if (!containers.withdrawFromStorage(creep)) {}
             return;
         }
-        close.sort((a, b) => a.amount - b.amount);
-        var high = close.length - 1;
+        let high = _.max(close,a=>a.amount);
 
-        if (close[high] === undefined) return false;
-
-        if (creep.pos.isNearTo(close[high])) {
-            creep.pickup(close[high]);
+        if (creep.pos.isNearTo(high)) {
+            creep.pickup(high);
         } else {
-            creep.moveTo(close[high], {
+            creep.moveTo(high, {
                 maxRooms: 1,
                 visualizePathStyle: {
                     fill: 'transparent',

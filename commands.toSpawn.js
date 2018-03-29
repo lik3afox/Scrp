@@ -474,7 +474,7 @@ class SpawnInteract {
 
         return true;
     }
-
+/*
     static removeRenew(creep) {
 
         let spawn = Game.getObjectById(creep.memory.renewSpawnID);
@@ -490,7 +490,7 @@ class SpawnInteract {
         }
 
     }
-
+ */
     static createFromStack(spawn) {
         var STACK = getStack(spawn);
         if(spawn.memory.spawnDir === undefined) {

@@ -92,7 +92,7 @@ class StructureInteract {
                         }
                     } else {
                         for (let e in tombStone[0].store) {
-                            if( e !== RESOURCE_ENERGY)
+                            if (e !== RESOURCE_ENERGY)
                                 creep.withdraw(tombStone, e);
                         }
                     }
@@ -108,10 +108,10 @@ class StructureInteract {
         if (tombStone !== null) {
             creep.say('⚰️');
             creep.room.visual.line(creep.pos, tombStone.pos, { color: 'red' });
-            if(energy){
+            if (energy) {
                 if (tombStone.total === 0) creep.memory.tombStoneID = undefined;
             } else {
-                if (tombStone.total-tombStone.store.energy === 0) creep.memory.tombStoneID = undefined;
+                if (tombStone.total - tombStone.store.energy === 0) creep.memory.tombStoneID = undefined;
             }
             if (!creep.pos.inRangeTo(tombStone, range)) creep.memory.tombStoneID = undefined;
 
@@ -167,7 +167,7 @@ class StructureInteract {
             var location = new RoomPosition(snapShot[e].x, snapShot[e].y, roomName);
             if (!_.find(location.lookFor(LOOK_STRUCTURES), { structureType: snapShot[e].type })) {
                 Game.rooms[roomName].createConstructionSite(location.x, location.y, snapShot[e].type);
-            
+
             }
         }
         //let structures = this.lookFor(LOOK_STRUCTURES);
@@ -273,47 +273,27 @@ class StructureInteract {
         if (creep.memory.wallTargetID === undefined) {
             var sz;
 
-            var targets = creep.room.find(FIND_STRUCTURES);
-            targets = _.filter(targets,
+            var structs = creep.room.find(FIND_STRUCTURES);
+            var targets = _.filter(structs,
                 function(object) {
                     return object.structureType == STRUCTURE_RAMPART && object.isPublic && object.hits < 1000000;
                 }
-            ).sort((a, b) => a.hits - b.hits);
+            );
 
-            targets = _.filter(targets,
-                function(object) {
-                    return object.structureType == STRUCTURE_RAMPART && object.isPublic && object.hits < 1000000;
-                }
-            ).sort((a, b) => a.hits - b.hits);
-            
             if (targets.length === 0) {
-
-                targets = creep.room.find(FIND_STRUCTURES);
-                if (creep.room.name !== 'E3x2S34') {
-                    targets = _.filter(targets,
-                        function(object) {
-                            return (object.structureType == STRUCTURE_WALL || (object.structureType == STRUCTURE_RAMPART && !object.isPublic)) && object.hits !== undefined;
-                        }
-                    ).sort((a, b) => a.hits - b.hits);
-                } else {
-                    targets = _.filter(targets,
-                        function(object) {
-                            return (object.structureType == STRUCTURE_RAMPART && !object.isPublic);
-                        }
-                    ).sort((a, b) => a.hits - b.hits);
-                }
+                targets = _.filter(structs,
+                    function(object) {
+                        return (object.structureType == STRUCTURE_RAMPART && !object.isPublic);
+                    }
+                );
             }
             creep.say(targets.length);
             if (targets.length > 0) {
-        //    console.log(targets[0].id);
-//            ,_.minBy(targets,function(o) { return o.hits; }) 
-                creep.memory.wallTargetID = targets[0].id;
-                //                if(targets[0].structureType === STRUCTURE_RAMPART && !targets[0].isPublic){
-                //                  tagets[0].setPublic(true);
-                //            }
-                if (creep.repair(targets[0]) === ERR_NOT_IN_RANGE) {
-                    creep.moveMe(targets[0], { ignoreCreeps: true, reusePath: 20 });
-                }else {
+                var lowestWall = _.min(targets, o => o.hits);
+                creep.memory.wallTargetID = lowestWall.id;
+                if (creep.repair(lowestWall) === ERR_NOT_IN_RANGE) {
+                    creep.moveMe(lowestWall, { ignoreCreeps: true, reusePath: 20 });
+                } else {
                     creep.cleanMe();
                 }
                 return;
@@ -332,7 +312,7 @@ class StructureInteract {
                     creep.repair(target);
                     creep.cleanMe();
                 } else {
-                    creep.moveMe(target, {ignoreCreeps: true, reusePath: 20 });
+                    creep.moveMe(target, { ignoreCreeps: true, reusePath: 20 });
                 }
             } else {
                 creep.memory.wallTargetID = undefined;

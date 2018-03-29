@@ -231,13 +231,13 @@ function banditAction(creep) {
             good = _.filter(good, function(o) {
                 return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0;
             });
-            good.sort((a, b) => a.hits - b.hits);
-            creep.say(good.length + 'xxx');
             if (good.length > 0) {
-                if (!creep.pos.isNearTo(good[0])) {
-                    creep.moveTo(good[0]);
+            var dmg = _.min(good,o => o.hits);
+            creep.say(dmg + 'xxx');
+                if (!creep.pos.isNearTo(dmg)) {
+                    creep.moveTo(dmg);
                 }
-                creep.heal(good[0]);
+                creep.heal(dmg);
                 return true;
             }
 
@@ -323,17 +323,19 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);      
         }
 
         var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 7);
+
         hurtz = _.filter(hurtz, function(object) {
             return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'Baj');
-        }).sort((a, b) => a.hits - b.hits);
+        });
+        let dmg = _.min(hurtz, o => o.hits);
 
         //return;
-        if (hurtz[0] !== undefined) {
+        if (dmg !== undefined) {
             creep.say('1');
-            if (creep.heal(hurtz[0]) == ERR_NOT_IN_RANGE) {
-                creep.rangedHeal(hurtz[0]);
+            if (creep.heal(dmg) == ERR_NOT_IN_RANGE) {
+                creep.rangedHeal(dmg);
             } else {
-                creep.memory.lastHealed = hurtz[0].id;
+                creep.memory.lastHealed = dmg.id;
             }
             doMove = true;
 

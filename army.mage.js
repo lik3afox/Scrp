@@ -123,7 +123,6 @@ function banditAction(creep) {
             good = _.filter(good, function(o) {
                 return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0 && o.memory.party === creep.memory.party;
             });
-//            good.sort((a, b) => a.hits - b.hits);
             if (good.length > 0) {
                 if(creep.pos.isNearTo(good[0])){
                     creep.move(creep.pos.getDirectionTo(good[0]));

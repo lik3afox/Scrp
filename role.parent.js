@@ -322,7 +322,7 @@ class baseParent {
     }
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1400) {
+        if (creep.ticksToLive < 1000) {
             return false;
         }
         if (creep.memory.boostNeeded === undefined) {
