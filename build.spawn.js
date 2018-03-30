@@ -220,6 +220,20 @@ function doSpawnCount(creep) {
     if (creep === undefined) {
         return;
     }
+
+    if (creep.partyFlag !== undefined) {
+        // If this creep is in a party
+        if (spawnCount[creep.memory.party] === undefined) {
+            spawnCount[creep.memory.party] = {};
+        }
+        if (spawnCount[creep.memory.party][creep.memory.role] === undefined) {
+            spawnCount[creep.memory.party][creep.memory.role] = {
+                count: 0,
+            };
+        }
+        spawnCount[creep.memory.party][creep.memory.role].count++;
+    }
+
     if (creep.memory.parent === undefined) return;
     if (spawnCount[creep.memory.parent] === undefined) {
         spawnCount[creep.memory.parent] = {};
@@ -342,7 +356,7 @@ class theSpawn {
             let remoteInfo = spawn.memory.roadsTo[mod];
             let source = Game.getObjectById(remoteInfo.source);
             // Checking if room is visable and too observe it.
-            if (remoteInfo.expLevel === 0) { 
+            if (remoteInfo.expLevel === 0) {
                 continue;
             }
             if (source === null) {
@@ -396,8 +410,22 @@ class theSpawn {
                             case 'miner':
                                 spawn.memory.expandCreate.unshift(temp);
                                 break;
+                            case 'ztransport':
+                                let min = Game.getObjectById(remoteInfo.source);
+                                if(min.pos.roomName == 'E14S38'){
+                                if (min !== null && min.mineralAmount > 0 &&
+                                    min.room.controller !== undefined && min.room.controller.level >= 6) {
+                                    spawn.memory.expandCreate.push(temp);
+                                } else if (min !== null && min.mineralAmount > 0 && min.room.controller === undefined) {
+                                    spawn.memory.expandCreate.push(temp);
+                                }
+                            } else {
+                                spawn.memory.expandCreate.push(temp);
+                            }
+
+                                break;
                             case 'controller':
-                                if (remoteInfo.controller !== undefined && source.energyCapacity === 3000) {
+                                if (remoteInfo.controller !== undefined || source.energyCapacity === 3000) {
                                     var level;
                                     let controlLeft = source.room.controller;
                                     if (source.room.controller !== undefined && source.room.controller.reservation !== undefined) {
@@ -405,7 +433,7 @@ class theSpawn {
                                     } else {
                                         level = 0;
                                     }
-                                    if ((level < controllerLevel) || (source.room.controller.level > 0)) {
+                                    if (level === 0 || (level < controllerLevel) || (source.room.controller.level > 0)) {
                                         let controlParts;
 
                                         if (spawn.room.energyCapacityAvailable > 8000) {
@@ -425,11 +453,11 @@ class theSpawn {
                                 }
                                 break;
                             case 'mineral':
-                                let min = Game.getObjectById(remoteInfo.source);
-                                if (min !== null && min.mineralAmount > 0 &&
-                                    min.room.controller !== undefined && min.room.controller.level >= 6) {
+                              let   mizn = Game.getObjectById(remoteInfo.source);
+                                if (mizn !== null && mizn.mineralAmount > 0 &&
+                                    mizn.room.controller !== undefined && mizn.room.controller.level >= 6) {
                                     spawn.memory.expandCreate.push(temp);
-                                } else if (min !== null && min.mineralAmount > 0 && min.room.controller === undefined) {
+                                } else if (mizn !== null && mizn.mineralAmount > 0 && mizn.room.controller === undefined) {
                                     spawn.memory.expandCreate.push(temp);
                                 }
                                 break;

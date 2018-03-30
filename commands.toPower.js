@@ -1,4 +1,4 @@
-var transportCall = 700000;
+const transportCall = 750000;
 
 function makeBody(carryNeeded) {
     let body = [];

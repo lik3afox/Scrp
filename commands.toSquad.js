@@ -272,7 +272,7 @@ function squadMovement(creep) {
                     creep.move(creep.pos.getDirectionTo(fol));
                     creep.say('🚆');
                 } else if (!creep.memory.happy) {
-                    creep.moveMe(fol);
+                    creep.moveTo(fol);
                     creep.say(':(');
                 }
             }
@@ -284,7 +284,7 @@ function squadMovement(creep) {
                     creep.move(creep.pos.getDirectionTo(fol));
                     creep.say('🚆');
                 } else if (!creep.memory.happy) {
-                    creep.moveMe(fol);
+                    creep.moveTo(fol);
                     creep.say(':(');
                 }
                 }

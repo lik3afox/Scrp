@@ -116,10 +116,10 @@ function banditAction(creep) {
     creep.memory.reportDeath = true;
 
     if (Game.flags[creep.memory.party] !== undefined) {
-        if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+     //   if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
             creep.rangedMassAttack();
-
-            good = creep.room.find(FIND_MY_CREEPS);
+creep.smartHeal();
+/*            good = creep.room.find(FIND_MY_CREEPS);
             good = _.filter(good, function(o) {
                 return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0 && o.memory.party === creep.memory.party;
             });
@@ -143,8 +143,8 @@ function banditAction(creep) {
                 }
                 return true;
             }
-
-        }
+*/
+//        }
         movement.flagMovement(creep);
     }
 }
@@ -212,6 +212,9 @@ class rangerClass extends roleParent {
         	creep.selfHeal();
             return;
         }
+        if (super.rallyFirst(creep)) return;
+        if (super.goToPortal(creep)) return;
+        
         if (creep.ticksToLive > 1495 &&  creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
 creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
         } else if (super.boosted(creep, creep.memory.boostNeeded)) {
@@ -225,8 +228,6 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
             return;
         }
 
-        if (super.goToPortal(creep)) return;
-        if (super.rallyFirst(creep)) return;
         if (creep.pos.isNearTo(Game.flags.kill)) {
             creep.memory.waypoint = false;
         }

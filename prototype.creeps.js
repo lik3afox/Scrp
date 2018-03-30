@@ -240,7 +240,7 @@ module.exports = function() {
 
                     return zzzz;
                 default:
-//                    console.log('requested stat not existant');
+                    //                    console.log('requested stat not existant');
                     break;
             }
         } else {
@@ -608,7 +608,7 @@ module.exports = function() {
         });
 
         if (hurtz.length > 0) {
-            var hurted = _.min(hurtz, a=> a.hits);
+            var hurted = _.min(hurtz, a => a.hits);
             if (!this.pos.isNearTo(hurted)) {
                 this.rangedHeal(hurted);
                 this.room.visual.line(this.pos, hurted.pos);
@@ -617,10 +617,10 @@ module.exports = function() {
                 this.heal(hurted);
             }
             this.memory.reHealID = hurted.id;
-            if (this.memory.role == 'healer' && this.memory.partner === undefined && hurted.memory.role == 'fighter' && hurted.memory.party === this.memory.party) {
+/*            if (this.memory.role == 'healer' && this.memory.partner === undefined && hurted.memory.role == 'fighter' && hurted.memory.party === this.memory.party) {
                 this.memory.partner = hurted.id;
                 hurted.memory.partner = this.id;
-            }
+            }*/
             return true;
         } else {
             let tgt = Game.getObjectById(this.memory.reHealID);
@@ -713,155 +713,155 @@ module.exports = function() {
         return true;
     };
 
-/*    Creep.prototype.killBase = function(options) {
-        //        if (this.hits !== this.hitsMax) return false;
+    /*    Creep.prototype.killBase = function(options) {
+            //        if (this.hits !== this.hitsMax) return false;
 
-        if (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.friends, this.room.controller.owner.username)) {
-            return;
-        }
-
-        var target = Game.getObjectById(this.partyFlag.memory.target);
-        if (target !== null) {
-            if (this.pos.isNearTo(target)) {
-                this.attack(target);
-                return;
-            } else {
-                this.moveTo(target);
-                let bads = this.pos.findInRange(FIND_STRUCTURES, 1);
-                if (bads.length > 0) {
-                    this.attack(bads[0]);
-                }
+            if (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.friends, this.room.controller.owner.username)) {
                 return;
             }
-            //            var font = { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT, backgroundColor: '#0F0F0F' };
-            //           this.room.visual.text(target.hits, this.pos.x + 1.5, this.pos.y, font);
-        }
 
-        if (this.room.controller !== undefined && this.room.controller.owner !== undefined &&
-
-            _.contains(fox.friends, this.room.controller.owner.username)) return false;
-        /*        if (this.memory.role == 'demolisher') {
-
-                } 
-        var struc = this.room.find(FIND_STRUCTURES);
-
-        var site = this.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-        site = _.filter(site, function(o) {
-            return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progress > 2000;
-        });
-        if (site.length > 0) {
-            var zzz = this.pos.findClosestByRange(site);
-            this.moveTo(zzz);
-            return;
-        }
-
-
-        if (this.memory.targetID === undefined) {
-            if (this.room.controller === undefined) {
-                let test2 = _.filter(struc, function(o) {
-                    return o.structureType === STRUCTURE_WALL && o.structureType === STRUCTURE_ROAD && o.structureType === STRUCTURE_CONTAINER;
-                });
-
-                if (test2.length !== 0) {
-                    this.memory.targetID = this.pos.findClosestByRange(test2).id;
-                }
-            } else if (this.room.controller !== undefined && this.room.controller.owner === 'undefined') {
-                if (this.room.storage !== undefined && this.room.storage.pos.lookForStructure(STRUCTURE_RAMPART)) {
-                    this.memory.targetID = this.room.storage.id;
-                } else if (this.room.terminal !== undefined && this.room.terminal.pos.lookForStructure(STRUCTURE_RAMPART)) {
-                    this.memory.targetID = this.room.terminal.id;
-                }
-            } else if (this.room.controller !== undefined) {
-                if (1 == 2 && this.room !== undefined && this.room.terminal !== undefined && this.room.terminal.pos.lookForStructure(STRUCTURE_RAMPART)) {
-                    //                    this.memory.targetID = this.room.terminal.id;
-                    var test2z = _.filter(struc, function(o) {
-                        return (!o.pos.lookForStructure(STRUCTURE_TERMINAL) && o.structureType == STRUCTURE_RAMPART);
-                    }); // This is something is not on a rampart
-                    if (test2z.length > 0) {
-                        this.memory.targetID = test2z[0].id;
-                    }
+            var target = Game.getObjectById(this.partyFlag.memory.target);
+            if (target !== null) {
+                if (this.pos.isNearTo(target)) {
+                    this.attack(target);
+                    return;
                 } else {
+                    this.moveTo(target);
+                    let bads = this.pos.findInRange(FIND_STRUCTURES, 1);
+                    if (bads.length > 0) {
+                        this.attack(bads[0]);
+                    }
+                    return;
+                }
+                //            var font = { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT, backgroundColor: '#0F0F0F' };
+                //           this.room.visual.text(target.hits, this.pos.x + 1.5, this.pos.y, font);
+            }
+
+            if (this.room.controller !== undefined && this.room.controller.owner !== undefined &&
+
+                _.contains(fox.friends, this.room.controller.owner.username)) return false;
+            /*        if (this.memory.role == 'demolisher') {
+
+                    } 
+            var struc = this.room.find(FIND_STRUCTURES);
+
+            var site = this.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+            site = _.filter(site, function(o) {
+                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progress > 2000;
+            });
+            if (site.length > 0) {
+                var zzz = this.pos.findClosestByRange(site);
+                this.moveTo(zzz);
+                return;
+            }
 
 
-                    var filter = [STRUCTURE_WALL, STRUCTURE_ROAD, STRUCTURE_CONTROLLER, STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
-                    var test2 = _.filter(struc, function(o) {
-                        return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(filter, o.structureType);
-                    }); // This is something is not on a rampart
+            if (this.memory.targetID === undefined) {
+                if (this.room.controller === undefined) {
+                    let test2 = _.filter(struc, function(o) {
+                        return o.structureType === STRUCTURE_WALL && o.structureType === STRUCTURE_ROAD && o.structureType === STRUCTURE_CONTAINER;
+                    });
 
                     if (test2.length !== 0) {
                         this.memory.targetID = this.pos.findClosestByRange(test2).id;
+                    }
+                } else if (this.room.controller !== undefined && this.room.controller.owner === 'undefined') {
+                    if (this.room.storage !== undefined && this.room.storage.pos.lookForStructure(STRUCTURE_RAMPART)) {
+                        this.memory.targetID = this.room.storage.id;
+                    } else if (this.room.terminal !== undefined && this.room.terminal.pos.lookForStructure(STRUCTURE_RAMPART)) {
+                        this.memory.targetID = this.room.terminal.id;
+                    }
+                } else if (this.room.controller !== undefined) {
+                    if (1 == 2 && this.room !== undefined && this.room.terminal !== undefined && this.room.terminal.pos.lookForStructure(STRUCTURE_RAMPART)) {
+                        //                    this.memory.targetID = this.room.terminal.id;
+                        var test2z = _.filter(struc, function(o) {
+                            return (!o.pos.lookForStructure(STRUCTURE_TERMINAL) && o.structureType == STRUCTURE_RAMPART);
+                        }); // This is something is not on a rampart
+                        if (test2z.length > 0) {
+                            this.memory.targetID = test2z[0].id;
+                        }
                     } else {
-                        filter = [STRUCTURE_WALL, STRUCTURE_CONTROLLER, STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
-                        var test = _.filter(struc, function(o) {
+
+
+                        var filter = [STRUCTURE_WALL, STRUCTURE_ROAD, STRUCTURE_CONTROLLER, STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
+                        var test2 = _.filter(struc, function(o) {
                             return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(filter, o.structureType);
-                        });
-                        if (test.length !== 0) {
-                            this.memory.targetID = this.pos.findClosestByRange(test).id;
+                        }); // This is something is not on a rampart
+
+                        if (test2.length !== 0) {
+                            this.memory.targetID = this.pos.findClosestByRange(test2).id;
                         } else {
-                            filter = [STRUCTURE_WALL, STRUCTURE_CONTROLLER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
-                            bads = _.filter(struc, function(o) {
-                                return !_.contains(filter, o.structureType);
-                            }); // these are the ramparts
-                            if (bads.length > 0) {
-                                this.memory.targetID = this.pos.findClosestByRange(bads).id;
+                            filter = [STRUCTURE_WALL, STRUCTURE_CONTROLLER, STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
+                            var test = _.filter(struc, function(o) {
+                                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(filter, o.structureType);
+                            });
+                            if (test.length !== 0) {
+                                this.memory.targetID = this.pos.findClosestByRange(test).id;
                             } else {
-                                filter = [STRUCTURE_CONTROLLER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
+                                filter = [STRUCTURE_WALL, STRUCTURE_CONTROLLER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
                                 bads = _.filter(struc, function(o) {
                                     return !_.contains(filter, o.structureType);
                                 }); // these are the ramparts
                                 if (bads.length > 0) {
                                     this.memory.targetID = this.pos.findClosestByRange(bads).id;
+                                } else {
+                                    filter = [STRUCTURE_CONTROLLER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
+                                    bads = _.filter(struc, function(o) {
+                                        return !_.contains(filter, o.structureType);
+                                    }); // these are the ramparts
+                                    if (bads.length > 0) {
+                                        this.memory.targetID = this.pos.findClosestByRange(bads).id;
+                                    }
                                 }
                             }
                         }
                     }
+
+                } else {
+                    var tester2 = _.filter(this.room.find(FIND_STRUCTURES), function(o) {
+                        return o.structureType === STRUCTURE_ROAD && o.structureType === STRUCTURE_CONTAINER;
+                    }); // This is something is not on a rampart
+
+                    if (tester2.length !== 0) {
+                        this.memory.targetID = tester2[0].id;
+                    }
                 }
 
-            } else {
-                var tester2 = _.filter(this.room.find(FIND_STRUCTURES), function(o) {
-                    return o.structureType === STRUCTURE_ROAD && o.structureType === STRUCTURE_CONTAINER;
-                }); // This is something is not on a rampart
 
-                if (tester2.length !== 0) {
-                    this.memory.targetID = tester2[0].id;
-                }
+
             }
+            close = Game.getObjectById(this.memory.targetID);
+            //    this.say('blah'+this.memory.targetID);
 
+            if (close !== null) {
+                if (this.getActiveBodyparts(ATTACK) > 0) {
+                    if (this.pos.isNearTo(close)) {
+                        this.attack(close);
+                    } else {
+                        this.moveTo(close);
+                    }
+                    return true;
 
-
-        }
-        close = Game.getObjectById(this.memory.targetID);
-        //    this.say('blah'+this.memory.targetID);
-
-        if (close !== null) {
-            if (this.getActiveBodyparts(ATTACK) > 0) {
-                if (this.pos.isNearTo(close)) {
-                    this.attack(close);
+                } else if (this.getActiveBodyparts(RANGED_ATTACK) > 0) {
+                    if (this.pos.inRangeTo(close, 3)) {
+                        this.rangedAttack(close);
+                    } else {
+                        this.moveTo(close);
+                    }
+                    return true;
                 } else {
-                    this.moveTo(close);
+                    if (this.pos.isNearTo(close)) {
+                        this.dismantle(close);
+                    } else {
+                        this.moveTo(close);
+                    }
+                    return true;
                 }
-                return true;
-
-            } else if (this.getActiveBodyparts(RANGED_ATTACK) > 0) {
-                if (this.pos.inRangeTo(close, 3)) {
-                    this.rangedAttack(close);
-                } else {
-                    this.moveTo(close);
-                }
-                return true;
             } else {
-                if (this.pos.isNearTo(close)) {
-                    this.dismantle(close);
-                } else {
-                    this.moveTo(close);
-                }
-                return true;
+                this.memory.targetID = undefined;
             }
-        } else {
-            this.memory.targetID = undefined;
-        }
-        return false;
-    };*/
+            return false;
+        };*/
     /*
         Creep.prototype.dragHealer = function(options) {
             if (this.memory.healerID !== undefined) {
@@ -1025,17 +1025,17 @@ module.exports = function() {
                 Exits.push(FIND_EXIT_TOP);
             }
         }
-/*
-        switch (this.roomName) {
-            case "W58S29":
-                Exits = [
-                    FIND_EXIT_RIGHT,
-                    FIND_EXIT_BOTTOM,
-                    FIND_EXIT_LEFT
-                ];
-                break;
-        }
-*/
+        /*
+                switch (this.roomName) {
+                    case "W58S29":
+                        Exits = [
+                            FIND_EXIT_RIGHT,
+                            FIND_EXIT_BOTTOM,
+                            FIND_EXIT_LEFT
+                        ];
+                        break;
+                }
+        */
 
         for (var e in Exits) {
             const exit = this.pos.findClosestByRange(Exits[e]);
@@ -1330,12 +1330,10 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         _.defaults(move_opts, {
             useSKPathing: true,
             reusePath: 50,
-            maxRooms: 2,
+            maxRooms: 1,
             segment: false,
             simpleExit: false,
         });
-
-        this.say('🐘');
 
         let status = null;
         let end_room = target.roomName !== undefined ? target.roomName : target.pos.roomName;
@@ -1348,12 +1346,6 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             this.memory.inter_room_target = undefined;
             this.memory.inter_room_exit = undefined;
             this.memory.inter_room_exitTarget = undefined;
-        }
-
-        if (this.isAtEdge) {
-            let index = this.memory.inter_room_path.indexOf(this.room.name);
-            this.memory.inter_room_target = this.memory.inter_room_path[index + 1];
-            this.memory.inter_room_exitTarget = this.memory.inter_room_exit[index + 1];
         }
 
         this.memory.start_room = start_room;
@@ -1383,8 +1375,8 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         }
 
         if (this.room.name == start_room) {
+            this.say('StartPath');
             if (move_opts.simpleExit || move_opts.segment) {
-                this.say('X');
                 if (this.room.memory.exitPoints === undefined) {
                     this.room.memory.exitPoints = {};
                 }
@@ -1412,37 +1404,41 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                     this.say('🚏' + zz);
                     return zz;
                 }
+            } else {
+                this.memory.inter_room_target = this.memory.inter_room_path[0];
+                this.memory.inter_room_exitTarget = this.memory.inter_room_exit[0];
+                target = new RoomPosition(25, 25, this.memory.inter_room_target);
+                return this.moveMe(target, move_opts);
             }
-
-            //            return;
-        } else if (this.room.name == target.pos.roomName) {
+        }
+        if (this.room.name == target.pos.roomName) {
+            // At the target room it will be happy.
             if (!this.pos.isEqualTo(target)) {
-                this.say(';(');
-                return this.moveTo(target, move_opts); // Questionable segment use.
+                this.say('IsThere');
+                return this.moveMe(target, move_opts); // Questionable segment use.
             }
         }
 
-        if (!_.contains(this.memory.inter_room_path, this.room.name)) {
+        if (!_.contains(this.memory.inter_room_path, this.room.name) && this.room.name !== start_room) {
             // This is a check to make sure the creep is on the path, if it makes a wrong move it should clear and go back to moveing to target.
             // If it is not then it should do it's own moveTo(target);
             this.memory.inter_room_exitTarget = undefined;
             this.memory.inter_room_target = undefined;
-            this.say(';(');
-            move_opts.maxRooms = undefined;
+            this.say('NotPath');
             return this.moveTo(target, move_opts);
         } else if (this.memory.inter_room_exitTarget === undefined) {
             let index = this.memory.inter_room_path.indexOf(this.room.name);
             this.memory.inter_room_target = this.memory.inter_room_path[index + 1];
             this.memory.inter_room_exitTarget = this.memory.inter_room_exit[index + 1];
         }
-        if (this.memory.inter_room_target === undefined) {
+        /*      if (this.memory.inter_room_target === undefined) {
             // We coudn't find a path!
-            this.say(':(');
-            move_opts.maxRooms = undefined;
+            this.say(':+');
             return this.moveTo(target, move_opts);
         }
-
+*/
         if (this.room.name !== this.memory.inter_room_target && move_opts.simpleExit) {
+            this.say('Sexit');
             target = getExitPos(this);
         } else {
             // Get next room in the path
@@ -1458,17 +1454,26 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             }
             this.memory.inter_room_target = this.memory.inter_room_path[index + 1];
             this.memory.inter_room_exitTarget = this.memory.inter_room_exit[index + 1];
-            if (move_opts.simpleExit) target = getExitPos(this);
-        }
-        if(!move_opts.simpleExit){
-             target = new RoomPosition(25,25,this.memory.inter_room_target);
-        }
+            if (move_opts.simpleExit) {
+                this.say('Sexit2');
+                target = getExitPos(this);
+            } else {
+                this.say('2525');
+                if (this.room.name == start_room) {
+                    this.memory.inter_room_target = this.memory.inter_room_path[0];
+                    this.memory.inter_room_exitTarget = this.memory.inter_room_exit[0];
+                } else {
+                    let index = this.memory.inter_room_path.indexOf(this.room.name);
+                    if (index > -1) {
+                        this.memory.inter_room_target = this.memory.inter_room_path[index + 1];
+                        this.memory.inter_room_exitTarget = this.memory.inter_room_exit[index + 1];
+                    }
+                }
+                if (this.memory.inter_room_target !== undefined)
+                    target = new RoomPosition(25, 25, this.memory.inter_room_target);
+            }
 
-        //       
-        /*if(this.memory.inter_room_target !== undefined){
-                  target = new RoomPosition(25,25,this.memory.inter_room_target);
-                  this.say(this.memory.inter_room_target);
-        } */
+        }
         return this.moveMe(target, move_opts);
     };
 
@@ -1532,6 +1537,50 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 strokeWidth: 0.1,
                 opacity: 0.5
             };
+        }
+
+        // Here is the logic for following and stuff.
+        if (this.memory.followerID !== undefined && this.memory.leaderID !== undefined) {
+            // This is a guy in the middle
+            let led = Game.getObjectById(this.memory.leaderID);
+            let fol = Game.getObjectById(this.memory.followerID);
+            if (led !== null && fol !== null) {
+                if (!this.pos.isNearTo(fol) && !this.isAtEdge) {
+                    // If not near the follower then don't move. 
+                    this.say('w4F');
+                    return ERR_NO_PATH;
+                }
+                if (this.pos.isNearTo(led)) {
+                    return this.move(this.pos.getDirectionTo(led));
+                } else {
+                    return this.moveTo(led, options);
+                }
+            }
+        } else if (this.memory.followerID !== undefined) {
+            // This is the leader.
+            let fol = Game.getObjectById(this.memory.followerID);
+            if (fol !== null) {
+                if (!this.pos.isNearTo(fol) && !this.isAtEdge && fol.fatigue > 0) {
+                    // If the leader isn't near his follower, he doesn't move. 
+                    this.say('w4F');
+                    //this.moveTo(fol,options)
+                    return ERR_NO_PATH;
+                }
+            } else {
+                this.memory.followerID = undefined;
+            }
+        } else if (this.memory.leaderID !== undefined) {
+            let led = Game.getObjectById(this.memory.leaderID);
+            if (led !== null) {
+                if (this.pos.isNearTo(led)) {
+                    return this.move(this.pos.getDirectionTo(led));
+                } else {
+                    return this.moveTo(led, options);
+                }
+            } else {
+                this.memory.leaderID = undefined;
+            }
+            // This is the last follower. 
         }
 
         if (this.memory.role == 'transport' || this.memory.role == 'xtransport' || this.memory.party !== undefined) {

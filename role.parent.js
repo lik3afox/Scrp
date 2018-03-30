@@ -468,7 +468,7 @@ class baseParent {
             let parent = Game.getObjectById(creep.memory.parent);
             if (parent !== null) {
                 creep.moveMe(parent, {
-                    reusePath: 25,
+                    reusePath: 50,
                     ignoreCreeps: true,
                     visualizePathStyle: {
                         stroke: '#fa0',
@@ -488,21 +488,21 @@ class baseParent {
 
     static rallyFirst(creep) {
         if (creep.memory.partied) return false;
-
-        var partyFlag = Game.flags[creep.memory.party];
+        var partyFlag = creep.partyFlag;
         if (partyFlag === undefined) return false;
-        if (partyFlag.memory.rallyFlag !== false && partyFlag.memory.rallyFlag !== undefined) {
+
+        if (partyFlag.memory.rallyFlag !== false) {
             if (partyFlag.memory.rallyFlag !== 'home') {
                 var pFlag = Game.flags[partyFlag.memory.rallyFlag];
-                creep.moveTo(Game.flags[partyFlag.memory.rallyFlag], { reusePath: 50 });
+                creep.moveTo(pFlag, { reusePath: 50 });
             } else {
-                creep.moveTo(Game.flags[creep.memory.home], { reusePath: 50 });
+                creep.moveTo(creep.homeFlag, { reusePath: 50 });
             }
             creep.say('R move');
             return true;
-        } else {
-            return false;
-        }
+        } 
+        
+        return false;
     }
 
     static goToPortal(creep) {

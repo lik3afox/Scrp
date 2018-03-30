@@ -182,7 +182,7 @@
             });
 
         }
-//        console.log('SUCIDE FIND', screeps.length);
+        //        console.log('SUCIDE FIND', screeps.length);
         for (var ea in screeps) {
             screeps[ea].suicide();
         }
@@ -323,7 +323,7 @@
                         return (structure.structureType == STRUCTURE_LAB);
                     });
                     if (zzz.length === 1) {
-//                        console.log(flag, 'FOUND MasterLab', zzz[0].structureType);
+                        //                        console.log(flag, 'FOUND MasterLab', zzz[0].structureType);
                         flag.room.memory.boostLabID = zzz[0].id;
                     }
                 }
@@ -340,7 +340,7 @@
                     });
 
                     if (zzz.length > 0) {
-                   //     console.log(flag, 'FOUND masterLink', zzz[0].structureType);
+                        //     console.log(flag, 'FOUND masterLink', zzz[0].structureType);
                         flag.room.memory.masterLinkID = zzz[0].id;
                     }
                 }
@@ -931,8 +931,7 @@
 
     class buildFlags {
 
-        static run(spawncounted) {
-            //  spawnCount = spawncounted;
+        static run(spawnCount) {
             let powerTotal = 0;
             let defendTotal = 0;
             Memory.clearFlag--;
@@ -943,13 +942,13 @@
 
             let zFlags = _.filter(Game.flags, function(o) { return o.color != COLOR_GREY && o.color != COLOR_CYAN; });
 
-        for(let a in Memory.flags) {
-            if (Game.flags[a] === undefined) {
-              delete Memory.flags[a];  
+            for (let a in Memory.flags) {
+                if (Game.flags[a] === undefined) {
+                    delete Memory.flags[a];
+                }
             }
-        }
 
-      //  }
+            //  }
             //o.color != COLOR_WHITE
             //           var e = zFlags.length;
             var flag;
@@ -1012,22 +1011,28 @@
                     flag.memory.musterRoom = 'E14S37';
                 }
                 if (flag.name === 'Flag27') {
-                    if(flag.room.controller.level < 6 && flag.room.controller.level > 3 && flag.color !== COLOR_YELLOW) {
-                        flag.memory.setColor  = {
-                            color:COLOR_YELLOW,
-                            secondaryColor:COLOR_YELLOW,
-                        };
-                    } else if(flag.room.controller.level > 5 &&  flag.color !== COLOR_WHITE) {
+                    if (flag.room.storage.store[RESOURCE_ENERGY] < 375000) {
+                        flag.memory.musterType = 'hmule';
+                    } else {
+                        flag.memory.musterType = 'upgrademule';
+                    }
+
+                    if (flag.room.controller.level < 6 && flag.room.controller.level > 3 && flag.color !== COLOR_YELLOW) {
                         flag.memory.setColor = {
-                            color:COLOR_WHITE,
-                            secondaryColor:COLOR_WHITE,
+                            color: COLOR_YELLOW,
+                            secondaryColor: COLOR_YELLOW,
+                        };
+                    } else if (flag.room.controller.level > 5 && flag.color !== COLOR_WHITE) {
+                        flag.memory.setColor = {
+                            color: COLOR_WHITE,
+                            secondaryColor: COLOR_WHITE,
                         };
                     }
                 }
                 switch (flag.secondaryColor) {
                     case COLOR_GREEN:
-                            // Setting up target
-                            if(flag.room !== undefined) {
+                        // Setting up target
+                        if (flag.room !== undefined) {
                             let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                             for (let ee in res) {
                                 if (res[ee].structure !== undefined) {
@@ -1035,9 +1040,9 @@
                                     break;
                                 }
                             }
-                            }
-                            // Lets add some targets to next
-                            break;
+                        }
+                        // Lets add some targets to next
+                        break;
                     case COLOR_ORANGE: // This color is for squad running, leave empty due to it being to the creep.run role;
                         var squad;
                         //                   if (flag.memory.squadID === undefined || flag.memory.squadID.length !== flag.memory.totalNumber) {
@@ -1191,6 +1196,9 @@
                         // This will mean power flag if it's green/red.
                         let rally = flag;
                         if (flag.secondaryColor == COLOR_RED) {
+                            if(flag.room === undefined){
+                                flag.memory.rallyFlag = 'home';
+                            }
                             var power = require('commands.toPower');
                             if (Memory.showInfo > 1)
                                 powerTotal++;
@@ -1202,13 +1210,6 @@
                         }
                         if (flag.secondaryColor == COLOR_WHITE) {
                             removeRA(flag);
-                        }
-                        if (flag.name == 'Flag27') {
-                            if (flag.room.storage.store[RESOURCE_ENERGY] < 375000) {
-                                flag.memory.musterType = 'hmule';
-                            } else {
-                                flag.memory.musterType = 'upgrademule';
-                            }
                         }
 
 
@@ -1237,6 +1238,8 @@
                             }
                         }
                         if (flag.name == 'bandit') {
+                            
+                            flag.memory.rallyFlag = 'home';
                             /*                            if (flag.memory.timer === undefined) {
                                                             flag.memory.timer = 1200;
                                                         }
@@ -1244,7 +1247,7 @@
                                                         if (flag.memory.timer < 0) {
                             //                                flag.remove();
                                                         } */
-//                            console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
+                            //                            console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
                             if (flag.room !== undefined) {
                                 // So here we check if we remove the flag
                                 // We first give it an 1500 timer.
@@ -1266,7 +1269,7 @@
                                 var testz3 = _.filter(strucd, function(o) {
                                     return o.structureType === STRUCTURE_CONTAINER && o.total === 0;
                                 });
-//                                console.log('Bandit room available, containers found:', testz2.length, "emp:", testz3.length, flag.memory.timer);
+                                //                                console.log('Bandit room available, containers found:', testz2.length, "emp:", testz3.length, flag.memory.timer);
                                 if (testz2.length !== 0 && testz2.length == testz3.length) {
                                     flag.remove();
                                 }
@@ -1299,7 +1302,7 @@
                             //                            if(Game.cpu.bucket > 600)
                             rally.memory.rallyCreateCount--;
                             if (rally.memory.rallyCreateCount < 0) {
-                                party.create(flag);
+                                party.create(flag, spawnCount);
                                 rally.memory.rallyCreateCount = delayBetweenScan;
                             }
                         }

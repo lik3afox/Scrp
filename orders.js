@@ -4,7 +4,8 @@ Game.market.calcTransactionCost(1000, 'W39N68', 'W28S73');
 
 Game.market.deal('59b6cf25655799687523c272', 5000, 'E17S45');
 
-Game.market.deal('5aa029d13d4a72434fff2e94', 10000, 'E14S47');
+Game.market.deal('5a76547921d27469cb613e25', 2000, 'E19S49');
+
 Game.market.deal('591c9806be13d2530e2d9d20', 5000, 'E28S71');
 Game.market.deal('588b9067dab725f87b0f1afc', 4000, 'E26S77');
 
@@ -57,7 +58,7 @@ Game.market.createOrder(ORDER_SELL, 'XGH2O', 7.0, 10000, "E19S49");
 
 Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.03, 500000, "E18S32");
 
-Game.market.createOrder(ORDER_SELL, 'O', 0.82, 100000, "E18S36");
+Game.market.createOrder(ORDER_SELL, 'X', 0.1, 10000, "E19S49");
 
 Game.market.createOrder(ORDER_BUY, 'U', 0.091, 100000, "E23S42");
 

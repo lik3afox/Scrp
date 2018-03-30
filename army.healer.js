@@ -165,7 +165,9 @@ function powerAction(creep) {
                 }
                 return true;
             }
-
+            creep.moveMe(pBank);
+            creep.smartHeal();
+/*
             if (creep.pos.inRangeTo(pBank, 6)) {
                 creep.memory.notThere = true;
                 if(creep.id == creep.memory.partner){
@@ -181,7 +183,7 @@ function powerAction(creep) {
                 } else {
                     creep.healOther(7);
                 }
-            }
+            } */
         } else {
 
             if (creep.memory.partner !== undefined) {
@@ -300,6 +302,8 @@ class healerClass extends roleParent {
         if (super.spawnRecycle(creep)) {
             return;
         }
+        if (super.rallyFirst(creep)) return;
+
         if (creep.ticksToLive > 1495 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
 //            creep.memory.boostNeeded = classLevels[creep.memory.level].boost;
 creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);        } 
@@ -353,7 +357,7 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);      
             }
             doMove = true;
         }
-        if (super.rallyFirst(creep)) return;
+//        if (super.rallyFirst(creep)) return;
         if (super.goToPortal(creep)) return;
 
         //  creep.heal(creep);

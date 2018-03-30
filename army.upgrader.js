@@ -98,6 +98,10 @@ class upgraderzClass extends roleParent {
                 var ez;
                 switch (creep.memory.upgradeSpot) {
                     case 1: // renew spot.
+                    if(creep.pos.x == 31 && creep.pos.y == 8 && creep.memory.upgradeSpot === 1 && creep.memory.stuckCount > 0 ){
+                        creep.memory.upgradeSpot = 0;
+                    }
+
                         zz = new RoomPosition(32, 9, creep.room.name);
                         let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
                         if (creep.room.controller.level > 5 && ((!creep.memory.boosted) || (creep.memory.boosted && creep.ticksToLive < 5))) {

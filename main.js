@@ -317,11 +317,9 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
             let total = room.storage.store[RESOURCE_ENERGY] + room.terminal.store[RESOURCE_ENERGY];
             room.visual.text(total, room.storage.pos);
             if (total > 1200000) {
-                flag.memory.party[0][1] = 3;
-
+                flag.memory.party[0][1] = 4;
             } else if (total > 1100000) {
-                flag.memory.party[0][1] = 2;
-
+                flag.memory.party[0][1] = 3;
             } else if (total > 900000) {
                 flag.memory.party[0][1] = 2;
 
@@ -752,7 +750,7 @@ function blackMagic(fn) {
     };
 }
 
-
+var spawnCount;
 module.exports.loop = blackMagic(function() {
     var _terminal = require('build.terminal');
     //    this._terminal = require('build.terminal');
@@ -777,13 +775,13 @@ module.exports.loop = blackMagic(function() {
     }
     addCounters();
 
-    flag.run(); // We do this part of the first stuff so we can go and find things in the flag rooms
+    flag.run(spawnCount); // We do this part of the first stuff so we can go and find things in the flag rooms
 
     if (Game.shard.name === 'shard1' && Game.cpu.bucket <= 200) {
         console.log('XXXX XXXXX 200 tick break after flag logic XXXX XXXX');
         return;
     }
-    var spawnCount = addSpawnQuery(spawnsDo.runCreeps()); // This will not work with old counting.
+    spawnCount = addSpawnQuery(spawnsDo.runCreeps()); // This will not work with old counting.
     var spawnReport = {};
     require('commands.toSegment').run();
 
@@ -850,6 +848,7 @@ module.exports.loop = blackMagic(function() {
                     font: 0.5,
                     align: RIGHT
                 });
+                
             }
 
             if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {

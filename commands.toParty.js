@@ -40,8 +40,13 @@ var allParty = {
     bandit: [
         ['fighter', 1, 10],
         ['mage', 1, 6],
-        ['thief', 4, 5],
+//        ['thief', 4, 5],
     ],
+  //  bandit: [
+//        ['fighter', 1, 10],
+  //      ['mage', 1, 6],
+//        ['thief', 4, 5],
+//    ],
     thief: [
         ['thief', 1, 4],
     ],
@@ -123,7 +128,7 @@ var allParty = {
         ['rampartGuard', 1, 0]
     ],
     harass: [
-        ['harass', 1, 5]
+        ['harass', 2, 5]
     ],
 
 };
@@ -183,13 +188,13 @@ function getCurrentParty(flag) {
         return flag.memory.party;
     }
     if (flag.name.substr(0, 5) == 'power') {
-        if(Game.shard.name === 'shard1') {
+        if (Game.shard.name === 'shard1') {
             if (flag.memory.spawn) return allParty.smarterPowerParty;
         } else {
             if (flag.memory.spawn) return allParty.smallpowerParty;
         }
     }
-    if(flag.name == 'bandit') {
+    if (flag.name == 'bandit') {
         return allParty.bandit;
     }
     if (flag.name.substr(0, 5) == 'rampa') {
@@ -207,7 +212,7 @@ function getCurrentParty(flag) {
         if (allParty[flag.memory.musterType] !== undefined) {
             party = allParty[flag.memory.musterType];
         } else {
-//            console.log(flag, 'doesn"t have party or musterType', roomLink(flag.pos.roomName));
+            //            console.log(flag, 'doesn"t have party or musterType', roomLink(flag.pos.roomName));
         }
         return party;
     }
@@ -218,11 +223,11 @@ function returnClosestRoom(roomName) {
     var distance = 100;
     var spawn;
 
-    switch(roomName){
-    	case 'E20S37':
-    	case 'E20S38':
-    	case 'E20S39':
-    	return 'E23S38';
+    switch (roomName) {
+        case 'E20S37':
+        case 'E20S38':
+        case 'E20S39':
+            return 'E23S38';
     }
 
     for (var e in Game.spawns) {
@@ -241,9 +246,37 @@ function returnClosestRoom(roomName) {
 }
 
 // This get the current total of each party member of currentParty.
-function findParty(flag) {
-    var currentParty = getCurrentParty(flag);
-    var total = [];
+function findParty(flag, spawnCount) {
+    if (spawnCount !== undefined && spawnCount[flag.name] !== undefined) {
+        let currentParty = getCurrentParty(flag);
+        let total = [];
+        for (let i in currentParty) {
+            if (spawnCount[flag.name][currentParty[i][_name]] !== undefined) {
+                total[currentParty[i][_name]] = spawnCount[flag.name][currentParty[i][_name]].count;
+            } else {
+                total[currentParty[i][_name]] = 0;
+            }
+            for (let o in Game.spawns) {
+                if(!Game.spawns[o].memory.alphaSpawn) continue;
+                let spawnz = Game.spawns[o];
+                for (let z in spawnz.memory.warCreate) {
+                    if (currentParty[i][_name] == spawnz.memory.warCreate[z].memory.role && spawnz.memory.warCreate[z].memory.party == flag.name) {
+                        total[currentParty[i][_name]]++;
+                    }
+                }
+                for (let z in spawnz.memory.expandCreate) {
+                    if (currentParty[i][_name] == spawnz.memory.expandCreate[z].memory.role && spawnz.memory.expandCreate[z].memory.party == flag.name) {
+                        total[currentParty[i][_name]]++;
+                    }
+                }
+            }
+        }
+
+        return total;
+    }
+
+    let currentParty = getCurrentParty(flag);
+    let total = [];
 
     for (var i in currentParty) {
         total[currentParty[i][_name]] = 0;
@@ -272,6 +305,7 @@ function findParty(flag) {
     }
 
     return total;
+
 }
 
 function getCost(module) {
@@ -305,17 +339,6 @@ class partyInteract {
         }
         if (flag.memory.musterType === undefined) {
             flag.memory.musterType = 'none';
-        }
-
-        if (flag.memory.wayPath === undefined) {
-            flag.memory.wayPath = [];
-            var test = {
-                throughPortal: false,
-                x: 1,
-                y: 1,
-                roomName: 'none'
-            };
-            flag.memory.wayPath.push(test);
         }
 
         var o;
@@ -402,7 +425,7 @@ class partyInteract {
 
 
                         // Here we setup the travel caravan;
-//                        console.log('SETTING CARAVAN', healers.length, others.length, point);
+                        //                        console.log('SETTING CARAVAN', healers.length, others.length, point);
 
                         var caravan = [];
                         caravan.push(point);
@@ -425,7 +448,7 @@ class partyInteract {
                                 caravan.push(others.shift());
                             }
                         }
-//                        console.log('AFTERSETTING CARAVAN', caravan.length);
+                        //                        console.log('AFTERSETTING CARAVAN', caravan.length);
                         flag.memory.squadID = [];
                         for (let a = 0; a < caravan.length; a++) {
 
@@ -448,6 +471,12 @@ class partyInteract {
 
                     }
                 }
+                // So logic dictacts 
+                // If you have just the followerID - your the leader.
+                // Maybe the leader needs an additional Flag - so if he has no followers someone can find him. 
+                // iF you have both ID's your middle. 
+                // iF you just have the leader ID - your the last follower.
+
             } else if (flag.memory.totalNumber === 2) {
 
                 if (rallied !== undefined && rallied.room !== undefined) {
@@ -457,23 +486,21 @@ class partyInteract {
                     });
                     if (crps.length >= flag.memory.totalNumber) {
                         crps[0].memory.leaderID = crps[1].id;
-                        crps[1].memory.followerID = crps[0].id;
-                        crps[1].memory.partied = true;
                         crps[0].memory.partied = true;
 
+                        crps[1].memory.followerID = crps[0].id;
+                        crps[1].memory.partied = true;
                     }
                 }
             } else {
-//                console.log('ERROR for These creeps, enable squadLogic',flag.name,roomLink(flag.pos.roomName));
+                //                console.log('ERROR for These creeps, enable squadLogic',flag.name,roomLink(flag.pos.roomName));
             }
 
-            //              break;
-            //        }
         }
     }
 
-    static create(flag) {
-        var totalParty = findParty(flag);
+    static create(flag, spawnCount) {
+        var totalParty = findParty(flag, spawnCount);
         var currentParty = getCurrentParty(flag);
         let totalPartyed = 0;
         for (let e in flag.memory.party) {
@@ -529,16 +556,16 @@ class partyInteract {
                     } else if (currentParty[e][_name] == 'mule' && home == 'E19S49') {
                         let term = Game.rooms[home].terminal;
                         //term.store.X > 1250 ||
-                        if ( (term.store[RESOURCE_POWER] > 1250) && Game.rooms[home].storage.store[RESOURCE_ENERGY] > 100000) {
+                        if ((term.store[RESOURCE_POWER] > 1250) && Game.rooms[home].storage.store[RESOURCE_ENERGY] > 100000) {
                             let toSpawn = require('commands.toSpawn');
                             toSpawn.addToWarStack(temp);
                             totalParty[i]++;
                         }
                     } else if (currentParty[e][_name] == 'mule') {
-                            let toSpawn = require('commands.toSpawn');
-                            toSpawn.addToExpandStack(temp);
-                            totalParty[i]++;
-                    }else if (currentParty[e][_name] == 'Aupgrader') {
+                        let toSpawn = require('commands.toSpawn');
+                        toSpawn.addToExpandStack(temp);
+                        totalParty[i]++;
+                    } else if (currentParty[e][_name] == 'Aupgrader') {
                         let toSpawn = require('commands.toSpawn');
                         toSpawn.addToExpandStack(temp);
                         totalParty[i]++;

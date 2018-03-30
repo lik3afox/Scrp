@@ -136,7 +136,7 @@ function findNewParty(creep) {
         var a = pbFlags[e];
         let dis = Game.map.getRoomLinearDistance(creep.room.name, pbFlags[a].pos.roomName);
         if (dis <= 5 && pbFlags[a].name != creep.memory.party) {
-//            console.log(creep, "Has switched to new party", pbFlags[a].name, 'from', creep.memory.party);
+            //            console.log(creep, "Has switched to new party", pbFlags[a].name, 'from', creep.memory.party);
             creep.memory.party = pbFlags[a].name;
             creep.memory.reportDeath = true;
             creep.memory.powerbankID = undefined;
@@ -225,7 +225,6 @@ function powerAction(creep) {
 
         } else {
             creep.countDistance();
-//            movement.flagMovement(creep);
             let task = {};
             task.options = {
                 reusePath: 50
@@ -258,12 +257,12 @@ function banditAction(creep) {
             });
             if (bads.length > 0) {
 
-                let tgt = _.min(bads,o => o.pos.getRangeTo(creep));
+                let tgt = _.min(bads, o => o.pos.getRangeTo(creep));
                 if (creep.pos.isNearTo(tgt)) {
                     creep.attack(tgt);
-                    creep.moveTo(tgt);
+                    creep.moveMe(tgt);
                 } else {
-                    creep.moveTo(tgt);
+                    creep.moveMe(tgt);
                 }
                 return true;
             }
@@ -274,16 +273,50 @@ function banditAction(creep) {
             });
             if (bads.length > 0) {
 
-                let tgt = _.min(bads,o => o.pos.getRangeTo(creep));
+                // How many transporters there are
+
+                let tgt = _.min(bads, o => o.pos.getRangeTo(creep));
                 if (creep.pos.isNearTo(tgt)) {
+
                     if (tgt.getActiveBodyparts(ATTACK) > 0 && creep.hits > 2000) {
                         creep.attack(tgt);
                     } else if (tgt.getActiveBodyparts(ATTACK) === 0) {
                         creep.attack(tgt);
                     }
                     creep.moveTo(tgt);
+
+                    if (creep.memory.calledTrans === undefined) {
+                        var trans = _.fitler(bads, function(o) {
+                            return o.getActiveBodyparts(CARRY) > 0;
+                        });
+//            let spawnID = ;
+if(trans.length){
+let spawn = require('commands.toSpawn');
+let numOfcreep = 0;
+  do {
+                let transport = {
+                    build: [MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,
+                            MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,
+                            MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,
+                            MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,
+                            MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,],
+                    memory: {
+                        role: "thief",
+                        home: creep.memory.home,
+                        parent: creep.memory.parent,
+                        level: 5,
+                        party: "bandit"
+                    }
+                };
+                spawn.requestCreep(transport, spawnID);
+                numOfcreep++;
+            } while (numOfcreep <= trans.length);
+}
+                        creep.memory.calledTrans = true;
+                    }
+
                 } else {
-                    creep.moveTo(tgt);
+                    creep.moveMe(tgt);
                 }
                 return true;
             }
@@ -322,9 +355,9 @@ class fighterClass extends roleParent {
         if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
-        if (super.doTask(creep)) {
-            return;
-        }
+        if (super.doTask(creep)) { return; }
+        if (super.rallyFirst(creep)) return;
+
         if (super.isPowerParty(creep)) {
             if (powerAction(creep))
                 return;
@@ -338,7 +371,6 @@ class fighterClass extends roleParent {
 
         var enemy;
 
-        if (super.rallyFirst(creep)) return;
         if (super.goToPortal(creep)) return;
 
         enemy = creep.room.hostilesHere();
@@ -356,7 +388,7 @@ class fighterClass extends roleParent {
             creep.attack(close);
         } else {
             if (!doAttack(creep)) {
-                if (creep.hits < creep.hitsMax)creep.selfHeal();
+                if (creep.hits < creep.hitsMax) creep.selfHeal();
             }
         }
 

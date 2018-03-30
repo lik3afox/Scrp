@@ -286,7 +286,7 @@ class thiefClass extends roleParent {
         }
 
         //  super.rebirth(creep);
-        if (creep.memory.party == 'bandit' || creep.memory.party == 'Flag18') {
+        if (creep.memory.party == 'bandit') {
             creep.say('bandit');
             banditAction(creep);
             return;
@@ -312,7 +312,15 @@ class thiefClass extends roleParent {
 
         if (creep.memory.home == creep.room.name && creep.carryTotal > 0 && creep.carryTotal !== creep.carry[RESOURCE_ENERGY]) {
             // Find Minearls.
-            if (creep.room.storage !== undefined && creep.room.name !== 'W53S35') {
+let parent = Game.getObjectById(creep.memory.parent);            
+            if(!creep.pos.isNearTo(parent.room.terminal)){
+
+            creep.tuskenTo(parent.room.terminal, creep.partyFlag.pos.roomName,{segment:true,reusePath:50});
+            } else {
+                creep.transfer(creep.room.terminal,creep.carrying);
+            }
+
+/*            if (creep.room.storage !== undefined && creep.room.name !== 'W53S35') {
                 contain.moveToStorage(creep);
                 if (creep.pos.isNearTo(creep.room.storage)) {
                     if (creep.ticksToLive < creep.memory.distance) creep.suicide();
@@ -338,7 +346,7 @@ class thiefClass extends roleParent {
                     creep.moveTo(par, { reusePath: 75 });
                 }
 
-            }
+            }*/
             creep.say('h');
             return;
         }
@@ -352,10 +360,10 @@ class thiefClass extends roleParent {
 
         if (!isThere) {
             if (creepCarry == creep.carryCapacity && creep.memory.home != creep.room.name && creep.carryCapacity !== creep.carry[RESOURCE_ENERGY]) {
-                var parent = Game.getObjectById(creep.memory.parent);
+               let parent = Game.getObjectById(creep.memory.parent);
                 //            if (!super.avoidArea(creep)) {
                 //                    creep.moveTo(parent, { reusePath: 75 });
-                creep.tuskenTo(parent, creep.partyFlag.pos.roomName);
+                creep.tuskenTo(parent.room.terminal, creep.partyFlag.pos.roomName,{segment:true,reusePath:50});
                 //                creep.moveTo(parent, { reusePath: 75 });
                 //              }
                 creep.countDistance();
@@ -364,7 +372,7 @@ class thiefClass extends roleParent {
                 //        if (!super.avoidArea(creep)) {
                 //              movement.flagMovement(creep);
                 //            }
-                let zz = creep.tuskenTo(creep.partyFlag, creep.memory.home);
+                let zz = creep.tuskenTo(creep.partyFlag, creep.memory.home,{segment:true,reusePath:50});
                 //                let zz = creep.moveTo(creep.partyFlag, { reusePath: 75 });
                 //                creep.say('thief'+zz);
 
