@@ -191,7 +191,7 @@ function getCurrentParty(flag) {
         if (Game.shard.name === 'shard1') {
             if (flag.memory.spawn) return allParty.smarterPowerParty;
         } else {
-            if (flag.memory.spawn) return allParty.smallpowerParty;
+            if (flag.memory.spawn) return allParty.smallPowerParty;
         }
     }
     if (flag.name == 'bandit') {

@@ -89,7 +89,7 @@ class roleNewDefender extends roleParent {
         if (creep.memory.renewSpawnID === undefined && !creep.room.memory.simple) {
             creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
             var ccSpawn = require('commands.toSpawn');
-            ccSpawn.wantRenew(creep);
+            ccSpawn.newWantRenew(creep);
         }
 
         if (super.movement.moveToDefendFlag2(creep)) {

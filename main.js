@@ -797,7 +797,7 @@ module.exports.loop = blackMagic(function() {
             labs.roomLab(roomName);
             power.roomRun(roomName);
             link.roomRun(roomName);
-            if (Game.shard.name == 'shard2') {
+            if (Game.shard.name == 'shard2' || Game.shard.name == 'shard0' ) {
                 observer.runRoom2(roomName);
             } else {
                 observer.runRoom(roomName);
@@ -826,12 +826,11 @@ module.exports.loop = blackMagic(function() {
                     (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
                     spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
                 }
-                ccSpawn.newRenewCreep(Game.spawns[title].roomName);
+                        ccSpawn.newRenewCreep(Game.spawns[title].pos.roomName);
             }
 
 
             if (Game.spawns[title].spawning === null) {
-                ccSpawn.renewCreep(Game.spawns[title]);
                 ccSpawn.createFromStack(Game.spawns[title]);
             } else {
                 //                Game.spawns[title].memory.lastSpawn = 0;

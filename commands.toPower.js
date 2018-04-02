@@ -122,7 +122,7 @@ class PowerInteract {
         let find = closeFlag.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
 
         if (find.length > 0) {
-//            console.log(creep, "Has switched to new party", closeFlag.name, 'from', creep.memory.party);
+            //            console.log(creep, "Has switched to new party", closeFlag.name, 'from', creep.memory.party);
             creep.memory.party = closeFlag.name;
             creep.memory.reportDeath = true;
             creep.memory.powerbankID = undefined;
@@ -272,8 +272,18 @@ class PowerInteract {
 
             let carryAmount = 150;
             let boost = ['KH2O'];
+
+            if (Game.shard.name !== 'shard1') {
+                carryAmount = 50;
+                boost = [];
+            }
+
             let carryNeeded = Math.ceil(powerB.power / carryAmount);
             let numOfcreep = Math.ceil(carryNeeded / 25);
+            if (Game.shard.name !== 'shard1') {
+                if (numOfcreep > 4) numOfcreep = 4;
+            }
+
             //get spawnID - find the creeps around powerB
             let creep = powerB.pos.findInRange(FIND_MY_CREEPS, 2);
             if (creep.length === 0) return;
@@ -314,7 +324,7 @@ class PowerInteract {
         } else {
             let rando = Math.floor(Math.random() * 100) + 1;
             var name = 'powerbankX' + rando;
-//            console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);
+            //            console.log('Analyzing Powerbank:' + powerBank + " " + powerBank.ticksToDecay + "/" + powerBank.ticksToDecay < 2700 + "  : " + Game.flags[name]);
             if (Game.flags[name] === undefined && (room.memory.powerbankID === undefined || Game.getObjectById(room.memory.powerbankID) === null)) {
                 var mem = {
                     flagName: name,
@@ -323,7 +333,7 @@ class PowerInteract {
                     flagCol2: COLOR_RED
                 };
                 let zz = room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
-//                console.log(zz, 'We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+                //                console.log(zz, 'We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
             }
             return true;
         }

@@ -262,11 +262,6 @@ class SpawnInteract {
                 spawn.memory.created = 0;
                 console.log('----------------Create Spawn Created Count----------------');
             }
-            if (spawn.memory.wantRenew === undefined) {
-                spawn.memory.wantRenew = [];
-                console.log('----------------Create Spawn wantRenew----------------');
-            }
-
             if (spawn.memory.roadsTo === undefined) {
                 spawn.memory.roadsTo = [];
                 console.log('----------------Create Spawn RoadsTo ----------------');
@@ -284,21 +279,32 @@ class SpawnInteract {
     }
     static newRenewCreep(roomName) {
         var room = Game.rooms[roomName];
-        if(room === undefined) return;
+        if (room === undefined) return;
         if (room.memory.renewCreep === undefined) {
             room.memory.renewCreep = [];
         }
         var e = room.memory.renewCreep.length;
+        if (e === 0) return;
+        if(room.availableSpawns.length === 0) return;
+        var cpts = [];
         while (e--) {
             var crp = Game.creeps[room.memory.renewCreep[e]];
             if (crp !== undefined) {
-                let spwn = crp.pos.isNearAny(room.spawns);
-                if (spwn) {
-                    console.log('spwn renewed new',spwn,crp);
-                    spwn.renewCreep(crp);
-                }
+                cpts.push(crp);
             } else {
                 room.memory.renewCreep.splice(e, 1);
+            }
+        }
+        for (e in room.availableSpawns) {
+            let spwn = room.availableSpawns[e];
+            if (!spwn.spawning) {
+                let inRng = spwn.pos.findInRange(cpts, 1);
+                if (inRng.length) {
+                    let minTgt = _.min(inRng, o => o.ticksToLive);
+                    if (minTgt.ticksToLive < 1300) {
+                        room.availableSpawns[e].renewCreep(minTgt);
+                    }
+                }
             }
         }
     }
@@ -308,81 +314,9 @@ class SpawnInteract {
         }
         creep.room.memory.renewCreep.push(creep.name);
     }
-    static renewCreep(spawn) {
-        if (spawn.memory.wantRenew === undefined) return false;
-        if (spawn.memory.wantRenew.length === 0) return false;
-        //        if(spawn.room.name == 'E14S38' && spawn.room.controller.level < 6) return false;
-        if (spawn.memory.renewEnergyLevel !== undefined) {
-            if (spawn.room.energyAvailable < spawn.memory.renewEnergyLevel) {
-                return false;
-            }
-        }
-
-        let temp = 1500;
-        let renewTarget;
-        var e = spawn.memory.wantRenew.length;
-        while (e--) {
-            let creepID = spawn.memory.wantRenew[e];
-            let creepTarget = Game.getObjectById(creepID);
-
-            if (creepTarget === null) {
-                spawn.memory.wantRenew.splice(e, 1);
-            } else if (creepTarget.ticksToLive < temp && creepTarget.pos.isNearTo(spawn)) {
-
-                if (spawn.room.name === 'E14S38') {
-
-                    if (spawn.room.controller.level > 5) {
-
-                        renewTarget = creepTarget;
-                        temp = creepTarget.ticksToLive;
-                    } else if (creepTarget.memory.role == 'linker') {
-                        renewTarget = creepTarget;
-                        temp = creepTarget.ticksToLive;
-                    }
-                } else {
-                    renewTarget = creepTarget;
-                    temp = creepTarget.ticksToLive;
-                }
-            }
-        }
-
-        // Does renew stuff
-        let renewLimit = 1300;
-        if (spawn.memory.renewLevel !== undefined) {
-            renewLimit = spawn.memory.renewLevel;
-        }
-
-        if (temp < renewLimit) {
-            let rst = spawn.renewCreep(renewTarget);
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    static wantRenew(creep) {
-
-        if (creep.memory.renewSpawnID === undefined || creep.memory.renewSpawnID == 'none') return false;
-
-        let spawn = Game.getObjectById(creep.memory.renewSpawnID);
-        if (spawn === null) {
-            creep.memory.renewSpawnID = undefined;
-            return false;
-        }
-        if (spawn.memory.wantRenew === undefined) {
-            spawn.memory.wantRenew = [];
-            console.log('----------------Create RENEW stack----------------');
-        }
-
-        if (!_.contains(spawn.memory.wantRenew, creep.id)) {
-            spawn.memory.wantRenew.push(creep.id);
-        }
-
-        return true;
-    }
 
     static createFromStack(spawn) {
+        if(spawn.spawning) return;
         var STACK = getStack(spawn);
         if (spawn.memory.spawnDir === undefined) {
             spawn.memory.spawnDir = 1;

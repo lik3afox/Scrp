@@ -387,8 +387,8 @@ class theSpawn {
 
             for (e in expandRole) {
                 if (roleInfo[expandRole[e]] !== undefined && roleInfo[expandRole[e]].max > 0) {
-//totalCreeps[creepRole][goal]
-  //      spawnCount[creep.memory.party][creep.memory.role].count++;
+                    //totalCreeps[creepRole][goal]
+                    //      spawnCount[creep.memory.party][creep.memory.role].count++;
                     let currentCount = newGetExpandRole(expandRole[e], remoteInfo.source, totalCreeps);
                     if (currentCount < roleInfo[expandRole[e]].max) {
                         // This is where it does the creation of the unit.
@@ -407,23 +407,34 @@ class theSpawn {
                                 level: roleInfo[expandRole[e]].level
                             }
                         };
+    if (totalCreeps[expandRole[e]] === undefined) {
+        totalCreeps[expandRole[e]] = {
+            count: 0,
+            goal: [],
+        };
+    }
+
+                        if(totalCreeps[expandRole[e]].goal === undefined) totalCreeps[expandRole[e]].goal = [];
 
                         switch (expandRole[e]) {
                             case 'miner':
+                                totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                 spawn.memory.expandCreate.unshift(temp);
                                 break;
                             case 'ztransport':
                                 let min = Game.getObjectById(remoteInfo.source);
-                                if(min.pos.roomName == 'E14S38'){
-                                if (min !== null && min.mineralAmount > 0 &&
-                                    min.room.controller !== undefined && min.room.controller.level >= 6) {
-                                    spawn.memory.expandCreate.push(temp);
-                                } else if (min !== null && min.mineralAmount > 0 && min.room.controller === undefined) {
+                                if (min.pos.roomName == 'E14S38') {
+                                    if (min !== null && min.mineralAmount > 0 &&
+                                        min.room.controller !== undefined && min.room.controller.level >= 6) {
+                                        spawn.memory.expandCreate.push(temp);
+                                    } else if (min !== null && min.mineralAmount > 0 && min.room.controller === undefined) {
+                                        totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
+                                        spawn.memory.expandCreate.push(temp);
+                                    }
+                                } else {
+                                    totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                     spawn.memory.expandCreate.push(temp);
                                 }
-                            } else {
-                                spawn.memory.expandCreate.push(temp);
-                            }
 
                                 break;
                             case 'controller':
@@ -437,10 +448,10 @@ class theSpawn {
                                     }
                                     if (level === 0 || (level < controllerLevel) || (source.room.controller.level > 0)) {
                                         let controlParts;
-
                                         if (spawn.room.energyCapacityAvailable > 8000) {
                                             controlParts = 8;
-                                        } else if (spawn.room.energyCapacityAvailable > 6000) {
+                                        } else
+                                        if (spawn.room.energyCapacityAvailable > 6000) {
                                             controlParts = 5;
                                         }
                                         if (controlParts !== undefined) {
@@ -450,20 +461,24 @@ class theSpawn {
                                                 temp.build.push(MOVE);
                                             }
                                         }
+                                        totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                         spawn.memory.expandCreate.push(temp);
                                     }
                                 }
                                 break;
                             case 'mineral':
-                              let   mizn = Game.getObjectById(remoteInfo.source);
+                                let mizn = Game.getObjectById(remoteInfo.source);
                                 if (mizn !== null && mizn.mineralAmount > 0 &&
                                     mizn.room.controller !== undefined && mizn.room.controller.level >= 6) {
+                                    totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                     spawn.memory.expandCreate.push(temp);
                                 } else if (mizn !== null && mizn.mineralAmount > 0 && mizn.room.controller === undefined) {
+                                    totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                     spawn.memory.expandCreate.push(temp);
                                 }
                                 break;
                             default:
+                                totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                 spawn.memory.expandCreate.push(temp);
                                 break;
                         }

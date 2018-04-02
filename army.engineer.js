@@ -198,17 +198,22 @@ class engineerClass extends roleParent {
             let sp = Game.getObjectById(creep.memory.renewSpawnID);
             if (sp !== null) {
                 if (creep.pos.isNearTo(sp)) {
-                    sp.renewCreep(creep);
+//                    sp.renewCreep(creep);
                 }
             }
         }
+/*
+        if(creep.id === '5ac26ca13d32c04bbf818c2d'){
+            creep.moveTo(36,20);
+            console.log(creep.room.towers);
+            let zzz = creep.pos.isNearAny(creep.room.towers);
+            console.log(zzz);
+            return;
+        } */
         creep.say(isThere);
         if (!isThere) {
-
-            //        if (!super.avoidArea(creep)) {
-            //              movement.flagMovement(creep);
-            //            }
             creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true });
+//            creep.tuskenTo(creep.partyFlag, creep.home,{ reusePath: 50, useSKPathing: true });
         } else {
 
             if (creep.memory.renewSpawnID === undefined && creep.room.alphaSpawn !== undefined) {
@@ -217,9 +222,7 @@ class engineerClass extends roleParent {
             }
             
             var tw = creep.pos.isNearAny(creep.room.towers);
-            tw = Game.getObjectById('5ac15c1275dec047bf511704');
-        console.log(tw,creep.room.towers);
-            if(tw !== undefined&&creep.pos.isNearTo(tw)){
+            if(tw !== undefined){
                 creep.transfer(tw,RESOURCE_ENERGY);
             }
 

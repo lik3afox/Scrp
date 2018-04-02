@@ -294,6 +294,9 @@ class thiefClass extends roleParent {
         if (super.isPowerParty(creep)) {
             if (powerAction(creep)) return;
         }
+
+        creep.memory.death = creep.partyFlag === undefined;
+        
         let creepCarry = creep.carryTotal;
         /*
                 if (creep.memory.party == 'Flag1' && creep.isHome && creep.carryTotal === 0) {

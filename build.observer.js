@@ -24,7 +24,13 @@ var roomsObserve = [
     'E17S30', 'E18S30', 'E19S30',
     'E10S45', 'E10S46', 'E10S47', 'E10S48', 'E10S49', 'E10S50',
 ];
-var powerRooms = [
+var shard0PowerRooms = ['E36S70','E37S70','E38S70','E39S70','E40S70',
+'E40S71','E40S72','E40S73'];
+
+var shard2PowerRooms = ['E17S50','E18S50','E19S50','E20S50','E21S50','E22S50',
+                        'E20S51','E20S49','E20S48',];
+
+var shard1PowerRooms = [
     'E30S40', 'E30S41', 'E30S42', 'E30S43', 'E30S44', 'E30S45', 'E30S46', 'E30S47', 'E30S48', 'E30S49', 'E30S50',
     'E21S30', 'E22S30', 'E23S30', 'E24S30', 'E25S30', 'E26S30', 'E28S30', 'E29S30',
     'E11S50', 'E12S50', 'E13S50', 'E14S50', 'E15S50', 'E16S50', 'E17S50', 'E18S50', 'E19S50',
@@ -206,6 +212,7 @@ function controllerCheck(target) {
         var fox = require('foxGlobals');
         if (!_.contains(fox.friends, controller.owner.username)) {
             //Memory.hostile_rooms = [];
+            if(Memory.hostile_rooms === undefined || !_.isArray(Memory.hostile_rooms) ) Memory.hostile_rooms = [];
             Memory.hostile_rooms.push(target);
             Memory.hostile_rooms = _.uniq(Memory.hostile_rooms);
             //            console.log('hostile room added to global hostile_rooms',target,controller.owner.username);
@@ -214,10 +221,24 @@ function controllerCheck(target) {
 }
 
 function powerbankCheck(target) {
-    if (Game.shard.name === 'shard2') return false;
-    if (Game.shard.name === 'shard0') return false;
+//    if (Game.shard.name === 'shard2') return false;
+//    if (Game.shard.name === 'shard0') return false;
     if (Game.rooms[target] === undefined) return false;
     //    console.log(roomLink( target ),'is target in power room',_.contains(powerRooms,target));
+
+    let powerRooms;
+    switch(Game.shard.name){
+        case 'shard1':
+             powerRooms = shard1PowerRooms;
+        break;
+        case 'shard0':
+             powerRooms = shard0PowerRooms;
+        break;
+        case 'shard2':
+             powerRooms = shard2PowerRooms;
+        break;
+    }
+    
     if (!_.contains(powerRooms, target)) return false;
     let powerBank = Game.rooms[target].find(FIND_STRUCTURES);
     powerBank = _.filter(powerBank, function(s) {

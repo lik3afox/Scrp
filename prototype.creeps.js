@@ -50,6 +50,12 @@ module.exports = function() {
             return Game.flags[this.memory.home];
         },
     });
+    Object.defineProperty(Creep.prototype, "home", {
+        configurable: true,
+        get: function() {
+            return this.memory.home;
+        },
+    });
 
     Object.defineProperty(Creep.prototype, "carrying", {
         configurable: true,
@@ -1118,25 +1124,29 @@ destination Current Pos Path
         if (creep.memory.cachePath !== undefined) {
             direction = creep.memory.cachePath[4];
         } else if (creep.memory._move.path !== undefined) {
-            direction = creep.memory._move.path[4];
+            direction = creep.memory._move.path[5];
         }
         if (direction === undefined) { return; }
+        let tpos = getFormationPos(creep, direction);
+        var looking = creep.room.lookForAt(LOOK_CREEPS,tpos)[0];
 
-        var looking = creep.room.lookForAt(LOOK_CREEPS, getFormationPos(creep, direction))[0];
-
+        creep.room.visual.line(creep.pos,tpos,{color:'red',width:0.3});
+        creep.room.visual.circle(tpos,{stroke:'green',radius:0.5});
         if (looking === undefined) { return; }
 
         // The blocked Creep moves to 
-
+      //  var color = 'green';
         if (looking.memory === undefined ||
             (looking.memory.sleeping !== undefined && looking.memory.sleeping > 0) ||
             (looking.memory._move !== undefined && looking.memory.cachePath !== undefined && looking.fatigue === 0) ||
             (looking.memory.stuckCount !== undefined && looking.memory.stuckCount > 1)) {
+//            color = 'red';
             looking.move(looking.pos.getDirectionTo(creep));
             looking.say('✔');
             creep.memory.swapTargetID = looking.id;
             creep.say('mv!');
         }
+        creep.room.visual.circle(tpos,{stroke:'red',radius:0.5});
 
         return;
 

@@ -140,7 +140,12 @@ class muleClass extends roleParent {
             creep.moveMe(Game.flags.portal5);
             return;
         }
-        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && !creep.memory.didPortal) {
+        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && !creep.memory.didPortal && creep.memory.party === 'Flag1') {
+            creep.say('P');
+            creep.moveMe(Game.flags.portal);
+            return;
+        }
+        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && !creep.memory.didPortal && creep.memory.party === 'Flag3') {
             creep.say('P');
             creep.moveMe(Game.flags.portal);
             return;
@@ -360,9 +365,10 @@ class muleClass extends roleParent {
                             }
                         }
 
-                        //                    let zz = Math.floor(Math.random() * 10);
-                        //                                              if (zz === 0) {
-                        //                            creep.withdraw(stor, RESOURCE_ENERGY);
+                                            let zz = Math.floor(Math.random() * 1);
+                                                                      if (zz === 0) {
+                                                    creep.withdraw(stor, RESOURCE_ENERGY);
+                                                }
                         //creep.withdrawing(stor, 'XZHO2');
                         //   _terminal.requestMineral(creep.room.name, 'XZHO2');
                         //                                          }/* else if (zz === 1) {
@@ -380,10 +386,11 @@ class muleClass extends roleParent {
                         //                            _terminal.requestMineral(creep.room.name, 'XLHO2');
                         //                        } else if (zz === 4) {
                         //} 
-                        //                else {
+                                        else {
                         creep.withdraw(stor, most);
+//                        creep.withdraw(stor, RESOURCE_ENERGY);
 
-                        //              }
+                                      }
                     } else {
                         //                        if (creep.room.name == 'E14S37')
                         creep.withdraw(stor, RESOURCE_ENERGY);

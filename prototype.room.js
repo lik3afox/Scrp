@@ -71,6 +71,19 @@ module.exports = function() {
 
         }
     });
+    Object.defineProperty(Room.prototype, 'availableSpawns', {
+        // Returns any(my/enemy) towers.
+        configurable: true,
+        get: function() {
+            if (this._spawns !== undefined) {
+                return this._spawns;
+            } else {
+                this._spawns = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_SPAWN && !o.spawning });
+                return this._spawns;
+            }
+
+        }
+    });
 
     Object.defineProperty(Room.prototype, 'masterLink', {
         configurable: true,
@@ -171,7 +184,8 @@ module.exports = function() {
         }
     });
     RoomPosition.prototype.isNearAny = function(targets) {
-        if(_.isArray(targets)){
+    
+        if(!_.isArray(targets)){
             targets = [targets];
         }
         for(let i in targets){
