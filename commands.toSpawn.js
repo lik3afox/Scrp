@@ -163,7 +163,7 @@ class SpawnInteract {
 
         if (creep.memory.goToSpawn === undefined) {
             var targets = getTargets(creep);
-            if(targets.length === 0) return false;
+            if (targets.length === 0) return false;
             let goTo = -1; //= creep.memory.roleID;
             var zz = creep.memory.roleID;
             if (creep.memory.role == 'scientist') zz++;
@@ -282,7 +282,32 @@ class SpawnInteract {
 
         }
     }
-
+    static newRenewCreep(roomName) {
+        var room = Game.rooms[roomName];
+        if(room === undefined) return;
+        if (room.memory.renewCreep === undefined) {
+            room.memory.renewCreep = [];
+        }
+        var e = room.memory.renewCreep.length;
+        while (e--) {
+            var crp = Game.creeps[room.memory.renewCreep[e]];
+            if (crp !== undefined) {
+                let spwn = crp.pos.isNearAny(room.spawns);
+                if (spwn) {
+                    console.log('spwn renewed new',spwn,crp);
+                    spwn.renewCreep(crp);
+                }
+            } else {
+                room.memory.renewCreep.splice(e, 1);
+            }
+        }
+    }
+    static newWantRenew(creep) {
+        if (creep.room.memory.renewCreep === undefined) {
+            creep.room.memory.renewCreep = [];
+        }
+        creep.room.memory.renewCreep.push(creep.name);
+    }
     static renewCreep(spawn) {
         if (spawn.memory.wantRenew === undefined) return false;
         if (spawn.memory.wantRenew.length === 0) return false;

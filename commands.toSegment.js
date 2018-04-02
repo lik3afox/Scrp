@@ -269,21 +269,6 @@ class segmentCommand {
         }
     }
 
-    static requestPartySegmentData(partyName) {
-        var seg = partyNameToSegmentNumber(partyName);
-        let zz = _.indexOf(Memory.shardNeed, seg);
-        if (RawMemory.segments[seg] === undefined && zz === -1) {
-            if (_.isNumber(seg))
-                Memory.shardNeed.push(seg);
-            return true;
-        } else if (zz !== -1) {
-            let zze = Memory.shardNeed.splice(zz, 1);
-            if (_.isNumber(seg))
-                Memory.shardNeed.push(zze);
-        }
-        return;
-    }
-
     static requestRoomSegmentData(roomName) {
         if (roomSegment[roomName] !== undefined) {
 
@@ -317,9 +302,28 @@ class segmentCommand {
         }
 
     }
+
+
+    static requestPartySegmentData(partyName) {
+        var seg = partyNameToSegmentNumber(partyName);
+  //      let zz = _.indexOf(Memory.shardNeed, seg);
+        console.log('requesting segment',partyName,seg);
+/*        if (RawMemory.segments[seg] === undefined && zz === -1) {
+            if (_.isNumber(seg))
+                Memory.shardNeed.push(seg);
+            return true;
+        } else if (zz !== -1) {
+            let zze = Memory.shardNeed.splice(zz, 1);
+            */
+            if (_.isNumber(seg))
+                Memory.shardNeed.push(seg);
+//        }
+        return;
+    }
+
     static setPartySegmentData(partyName, rawData) {
         var seg = partyNameToSegmentNumber(partyName);
-        //        console.log("set party segment", seg, RawMemory.segments[seg]);
+        console.log("set party segment", seg, RawMemory.segments[seg]);
 
         if (RawMemory.segments[seg] === undefined) {
             if (seg !== undefined)
@@ -330,17 +334,16 @@ class segmentCommand {
         } else if (RawMemory.segments[seg] !== undefined) {
             RawMemory.segments[seg] = rawData;
         }
-
     }
+
     static getRawSegmentPartyData(partyName) {
         var seg = partyNameToSegmentNumber(partyName);
-        //      console.log("get party segment", seg, RawMemory.segments[seg]);
+        console.log(partyName, "is getting raw party segment", seg, RawMemory.segments[seg]);
 
         if (RawMemory.segments[seg] === undefined) {
-            if (seg !== undefined)
-            	if(_.isNumber(seg))
+            if (seg !== undefined && _.isNumber(seg)){
                 Memory.shardNeed.push(seg);
-            return;
+            }
         } else if (RawMemory.segments[seg] !== undefined) {
             if (RawMemory.segments[seg][0] === undefined) {
                 RawMemory.segments[seg] = '+';

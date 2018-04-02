@@ -174,6 +174,7 @@ class engineerClass extends roleParent {
 
     static run(creep) {
         //     super.renew(creep);
+
         if (super.goToPortal(creep)) return;
 
         if (super.doTask(creep)) {
@@ -210,18 +211,17 @@ class engineerClass extends roleParent {
             creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true });
         } else {
 
-            if (creep.memory.renewSpawnID === undefined) {
-                let finded = creep.room.find(FIND_STRUCTURES);
-                finded = _.filter(finded, function(structure) {
-                    return (structure.structureType == STRUCTURE_SPAWN);
-                });
-                if (finded.length > 0) {
-                    creep.memory.renewSpawnID = finded[0].id;
-                } else {
-                    creep.memory.renewSpawnID = 'none';
-                }
+            if (creep.memory.renewSpawnID === undefined && creep.room.alphaSpawn !== undefined) {
+                creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
+                require('commands.toSpawn').newWantRenew(creep);
             }
-
+            
+            var tw = creep.pos.isNearAny(creep.room.towers);
+            tw = Game.getObjectById('5ac15c1275dec047bf511704');
+        console.log(tw,creep.room.towers);
+            if(tw !== undefined&&creep.pos.isNearTo(tw)){
+                creep.transfer(tw,RESOURCE_ENERGY);
+            }
 
             if (creep.carry[RESOURCE_ENERGY] === 0) {
                 creep.memory.building = false;
@@ -233,7 +233,7 @@ class engineerClass extends roleParent {
 
             if (creep.memory.building) {
                 if (creep.room.controller !== undefined) {
-                   if (!spawn.moveToTransfer(creep, 300)) {
+//                   if (!spawn.moveToTransfer(creep, 300)) {
                         if (!super.constr.moveToBuild(creep)) {
                             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                                 creep.moveTo(creep.room.controller);
@@ -243,7 +243,7 @@ class engineerClass extends roleParent {
                                 }
                             }
                         }
-                    }
+  //                  }
                     creep.say('!');
                 } else {
                     if (!super.constr.moveToBuild(creep)) {

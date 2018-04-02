@@ -92,17 +92,6 @@ function getTowerDamage(target, towers) {
     return totalDamage;
 }
 
-function getBoostTough(body) {
-    let toughness = 0;
-    var e = body.length;
-    while (e--) {
-        if (body[e].type == TOUGH && body[e].boost !== undefined) {
-            toughness++;
-        }
-    }
-    return toughness;
-}
-
 function calcuateDamage(body, amount) {
     var toughType;
     for (var a in body) {
@@ -136,8 +125,8 @@ function estimateDamageAndAttack(target, allies, towers) {
     if (damageTotal + currentLossHp < totalToughHp && toughParts > 0) {
         return false;
     }
-
-    //    console.log('est damage', target, totalToughHp, damageTotal, damageTotal > totalToughHp);
+if(Game.shard.name == 'shard2')
+    console.log('est damage',toughParts, target, totalToughHp, damageTotal, damageTotal > totalToughHp);
     target.room.visual.text(damageTotal, target.pos, { color: 'red', font: 0.8 });
     //    console.log(damageTotal, target.pos);
     var e;

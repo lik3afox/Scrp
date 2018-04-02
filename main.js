@@ -171,7 +171,7 @@ function whoWorksFor(goal) {
 
 
 function rampartCheck(spawn) {
-var HardD = ['E35S83'];
+    var HardD = ['E35S83'];
 
     var fox = require('foxGlobals');
 
@@ -304,7 +304,7 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
     if (Game.shard.name !== 'shard1') return;
 
     // Lets count how many ticks left for enhanced upgrading.
-    if(Memory.stats.playerTrade === undefined) {
+    if (Memory.stats.playerTrade === undefined) {
         Memory.stats.playerTrade = {};
     }
 
@@ -429,30 +429,25 @@ function doRoomReport(room) {
     if (room.controller.level > 3) {
 
         var goods = room.find(FIND_MY_CREEPS);
-        if (goods.length <= 1) {
+        if (goods.length <= 2) {
             for (var i in goods) {
                 if (goods[i].memory.role == 'linker') {
                     goods[i].memory.role = 'first';
                     goods[i].memory.reportDeath = true;
+                } else if (goods[i].memory.role == 'homeDefender') {
+                    goods[i].memory.death = true;
                 }
             }
-            var spwns = room.find(FIND_STRUCTURES);
-            spwns = _.filter(spwns, function(o) {
-                return o.structureType == STRUCTURE_SPAWN && o.spawning === null;
-            });
-            if (spwns.length > 0) {
-
-                if (room.energyAvailable >= 300) {
-                    var zz = spwns[0].spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir' + Math.random(), {
-                        memory: {
-                            role: 'first',
-                            roleID: 0,
-                            home: spwns[0].pos.roomName,
-                            parent: "none",
-                            level: 3
-                        }
-                    });
-                }
+            if (room.energyAvailable >= 300) {
+                var zz = room.alphaSpawn.spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir' + Math.floor(Math.random()*100), {
+                    memory: {
+                        role: 'first',
+                        roleID: 0,
+//                        home: room.pos.roomName,
+                        parent: "none",
+                        level: 3
+                    }
+                });
             }
 
         }
@@ -831,6 +826,7 @@ module.exports.loop = blackMagic(function() {
                     (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
                     spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
                 }
+                ccSpawn.newRenewCreep(Game.spawns[title].roomName);
             }
 
 
@@ -838,7 +834,7 @@ module.exports.loop = blackMagic(function() {
                 ccSpawn.renewCreep(Game.spawns[title]);
                 ccSpawn.createFromStack(Game.spawns[title]);
             } else {
-//                Game.spawns[title].memory.lastSpawn = 0;
+                //                Game.spawns[title].memory.lastSpawn = 0;
                 Game.spawns[title].spawning.setDirections(Game.spawns[title].memory.spawnDir);
                 let spawn = Game.spawns[title];
                 spawn.room.visual.text("🔧" + spawn.spawning.name, spawn.pos.x + 1, spawn.pos.y, {
@@ -848,7 +844,7 @@ module.exports.loop = blackMagic(function() {
                     font: 0.5,
                     align: RIGHT
                 });
-                
+
             }
 
             if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {

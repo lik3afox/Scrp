@@ -143,6 +143,7 @@ class roleFirst extends roleParent {
     }
 
     static run(creep) {
+        if(creep.memory.home === undefined) creep.memory.home = creep.room.name;
         if (creep.room.memory.simple) {
             creep.memory.reportDeath = true;
         }
@@ -190,6 +191,7 @@ class roleFirst extends roleParent {
             }
 
             if (creep.pos.isNearTo(creep.room.storage) && creep.room.storage.store[RESOURCE_ENERGY] !== 0) {
+                creep.say('zz');
                 creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
             } else if (creep.pos.isNearTo(creep.room.terminal) && creep.room.terminal.store[RESOURCE_ENERGY] !== 0) {
                 creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);

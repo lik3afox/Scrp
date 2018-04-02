@@ -83,7 +83,7 @@ function getHostiles(creep) {
     let bads = creep.room.find(FIND_HOSTILE_CREEPS);
 
     var players = _.filter(bads, function(o) {
-        return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper';
+        return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper'&& creep.pos.inRangeTo(o, 10) ;
     });
 
     var sk = _.filter(bads, function(o) {

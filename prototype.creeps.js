@@ -1560,7 +1560,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             // This is the leader.
             let fol = Game.getObjectById(this.memory.followerID);
             if (fol !== null) {
-                if (!this.pos.isNearTo(fol) && !this.isAtEdge && fol.fatigue > 0) {
+                if((!this.pos.isNearTo(fol) && !this.isAtEdge) || fol.fatigue > 0) {
                     // If the leader isn't near his follower, he doesn't move. 
                     this.say('w4F');
                     //this.moveTo(fol,options)
@@ -1853,7 +1853,6 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
         if (options.segment && (this.pos.x === 1 || this.pos.x === 48 || this.pos.y === 1 || this.pos.y === 48)) {
             if (this.memory.cachePath === undefined || this.memory.cachePath.length < 10) {
-
                 if (this.memory.party !== undefined) {
                     segment.requestPartySegmentData(this.memory.party);
                 } else {

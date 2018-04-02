@@ -130,20 +130,19 @@ class upgraderzClass extends roleParent {
                         creep.say('boost');
                         if (creep.room.controller.level > 5 && creep.room.controller.level !== 8) {
                             if (creep.carryTotal !== creep.carry[RESOURCE_ENERGY]) {
-                                for (var aa in creep.carry)
-                                    creep.transfer(creep.room.terminal, aa);
+                                creep.transfer(creep.room.terminal, creep.carrying);
                             }
                             if (!creep.memory.boosted) {
                                 let lab = Game.getObjectById(creep.room.memory.boostLabID);
                                 if (lab !== null && creep.ticksToLive > 1480) {
                                     // Do boost here and 
-                                    let zzz = lab.boostCreep(creep);
+                                /*    let zzz = lab.boostCreep(creep);
                                     //                                    creep.say(zzz);
                                     if (zzz == OK) {
                                         creep.memory.boosted = true;
                                         creep.memory.upgradeSpot = 0; // 0 is the wait spot that can take multiple creeps.
                                     }
-
+*/
                                 } else if (creep.ticksToLive < 1480) {
                                     creep.memory.boosted = false;
                                     creep.memory.upgradeSpot = 0;

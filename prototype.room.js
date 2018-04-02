@@ -44,6 +44,34 @@ module.exports = function() {
         }
     });
 
+    Object.defineProperty(Room.prototype, 'towers', {
+        // Returns any(my/enemy) towers.
+        configurable: true,
+        get: function() {
+            if (this._towers !== undefined) {
+                return this._towers;
+            } else {
+                this._towers = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_TOWER });
+                return this._towers;
+            }
+
+        }
+    });
+
+    Object.defineProperty(Room.prototype, 'spawns', {
+        // Returns any(my/enemy) towers.
+        configurable: true,
+        get: function() {
+            if (this._spawns !== undefined) {
+                return this._spawns;
+            } else {
+                this._spawns = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_SPAWN });
+                return this._spawns;
+            }
+
+        }
+    });
+
     Object.defineProperty(Room.prototype, 'masterLink', {
         configurable: true,
         get: function() {
@@ -142,7 +170,17 @@ module.exports = function() {
 
         }
     });
-
+    RoomPosition.prototype.isNearAny = function(targets) {
+        if(_.isArray(targets)){
+            targets = [targets];
+        }
+        for(let i in targets){
+            if(this.isNearTo(targets[i])){
+                return targets[i];
+            }
+        }
+        return undefined;
+    }; 
 
     Room.prototype.dropped = function() {
         var dEnergy;

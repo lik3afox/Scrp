@@ -129,6 +129,7 @@ function newGetExpandRole(creepRole, sourceID, totalCreeps) {
         });
         return cc.length;
     }
+
     return 0;
 }
 
@@ -386,7 +387,8 @@ class theSpawn {
 
             for (e in expandRole) {
                 if (roleInfo[expandRole[e]] !== undefined && roleInfo[expandRole[e]].max > 0) {
-
+//totalCreeps[creepRole][goal]
+  //      spawnCount[creep.memory.party][creep.memory.role].count++;
                     let currentCount = newGetExpandRole(expandRole[e], remoteInfo.source, totalCreeps);
                     if (currentCount < roleInfo[expandRole[e]].max) {
                         // This is where it does the creation of the unit.
