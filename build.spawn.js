@@ -508,7 +508,35 @@ class theSpawn {
         var roomTarget;
         if (Game.shard.name == 'shard0') {
             // Currently has no creeps going to shard0
+            portalInRooms = ['E40S70', 'E40S80'];
+            roomTarget = ['E38S72', 'E38S81'];
 
+            for (let i = 0, iMax = portalInRooms.length; i < iMax; i++) {
+                if (Game.rooms[portalInRooms[i]] !== undefined) {
+                    let crps = Game.rooms[portalInRooms[i]].find(FIND_MY_CREEPS);
+                    if (crps.length > 0) {
+                        for (let e = 0, eMax = crps.length; e < eMax; e++) {
+                            if (crps[e].memory.role === undefined) {
+                                if (crps[e].name.substr(0, 5) == 'engin') {
+                                    crps[e].memory.role = 'engineer';
+                                } else  {
+                                    crps[e].memory.role = 'mule';
+                                    crps[e].memory.level = 2;
+                                }
+                                crps[e].memory.party = roomTarget[i];
+                                if (crps[e].memory.parent === undefined) {
+                                    crps[e].memory.parent = Game.rooms[roomTarget[i]].alphaSpawn.id;
+                                }
+                                if (crps[e].memory.home === undefined) {
+                                    crps[e].memory.home = portalInRooms[i];
+                                }
+
+                                crps[e].memory.didPortal = true;
+                            }
+                        }
+                    }
+                }
+            }
         }
         if (Game.shard.name == 'shard1') {
             portalInRooms = ['E20S40', 'E20S50'];
@@ -522,9 +550,9 @@ class theSpawn {
                             if (crps[e].memory.role === undefined) {
                                 if (crps[e].name.substr(0, 5) == 'engin') {
                                     crps[e].memory.role = 'engineer';
-                                } else if (crps[e].name.substr(0, 4) == 'mule') {
+                                } else  {
                                     crps[e].memory.role = 'mule';
-                                    crps[e].memory.level = 2;
+                                    crps[e].memory.level = 5;
                                 }
                                 crps[e].memory.party = roomTarget[i];
                                 if (crps[e].memory.parent === undefined) {
@@ -552,14 +580,14 @@ class theSpawn {
                             if (crps[e].memory.role === undefined) {
                                 if (crps[e].name.substr(0, 5) == 'engin') {
                                     crps[e].memory.role = 'engineer';
-                                } else if (crps[e].name.substr(0, 4) == 'mule') {
+                                } else  {
                                     crps[e].memory.role = 'mule';
-                                    crps[e].memory.level = 2;
+                                    crps[e].memory.level = 5;
                                 }
                                 crps[e].memory.didPortal = true;
                             }
                             if (crps[e].memory.parent === undefined) {
-                                crps[e].memory.parent = '5a301e5f5858c967fe338616';
+                                crps[e].memory.parent = Game.rooms[roomTarget[i]].alphaSpawn.id;
                             }
                             if (crps[e].memory.home === undefined) {
                                 crps[e].memory.home = portalInRooms[i];

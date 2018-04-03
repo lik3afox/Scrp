@@ -196,8 +196,8 @@ function powerAction(creep) {
                 creep.healOther(7);
             }
             creep.countDistance();
-            movement.flagMovement(creep);
 
+            movement.flagMovement(creep);
             let task = {};
             task.options = {
                 reusePath: 100

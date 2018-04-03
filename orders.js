@@ -2,7 +2,7 @@ createOrder(ORDER_SELL, RESOURCE_KEANIUM, 0.9, 1000);
 
 Game.market.calcTransactionCost(1000, 'W39N68', 'W28S73');
 
-Game.market.deal('59b6cf25655799687523c272', 5000, 'E17S45');
+Game.market.deal('5abe9363c91575234b098795', 2500, 'E17S45');
 
 Game.market.deal('5a76547921d27469cb613e25', 2000, 'E19S49');
 

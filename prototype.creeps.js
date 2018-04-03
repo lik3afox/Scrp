@@ -295,7 +295,7 @@ module.exports = function() {
             if (FIND === FIND_DROPPED_RESOURCES) {
                 close = this.pos.findClosestByRange(FIND, {
                     filter: function(object) {
-                        return object.amount > amount && object.resourceType !== 'energy';
+                        return object.amount > amount ;//&& object.resourceType !== 'energy'
                     }
                 });
             } else {

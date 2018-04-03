@@ -236,7 +236,7 @@ class engineerClass extends roleParent {
 
             if (creep.memory.building) {
                 if (creep.room.controller !== undefined) {
-//                   if (!spawn.moveToTransfer(creep, 300)) {
+                   if (!spawn.moveToTransfer(creep, 300)) {
                         if (!super.constr.moveToBuild(creep)) {
                             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                                 creep.moveTo(creep.room.controller);
@@ -246,7 +246,9 @@ class engineerClass extends roleParent {
                                 }
                             }
                         }
-  //                  }
+                    }
+
+                    
                     creep.say('!');
                 } else {
                     if (!super.constr.moveToBuild(creep)) {

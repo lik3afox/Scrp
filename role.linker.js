@@ -632,7 +632,7 @@ function simple(creep) {
                 creep.moveTo(creep.room.terminal);
             }
             return;
-        } else if (creep.room.terminal.store[RESOURCE_POWER] === 0) {
+        } else if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_POWER] === 0) {
             _terminal_().requestMineral(creep.room.name, RESOURCE_POWER);
         }
         if (creep.room.powerspawn !== undefined && creep.room.powerspawn.energy < 50) {
@@ -640,7 +640,7 @@ function simple(creep) {
             creep.moveToWithdraw(creep.room.terminal, RESOURCE_ENERGY);
             return;
         }
-        if (creep.room.terminal.store[RESOURCE_ENERGY] > 0 && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 && creep.room.storage.store[RESOURCE_ENERGY] > 100000) {
+        if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] > 0 && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 && creep.room.storage.store[RESOURCE_ENERGY] > 100000) {
             creep.say('TBal');
             creep.moveToWithdraw(creep.room.terminal, RESOURCE_ENERGY);
             return;
@@ -678,13 +678,13 @@ function simple(creep) {
                     if (e === RESOURCE_ENERGY && creep.room.storage.store[RESOURCE_ENERGY] < 900000) {
                         target = creep.room.storage;
                     }
-                    if (creep.room.terminal.store[RESOURCE_ENERGY] < 20000 && creep.room.storage.store[RESOURCE_ENERGY] > 100000) {
+                    if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 && creep.room.storage.store[RESOURCE_ENERGY] > 100000) {
                         target = creep.room.terminal;
                     }
                     if (target.total === 1000000 || e !== RESOURCE_ENERGY) {
                         target = creep.room.terminal;
                     }
-                    if (creep.room.terminal.store[RESOURCE_ENERGY] === 0)
+                    if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] !== undefined  && creep.room.terminal.store[RESOURCE_ENERGY] === 0)
                         target = creep.room.terminal;
                     if (target.total === 300000) target = creep.room.storage;
 

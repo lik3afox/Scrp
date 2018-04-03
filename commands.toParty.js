@@ -40,13 +40,13 @@ var allParty = {
     bandit: [
         ['fighter', 1, 10],
         ['mage', 1, 6],
-//        ['thief', 4, 5],
+        //        ['thief', 4, 5],
     ],
-  //  bandit: [
-//        ['fighter', 1, 10],
-  //      ['mage', 1, 6],
-//        ['thief', 4, 5],
-//    ],
+    //  bandit: [
+    //        ['fighter', 1, 10],
+    //      ['mage', 1, 6],
+    //        ['thief', 4, 5],
+    //    ],
     thief: [
         ['thief', 1, 4],
     ],
@@ -257,7 +257,7 @@ function findParty(flag, spawnCount) {
                 total[currentParty[i][_name]] = 0;
             }
             for (let o in Game.spawns) {
-                if(!Game.spawns[o].memory.alphaSpawn) continue;
+                if (!Game.spawns[o].memory.alphaSpawn) continue;
                 let spawnz = Game.spawns[o];
                 for (let z in spawnz.memory.warCreate) {
                     if (currentParty[i][_name] == spawnz.memory.warCreate[z].memory.role && spawnz.memory.warCreate[z].memory.party == flag.name) {
@@ -484,12 +484,27 @@ class partyInteract {
                     crps = _.filter(crps, function(o) {
                         return o.memory.party == flag.name;
                     });
+                    for (let a in crps) {
+                        if (crps[a].memory.role === 'fighter') {
+                            crps[a].memory.leader = true;
+                        }
+                    }
                     if (crps.length >= flag.memory.totalNumber) {
-                        crps[0].memory.leaderID = crps[1].id;
-                        crps[0].memory.partied = true;
+                        if (crps[0].memory.leader) {
+                            crps[0].memory.leaderID = crps[1].id;
+                            crps[0].memory.partied = true;
 
-                        crps[1].memory.followerID = crps[0].id;
-                        crps[1].memory.partied = true;
+                            crps[1].memory.followerID = crps[0].id;
+                            crps[1].memory.partied = true;
+                        } else {
+                            crps[1].memory.leaderID = crps[0].id;
+                            crps[1].memory.partied = true;
+
+                            crps[0].memory.followerID = crps[1].id;
+                            crps[0].memory.partied = true;
+
+                        }
+
                     }
                 }
             } else {

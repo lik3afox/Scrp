@@ -245,6 +245,9 @@ class roleHarvester extends roleParent {
             }
             return;
         }
+        if(creep.memory.level === 2) {
+            creep.harvest(goal);
+        }
 
         if (creep.room.name == 'E32S34') {
             creep.memory.distance = 0;

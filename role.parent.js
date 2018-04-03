@@ -617,16 +617,13 @@ class baseParent {
         if (creep.ticksToLive > 750) return false;
         if (creep.memory.renewSpawnID == 'none') return false;
         if (creep.memory.renewSpawnID === undefined) {
-            let Fspawn = creep.pos.findInRange(FIND_MY_STRUCTURES, 1, {
-                filter: object => (object.structureType == STRUCTURE_SPAWN)
-            });
 
-            if (Fspawn.length === 0) {
+            if (creep.room.alphaSpawn === undefined) {
                 creep.memory.renewSpawnID = 'none';
                 return;
             }
 
-            creep.memory.renewSpawnID = Fspawn[0].id;
+            creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
             var ccSpawn = require('commands.toSpawn');
             ccSpawn.newWantRenew(creep);
             creep.memory.reportDeath = true;

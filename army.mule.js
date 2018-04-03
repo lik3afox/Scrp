@@ -140,20 +140,25 @@ class muleClass extends roleParent {
             creep.moveMe(Game.flags.portal5);
             return;
         }
+        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && !creep.memory.didPortal && creep.memory.party === 'portal') {
+            creep.say('P');
+            creep.moveMe(Game.flags.portal);
+            return;
+        }
         if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && !creep.memory.didPortal && creep.memory.party === 'Flag1') {
             creep.say('P');
             creep.moveMe(Game.flags.portal);
             return;
         }
-        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && !creep.memory.didPortal && creep.memory.party === 'Flag3') {
-            creep.say('P');
-            creep.moveMe(Game.flags.portal);
-            return;
-        }
-        if (Game.flags.portal2 !== undefined && creep.room.name == Game.flags.portal2.pos.roomName && creep.memory.party !== 'E23S38') {
+        if (Game.flags.portal2 !== undefined && creep.room.name == Game.flags.portal2.pos.roomName && !creep.memory.didPortal && creep.memory.party !== 'E38S72') {
             creep.say('P2');
             creep.moveMe(Game.flags.portal2);
             return;
+        }
+        if(!creep.memory.goHome){
+            if(creep.room.name == creep.memory.home && creep.memory.didPortal){
+                creep.memory.goHome = false;
+            }
         }
         if (this.spawnRecycle(creep)) {
             return false;
@@ -216,9 +221,7 @@ class muleClass extends roleParent {
                 }
 
             } else {
-//                if (!super.avoidArea(creep)) {
-                    movement.flagMovement(creep);
-  //              }
+                movement.flagMovement(creep);
             }
             return;
         }
@@ -228,9 +231,7 @@ class muleClass extends roleParent {
 
 
         if (!creep.memory.goHome) {
-            if (total === creep.carryCapacity && creep.memory.level !== 9) {
-
-                //   creep.say('bich');
+            if ((creep.memory.happy !== undefined || total === creep.carryCapacity) && creep.memory.level !== 9) {
                 let isThere = false;
                 if (Game.flags[creep.memory.party] !== undefined &&
                     Game.flags[creep.memory.party].room !== undefined &&
@@ -241,8 +242,9 @@ class muleClass extends roleParent {
                 if (!isThere) {
                     //                  if (!super.avoidArea(creep)) {
                     //                        movement.flagMovement(creep);
-                    if (creep.memory.party == 'Flag9' || creep.memory.party == 'Flag12') {
-                        creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home);
+                    if(creep.memory.party === 'portal'){
+                        creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home,{reusePath:50});
+                    } else if (creep.memory.party == 'Flag9' || creep.memory.party == 'Flag12') {
 
                     } else {
                         creep.moveMe(Game.flags[creep.memory.party], { reusePath: 50, ignoreCreeps: false });
@@ -273,7 +275,7 @@ class muleClass extends roleParent {
                         }
 
                     } else {
-                        if (creep.pos.isNearTo(Game.flags[creep.memory.party].pos)) {
+                        if (creep.pos.isEqualTo(Game.flags[creep.memory.party].pos)) {
                             creep.drop(RESOURCE_ENERGY);
                             if (creep.ticksToLive < creep.memory.distance >> 1) creep.suicide();
                             creep.countReset();
@@ -313,7 +315,7 @@ class muleClass extends roleParent {
                         stor = creep.room.terminal;
                     }
                 }
-                if (Game.shard.name == 'shard2') {
+                if (Game.shard.name == 'shard2' || creep.room.name == 'E23S38') {
                     stor = creep.room.terminal;
                 }
                 if (creep.room.name == 'E22S48') {
@@ -321,7 +323,20 @@ class muleClass extends roleParent {
                 }
 
                 if (creep.pos.isNearTo(stor)) {
-                    if (Game.shard.name == 'shard0') {
+                    if (creep.memory.pickup !== undefined) {
+                        creep.say('%');
+                        let min = creep.memory.pickup.mineralType;
+                        let amnt = creep.memory.pickup.mineralAmount;
+                        if(Game.shard.name === 'shard1' && (creep.room.terminal.store[min] === undefined || creep.room.terminal.store[min] < amnt)){
+                            _terminal_().requestMineral(creep.room.name, min);                            
+                        }
+                        //if(Memory.stats.totalMinerals[min] < 1000) creep.memory.death = true;
+                        if(creep.room.terminal.store[min] >= amnt && creep.withdraw(stor, min, amnt) === OK ){
+                            creep.memory.happy = true;
+                        } else {
+                            return;
+                        }
+                    } else if (Game.shard.name == 'shard0') {
                         if (creep.ticksToLive < 1200 && creep.room.name == creep.memory.home) {
                             creep.memory.death = true;
                         }
@@ -354,43 +369,8 @@ class muleClass extends roleParent {
 
                                             }*/
 
-                    } else if (creep.room.name == 'E22S48') {
-                        var most;
-                        var amount = 0;
-                        var min = ['L', 'X', 'U', 'Z', 'K', 'X', 'H', 'O'];
-                        for (var ze in min) {
-                            if (Memory.stats.totalMinerals[min[ze]] > amount) {
-                                most = min[ze];
-                                amount = Memory.stats.totalMinerals[min[ze]];
-                            }
-                        }
-
-                                            let zz = Math.floor(Math.random() * 1);
-                                                                      if (zz === 0) {
-                                                    creep.withdraw(stor, RESOURCE_ENERGY);
-                                                }
-                        //creep.withdrawing(stor, 'XZHO2');
-                        //   _terminal.requestMineral(creep.room.name, 'XZHO2');
-                        //                                          }/* else if (zz === 1) {
-                        //                          creep.withdrawing(stor, 'XUH2O');
-                        //                             _terminal_().requestMineral(creep.room.name, 'XUH2O');
-
-                        //                                  } else if (zz === 2) {
-                        //                      creep.withdrawing(stor, 'XGHO2');
-                        //                         _terminal_().requestMineral(creep.room.name, 'XGHO2');
-
-                        //                                    }  else*/
-                        //                      if (zz === 3) {
-
-                        //                          creep.withdrawing(stor, 'XLHO2');
-                        //                            _terminal.requestMineral(creep.room.name, 'XLHO2');
-                        //                        } else if (zz === 4) {
-                        //} 
-                                        else {
-                        creep.withdraw(stor, most);
-//                        creep.withdraw(stor, RESOURCE_ENERGY);
-
-                                      }
+                    } else if (creep.room.name == 'E22S48'&&creep.memory.party === 'Flag3') {
+                        creep.withdraw(stor, RESOURCE_ENERGY);
                     } else {
                         //                        if (creep.room.name == 'E14S37')
                         creep.withdraw(stor, RESOURCE_ENERGY);
@@ -403,7 +383,7 @@ class muleClass extends roleParent {
 
 
         } else {
-            if (creep.room.name == creep.memory.home) {
+            if (creep.room.name == creep.memory.home && !creep.memory.didPortal) {
                 creep.memory.goHome = false;
             } else {
 
@@ -416,10 +396,15 @@ class muleClass extends roleParent {
                         //creep.moveMe(zz, { reusePath: 50, ignoreCreeps: true });
                         //                            creep.tuskenTo(zz,creep.partyFlag.pos.roomName);
                         creep.moveMe(zz, { reusePath: 50, ignoreCreeps: true });
-
                     }
                 }
+                if (creep.carryTotal === 0 && creep.memory.portal) {
+                    creep.memory.death = true;
+                }
                 if (creep.carryTotal === 0 && creep.room.name == 'E19S49') {
+                    creep.memory.death = true;
+                }
+                if (creep.carryTotal === 0 && creep.room.name == 'E38S72') {
                     creep.memory.death = true;
                 }
                 if (creep.carryTotal === 0 && creep.room.name == 'E22S48') {
