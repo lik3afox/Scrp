@@ -448,11 +448,8 @@ class theSpawn {
                                     }
                                     if (level === 0 || (level < controllerLevel) || (source.room.controller.level > 0)) {
                                         let controlParts;
-                                        if (spawn.room.energyCapacityAvailable > 8000) {
-                                            controlParts = 8;
-                                        } else
                                         if (spawn.room.energyCapacityAvailable > 6000) {
-                                            controlParts = 5;
+                                            controlParts = 4;
                                         }
                                         if (controlParts !== undefined) {
                                             temp.build = [];
