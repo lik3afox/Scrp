@@ -429,6 +429,7 @@ class theSpawn {
                                         spawn.memory.expandCreate.push(temp);
                                     } else if (min !== null && min.mineralAmount > 0 && min.room.controller === undefined) {
                                         totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
+                                        totalCreeps[expandRole[e]].count++;
                                         spawn.memory.expandCreate.push(temp);
                                     }
                                 } else {
