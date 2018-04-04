@@ -23,7 +23,7 @@ Game.rooms.E18S32.terminal.send('energy', 100000, 'E21S31', 'trade');
 
 
 
-Game.rooms.E25S37.terminal.send('Z', 5000, 'E22S48', 'trade');
+Game.rooms.E27S45.terminal.send('H',10000, 'E22S48', 'trade');
 
 Game.rooms.E25S43.terminal.send('ZO', 3000, 'E22S48', 'trade');
 

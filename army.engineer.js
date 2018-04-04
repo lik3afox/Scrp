@@ -262,14 +262,14 @@ class engineerClass extends roleParent {
 
                 if (creep.room.storage !== undefined) {
                     if (!super.containers.withdrawFromStorage(creep)) {
-                        if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES, (500 * creep.memory.roleID) + 100)) {
+                        if (0 !== creep.moveToPickUp(FIND_DROPPED_RESOURCES, (500 * creep.memory.roleID) + 100)) {
                             //                                if (!super.sources.moveToWithdraw(creep)) {
                             if (!creep.moveToWithdrawSource()) {}
                         }
                     }
 
                 } else {
-                    if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES, (500 * creep.memory.roleID) + 100)) {
+                    if (0 !== creep.moveToPickUp(FIND_DROPPED_RESOURCES, (500 * creep.memory.roleID) + 100)) {
                         if (!super.containers.withdrawFromTerminal(creep)) {
                             if (!super.containers.withdrawFromStorage(creep)) {
                                 if (!super.containers.moveToWithdraw(creep)) {

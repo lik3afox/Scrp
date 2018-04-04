@@ -879,7 +879,7 @@
         if (test2.length > 0) {
             flag.memory.target = test2[0].id;
         } else {
-            filter = [STRUCTURE_CONTAINER, STRUCTURE_EXTRACTOR]; // Any towers
+            filter = [ STRUCTURE_EXTRACTOR]; // Any towers
             test2 = _.filter(strucs, function(o) {
                 return !o.pos.lookForStructure(STRUCTURE_RAMPART) && _.contains(filter, o.structureType);
             });
@@ -963,7 +963,18 @@
 
                     return;
                 }
-
+                        if (flag.memory.killBase) {
+                            if (flag.memory.target === undefined) {
+                                findFlagTarget(flag);
+                            } else {
+                                let zz = Game.getObjectById(flag.memory.target);
+                                if (zz !== null && !flag.pos.isEqualTo(zz)) {
+                                    flag.setPosition(zz.pos);
+                                } else {
+                                    findFlagTarget(flag);
+                                }
+                            }
+                        }
                 if (flag.pos.roomName === flag.name) {
                     if (flag.room !== undefined) {
 
@@ -1225,18 +1236,7 @@
                             flag.memory.nextTargets = [];
                         }
 
-                        if (flag.memory.killBase) {
-                            if (flag.memory.target === undefined) {
-                                findFlagTarget(flag);
-                            } else {
-                                let zz = Game.getObjectById(flag.memory.target);
-                                if (zz !== null && !flag.pos.isEqualTo(zz)) {
-                                    flag.setPosition(zz.pos);
-                                } else {
-                                    findFlagTarget(flag);
-                                }
-                            }
-                        }
+
                         if (flag.name == 'bandit') {
                             
                             flag.memory.rallyFlag = 'home';

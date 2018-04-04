@@ -421,20 +421,22 @@ function labDo(roomName, created, labz, laby) {
     if (lab1.cooldown !== 0) return false;
     if (!lab3.room.memory.labsNeedWork && Game.rooms[roomName].memory.lab2Mode !== 'none') {
         if (lab1.mineralAmount >= 2950 && labs[labz - 1].emptied) {
-//            console.log(lab3.room.name, 'tigger1');
+            console.log(lab3.room.name, 'tigger1');
             lab3.room.memory.labsNeedWork = true;
         }
         if ((!labs[labz - 1].emptied && (lab2.mineralAmount < 150 || lab2.mineralAmount === null) && (lab2.room.terminal.store[labs[labz - 1].resource] > 1)) ||
             (!labs[laby - 1].emptied && (lab3.mineralAmount < 150 || lab3.mineralAmount === null) && ( lab3.room.terminal.store[labs[laby - 1].resource] > 1))) {
-     //       console.log(lab3.room.name, 'tigger2');
+            console.log(lab3.room.name, 'tigger2');
             lab3.room.memory.labsNeedWork = true;
         }
-        if (labs[labz - 1].resource !== 'none' && (lab2.mineralType !== undefined && labs[labz - 1].resource !== undefined && labs[labz - 1].resource !== lab2.mineralType)) {
-         //   console.log(lab3.room.name, 'tigger3', lab2.mineralType, labs[labz - 1].resource, lab2.mineralType);
+        if (labs[labz - 1].resource !== 'none' &&
+            ((lab2.mineralType !== undefined && lab2.mineralType !== null) && labs[labz - 1].resource !== undefined && 
+                labs[labz - 1].resource !== lab2.mineralType)) {
+            console.log(lab3.room.name, 'tigger3', lab2.mineralType, labs[labz - 1].resource, lab2.mineralType);
             lab3.room.memory.labsNeedWork = true;
         }
         if ((lab3.mineralType !== null && labs[laby - 1].resource !== undefined && labs[laby - 1].resource !== lab3.mineralType)) {
-        //    console.log(roomLink(lab3.room.name), 'tigger4', labs[laby - 1].resource, lab3.mineralType, laby - 1);
+            console.log(roomLink(lab3.room.name), 'tigger4', labs[laby - 1].resource, lab3.mineralType, laby - 1);
             lab3.room.memory.labsNeedWork = true;
         }
 

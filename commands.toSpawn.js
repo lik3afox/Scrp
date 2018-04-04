@@ -283,6 +283,8 @@ class SpawnInteract {
         if (room.memory.renewCreep === undefined) {
             room.memory.renewCreep = [];
         }
+        //console.log(room.energyAvailable,  );
+        if(room.energyAvailable < room.energyCapacityAvailable>>1  ) return;
         var e = room.memory.renewCreep.length;
         if (e === 0) return;
         if(room.availableSpawns.length === 0) return;

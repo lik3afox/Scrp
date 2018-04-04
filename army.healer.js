@@ -139,13 +139,6 @@ function findNewParty(creep) {
 
 function powerAction(creep) {
     var power = require('commands.toPower');
-if(creep.memory.followerID !== undefined){
-    var tgt = Game.getObjectById(creep.memory.followerID);
-    tgt.followerID = creep.id;
-    tgt.memory.leaderID = undefined;
-    creep.memory.leaderID = tgt.id;
-    creep.memory.followerID = undefined;
-}
 
     if (Game.flags[creep.memory.party] !== undefined) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party], 5)) {
@@ -322,8 +315,29 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);      
         }
         if (super.isPowerParty(creep)) {
             creep.memory.waypoint = true;
-            if (powerAction(creep))
+            if (powerAction(creep)){
+if(creep.memory.followerID !== undefined && !creep.isHome){
+    var tgt = Game.getObjectById(creep.memory.followerID);
+if(tgt !== null && tgt.memory.leaderID !== undefined){
+    tgt.memory.leaderID = undefined;
+    creep.memory.followerID = undefined;
+
+    creep.memory.leaderID = tgt.id;
+    tgt.memory.followerID = creep.id;
+    creep.say("><");
+    tgt.say(">?<");
+
+}
+/*    tgt.followerID = creep.id;
+    tgt.memory.leaderID = undefined;
+    creep.memory.leaderID = tgt.id;
+    creep.memory.followerID = undefined;
+    return;*/
+}
                 return;
+
+            }
+
         }
         if (creep.memory.party == 'bandit') {
 //            super.rebirth(creep);

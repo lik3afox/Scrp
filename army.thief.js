@@ -218,7 +218,7 @@ function banditAction(creep) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
             if (!roleParent.constr.withdrawFromTombstone(creep)) {
 
-                if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES)) {
+                if (creep.moveToPickUp(FIND_DROPPED_RESOURCES) !== 0) {
 
 
                     bads = creep.room.find(FIND_STRUCTURES);

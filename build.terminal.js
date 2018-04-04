@@ -1378,6 +1378,26 @@ var failedRequest;
 
 class roleTerminal {
 
+    static getRoomMostMineral(mineral){
+        let most = 0;
+        let mostRoom;
+        for (var e in s1LabRooms) {
+            if (Game.rooms[s1LabRooms[e]] !== undefined ) {
+                var term = Game.rooms[s1LabRooms[e]].terminal;
+                if (term !== undefined) {
+                    let needed = labs.neededMinerals(term.pos.roomName);
+
+                    if (term.cooldown === 0 && term.store[mineral] !== undefined && term.store[mineral] > most && !_.contains(needed, mineral)) {
+                        most = term.store[mineral];
+                        mostRoom = s1LabRooms[e];
+                    }
+                }
+            }
+        }
+
+        return mostRoom;
+    }
+
     static requestMineral(targetRoom, mineral, amount) {
         //  if (failedRequest === undefined) {
         //      failedRequest = {};

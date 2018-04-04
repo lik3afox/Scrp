@@ -293,11 +293,11 @@ module.exports = function() {
         if (this.memory.pickUpId === undefined) {
             if (amount === undefined) amount = 0;
             if (FIND === FIND_DROPPED_RESOURCES) {
-                close = this.pos.findClosestByRange(FIND, {
+                close = _.max( this.room.find(FIND, {
                     filter: function(object) {
-                        return object.amount > amount ;//&& object.resourceType !== 'energy'
+                        return object.amount > amount; //&& object.resourceType !== 'energy'
                     }
-                });
+                }), o => o.amount);
             } else {
                 close = this.pos.findClosestByRange(FIND, {
                     filter: function(object) {
@@ -305,7 +305,7 @@ module.exports = function() {
                     }
                 });
             }
-
+            if (close === undefined) return false;
         } else {
             close = Game.getObjectById(this.memory.pickUpId);
         }
@@ -434,7 +434,7 @@ module.exports = function() {
 
     Creep.prototype.smartRangedAttack = function() {
         // No moving. 
-        //        this.say('SRanged');
+                this.say('SRanged');
         var hurtz;
         hurtz = this.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
         hurtz = _.filter(hurtz, function(object) {
@@ -623,10 +623,10 @@ module.exports = function() {
                 this.heal(hurted);
             }
             this.memory.reHealID = hurted.id;
-/*            if (this.memory.role == 'healer' && this.memory.partner === undefined && hurted.memory.role == 'fighter' && hurted.memory.party === this.memory.party) {
-                this.memory.partner = hurted.id;
-                hurted.memory.partner = this.id;
-            }*/
+            /*            if (this.memory.role == 'healer' && this.memory.partner === undefined && hurted.memory.role == 'fighter' && hurted.memory.party === this.memory.party) {
+                            this.memory.partner = hurted.id;
+                            hurted.memory.partner = this.id;
+                        }*/
             return true;
         } else {
             let tgt = Game.getObjectById(this.memory.reHealID);
@@ -1128,25 +1128,25 @@ destination Current Pos Path
         }
         if (direction === undefined) { return; }
         let tpos = getFormationPos(creep, direction);
-        var looking = creep.room.lookForAt(LOOK_CREEPS,tpos)[0];
+        var looking = creep.room.lookForAt(LOOK_CREEPS, tpos)[0];
 
-        creep.room.visual.line(creep.pos,tpos,{color:'red',width:0.3});
-        creep.room.visual.circle(tpos,{stroke:'green',radius:0.5});
+        creep.room.visual.line(creep.pos, tpos, { color: 'red', width: 0.3 });
+        creep.room.visual.circle(tpos, { stroke: 'green', radius: 0.5 });
         if (looking === undefined) { return; }
 
         // The blocked Creep moves to 
-      //  var color = 'green';
+        //  var color = 'green';
         if (looking.memory === undefined ||
             (looking.memory.sleeping !== undefined && looking.memory.sleeping > 0) ||
             (looking.memory._move !== undefined && looking.memory.cachePath !== undefined && looking.fatigue === 0) ||
             (looking.memory.stuckCount !== undefined && looking.memory.stuckCount > 1)) {
-//            color = 'red';
+            //            color = 'red';
             looking.move(looking.pos.getDirectionTo(creep));
             looking.say('✔');
             creep.memory.swapTargetID = looking.id;
             creep.say('mv!');
         }
-        creep.room.visual.circle(tpos,{stroke:'red',radius:0.5});
+        creep.room.visual.circle(tpos, { stroke: 'red', radius: 0.5 });
 
         return;
 
@@ -1570,7 +1570,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             // This is the leader.
             let fol = Game.getObjectById(this.memory.followerID);
             if (fol !== null) {
-                if((!this.pos.isNearTo(fol) && !this.isAtEdge) || fol.fatigue > 0) {
+                if ((!this.pos.isNearTo(fol) && !this.isAtEdge) || fol.fatigue > 0) {
                     // If the leader isn't near his follower, he doesn't move. 
                     this.say('w4F');
                     //this.moveTo(fol,options)

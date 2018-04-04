@@ -57,7 +57,7 @@ var labsBuild = require('build.labs');
 
 function labNeedReducing(creep) {
     var theplans = labsBuild.getPlans(creep.room.name);
-    if(theplans === undefined) return;
+    if (theplans === undefined) return;
     var e = theplans.length;
     while (e--) {
         let lab = Game.getObjectById(theplans[e].id);
@@ -78,10 +78,10 @@ function labNeedReducing(creep) {
 class scientistRole extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        if( _.isArray(classLevels[level])) {
+        if (_.isArray(classLevels[level])) {
             return classLevels[level];
         }
-        if (_.isObject(classLevels[level]) ) {
+        if (_.isObject(classLevels[level])) {
             return classLevels[level].body;
         } else {
             return classLevels[level];
@@ -101,8 +101,8 @@ class scientistRole extends roleParent {
             if (creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
                 require('role.first').run(creep);
             } else {
-                        require('role.nuker').run(creep);
-                        return;
+                require('role.nuker').run(creep);
+                return;
             }
             return;
         }
@@ -126,7 +126,7 @@ class scientistRole extends roleParent {
 
         creep.say('sci');
 
-        var total = creep.carryTotal; 
+        var total = creep.carryTotal;
         if (total === 0) {
             creep.memory.putaway = false;
         } else {
@@ -136,7 +136,7 @@ class scientistRole extends roleParent {
         if (creep.memory.putaway) {
             if (!labsBuild.moveToTransfer(creep)) {
 
-                if (creep.room.terminal.total === 300000||(creep.room.name == 'E33S76' )) {
+                if (creep.room.terminal.total === 300000 || (creep.room.name == 'E33S76')) {
                     super.containers.moveToStorage(creep);
                 } else {
                     creep.say('term');
@@ -144,19 +144,18 @@ class scientistRole extends roleParent {
                 }
                 return;
             }
-                           //     super.containers.moveToStorage(creep);
+            //     super.containers.moveToStorage(creep);
 
         } else {
-
             var _labs = labsBuild.getLabs(creep.room.name);
             creep.say(_labs.length);
-            if (!labNeedReducing(creep))
+            if ( !labNeedReducing(creep))
                 if (_labs.length > 0) { // If there are labs. 
                     var i = _labs.length;
-                        var plan = labsBuild.getPlans(_labs[0].pos.roomName); // get the plans
+                    var plan = labsBuild.getPlans(_labs[0].pos.roomName); // get the plans
                     while (i--) { // go through them
-                        
-                        if ( plan[i].id == _labs[i].id && (plan[i].resource !== _labs[i].mineralType) && (_labs[i].mineralAmount >  plan[i].emptied ? 500 : 0) && _labs[i].id !== creep.room.memory.boostLabID) {
+
+                        if (plan[i].id == _labs[i].id && (plan[i].resource !== _labs[i].mineralType) && (_labs[i].mineralAmount > plan[i].emptied ? 500 : 0) && _labs[i].id !== creep.room.memory.boostLabID) {
                             creep.say('clear');
 
                             if (creep.pos.isNearTo(_labs[i])) {
@@ -173,24 +172,6 @@ class scientistRole extends roleParent {
 
                     if (!labsBuild.getFromTerminal(creep)) {
                         let otherThings = false;
-                        if(!creep.room.memory.simple){
-                            
-                        var keys = Object.keys(creep.room.storage.store);
-                        var n = keys.length;
-                        while (n--) {
-                            var e = keys[n];
-                            var stored = [RESOURCE_ENERGY, 'XGHO2', 'XLHO2', 'XUH2O', 'XZHO2', 'XZH2O', 'XKHO2'];
-                            if (!_.contains(stored, e) && creep.room.storage.store[e]) {
-                                otherThings = true;
-                                if (creep.pos.isNearTo(creep.room.storage)) {
-                                    creep.withdraw(creep.room.storage, e);
-                                } else {
-                                    creep.moveMe(creep.room.storage);
-                                }
-                            }
-                        }
-
-                        }
                         if (!otherThings) {
                             creep.say('<3', true);
                             creep.room.memory.labsNeedWork = false;

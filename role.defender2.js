@@ -91,6 +91,9 @@ class roleNewDefender extends roleParent {
             var ccSpawn = require('commands.toSpawn');
             ccSpawn.newWantRenew(creep);
         }
+        if (super.spawnRecycle(creep)) {
+            return;
+        }
 
         if (super.movement.moveToDefendFlag2(creep)) {
 
