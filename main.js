@@ -801,33 +801,6 @@ function runShardRoom(roomName) {
 function createSendCreep(request) {
     console.log(Game.shard.name, 'doing ', request.type, 'from room', request.shardRoom, 'transports', request.mineralType, 'amount:', request.mineralAmount, 'for shard1');
     // 
-    var partyFlag;
-    switch (Game.shard.name) {
-        case 'shard2':
-            partyFlag = 'portal2';
-            break;
-    }
-    let temp = {
-        build: [CARRY, CARRY, CARRY, CARRY, CARRY,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            CARRY, CARRY, CARRY, CARRY, CARRY,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            CARRY, CARRY, CARRY, CARRY, CARRY,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            CARRY, CARRY, CARRY, CARRY, CARRY,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            CARRY, CARRY, CARRY, CARRY, CARRY,
-        ],
-        name: 'send' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
-        memory: {
-            role: 'mule',
-            home: request.shardRoom,
-            party: partyFlag,
-            parent: Game.rooms[request.shardRoom].memory.alphaSpawnID,
-            level: 5,
-        }
-    };
     return temp;
 }
 
@@ -901,11 +874,39 @@ function doInstructions(instructions) {
             if (current.type === 'send') {
                 var alphaSpawn = Game.rooms[current.shardRoom].alphaSpawn;
                 //                console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
-
-
-
                 if (alphaSpawn.memory.expandCreate.length === 0) {
-                    var temp = createSendCreep(current);
+//                    var temp = createSendCreep(current);
+    var partyFlag;
+    switch (Game.shard.name) {
+        case 'shard2':
+            partyFlag = 'portal';
+            break;
+        case 'shard0':
+            partyFlag = 'portal2';
+            break;
+    }
+    let temp = {
+        build: [CARRY, CARRY, CARRY, CARRY, CARRY,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            CARRY, CARRY, CARRY, CARRY, CARRY,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            CARRY, CARRY, CARRY, CARRY, CARRY,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            CARRY, CARRY, CARRY, CARRY, CARRY,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            CARRY, CARRY, CARRY, CARRY, CARRY,
+        ],
+        name: 'send' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
+        memory: {
+            role: 'mule',
+            home: request.shardRoom,
+            party: partyFlag,
+            parent: Game.rooms[request.shardRoom].memory.alphaSpawnID,
+            level: 5,
+        }
+    };
+
                     temp.memory.pickup = {
                         mineralType: current.mineralType,
                         mineralAmount: current.mineralAmount > 1250 ? 1250 : current.mineralAmount,
