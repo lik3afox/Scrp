@@ -750,8 +750,8 @@ function runShardRoom(roomName) {
     let room = Game.rooms[roomName];
     if (room === undefined) return;
     let terminal = room.terminal;
-    var min = 6750;
-    var max = 9250;
+    var min = 5000;
+    var max = 7500;
     var minerals = _.shuffle([
         "H", "O", "U", "L", "K", "Z", "X", "G",
         "OH", "ZK", "UL",

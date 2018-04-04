@@ -139,6 +139,13 @@ function findNewParty(creep) {
 
 function powerAction(creep) {
     var power = require('commands.toPower');
+if(creep.memory.followerID !== undefined){
+    var tgt = Game.getObjectById(creep.memory.followerID);
+    tgt.followerID = creep.id;
+    tgt.memory.leaderID = undefined;
+    creep.memory.leaderID = tgt.id;
+    creep.memory.followerID = undefined;
+}
 
     if (Game.flags[creep.memory.party] !== undefined) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party], 5)) {
