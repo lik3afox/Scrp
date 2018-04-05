@@ -2,7 +2,7 @@ var labRooms = ['W53S35', 'E23S38', 'E13S34', 'E17S34', 'E27S34', 'E18S32', 'E14
     'E32S34', 'E21S38', 'E11S47', 'E1S11', 'E33S54'
 ];
 
-var shiftCount = 900;
+var shiftCount = 1800;
 
 var constr = require('commands.toStructure');
 

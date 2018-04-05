@@ -34,6 +34,7 @@ var roomSegment = {
     E32S34: 24,
     // Shard 2
     E19S49: 10,
+    E22S49: 10,
 };
 
 

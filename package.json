@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/lik3afox/Scrp#readme",
   "devDependencies": {
-    "grunt": "^1.0.1"
+    "grunt": "^1.0.2"
   },
   "dependencies": {
     "grunt-contrib-jshint": "^1.1.0",

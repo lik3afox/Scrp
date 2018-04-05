@@ -88,6 +88,8 @@ var allParty = {
     ],
     test: [
         ['scout', 1, 1]
+
+        
     ],
 
     control: [

@@ -286,7 +286,6 @@ class theSpawn {
         }
 
         // Flag Module Check Add Module.
-
         currentModule = Game.flags[spawn.room.name].memory.module;
         for (type in currentModule) {
 

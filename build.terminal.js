@@ -978,7 +978,6 @@ function buyMineralOrder() {
             }
         }
     }
-
 }
 
 
@@ -1377,6 +1376,10 @@ var share;
 var failedRequest;
 
 class roleTerminal {
+
+    static getAveragePrice(e,isBuy){
+     return getAverageMineralPrice(e, isBuy);
+    }
 
     static getRoomMostMineral(mineral){
         let most = 0;

@@ -1122,7 +1122,7 @@ destination Current Pos Path
         var direction;
 
         if (creep.memory.cachePath !== undefined) {
-            direction = creep.memory.cachePath[4];
+            direction = creep.memory.cachePath[5];
         } else if (creep.memory._move.path !== undefined) {
             direction = creep.memory._move.path[5];
         }

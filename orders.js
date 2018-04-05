@@ -17,15 +17,18 @@ Game.rooms.E13S34.terminal.send('energy', 100000, 'E9N3', 'trade');
 Game.rooms.E17S34.terminal.send('energy', 100000, 'E9N3', 'trade');
 
 Game.rooms.E32S34.terminal.send('energy', 50000, 'E21S31', 'trade');
-Game.rooms.E18S32.terminal.send('energy', 100000, 'E21S31', 'trade');
+Game.rooms.E18S32.terminal.send('energy', 100000, 'E38S72', 'trade');
 
 
 
 
 
-Game.rooms.E27S45.terminal.send('H',10000, 'E22S48', 'trade');
+Game.rooms.E27S45.terminal.send('',10000, 'E38S72', 'trade');
 
-Game.rooms.E25S43.terminal.send('ZO', 3000, 'E22S48', 'trade');
+
+Game.rooms.E29S48.terminal.send('X', 20000, 'E22S52', 'trade');
+
+
 
 Game.rooms.E25S37.terminal.send('Z', 20000, 'E22S48', 'trade');
 
@@ -54,7 +57,7 @@ Game.market.cancelOrder('59c72e66e6480025b1468a45');
 
 var cost = Game.market.calcTransactionCost(10000, 'E28S73', 'E28S71');
 
-Game.market.createOrder(ORDER_SELL, 'XGH2O', 7.0, 10000, "E19S49");
+
 
 Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, 0.03, 500000, "E18S32");
 

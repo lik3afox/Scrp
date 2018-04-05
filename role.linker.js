@@ -573,10 +573,6 @@ function simple(creep) {
         if (creep.pos.isNearTo(creep.room.storage)) {
             creep.transfer(creep.room.storage, creep.carrying);
         }
-        if (creep.moveToPickUp(FIND_DROPPED_RESOURCES) === OK) {
-            creep.say('drp');
-            return;
-        }
         var zz = Game.getObjectById(creep.room.memory.mineralContainID);
         if (zz !== null && zz.total > 1000) {
             require('role.assistant').run(creep);
@@ -592,6 +588,10 @@ function simple(creep) {
             }
             creep.say('Link');
 
+            return;
+        }
+        if (creep.moveToPickUp(FIND_DROPPED_RESOURCES) === OK) {
+            creep.say('drp');
             return;
         }
         //        if (constr.moveToPickUpEnergy(creep, 300)) {

@@ -284,10 +284,10 @@ class SpawnInteract {
             room.memory.renewCreep = [];
         }
         //console.log(room.energyAvailable,  );
-        if(room.energyAvailable < room.energyCapacityAvailable>>1  ) return;
+        if (room.energyAvailable < room.energyCapacityAvailable >> 1) return;
         var e = room.memory.renewCreep.length;
         if (e === 0) return;
-        if(room.availableSpawns.length === 0) return;
+        if (room.availableSpawns.length === 0) return;
         var cpts = [];
         while (e--) {
             var crp = Game.creeps[room.memory.renewCreep[e]];
@@ -318,7 +318,8 @@ class SpawnInteract {
     }
 
     static createFromStack(spawn) {
-        if(spawn.spawning) return;
+        if (spawn.spawning) return;
+
         var STACK = getStack(spawn);
         if (spawn.memory.spawnDir === undefined) {
             spawn.memory.spawnDir = 1;
@@ -329,8 +330,18 @@ class SpawnInteract {
                 STACK.shift();
             }
             var ee = spawn.canCreateCreep(STACK[0].build);
+            //            if(Game.shard.name === 'shard2')
             //                console.log("spawn, dry run", spawn.spawnCreep(STACK[0].build,build[0].name, {memory:STACK[0].memory,direction:spawn.memory.spawnDir,dryRun:true}) );
-            if (ee == OK) {
+            if (ee === -10) {
+                if (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable) {
+                }
+                do {
+                    STACK[0].build.shift();
+                } while (STACK[0].build.length > 50 && getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
+                spawn.canCreateCreep(STACK[0].build);
+                    //       console.log('><><>>>>-=-=-DOWNGRADE MODULE X'  + '-=-=-=-=<<<<><><');
+
+            } else if (ee == OK) {
 
                 let ez = spawn.createCreep(STACK[0].build, STACK[0].name, STACK[0].memory);
                 if (ez == -3) {
@@ -339,13 +350,6 @@ class SpawnInteract {
                 } else {
                     STACK.shift();
                 }
-            } else if (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable) {
-                let count = 0;
-                do {
-                    count++;
-                    STACK[0].build.shift();
-                } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
-                //       console.log('><><>>>>-=-=-DOWNGRADE MODULE X' + count + '-=-=-=-=<<<<><><');
             } else if (STACK[0].length === undefined && STACK[0].length === 0) {
 
                 console.log("ERROR", spawn, spawn.pos);
