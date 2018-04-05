@@ -1389,11 +1389,15 @@ class roleTerminal {
                 var term = Game.rooms[s1LabRooms[e]].terminal;
                 if (term !== undefined) {
                     let needed = labs.neededMinerals(term.pos.roomName);
-
                     if (term.cooldown === 0 && term.store[mineral] !== undefined && term.store[mineral] > most && !_.contains(needed, mineral)) {
                         most = term.store[mineral];
                         mostRoom = s1LabRooms[e];
                     }
+                    if (term.cooldown === 0 && term.store[mineral] !== undefined && term.store[mineral] > most && _.contains(needed, mineral) && term.store[mineral] > 10000 ) {
+                        most = term.store[mineral];
+                        mostRoom = s1LabRooms[e];
+                    }
+
                 }
             }
         }

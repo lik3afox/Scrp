@@ -330,16 +330,24 @@ class SpawnInteract {
                 STACK.shift();
             }
             var ee = spawn.canCreateCreep(STACK[0].build);
-            //            if(Game.shard.name === 'shard2')
-            //                console.log("spawn, dry run", spawn.spawnCreep(STACK[0].build,build[0].name, {memory:STACK[0].memory,direction:spawn.memory.spawnDir,dryRun:true}) );
-            if (ee === -10) {
-                if (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable) {
-                }
+            if (spawn.room.name == 'E22S49') {
+                console.log('doing', ee);
+            }
+            //console.log("spawn, dry run", spawn.spawnCreep(STACK[0].build,build[0].name, {memory:STACK[0].memory,direction:spawn.memory.spawnDir,dryRun:true}) );
+            if (STACK[0].build.length === 0 && ee === ERR_INVALID_ARGS) {
+                STACK.shift();
+            }
+            if (ee === ERR_NOT_ENOUGH_ENERGY) {
                 do {
                     STACK[0].build.shift();
-                } while (STACK[0].build.length > 50 && getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
+                } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
                 spawn.canCreateCreep(STACK[0].build);
-                    //       console.log('><><>>>>-=-=-DOWNGRADE MODULE X'  + '-=-=-=-=<<<<><><');
+            } else if (ee === ERR_INVALID_ARGS) {
+                do {
+                    STACK[0].build.shift();
+                } while (STACK[0].build.length > 50);
+                spawn.canCreateCreep(STACK[0].build);
+                //       console.log('><><>>>>-=-=-DOWNGRADE MODULE X'  + '-=-=-=-=<<<<><><');
 
             } else if (ee == OK) {
 

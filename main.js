@@ -327,6 +327,8 @@ function doUpgradeRooms() { //5836b82d8b8b9619519f19be
                 flag.memory.party[0][1] = 1;
             } else if (total > 500000) {
                 flag.memory.party[0][1] = 1;
+            } else if (total < 50000){
+                flag.memory.party[0][1] = 0;
             }
         }
         //}
@@ -429,7 +431,7 @@ function doRoomReport(room) {
     if (room.controller.level > 3) {
 
         var goods = room.find(FIND_MY_CREEPS);
-        if (goods.length <= 3) {
+        if (goods.length <= 2) {
             for (var i in goods) {
                 if (goods[i].memory.role == 'linker') {
                     goods[i].memory.role = 'first';
@@ -828,7 +830,7 @@ function doInstructions(instructions) {
                 flagTarget = 'portal';
             }
             let alphaSpawn = Game.rooms[roomCreate].alphaSpawn;
-            console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
+           // console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
             if (alphaSpawn.memory.expandCreate.length === 0) {
 
                 let temp = {
@@ -865,8 +867,12 @@ function doInstructions(instructions) {
                 current.mineralAmount -= temp.memory.pickup.mineralAmount;
 
             }
-            if (current.mineralAmount <= 0) {
-                console.log(' and Spliced from instructions');
+            if( Game.rooms[roomCreate].terminal.store[current.mineralType] <= 1250){
+                _terminal_().requestMineral(roomCreate, current.mineralType,1250);
+            }
+            if (current.mineralAmount <= 0 || Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined  ) {
+
+                console.log(current.mineralAmount,current.mineralType,' and Spliced from instructions',Game.rooms[roomCreate].terminal.store[current.mineralType],roomCreate);
                 instructions.splice(i, 1);
             }
         }
@@ -876,7 +882,7 @@ function doInstructions(instructions) {
             // Here the shards make the creeps to send.
             if (current.type === 'send') {
                 var alphaSpawn = Game.rooms[current.shardRoom].alphaSpawn;
-                console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
+              //  console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
                 if (alphaSpawn.memory.expandCreate.length === 0) {
                     //                    var temp = createSendCreep(current);
                     var partyFlag;
@@ -1013,6 +1019,10 @@ function getMarketPrices() {
     for (var e in minerals) {
         let min = minerals[e];
         var room = getShardRoom(Game.shard.name, min);
+        if(Game.rooms[room] === undefined || Game.rooms[room].terminal === undefined){
+            console.log("how does this room:",room,"not have terminal",Game.shard.name,min);
+          continue;  
+        } 
         if ((Game.rooms[room].terminal.store[min] !== undefined)) {
             rtn[min] = {
                 //              buy: _.max(Game.market.getAllOrders( order => order.resourceType === min && order.type === ORDER_BUY && order.remaingAmount >= 1250 ), o => o.price),
@@ -1162,7 +1172,7 @@ function analyzeMarkets(shardObject) {
     //    shardObject.instructions= [];
     //[Game.shard.name]
     //if (Game.shard.name === 'shard1') return;
-    if (Game.time % 10 !== 0) return;
+    if (Game.time % 1000 !== 0) return;
     var minerals = [
         "H", "O", "U", "L", "K", "Z", "X", "G",
         "OH", "ZK", "UL",

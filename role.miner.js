@@ -46,7 +46,10 @@ function doWork(creep) {
     }
 
     let contain = Game.getObjectById(creep.memory.workContainer);
-    if (contain === null) return;
+    if (contain === null) {
+        creep.memory.workContainer = undefined;
+        return;
+    }
     if ((contain.hits < contain.hitsMax - 25000) || (contain.hits < 50000)) {
         if (!creep.pos.isNearTo(contain)) {}
 

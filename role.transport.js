@@ -331,7 +331,7 @@ class transport extends roleParent {
             return classLevels[level];
         }
         if (_.isObject(classLevels[level])) {
-            return classLevels[level].body;
+            return _.shuffle( classLevels[level].body );
         } else {
             return classLevels[level];
         }

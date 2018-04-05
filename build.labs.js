@@ -46,9 +46,9 @@ var maxMinerals = {
     'UH2O': 50000, // Attack
     'UH': 75000, // Repair
 
-    'XUHO2': 40000, // Harvest
-    'UHO2': 30000,
-    'UO': 20000,
+    'XUHO2': 50000, // Harvest
+    'UHO2': 50000,
+    'UO': 30000,
 
     'XLHO2': 325000, // Heal*
     'LHO2': 50000, // Heal*

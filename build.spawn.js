@@ -389,6 +389,7 @@ class theSpawn {
                     //totalCreeps[creepRole][goal]
                     //      spawnCount[creep.memory.party][creep.memory.role].count++;
                     let currentCount = newGetExpandRole(expandRole[e], remoteInfo.source, totalCreeps);
+
                     if (currentCount < roleInfo[expandRole[e]].max) {
                         // This is where it does the creation of the unit.
                         if (spawn.memory.created === undefined) {
@@ -438,7 +439,8 @@ class theSpawn {
 
                                 break;
                             case 'controller':
-                                if (remoteInfo.controller !== undefined || source.energyCapacity === 3000) {
+
+                                if (remoteInfo.controller !== undefined && source.energyCapacity === 3000) {
                                     var level;
                                     let controlLeft = source.room.controller;
                                     if (source.room.controller !== undefined && source.room.controller.reservation !== undefined) {
@@ -446,9 +448,12 @@ class theSpawn {
                                     } else {
                                         level = 0;
                                     }
+
                                     if (level === 0 || (level < controllerLevel) || (source.room.controller.level > 0)) {
                                         let controlParts;
-                                        if (spawn.room.energyCapacityAvailable > 6000) {
+                                        if (spawn.room.energyCapacityAvailable > 10000) {
+                                            controlParts = 8;
+                                        }else if (spawn.room.energyCapacityAvailable > 6000) {
                                             controlParts = 4;
                                         }
                                         if (controlParts !== undefined) {
@@ -459,7 +464,9 @@ class theSpawn {
                                             }
                                         }
                                         totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
+
                                         spawn.memory.expandCreate.push(temp);
+                                     //   return;
                                     }
                                 }
                                 break;

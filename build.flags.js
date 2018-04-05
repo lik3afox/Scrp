@@ -419,7 +419,7 @@
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
-                } else if (Game.shard.name === 'shard1') {
+                } else  {
                     if (flag.room.memory.nukeIncoming) {
                         flag.memory.module[ez][_number] = 3;
                     }
@@ -451,18 +451,7 @@
                             }
                             break;
                     }
-                } else {
-                    var storage2 = flag.room.storage;
-                    if (storage2 !== undefined) {
-                        if (storage2.store[RESOURCE_ENERGY] > 100000) {
-                            flag.memory.module[ez][_number] = 1;
-                        } else {
-                            flag.memory.module[ez][_number] = 0;
-                        }
-                    }
-
-
-                }
+                } 
                 break;
 
             case 'first':

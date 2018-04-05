@@ -293,7 +293,7 @@ module.exports = function() {
         if (this.memory.pickUpId === undefined) {
             if (amount === undefined) amount = 0;
             if (FIND === FIND_DROPPED_RESOURCES) {
-                close = _.max( this.room.find(FIND, {
+                close = _.max(this.room.find(FIND, {
                     filter: function(object) {
                         return object.amount > amount; //&& object.resourceType !== 'energy'
                     }
@@ -434,7 +434,7 @@ module.exports = function() {
 
     Creep.prototype.smartRangedAttack = function() {
         // No moving. 
-                this.say('SRanged');
+        this.say('SRanged');
         var hurtz;
         hurtz = this.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
         hurtz = _.filter(hurtz, function(object) {
@@ -1597,8 +1597,14 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             if (this.room.name != this.memory.home)
                 options.ignoreCreeps = true;
         }
+        if (this.memory._move !== undefined && this.memory._move.time > Game.time ) {
+            console.log( this.memory._move.time,'current',Game.time);
+//            this.memory._move = undefined;
+        }
         if (options.ignoreCreeps && (this.memory.stuckCount > 0 || this.room.name == this.memory.home)) {
+
             swapTarget(this);
+
         }
 
         if (this.memory.stuckCount > 2) {
