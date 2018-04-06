@@ -224,7 +224,11 @@ function analyzeOtherPlayerSegment() {
 
                     if (Memory.stats.totalMinerals[resource] > acceptNum && _.contains(acceptable, resource)) {
                         // Here we do the sending logic.
-                        let zz = _terminal.requestMineral(basic.room, resource, 101);
+                        var amount = 101;
+                        if(resource === 'X'){
+                                amount = 1001;
+                        }
+                        let zz = _terminal.requestMineral(basic.room, resource, amount);
                         console.log('FULFILLING TERMINAL REQUEST', resource, basic[resource], '@', basic.room, '#:', 101, zz);
                     }
                 }

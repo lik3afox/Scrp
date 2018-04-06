@@ -330,9 +330,6 @@ class SpawnInteract {
                 STACK.shift();
             }
             var ee = spawn.canCreateCreep(STACK[0].build);
-            if (spawn.room.name == 'E22S49') {
-                console.log('doing', ee);
-            }
             //console.log("spawn, dry run", spawn.spawnCreep(STACK[0].build,build[0].name, {memory:STACK[0].memory,direction:spawn.memory.spawnDir,dryRun:true}) );
             if (STACK[0].build.length === 0 && ee === ERR_INVALID_ARGS) {
                 STACK.shift();
@@ -341,16 +338,17 @@ class SpawnInteract {
 
                 do {
                     STACK[0].build.shift();
+                       console.log('><><>>>>-=-=-DOWNGRADE MODULE ENERGY',getCost(STACK[0].build),STACK[0].memory.role  + '-=-=-=-=<<<<><><');
                 } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
 
                 spawn.canCreateCreep(STACK[0].build);
 
-            } else if (ee === ERR_INVALID_ARGS) {
+            } else if (ee === ERR_INVALID_ARGS && STACK[0].build.length > 50) {
                 do {
                     STACK[0].build.shift();
+                       console.log('><><>>>>-=-=-DOWNGRADE MODULE 50+',STACK[0].build.length ,STACK[0].memory.role + '-=-=-=-=<<<<><><');
                 } while (STACK[0].build.length > 50);
                 spawn.canCreateCreep(STACK[0].build);
-                //       console.log('><><>>>>-=-=-DOWNGRADE MODULE X'  + '-=-=-=-=<<<<><><');
 
             } else if (ee == OK) {
 

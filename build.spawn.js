@@ -296,7 +296,9 @@ class theSpawn {
             var alertProhib = ['minHarvest', 'assistant', 'nuker'];
             if (currentModule[type][_number] === 0) {
                 // No count so don't count.
-            } else if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
+            } else if(currentModule[type][_name] == 'wallworker' && Game.rooms[creep.room.name].memory.weakestWall !== undefined && Game.rooms[creep.room.name].memory.weakestWall > 299000000){
+console.log('room has "max" walls!',spawn.room.name);  
+            }else if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
 
             } else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
 
@@ -409,14 +411,14 @@ class theSpawn {
                                 level: roleInfo[expandRole[e]].level
                             }
                         };
-    if (totalCreeps[expandRole[e]] === undefined) {
-        totalCreeps[expandRole[e]] = {
-            count: 0,
-            goal: [],
-        };
-    }
+                        if (totalCreeps[expandRole[e]] === undefined) {
+                            totalCreeps[expandRole[e]] = {
+                                count: 0,
+                                goal: [],
+                            };
+                        }
 
-                        if(totalCreeps[expandRole[e]].goal === undefined) totalCreeps[expandRole[e]].goal = [];
+                        if (totalCreeps[expandRole[e]].goal === undefined) totalCreeps[expandRole[e]].goal = [];
 
                         switch (expandRole[e]) {
                             case 'miner':
@@ -455,7 +457,7 @@ class theSpawn {
                                         let controlParts;
                                         if (spawn.room.energyCapacityAvailable > 10000) {
                                             controlParts = 8;
-                                        }else if (spawn.room.energyCapacityAvailable > 6000) {
+                                        } else if (spawn.room.energyCapacityAvailable > 6000) {
                                             controlParts = 4;
                                         }
                                         if (controlParts !== undefined) {
@@ -468,7 +470,7 @@ class theSpawn {
                                         totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
 
                                         spawn.memory.expandCreate.push(temp);
-                                     //   return;
+                                        //   return;
                                     }
                                 }
                                 break;
@@ -525,7 +527,7 @@ class theSpawn {
                             if (crps[e].memory.role === undefined) {
                                 if (crps[e].name.substr(0, 5) == 'engin') {
                                     crps[e].memory.role = 'engineer';
-                                } else  {
+                                } else {
                                     crps[e].memory.role = 'mule';
                                     crps[e].memory.level = 2;
                                 }
@@ -556,7 +558,7 @@ class theSpawn {
                             if (crps[e].memory.role === undefined) {
                                 if (crps[e].name.substr(0, 5) == 'engin') {
                                     crps[e].memory.role = 'engineer';
-                                } else  {
+                                } else {
                                     crps[e].memory.role = 'mule';
                                     crps[e].memory.level = 5;
                                 }
@@ -586,7 +588,7 @@ class theSpawn {
                             if (crps[e].memory.role === undefined) {
                                 if (crps[e].name.substr(0, 5) == 'engin') {
                                     crps[e].memory.role = 'engineer';
-                                } else  {
+                                } else {
                                     crps[e].memory.role = 'mule';
                                     crps[e].memory.level = 5;
                                 }

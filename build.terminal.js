@@ -684,7 +684,7 @@ function cleanUpOrders() {
     }
 }
 
-
+/*
 function sellMineral(terminal) {
     if (terminal.total < 299000) return false;
 
@@ -727,7 +727,7 @@ function sellMineral(terminal) {
     }
 
     return false;
-}
+} */
 
 function energyCheck(terminal) {
     if (terminal.store[RESOURCE_ENERGY] > 20000) return false;

@@ -69,19 +69,16 @@ var classLevels = [
         boost: ['XKHO2', 'XLHO2'],
     },
     // Level 8
-    {
-        body: [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            HEAL, HEAL, HEAL, HEAL, HEAL,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            HEAL, HEAL, HEAL, HEAL, HEAL,
+    { // This will take on 1 tower. 
+            
+        body: [TOUGH, TOUGH, TOUGH,
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            MOVE, MOVE, MOVE, 
+            MOVE, MOVE, MOVE,MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE,MOVE,
         ],
-        boost: ['XZHO2', 'XKHO2', 'XLHO2'],
+        boost:['XKHO2', 'XLHO2', 'XGHO2'],
     },
     // Level 9
 
@@ -197,14 +194,15 @@ class rangerClass extends roleParent {
             creep.selfHeal();
             return;
         }
-        if (super.rallyFirst(creep)) return;
-        if (super.goToPortal(creep)) return;
 
         if (creep.ticksToLive > 1495 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
             creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
         } else if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
+
+        if (super.rallyFirst(creep)) return;
+        if (super.goToPortal(creep)) return;
         if (creep.memory.party == 'bandit') {
             super.rebirth(creep);
             creep.say('bandit');
@@ -221,16 +219,15 @@ class rangerClass extends roleParent {
             return;
         }
 
-  //      if (!doAttack(creep)) {
-
-//        }
-        creep.smartRangedAttack();
+        //creep.smartRangedAttack();
+creep.rangedMassAttack();
         creep.say(creep.memory.party);
         creep.selfHeal();
 
 
-
-        movement.flagMovement(creep);
+if(creep.hits > creep.hitsMax-300){
+movement.flagMovement(creep);
+}        
         //          }
     }
 

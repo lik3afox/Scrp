@@ -62,7 +62,7 @@ class roleWallWorker extends roleParent {
     static run(creep) {
         if (super.baseRun(creep)) return;
         if (creep.room.memory.simple && creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
-            if( creep.memory.boostNeeded === undefined) {
+            if (creep.memory.boostNeeded === undefined) {
                 creep.memory.boostNeeded = ['LH'];
             }
             require('role.upbuilder').run(creep);
@@ -84,11 +84,11 @@ class roleWallWorker extends roleParent {
             boost.push('XLH2O');
             _.uniq(boost);
         }
-if(creep.room.name === 'E1S11'){
-	if (super.boosted(creep,['XLH2O'])) {
-            return;
+        if (creep.room.name === 'E1S11') {
+            if (super.boosted(creep, ['XLH2O'])) {
+                return;
+            }
         }
-}
 
         if (creep.ticksToLive > 1400 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
             creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
@@ -97,14 +97,15 @@ if(creep.room.name === 'E1S11'){
         }
 
         var target = (creep.room.name == 'E29S48' || creep.room.name == 'E18S46') ? creep.room.storage : creep.room.terminal;
-        if(creep.room.name == 'E11S47' || creep.room.name == 'E19S49' ) {
-            target =  creep.room.storage;
+        
+        if (creep.room.name == 'E11S47' || creep.room.name == 'E19S49') {
+            target = creep.room.storage;
         }
         if (creep.carry.energy > creep.carryCapacity - 50 && creep.pos.isNearTo(target)) {
-          //  creep.memory.repair = true;
+            //  creep.memory.repair = true;
         } else if (creep.carry.energy < creep.stats('work')) {
             if (creep.pos.isNearTo(target)) {
-            	creep.say('t:'+target.structureType);
+                creep.say('t:' + target.structureType);
                 creep.withdraw(target, RESOURCE_ENERGY);
                 let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                 if (strucs !== null) creep.memory.constructionID = strucs.id;
@@ -115,33 +116,19 @@ if(creep.room.name === 'E1S11'){
             return;
         }
 
-      //  if (creep.memory.repair) {
-            /*            if(creep.room.memory.nukeIncoming) {
-                            if(doNukeRamparts(creep)) {
-                                return;
-                            }
-                        }*/
-            if (creep.memory.constructionID !== undefined) {
-                var strucs = Game.getObjectById(creep.memory.constructionID);
-                if (strucs !== null) {
-                    if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(strucs, { reusePath: 15 });
-                    }
-                } else {
-                    creep.room.memory.spawnTargets = undefined;
-                    creep.memory.constructionID = undefined;
+        if (creep.memory.constructionID !== undefined) {
+            var strucs = Game.getObjectById(creep.memory.constructionID);
+            if (strucs !== null) {
+                if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(strucs, { reusePath: 15 });
                 }
             } else {
-                super.constr.moveToRepairWall(creep);
+                creep.room.memory.spawnTargets = undefined;
+                creep.memory.constructionID = undefined;
             }
-
-       //     if (creep.carry.energy === 0) {
-     //           creep.memory.repair = false;
-        //    }
-  //      } else {
-
-
-//        }
+        } else {
+            super.constr.moveToRepairWall(creep);
+        }
 
     }
 

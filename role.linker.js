@@ -490,6 +490,16 @@ function boostLabWork(creep) {
                 creep.say('request');
                 _terminal_().requestMineral(creep.room.name, boost.mineralType);
             }
+//console.log(lab.mineralType, boost.mineralType, lab.mineralAmount);
+            if (lab.mineralType !== undefined && lab.mineralType === boost.mineralType && lab.mineralAmount > boost.mineralAmount) {
+                creep.say('reuce');
+                if (creep.pos.isNearTo(lab)) {
+                    creep.withdraw(lab, lab.mineralType,lab.mineralAmount - boost.mineralAmount);
+                } else {
+                    creep.moveTo(lab);
+                }
+                return;
+            }
 
             if (lab.mineralType !== undefined && lab.mineralType !== boost.mineralType && lab.mineralAmount > 0) {
                 creep.say('Empty');
@@ -807,10 +817,8 @@ class roleLinker extends roleParent {
             return;
         }
         if (creep.room.name == 'E19S49') {
-//            simple(creep);
-//            doDefault(creep, creep.carryTotal > 0);
 creep.say('Xzh');
-if(creep.carry[RESOURCE_ENERGY] > 0 && (creep.room.terminal.store[RESOURCE_ENERGY] === undefined || creep.room.terminal.store[RESOURCE_ENERGY] < 20000)){
+if(creep.carry[RESOURCE_ENERGY] > 0&&creep.room.terminal.total < 300000 && (creep.room.terminal.store[RESOURCE_ENERGY] === undefined || creep.room.terminal.store[RESOURCE_ENERGY] < 20000)){
     creep.moveToTransfer(creep.room.terminal,RESOURCE_ENERGY);
     return;
 }

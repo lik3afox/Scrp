@@ -1052,7 +1052,7 @@
                             return o.memory.party === flag.name;
                         });
                         if (squad !== undefined && squad.length > 0) {
-                            if (squad.length === 1) {
+                            if (squad.length === 1&& flag.room !== undefined) {
                                 let strucs = flag.room.find(FIND_STRUCTURES);
 
                                 var towers = _.filter(strucs, function(o) {
@@ -1098,24 +1098,18 @@
                         flag.memory.killBase = false; // Always false - we don't turn this on until. 
 
                         if (flag.room !== undefined) {
+                            
                             if (flag.memory.nextTargets.length > 0) {
+                                if(flag.memory.target === undefined) {
+                                    flag.memory.target = flag.memory.nextTargets.shift();
+                                }
                                 // Visualization of X's.
                                 let zzzzz = Game.getObjectById(flag.memory.target);
-                                if (zzzzz !== null) {
-                                    for (let za in flag.memory.nextTargets) {
-                                        let tar = Game.getObjectById(flag.memory.nextTargets[za]);
-                                        if (tar !== null) {
-                                            flag.room.visual.text('X' + za, tar.pos);
-
-                                        } else {
-                                            flag.memory.nextTargets.splice(za, 1);
-                                            continue;
-                                        }
-                                    }
+                                if (zzzzz === null) {
+                                    flag.memory.target = flag.memory.nextTargets.shift();
                                 }
-                            } else {}
-
-                            if (flag.memory.target === undefined) {
+                            } 
+                            if (flag.memory.target === undefined && flag.memory.nextTargets.length === 0) {
                                 // Setting up target
                                 let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                                 for (var ee in res) {
@@ -1140,7 +1134,7 @@
                             let strng = "";
 
                             if (zz === null) {
-                                flag.memory.target = flag.memory.nextTargets.shift();
+                                flag.memory.target = undefined;
                                 flag.memory.attackDirection = false;
                             } else if (!flag.pos.isEqualTo(zz)) {
                                 flag.setPosition(zz.pos);

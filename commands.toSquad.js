@@ -58,9 +58,9 @@ function squadMemory(squaded, bads, analysis) {
             var X10 = X * 10;
             var squadSpots = [
                 { pos: X, role: 'point', },
-                { pos: (X * 10) + (X), role: 'healer', },
-                { pos: f(X - 1), role: 'melee', },
-                { pos: f(X + 1), role: 'melee', },
+                { pos: (X * 10) + (X), role: 'healer', }, // Behind point
+                { pos: f(X - 1), role: 'melee', }, // Left of point
+                { pos: f(X + 1), role: 'melee', }, // right of point
                 { pos: (f(X - 1) * 10) + X, role: (f(X - 1) * 10) + X, },
                 { pos: (X10 + f(X + 1)), role: (X10 + (X + 1)), },
 
@@ -68,8 +68,24 @@ function squadMemory(squaded, bads, analysis) {
                 { pos: f(X + 1) * 10 + f(X + 1), role: f(X + 1) * 10 + (X + 1), },
                 { pos: f(X + 1) * 10 + f(X + 2), role: f(X + 1) * 10 + (X + 2), },
                 { pos: f(X - 2) * 10 + f(X - 1), role: f(X - 2) * 10 + (X - 1), },
-
             ];
+
+            if(squad[0].partyFlag.pos.x === 2 || squad[0].partyFlag.pos.x === 47 || squad[0].partyFlag.pos.y === 2 || squad[0].partyFlag.pos.y=== 47){
+                // This means that the flag is near the edge posistion - or an target that is near the endge. 
+                squadSpots = [
+                { pos: X, role: 'point', },
+                { pos: f(X - 1), role: 'melee', }, // Left of point
+                { pos: f(X + 1), role: 'healer', }, // right of point
+                { pos: (X * 10) + (X),  },// Behind point
+                { pos: (f(X - 1) * 10) + X, role: (f(X - 1) * 10) + X, },
+                { pos: (X10 + f(X + 1)), role: (X10 + (X + 1)), },
+
+                { pos: f(X - 1) * 10 + f(X - 1), role: f(X - 1) * 10 + (X - 1), },
+                { pos: f(X + 1) * 10 + f(X + 1), role: f(X + 1) * 10 + (X + 1), },
+                { pos: f(X + 1) * 10 + f(X + 2), role: f(X + 1) * 10 + (X + 2), },
+                { pos: f(X - 2) * 10 + f(X - 1), role: f(X - 2) * 10 + (X - 1), },
+                ];
+            }
 
             let ae = squadSpots.length;
             while (ae--) {

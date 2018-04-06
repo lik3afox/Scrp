@@ -12,13 +12,13 @@ function getRetreatFlag(creep) {
 function moveToRallyFlag(creep) {
     let moveToPos = getFormationPos(creep.partyFlag, creep.memory.formationPos);
     if (moveToPos !== undefined) {
-        if (creep.room.name == moveToPos.roomName) {
+        if (creep.room.name === creep.partyFlag.pos.roomName) {
             if (!creep.pos.isEqualTo(moveToPos)) {
-                creep.moveMe(moveToPos, { reusePath: 25 });
+                creep.moveMe(moveToPos, { ignoreCreeps: true ,reusePath: 25 });
             }
         } else {
             if (!creep.pos.isEqualTo(moveToPos))
-                creep.moveMe(moveToPos, { reusePath: 50 });
+                creep.moveMe(moveToPos, { ignoreCreeps: true , reusePath: 50 });
         }
         return true;
     }
@@ -80,54 +80,6 @@ class MoveInteract {
 
     static moveToDefendFlag(creep, bades) {
         console.log('DEFEND FLAG HAS BEEN DISCONTINUED, FIX',creep.memory.role);
-    /*    var defendRooms = {
-            E16S45: ['E16S45', 'E15S45', 'E16S44'],
-
-        };
-
-        //      if (redFlags === undefined) {
-        redFlags = _.filter(Game.flags, function(f) {
-            return f.color == COLOR_RED;
-        });
-        //        }
-
-        let flagz = redFlags;
-        let targetFlag;
-
-        for (var e in flagz) {
-
-            var distance = Game.map.getRoomLinearDistance(flagz[e].pos.roomName, creep.room.name);
-            let maxDistance = 4;
-            targetFlag = flagz[e];
-
-            if (creep.memory.role == 'homeDefender') {
-                if (creep.room.name == 'E28S77' || creep.room.name == 'E35S73') {
-                    maxDistance = 2;
-                } else {
-                    maxDistance = 1; //  if(distance > 2) return false;
-                }
-                //break;
-            } else if (creep.memory.role == 'guard' || creep.memory.role == 'shooter') {
-                maxDistance = 1; //if(distance > 1) return false;
-
-                if (defendRooms[creep.room.name] !== undefined) {
-                    if (_.contains(defendRooms[creep.room.name], flagz[e].pos.roomName) || _.contains(defendRooms[creep.room.name], creep.memory.home)) {
-                        maxDistance = 1;
-                    } else {
-                        maxDistance = 0;
-                    }
-                }
-            }
-            if (distance <= maxDistance) {
-                let zz = new RoomPosition(flagz[e].pos.x, flagz[e].pos.y, flagz[e].pos.roomName);
-                let xx = creep.moveTo(zz, { reusePath: 40 });
-                creep.say(maxDistance + '/D!' + flagz[e].pos.roomName);
-                //        targetFlag;
-                return true;
-            }
-
-        }
-        return false; */
     }
 
     static runAway(creep) {
@@ -168,16 +120,6 @@ class MoveInteract {
             creep.memory.checkForBadScan = Math.ceil(Math.random() * 9) + 3;
 
             var bads = creep.room.find(FIND_HOSTILE_CREEPS);
-            /*            var player = _.filter(bads, function(o) {
-                            return o.owner.username != 'Invader' && o.owner.username != "Source Keeper" && !_.contains(FLAG.friends, o.owner.username);
-                        });
-
-                        if (player.length > 0) {
-                            var flagName = player[0].owner.username + player[0].pos.roomName;
-                            if (Game.flags[flagName] === undefined) {
-                                creep.room.createFlag(player[0].pos.x, player[0].pos.y, flagName, FLAG.DEFEND, COLOR_WHITE);
-                            }
-                        } */
 
             bads = _.filter(bads, function(o) {
                 return o.owner.username == 'Invader';
@@ -199,7 +141,7 @@ class MoveInteract {
                 let z = bads[0].room.name;
 
                 if (flagz.length === 0) {
-                    creep.room.createFlag(bads[0].pos.x, bads[0].pos.y, type + z + " " + bads.length + bads[0].id[22], FLAG.DEFEND);
+                    creep.room.createFlag(bads[0].pos.x, bads[0].pos.y, type + z + " " + bads.length + creep.room.name, FLAG.DEFEND);
                 }
             }
 

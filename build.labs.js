@@ -822,6 +822,13 @@ class buildLab {
         if (Game.rooms[roomName].memory.boost !== undefined && Game.rooms[roomName].memory.boost.mineralType === 'none') {
             return;
         } else {
+            if(Game.rooms[roomName].memory.boost === undefined){
+                Game.rooms[roomName].memory.boost = {
+                    mineralAmount:null,
+                    mineralType:null,
+                    timed:0,
+                };
+            }
             if (Game.rooms[roomName].memory.boost.mineralAmount === 0 || Game.rooms[roomName].memory.boost.timed === 0) {
                 Game.rooms[roomName].memory.boost.mineralType = 'none';
                 Game.rooms[roomName].memory.boost.mineralAmount = 0;
@@ -837,7 +844,7 @@ class buildLab {
             return _.contains(o.memory.boostNeeded, lab.mineralType) && o.pos.isNearTo(lab);
         });
         //        console.log(roomLink(roomName), 'boost check', good.length, Game.rooms[roomName].memory.boost.mineralAmount, lab.mineralAmount);
-        if (good.length > 0 && Game.rooms[roomName].memory.boost.mineralAmount === lab.mineralAmount) {
+        if (good.length > 0 && Game.rooms[roomName].memory.boost.mineralAmount >= lab.mineralAmount) {
 //            console.log('doing boost', good.length, roomLink(roomName));
             let result = lab.boostCreep(good[0]);
             if (result === OK) {

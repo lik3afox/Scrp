@@ -368,16 +368,15 @@ class partyInteract {
                 }
             }
             flag.memory.totalNumber = totalParty;
-            if (flag.memory.squadLogic) {
+            if (flag.memory.squadLogic && totalParty > 0) {
                 if (rallied !== undefined && rallied.room !== undefined) {
-
                     let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 5);
                     crps = _.filter(crps, function(o) {
-                        return o.memory.party == flag.name;
+                        return o.memory.party == flag.name&&o.memory.boostNeeded.length === 0;
                     });
-                    rallied.room.visual.text("💥" + flag.memory.totalNumber, totalParty, crps.length, rallied.room, 'total# check', rallied.pos.x - 5.5, rallied.pos.y - 5.5, { color: 'green', font: 0.8 });
-                    rallied.room.visual.rect(rallied.pos.x - 5.5, rallied.pos.y - 5.5,
-                        11, 11, { fill: 'transparent', stroke: '#f00' });
+    //                rallied.room.visual.text("💥" + flag.memory.totalNumber, totalParty, crps.length, rallied.room, 'total# check', rallied.pos.x - 5.5, rallied.pos.y - 5.5, { color: 'green', font: 0.8 });
+  //                  rallied.room.visual.rect(rallied.pos.x - 5.5, rallied.pos.y - 5.5,
+//                        11, 11, { fill: 'transparent', stroke: '#f00' });
 
                     if (flag.memory.totalNumber !== 0 && crps.length >= flag.memory.totalNumber || crps.length === flag.memory.totalNumber) {
                         var total = 0;
@@ -587,6 +586,9 @@ class partyInteract {
                         toSpawn.addToExpandStack(temp);
                         totalParty[i]++;
                     } else {
+                        if(currentParty[e][_name]  === 'healer'){
+                            console.log(temp.build.length);
+                        }
                         let toSpawn = require('commands.toSpawn');
                         toSpawn.addToWarStack(temp);
                         totalParty[i]++;

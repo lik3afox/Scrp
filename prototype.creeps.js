@@ -98,7 +98,7 @@ module.exports = function() {
     Object.defineProperty(Creep.prototype, 'isNPC', {
         configurable: true,
         get: function() {
-            return this.owner.username !== 'Invader' || this.owner.username !== 'Source Keeper';
+            return this.owner.username === 'Invader' || this.owner.username === 'Source Keeper';
         }
     });
 
@@ -404,10 +404,7 @@ module.exports = function() {
     };
 
     Creep.prototype.dropEverything = function() {
-        for (var e in this.carry) {
-            this.drop(e);
-            return;
-        }
+            return this.drop(this.carrying);
     };
     Creep.prototype.smartDismantle = function() {
         //     this.say('sDismale');
@@ -442,9 +439,13 @@ module.exports = function() {
         });
         if (hurtz.length > 0) {
             var clost = this.pos.findClosestByRange(hurtz);
-            this.rangedAttack(clost);
+            if(this.pos.isNearTo(clost)){
+                    this.rangedMassAttack();
+            } else {
+                    this.rangedAttack(clost);
+            }
             this.say('🔫' + hurtz.length, true);
-            return;
+            return true;
         }
 
         var bads = this.pos.findInRange(FIND_HOSTILE_STRUCTURES, 3);
@@ -471,7 +472,10 @@ module.exports = function() {
                 return true;
             }
         }
-
+        if(this.room.controller !== undefined && !this.room.controller.my && this.room.name === this.partyFlag.pos.roomName) {
+            this.rangedMassAttack();
+        }
+        return false;
     };
     Creep.prototype.smartAttack = function() {
         // No moving. 
@@ -482,7 +486,7 @@ module.exports = function() {
 
         var bads = this.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
         bads = _.filter(bads, function(o) {
-            return !_.contains(fox.friends, o.owner.username); // && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+            return !_.contains(fox.friends, o.owner.username) && !o.pos.lookForStructure(STRUCTURE_RAMPART) ; // && !o.pos.lookForStructure(STRUCTURE_RAMPART);
         });
         //      this.say(bads.length + "x");
         if (bads.length > 0) {
@@ -498,9 +502,17 @@ module.exports = function() {
             }
         }
 
-        bads = this.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-        bads = _.filter(bads, function(o) {
-            return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL;
+       var badStr = this.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+        bads = _.filter(badStr, function(o) {
+            return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+        });
+        if (bads.length > 0) {
+            this.attack(bads[0]);
+            return true;
+        }
+
+        bads = _.filter(badStr, function(o) {
+            return !_.contains(fox.friends, o.owner.username);
         });
         if (bads.length > 0) {
             this.attack(bads[0]);
@@ -1305,7 +1317,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
     };
 
-    var getExitPos = function(creep) {
+    function getExitPos(creep) {
 
         if (creep.memory._move && creep.memory._move.path.length === 0) {
             creep.memory._move = undefined;
@@ -1330,7 +1342,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         }
 
         return goToPos;
-    };
+    }
 
 
     // Robust path finding, for traveling large distances
