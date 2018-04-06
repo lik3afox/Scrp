@@ -1122,7 +1122,7 @@ destination Current Pos Path
         var direction;
 
         if (creep.memory.cachePath !== undefined) {
-            direction = creep.memory.cachePath[5];
+            direction = creep.memory.cachePath[4];
         } else if (creep.memory._move.path !== undefined) {
             direction = creep.memory._move.path[5];
         }
@@ -1149,6 +1149,8 @@ destination Current Pos Path
         creep.room.visual.circle(tpos, { stroke: 'red', radius: 0.5 });
 
         return;
+
+        
 
     }
 
@@ -1601,7 +1603,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             console.log( this.memory._move.time,'current',Game.time);
 //            this.memory._move = undefined;
         }
-        if (options.ignoreCreeps && (this.memory.stuckCount > 0 || this.room.name == this.memory.home)) {
+        if (options.ignoreCreeps && (this.memory.stuckCount > 0 || this.room.name === this.memory.home)) {
 
             swapTarget(this);
 

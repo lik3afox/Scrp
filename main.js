@@ -813,16 +813,27 @@ function doInstructions(instructions) {
         let current = instructions[i];
         let shard = current.shard;
 
-
         let roomCreate;
         let flagTarget;
+
+        // Here we're checking to see if there's any other instruction that is simliar that can cancel each other out.
+        var similiar = _.filter(instructions, function(o){
+            return o.mineralType === current.mineralType && o !== current ;
+        });
+        if(similiar.length)
+        console.log(similiar.length,current.mineralType,"Thesad");
 
         if (Game.shard.name === 'shard1' && current.type === 'request') {
             // Here shard1 fulfills any request that is made.
             //            console.log('shard1 wants to fulfill REQUEST for', current.shard);
             //            current.mineralType,current.mineralAmount,
             if (current.shard === 'shard0') {
-                roomCreate = 'E23S38';
+                if( Math.floor( Math.random()*2 ) === 0){
+                    roomCreate = 'E23S38';
+                } else {
+                    roomCreate = 'E23S42';
+                }
+
                 flagTarget = 'portal3';
             }
             if (current.shard === 'shard2') {
@@ -830,7 +841,8 @@ function doInstructions(instructions) {
                 flagTarget = 'portal';
             }
             let alphaSpawn = Game.rooms[roomCreate].alphaSpawn;
-           // console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
+            console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
+        
             if (alphaSpawn.memory.expandCreate.length === 0) {
 
                 let temp = {
@@ -875,6 +887,7 @@ function doInstructions(instructions) {
                 console.log(current.mineralAmount,current.mineralType,' and Spliced from instructions',Game.rooms[roomCreate].terminal.store[current.mineralType],roomCreate);
                 instructions.splice(i, 1);
             }
+            continue;
         }
         if (shard === Game.shard.name) {
 
@@ -882,7 +895,14 @@ function doInstructions(instructions) {
             // Here the shards make the creeps to send.
             if (current.type === 'send') {
                 var alphaSpawn = Game.rooms[current.shardRoom].alphaSpawn;
-              //  console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
+
+                console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
+if(Game.rooms[roomCreate] !== undefined && Game.rooms[roomCreate].store[current.mineralType] <= 5000){
+    console.log("bad slicing ");
+     instructions.splice(i, 1);
+    continue;
+}
+
                 if (alphaSpawn.memory.expandCreate.length === 0) {
                     //                    var temp = createSendCreep(current);
                     var partyFlag;
@@ -1172,7 +1192,7 @@ function analyzeMarkets(shardObject) {
     //    shardObject.instructions= [];
     //[Game.shard.name]
     //if (Game.shard.name === 'shard1') return;
-    if (Game.time % 1000 !== 0) return;
+    if (Game.time % 1000 > 41 ) return;
     var minerals = [
         "H", "O", "U", "L", "K", "Z", "X", "G",
         "OH", "ZK", "UL",
@@ -1408,7 +1428,9 @@ function analyzeShards(shardObject) {
 
         }
         for (let i in shardObject.shard0.sending) {
-            //            console.log('shard0 sending out',shardObject.shard0.sending[i].mineralType,":",shardObject.shard0.sending[i].mineralAmount,shardObject.shard0.shardRoom);
+//                        console.log('shard0 sending out',shardObject.shard0.sending[i].mineralType,":",shardObject.shard0.sending[i].mineralAmount,shardObject.shard0.shardRoom);
+
+
             let request = {
                 type: 'send',
                 shard: 'shard0',
@@ -1468,6 +1490,7 @@ function analyzeShards(shardObject) {
                 mineralAmount: shardObject.shard2.sending[i].mineralAmount,
                 mineralType: shardObject.shard2.sending[i].mineralType,
             };
+
             let doRequest = true;
             for (let e in shardObject.instructions) {
                 if (shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type) {
@@ -1671,8 +1694,8 @@ module.exports.loop = blackMagic(function() {
                     storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
                     terminalEnergy: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.store[RESOURCE_ENERGY],
                     terminalTotal: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.total,
-                    parts: spawn.memory.totalParts,
-                    creepNumber: spawn.memory.totalCreep,
+                    parts: spawn._totalParts,
+                    creepNumber: spawn._totalCreep,
                     energy: spawn.room.energyAvailable,
                     maxEnergy: spawn.room.energyCapacityAvailable,
                     controllerLevel: spawn.room.controller.level,

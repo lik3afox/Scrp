@@ -337,11 +337,14 @@ class SpawnInteract {
             if (STACK[0].build.length === 0 && ee === ERR_INVALID_ARGS) {
                 STACK.shift();
             }
-            if (ee === ERR_NOT_ENOUGH_ENERGY) {
+            if (ee === ERR_NOT_ENOUGH_ENERGY && getCost(STACK[0].build) > spawn.room.energyCapacityAvailable) {
+
                 do {
                     STACK[0].build.shift();
                 } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
+
                 spawn.canCreateCreep(STACK[0].build);
+
             } else if (ee === ERR_INVALID_ARGS) {
                 do {
                     STACK[0].build.shift();

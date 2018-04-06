@@ -145,27 +145,6 @@ class muleClass extends roleParent {
     static run(creep) {
         // First if it's home it will go to storage.
 
-        if (Game.flags.portal5 !== undefined && creep.room.name == Game.flags.portal5.pos.roomName) {
-            creep.memory.level = 9;
-            creep.say('P');
-            creep.moveMe(Game.flags.portal5);
-            return;
-        }
-        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && !creep.memory.didPortal && creep.memory.party === 'portal') {
-            creep.say('P');
-            creep.moveMe(Game.flags.portal);
-            return;
-        }
-        if (Game.flags.portal !== undefined && creep.room.name == Game.flags.portal.pos.roomName && !creep.memory.didPortal && creep.memory.party === 'Flag1') {
-            creep.say('P');
-            creep.moveMe(Game.flags.portal);
-            return;
-        }
-        if (Game.flags.portal2 !== undefined && creep.room.name == Game.flags.portal2.pos.roomName && !creep.memory.didPortal && creep.memory.party !== 'E38S72') {
-            creep.say('P2');
-            creep.moveMe(Game.flags.portal2);
-            return;
-        }
         if (!creep.memory.goHome) {
             if (creep.room.name == creep.memory.home && creep.memory.didPortal) {
                 creep.memory.goHome = true;
@@ -319,23 +298,8 @@ class muleClass extends roleParent {
             } else {
 
 
-                let stor = creep.room.storage;
-                if (stor === undefined || stor.store[RESOURCE_ENERGY] < 1000) {
-                    stor = creep.room.terminal;
-                }
-                if (Game.shard.name == 'shard0') {
-                    if (creep.room.storage !== undefined && creep.room.storage.total !== creep.room.storage.store[RESOURCE_ENERGY]) {
-                        stor = creep.room.storage;
-                    } else {
-                        stor = creep.room.terminal;
-                    }
-                }
-                if (Game.shard.name == 'shard2' || creep.room.name == 'E23S38' || creep.room.name == 'E38S72') {
-                    stor = creep.room.terminal;
-                }
-                if (creep.room.name == 'E22S48') {
-                    stor = creep.room.terminal;
-                }
+                let stor = creep.room.terminal;
+
 
                 if (creep.pos.isNearTo(stor)) {
                     if (creep.memory.pickup !== undefined) {
@@ -348,13 +312,11 @@ class muleClass extends roleParent {
                         let amnt = creep.memory.pickup.mineralAmount;
                         if (Game.shard.name === 'shard1' && (creep.room.terminal.store[min] === undefined || creep.room.terminal.store[min] < amnt)) {
                             _terminal_().requestMineral(creep.room.name, min);
+                        } 
+                        if(Game.shard.name !== 'shard1' && creep.room.terminal.store[min] !== undefined && creep.room.terminal.store[min] < 5000) {
+                            this.memory.death = true;
+                            return;
                         }
-                        //if(Memory.stats.totalMinerals[min] < 1000) creep.memory.death = true;
-                        /*                        if(Game.shard.name !== 'shard1' && creep.room.terminal.store[RESOURCE_POWER] >= 1250) {
-                                                    creep.withdraw(stor,RESOURCE_POWER , 1250);
-                                                    creep.memory.happy = true;
-                                                    return;
-                                                } */
                         if (creep.room.terminal.store[min] >= amnt && creep.withdraw(stor, min, amnt) === OK) {
                             creep.memory.happy = true;
                         } else {

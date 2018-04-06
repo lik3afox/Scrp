@@ -1288,7 +1288,7 @@ function doTrap(roomname) {
     }
     Game.rooms[roomname].memory.trapCount--;
     if (Game.rooms[roomname].memory.trapCount > 0) return;
-    if (Game.rooms[roomname].terminal.total > 250000) return;
+    if (Game.rooms[roomname].terminal.total > 290000) return;
     Game.rooms[roomname].memory.trapCount = 15;
     //if(roomname === 'E19S49' || roomname === 'E38S81' ) {
     //      Game.rooms[roomname].memory.marketBuyTrap = ['G','H','ZK','UL','energy','XGH2O','XGHO2','XZHO2','XZH2O','XLHO2','XLH2O','XKHO2','XKH2O','XUHO2','XUH2O','X','power'];

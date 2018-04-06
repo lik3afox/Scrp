@@ -282,7 +282,9 @@ class theSpawn {
         if (spawnCount !== undefined) {
             totalCreeps = spawnCount[spawn.id];
             spawn.memory.totalParts = (spawnCount[spawn.id].bodyCount * 3);
+            spawn._totalParts = (spawnCount[spawn.id].bodyCount * 3);
             spawn.memory.totalCreep = spawnCount[spawn.id].total;
+            spawn._totalCreep = (spawnCount[spawn.id].bodyCount * 3);
         }
 
         // Flag Module Check Add Module.
@@ -656,6 +658,7 @@ class theSpawn {
                 } else if (Game.creeps[name].memory.follower) {
                     // So here instead of doing what the creep normally does, it will want to see if it can find it's party 
                 } else if (!Game.creeps[name].spawning) {
+                    Game.creeps[name].memory.sleeping = undefined;
                     if (roleIndex[Game.creeps[name].memory.role] === undefined) {
                         var type = allModule.length;
                         while (type--) {
