@@ -1674,7 +1674,7 @@ class roleTerminal {
 
                         let terminal = Game.rooms[s0LabRooms[a]].terminal;
                         //                  if (!shareEnergy(terminal)) { // Moves energy around
-                        buyMineralsFromBUYORDER(terminal);
+//                        buyMineralsFromBUYORDER(terminal);
                         //                    }
                     }
                 }

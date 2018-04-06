@@ -314,7 +314,7 @@ class muleClass extends roleParent {
                             _terminal_().requestMineral(creep.room.name, min);
                         } 
                         if(Game.shard.name !== 'shard1' && creep.room.terminal.store[min] !== undefined && creep.room.terminal.store[min] < 5000) {
-                            this.memory.death = true;
+                            creep.memory.death = true;
                             return;
                         }
                         if (creep.room.terminal.store[min] >= amnt && creep.withdraw(stor, min, amnt) === OK) {

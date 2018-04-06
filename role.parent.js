@@ -252,7 +252,7 @@ class baseParent {
 
                     if (badz.length === 0) {
                         if (task.energyPickup) { //!creep.isHome
-                            //                            if (!constr.moveToPickUpEnergyIn(creep, 4)) {
+                                                        if (!constr.withdrawFromTombstone(creep, 4)) {
                             if (creep.moveMe(tmp2, task.options) == OK) {
                                 if (task.count) {
                                     if (creep.memory.distance === undefined) {
@@ -262,7 +262,7 @@ class baseParent {
                                     creep.memory.distance++;
                                 }
                             }
-                            //       }
+                                   }
                         } else {
                             if (creep.moveMe(tmp2, task.options) == OK) {
                                 if (task.count) {

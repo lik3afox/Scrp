@@ -1814,6 +1814,8 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                                 }
                             );
                         }
+
+                        
                         let aggro_radius = 4;
                         let aggro_cost = 50;
                         let n = 0;
