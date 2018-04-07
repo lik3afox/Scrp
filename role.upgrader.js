@@ -165,13 +165,14 @@ class roleUpgrader extends roleParent {
             if (creep.carry.energy < creep.stats('upgrading') + 1) {
 
  if (going === undefined){
+ 	creep.moveToWithdraw(creep.room.storage,RESOURCE_ENERGY);
 //                if (!structures.pickUpEnergy(creep)) {
       //              if (!containers.fromStorage(creep)) {
 //                        if (!containers.fromTerminal(creep)) {
-                            if (!containers.withdrawFromStorage(creep)) {
-                                if (!containers.moveToWithdraw(creep)) {
-                                }
-                            }
+//                            if (!containers.withdrawFromStorage(creep)) {
+  //                              if (!containers.moveToWithdraw(creep)) {
+    //                            }
+      //                      }
           //              }
           //          }
            //     }
