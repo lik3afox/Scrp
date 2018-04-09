@@ -255,6 +255,7 @@ class transportz extends roleParent {
                         creep.memory.empty = false;
                     }
                 } else {
+                    creep.memory.reportDeath = true;
                     if (_goal !== null && _goal.room.name === creep.room.name) {
                         creep.say('Get Energy');
                         getEnergy(creep);

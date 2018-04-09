@@ -422,9 +422,9 @@ function newTradeEnergy(terminal) {
                         grade = 'A+++++ Grade Deal:';
 
                     }
-                    //                    // console.log(maxLimit, grade, whatHappened, '*EstProfit:', (energyGained * 0.01).toFixed(2), 'From:', terminal.room, 'to', target.room, '@', target.price,
-                    //                      'Gain:', profit.toFixed(2),
-                    //                        "total=", energyUsed.toFixed(2), "Amount", trans.toFixed(2), '+Transfer:', cost, '@perEnergy', perEnergy.toFixed(3));
+                                         console.log(maxLimit, grade, whatHappened, '*EstProfit:', (energyGained * 0.01).toFixed(2), 'From:', terminal.room, 'to', target.room, '@', target.price,
+                                          'Gain:', profit.toFixed(2),
+                                            "total=", energyUsed.toFixed(2), "Amount", trans.toFixed(2), '+Transfer:', cost, '@perEnergy', perEnergy.toFixed(3));
                     return true;
                 } else {
                     //                  // console.log(maxLimit, grade, whatHappened, '*EstProfit:', (energyGained * 0.01).toFixed(2), 'From:', terminal.room, 'to', target.room, '@', target.price,
@@ -966,7 +966,7 @@ function buyMineralOrder() {
         'Z': 25000,
         'K': 25000,
         'O': 25000,
-        'H': 25000,
+        'H': 25000, 
         'X': 25000
     };
     for (var e in minMinerals) {
@@ -1212,7 +1212,7 @@ function reduceTerminal(terminal) {
     var min;
     var most = 0;
     for (var e in terminal.store) {
-        if (terminal.store[e] > most) {
+        if (terminal.store[e] > most && e !== RESOURCE_ENERGY) {
             most = terminal.store[e];
             min = e;
         }
@@ -1545,8 +1545,8 @@ class roleTerminal {
             let terminal = Game.rooms[roomName].terminal;
 
             if (terminal !== undefined && terminal.cooldown === 0 && roomName !== 'E14S38') {
-                if (!upgradeGHTransfer)
-                    upgradeGHTransfer = upgradeGH(terminal);
+  //              if (!upgradeGHTransfer)
+//                    upgradeGHTransfer = upgradeGH(terminal);
 
                 var energy = terminal.store[RESOURCE_ENERGY];
                 var total = terminal.total;
@@ -1695,6 +1695,14 @@ class roleTerminal {
                 return;
             case 'shard2':
                 doTrap('E19S49');
+                if (Game.rooms.E19S49.terminal.store[RESOURCE_ENERGY] > 21000 && Game.rooms.E19S49.storage.store[RESOURCE_ENERGY]>900000){
+                    if(Game.rooms.E22S49.terminal.store[RESOURCE_ENERGY] === undefined || Game.rooms.E22S49.terminal.store[RESOURCE_ENERGY] < 5000){
+                        Game.rooms.E19S49.terminal.send('energy', 3000, 'E22S49', 'trade');
+                    } else {
+                    newTradeEnergy(Game.rooms.E19S49.terminal);
+                    }
+                }
+
                 /*var room = Game.rooms.E19S49;
 
                 var terminal = room.terminal;
@@ -1705,7 +1713,6 @@ class roleTerminal {
                             if (zz.length > 0) {
                                 zz.sort((a, b) => a.price - b.price);
                                 if (zz[zz.length - 1].price > 0.21) {
-
                                     var deal = Game.market.deal(zz[zz.length - 1].id, 1000, 'E19S49');
                                     //                                // console.log('did deal in shard2', deal, zz[zz.length - 1].price, '4', eee);
                                     if (deal == OK) {
@@ -1716,8 +1723,6 @@ class roleTerminal {
                         }
                     }
                 }
-                if (Game.rooms.E19S49.terminal.store[RESOURCE_ENERGY] > 21000)
-                    newTradeEnergy(Game.rooms.E19S49.terminal);
                 s1LabRooms = ['E19S49'];
                 Memory.stats.totalMinerals = countTerminals(); */
                 return;

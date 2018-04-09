@@ -1047,11 +1047,12 @@ function getMarketPrices() {
         }
         if ((Game.rooms[room].terminal.store[min] !== undefined)) {
             rtn[min] = {
-                //              buy: _.max(Game.market.getAllOrders( order => order.resourceType === min && order.type === ORDER_BUY && order.remaingAmount >= 1250 ), o => o.price),
-                //                sell: _.min(Game.market.getAllOrders( order => order.resourceType === min && order.type === ORDER_SELL && order.remaingAmount >= 1250 ), o => o.price),
-                buy: _.max(Game.market.getAllOrders({ type: ORDER_BUY, resourceType: min }), o => o.price),
-
-                sell: _.min(Game.market.getAllOrders({ type: ORDER_SELL, resourceType: min }), o => o.price),
+                              buy: _.max(Game.market.getAllOrders( order => order.resourceType === min && order.type === ORDER_BUY && order.remaingAmount >= 1250 ), o => o.price),
+                                sell: _.min(Game.market.getAllOrders( order => order.resourceType === min && order.type === ORDER_SELL && order.remaingAmount >= 1250 ), o => o.price),
+//                buy: _.max(Game.market.getAllOrders( o => o.type === ORDER_BUY && o.min === min && !Game.market.orders[o.id] ), o => o.price),
+//
+  //              sell: _.min(Game.market.getAllOrders(o => o.type === ORDER_SELL && o.min === min && !Game.market.orders[o.id] ), o => o.price),
+//
 
             };
         } else if (min === 'energy') {
@@ -1068,6 +1069,8 @@ function getMarketPrices() {
 
 function analyzeNeeds(shardObject) {
     if (Game.time % 33 !== 0) return;
+
+    
     console.log("analyzing needs");
     if (Game.shard.name !== 'shard1') return;
 
@@ -1096,13 +1099,13 @@ function analyzeNeeds(shardObject) {
                 lowestAmount = shardObject.shard0.marketData[min].sell;
             }
             if (shardObject.shard1.marketData[min]) {
-                if (lowestAmount === undefined || shardObject.shard1.marketData[min].sell.price < lowestAmount.price) {
+                if (lowestAmount === null ||lowestAmount === undefined ||  shardObject.shard1.marketData[min].sell.price < lowestAmount.price) {
                     lowestShard = 'shard1';
                     lowestAmount = shardObject.shard1.marketData[min].sell;
                 }
             }
             if (shardObject.shard2.marketData[min]) {
-                if (lowestAmount === undefined || shardObject.shard2.marketData[min].sell.price < lowestAmount.price) {
+                if (lowestAmount === null ||lowestAmount === undefined || shardObject.shard2.marketData[min].sell.price < lowestAmount.price) {
                     lowestShard = 'shard2';
                     lowestAmount = shardObject.shard2.marketData[min].sell;
                 }
@@ -1194,7 +1197,7 @@ function analyzeMarkets(shardObject) {
     //    shardObject.instructions= [];
     //[Game.shard.name]
     //if (Game.shard.name === 'shard1') return;
-    if (Game.time % 1000 > 41) return;
+//    if (Game.time % 100 > 21) return;
     var minerals = [
         "H", "O", "U", "L", "K", "Z", "X", "G",
         "OH", "ZK", "UL",
@@ -1384,7 +1387,7 @@ function analyzeMarkets(shardObject) {
     }
     if (bestDeal !== undefined) {
 
-        //        console.log(profit, 'for:', min, 'highest Buy order', lowestShard, '@', lowestAmount.price, 'lowest Sell order', highestShard, '@', highestAmount.price);
+        console.log( 'for:', min, 'highest Buy order', lowestShard, '@', lowestAmount.price, 'lowest Sell order', highestShard, '@', highestAmount.price);
         var doRequest = true;
         if (shardObject.instructions.length > 4) doRequest = false;
         if (doRequest) {
@@ -1416,7 +1419,7 @@ function analyzeShards(shardObject) {
     if (shardObject.shard0 !== undefined) {
         let room = Game.rooms[shardObject.shard0.shardRoom];
         for (let i in shardObject.shard0.request) {
-            //            console.log('shard0 requests for',shardObject.shard0.request[i].mineralType,":",shardObject.shard0.request[i].mineralAmount,shardObject.shard0.shardRoom);
+            console.log('shard0 requests for',shardObject.shard0.request[i].mineralType,":",shardObject.shard0.request[i].mineralAmount,shardObject.shard0.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard0.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1444,7 +1447,7 @@ function analyzeShards(shardObject) {
 
         }
         for (let i in shardObject.shard0.sending) {
-            //                        console.log('shard0 sending out',shardObject.shard0.sending[i].mineralType,":",shardObject.shard0.sending[i].mineralAmount,shardObject.shard0.shardRoom);
+                                    console.log('shard0 sending out',shardObject.shard0.sending[i].mineralType,":",shardObject.shard0.sending[i].mineralAmount,shardObject.shard0.shardRoom);
 
 
             let request = {
@@ -1471,7 +1474,7 @@ function analyzeShards(shardObject) {
     if (shardObject.shard2 !== undefined) {
         let room = Game.rooms[shardObject.shard2.shardRoom];
         for (let i in shardObject.shard2.request) {
-            //            console.log('shard2 requests for',shardObject.shard2.request[i].mineralType,":",shardObject.shard2.request[i].mineralAmount,shardObject.shard2.shardRoom);
+                        console.log('shard2 requests for',shardObject.shard2.request[i].mineralType,":",shardObject.shard2.request[i].mineralAmount,shardObject.shard2.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1498,7 +1501,7 @@ function analyzeShards(shardObject) {
 
         }
         for (let i in shardObject.shard2.sending) {
-            //            console.log('shard2 sending out',shardObject.shard2.sending[i].mineralType,":",shardObject.shard2.sending[i].mineralAmount,shardObject.shard2.shardRoom);
+            console.log('shard2 sending out',shardObject.shard2.sending[i].mineralType,":",shardObject.shard2.sending[i].mineralAmount,shardObject.shard2.shardRoom);
             let request = {
                 type: 'send',
                 shard: 'shard2',

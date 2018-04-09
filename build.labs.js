@@ -880,7 +880,7 @@ class buildLab {
                 mins.push(labs[e].resource);
             }
         }
-        if (Game.rooms[roomName].memory.boost.mineralType !== 'none') {
+        if (Game.rooms[roomName].memory.boost !== undefined && Game.rooms[roomName].memory.boost.mineralType !== 'none') {
             mins.push(Game.rooms[roomName].memory.boost.mineralType);
         }
         return _.uniq(mins);
