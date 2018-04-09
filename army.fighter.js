@@ -194,6 +194,7 @@ function powerAction(creep) {
     var power = require('commands.toPower');
 
     if (Game.flags[creep.memory.party] !== undefined) {
+
         if (creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
             if (creep.memory.powerbankID === undefined) {
                 let zz = creep.room.find(FIND_STRUCTURES);

@@ -309,8 +309,8 @@ module.exports = function() {
             avoidHostile: true, //Avoid rooms that have been blacklisted
             preferOwn: true, //Prefer to path through claimed/reserved rooms
             preferHW: true, //Prefer to path through Highways
-            preferRooms: [], //Prefer to path through a specific list of rooms
-            avoidRooms: [], //Avoid pathing through a specific list of rooms
+            preferRooms: Memory.empire_rooms, //Prefer to path through a specific list of rooms
+            avoidRooms: Memory.hostile_rooms, //Avoid pathing through a specific list of rooms
         });
         if (start_room === end_room) {
             return [];
@@ -322,7 +322,7 @@ module.exports = function() {
                     //NOTE: This is above opts.preferRooms --> so will overwrite any preferRooms
                     if (opts.avoidRooms.includes(roomName)) {
                         // Avoid pathing through specific rooms
-                        return 8.0;
+                        return 16.0;
                     }
                 }
 

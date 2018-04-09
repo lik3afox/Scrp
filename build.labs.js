@@ -425,12 +425,12 @@ function labDo(roomName, created, labz, laby) {
             lab3.room.memory.labsNeedWork = true;
         }
         if ((!labs[labz - 1].emptied && (lab2.mineralAmount < 150 || lab2.mineralAmount === null) && (lab2.room.terminal.store[labs[labz - 1].resource] > 1)) ||
-            (!labs[laby - 1].emptied && (lab3.mineralAmount < 150 || lab3.mineralAmount === null) && ( lab3.room.terminal.store[labs[laby - 1].resource] > 1))) {
+            (!labs[laby - 1].emptied && (lab3.mineralAmount < 150 || lab3.mineralAmount === null) && (lab3.room.terminal.store[labs[laby - 1].resource] > 1))) {
             console.log(lab3.room.name, 'tigger2');
             lab3.room.memory.labsNeedWork = true;
         }
         if (labs[labz - 1].resource !== 'none' &&
-            ((lab2.mineralType !== undefined && lab2.mineralType !== null) && labs[labz - 1].resource !== undefined && 
+            ((lab2.mineralType !== undefined && lab2.mineralType !== null) && labs[labz - 1].resource !== undefined &&
                 labs[labz - 1].resource !== lab2.mineralType)) {
             console.log(lab3.room.name, 'tigger3', lab2.mineralType, labs[labz - 1].resource, lab2.mineralType);
             lab3.room.memory.labsNeedWork = true;
@@ -465,29 +465,29 @@ function switchLabMode(roomName) {
         case "XGH2O":
             if (Memory.stats.totalMinerals.GH2O < 5000) {
                 room.memory.lab2Mode = 'GH2O';
-     //           console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //           console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             if (Memory.stats.totalMinerals.GH < 5000) {
                 room.memory.lab2Mode = 'GH';
-            //    console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //    console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             if (Memory.stats.totalMinerals.G < 5000) {
                 room.memory.lab2Mode = 'G';
-              //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
         case "GH2O":
             if (Memory.stats.totalMinerals.GH < 5000) {
                 room.memory.lab2Mode = 'GH';
-              //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             if (Memory.stats.totalMinerals.OH < 5000) {
                 room.memory.lab2Mode = 'OH';
-              //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
@@ -495,7 +495,7 @@ function switchLabMode(roomName) {
         case "XLHO2":
             if (Memory.stats.totalMinerals.LHO2 < 5000) {
                 room.memory.lab2Mode = 'LHO2';
-             //   console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //   console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
@@ -503,19 +503,19 @@ function switchLabMode(roomName) {
         case "XGHO2":
             if (Memory.stats.totalMinerals.GHO2 < 5000) {
                 room.memory.lab2Mode = 'GHO2';
-             //   console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //   console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
         case "LHO2":
             if (Memory.stats.totalMinerals.LO < 5000) {
                 room.memory.lab2Mode = 'LO';
-              //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             if (Memory.stats.totalMinerals.OH < 5000) {
                 room.memory.lab2Mode = 'OH';
-              //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
@@ -523,12 +523,12 @@ function switchLabMode(roomName) {
         case "ZHO2":
             if (Memory.stats.totalMinerals.ZO < 5000) {
                 room.memory.lab2Mode = 'ZO';
-              //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             if (Memory.stats.totalMinerals.OH < 5000) {
                 room.memory.lab2Mode = 'OH';
-              //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
@@ -536,24 +536,24 @@ function switchLabMode(roomName) {
         case "GHO2":
             if (Memory.stats.totalMinerals.GO < 5000) {
                 room.memory.lab2Mode = 'GO';
-               // console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                // console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             if (Memory.stats.totalMinerals.OH < 5000) {
                 room.memory.lab2Mode = 'OH';
-               // console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                // console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
         case "UH2O":
             if (Memory.stats.totalMinerals.UH < 5000) {
                 room.memory.lab2Mode = 'UH';
-               // console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                // console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             if (Memory.stats.totalMinerals.OH < 5000) {
                 room.memory.lab2Mode = 'OH';
-               // console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                // console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
@@ -562,26 +562,26 @@ function switchLabMode(roomName) {
         case "GH":
             if (Memory.stats.totalMinerals.G < 5000) {
                 room.memory.lab2Mode = 'G';
-              //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //  console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
         case "G":
             if (Memory.stats.totalMinerals.UL < 5000) {
                 room.memory.lab2Mode = 'UL';
-             //   console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //   console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             if (Memory.stats.totalMinerals.ZK < 5000) {
                 room.memory.lab2Mode = 'ZK';
-             //   console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
+                //   console.log(roomLink(roomName), 'doing an lab switch for', roomName, room.memory.lab2Mode);
                 return;
             }
             break;
 
     }
-    Game.rooms[roomName].memory.labShift-= 5;
- //   console.log(roomLink(roomName), 'FAILED an lab switch for', roomName, room.memory.lab2Mode,Game.rooms[roomName].memory.labShift);
+    Game.rooms[roomName].memory.labShift -= 5;
+    //   console.log(roomLink(roomName), 'FAILED an lab switch for', roomName, room.memory.lab2Mode,Game.rooms[roomName].memory.labShift);
 }
 
 function updateRoomLabsMemory(roomName) {
@@ -648,23 +648,23 @@ function updateRoomLabsMemory(roomName) {
             //            }
             Game.rooms[roomName].memory.labShift = shiftCount;
             //if (Game.rooms[roomName].memory.lab2Mode === 'none' || (Memory.stats.totalMinerals[Game.rooms[roomName].memory.lab2Mode] > maxMinerals[Game.rooms[roomName].memory.lab2Mode])) {
-                Game.rooms[roomName].memory.lab2Mode = 'none';
-                let zz = shiftingMats.length;
-                while (zz--) {
-//                    console.log(roomName, 'CHECKING shift', zz, shiftingMats[zz], Memory.stats.totalMinerals[shiftingMats[zz]], maxMinerals[shiftingMats[zz]]);
-                    if (Memory.stats.totalMinerals[shiftingMats[zz]] < maxMinerals[shiftingMats[zz]]) {
-                        Game.rooms[roomName].memory.lab2Mode = shiftingMats[zz];
-                        Game.rooms[roomName].memory.labsNeedWork = true;
-                        break;
-                    }
+            Game.rooms[roomName].memory.lab2Mode = 'none';
+            let zz = shiftingMats.length;
+            while (zz--) {
+                //                    console.log(roomName, 'CHECKING shift', zz, shiftingMats[zz], Memory.stats.totalMinerals[shiftingMats[zz]], maxMinerals[shiftingMats[zz]]);
+                if (Memory.stats.totalMinerals[shiftingMats[zz]] < maxMinerals[shiftingMats[zz]]) {
+                    Game.rooms[roomName].memory.lab2Mode = shiftingMats[zz];
+                    Game.rooms[roomName].memory.labsNeedWork = true;
+                    break;
                 }
-                if (Game.rooms[roomName].memory.lab2Mode === 'none') {
+            }
+            if (Game.rooms[roomName].memory.lab2Mode === 'none') {
 
-                    //                  Game.rooms[roomName].memory.lab2Mode = shiftingMats[0];
-                    //  _.min( )
-                    Game.rooms[roomName].memory.labShift = 50;
-                }
-//            }
+                //                  Game.rooms[roomName].memory.lab2Mode = shiftingMats[0];
+                //  _.min( )
+                Game.rooms[roomName].memory.labShift = 50;
+            }
+            //            }
         }
         Game.rooms[roomName].memory.primaryLab = undefined;
 
@@ -756,7 +756,7 @@ class buildLab {
     static roomLab(roomName) {
         if (Game.rooms[roomName] === undefined) return;
         if (Game.rooms[roomName].controller === undefined || Game.rooms[roomName].controller.level < 6) return;
-        if (Game.time%5  === 0) {
+        if (Game.time % 5 === 0) {
 
             if (_.contains(labRooms, roomName)) {
                 if (Game.rooms[roomName] !== undefined) {
@@ -802,11 +802,11 @@ class buildLab {
                         var result;
                         for (var a in oneMatMix) {
                             let form = oneMatMix[a];
-                            if(result === OK || result === undefined || !result){
-                                 result = labDo(roomName, form[0], form[1], form[2]);
+                            if (result === OK || result === undefined || !result) {
+                                result = labDo(roomName, form[0], form[1], form[2]);
                             } else {
-//                                console.log('Not doing labs');
-                                Game.rooms[roomName].memory.labShift -= 1; 
+                                //                                console.log('Not doing labs');
+                                Game.rooms[roomName].memory.labShift -= 1;
                             }
                         }
                     }
@@ -822,11 +822,11 @@ class buildLab {
         if (Game.rooms[roomName].memory.boost !== undefined && Game.rooms[roomName].memory.boost.mineralType === 'none') {
             return;
         } else {
-            if(Game.rooms[roomName].memory.boost === undefined){
+            if (Game.rooms[roomName].memory.boost === undefined) {
                 Game.rooms[roomName].memory.boost = {
-                    mineralAmount:null,
-                    mineralType:null,
-                    timed:0,
+                    mineralAmount: null,
+                    mineralType: null,
+                    timed: 0,
                 };
             }
             if (Game.rooms[roomName].memory.boost.mineralAmount === 0 || Game.rooms[roomName].memory.boost.timed === 0) {
@@ -845,7 +845,7 @@ class buildLab {
         });
         //        console.log(roomLink(roomName), 'boost check', good.length, Game.rooms[roomName].memory.boost.mineralAmount, lab.mineralAmount);
         if (good.length > 0 && Game.rooms[roomName].memory.boost.mineralAmount >= lab.mineralAmount) {
-//            console.log('doing boost', good.length, roomLink(roomName));
+            //            console.log('doing boost', good.length, roomLink(roomName));
             let result = lab.boostCreep(good[0]);
             if (result === OK) {
                 good[0].room.memory.boost.mineralType = 'none';
@@ -880,6 +880,12 @@ class buildLab {
                 mins.push(labs[e].resource);
             }
         }
+        if (Game.rooms[roomName].memory.boost === undefined) {
+            Game.rooms[roomName].memory.boost = {};
+            Game.rooms[roomName].memory.boost.mineralType = 'none';
+            Game.rooms[roomName].memory.boost.mineralAmount = 0;
+            Game.rooms[roomName].memory.boost.timed = 0;
+        }
         if (Game.rooms[roomName].memory.boost !== undefined && Game.rooms[roomName].memory.boost.mineralType !== 'none') {
             mins.push(Game.rooms[roomName].memory.boost.mineralType);
         }
@@ -892,7 +898,7 @@ class buildLab {
     static moveToTransfer(creep) {
         let What;
         if (creep.carryTotal !== 0) {
-            What = creep.carrying;//whatDoIHave(creep);
+            What = creep.carrying; //whatDoIHave(creep);
         } else {
             for (var a in creep.carry) {
                 if (creep.carry[a] > 0)
@@ -900,7 +906,7 @@ class buildLab {
             }
         }
         let Where = whereDoIPut(creep, What);
-        creep.say('m'+Where);
+        creep.say('m' + Where);
         if (Where === undefined) return false;
         if (Where.mineralType !== null) {
             if (Where.mineralType != What) return false;

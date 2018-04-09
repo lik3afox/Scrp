@@ -54,6 +54,7 @@ function attackCreep(creep, bads) {
     let enemy = creep.pos.findClosestByRange(bads);
     let distance = creep.pos.getRangeTo(enemy);
     creep.say('attk' + bads.length, ":", distance);
+    if(enemy === null) return;
     if (creep.hits < 400 && enemy !== undefined && enemy.owner.username != 'Source Keeper' && distance === 1) {
         creep.selfHeal();
         return;

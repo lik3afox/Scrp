@@ -419,7 +419,7 @@
                 ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
-                } else  {
+                } else {
                     if (flag.room.memory.nukeIncoming) {
                         flag.memory.module[ez][_number] = 3;
                     }
@@ -451,7 +451,7 @@
                             }
                             break;
                     }
-                } 
+                }
                 break;
 
             case 'first':
@@ -868,7 +868,7 @@
         if (test2.length > 0) {
             flag.memory.target = test2[0].id;
         } else {
-            filter = [ STRUCTURE_EXTRACTOR]; // Any towers
+            filter = [STRUCTURE_EXTRACTOR]; // Any towers
             test2 = _.filter(strucs, function(o) {
                 return !o.pos.lookForStructure(STRUCTURE_RAMPART) && _.contains(filter, o.structureType);
             });
@@ -952,18 +952,34 @@
 
                     return;
                 }
-                        if (flag.memory.killBase) {
-                            if (flag.memory.target === undefined) {
-                                findFlagTarget(flag);
-                            } else {
-                                let zz = Game.getObjectById(flag.memory.target);
-                                if (zz !== null && !flag.pos.isEqualTo(zz)) {
-                                    flag.setPosition(zz.pos);
-                                } else {
-                                    findFlagTarget(flag);
-                                }
-                            }
+                if (flag.memory.killBase) {
+
+                    if (flag.memory.target === undefined && flag.memory.nextTargets.length > 0) {
+                        flag.memory.target = flag.memory.nextTargets.shift();
+                    }
+                    // Visualization of X's.
+                    let zzzzz = Game.getObjectById(flag.memory.target);
+                    if (zzzzz === null) {
+                        if(flag.memory.nextTargets.length > 0){
+                            flag.memory.target = flag.memory.nextTargets.shift();
+                        } else {
+                            flag.memory.target  = undefined;
                         }
+
+                    }
+
+                    if (flag.memory.target === undefined) {
+                        findFlagTarget(flag);
+                    } else {
+                        let zz = Game.getObjectById(flag.memory.target);
+                        if (zz !== null && !flag.pos.isEqualTo(zz)) {
+                            flag.setPosition(zz.pos);
+                        } else {
+                            findFlagTarget(flag);
+                        }
+                    }
+
+                }
                 if (flag.pos.roomName === flag.name) {
                     if (flag.room !== undefined) {
 
@@ -1052,7 +1068,7 @@
                             return o.memory.party === flag.name;
                         });
                         if (squad !== undefined && squad.length > 0) {
-                            if (squad.length === 1&& flag.room !== undefined) {
+                            if (squad.length === 1 && flag.room !== undefined) {
                                 let strucs = flag.room.find(FIND_STRUCTURES);
 
                                 var towers = _.filter(strucs, function(o) {
@@ -1098,9 +1114,9 @@
                         flag.memory.killBase = false; // Always false - we don't turn this on until. 
 
                         if (flag.room !== undefined) {
-                            
+
                             if (flag.memory.nextTargets.length > 0) {
-                                if(flag.memory.target === undefined) {
+                                if (flag.memory.target === undefined) {
                                     flag.memory.target = flag.memory.nextTargets.shift();
                                 }
                                 // Visualization of X's.
@@ -1108,7 +1124,7 @@
                                 if (zzzzz === null) {
                                     flag.memory.target = flag.memory.nextTargets.shift();
                                 }
-                            } 
+                            }
                             if (flag.memory.target === undefined && flag.memory.nextTargets.length === 0) {
                                 // Setting up target
                                 let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
@@ -1190,7 +1206,7 @@
                         // This will mean power flag if it's green/red.
                         let rally = flag;
                         if (flag.secondaryColor == COLOR_RED) {
-                            if(flag.room === undefined){
+                            if (flag.room === undefined) {
                                 flag.memory.rallyFlag = 'home';
                             }
                             var power = require('commands.toPower');
@@ -1221,7 +1237,7 @@
 
 
                         if (flag.name == 'bandit') {
-                            
+
                             flag.memory.rallyFlag = 'home';
                             /*                            if (flag.memory.timer === undefined) {
                                                             flag.memory.timer = 1200;

@@ -444,7 +444,8 @@ console.log('room has "max" walls!',spawn.room.name);
                                 break;
                             case 'controller':
 
-                                if (remoteInfo.controller !== undefined && source.energyCapacity === 3000) {
+                                if (remoteInfo.controller !== undefined && source.energyCapacity === 3000||source.energyCapacity === 1500  ) {
+
                                     var level;
                                     let controlLeft = source.room.controller;
                                     if (source.room.controller !== undefined && source.room.controller.reservation !== undefined) {

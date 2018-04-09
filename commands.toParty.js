@@ -190,7 +190,7 @@ function getCurrentParty(flag) {
         return flag.memory.party;
     }
     if (flag.name.substr(0, 5) == 'power') {
-        if (Game.shard.name === 'shard1') {
+        if (Game.shard.name === 'shard1' || Game.shard.name === 'shard2') {
             if (flag.memory.spawn) return allParty.smarterPowerParty;
         } else {
             if (flag.memory.spawn) return allParty.smallPowerParty;

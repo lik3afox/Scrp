@@ -62,7 +62,7 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
 //            if (!super.moveToSignControl(creep)) {
     //            if (!super.avoidArea(creep)) {
                //     movement.flagMovement(creep);
-               creep.moveMe(creep.partyFlag,{ignoreCreeps:true,visualizePathStyle: {
+               creep.tuskenTo(creep.partyFlag,creep.memory.home,{ignoreCreeps:true,visualizePathStyle: {
                         stroke: '#fa0',
                         lineStyle: 'dotted',
                         strokeWidth: 0.1,

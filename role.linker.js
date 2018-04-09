@@ -66,16 +66,6 @@ function toStorageOrTerminal(creep) {
         return false;
     }
     if (isItTier3(creep)) {
-        //        containers.moveToStorage(creep);
-        /*creep.say('3t');
-            var xStored = terminal.getStored();
-            for (var e in xStored) {
-                if(creep.room.storage.store[e] < xStored[e]){
-                    containers.moveToStorage(creep);
-                } else {
-                    containers.moveToTerminal(creep);
-                }
-            } */
 
     } else if (creep.room.terminal === undefined) {
         containers.moveToStorage(creep);
@@ -94,10 +84,22 @@ function toStorageOrTerminal(creep) {
     }
 }
 
-function getMineralForStorage(creep) {
+
+function manageStorageMinerals(creep) {
     if(Game.shard.name !== 'shard1') return;
-    var xStored = terminal.getStored();
     if (creep.carryTotal === creep.carryCapacity) return false;
+
+var storaged = ['XLHO2', 'XLH2O', 'XUH2O', 'XUHO2', 'XGHO2', 'XZHO2', 'XZH2O', 'XKHO2', 'XKH2O'];    
+for(var i in creep.room.storage.store) {
+    if(!_.contains(storaged,i) && creep.room.storage.store[i] > 0 && i !== RESOURCE_ENERGY){
+        creep.say('NotBelong');
+console.log(i,!_.contains(storaged,i) , creep.room.storage.store[i],creep.room.name);
+        creep.moveToWithdraw(creep.room.storage,i);
+        return;
+    }
+}
+
+    var xStored = terminal.getStored();
     for (var e in xStored) {
         if (creep.room.storage.store[e] === undefined && creep.room.terminal.store[e] !== undefined) {
             if (creep.room.terminal.store[e] > 0) {
@@ -143,7 +145,7 @@ function getMineralForStorage(creep) {
 
 function takeFromTerminalForStorage(creep) {
     if (creep.room.terminal === undefined || creep.room.storage === undefined) return false;
-    if (creep.room.controller.level === 8 && getMineralForStorage(creep)) {
+    if (creep.room.controller.level === 8 && manageStorageMinerals(creep)) {
         creep.say('M');
         return true;
     }

@@ -404,7 +404,7 @@ module.exports = function() {
     };
 
     Creep.prototype.dropEverything = function() {
-            return this.drop(this.carrying);
+        return this.drop(this.carrying);
     };
     Creep.prototype.smartDismantle = function() {
         //     this.say('sDismale');
@@ -429,6 +429,25 @@ module.exports = function() {
         }
     };
 
+    Creep.prototype.killRoads = function() {
+        var bads = this.pos.findInRange(FIND_STRUCTURES, 3);
+        bads = _.filter(bads, function(o) {
+            return o.structureType === STRUCTURE_ROAD ||o.structureType === STRUCTURE_CONTAINER ;
+        });
+        if (bads.length > 0) {
+            let az = this.pos.findClosestByRange(bads);
+            if (az.pos.isNearTo(this) && this.getActiveBodyparts(WORK) > 0) {
+                this.dismantle(az);
+            } else if (az.pos.isNearTo(this) &&this.getActiveBodyparts(ATTACK) > 0) {
+                this.attack(az);
+            } else if (this.getActiveBodyparts(RANGED_ATTACK) > 0) {
+                this.rangedAttack(az);
+            }
+            return true;
+        }
+        return false;
+    };
+
     Creep.prototype.smartRangedAttack = function() {
         // No moving. 
         this.say('SRanged');
@@ -439,10 +458,10 @@ module.exports = function() {
         });
         if (hurtz.length > 0) {
             var clost = this.pos.findClosestByRange(hurtz);
-            if(this.pos.isNearTo(clost)){
-                    this.rangedMassAttack();
+            if (this.pos.isNearTo(clost)) {
+                this.rangedMassAttack();
             } else {
-                    this.rangedAttack(clost);
+                this.rangedAttack(clost);
             }
             this.say('🔫' + hurtz.length, true);
             return true;
@@ -472,7 +491,7 @@ module.exports = function() {
                 return true;
             }
         }
-        if(this.room.controller !== undefined && !this.room.controller.my && this.room.name === this.partyFlag.pos.roomName) {
+        if (this.room.controller !== undefined && !this.room.controller.my && this.room.name === this.partyFlag.pos.roomName) {
             this.rangedMassAttack();
         }
         return false;
@@ -486,7 +505,7 @@ module.exports = function() {
 
         var bads = this.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
         bads = _.filter(bads, function(o) {
-            return !_.contains(fox.friends, o.owner.username) && !o.pos.lookForStructure(STRUCTURE_RAMPART) ; // && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+            return !_.contains(fox.friends, o.owner.username) && !o.pos.lookForStructure(STRUCTURE_RAMPART); // && !o.pos.lookForStructure(STRUCTURE_RAMPART);
         });
         //      this.say(bads.length + "x");
         if (bads.length > 0) {
@@ -502,7 +521,7 @@ module.exports = function() {
             }
         }
 
-       var badStr = this.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+        var badStr = this.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
         bads = _.filter(badStr, function(o) {
             return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && !o.pos.lookForStructure(STRUCTURE_RAMPART);
         });
@@ -1064,7 +1083,7 @@ module.exports = function() {
             }
         }
         if (exited !== undefined) {
-            this.moveTo(exited);
+            this.moveMe(exited);
         }
     };
 
@@ -1162,7 +1181,7 @@ destination Current Pos Path
 
         return;
 
-        
+
 
     }
 
@@ -1596,6 +1615,9 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         } else if (this.memory.leaderID !== undefined) {
             let led = Game.getObjectById(this.memory.leaderID);
             if (led !== null) {
+                if(this.room.name === led.room.name){
+                    options.maxRooms = 1;
+                }
                 if (this.pos.isNearTo(led)) {
                     return this.move(this.pos.getDirectionTo(led));
                 } else {
@@ -1611,9 +1633,9 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             if (this.room.name != this.memory.home)
                 options.ignoreCreeps = true;
         }
-        if (this.memory._move !== undefined && this.memory._move.time > Game.time ) {
-            console.log( this.memory._move.time,'current',Game.time);
-//            this.memory._move = undefined;
+        if (this.memory._move !== undefined && this.memory._move.time > Game.time) {
+            console.log(this.memory._move.time, 'current', Game.time);
+            //            this.memory._move = undefined;
         }
         if (options.ignoreCreeps && (this.memory.stuckCount > 0 || this.room.name === this.memory.home)) {
 
@@ -1827,7 +1849,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                             );
                         }
 
-                        
+
                         let aggro_radius = 4;
                         let aggro_cost = 50;
                         let n = 0;

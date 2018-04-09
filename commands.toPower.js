@@ -1,4 +1,4 @@
-const transportCall = 750000;
+var transportCall = 750000;
 
 function makeBody(carryNeeded) {
     let body = [];
@@ -268,6 +268,9 @@ class PowerInteract {
                         } */
         // So here when decay is at 1000 we will start creating the transports
         //                    theRoom.memory.transSent = undefined;
+        if(Game.shard.name !== 'shard1') {
+            transportCall = 300000;
+        }
         if (powerB.hits < transportCall && !theRoom.memory.transSent) {
 
             let carryAmount = 150;
@@ -332,7 +335,16 @@ class PowerInteract {
                     flagCol: COLOR_YELLOW,
                     flagCol2: COLOR_RED
                 };
-                let zz = room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+                var half = ['E23S50','E24S50','E25S50','E26S50','E27S50','E28S50','E29S50'];
+                let zz;
+
+                if (_.contains(half, powerBank.pos.roomName)) {
+                    if (powerBank.pos.y < 25) {
+                        zz = room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+                    }
+                } else {
+                    zz = room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+                }
                 //                console.log(zz, 'We MIGHT a flag we have it', mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
             }
             return true;
