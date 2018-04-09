@@ -814,7 +814,7 @@ class roleLinker extends roleParent {
         super.renew(creep);
 
         var goto;
-        if (creep.room.memory.boost !== undefined && creep.room.memory.boost.mineralType !== 'none' && creep.room.memory.boost.mineralAmount !== 0 && creep.room.memory.boostLabID !== undefined) {
+        if (creep.room.memory.boost !== undefined && creep.room.memory.boost.mineralType !== 'none' && creep.room.memory.boost.mineralAmount !== 0 && creep.room.memory.boostLabID !== undefined && creep.room.name !== 'E22S49') {
             boostLabWork(creep);
             return;
         }
