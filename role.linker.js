@@ -760,7 +760,10 @@ class roleLinker extends roleParent {
                             my[0].memory.role === 'first';
                         }
                 } */
-
+        if(creep.room.name == 'xE14S47' && creep.carryTotal === 0){
+            creep.moveToPickUp(FIND_DROPPED_RESOURCES);
+            return;
+        }
         if (creep.room.name == 'E29xxS48') {
             let term = creep.room.terminal;
             let stor = creep.room.storage;

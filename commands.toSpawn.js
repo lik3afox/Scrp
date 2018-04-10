@@ -319,7 +319,6 @@ class SpawnInteract {
 
     static createFromStack(spawn) {
         if (spawn.spawning) return;
-
         var STACK = getStack(spawn);
         if (spawn.memory.spawnDir === undefined) {
             spawn.memory.spawnDir = 1;

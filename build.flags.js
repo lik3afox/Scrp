@@ -949,9 +949,8 @@
                     if (flag.memory.nukeRooms === undefined) {
                         flag.memory.nukeRooms = [];
                     }
-
                     return;
-                }
+                }/*
                 if (flag.memory.killBase) {
 
                     if (flag.memory.target === undefined && flag.memory.nextTargets.length > 0) {
@@ -960,10 +959,10 @@
                     // Visualization of X's.
                     let zzzzz = Game.getObjectById(flag.memory.target);
                     if (zzzzz === null) {
-                        if(flag.memory.nextTargets.length > 0){
+                        if (flag.memory.nextTargets.length > 0) {
                             flag.memory.target = flag.memory.nextTargets.shift();
                         } else {
-                            flag.memory.target  = undefined;
+                            flag.memory.target = undefined;
                         }
 
                     }
@@ -979,7 +978,8 @@
                         }
                     }
 
-                }
+                } */
+                /*
                 if (flag.pos.roomName === flag.name) {
                     if (flag.room !== undefined) {
 
@@ -997,8 +997,9 @@
                         ];
 
                     }
-                }
+                } */
 
+                // Flag Delay Spawning Function.
                 if (flag.memory.delaySpawn !== undefined) {
                     if (flag.memory.delaySpawn > 0) {
                         flag.memory.delaySpawn--;
@@ -1017,11 +1018,14 @@
                         }
                     }
                 }
+                
+                // Make sure the flag is set this color.
                 if (flag.memory.setColor !== undefined && flag.memory.setColor.color !== flag.color) {
                     flag.setColor(flag.memory.setColor.color, flag.memory.setColor.secondaryColor);
                 } else {
                     flag.memory.setColor = undefined;
                 }
+
                 if (flag.name === 'recontrol') {
                     flag.memory.musterType = 'recontrol';
                     flag.memory.musterRoom = 'E14S37';
@@ -1046,15 +1050,30 @@
                     }
                 }
                 switch (flag.secondaryColor) {
-                    case COLOR_GREEN:
-                        // Setting up target
+                    case COLOR_BROWN:
                         if (flag.room !== undefined) {
+
                             let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
-                            for (let ee in res) {
-                                if (res[ee].structure !== undefined) {
-                                    flag.memory.target = res[ee].structure.id;
-                                    break;
+                            if (res.length > 0) {
+                                for (let ee in res) {
+                                    if (res[ee].structure !== undefined &&(res[ee].structureType !== STRUCTURE_TERMINAL || res[ee].structureType !== STRUCTURE_STORAGE)) {
+                                        flag.memory.target = res[ee].structure.id;
+                                        break;
+                                    }
                                 }
+                            } else {
+                                findFlagTarget(flag);
+                            }
+
+                            var tgt = Game.getObjectById(flag.memory.target);
+                            if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
+                                flag.setPosition(tgt.pos);
+                            } else if(tgt === null){
+                                flag.memory.target = undefined;
+                            }
+
+                            if (flag.memory.target === undefined || tgt === null) {
+                                findFlagTarget(flag);
                             }
                         }
                         // Lets add some targets to next
@@ -1184,7 +1203,15 @@
                         // squad color is orange, it occurs when a squad is at the rally(yellow) flag. 
 
                     case COLOR_ORANGE:
-
+                    let squade = _.filter(Game.creeps, function(o) {
+                            return o.memory.party === flag.name;
+                        });
+                        if (squade !== undefined && squade.length === 0) {
+                            flag.memory.setColor = {
+                                color: COLOR_YELLOW,
+                                secondaryColor: COLOR_YELLOW
+                            };
+                        }
 
                         break;
 

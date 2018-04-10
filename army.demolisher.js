@@ -225,17 +225,33 @@ class demolisherClass extends roleParent {
 
 
         if (creep.partyFlag.memory.target !== undefined) {
-            let fTar = Game.getObjectById(creep.partyFlag.memory.target);
-            if (fTar !== null) {
-                if (creep.pos.isNearTo(fTar)) {
-                    creep.dismantle(fTar);
-                }
+            /*            let fTar = Game.getObjectById(creep.partyFlag.memory.target);
+                        if (fTar !== null) {
+                            if (creep.pos.isNearTo(fTar)) {
+                                creep.dismantle(fTar);
+                            }
+                        }*/
+            creep.smartDismantle();
+            if (creep.room.name === creep.partyFlag.pos.roomName) {
+                creep.moveMe(creep.partyFlag, { ignoreCreeps: true });
+            } else {
+                movement.flagMovement(creep);
             }
-            movement.flagMovement(creep);
         } else if (!doAttack(creep)) {
             movement.flagMovement(creep);
         } else {
             movement.flagMovement(creep);
+        }
+
+        if (creep.room.name === creep.partyFlag.pos.roomName) {
+            if (creep.memory._move !== undefined && creep.memory._move.path !== undefined && creep.memory._move.path === "") {
+               var str = creep.room.find(FIND_STRUCTURES);
+                console.log(str.length,"trying");
+                if(str.length > 0){
+	               var tgt = creep.pos.findClosestByRange(str);
+                	creep.partyFlag.memory.target = tgt.id;
+                }
+            }
         }
         /*        var target = Game.getObjectById('588587458b65791f39f134c1');
                 if (target !== null)

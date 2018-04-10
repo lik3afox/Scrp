@@ -322,7 +322,7 @@ class baseParent {
     }
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1000) {
+        if (creep.ticksToLive < 1000 || creep.room.name == 'E22S49') {
             return false;
         }
         if (creep.memory.boostNeeded === undefined) {
@@ -467,6 +467,8 @@ class baseParent {
             creep.say('💀');
             let parent = Game.getObjectById(creep.memory.parent);
             if (parent !== null) {
+                creep.memory.leaderID = undefined;
+                creep.memory.followerID = undefined;
                 creep.moveMe(parent, {
                     reusePath: 50,
                     ignoreCreeps: true,

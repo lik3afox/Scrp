@@ -167,7 +167,7 @@ class muleClass extends roleParent {
         if (creep.memory.goHome === undefined) {
             creep.memory.goHome = false;
         }
-        if (creep.memory.level === 9) {
+        if (creep.memory.level === 9 || creep.memory.level === 13 ) {
             let isThere = false;
             if (Game.flags[creep.memory.party] !== undefined &&
                 Game.flags[creep.memory.party].room !== undefined &&
