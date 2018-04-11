@@ -226,7 +226,8 @@ function powerAction(creep) {
 
         } else {
             creep.countDistance();
-            let task = {};
+            creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:60,ignoreCreeps:true});
+  /*          let task = {};
             task.options = {
                 reusePath: 50
             };
@@ -235,7 +236,7 @@ function powerAction(creep) {
             task.room = true;
             task.count = true;
             creep.memory.task.push(task);
-
+*/
             return true;
         }
     } else {
@@ -347,6 +348,7 @@ class fighterClass extends roleParent {
 
     static run(creep) {
         creep.say('fight');
+         creep.memory.death = creep.partyFlag === undefined;
         if (super.spawnRecycle(creep)) {
             return;
         }
@@ -366,7 +368,7 @@ class fighterClass extends roleParent {
         if (creep.memory.party == 'bandit') {
             creep.say('bandit');
             banditAction(creep);
-            if (Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
+            
             return;
         }
 

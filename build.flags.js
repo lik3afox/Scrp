@@ -883,7 +883,7 @@
                     flag.memory.target = bads[0].id;
                 } else {
                     test2 = _.filter(strucs, function(o) {
-                        return o.structureType == STRUCTURE_SPAWN;
+                        return o.structureType == STRUCTURE_SPAWN || (o.structureType === STRUCTURE_RAMPART && (o.room.storage !== undefined && o.room.storage.pos.isEqualTo(o) || o.room.terminal !== undefined && o.room.terminal.pos.isEqualTo(o)));
                     });
                     if (test2.length > 0) {
                         flag.memory.target = test2[0].id;
@@ -906,8 +906,10 @@
                                 test2 = _.filter(strucs, function(o) {
                                     return !_.contains(filter, o.structureType);
                                 });
-                                if (test2.length > 0) {
+                                if (test2.length > 0 && test2[0].structureType !== STRUCTURE_CONTROLLER) {
                                     flag.memory.target = test2[0].id;
+                                } else {
+
                                 }
                             }
                         }
@@ -950,7 +952,32 @@
                         flag.memory.nukeRooms = [];
                     }
                     return;
-                }/*
+                }
+                if (flag.name === 'recontrol') {
+                    flag.memory.musterType = 'recontrol';
+                    flag.memory.musterRoom = 'E14S37';
+                }
+                if (flag.name === 'Flag27') {
+                    if (flag.room.storage.store[RESOURCE_ENERGY] < 375000) {
+                        flag.memory.musterType = 'hmule';
+                    } else {
+                        flag.memory.musterType = 'upgrademule';
+                    }
+
+                    if (flag.room.controller.level < 6 && flag.room.controller.level > 3 && flag.color !== COLOR_YELLOW) {
+                        flag.memory.setColor = {
+                            color: COLOR_YELLOW,
+                            secondaryColor: COLOR_YELLOW,
+                        };
+                    } else if (flag.room.controller.level > 5 && flag.color !== COLOR_WHITE) {
+                        flag.memory.setColor = {
+                            color: COLOR_WHITE,
+                            secondaryColor: COLOR_WHITE,
+                        };
+                    }
+                }
+
+                /*
                 if (flag.memory.killBase) {
 
                     if (flag.memory.target === undefined && flag.memory.nextTargets.length > 0) {
@@ -1018,7 +1045,7 @@
                         }
                     }
                 }
-                
+
                 // Make sure the flag is set this color.
                 if (flag.memory.setColor !== undefined && flag.memory.setColor.color !== flag.color) {
                     flag.setColor(flag.memory.setColor.color, flag.memory.setColor.secondaryColor);
@@ -1026,38 +1053,36 @@
                     flag.memory.setColor = undefined;
                 }
 
-                if (flag.name === 'recontrol') {
-                    flag.memory.musterType = 'recontrol';
-                    flag.memory.musterRoom = 'E14S37';
-                }
-                if (flag.name === 'Flag27') {
-                    if (flag.room.storage.store[RESOURCE_ENERGY] < 375000) {
-                        flag.memory.musterType = 'hmule';
-                    } else {
-                        flag.memory.musterType = 'upgrademule';
-                    }
-
-                    if (flag.room.controller.level < 6 && flag.room.controller.level > 3 && flag.color !== COLOR_YELLOW) {
-                        flag.memory.setColor = {
-                            color: COLOR_YELLOW,
-                            secondaryColor: COLOR_YELLOW,
-                        };
-                    } else if (flag.room.controller.level > 5 && flag.color !== COLOR_WHITE) {
-                        flag.memory.setColor = {
-                            color: COLOR_WHITE,
-                            secondaryColor: COLOR_WHITE,
-                        };
-                    }
-                }
                 switch (flag.secondaryColor) {
+
+                    case COLOR_PURPLE:
+                        rampartThings(flag);
+                        break;
+                    case COLOR_WHITE:
+//                        removeRA(flag);
+                        break;
+                    case COLOR_RED:
+                        if (flag.room === undefined) {
+                            flag.memory.rallyFlag = 'home';
+                        }
+                        var power = require('commands.toPower');
+                        if (Memory.showInfo > 1)
+                            powerTotal++;
+                        power.calcuate(flag);
+                        break;
+
                     case COLOR_BROWN:
                         if (flag.room !== undefined) {
 
                             let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                             if (res.length > 0) {
                                 for (let ee in res) {
-                                    if (res[ee].structure !== undefined &&(res[ee].structureType !== STRUCTURE_TERMINAL || res[ee].structureType !== STRUCTURE_STORAGE)) {
+                                    if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_TERMINAL && res[ee].structureType !== STRUCTURE_STORAGE&& res[ee].structureType !== STRUCTURE_CONTROLLER)) {
                                         flag.memory.target = res[ee].structure.id;
+                                        break;
+                                    }
+                                    if (res[ee].structure !== undefined && res[ee].structureType === STRUCTURE_TERMINAL === res[ee].structureType === STRUCTURE_STORAGE) {
+                                        findFlagTarget(flag);
                                         break;
                                     }
                                 }
@@ -1066,9 +1091,11 @@
                             }
 
                             var tgt = Game.getObjectById(flag.memory.target);
+
+
                             if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
                                 flag.setPosition(tgt.pos);
-                            } else if(tgt === null){
+                            } else if (tgt === null) {
                                 flag.memory.target = undefined;
                             }
 
@@ -1203,7 +1230,7 @@
                         // squad color is orange, it occurs when a squad is at the rally(yellow) flag. 
 
                     case COLOR_ORANGE:
-                    let squade = _.filter(Game.creeps, function(o) {
+                        let squade = _.filter(Game.creeps, function(o) {
                             return o.memory.party === flag.name;
                         });
                         if (squade !== undefined && squade.length === 0) {
@@ -1215,7 +1242,7 @@
 
                         break;
 
-                    case FLAG.GUARD:
+                    case COLOR_BLUE:
 
                         let guard = flag;
                         if (guard.memory.guardCreateCount === undefined) {
@@ -1229,32 +1256,13 @@
                         }
                         break;
 
-                    case FLAG.RALLY:
+                    case COLOR_YELLOW:
                         // This will mean power flag if it's green/red.
                         let rally = flag;
-                        if (flag.secondaryColor == COLOR_RED) {
-                            if (flag.room === undefined) {
-                                flag.memory.rallyFlag = 'home';
-                            }
-                            var power = require('commands.toPower');
-                            if (Memory.showInfo > 1)
-                                powerTotal++;
-                            power.calcuate(flag);
-                        }
-
-                        if (flag.secondaryColor == COLOR_PURPLE) {
-                            rampartThings(flag);
-                        }
-                        if (flag.secondaryColor == COLOR_WHITE) {
-                            removeRA(flag);
-                        }
-
-
-
-
-                        if (flag.memory.killBase === undefined) {
-                            flag.memory.killBase = false;
-                        }
+//if (flag.name.substr(0, 5) == 'power') {
+  //  flag.memory.power = true;
+//    flag.setColor(flag.color, COLOR_RED);
+//}
                         if (flag.memory.squadLogic === undefined) {
                             flag.memory.squadLogic = false;
                         }

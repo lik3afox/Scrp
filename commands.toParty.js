@@ -172,6 +172,7 @@ function getSpawnCreating(flag) {
         return flag.memory.musterRoom;
     }
     if (flag.name.substr(0, 5) == 'power' || flag.name == 'bandit') {
+        flag.memory.power = true;
         //        if (flag.memory.spawn) return allParty.smartPowerParty;
         flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
         return flag.memory.musterRoom;

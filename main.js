@@ -16,6 +16,25 @@ function returnClosestRoom(roomName) {
 }
 
 
+function testFlagFunction() {
+    //if(Game.flags.test === undefined) return;
+//    let testFlag = Game.flags.test;
+    var testPos = new RoomPosition(25,25,'E20S49');
+    var testPos2 = new RoomPosition(20,20,'E20S49');
+
+//if(Game.flags.test === undefined){
+console.log('create', Game.rooms.E19S49.createFlag(25, 25, 'test') );
+    let testFlag = Game.flags.test;
+//    console.log("remove", testFlag.remove() );
+// console.log("setPos",testFlag.setPosition(testPos),testFlag.pos);
+  //  console.log("setColor", testFlag.setColor(COLOR_YELLOW,COLOR_WHITE) );
+
+//}
+   
+}
+
+
+
 function scanForRemoteSources() {
     var observer = require('build.observer');
 
@@ -1681,7 +1700,9 @@ module.exports.loop = blackMagic(function() {
         require('prototype.room')
     ];
     doMemory();
-
+//if(Game.shard.name === 'shard2'){
+//    testFlagFunction();
+//}
     for (let i = 0, e = prototypes.length; i < e; i++) {
         prototypes[i]();
     }

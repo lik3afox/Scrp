@@ -83,7 +83,7 @@ function getHostiles(creep) {
     let bads = creep.room.find(FIND_HOSTILE_CREEPS);
 
     var players = _.filter(bads, function(o) {
-        return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper';
+        return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper' && !o.isAtEdge;
     });
     //&& creep.pos.inRangeTo(o, 10)
     var sk = _.filter(bads, function(o) {
@@ -129,21 +129,30 @@ function attackCreep(creep, bads) {
 
     if (enemy.getActiveBodyparts(RANGED_ATTACK) > 0 && enemy.getActiveBodyparts(ATTACK) === 0) { //
         creep.say('CHRG');
-        creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
+
+        if (creep.room.controller === undefined || creep.room.controller.owner === undefined || !_.contains(fox.enemies, creep.room.controller.owner.username)) {
+//            console.log(creep.room.controller.owner.username);
+            creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
+        }
     } else
     if (creep.hits < creep.hitsMax - 200 && enemy.getActiveBodyparts(MOVE) > 0 && distance < 3) {
         creep.moveToEdge();
     } else if (distance == 3 && (enemy.getActiveBodyparts(ATTACK) > 0)) {
 
-    } else if ((distance > 2 || enemy.getActiveBodyparts(RANGED_ATTACK) > 0)&& enemy.getActiveBodyparts(ATTACK) === 0) { 
-        creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
-        //        }
+    } else if ((distance > 2 || enemy.getActiveBodyparts(RANGED_ATTACK) > 0) && enemy.getActiveBodyparts(ATTACK) === 0) {
+        if (creep.room.controller === undefined || creep.room.controller.owner === undefined || !_.contains(fox.enemies, creep.room.controller.owner.username)) {
+
+            creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
+        }
     } else if (distance < 3 && (enemy.getActiveBodyparts(RANGED_ATTACK) > 0 || enemy.getActiveBodyparts(ATTACK) > 0)) {
         creep.moveToEdge();
-    } else if( enemy.getActiveBodyparts(ATTACK) === 0 ) {
-        creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
+    } else {
+        if (creep.room.controller === undefined || creep.room.controller.owner === undefined || !_.contains(fox.enemies, creep.room.controller.owner.username)) {
+            creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
+        }
+        creep.killRoads();
     }
-
+    //if( enemy.getActiveBodyparts(ATTACK) === 0 ) 
 }
 
 function moveCreep(creep) {
@@ -196,41 +205,32 @@ class roleGuard extends roleParent {
             }
             creep.memory.death = true;
         }
-        let bads = getHostiles(creep);
+  //          if(creep.room.name == 'E26S48')
+//console.log( creep.room.controller.reservation.username);
 
-        if (bads.length > 0 && bads[0].owner.username == 'Source Keeper') {
-            killSK(creep, bads);
-        } else if (bads.length > 0) {
+        let bads = getHostiles(creep);
+        if (creep.room.name == 'E24S49') {
+            var zed = Game.getObjectById('5aa27466b61d341266be77c1');
+            if (zed !== null)
+                creep.rangedAttack(zed);
+        }
+         if (bads.length > 0) {
 
             attackCreep(creep, bads);
 
+            creep.say('bds');
+
+        } else if (bads.length > 0 && bads[0].owner.username == 'Source Keeper') {
+            killSK(creep, bads);
         } else {
             if (creep.partyFlag !== undefined) {
-/*                if (creep.partyFlag.memory.killBase) {
-                    let zzzz = Game.getObjectById(creep.partyFlag.memory.target);
-                    if (zzzz !== null && (zzzz.structureType === STRUCTURE_CONTAINER || zzzz.structureType === STRUCTURE_ROAD)) {
-                        creep.rangedAttack(zzzz);
-                    } else {
-                        creep.rangedMassAttack();
-                    }
-                } else {*/
-                    let zzzz = Game.getObjectById(creep.partyFlag.memory.target);
-                    if (zzzz !== null&& (zzzz.structureType === STRUCTURE_CONTAINER || zzzz.structureType === STRUCTURE_ROAD)) {
-                        if (creep.pos.isNearTo(zzzz)) {
-                            creep.rangedMassAttack();
-
-                        } else {
-                            creep.rangedAttack(zzzz);
-                        }
-                    }
-//                }
+                creep.smartRangedAttack();
             }
-
-            if ((creep.room.name === creep.partyFlag.pos.roomName) || (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && _.contains(fox.enemies, creep.room.controller.owner.username))) {
+            moveCreep(creep);
+            if ((creep.room.name === creep.partyFlag.pos.roomName) || (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && _.contains(fox.enemies, creep.room.controller.owner.username)) || (creep.room.controller !== undefined && creep.room.controller.reservation !== undefined && _.contains(fox.enemies, creep.room.controller.reservation.username)) ) {
                 creep.killRoads();
                 creep.say('kr');
             }
-            moveCreep(creep);
             creep.memory.needed = undefined;
         }
 

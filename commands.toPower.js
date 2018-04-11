@@ -223,7 +223,6 @@ class PowerInteract {
 
         let powerB = Game.getObjectById(theRoom.memory.powerbankID);
 
-
         if (powerB === null) {
             theRoom.memory.powerbankID = undefined;
             flag.memory.spawn = false;
@@ -234,7 +233,7 @@ class PowerInteract {
             }
             if (zz.length === 0) {
                 flag.memory = undefined;
-                flag.remove();
+                 flag.remove();
             }
             return;
         }

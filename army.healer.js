@@ -170,24 +170,25 @@ function powerAction(creep) {
                 return true;
             }
             creep.moveMe(pBank);
-            creep.smartHeal();
-            /*
-                        if (creep.pos.inRangeTo(pBank, 6)) {
-                            creep.memory.notThere = true;
-                            if(creep.id == creep.memory.partner){
-                                creep.memory.partner = undefined;
-                            }
-                            if (creep.memory.partner !== undefined) {
-                                let zz = Game.getObjectById(creep.memory.partner);
-                                if (zz !== null) {
-                                    creep.heal(zz);
-                                    if(!creep.pos.isNearTo(zz))
-                                        creep.moveTo(zz);
-                                }
-                            } else {
-                                creep.healOther(7);
-                            }
-                        } */
+            if (creep.pos.inRangeTo(pBank, 6)) {
+                creep.memory.notThere = true;
+                if (creep.id == creep.memory.partner) {
+                    creep.memory.partner = undefined;
+                }
+                if (creep.memory.leaderID !== undefined) {
+                    let zz = Game.getObjectById(creep.memory.leaderID);
+                    if (zz !== null) {
+                        creep.heal(zz);
+                        if (!creep.pos.isNearTo(zz))
+                            creep.moveTo(zz);
+                    }
+                } else {
+                    creep.healOther(7);
+                }
+            } else {
+                creep.smartHeal();
+
+            }
         } else {
 
             if (creep.memory.partner !== undefined) {
@@ -303,6 +304,7 @@ class healerClass extends roleParent {
 
     static run(creep) {
         doMove = false;
+        creep.memory.death = creep.partyFlag === undefined;        
         if (super.spawnRecycle(creep)) {
             return;
         }
@@ -349,7 +351,7 @@ class healerClass extends roleParent {
             //            super.rebirth(creep);
             creep.say('bandit');
             banditAction(creep);
-            if (Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
+//            if (Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
             return;
         }
 

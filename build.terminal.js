@@ -1691,7 +1691,7 @@ class roleTerminal {
                 doDebt(); // Send energy to a target
                 sellMineralOrder();
                 //        buyMineralOrder();
-                Game.rooms.E27S45.terminal.send('L', 100, 'E37S46');
+//                Game.rooms.E27S45.terminal.send('L', 100, 'E37S46');
                 return;
             case 'shard2':
                 doTrap('E19S49');

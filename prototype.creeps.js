@@ -1443,7 +1443,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
                 if (this.room.memory.exitPoints[this.memory.inter_room_exitTarget] !== undefined) {
                     var newz = new RoomPosition(this.room.memory.exitPoints[this.memory.inter_room_exitTarget].x, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].y, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].roomName);
-                    let zz = this.moveTo(newz); // Never needs to be segmented.
+                    let zz = this.moveMe(newz); // Never needs to be segmented.
                     this.say('🚏' + zz);
                     return zz;
                 }
@@ -1467,8 +1467,9 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             // If it is not then it should do it's own moveTo(target);
             this.memory.inter_room_exitTarget = undefined;
             this.memory.inter_room_target = undefined;
-            this.say('NotPath');
-            return this.moveTo(target, move_opts);
+            move_opts.maxRooms = 2;
+            this.say('NotPath'+move_opts.maxRooms);
+            return this.moveMe(target, move_opts);
         } else if (this.memory.inter_room_exitTarget === undefined) {
             let index = this.memory.inter_room_path.indexOf(this.room.name);
             this.memory.inter_room_target = this.memory.inter_room_path[index + 1];
@@ -1605,8 +1606,15 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             if (fol !== null) {
                 if ((!this.pos.isNearTo(fol) && !this.isAtEdge) || fol.fatigue > 0) {
                     // If the leader isn't near his follower, he doesn't move. 
+                    if(this.memory.waitTimer === undefined) {
+                        this.memory.waitTimer = 5;
+                    }
+                    this.memory.waitTimer--;
+                    if(this.memory.waitTimer<0){
+                        this.memory.waitTimer = 5;
+                        return this.moveTo(fol,options);
+                    }
                     this.say('w4F');
-                    //this.moveTo(fol,options)
                     return ERR_NO_PATH;
                 }
             } else {
@@ -1617,6 +1625,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             if (led !== null) {
                 if(this.room.name === led.room.name){
                     options.maxRooms = 1;
+                    options.ignoreCreeps = true;
                 }
                 if (this.pos.isNearTo(led)) {
                     return this.move(this.pos.getDirectionTo(led));
