@@ -432,13 +432,13 @@ module.exports = function() {
     Creep.prototype.killRoads = function() {
         var bads = this.pos.findInRange(FIND_STRUCTURES, 3);
         bads = _.filter(bads, function(o) {
-            return o.structureType === STRUCTURE_ROAD ||o.structureType === STRUCTURE_CONTAINER ;
+            return o.structureType === STRUCTURE_ROAD || o.structureType === STRUCTURE_CONTAINER;
         });
         if (bads.length > 0) {
             let az = this.pos.findClosestByRange(bads);
             if (az.pos.isNearTo(this) && this.getActiveBodyparts(WORK) > 0) {
                 this.dismantle(az);
-            } else if (az.pos.isNearTo(this) &&this.getActiveBodyparts(ATTACK) > 0) {
+            } else if (az.pos.isNearTo(this) && this.getActiveBodyparts(ATTACK) > 0) {
                 this.attack(az);
             } else if (this.getActiveBodyparts(RANGED_ATTACK) > 0) {
                 this.rangedAttack(az);
@@ -491,6 +491,10 @@ module.exports = function() {
                 return true;
             }
         }
+/*        if ((this.room.name === this.partyFlag.pos.roomName) || (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.enemies, this.room.controller.owner.username)) || (this.room.controller !== undefined && this.room.controller.reservation !== undefined && _.contains(fox.enemies, this.room.controller.reservation.username))) {
+            this.killRoads();
+            this.say('kr');
+        } else */
         if (this.room.controller !== undefined && !this.room.controller.my && this.room.name === this.partyFlag.pos.roomName) {
             this.rangedMassAttack();
         }
@@ -1468,7 +1472,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             this.memory.inter_room_exitTarget = undefined;
             this.memory.inter_room_target = undefined;
             move_opts.maxRooms = 2;
-            this.say('NotPath'+move_opts.maxRooms);
+            this.say('NotPath' + move_opts.maxRooms);
             return this.moveMe(target, move_opts);
         } else if (this.memory.inter_room_exitTarget === undefined) {
             let index = this.memory.inter_room_path.indexOf(this.room.name);
@@ -1606,13 +1610,13 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             if (fol !== null) {
                 if ((!this.pos.isNearTo(fol) && !this.isAtEdge) || fol.fatigue > 0) {
                     // If the leader isn't near his follower, he doesn't move. 
-                    if(this.memory.waitTimer === undefined) {
+                    if (this.memory.waitTimer === undefined) {
                         this.memory.waitTimer = 5;
                     }
                     this.memory.waitTimer--;
-                    if(this.memory.waitTimer<0){
+                    if (this.memory.waitTimer < 0) {
                         this.memory.waitTimer = 5;
-                        return this.moveTo(fol,options);
+                        return this.moveTo(fol, options);
                     }
                     this.say('w4F');
                     return ERR_NO_PATH;
@@ -1623,7 +1627,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         } else if (this.memory.leaderID !== undefined) {
             let led = Game.getObjectById(this.memory.leaderID);
             if (led !== null) {
-                if(this.room.name === led.room.name){
+                if (this.room.name === led.room.name) {
                     options.maxRooms = 1;
                     options.ignoreCreeps = true;
                 }

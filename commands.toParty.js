@@ -374,7 +374,7 @@ class partyInteract {
                 if (rallied !== undefined && rallied.room !== undefined) {
                     let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 5);
                     crps = _.filter(crps, function(o) {
-                        return o.memory.party == flag.name && o.memory.boostNeeded.length === 0;
+                        return o.memory.party == flag.name && o.memory.boostNeeded !== undefined && o.memory.boostNeeded.length === 0;
                     });
                     //                rallied.room.visual.text("💥" + flag.memory.totalNumber, totalParty, crps.length, rallied.room, 'total# check', rallied.pos.x - 5.5, rallied.pos.y - 5.5, { color: 'green', font: 0.8 });
                     //                  rallied.room.visual.rect(rallied.pos.x - 5.5, rallied.pos.y - 5.5,

@@ -1115,6 +1115,7 @@
                         });
                         if (squad !== undefined && squad.length > 0) {
                             if (squad.length === 1 && flag.room !== undefined) {
+                                /*
                                 let strucs = flag.room.find(FIND_STRUCTURES);
 
                                 var towers = _.filter(strucs, function(o) {
@@ -1132,12 +1133,12 @@
                                         ['fighter', 2, 10]
                                     ];
                                 }
-                                if (spawns.length === 0 && bads.length === 0 && tower.length === 0) {
+                                if (spawns.length === 0 && bads.length === 0 && towers.length === 0) {
                                     flag.memory.party = [
                                         ['fighter', 2, 10],
 
                                     ];
-                                }
+                                } */
                                 // Kill all structures not on rampart.                                 
                                 // Here we can analyze the room for changes in how squad is setup. 
                                 // If no spawns.
@@ -1181,7 +1182,7 @@
                                     }
                                 }
                                 // Lets add some targets to next
-                                findFlagTarget(flag);
+                                if(flag.memory.target === undefined) findFlagTarget(flag);
                             }
                             /*
                              let bads = flag.room.find(FIND_HOSTILE_CREEPS);

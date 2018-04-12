@@ -94,7 +94,7 @@ module.exports = function() {
     };
 
     global.roleCircle = function(pos, role) {
-
+        if(pos === undefined) return false;
         if (Game.rooms[pos.roomName] === undefined) return false;
         var col;
 
@@ -184,7 +184,7 @@ module.exports = function() {
 
     global.getFormationPos = function(target, formationPos) {
         // So first we get the target.
-        if (target.pos === undefined || formationPos === undefined) {
+        if (target === undefined || target.pos === undefined || formationPos === undefined) {
             return;
         }
 

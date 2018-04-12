@@ -226,7 +226,8 @@ creep.rangedMassAttack();
 
 
 if(creep.hits > creep.hitsMax-300){
-movement.flagMovement(creep);
+//movement.flagMovement(creep);
+creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
 }        
         //          }
     }
