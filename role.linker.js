@@ -584,6 +584,7 @@ function simple(creep) {
     if (creep.memory.empty) {
         if (creep.pos.isNearTo(creep.room.storage)) {
             creep.transfer(creep.room.storage, creep.carrying);
+            return;
         }
         var zz = Game.getObjectById(creep.room.memory.mineralContainID);
         if (zz !== null && zz.total > 1000) {

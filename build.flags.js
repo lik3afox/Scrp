@@ -1040,7 +1040,7 @@
                         if (flag.memory.color !== COLOR_YELLOW) {
                             flag.memory.setColor = {
                                 color: COLOR_YELLOW,
-                                secondaryColor: COLOR_YELLOW,
+                                secondaryColor: COLOR_BROWN,
                             };
                         }
                     }

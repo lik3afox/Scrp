@@ -228,13 +228,13 @@ class roleGuard extends roleParent {
             killSK(creep, bads);
         } else {
             moveCreep(creep);
-             if (creep.partyFlag !== undefined && creep.partyFlag.target !== undefined) {
+             if (creep.partyFlag !== undefined ) {
                 creep.smartRangedAttack();
-            } 
+            } /*
             else if ((creep.room.name === creep.partyFlag.pos.roomName) || (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && _.contains(fox.enemies, creep.room.controller.owner.username)) || (creep.room.controller !== undefined && creep.room.controller.reservation !== undefined && _.contains(fox.enemies, creep.room.controller.reservation.username))) {
                 creep.killRoads();
                 creep.say('kr');
-            } 
+            }  */
 
             creep.memory.needed = undefined;
         }

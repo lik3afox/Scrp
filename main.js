@@ -1159,7 +1159,7 @@ function analyzeNeeds(shardObject) {
 
             if (doRequest) {
                 console.log('TOO LOWPush on to instructions,', minerals[e], lowestShard, request.mineralAmount, lowestAmount.price, "=", (request.mineralAmount * lowestAmount.price));
-                if (lowestAmount.price < 0.50) {
+                if (lowestAmount.price < 0.20) {
                     shardObject.instructions.push(request);
                 }
             }

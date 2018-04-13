@@ -395,7 +395,8 @@ class fighterClass extends roleParent {
             }
         }
 
-        movement.flagMovement(creep);
+//        movement.flagMovement(creep);
+creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
     }
 }
 

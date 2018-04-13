@@ -311,20 +311,24 @@ function squadMovement(creep) {
 
 function squadAction(creep) {
 var doHeal = true;
+
+    if (doHeal && creep.stats('heal') > 0 && creep.memory.role !== 'fighter') {
+        if(creep.smartHeal()) {
+            creep.rangedMassAttack();
+        }
+            return;
+    } else if (creep.stats('attack') > 0) {
+        creep.smartAttack();
+    }
     if (creep.stats('rangedAttack') === 10) {
         creep.rangedMassAttack();
     } else if (creep.stats('rangedAttack') > 0) {
         if( creep.smartRangedAttack() ){
-        	creep.smartCloseHeal();
+            doHeal = false;
+            creep.smartCloseHeal();
         }
-        doHeal = false;
     }
-
-    if (doHeal && creep.stats('heal') > 0 && creep.memory.role !== 'fighter') {
-        creep.smartHeal();
-    } else if (creep.stats('attack') > 0) {
-        creep.smartAttack();
-    }
+    
     if (creep.stats('dismantle') > 0) {
         creep.smartDismantle();
     }
