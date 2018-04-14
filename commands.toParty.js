@@ -7,15 +7,15 @@ var allParty = {
     ],
     firstWave: [
         ['engineer', 1, 10], // Builder Engineer
-        ['mule', 1, 11],
+        ['mule', 1, 10],
     ],
     secondWave: [
-        ['engineer', 1, 10], // Builder Engineer
-        ['mule', 3, 9],
+        ['engineer', 2, 12], // Upgrade Engineer
+        ['mule', 2, 9],
     ],
     thirdWave: [
-        ['engineer', 1, 11], //  Upgrade Engineer
-        ['mule', 3, 9],
+        ['engineer', 2, 7], //  Builder Engineer
+        ['mule', 2, 9],
     ],
 
     warParty: [
@@ -566,7 +566,7 @@ if (flag.name.substr(0, 5) !== 'power') {
                         }
                     };
 
-                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81' || home == 'E38S72')) {
+                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81' )) {
                         var terminalStuff;
                         terminalStuff = 0;
                         let term = Game.rooms[home].terminal;
@@ -580,7 +580,7 @@ if (flag.name.substr(0, 5) !== 'power') {
                             toSpawn.addToWarStack(temp);
                             totalParty[i]++;
                         }
-                    } else if (currentParty[e][_name] == 'mule' && home == 'E19S49') {
+                    } else/* if (currentParty[e][_name] == 'mule' && home == 'E19S49') {
                         let term = Game.rooms[home].terminal;
                         //term.store.X > 1250 ||
                         if ((term.store[RESOURCE_POWER] > 1250) && Game.rooms[home].storage.store[RESOURCE_ENERGY] > 100000) {
@@ -588,7 +588,8 @@ if (flag.name.substr(0, 5) !== 'power') {
                             toSpawn.addToWarStack(temp);
                             totalParty[i]++;
                         }
-                    } else if (currentParty[e][_name] == 'mule') {
+                    } else*/ if (currentParty[e][_name] == 'mule') {
+//                        console.log('heresz?',toSpawn.pos.roomName);
                         let toSpawn = require('commands.toSpawn');
                         toSpawn.addToExpandStack(temp);
                         totalParty[i]++;

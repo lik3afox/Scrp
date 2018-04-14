@@ -582,7 +582,7 @@ function simple(creep) {
 
 
     if (creep.memory.empty) {
-        if (creep.pos.isNearTo(creep.room.storage)) {
+        if (creep.pos.isNearTo(creep.room.storage) && creep.carrying) {
             creep.transfer(creep.room.storage, creep.carrying);
             return;
         }

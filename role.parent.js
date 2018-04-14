@@ -492,8 +492,8 @@ class baseParent {
         if (creep.memory.partied) return false;
         var partyFlag = creep.partyFlag;
         if (partyFlag === undefined) return false;
-
-        if (partyFlag.memory.rallyFlag !== false) {
+        if( partyFlag.memory.rallyFlag === undefined ) return false;
+        if (partyFlag.memory.rallyFlag !== false ) {
             if (partyFlag.memory.rallyFlag !== 'home') {
                 var pFlag = Game.flags[partyFlag.memory.rallyFlag];
                 creep.moveTo(pFlag, { reusePath: 50 });

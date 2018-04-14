@@ -1045,6 +1045,45 @@
                         }
                     }
                 }
+                if (flag.memory.musterType !== undefined && flag.room !== undefined && flag.memory.musterType !== 'none') {
+                    //flag.room.visual.
+                    flag.room.visual.text(flag.memory.musterType, flag.pos.x, flag.pos.y);
+                    if (flag.memory.musterType === 'firstWave') {
+                        var spwns = flag.room.find(FIND_MY_STRUCTURES);
+                        spwns = _.filter(spwns, function(structure) {
+                            return (structure.structureType == STRUCTURE_SPAWN);
+                        });
+                        if (spwns.length > 0) {
+                            flag.memory.musterType = 'secondWave';
+                            flag.memory.party = undefined;
+                        }
+                    }
+                    if (flag.memory.musterType === 'secondWave') {
+                        // THis is the upgrade wave.
+                        let sites = flag.room.find(FIND_CONSTRUCTION_SITES);
+                        if (sites.length > 3) {
+                            flag.memory.musterType = 'thirdWave';
+                            flag.memory.party = undefined;
+                        }
+                        if (flag.room.controller.level > 5) {
+                            flag.remove();
+                        }
+                    }
+
+                    if (flag.memory.musterType === 'thirdWave') {
+                        // THis is the buildWave wave.
+                        let sites = flag.room.find(FIND_CONSTRUCTION_SITES);
+                        if (sites.length === 0) {
+                            flag.memory.musterType = 'secondWave';
+                            flag.memory.party = undefined;
+                        }
+                        if (flag.room.controller.level > 5) {
+                            flag.remove();
+                        }
+                    }
+                }
+
+
 
                 // Make sure the flag is set this color.
                 if (flag.memory.setColor !== undefined && flag.memory.setColor.color !== flag.color) {
@@ -1059,7 +1098,7 @@
                         rampartThings(flag);
                         break;
                     case COLOR_WHITE:
-//                        removeRA(flag);
+                        //                        removeRA(flag);
                         break;
                     case COLOR_RED:
                         if (flag.room === undefined) {
@@ -1077,7 +1116,7 @@
                             let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                             if (res.length > 0) {
                                 for (let ee in res) {
-                                    if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_TERMINAL && res[ee].structureType !== STRUCTURE_STORAGE&& res[ee].structureType !== STRUCTURE_CONTROLLER)) {
+                                    if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_TERMINAL && res[ee].structureType !== STRUCTURE_STORAGE && res[ee].structureType !== STRUCTURE_CONTROLLER)) {
                                         flag.memory.target = res[ee].structure.id;
                                         break;
                                     }
@@ -1182,7 +1221,7 @@
                                     }
                                 }
                                 // Lets add some targets to next
-                                if(flag.memory.target === undefined) findFlagTarget(flag);
+                                if (flag.memory.target === undefined) findFlagTarget(flag);
                             }
                             /*
                              let bads = flag.room.find(FIND_HOSTILE_CREEPS);
@@ -1260,10 +1299,10 @@
                     case COLOR_YELLOW:
                         // This will mean power flag if it's green/red.
                         let rally = flag;
-//if (flag.name.substr(0, 5) == 'power') {
-  //  flag.memory.power = true;
-//    flag.setColor(flag.color, COLOR_RED);
-//}
+                        //if (flag.name.substr(0, 5) == 'power') {
+                        //  flag.memory.power = true;
+                        //    flag.setColor(flag.color, COLOR_RED);
+                        //}
                         if (flag.memory.squadLogic === undefined) {
                             flag.memory.squadLogic = false;
                         }

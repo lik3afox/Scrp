@@ -399,7 +399,7 @@ let parent = Game.getObjectById(creep.memory.parent);
                 target = creep.room.storage;
                 if (target !== undefined) {
                     for (let e in target.store) {
-                        if (target.store[e] > 0 && e !== RESOURCE_ENERGY && e !== 'H' && e !== 'X') {
+                        if (target.store[e] > 0 && e !== RESOURCE_ENERGY) {
                             getting = e;
                             break;
                         }

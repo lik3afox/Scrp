@@ -235,12 +235,17 @@ class demolisherClass extends roleParent {
             if (creep.room.name === creep.partyFlag.pos.roomName) {
                 creep.moveMe(creep.partyFlag, { ignoreCreeps: true });
             } else {
-                movement.flagMovement(creep);
+                creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+//                movement.flagMovement(creep);
             }
         } else if (!doAttack(creep)) {
-            movement.flagMovement(creep);
+                            creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+
+  //          movement.flagMovement(creep);
         } else {
-            movement.flagMovement(creep);
+                            creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+
+    //        movement.flagMovement(creep);
         }
 
         if (creep.room.name === creep.partyFlag.pos.roomName) {

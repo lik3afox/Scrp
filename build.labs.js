@@ -756,9 +756,13 @@ class buildLab {
     static roomLab(roomName) {
         if (Game.rooms[roomName] === undefined) return;
         if (Game.rooms[roomName].controller === undefined || Game.rooms[roomName].controller.level < 6) return;
+        var ez = labRooms;
+        if (Game.shard.name === 'shard2') {
+            ez = ['E19S49'];
+        }
         if (Game.time % 5 === 0) {
 
-            if (_.contains(labRooms, roomName)) {
+            if (_.contains(ez, roomName)) {
                 if (Game.rooms[roomName] !== undefined) {
                     updateRoomLabsMemory(roomName);
                     //                    console.log(, 'Labs @ ', roomName);
@@ -851,13 +855,13 @@ class buildLab {
                 good[0].room.memory.boost.mineralType = 'none';
                 //                good[0].room.memory.boost.mineralAmount = 0;
                 good[0].room.memory.boost.timed = 0;
-                good[0].memory.isBoosted = true;
+                if( good[0].memory.isBoosted === undefined) good[0].memory.isBoosted = [];
                 good[0].say('ahhh');
                 let zz = good[0].memory.boostNeeded.length;
                 while (zz--) {
                     if (lab.mineralType === good[0].memory.boostNeeded[zz]) {
-                        good[0].memory.boostNeeded.splice(zz, 1);
-                        //                        break;
+                        good[0].memory.isBoosted.push(good[0].memory.boostNeeded.splice(zz, 1)[0]);
+                        return;
                     }
                 }
             }

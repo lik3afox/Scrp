@@ -75,7 +75,7 @@ class ContainerInteract {
 
         creep.say(storage.store[RESOURCE_ENERGY]);
         if (creep.pos.isNearTo(storage)) {
-                creep.withdraw(storage, creep.carrying);
+            creep.withdraw(storage, RESOURCE_ENERGY);
         } else {
             creep.say(creep.moveTo(storage, { maxRooms: 1 }));
             

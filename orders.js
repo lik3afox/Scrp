@@ -23,6 +23,13 @@ Game.rooms.E18S32.terminal.send('energy', 100000, 'E38S72', 'trade');
 
 
 
+
+
+
+
+
+Game.market.cancelOrder('5a9714b6d51df80354b2a81a');
+
 Game.rooms.E27S45.terminal.send('',10000, 'E38S72', 'trade');
 
 
@@ -48,7 +55,7 @@ Game.rooms.W4S93.terminal.send('H', 8000, 'E5N7', 'trade');
 
 Game.market.cancelOrder('598dd9bbc9aaff3cb2dad9b6');
 Game.market.cancelOrder('59d937cc1aadaa262312db20');
-Game.market.cancelOrder('59d937d01aadaa262312dc57');
+
 Game.market.cancelOrder('5a2f685052288a08ba15c2b1');
 Game.market.cancelOrder('59dd832216373068e967dbaf');
 Game.market.cancelOrder('59c6688cc3086045fc730bd0');

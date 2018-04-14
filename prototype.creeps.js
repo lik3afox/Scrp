@@ -34,6 +34,7 @@ module.exports = function() {
     Object.defineProperty(Creep.prototype, "atFlagRoom", {
         configurable: true,
         get: function() {
+            if(this.partyFlag === undefined) return false;
             return this.room.name === this.partyFlag.pos.roomName;
         },
     });
@@ -276,6 +277,51 @@ module.exports = function() {
         }
         return false;
     };
+    Creep.prototype.moveToPickEnergy = function(amount) {
+        var options = {};
+        _.defaults(options, {
+            reusePath: 10,
+            visualizePathStyle: {
+                fill: 'transparent',
+                stroke: '#f0f',
+                lineStyle: 'dashed',
+                strokeWidth: 0.15,
+                opacity: 0.5
+            },
+        });
+        var close;
+        if (this.memory.pickUpId === undefined) {
+            if (amount === undefined) amount = 0;
+
+                close = _.max(this.room.find(FIND_DROPPED_RESOURCES, {
+                    filter: function(object) {
+                        return object.amount > amount && object.resourceType === 'energy';
+
+                    }
+                }), o => o.amount);
+
+        } else {
+            close = Game.getObjectById(this.memory.pickUpId);
+        }
+
+        if (close === null) {
+            this.memory.pickUpId = undefined;
+            return false;
+        }
+        if (close === undefined) return false;
+
+        if (this.pos.isNearTo(close)) {
+            this.pickup(close);
+            return true;
+        } else {
+             this.moveTo(close, options);
+            return true;
+
+        }
+
+        return false;
+    };
+
 
     Creep.prototype.moveToPickUp = function(FIND, amount, options) {
         if (options === undefined) options = {};

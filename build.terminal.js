@@ -1290,9 +1290,9 @@ function doTrap(roomname) {
     if (Game.rooms[roomname].memory.trapCount > 0) return;
     if (Game.rooms[roomname].terminal.total > 290000) return;
     Game.rooms[roomname].memory.trapCount = 15;
-    //if(roomname === 'E19S49' || roomname === 'E38S81' ) {
-    //      Game.rooms[roomname].memory.marketBuyTrap = ['G','H','ZK','UL','energy','XGH2O','XGHO2','XZHO2','XZH2O','XLHO2','XLH2O','XKHO2','XKH2O','XUHO2','XUH2O','X','power'];
-    //    }
+   // if( roomname === 'E38S72' ) {
+//          Game.rooms[roomname].memory.marketBuyTrap = ['G','H','ZK','UL','energy','XGH2O','XGHO2','XZHO2','XZH2O','XLHO2','XLH2O','XKHO2','XKH2O','XUHO2','XUH2O','X','power'];
+  //      }
     buyTrap = Game.rooms[roomname].memory.marketBuyTrap;
 
     for (var e in buyTrap) {
@@ -1665,7 +1665,7 @@ class roleTerminal {
                 if (Game.rooms.E38S72.terminal.store[RESOURCE_ENERGY] > 290000 && Game.rooms.E38S81.terminal.store[RESOURCE_ENERGY] < 290000) {
                     Game.rooms.E38S72.terminal.send('energy', 10000, 'E38S81', 'trade');
                 }
-                doTrap('E38S81');
+                doTrap('E38S72');
 
                 for (var a in s0LabRooms) {
 

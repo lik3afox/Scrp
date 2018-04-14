@@ -1491,7 +1491,7 @@ function analyzeShards(shardObject) {
     if (shardObject.shard0 !== undefined) {
         let room = Game.rooms[shardObject.shard0.shardRoom];
         for (let i in shardObject.shard0.request) {
-            //     console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
+       //          console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard0.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1546,7 +1546,7 @@ function analyzeShards(shardObject) {
     if (shardObject.shard2 !== undefined) {
         let room = Game.rooms[shardObject.shard2.shardRoom];
         for (let i in shardObject.shard2.request) {
-            //          console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
+      //                console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000) {
                 continue;
             }
