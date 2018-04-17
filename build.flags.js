@@ -990,9 +990,6 @@
                 }
                 // Mineral flag that will turn off when it's fully extracted.
                 if (flag.memory.mineral && flag.room !== undefined) {
-    //                if (flag.room.extractor !== null && !flag.room.extractor.pos.isEqualTo(flag)) {
-  //                      flag.setPosition(flag.room.extractor.pos);
-//                    }
                     if (flag.room.mineral !== undefined) {
                         flag.memory.mineralID = flag.room.mineral.id;
                         flag.memory.mineralType = flag.room.mineral.mineralType;
@@ -1001,21 +998,6 @@
                         flag.memory.delaySpawn = flag.room.mineral.ticksToRegeneration-150;
                     }
                 } 
-                if (flag.memory.mineral && flag.memory.mineralType !== undefined) {
-//                    console.log(flag, flag.memory.mineralType , Memory.stats.totalMinerals[flag.memory.mineralType]);
-/*                         if (flag.memory.color === COLOR_YELLOW && Memory.stats.totalMinerals[flag.memory.mineralType] > 175000) {
-                            flag.memory.setColor = {
-                                color: COLOR_WHITE,
-                                secondaryColor: COLOR_WHITE,
-                            };
-                        } */
-                         if (flag.memory.color === COLOR_WHITE) {
-                            flag.memory.setColor = {
-                                color: COLOR_YELLOW,
-                                secondaryColor: COLOR_YELLOW,
-                            };
-                        }
-                }
 
                 // Flag Delay Spawning Function.
                 if (flag.memory.delaySpawn !== undefined) {

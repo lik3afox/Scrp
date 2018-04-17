@@ -69,9 +69,9 @@ class ContainerInteract {
 
         if (storage === undefined) return false;
 
-    //    if (storage.store[RESOURCE_ENERGY] < 1000) {
-//            return false;
-  //      }
+        if (storage.store[RESOURCE_ENERGY] === 0) {
+           return false;
+        }
 
         creep.say(storage.store[RESOURCE_ENERGY]);
         if (creep.pos.isNearTo(storage)) {

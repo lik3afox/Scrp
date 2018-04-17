@@ -216,7 +216,7 @@ class muleClass extends roleParent {
                 creep.memory.mining = true;
             } else if (creep.carry[RESOURCE_ENERGY] === creep.carryCapacity) {
                 creep.memory.mining = false;
-            } else if (creep.carry[RESOURCE_ENERGY] >= 6000) {
+            } else if (creep.carry[RESOURCE_ENERGY] >= 3000) {
                 creep.memory.mining = false;
             } else if (creep.memory.mining === undefined) {
                 creep.memory.mining = false;
@@ -233,12 +233,15 @@ class muleClass extends roleParent {
             }
 
             if (creep.memory.mining) {
-                if (roleParent.constr.withdrawFromTombstone(creep)) {
-                    if (!creep.moveToPickEnergy(100)) {
-                        if (!creep.moveToWithdrawSource()) {}
+      //          if (roleParent.constr.withdrawFromTombstone(creep)) {
+    //                if (!creep.moveToPickEnergy(100)) {
+                        if (!creep.moveToWithdrawSource()) {
+                            let totaled = creep.room.find(FIND_SOURCES_ACTIVE);
+                            if(totaled.length === 0) creep.memory.mining = false;
+                        }
 
-                    }
-                }
+//                    }
+  //              }
             }
             creep.say('10' + creep.memory.mining);
             return;
@@ -376,7 +379,7 @@ class muleClass extends roleParent {
                 }
                 if (creep.atFlagRoom && creep.carryTotal > 0 && creep.memory.didPortal) {
                     creep.moveToTransfer(creep.room.terminal, creep.carrying);
-                    creep.say('trs');
+                    creep.say('trs2');
                     return;
                 } else {
                     creep.moveMe(creep.partyFlag, { reusePath: 50 });

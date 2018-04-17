@@ -1705,9 +1705,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             //            this.memory._move = undefined;
         }
         if (options.ignoreCreeps && (this.memory.stuckCount > 0 || this.room.name === this.memory.home)) {
-
             swapTarget(this);
-
         }
 
         if (this.memory.stuckCount > 2) {
@@ -2079,6 +2077,10 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             }
 
         }
+        if (this.memory.role === 'miner' && moveStatus === OK && options.ignoreCreeps && (this.isAtEdge ||this.memory.stuckCount > 0 || this.room.name === this.memory.home)) {
+            swapTarget(this);
+        }
+
 
         return moveStatus;
     };

@@ -9,6 +9,7 @@ var transportLevel = 20000;
 
 
 var allModule = [
+    ['squire', require('role.squire')],
     ['harass', require('army.harass')],
     ['assistant', require('role.assistant')],
     ['troll', require('army.troll')],

@@ -152,22 +152,22 @@ function moveCreep(creep) {
 
     if (gota !== null) {
         if (!creep.pos.isNearTo(gota)) {
-                creep.moveMe(gota, {
-                    reusePath: 15,
-                    ignoreRoads: true,
-                    ignoreCreeps: true,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#bf0',
-                        lineStyle: 'dotted',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                });
+            creep.moveMe(gota, {
+                reusePath: 15,
+                ignoreRoads: true,
+                ignoreCreeps: true,
+                visualizePathStyle: {
+                    fill: 'transparent',
+                    stroke: '#bf0',
+                    lineStyle: 'dotted',
+                    strokeWidth: 0.15,
+                    opacity: 0.5
+                }
+            });
         } else {
             if (gota.ticksToSpawn !== undefined && gota.ticksToSpawn - 1 > 0 && gota.ticksToSpawn < 200 && creep.hits === creep.hitsMax) {
                 creep.sleep(gota.ticksToSpawn + Game.time - 1);
-            } 
+            }
         }
     }
 
@@ -202,15 +202,15 @@ class roleGuard extends roleParent {
             }
             _.uniq(boost);
         }
-        if ( creep.memory.level > 0 && super.boosted(creep, boost)) {
+        if (creep.memory.level > 0 && super.boosted(creep, boost)) {
             return;
         }
-        if(creep.partyFlag.color === COLOR_WHITE ||creep.partyFlag.color === COLOR_BROWN){
+        if (creep.partyFlag.color === COLOR_WHITE || creep.partyFlag.color === COLOR_BROWN) {
             creep.memory.reportDeath = true;
-        } 
+        }
 
         var goalPos = creep.partyFlag;
-
+        if (creep.memory.home !== creep.partyFlag.memory.musterRoom) creep.memory.reportDeath = true;
         if (creep.memory.keeperLair === undefined && creep.room.name == creep.partyFlag.pos.roomName) {
             if (creep.partyFlag.memory.mineral) {
 
@@ -250,19 +250,28 @@ class roleGuard extends roleParent {
                     if (distance <= 1) {
                         creep.attack(enemy);
                     } else {
-                        creep.moveMe(enemy, { ignoreCreeps: true, maxRooms: 1 });
+                        if (enemy.owner.username === 'Source Keeper') {
+                            if (creep.hits == creep.hitsMax || distance > 6) {
+                                creep.moveMe(enemy, { ignoreCreeps: true, maxRooms: 1 });
+                            } else {
+                                creep.selfHeal();    
+                            }
+                        } else {
+                            creep.moveMe(enemy, { ignoreCreeps: true, maxRooms: 1 });
+                        }
+                        //creep.moveMe(enemy, { ignoreCreeps: true, maxRooms: 1 });
                     }
                     return;
                 }
                 creep.selfHeal();
                 //moveCreep(creep);
-                if (!creep.pos.isEqualTo(creep.partyFlag)){
+                if (!creep.pos.isEqualTo(creep.partyFlag)) {
                     creep.moveMe(creep.partyFlag, { reusePath: 50 });
-                } else if(creep.hits === creep.hitsMax){
-                let gota = Game.getObjectById(creep.memory.keeperLair[creep.memory.goTo]);
+                } else if (creep.hits === creep.hitsMax) {
+                    let gota = Game.getObjectById(creep.memory.keeperLair[creep.memory.goTo]);
                     creep.sleep(gota.ticksToSpawn + Game.time - 1);
                 }
-                    
+
                 return;
             }
             let bads;

@@ -133,7 +133,7 @@ class scientistRole extends roleParent {
             creep.memory.putaway = true;
         }
 
-        if (creep.memory.putaway) {
+        if (creep.memory.putaway && creep.saying !== 'redo') {
             if (!labsBuild.moveToTransfer(creep)) {
 
                 if (creep.room.terminal.total === 300000 || (creep.room.name == 'E33S76')) {

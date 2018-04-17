@@ -46,9 +46,9 @@ var maxMinerals = {
     'UH2O': 50000, // Attack
     'UH': 75000, // Repair
 
-    'XUHO2': 50000, // Harvest
-    'UHO2': 50000,
-    'UO': 30000,
+    'XUHO2': 70000, // Harvest
+    'UHO2': 70000,
+    'UO': 50000,
 
     'XLHO2': 325000, // Heal*
     'LHO2': 50000, // Heal*
@@ -418,34 +418,41 @@ function labDo(roomName, created, labz, laby) {
         lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
         lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
     }
+      //  if(Game.shard.name === 'shard2'){
+     //       console.log(lab2.mineralType , lab3.mineralType);
+     //   }
     if (lab1.cooldown !== 0) return false;
-    if (!lab3.room.memory.labsNeedWork && Game.rooms[roomName].memory.lab2Mode !== 'none') {
-        if(Game.shard.name === 'shard'){
-            console.log(lab2.mineralType , lab3.mineralType);
-        }
-        if(lab2.mineralType === undefined || lab3.mineralType === undefined ){
+
+//&& Game.rooms[roomName].memory.lab2Mode !== 'none'
+    if (!lab3.room.memory.labsNeedWork ) {
+        if(lab2.mineralType === null || lab3.mineralType === null ){
             console.log(lab3.room.name, 'tigger0');
             lab3.room.memory.labsNeedWork = true;
+            return false;
         }
 
         if (lab1.mineralAmount >= 2950 && labs[labz - 1].emptied) {
             console.log(lab3.room.name, 'tigger1');
             lab3.room.memory.labsNeedWork = true;
+            return false;
         }
         if ((!labs[labz - 1].emptied && (lab2.mineralAmount < 150 || lab2.mineralAmount === null) && (lab2.room.terminal.store[labs[labz - 1].resource] > 1)) ||
             (!labs[laby - 1].emptied && (lab3.mineralAmount < 150 || lab3.mineralAmount === null) && (lab3.room.terminal.store[labs[laby - 1].resource] > 1))) {
             console.log(lab3.room.name, 'tigger2');
             lab3.room.memory.labsNeedWork = true;
+            return false;
         }
         if (labs[labz - 1].resource !== 'none' &&
             ((lab2.mineralType !== undefined && lab2.mineralType !== null) && labs[labz - 1].resource !== undefined &&
                 labs[labz - 1].resource !== lab2.mineralType)) {
             console.log(lab3.room.name, 'tigger3', lab2.mineralType, labs[labz - 1].resource, lab2.mineralType);
             lab3.room.memory.labsNeedWork = true;
+            return false;
         }
         if ((lab3.mineralType !== null && labs[laby - 1].resource !== undefined && labs[laby - 1].resource !== lab3.mineralType)) {
             console.log(roomLink(lab3.room.name), 'tigger4', labs[laby - 1].resource, lab3.mineralType, laby - 1);
             lab3.room.memory.labsNeedWork = true;
+            return false;
         }
 
     }
@@ -788,7 +795,12 @@ class buildLab {
 
                     }
                     if (mat == 'LO') {
-                        if (Memory.stats.totalMinerals.L < 60000 || Memory.stats.totalMinerals.O < 60000) {
+                        if (Memory.stats.totalMinerals.L < 40000 || Memory.stats.totalMinerals.O < 40000) {
+                            doMix = false;
+                        }
+                    }
+                    if (mat == 'UO') {
+                        if (Memory.stats.totalMinerals.U < 60000 || Memory.stats.totalMinerals.O < 60000) {
                             doMix = false;
                         }
                     }

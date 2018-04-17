@@ -175,7 +175,11 @@ function getSpawnCreating(flag) {
         flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
         return flag.memory.musterRoom;
     }
-    if (flag.name.substr(0, 6) == 'getMin') {
+    if (Game.rooms[flag.memory.musterRoom] !== undefined) {
+        return flag.memory.musterRoom;
+    }
+    if (flag.name.substr(0, 6) == 'getMin' && flag.memory.musterRoom === 'none') {
+        flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
         return returnClosestRoom(flag.pos.roomName);
     }
 
@@ -184,9 +188,6 @@ function getSpawnCreating(flag) {
     }
     if (flag.name.substr(0, 2) == 'RA') {
         return flag.room.name;
-    }
-    if (Game.rooms[flag.memory.musterRoom] !== undefined) {
-        return flag.memory.musterRoom;
     }
     if (flag.name.substr(0, 5) == 'power' || flag.name == 'bandit') {
         flag.memory.power = true;

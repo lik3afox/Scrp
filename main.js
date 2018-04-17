@@ -18,19 +18,19 @@ function returnClosestRoom(roomName) {
 
 function testFlagFunction() {
     //if(Game.flags.test === undefined) return;
-//    let testFlag = Game.flags.test;
-    var testPos = new RoomPosition(25,25,'E20S49');
-    var testPos2 = new RoomPosition(20,20,'E20S49');
+    //    let testFlag = Game.flags.test;
+    var testPos = new RoomPosition(25, 25, 'E20S49');
+    var testPos2 = new RoomPosition(20, 20, 'E20S49');
 
-//if(Game.flags.test === undefined){
-console.log('create', Game.rooms.E19S49.createFlag(25, 25, 'test') );
+    //if(Game.flags.test === undefined){
+    console.log('create', Game.rooms.E19S49.createFlag(25, 25, 'test'));
     let testFlag = Game.flags.test;
-//    console.log("remove", testFlag.remove() );
-// console.log("setPos",testFlag.setPosition(testPos),testFlag.pos);
-  //  console.log("setColor", testFlag.setColor(COLOR_YELLOW,COLOR_WHITE) );
+    //    console.log("remove", testFlag.remove() );
+    // console.log("setPos",testFlag.setPosition(testPos),testFlag.pos);
+    //  console.log("setColor", testFlag.setColor(COLOR_YELLOW,COLOR_WHITE) );
 
-//}
-   
+    //}
+
 }
 
 
@@ -658,7 +658,7 @@ function addSpawnQuery(spawnCount) {
                 if (spawnCount[Game.spawns[e].id] !== undefined) {
                     let spwn = Game.spawns[e];
                     let spwnCount = spawnCount[Game.spawns[e].id];
-                    if(spwn.memory.create === undefined) spwn.memory.create=  [];
+                    if (spwn.memory.create === undefined) spwn.memory.create = [];
                     let create = spwn.memory.create;
 
                     let war = spwn.memory.warCreate;
@@ -1188,7 +1188,7 @@ function analyzeNeeds(shardObject) {
                     lowestAmount = shardObject.shard2.marketData[min].buy;
                 }
             }
-            if (lowestAmount === undefined ||lowestAmount === null) {
+            if (lowestAmount === undefined || lowestAmount === null) {
                 continue;
             }
             let request = {
@@ -1353,23 +1353,23 @@ function analyzeMarkets(shardObject) {
         //        console.log('for:',min,'Highest Buy order',lowestShard,'@',lowestAmount.price,'Lowest Sell order',highestShard,'@',highestAmount.price);
 
         // This is to setup an order if we need to sell an mineral we have too much of and we don't need to verify.
-/*        if (lowestAmount !== undefined && Memory.stats.totalMinerals[min] > 300000 && lowestAmount.price > 0.20 && _.contains(['X', 'O', 'H', 'L', 'U', 'Z', 'K'], minerals[i])) {
+        /*        if (lowestAmount !== undefined && Memory.stats.totalMinerals[min] > 300000 && lowestAmount.price > 0.20 && _.contains(['X', 'O', 'H', 'L', 'U', 'Z', 'K'], minerals[i])) {
 
-            let request = {
-                type: 'fillBuyOrder',
-                shard: lowestShard,
-                order: lowestAmount,
-                mineralType: minerals[i],
-                shardRoom: getShardRoom(lowestShard, min),
-                mineralAmount: 1750,
-            };
-            if (shardObject.instructions.length < 4) {
+                    let request = {
+                        type: 'fillBuyOrder',
+                        shard: lowestShard,
+                        order: lowestAmount,
+                        mineralType: minerals[i],
+                        shardRoom: getShardRoom(lowestShard, min),
+                        mineralAmount: 1750,
+                    };
+                    if (shardObject.instructions.length < 4) {
 
-                console.log('added just a buy order to instructions:', min, "@", lowestAmount.price, Memory.stats.totalMinerals[min]);
-                shardObject.instructions.push(request);
-                continue;
-            }
-        } */
+                        console.log('added just a buy order to instructions:', min, "@", lowestAmount.price, Memory.stats.totalMinerals[min]);
+                        shardObject.instructions.push(request);
+                        continue;
+                    }
+                } */
 
         if (lowestAmount !== undefined && highestAmount !== undefined) {
 
@@ -1493,7 +1493,7 @@ function analyzeShards(shardObject) {
     if (shardObject.shard0 !== undefined) {
         let room = Game.rooms[shardObject.shard0.shardRoom];
         for (let i in shardObject.shard0.request) {
-       //          console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
+            //          console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard0.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1548,7 +1548,7 @@ function analyzeShards(shardObject) {
     if (shardObject.shard2 !== undefined) {
         let room = Game.rooms[shardObject.shard2.shardRoom];
         for (let i in shardObject.shard2.request) {
-      //                console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
+            //                console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1702,9 +1702,9 @@ module.exports.loop = blackMagic(function() {
         require('prototype.room')
     ];
     doMemory();
-//if(Game.shard.name === 'shard2'){
-//    testFlagFunction();
-//}
+    //if(Game.shard.name === 'shard2'){
+    //    testFlagFunction();
+    //}
     for (let i = 0, e = prototypes.length; i < e; i++) {
         prototypes[i]();
     }
@@ -1744,11 +1744,15 @@ module.exports.loop = blackMagic(function() {
             } else {
                 observer.runRoom(roomName);
             }
-            if (isTenTime === 0 && Game.shard.name == 'shard1') {
-                if (Game.spawns[title].room.memory.simple) {
-                    _terminal.runSimple(roomName);
+            if (isTenTime === 0) {
+                if (Game.shard.name == 'shard1') {
+                    if (Game.spawns[title].room.memory.simple) {
+                        _terminal.runSimple(roomName);
+                    } else {
+                        _terminal.runTerminal(roomName);
+                    }
                 } else {
-                    _terminal.runTerminal(roomName);
+                    _terminal.runNewTerminal(roomName);
                 }
             }
 

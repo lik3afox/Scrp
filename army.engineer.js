@@ -195,7 +195,7 @@ class engineerClass extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-        if (creep.memory.isBoosted.length > 0) {
+        if (creep.memory.isBoosted !== undefined && creep.memory.isBoosted.length > 0) {
             if (creep.memory.boostType === undefined) {
                 if (_.contains(creep.memory.isBoosted, 'XGH2O')) {
                     creep.memory.boostType = 'upgrader';
@@ -211,7 +211,7 @@ class engineerClass extends roleParent {
             creep.tuskenTo(creep.partyFlag, creep.home, { reusePath: 50, useSKPathing: true });
         } else {
 
-            if (creep.memory.renewSpawnID === undefined && creep.room.alphaSpawn !== undefined && creep.memory.isBoosted.length === 0) {
+            if (creep.memory.renewSpawnID === undefined && creep.room.alphaSpawn !== undefined && creep.memory.isBoosted !== undefined && creep.memory.isBoosted.length === 0) {
                 creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
                 require('commands.toSpawn').newWantRenew(creep);
             }

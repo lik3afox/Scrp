@@ -52,23 +52,6 @@ function mineralContainerEmpty(creep) {
                 }
 
             } else {
-                /*
-                                if (creep.room.storage !== undefined) {
-                                    var keyz = Object.keys(creep.room.storage.store);
-                                    var x = keyz.length;
-                                    while (x--) {
-                                        var b = keyz[x];
-                                        if (b != RESOURCE_ENERGY && creep.room.storage.store[b]) {
-                                            if (creep.pos.isNearTo(creep.room.storage)) {
-                                                creep.withdrawing(creep.room.storage, b);
-                                            } else {
-                                                creep.moveMe(creep.room.storage);
-                                            }
-                                        }
-
-                                    }
-
-                                } */
 
             }
         }
