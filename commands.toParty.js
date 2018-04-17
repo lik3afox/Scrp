@@ -1,7 +1,15 @@
 // This is the army,
 // Used offensively.
 // These will need to be added to the allreport.
+
+
 var allParty = {
+    shooter : [
+    ['shooter',  1, 4]
+    ],
+    guard :[
+    ['guard',  1, 1]
+    ],
     engineer: [
         ['engineer', 1, 5],
     ],
@@ -11,11 +19,11 @@ var allParty = {
     ],
     secondWave: [
         ['engineer', 2, 12], // Upgrade Engineer
-        ['mule', 2, 9],
+        ['mule', 3, 9],
     ],
     thirdWave: [
         ['engineer', 2, 7], //  Builder Engineer
-        ['mule', 2, 9],
+        ['mule', 3, 9],
     ],
 
     warParty: [
@@ -42,11 +50,17 @@ var allParty = {
         ['mage', 1, 6],
         //        ['thief', 4, 5],
     ],
-    //  bandit: [
-    //        ['fighter', 1, 10],
-    //      ['mage', 1, 6],
-    //        ['thief', 4, 5],
-    //    ],
+
+    mineral:[
+        ['guard',1,0],
+        ['mineral',1,7],
+        ['ztransport',1,1],
+    ],
+    mineral2:[
+//        ['guard',1,0],
+        ['mineral',1,7],
+        ['ztransport',1,1],
+    ],
     thief: [
         ['thief', 1, 4],
     ],
@@ -161,6 +175,9 @@ function getSpawnCreating(flag) {
         flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
         return flag.memory.musterRoom;
     }
+    if (flag.name.substr(0, 6) == 'getMin') {
+        return returnClosestRoom(flag.pos.roomName);
+    }
 
     if (flag.name.substr(0, 5) == 'rampa') {
         return flag.room.name;
@@ -201,6 +218,17 @@ function getCurrentParty(flag) {
     if (flag.name == 'bandit') {
         return allParty.bandit;
     }
+//    console.log(flag.name.substr(0, ));
+    if (flag.name.substr(0, 6) == 'getMin') {
+        flag.memory.mineral = true;
+        if(flag.pos.roomName[2] === '5' && flag.pos.roomName[5] === '5'){
+        return allParty.mineral2;    
+        }
+        return allParty.mineral;
+//            mineral2
+
+    }
+
     if (flag.name.substr(0, 5) == 'rampa') {
         return allParty.rampart;
     }
@@ -210,7 +238,6 @@ function getCurrentParty(flag) {
     if (flag.name === 'controllerAttack') {
         return allParty.controllerAttack;
     }
-
     if (flag.memory.musterType !== 'none') {
         var party;
         if (allParty[flag.memory.musterType] !== undefined) {
@@ -218,6 +245,7 @@ function getCurrentParty(flag) {
         } else {
             //            console.log(flag, 'doesn"t have party or musterType', roomLink(flag.pos.roomName));
         }
+if(flag.memory.musterType === 'guard') console.log('does it?',party);
         return party;
     }
 
@@ -303,7 +331,7 @@ function findParty(flag, spawnCount) {
                 }
             }
         }
-        if (flag.name === 'bandit')
+        if (flag.name === 'getMinE25')
             console.log(flag.name + " Party:" + currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName));
 
     }
@@ -358,6 +386,8 @@ class partyInteract {
             } else {
                 rallied = Game.flags[flag.memory.rallyFlag];
             }
+  //          if(Game.shard.name === 'shard2')
+//            console.log(flag);
             if (rallied === undefined) return;
 
             currentParty = getCurrentParty(flag);
@@ -369,6 +399,7 @@ class partyInteract {
                     }
                 }
             }
+//            console.log(flag,flag.memory.rallyFlag,totalParty );
             flag.memory.totalNumber = totalParty;
             if (flag.memory.squadLogic && totalParty > 0) {
                 if (rallied !== undefined && rallied.room !== undefined) {
@@ -534,7 +565,7 @@ if (flag.name.substr(0, 5) !== 'power') {
             totalPartyed += flag.memory.party[e][1];
         }
         flag.memory.totalNumber = totalPartyed;
-
+//if(flag.name === 'getMinE25') console.log('should craete');
         if (flag.memory.party === undefined) {
             flag.memory.party = currentParty;
         }
@@ -598,9 +629,9 @@ if (flag.name.substr(0, 5) !== 'power') {
                         toSpawn.addToExpandStack(temp);
                         totalParty[i]++;
                     } else {
-                        if (currentParty[e][_name] === 'healer') {
-                            console.log(temp.build.length);
-                        }
+    //                    if (currentParty[e][_name] === 'healer') {
+//                            console.log(temp.build.length);
+  //                      }
                         let toSpawn = require('commands.toSpawn');
                         toSpawn.addToWarStack(temp);
                         totalParty[i]++;

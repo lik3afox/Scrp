@@ -212,7 +212,10 @@ class baseParent {
         switch (task.order) {
             case "keeperMoveTo":
             case "moveTo":
-
+            if(task.pos === undefined || task.pos.x === undefined ||task.pos.y === undefined ||task.pos.roomName === undefined ){
+                orderComplete = true;
+                break;
+            }
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
 
                 if (task.rangeHappy === undefined || task.rangeHappy === 0) {
@@ -322,7 +325,7 @@ class baseParent {
     }
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1000 || creep.room.name == 'E22S49') {
+        if (creep.ticksToLive < 1000 || creep.room.name == 'E29S48') {
             return false;
         }
         if (creep.memory.boostNeeded === undefined) {
@@ -394,6 +397,10 @@ class baseParent {
                                 creep.moveTo(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
                                 return true;
                             }
+                        }
+                        if (creep.memory.runFromKeeper === undefined) {
+                            creep.memory.runFromKeeper = Game.rooms[creep.memory.home].alphaSpawn.pos;
+                            creep.moveTo(creep.memory.runFromKeeper, { ignoreRoads: true, maxOpts: 50 });
                         }
                     } else {
                         creep.say('b');

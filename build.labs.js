@@ -420,6 +420,14 @@ function labDo(roomName, created, labz, laby) {
     }
     if (lab1.cooldown !== 0) return false;
     if (!lab3.room.memory.labsNeedWork && Game.rooms[roomName].memory.lab2Mode !== 'none') {
+        if(Game.shard.name === 'shard'){
+            console.log(lab2.mineralType , lab3.mineralType);
+        }
+        if(lab2.mineralType === undefined || lab3.mineralType === undefined ){
+            console.log(lab3.room.name, 'tigger0');
+            lab3.room.memory.labsNeedWork = true;
+        }
+
         if (lab1.mineralAmount >= 2950 && labs[labz - 1].emptied) {
             console.log(lab3.room.name, 'tigger1');
             lab3.room.memory.labsNeedWork = true;

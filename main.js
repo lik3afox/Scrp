@@ -658,7 +658,9 @@ function addSpawnQuery(spawnCount) {
                 if (spawnCount[Game.spawns[e].id] !== undefined) {
                     let spwn = Game.spawns[e];
                     let spwnCount = spawnCount[Game.spawns[e].id];
+                    if(spwn.memory.create === undefined) spwn.memory.create=  [];
                     let create = spwn.memory.create;
+
                     let war = spwn.memory.warCreate;
                     let expand = spwn.memory.expandCreate;
                     let a;
@@ -1186,7 +1188,7 @@ function analyzeNeeds(shardObject) {
                     lowestAmount = shardObject.shard2.marketData[min].buy;
                 }
             }
-            if (lowestAmount === undefined) {
+            if (lowestAmount === undefined ||lowestAmount === null) {
                 continue;
             }
             let request = {

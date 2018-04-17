@@ -251,7 +251,7 @@ function moveCreep(creep) {
             let rmPos = new RoomPosition(creep.memory.keeperLair[creep.memory.goTo].pos.x, creep.memory.keeperLair[creep.memory.goTo].pos.y, creep.memory.keeperLair[creep.memory.goTo].pos.roomName);
             creep.moveMe(rmPos, {
                 reusePath: 7,
-                maxRooms:1,
+                maxRooms: 1,
                 ignoreRoads: true,
                 visualizePathStyle: {
                     fill: 'transparent',
@@ -274,10 +274,10 @@ class roleGuard extends roleParent {
 
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        if( _.isArray(classLevels[level])) {
+        if (_.isArray(classLevels[level])) {
             return classLevels[level];
         }
-        if (_.isObject(classLevels[level]) ) {
+        if (_.isObject(classLevels[level])) {
             return classLevels[level].body;
         } else {
             return classLevels[level];
@@ -295,16 +295,12 @@ class roleGuard extends roleParent {
             return;
         }
 
-        if(creep.room.name == 'E35S84' && creep.memory.goTo == 1) {
+        if (creep.room.name == 'E35S84' && creep.memory.goTo == 1) {
             creep.memory.goTo = 2;
         }
 
         if (creep.memory.goalPos === undefined) {
-            for (var e in Game.flags) {
-                if (Game.flags[e].color == COLOR_BLUE && Game.flags[e].name == creep.memory.party) {
-                    creep.memory.goalPos = Game.flags[e].pos;
-                }
-            }
+            creep.memory.goalPos = creep.partyFlag.pos;
         }
 
         if (creep.memory.keeperLair) {
@@ -334,7 +330,7 @@ class roleGuard extends roleParent {
                         if (creep.memory.goTo !== undefined)
                             creep.memory.goTo = undefined;
                     }
-                    //                }
+                //                }
             }
 
             if (bads.length > 0) {
@@ -350,8 +346,8 @@ class roleGuard extends roleParent {
                 attackCreep(creep, bads);
             } else {
                 creep.selfHeal();
-//                movement.guardFlagMove(creep);
-            creep.moveMe(creep.partyFlag,{reusePath:50,segment:true});
+                //                movement.guardFlagMove(creep);
+                creep.moveMe(creep.partyFlag, { reusePath: 50, segment: true });
 
             }
             if (creep.memory.distance === undefined) {

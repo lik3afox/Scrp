@@ -34,7 +34,7 @@ module.exports = function() {
     Object.defineProperty(Creep.prototype, "atFlagRoom", {
         configurable: true,
         get: function() {
-            if(this.partyFlag === undefined) return false;
+            if (this.partyFlag === undefined) return false;
             return this.room.name === this.partyFlag.pos.roomName;
         },
     });
@@ -293,13 +293,13 @@ module.exports = function() {
         if (this.memory.pickUpId === undefined) {
             if (amount === undefined) amount = 0;
 
-                close = _.max(this.room.find(FIND_DROPPED_RESOURCES, {
-                    filter: function(object) {
-                        return object.amount > amount && object.resourceType === 'energy';
+            close = _.max(this.room.find(FIND_DROPPED_RESOURCES, {
+                filter: function(object) {
+                    return object.amount > amount && object.resourceType === 'energy';
 
-                    }
-                }), o => o.amount);
-
+                }
+            }), o => o.amount);
+            this.memory.pickUpId = close.id;
         } else {
             close = Game.getObjectById(this.memory.pickUpId);
         }
@@ -314,7 +314,7 @@ module.exports = function() {
             this.pickup(close);
             return true;
         } else {
-             this.moveTo(close, options);
+            this.moveTo(close, options);
             return true;
 
         }
@@ -529,18 +529,19 @@ module.exports = function() {
 
         var target = Game.getObjectById(this.partyFlag.memory.target);
         if (target !== null) {
-            if (this.pos.isNearTo(target) && target.structureType !== STRUCTURE_WALL && target.structureType !== STRUCTURE_ROAD) {
-                this.rangedMassAttack();
-                return true;
-            } else if (this.pos.inRangeTo(target, 3)) {
+            /*            if (this.pos.isNearTo(target) && target.structureType !== STRUCTURE_WALL && target.structureType !== STRUCTURE_ROAD&& target.structureType !== STRUCTURE_CONTAINER) {
+                            this.rangedMassAttack();
+                            return true;
+                        } else  */
+            if (this.pos.inRangeTo(target, 3)) {
                 this.rangedAttack(target);
                 return true;
             }
         }
-/*        if ((this.room.name === this.partyFlag.pos.roomName) || (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.enemies, this.room.controller.owner.username)) || (this.room.controller !== undefined && this.room.controller.reservation !== undefined && _.contains(fox.enemies, this.room.controller.reservation.username))) {
-            this.killRoads();
-            this.say('kr');
-        } else */
+        /*        if ((this.room.name === this.partyFlag.pos.roomName) || (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.enemies, this.room.controller.owner.username)) || (this.room.controller !== undefined && this.room.controller.reservation !== undefined && _.contains(fox.enemies, this.room.controller.reservation.username))) {
+                    this.killRoads();
+                    this.say('kr');
+                } else */
         if (this.room.controller !== undefined && !this.room.controller.my && this.room.name === this.partyFlag.pos.roomName) {
             this.rangedMassAttack();
         }
@@ -632,7 +633,7 @@ module.exports = function() {
         // No moving.
         // This returns true if it's a ranged heal and false if
         this.say('SHeal');
-        if (this.getActiveBodyparts(HEAL) < 2) {
+        if (this.getActiveBodyparts(HEAL) < 1) {
             return false;
         }
 
@@ -662,6 +663,7 @@ module.exports = function() {
                 this.heal(tgt);
             }
             this.memory.reHealID = tgt.id;
+            return true;
         } else {
             if (this.memory.role === 'guard') return false;
             // Echo Healing.
@@ -675,7 +677,7 @@ module.exports = function() {
                     this.heal(tgt);
                 }
             }
-            return true;
+            return false;
         }
         return false;
     };
@@ -1428,6 +1430,12 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             simpleExit: false,
         });
 
+        if (_.isObject(start_room)) {
+            move_opts = start_room;
+            start_room = creep.memory.home;
+        }
+        if (target === undefined) return;
+
         let status = null;
         let end_room = target.roomName !== undefined ? target.roomName : target.pos.roomName;
 
@@ -1966,10 +1974,11 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
         if (options.segment && (this.pos.x === 1 || this.pos.x === 48 || this.pos.y === 1 || this.pos.y === 48)) {
             if (this.memory.cachePath === undefined || this.memory.cachePath.length < 10) {
-                if (this.memory.party !== undefined) {
-                    segment.requestPartySegmentData(this.memory.party);
-                } else {
+                if (this.memory.party === undefined || Game.flags[this.memory.party].memory.mineral) {
                     segment.requestRoomSegmentData(this.memory.home);
+                } else {
+                    segment.requestPartySegmentData(this.memory.party);
+
                 }
             }
         }
@@ -2016,7 +2025,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 }
 
                 if (rawData[home] === undefined || !rawData[home]) { // False rawdata needs to be refreshed
-                    if (this.memory.party === undefined) {
+                    if (this.memory.party === undefined || Game.flags[this.memory.party].memory.mineral) {
                         rawData[home] = segment.getRawSegmentRoomData(home);
                     } else {
                         rawData[home] = segment.getRawSegmentPartyData(home);
@@ -2059,7 +2068,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                     test = serializePath(this);
                     if (test !== undefined) {
                         rawData[home] += test + '+';
-                        if (this.memory.party === undefined) {
+                        if (this.memory.party === undefined || Game.flags[this.memory.party].memory.mineral) {
                             segment.setRoomSegmentData(home, rawData[home]);
                         } else {
                             segment.setPartySegmentData(home, rawData[home]);

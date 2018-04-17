@@ -62,6 +62,7 @@ class MoveInteract {
 
     static moveToDefendFlag2(creep, bades) {
         let maxDistance = 1;
+        if(creep.memory.role === 'homeDefender') maxDistance = 2;
         let redFlags = _.filter(Game.flags, function(f) {
             return f.color == COLOR_RED && Game.map.getRoomLinearDistance(f.pos.roomName, creep.room.name) <= maxDistance;
         });

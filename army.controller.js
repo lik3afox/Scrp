@@ -84,7 +84,7 @@ class hackerClass extends roleParent {
 
 
 //            if (!super.avoidArea(creep)){
-                creep.moveMe(creep.partyFlag,{useSKPathing:true,reusePath:50});
+                creep.tuskenTo(creep.partyFlag,creep.memory.home,{useSKPathing:true,reusePath:50});
 //                            movement.flagMovement(creep);
   //          }
         }

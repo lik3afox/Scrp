@@ -235,11 +235,12 @@ class engineerClass extends roleParent {
                     switch (creep.memory.boostType) {
                         case 'upgrader':
                             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(creep.room.controller);
+                                creep.moveTo(creep.room.controller,{reusePath:20,maxRooms:1});
                             }
                             if(creep.carry[RESOURCE_ENERGY] < 100)                            creep.pickUpEnergy();
                             break;
                         case 'builder':
+                          creep.pickUpEnergy();
                                 if (!super.constr.moveToBuild(creep)) {
                                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                                         creep.moveTo(creep.room.controller);
@@ -251,6 +252,7 @@ class engineerClass extends roleParent {
                                 }
                             break;
                         default:
+                          creep.pickUpEnergy();
                             if (!spawn.moveToTransfer(creep, 300)) {
                                 if (!super.constr.moveToBuild(creep)) {
                                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -288,6 +290,11 @@ class engineerClass extends roleParent {
                 }
             } else {
 //                if (creep.pickUpEnergy()) return;
+creep.pickUpEnergy();
+     //   if ( creep.moveToPickUp(FIND_DROPPED_RESOURCES,100) === OK) {
+    //        creep.say('drp');
+  //          return;
+//        }
 
 //                if (!creep.moveToPickEnergy( 100)) {
                     if (!roleParent.constr.withdrawFromTombstone(creep)) {

@@ -31,8 +31,8 @@ class controllerRole extends roleParent {
         if (super.movement.runAway(creep)) {
             return;
         }
-
-        if (creep.room.name == super.movement.getRoomPos(creep).roomName && creep.room.controller) {
+        if(goal === null) return;
+        if (creep.room.name == goal.pos.roomName) {
 
             if (creep.pos.isNearTo(creep.room.controller)) {
                 creep.reserveController(creep.room.controller);

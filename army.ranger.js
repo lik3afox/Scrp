@@ -5,7 +5,7 @@ var classLevels = [
 // Level 0
 [MOVE, RANGED_ATTACK],
 // Level 1 10/10
-[MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],
+[MOVE,MOVE,MOVE,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],
 // Level 2 15/15
 [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK],
 // Level 3 20/20
@@ -246,8 +246,9 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
         if (super.rallyFirst(creep)) return;
         if (super.goToPortal(creep)) return;
 
-        if (!doAttack(creep)) {
-        }
+//        if (!doAttack(creep)) {
+  //      }
+        creep.smartRangedAttack();
 
         creep.say(creep.memory.party);
 
@@ -258,8 +259,8 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
                     }
                 }*/
 
-
-        movement.flagMovement(creep);
+creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+        //movement.flagMovement(creep);
         //          }
     }
 

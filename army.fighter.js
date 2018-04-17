@@ -193,6 +193,15 @@ function doAttack(creep) {
 function powerAction(creep) {
     var power = require('commands.toPower');
 
+            var bads = creep.room.find(FIND_HOSTILE_CREEPS);
+            bads = _.filter(bads, function(o) {
+                return o.owner.username === 'Screeps';
+            });
+//            bads = creep.pos.findInRange(bads,3);
+if(bads.length > 0){
+            console.log('FOUND looking around for bads',bads.length);
+}
+
     if (Game.flags[creep.memory.party] !== undefined) {
 
         if (creep.room.name == Game.flags[creep.memory.party].pos.roomName) {

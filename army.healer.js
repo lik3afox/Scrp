@@ -146,6 +146,7 @@ function powerAction(creep) {
 
     if (Game.flags[creep.memory.party] !== undefined) {
         if (Game.flags[creep.memory.party].room !== undefined && creep.pos.inRangeTo(Game.flags[creep.memory.party], 5)) {
+
             if (creep.memory.powerbankID === undefined) {
                 let vv = creep.room.find(FIND_STRUCTURES);
                 vv = _.filter(vv, function(s) {
@@ -363,7 +364,8 @@ class healerClass extends roleParent {
         let dmg = _.min(hurtz, o => o.hits);
 
         //return;
-        if (dmg !== undefined) {
+        creep.smartHeal();
+/*        if (dmg !== undefined) {
             creep.say('1');
             if (creep.heal(dmg) == ERR_NOT_IN_RANGE) {
                 creep.rangedHeal(dmg);
@@ -385,7 +387,7 @@ class healerClass extends roleParent {
                 if (last.id !== creep.id) {}
             }
             doMove = true;
-        }
+        }*/
         //        if (super.rallyFirst(creep)) return;
         if (super.goToPortal(creep)) return;
 
@@ -405,9 +407,10 @@ class healerClass extends roleParent {
                 movement.flagMovement(creep);
             }
         } else {
-            if (doMove) {
-                movement.flagMovement(creep);
-            }
+//            if (doMove) {
+            //    movement.flagMovement(creep);
+            creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+  //          }
         }
 
 

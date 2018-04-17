@@ -35,6 +35,7 @@ var roomSegment = {
     // Shard 2
     E19S49: 10,
     E22S49: 10,
+//    E29S48: 10,
 };
 
 
@@ -327,6 +328,7 @@ class segmentCommand {
     }
 
     static setPartySegmentData(partyName, rawData) {
+
         var seg = partyNameToSegmentNumber(partyName);
         console.log("set party segment", seg, RawMemory.segments[seg]);
 

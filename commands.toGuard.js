@@ -1,5 +1,5 @@
 var guardParty = [
-    ['guard', require('keeper.guard2'), 1, 0]
+    ['guard', require('keeper.guard2'), 1, 1]
 ];
 var shooterParty = [
     ['shooter', require('keeper.shooter'), 1, 4]
@@ -25,6 +25,7 @@ function getCost(module) {
 }
 
 function getSpawnCreating(flag) {
+if(flag.memory.musterRoom === undefined) flag.memory.musterRoom = flag.memory.spawnRoom;
     if(flag.memory.spawnRoom === undefined) flag.memory.spawnRoom = 'none';
     if (flag.memory.spawnRoom !== 'none') {
         return flag.memory.spawnRoom;
@@ -117,6 +118,7 @@ class partyInteract {
                         party: flag.name,
                         memory: {
                             role: currentParty[e][_name],
+                            level: currentParty[e][_level],
                             home: home,
                             party: flag.name,
                             parent: 'default'

@@ -6,16 +6,16 @@ RoomPosition.prototype.lookForStructure = function(structureType) {
 };
 
 module.exports = function() {
- Object.defineProperty(Room.prototype, 'stats', {
+    Object.defineProperty(Room.prototype, 'stats', {
         configurable: true,
         get: function() {
-    let zz = Memory.stats.rooms[this.name];
-    if(zz !== undefined) {
-        return zz;
-    }
-    return {};
-}
- });
+            let zz = Memory.stats.rooms[this.name];
+            if (zz !== undefined) {
+                return zz;
+            }
+            return {};
+        }
+    });
     Object.defineProperty(Room.prototype, 'alphaSpawn', {
         configurable: true,
         get: function() {
@@ -41,6 +41,47 @@ module.exports = function() {
                 return this._alphaspawn;
             }
 
+        }
+    });
+
+    Object.defineProperty(Room.prototype, 'extractor', {
+        // Returns any(my/enemy) towers.
+        configurable: true,
+        get: function() {
+            if (this._extractor !== undefined) {
+                return this._extractor;
+            } else {
+                if (this.memory.extractorID === undefined) {
+                    var rtn = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_EXTRACTOR });
+                    if (rtn.length > 0) {
+                        this.memory.extractorID = rtn[0].id;
+                    }
+                }
+                let ext = Game.getObjectById( this.memory.extractorID );
+                if(ext === null) ext = undefined;
+                this._extractor = ext;
+                return this._extractor;
+            }
+        }
+    });
+    Object.defineProperty(Room.prototype, 'mineral', {
+        // Returns any(my/enemy) towers.
+        configurable: true,
+        get: function() {
+            if (this._mineral !== undefined) {
+                return this._mineral;
+            } else {
+                if (this.memory.mineralID === undefined) {
+                    var rtn = this.find(FIND_MINERALS);
+                    if (rtn.length > 0) {
+                        this.memory.mineralID = rtn[0].id;
+                    }
+                }
+                let ext = Game.getObjectById( this.memory.mineralID );
+                if(ext === null) ext = undefined;
+                this._mineral = ext;
+                return this._mineral;
+            }
         }
     });
 
@@ -93,7 +134,7 @@ module.exports = function() {
             } else {
                 if (this.memory.masterLinkID === undefined) {
                     let bb = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_LINK });
-                    if (bb.length === 0){
+                    if (bb.length === 0) {
                         this.memory.masterLinkID = bb[0].id;
                         return bb[0];
                     }
@@ -116,7 +157,7 @@ module.exports = function() {
             } else {
                 if (this.memory.powerSpawnID === undefined) {
                     let bb = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_POWER_SPAWN });
-                    if (bb.length > 0){
+                    if (bb.length > 0) {
                         this.memory.powerSpawnID = bb[0].id;
                         return bb[0];
                     }
@@ -184,17 +225,17 @@ module.exports = function() {
         }
     });
     RoomPosition.prototype.isNearAny = function(targets) {
-    
-        if(!_.isArray(targets)){
+
+        if (!_.isArray(targets)) {
             targets = [targets];
         }
-        for(let i in targets){
-            if(this.isNearTo(targets[i])){
+        for (let i in targets) {
+            if (this.isNearTo(targets[i])) {
                 return targets[i];
             }
         }
         return undefined;
-    }; 
+    };
 
     Room.prototype.dropped = function() {
         var dEnergy;

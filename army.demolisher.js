@@ -169,13 +169,13 @@ function doAttack(creep) {
             //                  return !_.contains(fox.friends, o.owner.username);
             //                });
             if (bads.length > 0) {
-                creep.dismantle(bads[0]);
+              //  creep.dismantle(bads[0]);
                 return true;
             }
             if (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && creep.room.controller.owner.username !== 'likeafox') {
                 bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
                 if (bads.length > 0) {
-                    creep.dismantle(bads[0]);
+                   // creep.dismantle(bads[0]);
                     //                    return true;
                 }
             }
@@ -207,7 +207,7 @@ class demolisherClass extends roleParent {
     }
 
     static run(creep) {
-        creep.memory.death = creep.partyFlag === undefined;
+   //     creep.memory.death = creep.partyFlag === undefined;
         if (super.spawnRecycle(creep)) {
             return;
         }
@@ -224,7 +224,7 @@ class demolisherClass extends roleParent {
         if (super.goToPortal(creep)) return;
 
 
-        if (creep.partyFlag.memory.target !== undefined) {
+//        if (creep.partyFlag.memory.target !== undefined) {
             /*            let fTar = Game.getObjectById(creep.partyFlag.memory.target);
                         if (fTar !== null) {
                             if (creep.pos.isNearTo(fTar)) {
@@ -232,26 +232,26 @@ class demolisherClass extends roleParent {
                             }
                         }*/
             creep.smartDismantle();
-            if (creep.room.name === creep.partyFlag.pos.roomName) {
-                creep.moveMe(creep.partyFlag, { ignoreCreeps: true });
-            } else {
+      //      if (creep.room.name === creep.partyFlag.pos.roomName) {
+    //            creep.moveMe(creep.partyFlag, { ignoreCreeps: true });
+  //          } else {
                 creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
 //                movement.flagMovement(creep);
-            }
-        } else if (!doAttack(creep)) {
-                            creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+//            }
+//        } else if (!doAttack(creep)) {
+  //                          creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
 
   //          movement.flagMovement(creep);
-        } else {
-                            creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+    //    } else {
+      //                      creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
 
     //        movement.flagMovement(creep);
-        }
+       // }
 
         if (creep.room.name === creep.partyFlag.pos.roomName) {
             if (creep.memory._move !== undefined && creep.memory._move.path !== undefined && creep.memory._move.path === "") {
-               var str = creep.room.find(FIND_STRUCTURES);
-                console.log(str.length,"trying");
+               var str = creep.room.find(FIND_HOSTILE_STRUCTURES);
+//                console.log(str.length,"trying");
                 if(str.length > 0){
 	               var tgt = creep.pos.findClosestByRange(str);
                 	creep.partyFlag.memory.target = tgt.id;

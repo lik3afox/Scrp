@@ -193,7 +193,7 @@ class muleClass extends roleParent {
                         }
                         return;
                     } else {
-                        creep.moveMe(targ);
+                        creep.moveMe(targ, { maxRooms: 1, reusePath: 50 });
                     }
                 }
                 // }
@@ -258,6 +258,7 @@ class muleClass extends roleParent {
                         creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home, { reusePath: 50 });
                     } else {
                         creep.moveMe(Game.flags[creep.memory.party], { reusePath: 50, ignoreCreeps: false });
+                        creep.say('!');
                     }
                     creep.countDistance();
                     //                    }
@@ -368,18 +369,29 @@ class muleClass extends roleParent {
             if (creep.room.name == creep.memory.home && !creep.memory.didPortal) {
                 creep.memory.goHome = false;
             } else {
-
-                let zz = Game.getObjectById(creep.memory.parent);
-                if (zz !== null && creep.carryTotal > 0) {
-                    zz = zz.room.terminal;
-                    if (creep.pos.isNearTo(zz)) {
-                        creep.transfer(zz, creep.carrying);
-                    } else {
-                        //creep.moveMe(zz, { reusePath: 50, ignoreCreeps: true });
-                        //                            creep.tuskenTo(zz,creep.partyFlag.pos.roomName);
-                        creep.moveMe(zz, { reusePath: 50, ignoreCreeps: true });
-                    }
+                if (creep.isHome && creep.carryTotal > 0 && !creep.memory.didPortal) {
+                    creep.moveToTransfer(creep.room.terminal, creep.carrying);
+                    creep.say('trs');
+                    return;
                 }
+                if (creep.atFlagRoom && creep.carryTotal > 0 && creep.memory.didPortal) {
+                    creep.moveToTransfer(creep.room.terminal, creep.carrying);
+                    creep.say('trs');
+                    return;
+                } else {
+                    creep.moveMe(creep.partyFlag, { reusePath: 50 });
+                }
+                /*                let zz = Game.getObjectById(creep.memory.parent);
+                                if (zz !== null && creep.carryTotal > 0) {
+                                    zz = zz.room.terminal;
+                                    if (creep.pos.isNearTo(zz)) {
+                                        creep.transfer(zz, creep.carrying);
+                                    } else {
+                                        //creep.moveMe(zz, { reusePath: 50, ignoreCreeps: true });
+                                        //                            creep.tuskenTo(zz,creep.partyFlag.pos.roomName);
+                                        creep.moveMe(zz, { reusePath: 50, ignoreCreeps: true });
+                                    }
+                                }*/
                 if (creep.carryTotal === 0 && creep.memory.didPortal) {
                     creep.memory.death = true;
                 }

@@ -1702,7 +1702,16 @@ class roleTerminal {
                     newTradeEnergy(Game.rooms.E19S49.terminal);
                     }
                 }
-
+                console.log(Game.rooms.E22S49.terminal.total);
+                if(Game.rooms.E22S49.terminal.total > 0){
+                    if(Game.rooms.E19S49.terminal.total < 250000){
+                        for(var e in Game.rooms.E22S49.terminal.store){
+                            if(Game.rooms.E22S49.terminal.store[e] > 0 && e !== RESOURCE_ENERGY){
+                                Game.rooms.E22S49.terminal.send(e,1250,'E19S49','Balance');
+                            }
+                        }
+                    }
+                }
                 /*var room = Game.rooms.E19S49;
 
                 var terminal = room.terminal;

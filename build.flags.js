@@ -951,6 +951,8 @@
                     if (flag.memory.nukeRooms === undefined) {
                         flag.memory.nukeRooms = [];
                     }
+
+                    
                     return;
                 }
                 if (flag.name === 'recontrol') {
@@ -977,70 +979,60 @@
                     }
                 }
 
-                /*
-                if (flag.memory.killBase) {
-
-                    if (flag.memory.target === undefined && flag.memory.nextTargets.length > 0) {
-                        flag.memory.target = flag.memory.nextTargets.shift();
-                    }
-                    // Visualization of X's.
-                    let zzzzz = Game.getObjectById(flag.memory.target);
-                    if (zzzzz === null) {
-                        if (flag.memory.nextTargets.length > 0) {
-                            flag.memory.target = flag.memory.nextTargets.shift();
-                        } else {
-                            flag.memory.target = undefined;
-                        }
-
-                    }
-
-                    if (flag.memory.target === undefined) {
+                // All flags need to have a target
+                if (flag.room !== undefined && flag.room.controller !== undefined && !flag.room.controller.my) {
+                    let tgt = Game.getObjectById(flag.memory.target);
+                    if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
+                        flag.setPosition(tgt.pos);
+                    } else if (tgt === null) {
                         findFlagTarget(flag);
-                    } else {
-                        let zz = Game.getObjectById(flag.memory.target);
-                        if (zz !== null && !flag.pos.isEqualTo(zz)) {
-                            flag.setPosition(zz.pos);
-                        } else {
-                            findFlagTarget(flag);
+                    }
+                }
+                // Mineral flag that will turn off when it's fully extracted.
+                if (flag.memory.mineral && flag.room !== undefined) {
+    //                if (flag.room.extractor !== null && !flag.room.extractor.pos.isEqualTo(flag)) {
+  //                      flag.setPosition(flag.room.extractor.pos);
+//                    }
+                    if (flag.room.mineral !== undefined) {
+                        flag.memory.mineralID = flag.room.mineral.id;
+                        flag.memory.mineralType = flag.room.mineral.mineralType;
+                    }
+                    if (flag.room.mineral.mineralAmount === 0) {
+                        flag.memory.delaySpawn = flag.room.mineral.ticksToRegeneration-150;
+                    }
+                } 
+                if (flag.memory.mineral && flag.memory.mineralType !== undefined) {
+//                    console.log(flag, flag.memory.mineralType , Memory.stats.totalMinerals[flag.memory.mineralType]);
+/*                         if (flag.memory.color === COLOR_YELLOW && Memory.stats.totalMinerals[flag.memory.mineralType] > 175000) {
+                            flag.memory.setColor = {
+                                color: COLOR_WHITE,
+                                secondaryColor: COLOR_WHITE,
+                            };
+                        } */
+                         if (flag.memory.color === COLOR_WHITE) {
+                            flag.memory.setColor = {
+                                color: COLOR_YELLOW,
+                                secondaryColor: COLOR_YELLOW,
+                            };
                         }
-                    }
-
-                } */
-                /*
-                if (flag.pos.roomName === flag.name) {
-                    if (flag.room !== undefined) {
-
-                    } else if (flag.secondaryColor === COLOR_WHITE && flag.room === undefined) {
-                        //set color
-                        flag.memory.setColor = {
-                            color: COLOR_YELLOW,
-                            secondaryColor: COLOR_YELLOW,
-                        };
-                        // set memory
-                        flag.memory.musterRoom = close;
-                        flag.memory.party = [
-                            ['engineer', 1, 10], // Builder Engineer
-                            ['mule', 1, 11],
-                        ];
-
-                    }
-                } */
+                }
 
                 // Flag Delay Spawning Function.
                 if (flag.memory.delaySpawn !== undefined) {
                     if (flag.memory.delaySpawn > 0) {
                         flag.memory.delaySpawn--;
+
                         if (flag.memory.color !== COLOR_BROWN) {
                             flag.memory.setColor = {
                                 color: COLOR_BROWN,
-                                secondaryColor: COLOR_BROWN,
+                                secondaryColor: COLOR_WHITE,
                             };
                         }
                     } else if (flag.color === COLOR_BROWN) {
                         if (flag.memory.color !== COLOR_YELLOW) {
                             flag.memory.setColor = {
                                 color: COLOR_YELLOW,
-                                secondaryColor: COLOR_BROWN,
+                                secondaryColor: COLOR_YELLOW,
                             };
                         }
                     }
@@ -1116,21 +1108,14 @@
                             let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                             if (res.length > 0) {
                                 for (let ee in res) {
-                                    if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_TERMINAL && res[ee].structureType !== STRUCTURE_STORAGE && res[ee].structureType !== STRUCTURE_CONTROLLER)) {
+                                    if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_CONTROLLER)) {
                                         flag.memory.target = res[ee].structure.id;
                                         break;
                                     }
-                                    if (res[ee].structure !== undefined && res[ee].structureType === STRUCTURE_TERMINAL === res[ee].structureType === STRUCTURE_STORAGE) {
-                                        findFlagTarget(flag);
-                                        break;
-                                    }
                                 }
-                            } else {
-                                findFlagTarget(flag);
                             }
 
-                            var tgt = Game.getObjectById(flag.memory.target);
-
+                            let tgt = Game.getObjectById(flag.memory.target);
 
                             if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
                                 flag.setPosition(tgt.pos);

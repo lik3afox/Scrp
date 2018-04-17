@@ -277,7 +277,7 @@ class StructureInteract {
             let zz = creep.build(ztarget);
             creep.say('Build' + zz);
         } else {
-            creep.moveMe(ztarget, { reusePath: 15, ignoreCreeps: true });
+            creep.moveMe(ztarget, { reusePath: 15, ignoreCreeps: true , maxRooms:1});
         }
         return true;
     }
