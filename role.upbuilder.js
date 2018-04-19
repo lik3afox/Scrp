@@ -180,6 +180,7 @@ class roleUpbuilder extends roleParent {
 
         // Logic here to determine action.
         if ( creep.carry.energy <= creep.stats('upgrading')) {
+
 //            super.constr.pickUpEnergy(creep);
             creep.memory.wallTargetID = undefined;
             if (creep.room.name == 'E17S34' || creep.room.name == 'E28S73') {
@@ -251,6 +252,8 @@ class roleUpbuilder extends roleParent {
 
             if (strucs !== null  ) {
                 if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
+
+
                     creep.moveMe(strucs,{ignoreCreeps:true});
                 }
             } else {

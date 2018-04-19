@@ -52,8 +52,9 @@ class mineralRole extends roleParent {
         }
         memoryCheck(creep);
         if (creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
-            boost.push('UO');
-            _.uniq(boost);
+    //        let boost = [];
+//            boost.push('UO');
+  //          _.uniq(boost);
         }        
         if (creep.ticksToLive > 1200 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
             creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
