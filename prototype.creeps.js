@@ -435,7 +435,7 @@ module.exports = function() {
                 });
             }
         } else {
-            this.moveTo(source);
+            this.moveTo(source,{maxRooms:1,reusePath:50,ignoreCreeps:true});
         }
 
         return true;

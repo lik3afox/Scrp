@@ -180,7 +180,7 @@ class roleUpbuilder extends roleParent {
 
         // Logic here to determine action.
         if ( creep.carry.energy <= creep.stats('upgrading')) {
-
+ creep.pickUpEnergy();
 //            super.constr.pickUpEnergy(creep);
             creep.memory.wallTargetID = undefined;
             if (creep.room.name == 'E17S34' || creep.room.name == 'E28S73') {
@@ -200,7 +200,6 @@ class roleUpbuilder extends roleParent {
                         if (!super.containers.withdrawFromStorage(creep))
                             if (!super.containers.moveToWithdraw(creep)) {
                                 //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
-
                             }
                 //    }
 
@@ -218,14 +217,17 @@ class roleUpbuilder extends roleParent {
 
                         }
                 } else {
+                	if (!roleParent.constr.withdrawFromTombstone(creep)) {
                     if (!super.containers.withdrawFromStorage(creep))
                         if (!super.containers.moveToWithdraw(creep)) {
+if (!creep.moveToWithdrawSource()) {
+}
                       //      if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
                                 //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 
                         //    }
                         }
-
+}
                 }
             }
 

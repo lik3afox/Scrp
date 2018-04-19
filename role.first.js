@@ -200,7 +200,7 @@ class roleFirst extends roleParent {
                 if (!super.containers.withdrawFromStorage(creep)) {
                     if (!super.containers.withdrawFromTerminal(creep)) {
                         if (!roleParent.constr.withdrawFromTombstone(creep)) {
-                            if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES, creep.memory.roleID * 40)) {
+                            if (!creep.moveToPickUp(FIND_DROPPED_RESOURCES, creep.memory.roleID * 40,{maxRooms:1})) {
 
                             }
                         }

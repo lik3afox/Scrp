@@ -251,7 +251,7 @@ class roleGuard extends roleParent {
                         creep.attack(enemy);
                     } else {
                         if (enemy.owner.username === 'Source Keeper') {
-                            if (creep.hits == creep.hitsMax || distance > 6) {
+                            if (creep.hits == creep.hitsMax || distance > 6 || distance < 4) {
                                 creep.moveMe(enemy, { ignoreCreeps: true, maxRooms: 1 });
                             } else {
                                 creep.selfHeal();    

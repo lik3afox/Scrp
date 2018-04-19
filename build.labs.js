@@ -449,8 +449,10 @@ function labDo(roomName, created, labz, laby) {
             lab3.room.memory.labsNeedWork = true;
             return false;
         }
-        if ((lab3.mineralType !== null && labs[laby - 1].resource !== undefined && labs[laby - 1].resource !== lab3.mineralType)) {
-            console.log(roomLink(lab3.room.name), 'tigger4', labs[laby - 1].resource, lab3.mineralType, laby - 1);
+
+        if ((lab3.room.memory.lab2Mode !== 'none')&&( lab3.mineralType !== null && labs[laby - 1].resource !== undefined && labs[laby - 1].resource !== lab3.mineralType)) {
+            console.log(roomLink(lab3.room.name), 'tigger4',  lab3.mineralType, labs[laby - 1].resource, labs[laby - 1].resource , lab3.mineralType);
+
             lab3.room.memory.labsNeedWork = true;
             return false;
         }

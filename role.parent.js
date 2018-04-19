@@ -325,7 +325,7 @@ class baseParent {
     }
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1000 || creep.room.name == 'E29S48') {
+        if (creep.ticksToLive < 1000 || creep.room.name == 'E29S48' ||(creep.room.controller !== undefined && creep.room.controller.level < 6) ){
             return false;
         }
         if (creep.memory.boostNeeded === undefined) {
