@@ -108,16 +108,6 @@ var reactionTemplate = [{
     emptied: true
 }];
 
-var oneMatMix = [
-    [3, 1, 2],
-    [4, 1, 2],
-    [5, 1, 2],
-    //    [6, 1, 2],
-    [7, 1, 2],
-    [8, 1, 2],
-    [9, 1, 2],
-    [10, 1, 2],
-];
 
 
 
@@ -418,14 +408,14 @@ function labDo(roomName, created, labz, laby) {
         lab1.room.visual.line(lab1.pos, lab2.pos, { color: 'red' });
         lab1.room.visual.line(lab1.pos, lab3.pos, { color: 'red' });
     }
-      //  if(Game.shard.name === 'shard2'){
-     //       console.log(lab2.mineralType , lab3.mineralType);
-     //   }
+    //  if(Game.shard.name === 'shard2'){
+    //       console.log(lab2.mineralType , lab3.mineralType);
+    //   }
     if (lab1.cooldown !== 0) return false;
 
-//&& Game.rooms[roomName].memory.lab2Mode !== 'none'
-    if (!lab3.room.memory.labsNeedWork ) {
-        if(lab2.mineralType === null || lab3.mineralType === null ){
+    //&& Game.rooms[roomName].memory.lab2Mode !== 'none'
+    if (!lab3.room.memory.labsNeedWork) {
+        if (lab2.mineralType === null || lab3.mineralType === null) {
             console.log(lab3.room.name, 'tigger0');
             lab3.room.memory.labsNeedWork = true;
             return false;
@@ -450,8 +440,8 @@ function labDo(roomName, created, labz, laby) {
             return false;
         }
 
-        if ((lab3.room.memory.lab2Mode !== 'none')&&( lab3.mineralType !== null && labs[laby - 1].resource !== undefined && labs[laby - 1].resource !== lab3.mineralType)) {
-            console.log(roomLink(lab3.room.name), 'tigger4',  lab3.mineralType, labs[laby - 1].resource, labs[laby - 1].resource , lab3.mineralType);
+        if ((lab3.room.memory.lab2Mode !== 'none') && (lab3.mineralType !== null && labs[laby - 1].resource !== undefined && labs[laby - 1].resource !== lab3.mineralType)) {
+            console.log(roomLink(lab3.room.name), 'tigger4', lab3.mineralType, labs[laby - 1].resource, labs[laby - 1].resource, lab3.mineralType);
 
             lab3.room.memory.labsNeedWork = true;
             return false;
@@ -826,14 +816,27 @@ class buildLab {
 
                     if (doMix) {
                         var result;
+                        var oneMatMix = [
+                            [3, 1, 2],
+                            [4, 1, 2],
+                            [5, 1, 2],
+                            //    [6, 1, 2],
+                            [7, 1, 2],
+                            [8, 1, 2],
+                            [9, 1, 2],
+                            [10, 1, 2],
+                        ];
+
                         for (var a in oneMatMix) {
                             let form = oneMatMix[a];
-                            if (result === OK || result === undefined || !result) {
-                                result = labDo(roomName, form[0], form[1], form[2]);
-                            } else {
+      //                      if ( result === undefined || !result) {
+                                //result = 
+                                labDo(roomName, form[0], form[1], form[2]);
+
+    //                        } else {
                                 //                                console.log('Not doing labs');
-                                Game.rooms[roomName].memory.labShift -= 1;
-                            }
+//                                Game.rooms[roomName].memory.labShift -= 1;
+  //                          }
                         }
                     }
 
@@ -877,7 +880,7 @@ class buildLab {
                 good[0].room.memory.boost.mineralType = 'none';
                 //                good[0].room.memory.boost.mineralAmount = 0;
                 good[0].room.memory.boost.timed = 0;
-                if( good[0].memory.isBoosted === undefined) good[0].memory.isBoosted = [];
+                if (good[0].memory.isBoosted === undefined) good[0].memory.isBoosted = [];
                 good[0].say('ahhh');
                 let zz = good[0].memory.boostNeeded.length;
                 while (zz--) {

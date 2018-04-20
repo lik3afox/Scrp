@@ -61,12 +61,11 @@ function doWork(creep) {
             return true;
         }
     } else {
-        if (creep.pos.isNearTo(contain)) {
+        if(creep.pos.isEqualTo(contain)){
+
+        } else if (creep.pos.isNearTo(contain)) {
             if (contain.store != contain.storeCapacity) {
-                for (var e in creep.carry) {
-                    if (creep.carry[e] !== undefined && creep.carry[e] > 0)
-                        creep.transfer(contain, e);
-                }
+                creep.transfer(contain, creep.carrying);
             }
         } else {
             //creep.moveTo(contain);
@@ -186,7 +185,7 @@ class settler extends roleParent {
 
 
 
-            var string = creep.room.memory.mineInfo[creep.memory.goal];
+            //var string = creep.room.memory.mineInfo[creep.memory.goal];
 
             var spn = Game.getObjectById(creep.memory.parent);
             if (spn !== null) {
@@ -214,7 +213,7 @@ class settler extends roleParent {
                             markDeath(creep.memory.goal);
                         } else if(creep.room.memory.mineInfo[creep.memory.goal] > 5000 && zz.expLevel === maxLevel ) {
                         }
-                        string = string + "[" + zz.expLevel + "]";
+                     //   string = string + "[" + zz.expLevel + "]";
                     }
                 }
 
@@ -223,14 +222,6 @@ class settler extends roleParent {
 
             if (creep.room.memory.mineInfo[creep.memory.goal] > 100000) creep.room.memory.mineInfo[creep.memory.goal] = 100000;
             if (creep.room.memory.mineInfo[creep.memory.goal] < -100000) creep.room.memory.mineInfo[creep.memory.goal] = -100000;
-            //}
-
-            creep.room.visual.text(string, creep.pos, {
-                color: '#10c3ba ',
-                stroke: '#000000 ',
-                strokeWidth: 0.123,
-                font: 0.5
-            });
 
 
 //            super.constr.pickUpEnergy(creep);
@@ -257,7 +248,7 @@ class settler extends roleParent {
                 }
             }
 
-            if (contain === null || (contain !== null && _source.energy !== 0 && contain.total < contain.storeCapacity)) {
+            if (contain === null ||  _source.energy !== 0 || (creep.pos.isEqualTo(contain) || contain.total < contain.storeCapacity)) {
 
                 if (creep.harvest(_source) == OK) {
                     if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {

@@ -358,6 +358,15 @@ class SpawnInteract {
                 } else {
                     STACK.shift();
                 }
+            }else if(STACK[0].memory.role === 'first' && ee === ERR_NOT_ENOUGH_ENERGY && spawn.room.energyAvailable <= 500){
+
+                do {
+                    STACK[0].build.shift();
+                       console.log('><><>>>>-=-=-EMERGYENC MODULE ENERGY',getCost(STACK[0].build),STACK[0].memory.role  + '-=-=-=-=<<<<><><');
+                } while (getCost(STACK[0].build) > spawn.room.energyAvailable);
+
+                spawn.canCreateCreep(STACK[0].build);
+
             } else if (STACK[0].length === undefined && STACK[0].length === 0) {
 
                 console.log("ERROR", spawn, spawn.pos);

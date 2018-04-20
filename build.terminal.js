@@ -427,9 +427,7 @@ function newTradeEnergy(terminal) {
                         "total=", energyUsed.toFixed(2), "Amount", trans.toFixed(2), '+Transfer:', cost, '@perEnergy', perEnergy.toFixed(3));
                     return true;
                 } else {
-                    //                  // console.log(maxLimit, grade, whatHappened, '*EstProfit:', (energyGained * 0.01).toFixed(2), 'From:', terminal.room, 'to', target.room, '@', target.price,
-                    //                    'Gain:', profit.toFixed(2),
-                    //                  "total=", energyUsed.toFixed(2), "Amount", trans.toFixed(2), '+Transfer:', cost, '@perEnergy', perEnergy.toFixed(3));
+                    console.log(maxLimit, grade, whatHappened, '*EstProfit:', (energyGained * 0.01).toFixed(2), 'From:', terminal.room, 'to', target.room, '@', target.price, 'Gain:', profit.toFixed(2), "total=", energyUsed.toFixed(2), "Amount", trans.toFixed(2), '+Transfer:', cost, '@perEnergy', perEnergy.toFixed(3));
                     return false;
                 }
 
@@ -1473,24 +1471,29 @@ class roleTerminal {
         var main;
         if (Game.shard.name === 'shard2') main = 'E19S49';
         if (Game.shard.name === 'shard0') main = 'E38S72';
-                let terminal = Game.rooms[roomName].terminal;
-
+        let terminal = Game.rooms[roomName].terminal;
+//        console.log(roomName, main);
         if (roomName === main) {
             doTrap(roomName);
-            if(roomName === 'E38S72'){
-            	for(let e in terminal.store){
-            		if(e !== RESOURCE_ENERGY && terminal.store[e] > 10000){
+            if (roomName === 'E38S72') {
+                for (let e in terminal.store) {
+                    if (e !== RESOURCE_ENERGY && terminal.store[e] > 10000) {
 
-            			terminal.send(e, 1250, 'E38S81','stuf');
-            			return;
-            		}
-            	}
+                        terminal.send(e, 1250, 'E38S81', 'stuf');
+                        return;
+                    }
+                }
             }
-            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 21000 && Game.rooms[roomName].storage.store[RESOURCE_ENERGY] > 900000) {
-                newTradeEnergy(Game.rooms[roomName].terminal);
-            	return;
+            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 21000 || Game.rooms[roomName].terminal.total === 300000) {
+
+                console.log("doign new trade with new run", newTradeEnergy(Game.rooms[roomName].terminal));
+                return;
             }
             return;
+        } else {
+            if(Game.rooms[main].terminal.total === 300000){
+                Game.rooms[main].terminal.send('energy',5000,roomName);
+            }
         }
 
         var energy = terminal.store[RESOURCE_ENERGY];
@@ -1500,21 +1503,22 @@ class roleTerminal {
             if (terminal.room.boost !== undefined && terminal.room.boost.mineralType !== 'none') {
                 needed.push(terminal.room.boost.mineralType);
             }
-                for (let e in terminal.store) {
+            for (let e in terminal.store) {
 
-                    if (!_.contains(needed, e) && e !== RESOURCE_ENERGY && terminal.store[e] !== undefined) {
-                        let amnt = 1250;
-                        if (amnt > terminal.store[e]) amnt = terminal.store[e];
-
-                        let ez = Game.rooms[roomName].terminal.send(e, amnt, main, 'Balance');
-                        console.log(roomName, 'getting rid of excess', e, '@', main, 'xx', ez);
-                        return;
-                    }
+                if (!_.contains(needed, e) && e !== RESOURCE_ENERGY&& e !== 'XGH2O' && terminal.store[e] !== undefined) {
+                    let amnt = 1250;
+                    if (amnt > terminal.store[e]) amnt = terminal.store[e];
+                    if(amnt < 100) continue;
+                    let ez = Game.rooms[roomName].terminal.send(e, amnt, main, 'Balance');
+                    console.log(roomName, 'getting rid of excess', e, '@', main, 'xx', ez);
+                    return;
                 }
+            }
         }
         if (Game.rooms[roomName].storage.store[RESOURCE_ENERGY] < 1000) {
             Game.rooms[main].terminal.send(RESOURCE_ENERGY, 1250, roomName, 'Balance');
             return;
+            
         }
     }
 

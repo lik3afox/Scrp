@@ -1183,7 +1183,7 @@ function analyzeNeeds(shardObject) {
                 }
             }
             if (shardObject.shard2.marketData[min]) {
-                if (lowestAmount === null || lowestAmount === undefined || shardObject.shard2.marketData[min].buy.price > lowestAmount.price) {
+                if (lowestAmount === null || lowestAmount === undefined || (shardObject.shard2.marketData[min].buy !== null && shardObject.shard2.marketData[min].buy.price > lowestAmount.price) ){
                     lowestShard = 'shard2';
                     lowestAmount = shardObject.shard2.marketData[min].buy;
                 }

@@ -196,21 +196,26 @@ function updateMemory(creep) {
 }
 
 function movement(creep) {
-    let bads = [];
-    bads = getBads(creep);
-    if (bads.length !== 0) {
-        creep.runFrom(bads);
+//    let bads = [];
+//    bads = getBads(creep);
+//    if (bads.length !== 0) {
+    if (roleParent.guardRoom(creep)) {
+
+//        creep.runFrom(bads);
         creep.memory.cachePath = undefined;
-    } else {
+    } else  {
         var skRooms = ['E16S45'];
         if (creep.memory.goHome) {
 
             if (!creep.isHome && !roleParent.constr.doCloseRoadRepair(creep)) {
-                if (!roleParent.constr.doCloseRoadBuild(creep)) {}
+                if (!roleParent.constr.doCloseRoadBuild(creep)) {
+
+                }
             }
 
             creep.countDistance();
             if (Game.rooms[creep.memory.home].storage.total !== 1000000) {
+
                 creep.moveMe(Game.rooms[creep.memory.home].storage, {
                     reusePath: rePath,
                     useSKPathing: _.contains(skRooms, creep.memory.home),
@@ -218,7 +223,9 @@ function movement(creep) {
                     ignoreCreeps: true,
                     visualizePathStyle: visPath
                 });
+
             } else {
+
                 creep.moveMe(Game.rooms[creep.memory.home].terminal, {
                     reusePath: rePath,
                     segment: true,
@@ -226,6 +233,7 @@ function movement(creep) {
                     ignoreCreeps: true,
                     visualizePathStyle: visPath
                 });
+
             }
         } else {
             if (_goal !== null && _goal.energyCapacity === 4000 && roleParent.constr.withdrawFromTombstone(creep, 6)) {
@@ -246,7 +254,11 @@ function movement(creep) {
                 };
                 task.pos = _goal !== null ? _goal.pos : roleParent.movement.getRoomPos(creep);
                 task.order = "moveTo";
-                task.enemyWatch = (_goal.energyCapacity === 3000 ? false : true);
+                if(_goal.energyCapacity === 3000  || _goal.energyCapacity === 1500 ) {
+                    task.enemyWatch = false;
+                } else {
+                    task.enemyWatch = true;
+                }
                 task.energyPickup = true;
                 task.rangeHappy = 2;
                 creep.memory.task.push(task);

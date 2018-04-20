@@ -435,7 +435,7 @@ module.exports = function() {
                 });
             }
         } else {
-            this.moveTo(source,{maxRooms:1,reusePath:50,ignoreCreeps:true});
+            this.moveTo(source, { maxRooms: 1, reusePath: 50, ignoreCreeps: true });
         }
 
         return true;
@@ -965,14 +965,32 @@ module.exports = function() {
 
     Creep.prototype.runFrom = function(badguy, options) {
 
-        if (_.isArray(badguy)) {
+  //      if (this.memory.role === 'transport') {
+            var baddies = [];
+            if (_.isArray(badguy)) {
+                for (var e in badguy) {
+                    baddies.push({ pos: badguy[e].pos, range: 4 });
+                }
+            } else {
+                baddies.push({ pos: badguy.pos, range: 4 });
+            }
+            let result = PathFinder.search(this.pos, baddies, { flee: true });
+            let edz = this.move(this.pos.getDirectionTo(result.path[0]));
+            console.log(roomLink(this.room.name), 'doing new runFrom,',edz );
+            if(edz === OK){
+                return true;
+            } else {
+                return false;
+            }
+//        }
+
+    /*    if (_.isArray(badguy)) {
             let target = this.pos.findClosestByRange(badguy);
             badguy = target;
         }
 
 
         //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
-
         //this.move(this.pos.getDirectionTo(result.path[0]))
         //        this.move(this.pos.getDirectionTo(result.path[0]));
         var direction = this.pos.getDirectionTo(badguy);
@@ -981,7 +999,8 @@ module.exports = function() {
             direction = direction - 8;
         var moveStatus = this.move(direction, options);
         this.say('><', true);
-
+        if(moveStatus === OK) return true;
+        return false;*/
     };
     /*
         Creep.prototype.runFrom = function(badguy, options) {
@@ -2077,7 +2096,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             }
 
         }
-        if (this.memory.role === 'miner' && moveStatus === OK && options.ignoreCreeps && (this.isAtEdge ||this.memory.stuckCount > 0 || this.room.name === this.memory.home)) {
+        if (this.memory.role === 'miner' && moveStatus === OK && options.ignoreCreeps && (this.isAtEdge || this.memory.stuckCount > 0 || this.room.name === this.memory.home)) {
             swapTarget(this);
         }
 

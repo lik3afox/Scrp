@@ -325,7 +325,7 @@ class baseParent {
     }
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1000 || creep.room.name == 'E29S48' ||(creep.room.controller !== undefined && creep.room.controller.level < 6) ){
+        if (creep.ticksToLive < 1000  ||(creep.room.controller !== undefined && creep.room.controller.level < 6) ){
             return false;
         }
         if (creep.memory.boostNeeded === undefined) {
@@ -420,36 +420,31 @@ class baseParent {
         return false;
     }
     static guardRoom(creep) {
-        // IF this returns false - means that it's safe to move.
-        // If this returns true - means that it's not safe to move.
-        /*        let sKep = Game.getObjectById(creep.memory.keeperLairID);
-                if (sKep !== null && sKep.pos.roomName == creep.pos.roomName) {
-                    if (sKep.ticksToSpawn === undefined || sKep.ticksToSpawn < 15 || sKep.ticksToSpawn > 295) {
-                        return true;
-                    }
-                } */
         let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creep.room.name);
         let fMod = parsed[1] % 10;
         let sMod = parsed[2] % 10;
         let isSK = !(fMod === 5 && sMod === 5) && ((fMod >= 4) && (fMod <= 6)) &&
             ((sMod >= 4) && (sMod <= 6));
 
-
         if (!isSK) return false;
 
-        var stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
+        var stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
         stay = _.filter(stay, function(o) {
             return !_.contains(fox.friends, o.owner.username) && (o.getActiveBodyparts(ATTACK) > 0 || o.getActiveBodyparts(RANGED_ATTACK) > 0);
         });
 
+        if(creep.memory.hasRun !== undefined && stay.length > 0){
+            return true;
+        }
 
         if (stay.length === 0) return false;
-        var close = creep.pos.findInRange(stay, 4);
+        var close = creep.pos.findInRange(stay, 3);
         if (stay.length - close.length != stay.length) {
-
-            var closer = creep.pos.findInRange(stay, 3);
-            if (closer.length > 0) {
-                creep.runFrom(stay);
+            if (close.length > 0) {
+              let resz = creep.runFrom(stay);
+              if(resz){
+                creep.memory.hasRun = true;
+              }
             }
             return true;
         } else {

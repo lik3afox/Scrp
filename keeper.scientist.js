@@ -151,8 +151,6 @@ class mineralRole extends roleParent {
 
 
         } else if (!creep.pos.isNearTo(_source)) {
-            if (creep.pos.inRangeTo(_source, 4)) {
-
                 if (!super.guardRoom(creep)) {
                     creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep), {
                         reusePath: 49,
@@ -161,16 +159,6 @@ class mineralRole extends roleParent {
                         //                    visualizePathStyle: visPath
                     });
                 }
-            } else {
-                //            if (!super.guardRoom(creep)) {
-                creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep), {
-                    reusePath: 49,
-                    segment: true,
-                    useSKPathing: true,
-                });
-                //          }
-            }
-
         } else {
             // First he mines and fill up.
             if (creep.memory.mining) {
