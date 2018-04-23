@@ -84,7 +84,7 @@ class roleWallWorker extends roleParent {
             boost.push('XLH2O');
             _.uniq(boost);
         }
-        if (creep.room.name === 'E1S11') {
+        if (creep.room.name === 'E1S11' || creep.room.name === 'E2S24' ) {
             if (super.boosted(creep, ['XLH2O'])) {
                 return;
             }

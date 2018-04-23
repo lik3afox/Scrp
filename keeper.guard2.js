@@ -27,7 +27,7 @@ var fox = require('foxGlobals');
 
 
 function getHostiles(creep, range) {
-    if (creep.room.name !== creep.partyFlag.pos.roomName || creep.memory.keeperLair === undefined) {
+    if (creep.room.name !== creep.partyFlag.pos.roomName || creep.memory.keeperLair === undefined || creep.memory.keeperLair.length === 1) {
         range = 3;
     } 
 
