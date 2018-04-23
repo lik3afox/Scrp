@@ -41,14 +41,14 @@ function doUpgradeIn(creep) {
     var pos;
 
     switch (creep.pos.roomName) {
-        case "E1S11":
+        case "E2S24":
             pos = [
 //                new RoomPosition(31, 22, creep.room.name),
-                new RoomPosition(32, 24, creep.room.name),
-                new RoomPosition(33, 24, creep.room.name),
-                new RoomPosition(33, 22, creep.room.name),
-                new RoomPosition(33, 20, creep.room.name),
-                new RoomPosition(32, 20, creep.room.name),
+                new RoomPosition(39, 36, creep.room.name),
+                new RoomPosition(40, 35, creep.room.name),
+                new RoomPosition(40, 34, creep.room.name),
+                new RoomPosition(40, 33, creep.room.name),
+                new RoomPosition(39, 33, creep.room.name),
 ///                new RoomPosition(31, 22, creep.room.name),
 //                new RoomPosition(31, 21, creep.room.name),
             ];
@@ -60,8 +60,8 @@ function doUpgradeIn(creep) {
                 new RoomPosition(36, 41, creep.room.name),
                 new RoomPosition(35, 41, creep.room.name),
                 new RoomPosition(34, 41, creep.room.name),
-                new RoomPosition(33, 41, creep.room.name),
 //                new RoomPosition(31, 22, creep.room.name),
+                new RoomPosition(33, 41, creep.room.name),
 //                new RoomPosition(31, 21, creep.room.name),
             ];
             break;
@@ -165,7 +165,7 @@ class roleUpgrader extends roleParent {
             if (creep.carry.energy < creep.stats('upgrading') + 1) {
 
  if (going === undefined){
-    if(creep.pos.isNearTo(creep.room.terminal)) {
+    if(creep.pos.isNearTo(creep.room.terminal) && creep.room.terminal.store[RESOURCE_ENERGY] > 0) {
         creep.withdraw(creep.room.terminal,RESOURCE_ENERGY);
     } else {
     creep.moveToWithdraw(creep.room.storage,RESOURCE_ENERGY);

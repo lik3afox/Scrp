@@ -171,9 +171,9 @@ class roleUpbuilder extends roleParent {
    //         return;
     //    }
 
-        if (Game.shard.name === 'shard1' && super.boosted(creep,boost)) {
-            return;
-        }
+//        if (Game.shard.name === 'shard1' && super.boosted(creep,boost)) {
+  //          return;
+    //    }
 
         if (super.depositNonEnergy(creep)) return;
 

@@ -1040,7 +1040,10 @@
                             flag.memory.party = undefined;
                         }
                         if (flag.room.controller.level > 5) {
-                            flag.remove();
+                            flag.memory.setColor = {
+                                color: COLOR_WHITE,
+                                secondaryColor: COLOR_WHITE,
+                            };
                         }
                     }
 
@@ -1052,7 +1055,10 @@
                             flag.memory.party = undefined;
                         }
                         if (flag.room.controller.level > 5) {
-                            flag.remove();
+                            flag.memory.setColor = {
+                                color: COLOR_WHITE,
+                                secondaryColor: COLOR_WHITE,
+                            };
                         }
                     }
                 }

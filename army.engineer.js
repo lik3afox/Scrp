@@ -65,7 +65,7 @@ var classLevels = [
             MOVE, MOVE, MOVE, MOVE, MOVE,
             CARRY, CARRY, CARRY, CARRY, CARRY,
         ],
-        boost: ['LH','KH'],
+        boost: ['LH', 'KH'],
     },
     // Level 8
     {
@@ -185,7 +185,7 @@ class engineerClass extends roleParent {
         if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
-        if ( (creep.memory.level === 7 ||creep.memory.level >= 10 ) && creep.carry[RESOURCE_ENERGY] === 0 && creep.room.name === creep.memory.home) {
+        if ((creep.memory.level === 7 || creep.memory.level >= 10) && creep.carry[RESOURCE_ENERGY] === 0 && creep.room.name === creep.memory.home) {
             creep.moveToWithdraw(creep.room.storage, RESOURCE_ENERGY);
             return;
         }
@@ -235,24 +235,24 @@ class engineerClass extends roleParent {
                     switch (creep.memory.boostType) {
                         case 'upgrader':
                             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(creep.room.controller,{reusePath:20,maxRooms:1});
+                                creep.moveTo(creep.room.controller, { reusePath: 20, maxRooms: 1 });
                             }
-                            if(creep.carry[RESOURCE_ENERGY] < 100)                            creep.pickUpEnergy();
+                            if (creep.carry[RESOURCE_ENERGY] < 100) creep.pickUpEnergy();
                             break;
                         case 'builder':
-                          creep.pickUpEnergy();
-                                if (!super.constr.moveToBuild(creep)) {
-                                    if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                        creep.moveTo(creep.room.controller);
-                                    } else {
-                                        if (creep.pos.isEqualTo(Game.flags.there)) {
-                                            creep.moveTo(creep.room.conttroller);
-                                        }
+                            creep.pickUpEnergy();
+                            if (!super.constr.moveToBuild(creep)) {
+                                if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                                    creep.moveTo(creep.room.controller);
+                                } else {
+                                    if (creep.pos.isEqualTo(Game.flags.there)) {
+                                        creep.moveTo(creep.room.conttroller);
                                     }
                                 }
+                            }
                             break;
                         default:
-                          creep.pickUpEnergy();
+                            creep.pickUpEnergy();
                             if (!spawn.moveToTransfer(creep, 300)) {
                                 if (!super.constr.moveToBuild(creep)) {
                                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -265,21 +265,22 @@ class engineerClass extends roleParent {
                                 }
                             }
                             break;
-                    }/*
-                    if (!spawn.moveToTransfer(creep, 300)) {
-                        if (!super.constr.moveToBuild(creep)) {
-                            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(creep.room.controller);
-                            } else {
-                                if (creep.pos.isEqualTo(Game.flags.there)) {
-                                    creep.moveTo(creep.room.conttroller);
-                                }
-                            }
-                        }
-                    } */
+                    }
+                    /*
+                                        if (!spawn.moveToTransfer(creep, 300)) {
+                                            if (!super.constr.moveToBuild(creep)) {
+                                                if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                                                    creep.moveTo(creep.room.controller);
+                                                } else {
+                                                    if (creep.pos.isEqualTo(Game.flags.there)) {
+                                                        creep.moveTo(creep.room.conttroller);
+                                                    }
+                                                }
+                                            }
+                                        } */
 
 
-                    creep.say('!'+creep.memory.boostType);
+                    creep.say('!' + creep.memory.boostType);
                 } else {
                     if (!super.constr.moveToBuild(creep)) {
                         if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -289,16 +290,9 @@ class engineerClass extends roleParent {
                     creep.say('!@');
                 }
             } else {
-//                if (creep.pickUpEnergy()) return;
-creep.pickUpEnergy();
-     //   if ( creep.moveToPickUp(FIND_DROPPED_RESOURCES,100) === OK) {
-    //        creep.say('drp');
-  //          return;
-//        }
-
-//                if (!creep.moveToPickEnergy( 100)) {
+                creep.pickUpEnergy();
+                if (creep.room.storage !== undefined && creep.room.storage.store[RESOURCE_ENERGY] > 10000 && !super.containers.withdrawFromStorage(creep)) {
                     if (!roleParent.constr.withdrawFromTombstone(creep)) {
-                        //                    if (0 !== creep.moveToPickUp(FIND_DROPPED_RESOURCES, (500 * creep.memory.roleID) + 100)) {
                         if (!super.containers.withdrawFromStorage(creep)) {
                             if (!super.containers.withdrawFromTerminal(creep)) {
                                 if (!super.containers.moveToWithdraw(creep)) {
@@ -311,9 +305,8 @@ creep.pickUpEnergy();
                             }
                         }
                     }
-  //             }
 
-
+                }
             }
 
         }
