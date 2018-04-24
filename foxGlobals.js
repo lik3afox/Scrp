@@ -17,7 +17,7 @@ module.exports = {
     RALLY: COLOR_YELLOW, // If this flag has a name on it will create an party
     FOCUS: COLOR_CYAN, // This is where transportx and transporty will move too.
     RAMPART: COLOR_PURPLE,
-    GUARD: COLOR_BLUE // For guarding a keeper room
+//    GUARD: COLOR_BLUE // For guarding a keeper room
 };
 /*
 {color: '#97c39b ',

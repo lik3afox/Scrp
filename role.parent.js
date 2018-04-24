@@ -434,7 +434,12 @@ class baseParent {
         });
 
         if(creep.memory.hasRun !== undefined && stay.length > 0){
+            creep.memory.hasRun--;
+            if(creep.memory.hasRun < 0){
+                creep.memory.hasRun = 3;
+            } else {
             return true;
+            }
         }
 
         if (stay.length === 0) return false;
@@ -443,7 +448,7 @@ class baseParent {
             if (close.length > 0) {
               let resz = creep.runFrom(stay);
               if(resz){
-                creep.memory.hasRun = true;
+                creep.memory.hasRun = 3;
               }
             }
             return true;

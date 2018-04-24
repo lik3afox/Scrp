@@ -357,7 +357,10 @@ class transport extends roleParent {
             creep.suicide();
 
         super.rebirth(creep);
-        if (super.movement.runAway(creep)) return;
+        if (super.movement.runAway(creep)) {
+            
+            return;
+        }
         if (super.baseRun(creep)) return;
 
         if (creep.ticksToLive > 1400 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {

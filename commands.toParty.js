@@ -171,6 +171,10 @@ function getModuleRole(role) {
 
 function getSpawnCreating(flag) {
     // Rampart Defense, gotta create it where the flag appears.
+    if(flag.memory.spawnRoom !== undefined) {
+        flag.memory.musterRoom = flag.memory.spawnRoom;
+        return flag.memory.musterRoom;
+    }
     if (flag.memory.musterRoom === 'close') {
         flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
         return flag.memory.musterRoom;
@@ -246,7 +250,9 @@ function getCurrentParty(flag) {
         } else {
             //            console.log(flag, 'doesn"t have party or musterType', roomLink(flag.pos.roomName));
         }
-if(flag.memory.musterType === 'guard') console.log('does it?',party);
+
+//if(flag.memory.musterType === 'guard') console.log('does it?',party);
+
         return party;
     }
 
@@ -587,6 +593,7 @@ if (flag.name.substr(0, 5) !== 'power') {
                         build: build,
                         room: home, // This will return a room, and that room will add to alphaSpawn warstack.
                         spawn: home,
+                        home: home,
                         name: currentParty[e][_name] + '#' + currentParty[e][_level] + "!" + Game.shard.name[0] + Game.shard.name[5] + flag.name[rando] + rando3,
                         memory: {
                             role: currentParty[e][_name],
@@ -626,6 +633,10 @@ if (flag.name.substr(0, 5) !== 'power') {
                         toSpawn.addToExpandStack(temp);
                         totalParty[i]++;
                     } else if (currentParty[e][_name] == 'Aupgrader') {
+                        let toSpawn = require('commands.toSpawn');
+                        toSpawn.addToExpandStack(temp);
+                        totalParty[i]++;
+                    } else if (currentParty[e][_name] == 'guard' ||currentParty[e][_name] == 'shooter') {
                         let toSpawn = require('commands.toSpawn');
                         toSpawn.addToExpandStack(temp);
                         totalParty[i]++;

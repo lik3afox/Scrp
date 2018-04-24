@@ -1256,7 +1256,7 @@
                         break;
 
                     case COLOR_BLUE:
-
+/*
                         let guard = flag;
                         if (guard.memory.guardCreateCount === undefined) {
                             guard.memory.guardCreateCount = 0;
@@ -1267,8 +1267,8 @@
                             guard.memory.guardCreateCount = delayBetweenScan;
                             require('commands.toGuard').create(flag);
                         }
-                        break;
-
+                        break; 
+*/
                     case COLOR_YELLOW:
                         // This will mean power flag if it's green/red.
                         let rally = flag;
