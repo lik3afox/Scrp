@@ -416,7 +416,7 @@ function labDo(roomName, created, labz, laby) {
     //&& Game.rooms[roomName].memory.lab2Mode !== 'none'
     if (!lab3.room.memory.labsNeedWork) {
         if (lab2.mineralType === null || lab3.mineralType === null) {
-            console.log(lab3.room.name, 'tigger0');
+            console.log(lab3.room.name, 'tigger0',labs[labz - 1].resource,labs[laby - 1].resource);
             lab3.room.memory.labsNeedWork = true;
             return false;
         }
@@ -811,6 +811,9 @@ class buildLab {
                         if (Memory.stats.totalMinerals.U < 10000 || Memory.stats.totalMinerals.H < 10000) {
                             doMix = false;
                         }
+                    }
+                    if(mat === 'none'){
+                        doMix = false;
                     }
 
 

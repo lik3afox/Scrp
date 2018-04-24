@@ -192,6 +192,7 @@ function doPowerSpawn(creep) {
 
 
 function oneLinkRoom(creep, fill) {
+//    console.log(creep.pos.roomName, 'doing 1LinkRoom');
     if (!fill) {
         //    if ( creep.moveToPickUp(FIND_DROPPED_RESOURCES) ){
         //   creep.say('zzes');
@@ -215,7 +216,7 @@ function oneLinkRoom(creep, fill) {
     }
 }
 
-function E14S38(creep, fill) {
+function upgradeRoom(creep, fill) {
     var goto;
     var target = creep.room.storage;
     if (creep.room.terminal !== undefined && creep.room.controller.level > 3) {
@@ -325,7 +326,7 @@ function E14S38(creep, fill) {
         }
     }
 }
-
+/*
 function doDefault(creep) {
     if (creep.carryTotal !== creep.carryCapacity) {
         var close;
@@ -435,7 +436,7 @@ function doDefault(creep) {
     }
 
 }
-
+*/
 function boostLabWork(creep) {
     creep.say('hi');
     var boost = creep.room.memory.boost;
@@ -555,7 +556,7 @@ function boostLabWork(creep) {
 }
 
 function simple(creep) {
-
+//    console.log(creep.pos.roomName, 'doing simple');
     if (creep.carryTotal === 0) {
         creep.memory.empty = true;
     } else if (creep.carryTotal === creep.carryCapacity) {
@@ -672,13 +673,13 @@ function simple(creep) {
         }
 
     } else {
-        if(creep.saying === 'mBal'){
-            if( creep.moveToTransfer(creep.room.terminal,creep.carrying) !== OK)
+        if (creep.saying === 'mBal') {
+            if (creep.moveToTransfer(creep.room.terminal, creep.carrying) !== OK)
                 creep.say('mBal');
             return;
         }
 
-        if (creep.memory.roleID === 0 && creep.room.energyAvailable < (creep.room.energyCapacityAvailable-100) && creep.carry[RESOURCE_ENERGY] == creep.carryTotal && !creep.memory.pickUpId) {
+        if (creep.memory.roleID === 0 && creep.room.energyAvailable < (creep.room.energyCapacityAvailable - 100) && creep.carry[RESOURCE_ENERGY] == creep.carryTotal && !creep.memory.pickUpId) {
             require('role.first').run(creep);
             creep.say('fill');
             return;
@@ -701,7 +702,7 @@ function simple(creep) {
                     tgt = creep.room.powerspawn;
                     return;
                 }
-                if(creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 && creep.room.storage.store[RESOURCE_ENERGY] > 100000){
+                if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 && creep.room.storage.store[RESOURCE_ENERGY] > 100000) {
                     creep.say('eTerm');
                     tgt = creep.room.terminal;
                 } else {
@@ -739,12 +740,12 @@ function simple(creep) {
         } else if (creep.room.terminal.total === 300000) {
             creep.say('term300K');
             tgt = creep.room.storage;
-        } else if (creep.room.storage === undefined || creep.room.storage.total === 1000000){
+        } else if (creep.room.storage === undefined || creep.room.storage.total === 1000000) {
             creep.say('stor1m');
             tgt = creep.room.terminal;
         }
 
-        creep.moveToTransfer(tgt, e,{reusePath:20});
+        creep.moveToTransfer(tgt, e, { reusePath: 20 });
         //        var target = creep.room.terminal;
         /*
                 if (creep.room.controller.level == 5 && creep.room.storage !== undefined) {
@@ -854,14 +855,20 @@ class roleLinker extends roleParent {
         }
 
         // Dump room
-        if (creep.room.name == 'E14S38' && creep.carry.K > 0) {
-            if (creep.pos.isNearTo(creep.room.storage)) {
-                creep.transfer(creep.room.storage, 'K');
-            } else {
-                creep.moveTo(creep.room.storage);
+        if (creep.room.name == 'E14S38') {
+            if (creep.carry.K > 0) {
+                if (creep.pos.isNearTo(creep.room.storage)) {
+                    creep.transfer(creep.room.storage, 'K');
+                } else {
+                    creep.moveTo(creep.room.storage);
+                }
+                return;
             }
+            // This is for upgrade/dump room.
+            upgradeRoom(creep, creep.carryTotal > 0);
             return;
         }
+
 
         var goto;
         if (creep.room.memory.boost !== undefined && creep.room.memory.boost.mineralType !== 'none' && creep.room.memory.boost.mineralAmount !== 0 && creep.room.memory.boostLabID !== undefined) {
@@ -869,7 +876,7 @@ class roleLinker extends roleParent {
             creep.say('lab');
             return;
         }
-        if (creep.room.name == 'E19S49') {
+        if (creep.room.name == 'E19xxS49') {
             creep.say('Xzh');
             if (creep.carry[RESOURCE_ENERGY] > 0 && creep.room.terminal.total < 300000 && (creep.room.terminal.store[RESOURCE_ENERGY] === undefined || creep.room.terminal.store[RESOURCE_ENERGY] < 20000)) {
                 creep.moveToTransfer(creep.room.terminal, RESOURCE_ENERGY);
@@ -887,34 +894,11 @@ class roleLinker extends roleParent {
         }
 
         if (creep.room.memory.simple || Game.shard.name == 'shard2') {
+            // Simple really means complex - it makes the linker do scientist/first roles too. 
             simple(creep);
             return;
         }
-/*
-        if (creep.room.name == 'E14Sxx47') {
-            if (creep.carryTotal === 0 && creep.room.terminal.total === 300000) {
-                if (!creep.pos.isNearTo(creep.room.terminal)) {
-                    creep.moveTo(creep.room.terminal);
-                } else {
-                    creep.withdraw(creep.room.terminal, 'Z');
-                }
-            } else if (creep.carryTotal !== creep.carry[RESOURCE_ENERGY]) {
-                for (let e in creep.carry) {
-                    if (creep.carry[e] > 0) {
-                        creep.drop(e);
-                        break;
-                    }
-                }
 
-            }
-            creep.say('FUCK');
-            return;
-        } */
-
-        if (creep.room.name == 'E14S38') {
-            E14S38(creep, creep.carryTotal > 0);
-            return;
-        }
 
         if (creep.room.controller !== undefined && creep.room.controller.level === 8 || creep.room.name == 'E25S43' || creep.room.name == 'E14S37') {
             if (!super.power.getPowerToSpawn(creep)) {
@@ -922,18 +906,18 @@ class roleLinker extends roleParent {
             }
             return;
         } else {
-            if (creep.room.controller !== undefined && creep.room.controller.level > 5) {
-                var zz = Game.getObjectById(creep.room.memory.mineralContainID);
-                if (zz !== null && zz.total > 1000) {
-                    require('role.assistant').run(creep);
-                    creep.say('Min');
-                    return;
-                }
-            }
-
-            doDefault(creep, creep.carryTotal > 0);
-            creep.say('df');
-            return;
+            console.log(creep.pos.roomName, 'doing default');
+            /*            if (creep.room.controller !== undefined && creep.room.controller.level > 5) {
+                            var zz = Game.getObjectById(creep.room.memory.mineralContainID);
+                            if (zz !== null && zz.total > 1000) {
+                                require('role.assistant').run(creep);
+                                creep.say('Min');
+                                return;
+                            }
+                        }
+                        doDefault(creep, creep.carryTotal > 0);
+                        creep.say('df');
+                        return; */
         }
 
     }

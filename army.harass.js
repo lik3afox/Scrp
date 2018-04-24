@@ -152,7 +152,7 @@ function attackCreep(creep, bads) {
         //      if (creep.room.controller === undefined || creep.room.controller.owner === undefined || !_.contains(fox.enemies, creep.room.controller.owner.username)) {
         creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
         //        }
-        creep.killRoads();
+//        creep.killRoads();
     }
     //if( enemy.getActiveBodyparts(ATTACK) === 0 ) 
 }
@@ -229,10 +229,13 @@ class roleGuard extends roleParent {
         } else {
             moveCreep(creep);
              if (creep.partyFlag !== undefined ) {
-                creep.smartRangedAttack();
+                if(creep.pos.roomName === creep.partyFlag.pos.roomName){
+                                if(!creep.killRoads()){
+                                creep.smartRangedAttack();
+                                }
+                }
             } /*
             else if ((creep.room.name === creep.partyFlag.pos.roomName) || (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && _.contains(fox.enemies, creep.room.controller.owner.username)) || (creep.room.controller !== undefined && creep.room.controller.reservation !== undefined && _.contains(fox.enemies, creep.room.controller.reservation.username))) {
-                creep.killRoads();
                 creep.say('kr');
             }  */
 

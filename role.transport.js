@@ -200,7 +200,7 @@ function movement(creep) {
 //    bads = getBads(creep);
 //    if (bads.length !== 0) {
     if (roleParent.guardRoom(creep)) {
-
+//creep.say("BADS");
 //        creep.runFrom(bads);
         creep.memory.cachePath = undefined;
     } else  {
@@ -236,7 +236,7 @@ function movement(creep) {
 
             }
         } else {
-            if (_goal !== null && _goal.energyCapacity === 4000 && roleParent.constr.withdrawFromTombstone(creep, 6)) {
+            if (_goal !== null && _goal.energyCapacity === 4000 && roleParent.constr.withdrawFromTombstone(creep, 4)) {
                 creep.memory.cachePath = undefined;
                 return;
             }
@@ -392,7 +392,7 @@ class transport extends roleParent {
         }
 
         if (creep.carryTotal < creep.carryCapacity - 10) {
-            let bads = [];
+/*            let bads = [];
             if (_goal !== null && _goal.energyCapacity === 4000) {
                 bads = getBads(creep);
             }
@@ -402,7 +402,7 @@ class transport extends roleParent {
                 creep.memory.cachePath = undefined;
             } else {
                 //if (_goal !== null && _goal.energyCapacity === 4000 && super.constr.moveToPickUpEnergyIn(creep, 6)) {
-            }
+            } */
         }
 
         interactContainer(creep);

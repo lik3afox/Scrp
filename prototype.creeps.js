@@ -539,11 +539,12 @@ module.exports = function() {
             }
         }
         /*        if ((this.room.name === this.partyFlag.pos.roomName) || (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.enemies, this.room.controller.owner.username)) || (this.room.controller !== undefined && this.room.controller.reservation !== undefined && _.contains(fox.enemies, this.room.controller.reservation.username))) {
-                    this.killRoads();
+                    
                     this.say('kr');
                 } else */
         if (this.room.controller !== undefined && !this.room.controller.my && this.room.name === this.partyFlag.pos.roomName) {
-            this.rangedMassAttack();
+//            if(!this.killRoads())
+                this.rangedMassAttack();
         }
         return false;
     };
@@ -965,42 +966,42 @@ module.exports = function() {
 
     Creep.prototype.runFrom = function(badguy, options) {
 
-  //      if (this.memory.role === 'transport') {
-            var baddies = [];
-            if (_.isArray(badguy)) {
-                for (var e in badguy) {
-                    baddies.push({ pos: badguy[e].pos, range: 4 });
-                }
-            } else {
-                baddies.push({ pos: badguy.pos, range: 4 });
+        //      if (this.memory.role === 'transport') {
+        var baddies = [];
+        if (_.isArray(badguy)) {
+            for (var e in badguy) {
+                baddies.push({ pos: badguy[e].pos, range: 5 });
             }
-            let result = PathFinder.search(this.pos, baddies, { flee: true });
-            let edz = this.move(this.pos.getDirectionTo(result.path[0]));
-            console.log(roomLink(this.room.name), 'doing new runFrom,',edz );
-            if(edz === OK){
-                return true;
-            } else {
-                return false;
-            }
-//        }
-
-    /*    if (_.isArray(badguy)) {
-            let target = this.pos.findClosestByRange(badguy);
-            badguy = target;
+        } else {
+            baddies.push({ pos: badguy.pos, range: 5 });
         }
+        let result = PathFinder.search(this.pos, baddies, { flee: true });
+        let edz = this.move(this.pos.getDirectionTo(result.path[0]));
+        console.log(roomLink(this.room.name), 'doing new runFrom,', edz);
+        if (edz === OK) {
+            return true;
+        } else {
+            return false;
+        }
+        //        }
+
+        /*    if (_.isArray(badguy)) {
+                let target = this.pos.findClosestByRange(badguy);
+                badguy = target;
+            }
 
 
-        //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
-        //this.move(this.pos.getDirectionTo(result.path[0]))
-        //        this.move(this.pos.getDirectionTo(result.path[0]));
-        var direction = this.pos.getDirectionTo(badguy);
-        direction = direction + 4;
-        if (direction > 8)
-            direction = direction - 8;
-        var moveStatus = this.move(direction, options);
-        this.say('><', true);
-        if(moveStatus === OK) return true;
-        return false;*/
+            //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
+            //this.move(this.pos.getDirectionTo(result.path[0]))
+            //        this.move(this.pos.getDirectionTo(result.path[0]));
+            var direction = this.pos.getDirectionTo(badguy);
+            direction = direction + 4;
+            if (direction > 8)
+                direction = direction - 8;
+            var moveStatus = this.move(direction, options);
+            this.say('><', true);
+            if(moveStatus === OK) return true;
+            return false;*/
     };
     /*
         Creep.prototype.runFrom = function(badguy, options) {
@@ -1448,6 +1449,13 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             segment: false,
             simpleExit: false,
         });
+/*
+        if (target !== undefined && target.memory.target !== undefined) {
+            if (this.pos.isNearTo(target)) {
+                this.say('Cl');
+                return false;
+            }
+        }*/
 
         if (_.isObject(start_room)) {
             move_opts = start_room;
@@ -1527,7 +1535,9 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             } else {
                 this.memory.inter_room_target = this.memory.inter_room_path[0];
                 this.memory.inter_room_exitTarget = this.memory.inter_room_exit[0];
+
                 target = new RoomPosition(25, 25, this.memory.inter_room_target);
+
                 return this.moveMe(target, move_opts);
             }
         }
@@ -1580,18 +1590,27 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 target = getExitPos(this);
             } else {
                 this.say('2525');
+                let index;
                 if (this.room.name == start_room) {
                     this.memory.inter_room_target = this.memory.inter_room_path[0];
                     this.memory.inter_room_exitTarget = this.memory.inter_room_exit[0];
                 } else {
-                    let index = this.memory.inter_room_path.indexOf(this.room.name);
+                    index = this.memory.inter_room_path.indexOf(this.room.name);
                     if (index > -1) {
                         this.memory.inter_room_target = this.memory.inter_room_path[index + 1];
                         this.memory.inter_room_exitTarget = this.memory.inter_room_exit[index + 1];
                     }
                 }
-                if (this.memory.inter_room_target !== undefined)
-                    target = new RoomPosition(25, 25, this.memory.inter_room_target);
+                if (this.memory.inter_room_target !== undefined) {
+                    if (index === this.memory.inter_room_path.length - 1) {
+                        console.log("this is close to target room, using location");
+                        if(target.pos !== undefined) target = target.pos;
+                        target = new RoomPosition(target.x,target.y,target.roomName);
+                    } else {
+                        target = new RoomPosition(25, 25, this.memory.inter_room_target);
+                    }
+
+                }
             }
 
         }

@@ -816,18 +816,20 @@
                         flag.room.memory.simple = true;
                         //                    console.log( flag.room.stats.parts,'parts',flag.room.name);
 
-                        if (flag.room.stats.parts > 850) {
+                        if (flag.room.stats.parts > 1000) {
                             flag.memory.module.push(['first', 1, 6]);
                         }
                         if (flag.room.stats.parts > 1500) {
-                            flag.room.memory.simple = false;
+                            //                            flag.room.memory.simple = false;
                         }
-                        if (flag.room.stats.parts > 2000) {
+                        if (flag.room.stats.parts > 2500) {
                             // Linker becomes specialized. Like other non simple.
-                            flag.room.memory.simple = false;
-                            flag.memory.module.push(['scientist', 1, 6]);
                         }
-                        if (flag.room.stats.parts > 3500) {}
+                        if (flag.room.stats.parts > 3000) {
+                            flag.room.memory.simple = false; // This means that the linker becomes a dedicated link spot.
+                            flag.memory.module.push(['scientist', 1, 6]);
+
+                        }
                         /*     flag.room.memory.towers = [];
 
                              towers = flag.room.find(FIND_MY_STRUCTURES);
@@ -875,7 +877,7 @@
             if (test2.length > 0) {
                 flag.memory.target = test2[0].id;
             } else {
-                let bads = flag.room.find(FIND_HOSTILE_CREEPS);
+                let bads = [];// flag.room.find(FIND_HOSTILE_CREEPS);
                 bads = _.filter(bads, function(o) {
                     return !_.contains(require('foxGlobals').friends, o.owner.username);
                 }); // Kill all creeps
@@ -952,7 +954,7 @@
                         flag.memory.nukeRooms = [];
                     }
 
-                    
+
                     return;
                 }
                 if (flag.name === 'recontrol') {
@@ -981,6 +983,18 @@
 
                 // All flags need to have a target
                 if (flag.room !== undefined && flag.room.controller !== undefined && !flag.room.controller.my) {
+                    if (flag.memory.target === undefined) {
+                        let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
+                        if (res.length > 0) {
+                            for (let ee in res) {
+                                if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_CONTROLLER)) {
+                                    flag.memory.target = res[ee].structure.id;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
                     let tgt = Game.getObjectById(flag.memory.target);
                     if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
                         flag.setPosition(tgt.pos);
@@ -995,9 +1009,9 @@
                         flag.memory.mineralType = flag.room.mineral.mineralType;
                     }
                     if (flag.room.mineral.mineralAmount === 0) {
-                        flag.memory.delaySpawn = flag.room.mineral.ticksToRegeneration-150;
+                        flag.memory.delaySpawn = flag.room.mineral.ticksToRegeneration - 150;
                     }
-                } 
+                }
 
                 // Flag Delay Spawning Function.
                 if (flag.memory.delaySpawn !== undefined) {
@@ -1256,19 +1270,19 @@
                         break;
 
                     case COLOR_BLUE:
-/*
-                        let guard = flag;
-                        if (guard.memory.guardCreateCount === undefined) {
-                            guard.memory.guardCreateCount = 0;
-                        }
+                        /*
+                                                let guard = flag;
+                                                if (guard.memory.guardCreateCount === undefined) {
+                                                    guard.memory.guardCreateCount = 0;
+                                                }
 
-                        guard.memory.guardCreateCount--;
-                        if (guard.memory.guardCreateCount < 0) {
-                            guard.memory.guardCreateCount = delayBetweenScan;
-                            require('commands.toGuard').create(flag);
-                        }
-                        break; 
-*/
+                                                guard.memory.guardCreateCount--;
+                                                if (guard.memory.guardCreateCount < 0) {
+                                                    guard.memory.guardCreateCount = delayBetweenScan;
+                                                    require('commands.toGuard').create(flag);
+                                                }
+                                                break; 
+                        */
                     case COLOR_YELLOW:
                         // This will mean power flag if it's green/red.
                         let rally = flag;

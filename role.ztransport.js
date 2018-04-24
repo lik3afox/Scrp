@@ -59,7 +59,7 @@ function getEnergy(creep) {
             if (containerz.length > 0) {
                 for (let a in containerz) {
 
-                    if ((containerz[a].store[RESOURCE_ENERGY] * 0.75) > targetAmount) {
+                    if (containerz[a].store[RESOURCE_ENERGY]  > targetAmount) {
                         target = containerz[a].id;
                         targetAmount = containerz[a].store[RESOURCE_ENERGY];
                         //            isDropped = true;

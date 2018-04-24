@@ -86,7 +86,7 @@ class hackerClass extends roleParent {
 //            if (!super.avoidArea(creep)){
 //                creep.tuskenTo(creep.partyFlag,creep.memory.home,{useSKPathing:true,reusePath:50});
 //                            movement.flagMovement(creep);
-if(creep.memory.didIt === undefined){
+/*if(creep.memory.didIt === undefined){
     creep.moveMe(Game.flags.flagger,{useSKPathing:true,reusePath:50});
     if(creep.room.name === Game.flags.flagger.pos.roomName){
         creep.memory.didIt = true;
@@ -94,10 +94,10 @@ if(creep.memory.didIt === undefined){
     creep.say('zzzz');
     return;
 
-} else {
+} else { */
     creep.moveMe(creep.partyFlag,{useSKPathing:true,reusePath:50});
 
-}
+//}
   //          }
         }
 

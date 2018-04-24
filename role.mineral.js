@@ -51,7 +51,7 @@ class mineralRole extends roleParent {
             return;
         }
         memoryCheck(creep);
-        if (creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
+        if (Game.shard.name === 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
     //        let boost = [];
 //            boost.push('UO');
   //          _.uniq(boost);

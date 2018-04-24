@@ -428,29 +428,17 @@ class baseParent {
 
         if (!isSK) return false;
 
-        var stay = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
-        stay = _.filter(stay, function(o) {
+        var D4Bad = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+        D4Bad = _.filter(D4Bad, function(o) {
             return !_.contains(fox.friends, o.owner.username) && (o.getActiveBodyparts(ATTACK) > 0 || o.getActiveBodyparts(RANGED_ATTACK) > 0);
         });
 
-        if(creep.memory.hasRun !== undefined && stay.length > 0){
-            creep.memory.hasRun--;
-            if(creep.memory.hasRun < 0){
-                creep.memory.hasRun = 3;
-            } else {
-            return true;
-            }
-        }
-
-        if (stay.length === 0) return false;
-        var close = creep.pos.findInRange(stay, 3);
-        if (stay.length - close.length != stay.length) {
-            if (close.length > 0) {
-              let resz = creep.runFrom(stay);
+        var D3Bad = creep.pos.findInRange(D4Bad, 3);
+        if (D3Bad.length > 0 && D4Bad.length - D3Bad.length != D4Bad.length) {
+              let resz = creep.runFrom(D4Bad);
               if(resz){
-                creep.memory.hasRun = 3;
+                creep.memory.sleep = 5;
               }
-            }
             return true;
         } else {
             return false;

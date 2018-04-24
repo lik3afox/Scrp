@@ -96,6 +96,9 @@ var allParty = {
     troll: [
         ['troll', 1, 0]
     ],
+    mage: [
+        ['mage', 0, 10]
+    ],
 
     scout: [
         ['scout', 1, 0]

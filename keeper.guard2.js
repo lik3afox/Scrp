@@ -112,11 +112,18 @@ function attackCreep(creep, bads) {
             }
         }
     } else if (distance < 4) {
-        if (bads.length <= 2) {
-            creep.rangedAttack(enemy);
-        } else {
+//        var  = _.filter()
+    var heals = _.filter(bads, function(o) {
+        return o.getActiveBodyparts(HEAL) > 0;
+    });
+    if(heals.length > 0){
             creep.rangedMassAttack();
-        }
+    } else {
+            creep.rangedAttack(enemy);
+    }
+    //    if (bads.length <= 2) {
+  //      } else {
+//        }
         creep.selfHeal();
         creep.moveMe(enemy, { ignoreCreeps: true, maxRooms: 1 });
 
