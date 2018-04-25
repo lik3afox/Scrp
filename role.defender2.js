@@ -97,7 +97,7 @@ class roleNewDefender extends roleParent {
 
         if (super.movement.moveToDefendFlag2(creep)) {
 
-            var badzs = getHostiles(creep);
+            let badzs = getHostiles(creep);
             if (badzs.length > 0) {
             creep.say('nDef' + badzs.length);
                 attackCreep(creep, badzs);
@@ -105,6 +105,13 @@ class roleNewDefender extends roleParent {
 
             return true;
         } else { // go to mom and renew
+            let badzs = getHostiles(creep);
+            if (badzs.length > 0) {
+            creep.say('nDef' + badzs.length);
+                attackCreep(creep, badzs);
+                return true;
+            }
+
             if (creep.hits < creep.hitsMax) creep.heal(creep);
             if (creep.carryTotal > 0 && creep.isHome) {
                 creep.moveToTransfer(creep.room.terminal === undefined ? creep.room.storage : creep.room.terminal, creep.carrying);

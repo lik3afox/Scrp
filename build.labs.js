@@ -14,8 +14,8 @@ var maxMinerals = {
     'G': 150000,
 
     'GH': 100000, // Upgrade
-    'GH2O': 50000,
-    'XGH2O': 225000,
+    'GH2O': 65000,
+    'XGH2O': 150000,
 
     'KH': 40000,
     'KH2O': 50000, // Carry
@@ -627,7 +627,7 @@ function updateRoomLabsMemory(roomName) {
 
 
             if (Game.rooms[roomName].memory.labMode === 'shift') {
-                shiftingMats = _.shuffle(["UH", "UO", "ZH", "ZO", "KH", "KO", "LH", "LO", "GH", "GO", 'ZK', 'UL', 'G', 'OH', 'GH', 'GH2O', 'XGH2O', 'XZH2O', 'XGHO2', 'XKHO2', 'XKH2O', 'XLHO2', 'XZHO2', 'XUH2O', 'XLH2O', "UH2O", "UHO2", "ZH2O", "ZHO2", "KH2O", "KHO2", "LH2O", "LHO2", "GH2O", "GHO2", ]);
+                shiftingMats = _.shuffle(["UH", "UO", "ZH", "ZO", "KH", "KO", "LH", "LO", "GH", "GO", 'ZK', 'UL', 'G', 'OH', 'GH', 'GH2O', 'XGH2O', 'XZH2O', 'XGHO2', 'XKHO2', 'XKH2O', 'XLHO2', 'XZHO2', 'XUH2O', 'XLH2O','XUHO2', "UH2O", "UHO2", "ZH2O", "ZHO2", "KH2O", "KHO2", "LH2O", "LHO2", "GH2O", "GHO2", ]);
             }
             if (Game.rooms[roomName].memory.labMode === 'shiftGH') {
                 shiftingMats = _.shuffle(['XGH2O', 'GH2O', 'OH', 'GH', 'G']);

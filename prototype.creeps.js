@@ -364,6 +364,7 @@ module.exports = function() {
         if (this.pos.isNearTo(close)) {
             return this.pickup(close);
         } else {
+            options.maxRooms =1;
             return this.moveTo(close, options);
         }
 
@@ -1544,10 +1545,10 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             } else {
                 this.memory.inter_room_target = this.memory.inter_room_path[0];
                 this.memory.inter_room_exitTarget = this.memory.inter_room_exit[0];
-
+                if(this.memory.inter_room_target !== undefined) {
                 target = new RoomPosition(25, 25, this.memory.inter_room_target);
-
                 return this.moveMe(target, move_opts);
+                }
             }
         }
         if (this.room.name == target.pos.roomName) {
@@ -1711,7 +1712,8 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             // This is the leader.
             let fol = Game.getObjectById(this.memory.followerID);
             if (fol !== null) {
-                if ((!this.pos.isNearTo(fol) && !this.isAtEdge) || fol.fatigue > 0) {
+                if ((!this.pos.isNearTo(fol) && !this.isAtEdge) || fol.fatigue > 0|| (fol.hits !== fol.hitsMax && fol.getActiveBodyparts(MOVE) === 0) ) {
+
                     // If the leader isn't near his follower, he doesn't move. 
                     if (this.memory.waitTimer === undefined) {
                         this.memory.waitTimer = 5;

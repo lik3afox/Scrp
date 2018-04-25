@@ -182,19 +182,29 @@ class muleClass extends roleParent {
                         creep.memory.recycleID = 'none';
                     }
                 }
-                var targ = Game.flags[creep.memory.party].pos;
+                var targ = Game.flags[creep.memory.party];
+                var spn = Game.getObjectById(creep.memory.recycleID);
 
-                if (targ !== null) {
+                if (targ !== null && spn !== null && targ.pos.isNearTo(spn)) {
                     if (creep.pos.isEqualTo(targ)) {
                         if (creep.memory.recycleID === 'none') {
                             creep.suicide();
                         } else {
-                            Game.getObjectById(creep.memory.recycleID).recycleCreep(creep);
+                            spn.recycleCreep(creep);
                         }
                         return;
                     } else {
                         creep.moveMe(targ, { maxRooms: 1, reusePath: 50 });
+    //                    if(creep.pos.isNearTo(spn)){
+//                            spn.recycleCreep(creep);
+  //                      }
+
                     }
+                } else {
+                        creep.moveMe(spn, { maxRooms: 1, reusePath: 50 });
+                        if(creep.pos.isNearTo(spn)){
+                            spn.recycleCreep(creep);
+                        }
                 }
                 // }
 
@@ -225,7 +235,7 @@ class muleClass extends roleParent {
             if (!creep.memory.mining) {
                 var partner = Game.getObjectById(creep.memory.engineerID);
                 if (partner !== null) {
-                    creep.moveToTransfer(partner, RESOURCE_ENERGY, { maxOpts: 100 });
+                    creep.moveToTransfer(partner, RESOURCE_ENERGY, { maxOpts: 100,maxRooms:1 });
                 } else {
                     creep.memory.engineerID = undefined;
                     creep.memory.mining = true;
@@ -378,7 +388,9 @@ class muleClass extends roleParent {
                     return;
                 }
                 if (creep.atFlagRoom && creep.carryTotal > 0 && creep.memory.didPortal) {
-                    creep.moveToTransfer(creep.room.terminal, creep.carrying);
+                    let tgtt= creep.room.terminal;
+                    if(tgtt.total === 300000) tgtt = creep.room.storage;
+                    creep.moveToTransfer(tgtt, creep.carrying);
                     creep.say('trs2');
                     return;
                 } else {

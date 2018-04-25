@@ -105,7 +105,7 @@ var classLevels = [
             WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE,
             CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE,
         ],
-        boost: ['XGH2O', 'KH2O'],
+        boost: ['GH', 'KH'],
     },
     // Level 13
     {
@@ -197,7 +197,7 @@ class engineerClass extends roleParent {
         }
         if (creep.memory.isBoosted !== undefined && creep.memory.isBoosted.length > 0) {
             if (creep.memory.boostType === undefined) {
-                if (_.contains(creep.memory.isBoosted, 'XGH2O')) {
+                if (_.contains(creep.memory.isBoosted, ['XGH2O','GH2O','GH'])) {
                     creep.memory.boostType = 'upgrader';
                 } else if (_.contains(creep.memory.isBoosted, 'XLH2O')) {
                     creep.memory.boostType = 'builder';
@@ -291,7 +291,7 @@ class engineerClass extends roleParent {
                 }
             } else {
                 creep.pickUpEnergy();
-//                if (creep.room.storage !== undefined && creep.room.storage.store[RESOURCE_ENERGY] > 10000 && !super.containers.withdrawFromStorage(creep)) {
+                if (creep.room.storage === undefined || creep.room.storage.store[RESOURCE_ENERGY] <= 10000 || !super.containers.withdrawFromStorage(creep)) {
                     if (!roleParent.constr.withdrawFromTombstone(creep)) {
                         if (!super.containers.withdrawFromStorage(creep)) {
                             if (!super.containers.withdrawFromTerminal(creep)) {
@@ -306,7 +306,7 @@ class engineerClass extends roleParent {
                         }
                     }
 
-  //              }
+                }
             }
 
         }

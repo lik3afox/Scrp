@@ -1495,6 +1495,7 @@ class roleTerminal {
                 Game.rooms[main].terminal.send('energy',5000,roomName);
             }
         }
+        if(terminal === undefined) return;
 
         var energy = terminal.store[RESOURCE_ENERGY];
         var total = terminal.total;

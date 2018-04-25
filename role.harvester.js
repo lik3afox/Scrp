@@ -172,7 +172,7 @@ function moveToWithdraw(creep) {
         if (creep.pos.isNearTo(source)) {
             doMining(creep);
         } else {
-            creep.moveMe(source, { reusePath: 10 });
+            creep.moveMe(source, { reusePath: 30 });
             if (creep.memory.level < 4)
                 creep.countDistance();
         }

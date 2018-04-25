@@ -600,7 +600,7 @@ function simple(creep) {
             creep.say('drp');
             return;
         }
-        if (creep.memory.roleID >= 1 && creep.room.controller.level <= 5 && creep.room.terminal !== undefined) {
+        if (creep.memory.roleID >= 1 &&  creep.room.controller !== undefined &&  creep.room.controller.level <= 5 && creep.room.terminal !== undefined) {
             for (var e in creep.room.terminal.store) {
                 if (creep.room.terminal.store[e] > 0 && e !== RESOURCE_ENERGY) {
                     creep.moveToWithdraw(creep.room.terminal, e);
@@ -616,7 +616,7 @@ function simple(creep) {
             return;
         }
         //     }
-        if (creep.room.controller.level >= 6 && creep.room.storage.store[RESOURCE_ENERGY] !== creep.room.storage.total && creep.room.terminal !== undefined) {
+        if (creep.room.controller !== undefined && creep.room.controller.level >= 6 && creep.room.storage.store[RESOURCE_ENERGY] !== creep.room.storage.total && creep.room.terminal !== undefined && creep.room.terminal.total !== 300000) {
             if (creep.pos.isNearTo(creep.room.storage)) {
                 for (let zz in creep.room.storage.store) {
                     if (zz !== RESOURCE_ENERGY) {
@@ -630,7 +630,7 @@ function simple(creep) {
             }
         }
 
-        if (creep.room.controller.level >= 6 && creep.room.storage.store[RESOURCE_ENERGY] < 900000 && creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] > 20000) {
+        if (creep.room.controller !== undefined && creep.room.controller.level >= 6 && creep.room.storage.store[RESOURCE_ENERGY] < 900000 && creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] > 20000) {
             if (creep.pos.isNearTo(creep.room.terminal)) {
                 creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
             } else {
@@ -673,9 +673,14 @@ function simple(creep) {
         }
 
     } else {
-        if (creep.saying === 'mBal') {
+        if (creep.saying === 'mBal' ) {
+            if(creep.room.terminal.total === 300000) {
+            if (creep.moveToTransfer(creep.room.storage, creep.carrying) !== OK)
+                creep.say('mBal');
+            } else {
             if (creep.moveToTransfer(creep.room.terminal, creep.carrying) !== OK)
                 creep.say('mBal');
+            }
             return;
         }
 
@@ -684,7 +689,7 @@ function simple(creep) {
             creep.say('fill');
             return;
         }
-        if (creep.room.controller.level < 4) {
+        if (creep.room.controller !== undefined && creep.room.controller.level < 4) {
             if (creep.pos.isEqualTo(Game.flags[creep.memory.home])) {
                 creep.drop(creep.carrying);
             } else {
@@ -745,7 +750,7 @@ function simple(creep) {
             tgt = creep.room.terminal;
         }
 
-        creep.moveToTransfer(tgt, e, { reusePath: 20 });
+        creep.moveToTransfer(tgt, e, { reusePath: 20,maxRooms:1 });
         //        var target = creep.room.terminal;
         /*
                 if (creep.room.controller.level == 5 && creep.room.storage !== undefined) {

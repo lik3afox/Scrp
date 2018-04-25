@@ -191,7 +191,7 @@ function whoWorksFor(goal) {
 
 function rampartCheck(spawn) {
     var HardD = ['E35S83'];
-
+    var mediumD = [];
     var fox = require('foxGlobals');
 
     let targets = spawn.room.find(FIND_HOSTILE_CREEPS);
@@ -237,9 +237,7 @@ function rampartCheck(spawn) {
                     }
 
 
-
-
-                    if (Game.flags[named2] === undefined) {
+                    if (_.contains(mediumD, spawn.room.name) && Game.flags[named2] === undefined) {
 
 
                         if (Game.flags[named].memory.invaderTimed !== undefined &&
@@ -851,7 +849,7 @@ function doInstructions(instructions) {
             //            console.log('shard1 wants to fulfill REQUEST for', current.shard);
             //            current.mineralType,current.mineralAmount,
             if (current.shard === 'shard0') {
-                if (Math.floor(Math.random() << 1) === 0) {
+                if (Math.floor(Math.random() * 2) === 0) {
                     roomCreate = 'E23S38';
                 } else {
                     roomCreate = 'E23S42';
@@ -860,11 +858,15 @@ function doInstructions(instructions) {
                 flagTarget = 'portal3';
             }
             if (current.shard === 'shard2') {
-                roomCreate = 'E22S48';
+                if (Math.floor(Math.random() * 2) === 0) {
+                    roomCreate = 'E22S48';
+                } else {
+                    roomCreate = 'E18S46';
+                }
                 flagTarget = 'portal';
             }
             let alphaSpawn = Game.rooms[roomCreate].alphaSpawn;
-            //            console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
+                        console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
 
             if (alphaSpawn.memory.expandCreate.length === 0) {
 
@@ -919,7 +921,7 @@ function doInstructions(instructions) {
             if (current.type === 'send') {
                 var alphaSpawn = Game.rooms[current.shardRoom].alphaSpawn;
 
-                //   console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
+                   console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
                 if (Game.rooms[roomCreate] !== undefined && Game.rooms[roomCreate].store[current.mineralType] <= 5000) {
                     console.log("bad slicing ");
                     instructions.splice(i, 1);
@@ -1493,7 +1495,7 @@ function analyzeShards(shardObject) {
     if (shardObject.shard0 !== undefined) {
         let room = Game.rooms[shardObject.shard0.shardRoom];
         for (let i in shardObject.shard0.request) {
-            //          console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
+            console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard0.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1548,7 +1550,7 @@ function analyzeShards(shardObject) {
     if (shardObject.shard2 !== undefined) {
         let room = Game.rooms[shardObject.shard2.shardRoom];
         for (let i in shardObject.shard2.request) {
-            //                console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
+                            console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000) {
                 continue;
             }

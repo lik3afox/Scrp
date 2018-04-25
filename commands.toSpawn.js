@@ -191,6 +191,7 @@ class SpawnInteract {
                     }
                 }
             }
+            if(targets[goTo] !== undefined )
             creep.memory.goToSpawn = targets[goTo].id;
         }
 

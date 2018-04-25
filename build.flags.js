@@ -31,6 +31,9 @@
                 for (var a in creeps) {
                     creeps[a].memory.runAway = true;
                     creeps[a].memory.runFrom = flag.name;
+                    if(creeps[a].memory.sleeping !== undefined) {
+                        creeps[a].memory.sleeping = undefined;
+                    }
                 }
             }
         } else if (flag.secondaryColor == COLOR_WHITE) {
