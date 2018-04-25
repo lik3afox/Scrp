@@ -877,7 +877,7 @@
             if (test2.length > 0) {
                 flag.memory.target = test2[0].id;
             } else {
-                let bads = [];// flag.room.find(FIND_HOSTILE_CREEPS);
+                let bads = flag.room.find(FIND_HOSTILE_CREEPS);
                 bads = _.filter(bads, function(o) {
                     return !_.contains(require('foxGlobals').friends, o.owner.username);
                 }); // Kill all creeps
@@ -983,6 +983,7 @@
 
                 // All flags need to have a target
                 if (flag.room !== undefined && flag.room.controller !== undefined && !flag.room.controller.my) {
+                    let tgt = Game.getObjectById(flag.memory.target);
                     if (flag.memory.target === undefined) {
                         let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                         if (res.length > 0) {
@@ -993,11 +994,9 @@
                                 }
                             }
                         }
-
                     }
-                    let tgt = Game.getObjectById(flag.memory.target);
                     if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
-                        flag.setPosition(tgt.pos);
+                   //     flag.setPosition(tgt.pos);
                     } else if (tgt === null) {
                         findFlagTarget(flag);
                     }

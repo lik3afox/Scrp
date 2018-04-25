@@ -277,7 +277,8 @@ function squadMovement(creep) {
                 // Leader point man here
                 let dir = Game.getObjectById(creep.memory.directingID);
                 if (doMovement && !creep.pos.isNearTo(creep.partyFlag)) {
-                    movement.flagMovement(creep);
+                    //movement.flagMovement(creep);
+                    creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
                     creep.say('🚆' + doMovement);
                 }
             } else if (creep.memory.directingID === undefined) {

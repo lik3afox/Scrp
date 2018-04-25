@@ -513,8 +513,8 @@ module.exports = function() {
             return true;
         }
 
-        var bads = this.pos.findInRange(FIND_HOSTILE_STRUCTURES, 3);
-        bads = _.filter(bads, function(o) {
+        var sus = this.pos.findInRange(FIND_HOSTILE_STRUCTURES, 3);
+        var bads = _.filter(sus, function(o) {
             return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL && !o.pos.lookForStructure(STRUCTURE_RAMPART);
         });
         if (bads.length > 0) {
@@ -529,22 +529,31 @@ module.exports = function() {
 
         var target = Game.getObjectById(this.partyFlag.memory.target);
         if (target !== null) {
-            /*            if (this.pos.isNearTo(target) && target.structureType !== STRUCTURE_WALL && target.structureType !== STRUCTURE_ROAD&& target.structureType !== STRUCTURE_CONTAINER) {
-                            this.rangedMassAttack();
-                            return true;
-                        } else  */
-            if (this.pos.inRangeTo(target, 3)) {
+            if (this.pos.isNearTo(target) && target.structureType !== STRUCTURE_WALL && target.structureType !== STRUCTURE_ROAD && target.structureType !== STRUCTURE_CONTAINER) {
+                this.rangedMassAttack();
+                return true;
+            } else if (this.pos.inRangeTo(target, 3)) {
                 this.rangedAttack(target);
                 return true;
             }
         }
+        if (sus.length > 0) {
+            this.rangedAttack(sus);
+        }
+
         /*        if ((this.room.name === this.partyFlag.pos.roomName) || (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.enemies, this.room.controller.owner.username)) || (this.room.controller !== undefined && this.room.controller.reservation !== undefined && _.contains(fox.enemies, this.room.controller.reservation.username))) {
                     
                     this.say('kr');
                 } else */
-        if (this.room.controller !== undefined && !this.room.controller.my && this.room.name === this.partyFlag.pos.roomName) {
-//            if(!this.killRoads())
+        if (this.atFlagRoom) {
+            if (!this.killRoads()) {
                 this.rangedMassAttack();
+            }
+            return;
+        }
+
+        if (this.room.controller !== undefined && !this.room.controller.my && this.room.name === this.partyFlag.pos.roomName) {
+            this.rangedMassAttack();
         }
         return false;
     };
@@ -1449,13 +1458,13 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             segment: false,
             simpleExit: false,
         });
-/*
-        if (target !== undefined && target.memory.target !== undefined) {
-            if (this.pos.isNearTo(target)) {
-                this.say('Cl');
-                return false;
-            }
-        }*/
+        /*
+                if (target !== undefined && target.memory.target !== undefined) {
+                    if (this.pos.isNearTo(target)) {
+                        this.say('Cl');
+                        return false;
+                    }
+                }*/
 
         if (_.isObject(start_room)) {
             move_opts = start_room;
@@ -1604,8 +1613,10 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 if (this.memory.inter_room_target !== undefined) {
                     if (index === this.memory.inter_room_path.length - 1) {
                         console.log("this is close to target room, using location");
-                        if(target.pos !== undefined) target = target.pos;
-                        target = new RoomPosition(target.x,target.y,target.roomName);
+                        if (target.pos !== undefined) target = target.pos;
+                        target = new RoomPosition(target.x, target.y, target.roomName);
+                        move_opts.maxRooms = 3;
+
                     } else {
                         target = new RoomPosition(25, 25, this.memory.inter_room_target);
                     }

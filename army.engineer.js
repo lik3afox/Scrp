@@ -291,7 +291,7 @@ class engineerClass extends roleParent {
                 }
             } else {
                 creep.pickUpEnergy();
-                if (creep.room.storage !== undefined && creep.room.storage.store[RESOURCE_ENERGY] > 10000 && !super.containers.withdrawFromStorage(creep)) {
+//                if (creep.room.storage !== undefined && creep.room.storage.store[RESOURCE_ENERGY] > 10000 && !super.containers.withdrawFromStorage(creep)) {
                     if (!roleParent.constr.withdrawFromTombstone(creep)) {
                         if (!super.containers.withdrawFromStorage(creep)) {
                             if (!super.containers.withdrawFromTerminal(creep)) {
@@ -306,7 +306,7 @@ class engineerClass extends roleParent {
                         }
                     }
 
-                }
+  //              }
             }
 
         }

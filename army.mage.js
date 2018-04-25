@@ -220,10 +220,17 @@ class rangerClass extends roleParent {
         }
 
         //creep.smartRangedAttack();
-creep.rangedMassAttack();
+        creep.rangedMassAttack();
         creep.say(creep.memory.party);
         creep.selfHeal();
-
+//        if(creep.smartRangedAttack()) {
+        //  creep.selfHeal();
+  //      }
+/*
+if(creep.smartHeal()) {
+   creep.rangedMassAttack(); 
+} else 
+*/
 
 if(creep.hits > creep.hitsMax-300){
 //movement.flagMovement(creep);

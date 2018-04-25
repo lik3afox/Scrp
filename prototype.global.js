@@ -318,6 +318,7 @@ module.exports = function() {
 
         let ret = Game.map.findRoute(start_room, end_room, {
             routeCallback: (roomName) => {
+                if(opts.avoidRooms === undefined) opts.avoidRooms= [];
                 if (opts.avoidRooms.length > 0) {
                     //NOTE: This is above opts.preferRooms --> so will overwrite any preferRooms
                     if (opts.avoidRooms.includes(roomName)) {

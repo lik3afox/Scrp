@@ -149,6 +149,9 @@ var allParty = {
     harass: [
         ['harass', 2, 5]
     ],
+    harass1: [
+        ['harass', 1, 5]
+    ],
 
 };
 

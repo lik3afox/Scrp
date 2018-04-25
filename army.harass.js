@@ -82,6 +82,14 @@ var fox = require('foxGlobals');
 function getHostiles(creep) {
     let bads = creep.room.find(FIND_HOSTILE_CREEPS);
 
+    if (!creep.atFlagRoom) {
+        bads = creep.pos.findInRange(bads,5);
+    //    bads = _.filter(bads, function(o) {
+            
+//            return o.pos.inRangeTo(creep,5);
+            
+  //      });
+    }
     var players = _.filter(bads, function(o) {
         return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper' && !o.isAtEdge && !o.pos.lookForStructure(STRUCTURE_RAMPART);
     });
@@ -124,8 +132,7 @@ function attackCreep(creep, bads) {
         } */
     let enemy = creep.pos.findClosestByRange(bads);
     let distance = creep.pos.getRangeTo(enemy);
-
-    creep.smartRangedAttack();
+        creep.smartRangedAttack();
 
     if (enemy.getActiveBodyparts(RANGED_ATTACK) > 0 && enemy.getActiveBodyparts(ATTACK) === 0) { //
         creep.say('CHRG');
@@ -152,14 +159,15 @@ function attackCreep(creep, bads) {
         //      if (creep.room.controller === undefined || creep.room.controller.owner === undefined || !_.contains(fox.enemies, creep.room.controller.owner.username)) {
         creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
         //        }
-//        creep.killRoads();
+        //        creep.killRoads();
     }
     //if( enemy.getActiveBodyparts(ATTACK) === 0 ) 
 }
 
 function moveCreep(creep) {
     var zz = require('role.parent');
-    creep.tuskenTo(creep.partyFlag, creep.memory.home, { ignoreCreep: true, reusePath: 50 });
+        creep.tuskenTo(creep.partyFlag, creep.memory.home, { ignoreCreep: true, reusePath: 50 });
+    //creep.moveMe(creep.partyFlag, { ignoreCreep: true, reusePath: 50 });
 }
 
 
@@ -211,14 +219,17 @@ class roleGuard extends roleParent {
         //console.log( creep.room.controller.reservation.username);
 
         let bads = getHostiles(creep);
-        if (creep.room.name == 'E24S49') {
-            var zed = Game.getObjectById('5aa27466b61d341266be77c1');
-            if (zed !== null)
+        if (creep.room.name == 'E21S47') {
+            var zed = Game.getObjectById('5adfd892da0f976c5c1f9a09');
+            if(zed !== null){
                 creep.rangedAttack(zed);
+               creep.moveTo(zed);
+            return;
+        }
         }
         if (bads.length > 0) {
 
-        	
+
 
             attackCreep(creep, bads);
 
@@ -228,21 +239,22 @@ class roleGuard extends roleParent {
             killSK(creep, bads);
         } else {
             moveCreep(creep);
-             if (creep.partyFlag !== undefined ) {
-                if(creep.pos.roomName === creep.partyFlag.pos.roomName){
-                                if(!creep.killRoads()){
-                                creep.smartRangedAttack();
-                                }
+            if (creep.partyFlag !== undefined) {
+                if (creep.pos.roomName === creep.partyFlag.pos.roomName) {
+            //        if (!creep.killRoads()) {
+                        creep.smartRangedAttack();
+              //      }
                 }
-            } /*
-            else if ((creep.room.name === creep.partyFlag.pos.roomName) || (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && _.contains(fox.enemies, creep.room.controller.owner.username)) || (creep.room.controller !== undefined && creep.room.controller.reservation !== undefined && _.contains(fox.enemies, creep.room.controller.reservation.username))) {
-                creep.say('kr');
-            }  */
+            }
+            /*
+                       else if ((creep.room.name === creep.partyFlag.pos.roomName) || (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && _.contains(fox.enemies, creep.room.controller.owner.username)) || (creep.room.controller !== undefined && creep.room.controller.reservation !== undefined && _.contains(fox.enemies, creep.room.controller.reservation.username))) {
+                           creep.say('kr');
+                       }  */
 
             creep.memory.needed = undefined;
         }
 
-        if (Game.flags[creep.memory.party].memory.prohibitDirection === undefined) {
+        if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.prohibitDirection === undefined) {
             Game.flags[creep.memory.party].memory.prohibitDirection = {
                 top: true,
                 right: true,
