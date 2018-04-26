@@ -497,6 +497,7 @@ module.exports = function() {
 
     Creep.prototype.smartRangedAttack = function() {
         // No moving. 
+
         this.say('SRanged');
         var hurtz;
         hurtz = this.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
@@ -642,7 +643,10 @@ module.exports = function() {
 
     Creep.prototype.smartHeal = function() {
         // No moving.
-        // This returns true if it's a ranged heal and false if
+        // So rangedHeal will override any attack/ranged/mass - but meleeHeal will override any RangedHeal and attack.
+        // Because of that When this does a nearBy heal it will return false so it will allow other ranged Attacks.
+        // false from smartHeal will mean it's okay to do other attacks.
+
         this.say('SHeal');
         if (this.getActiveBodyparts(HEAL) < 1) {
             return false;
@@ -656,7 +660,7 @@ module.exports = function() {
             this.heal(this);
             // Does self healing
             this.memory.reHealID = this.id;
-            return true;
+            return false;
         }
 
         hurtz = this.pos.findInRange(FIND_CREEPS, 3);
@@ -667,13 +671,16 @@ module.exports = function() {
         if (hurtz.length > 0) {
             // Heals others
             let tgt = _.min(hurtz, c => c.hits);
+            this.memory.reHealID = tgt.id;
             if (!this.pos.isNearTo(tgt)) {
                 this.rangedHeal(tgt);
                 this.room.visual.line(this.pos, tgt.pos);
+                return true;                
             } else {
                 this.heal(tgt);
+                return false;
+
             }
-            this.memory.reHealID = tgt.id;
             return true;
         } else {
             if (this.memory.role === 'guard') return false;
@@ -681,16 +688,17 @@ module.exports = function() {
             let tgt = Game.getObjectById(this.memory.reHealID);
             if (tgt === null) {
                 this.heal(this);
+                return false;
             } else {
                 if (!this.pos.isNearTo(tgt)) {
                     this.rangedHeal(tgt);
+                    return true;
                 } else {
                     this.heal(tgt);
+                    return false;
                 }
             }
-            return false;
         }
-        return false;
     };
 
 
@@ -1611,8 +1619,11 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                         this.memory.inter_room_exitTarget = this.memory.inter_room_exit[index + 1];
                     }
                 }
+                    if(this.memory.role === 'demolisher') {
+                        console.log(this.room.name, this.memory.inter_room_path.indexOf(this.room.name),this.memory.inter_room_path.length-2);
+                    }
                 if (this.memory.inter_room_target !== undefined) {
-                    if (index === this.memory.inter_room_path.length - 1) {
+                    if (index === this.memory.inter_room_path.length - 2) {
                         console.log("this is close to target room, using location");
                         if (target.pos !== undefined) target = target.pos;
                         target = new RoomPosition(target.x, target.y, target.roomName);

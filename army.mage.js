@@ -39,46 +39,36 @@ var classLevels = [
         boost: [],
     },
     // Level 6
-    {
-        body: [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            HEAL, HEAL, HEAL, HEAL, HEAL,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            HEAL, HEAL, HEAL, HEAL, HEAL,
-        ],
-        boost: ['KO', 'LO'],
-    },
-    // Level 7
-    {
-        body: [RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            HEAL, HEAL, HEAL, HEAL, HEAL,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            MOVE, MOVE, MOVE, MOVE, MOVE,
-            HEAL, HEAL, HEAL, HEAL, HEAL,
-        ],
-        boost: ['XKHO2', 'XLHO2'],
-    },
-    // Level 8
-    { // This will take on 1 tower. 
-            
+    { //this will take on 1 tower.
         body: [TOUGH, TOUGH, TOUGH,
             HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
             RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
-            MOVE, MOVE, MOVE, 
-            MOVE, MOVE, MOVE,MOVE, MOVE, MOVE,
-            MOVE, MOVE, MOVE,MOVE,
+            MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE,
         ],
-        boost:['XKHO2', 'XLHO2', 'XGHO2'],
+        boost: ['XKHO2', 'XLHO2', 'XGHO2'],
+    },
+    // Level 7
+    { // This can be created by RCL 7 
+        body: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        ],
+        boost: ['XKHO2', 'XLHO2', 'XGHO2', 'XZHO2'],
+    },
+    // Level 8
+    { // This will take on 1 tower. 
+
+        body: [TOUGH, TOUGH, TOUGH,
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE,
+        ],
+        boost: ['XKHO2', 'XLHO2', 'XGHO2'],
     },
     // Level 9
 
@@ -154,9 +144,9 @@ function banditAction(creep) {
 function doAttack(creep) {
     let zz = Game.getObjectById(creep.partyFlag.memory.target);
     if (zz !== null) {
-        if(creep.pos.isNearTo(zz)){
+        if (creep.pos.isNearTo(zz)) {
             creep.rangedMassAttack();
-        } else 
+        } else
         if (creep.pos.inRangeTo(zz, 3)) {
             creep.rangedAttack(zz);
             creep.say('Xx?');
@@ -220,22 +210,25 @@ class rangerClass extends roleParent {
         }
 
         //creep.smartRangedAttack();
-        creep.rangedMassAttack();
+        //creep.smartHeal();
+//        creep.rangedMassAttack();
         creep.say(creep.memory.party);
         creep.selfHeal();
-//        if(creep.smartRangedAttack()) {
+                if(creep.smartRangedAttack()) {
         //  creep.selfHeal();
-  //      }
-/*
-if(creep.smartHeal()) {
-   creep.rangedMassAttack(); 
-} else 
-*/
+              }
+        /*
+        if(creep.smartHeal()) {
+           creep.rangedMassAttack(); 
+        } else 
+        */
 
-if(creep.hits > creep.hitsMax-300){
-//movement.flagMovement(creep);
-creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
-}        
+        if (creep.hits > creep.hitsMax - 100) {
+            //movement.flagMovement(creep);
+                creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
+        } else {
+            creep.runFrom(creep.partyFlag);
+        }
         //          }
     }
 

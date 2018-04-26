@@ -826,6 +826,16 @@ function createSendCreep(request) {
     // 
     return temp;
 }
+function makeBody(carryNeeded) {
+    let body = [];
+
+    do {
+        body.push(MOVE);
+        body.push(CARRY);
+        carryNeeded--;
+    } while (carryNeeded > 0);
+    return body;
+}
 
 function doInstructions(instructions) {
     //    console.log(Game.shard.name, "doing instructions", instructions.length);
@@ -870,20 +880,10 @@ function doInstructions(instructions) {
 
             if (alphaSpawn.memory.expandCreate.length === 0) {
 
+                
+
                 let temp = {
-                    build: [CARRY, CARRY, CARRY, CARRY, CARRY,
-                        MOVE, MOVE, MOVE, MOVE, MOVE,
-                        CARRY, CARRY, CARRY, CARRY, CARRY,
-                        MOVE, MOVE, MOVE, MOVE, MOVE,
-                        CARRY, CARRY, CARRY, CARRY, CARRY,
-                        MOVE, MOVE, MOVE, MOVE, MOVE,
-                        CARRY, CARRY, CARRY, CARRY, CARRY,
-                        MOVE, MOVE, MOVE, MOVE, MOVE,
-                        MOVE, MOVE, MOVE, MOVE, MOVE,
-                        CARRY, CARRY, CARRY, CARRY, CARRY,
-
-
-                    ],
+                    build: makeBody(Math.ceil(current.mineralAmount / 50)) ,
                     name: 'request' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
                     memory: {
                         role: 'mule',
@@ -940,17 +940,7 @@ function doInstructions(instructions) {
                             break;
                     }
                     let temp = {
-                        build: [CARRY, CARRY, CARRY, CARRY, CARRY,
-                            MOVE, MOVE, MOVE, MOVE, MOVE,
-                            CARRY, CARRY, CARRY, CARRY, CARRY,
-                            MOVE, MOVE, MOVE, MOVE, MOVE,
-                            CARRY, CARRY, CARRY, CARRY, CARRY,
-                            MOVE, MOVE, MOVE, MOVE, MOVE,
-                            CARRY, CARRY, CARRY, CARRY, CARRY,
-                            MOVE, MOVE, MOVE, MOVE, MOVE,
-                            MOVE, MOVE, MOVE, MOVE, MOVE,
-                            CARRY, CARRY, CARRY, CARRY, CARRY,
-                        ],
+                        build: makeBody(Math.ceil(current.mineralAmount / 50)),
                         name: 'send' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
                         memory: {
                             role: 'mule',

@@ -489,9 +489,10 @@ function boostLabWork(creep) {
                 boost.mineralType = 'none';
             }
 
-            if (creep.room.terminal.store[boost.mineralType] === undefined || creep.room.terminal.store[boost.mineralType] === 0) {
-                creep.say('request');
-                _terminal_().requestMineral(creep.room.name, boost.mineralType);
+            if (creep.room.terminal.store[boost.mineralType] === undefined || creep.room.terminal.store[boost.mineralType] === 0 || creep.room.terminal.store[boost.mineralType] <  boost.mineralAmount ) {
+                creep.say('request'+_terminal_().requestMineral(creep.room.name, boost.mineralType,boost.mineralAmount));
+                
+                return;
             }
             //console.log(lab.mineralType, boost.mineralType, lab.mineralAmount);
             if (lab.mineralType !== undefined && lab.mineralType === boost.mineralType && lab.mineralAmount > boost.mineralAmount) {
@@ -674,7 +675,7 @@ function simple(creep) {
 
     } else {
         if (creep.saying === 'mBal' ) {
-            if(creep.room.terminal.total === 300000) {
+            if(creep.room.terminal.total > 290000) {
             if (creep.moveToTransfer(creep.room.storage, creep.carrying) !== OK)
                 creep.say('mBal');
             } else {
@@ -851,7 +852,14 @@ class roleLinker extends roleParent {
             return;
 
         } */
-
+if(creep.room.name == 'E19xxS49') {
+    if(creep.carryTotal > 0){
+        creep.moveToTransfer(creep.room.storage,creep.carrying);
+    } else {
+        creep.moveToWithdraw(creep.room.terminal,'L');
+    }
+    return;
+}
         this.rebirth(creep);
         super.renew(creep);
         // control progress
@@ -878,7 +886,7 @@ class roleLinker extends roleParent {
         var goto;
         if (creep.room.memory.boost !== undefined && creep.room.memory.boost.mineralType !== 'none' && creep.room.memory.boost.mineralAmount !== 0 && creep.room.memory.boostLabID !== undefined) {
             boostLabWork(creep);
-            creep.say('lab');
+//            creep.say('lab');
             return;
         }
         if (creep.room.name == 'E19xxS49') {
