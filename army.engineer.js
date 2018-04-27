@@ -243,10 +243,10 @@ class engineerClass extends roleParent {
                             creep.pickUpEnergy();
                             if (!super.constr.moveToBuild(creep)) {
                                 if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                    creep.moveTo(creep.room.controller);
+                                    creep.moveTo(creep.room.controller,{maxRooms:1});
                                 } else {
                                     if (creep.pos.isEqualTo(Game.flags.there)) {
-                                        creep.moveTo(creep.room.conttroller);
+                                        creep.moveTo(creep.room.conttroller,{maxRooms:1});
                                     }
                                 }
                             }
@@ -256,10 +256,10 @@ class engineerClass extends roleParent {
                             if (!spawn.moveToTransfer(creep, 300)) {
                                 if (!super.constr.moveToBuild(creep)) {
                                     if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                                        creep.moveTo(creep.room.controller);
+                                        creep.moveTo(creep.room.controller,{maxRooms:1});
                                     } else {
                                         if (creep.pos.isEqualTo(Game.flags.there)) {
-                                            creep.moveTo(creep.room.conttroller);
+                                            creep.moveTo(creep.room.conttroller,{maxRooms:1});
                                         }
                                     }
                                 }

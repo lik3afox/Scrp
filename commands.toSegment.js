@@ -17,7 +17,7 @@ var roomSegment = {
     E33S54: 16,
 
     E17S45: 17,
-    E2S24: 17,
+    E2S24: 30,
 
     E14S47: 18,
     E23S42: 19,
@@ -293,7 +293,10 @@ class segmentCommand {
     }
 
     static setRoomSegmentData(roomName, rawData) {
-
+ let maxMemory = 100*1024;
+ let mx = rawData.length;
+var needed_segments = Math.ceil(mx/maxMemory);
+console.log(roomName,needed_segments,mx,"/",maxMemory);
         if (roomSegment[roomName] !== undefined) {
             if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined) {
                 if (_.isNumber(roomSegment[roomName]))
@@ -314,7 +317,7 @@ class segmentCommand {
     static requestPartySegmentData(partyName) {
         var seg = partyNameToSegmentNumber(partyName);
         //      let zz = _.indexOf(Memory.shardNeed, seg);
-        console.log('requesting segment', partyName, seg);
+//        console.log('requesting segment', partyName, seg);
         /*        if (RawMemory.segments[seg] === undefined && zz === -1) {
                     if (_.isNumber(seg))
                         Memory.shardNeed.push(seg);

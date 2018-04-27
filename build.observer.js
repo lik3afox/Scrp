@@ -92,7 +92,7 @@ function newDoTask(roomName) {
                 }
                 distance = Game.map.getRoomLinearDistance(ob.room.name, target);
                 if (distance < 10) {
-//                    console.log(roomLink(target),'looking @',target, "distance:", distance, ob, "doing the task of", task.order, "for " + task.options.timed + "longer");
+            //        console.log(roomLink(target),'looking @',target, "distance:", distance, ob, "doing the task of", task.order, "for " + task.options.timed + "longer");
                     if (ob.observeRoom(target) == OK) {
                         task.options.timed--;
                         if (task.options.timed === 0) {
@@ -100,11 +100,8 @@ function newDoTask(roomName) {
                         }
                         return true;
                     }
-                }else {
-                    /*task.options.timed--;
-                        if (task.options.timed === 0) {
+                }else if(target === 'E55S35'){
                             tasks.shift();
-                        }*/
                 }
             break;
     }
@@ -309,6 +306,9 @@ function getRandomRoom(room, max) {
 class buildObserver {
 
     static reqestRoom(theroom, thetimed) {
+
+        
+
         var request = { order: "observer", options: { room: theroom, timed: thetimed } };
         if (_.find(Memory.observerTask, function(o) {
                 return o.options.room == theroom;

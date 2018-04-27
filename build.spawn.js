@@ -367,6 +367,9 @@ console.log('room has "max" walls!',spawn.room.name);
             if (source === null) {
                 if (remoteInfo.sourcePos !== undefined) {
                     let obser = require('build.observer');
+                    if(remoteInfo.sourcePos.roomName === 'E55S35') {
+                        console.log('wtf is something looking @ E55S35',spawn.room.name,mod);
+                    }
                     obser.reqestRoom(remoteInfo.sourcePos.roomName, 2);
                 }
                 return;

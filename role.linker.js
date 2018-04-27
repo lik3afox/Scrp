@@ -458,7 +458,12 @@ function boostLabWork(creep) {
                     creep.say('PutE');
                     return;
                 } else {
-                    creep.moveToTransfer(creep.room.storage, RESOURCE_ENERGY);
+                    if(creep.room.storage.total < 1000000){
+                    creep.moveToTransfer(creep.room.storage, RESOURCE_ENERGY);    
+                } else {
+                    creep.moveToTransfer(creep.room.terminal, RESOURCE_ENERGY);
+                }
+                    
                     creep.say('putM');
                     return;
                 }
@@ -573,7 +578,7 @@ function simple(creep) {
     if (creep.room.energyAvailable === creep.room.energyCapacityAvailable)
         if (creep.room.memory.labsNeedWork) {
             require('role.scientist').run(creep);
-            creep.say('Labs');
+//            creep.say('Labs');
             return;
         }
 
@@ -661,7 +666,7 @@ function simple(creep) {
             creep.moveToWithdraw(creep.room.terminal, RESOURCE_ENERGY);
             return;
         }
-        if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] > 0 && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 && creep.room.storage.store[RESOURCE_ENERGY] > 100000) {
+        if (creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] > 0 && creep.room.terminal.store[RESOURCE_ENERGY] < 20000 && creep.room.storage.store[RESOURCE_ENERGY] > 900000) {
             creep.say('TBal');
             creep.moveToWithdraw(creep.room.terminal, RESOURCE_ENERGY);
             return;
@@ -856,8 +861,14 @@ if(creep.room.name == 'E19xxS49') {
     if(creep.carryTotal > 0){
         creep.moveToTransfer(creep.room.storage,creep.carrying);
     } else {
-        creep.moveToWithdraw(creep.room.terminal,'L');
+//        creep.moveToWithdraw(creep.room.terminal,'power');
     }
+    return;
+}
+if(creep.room.name == 'E19S49'&& creep.carrying === RESOURCE_ENERGY && creep.room.terminal.store[RESOURCE_ENERGY] < 20000) {
+    if(creep.carryTotal > 0){
+        creep.moveToTransfer(creep.room.terminal,creep.carrying);
+    } 
     return;
 }
         this.rebirth(creep);

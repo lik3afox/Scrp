@@ -1486,7 +1486,7 @@ class roleTerminal {
             }
             if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 21000 || Game.rooms[roomName].terminal.total === 300000) {
 
-                console.log("doign new trade with new run", newTradeEnergy(Game.rooms[roomName].terminal));
+                 newTradeEnergy(Game.rooms[roomName].terminal);
                 return;
             }
             return;

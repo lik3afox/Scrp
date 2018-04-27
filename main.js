@@ -819,16 +819,9 @@ function runShardRoom(roomName) {
     };
 }
 
-
-
-function createSendCreep(request) {
-    console.log(Game.shard.name, 'doing ', request.type, 'from room', request.shardRoom, 'transports', request.mineralType, 'amount:', request.mineralAmount, 'for shard1');
-    // 
-    return temp;
-}
 function makeBody(carryNeeded) {
+    if(carryNeeded > 50 ) carryNeeded = 50;
     let body = [];
-
     do {
         body.push(MOVE);
         body.push(CARRY);
@@ -876,14 +869,13 @@ function doInstructions(instructions) {
                 flagTarget = 'portal';
             }
             let alphaSpawn = Game.rooms[roomCreate].alphaSpawn;
-                        console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
+            //  console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
 
             if (alphaSpawn.memory.expandCreate.length === 0) {
-
-                
-
+                let parts = Math.ceil(current.mineralAmount / 50);
                 let temp = {
-                    build: makeBody(Math.ceil(current.mineralAmount / 50)) ,
+
+                    build: makeBody(parts),
                     name: 'request' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
                     memory: {
                         role: 'mule',
@@ -901,6 +893,7 @@ function doInstructions(instructions) {
                     alphaSpawn.memory.expandCreate.push(temp);
                     console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
                 }
+                // So the issue here is that we need to notify that we're sending materials to shard.
                 current.mineralAmount -= temp.memory.pickup.mineralAmount;
 
             }
@@ -921,7 +914,7 @@ function doInstructions(instructions) {
             if (current.type === 'send') {
                 var alphaSpawn = Game.rooms[current.shardRoom].alphaSpawn;
 
-                   console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
+                //          console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
                 if (Game.rooms[roomCreate] !== undefined && Game.rooms[roomCreate].store[current.mineralType] <= 5000) {
                     console.log("bad slicing ");
                     instructions.splice(i, 1);
@@ -939,8 +932,9 @@ function doInstructions(instructions) {
                             partyFlag = 'portal2';
                             break;
                     }
+                let parts = Math.ceil(current.mineralAmount / 50);
                     let temp = {
-                        build: makeBody(Math.ceil(current.mineralAmount / 50)),
+                        build: makeBody(parts),
                         name: 'send' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
                         memory: {
                             role: 'mule',
@@ -973,8 +967,7 @@ function doInstructions(instructions) {
                 let order = current.order;
                 roomCreate = order.shardRoom;
                 if (roomCreate === undefined) roomCreate = getShardRoom(Game.shard.name, current.mineralType);
-                console.log('FulFill buy order on ', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate, order.id, order.amount);
-                console.log(current.mineralType, order.id, current.mineralAmount, roomCreate, Game.shard.name);
+                //              console.log(current.mineralType, order.id, current.mineralAmount, roomCreate, Game.shard.name);
                 //                console.log(Game.rooms[roomCreate].terminal.store[current.mineralType]);
                 var zez = Game.market.getOrderById(order.id);
                 if (zez === null) {
@@ -997,13 +990,14 @@ function doInstructions(instructions) {
                 }
                 let ez = Game.market.deal(order.id, amoutn, roomCreate);
 
+                console.log(ez, 'FulFill buy order on ', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate, order.id, order.amount);
 
                 if (ez === OK) {
-                    console.log("selling SUCCESS", current.mineralType);
+                    //        console.log("selling SUCCESS", current.mineralType);
                     instructions.splice(i, 1);
                     continue;
                 } else {
-                    console.log('Selling FAILED2', ez);
+                    //       console.log('Selling FAILED2', ez);
                     if (Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
                         instructions.splice(i, 1);
                     }
@@ -1024,15 +1018,15 @@ function doInstructions(instructions) {
                         roomCreate = 'E22S48';
                     }
                 }
-                console.log('FulFill Sell order on ', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate, order.id, order.amount);
-                console.log(current.mineralType, order.id, current.mineralAmount, roomCreate, Game.shard.name);
+                //            console.log(current.mineralType, order.id, current.mineralAmount, roomCreate, Game.shard.name);
                 let ez = Game.market.deal(order.id, current.mineralAmount, roomCreate);
+                console.log(ez, 'FulFill Sell order on ', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate, order.id, order.amount);
                 if (ez === OK) {
-                    console.log("buying SUCCESS", current.mineralType);
+                    //                    console.log("buying SUCCESS", current.mineralType);
                     instructions.splice(i, 1);
                     continue;
                 } else {
-                    console.log('Buying FAILED', ez);
+                    //                  console.log('Buying FAILED', ez);
                 }
             }
 
@@ -1081,9 +1075,6 @@ function getMarketPrices() {
 
 function analyzeNeeds(shardObject) {
     if (Game.time % 33 !== 0) return;
-
-
-    console.log("analyzing needs");
     if (Game.shard.name !== 'shard1') return;
 
     if (shardObject.shard0 === undefined || shardObject.shard0.marketData === undefined ||
@@ -1175,7 +1166,7 @@ function analyzeNeeds(shardObject) {
                 }
             }
             if (shardObject.shard2.marketData[min]) {
-                if (lowestAmount === null || lowestAmount === undefined || (shardObject.shard2.marketData[min].buy !== null && shardObject.shard2.marketData[min].buy.price > lowestAmount.price) ){
+                if (lowestAmount === null || lowestAmount === undefined || (shardObject.shard2.marketData[min].buy !== null && shardObject.shard2.marketData[min].buy.price > lowestAmount.price)) {
                     lowestShard = 'shard2';
                     lowestAmount = shardObject.shard2.marketData[min].buy;
                 }
@@ -1475,17 +1466,28 @@ function analyzeMarkets(shardObject) {
 
     }
 }
-
+var requestMineral0;
+var requestMineral2;
 
 function analyzeShards(shardObject) {
     //    shardObject.instructions= [];
     //[Game.shard.name]
     //if (Game.shard.name === 'shard1') return;
-
     if (shardObject.shard0 !== undefined) {
+
+        if (requestMineral0 === undefined) requestMineral0 = {};
+        for (let e in requestMineral0) {
+            //if (requestMineral0[e] > 0){
+            if (requestMineral0[e] > 0) {
+//                console.log('delay for request0', e, requestMineral0[e]);
+                requestMineral0[e]--;
+            }
+            //}
+        }
+
         let room = Game.rooms[shardObject.shard0.shardRoom];
         for (let i in shardObject.shard0.request) {
-            console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
+            //            console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard0.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1506,7 +1508,11 @@ function analyzeShards(shardObject) {
                     break;
                 }
             }
+            if (requestMineral0[request.mineralType] === undefined) requestMineral0[request.mineralType] = 0;
+            if (requestMineral0[request.mineralType] > 0) doRequest = false;
+
             if (doRequest) {
+                requestMineral0[request.mineralType] = 1000;
                 shardObject.instructions.push(request);
                 console.log(' SHard 0 adding to isntructions', shardObject.instructions.length);
             }
@@ -1530,6 +1536,7 @@ function analyzeShards(shardObject) {
                     break;
                 }
             }
+
             if (doRequest) {
                 shardObject.instructions.push(request);
                 console.log(' SHard 0 adding to isntructions', shardObject.instructions.length);
@@ -1539,8 +1546,20 @@ function analyzeShards(shardObject) {
 
     if (shardObject.shard2 !== undefined) {
         let room = Game.rooms[shardObject.shard2.shardRoom];
+        if (requestMineral2 === undefined) requestMineral2 = {};
+
+        for (let e in requestMineral2) {
+            //    if (requestMineral2[e] > 0){
+            if (requestMineral2[e] > 0) {
+        //        console.log('delay for request2', e, requestMineral2[e]);
+                requestMineral2[e]--;
+            }
+
+            // }
+        }
+
         for (let i in shardObject.shard2.request) {
-                            console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
+//            console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1560,7 +1579,11 @@ function analyzeShards(shardObject) {
                     break;
                 }
             }
+            // We should add a 'delay of 1k ticks between doing '
+            if (requestMineral2[request.mineralType] === undefined) requestMineral2[request.mineralType] = 0;
+            if (requestMineral2[request.mineralType] > 0) doRequest = false;
             if (doRequest) {
+                requestMineral2[request.mineralType] = 1000;
                 shardObject.instructions.push(request);
                 console.log(' SHard 2 adding to isntructions', shardObject.instructions.length);
             }

@@ -384,7 +384,7 @@ class fighterClass extends roleParent {
         var enemy;
 
         if (super.goToPortal(creep)) return;
-
+/*
         enemy = creep.room.hostilesHere();
         enemy = _.filter(enemy,
             function(object) {
@@ -398,11 +398,11 @@ class fighterClass extends roleParent {
         creep.say(enemy.length + 'E');
         if (enemy.length > 0 && distance <= 1) {
             creep.attack(close);
-        } else {
-            if (!doAttack(creep)) {
+        } else {*/
+            if (!creep.smartAttack()) {
                 if (creep.hits < creep.hitsMax) creep.selfHeal();
             }
-        }
+//        }
 
 //        movement.flagMovement(creep);
 creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});

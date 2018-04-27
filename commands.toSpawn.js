@@ -191,8 +191,8 @@ class SpawnInteract {
                     }
                 }
             }
-            if(targets[goTo] !== undefined )
-            creep.memory.goToSpawn = targets[goTo].id;
+            if (targets[goTo] !== undefined)
+                creep.memory.goToSpawn = targets[goTo].id;
         }
 
 
@@ -326,9 +326,13 @@ class SpawnInteract {
         }
         if (STACK !== undefined && STACK.length > 0) {
             if (!_.isArray(STACK[0].build)) {
-                //   console.log('clearing stak of error', STACK[0].build);
+                console.log('clearing stak of error', STACK[0].build);
                 STACK.shift();
+                return;
             }
+            //        if(STACK[0] === undefined) {
+            //                console.log(STACK[0],'Xde',STACK.length,spawn.room.name);
+            //          }
             var ee = spawn.canCreateCreep(STACK[0].build);
             //console.log("spawn, dry run", spawn.spawnCreep(STACK[0].build,build[0].name, {memory:STACK[0].memory,direction:spawn.memory.spawnDir,dryRun:true}) );
             if (STACK[0].build.length === 0 && ee === ERR_INVALID_ARGS) {
@@ -338,17 +342,17 @@ class SpawnInteract {
 
                 do {
                     STACK[0].build.shift();
-                       console.log('><><>>>>-=-=-DOWNGRADE MODULE ENERGY',getCost(STACK[0].build),STACK[0].memory.role  + '-=-=-=-=<<<<><><');
+                    console.log('><><>>>>-=-=-DOWNGRADE MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
                 } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
 
-                spawn.canCreateCreep(STACK[0].build);
+//                spawn.canCreateCreep(STACK[0].build);
 
             } else if (ee === ERR_INVALID_ARGS && STACK[0].build.length > 50) {
                 do {
                     STACK[0].build.shift();
-                       console.log('><><>>>>-=-=-DOWNGRADE MODULE 50+',STACK[0].build.length ,STACK[0].memory.role + '-=-=-=-=<<<<><><');
+                    console.log('><><>>>>-=-=-DOWNGRADE MODULE 50+', STACK[0].build.length, STACK[0].memory.role + '-=-=-=-=<<<<><><');
                 } while (STACK[0].build.length > 50);
-                spawn.canCreateCreep(STACK[0].build);
+                //spawn.canCreateCreep(STACK[0].build);
 
             } else if (ee == OK) {
 
@@ -359,14 +363,11 @@ class SpawnInteract {
                 } else {
                     STACK.shift();
                 }
-            }else if(STACK[0].memory.role === 'first' && ee === ERR_NOT_ENOUGH_ENERGY && spawn.room.energyAvailable <= 500){
+            } else if (STACK[0].memory.role === 'first' && ee === ERR_NOT_ENOUGH_ENERGY && spawn.room.energyAvailable <= 500) {
+                STACK[0].build = [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, ];
+                console.log('><><>>>>-=-=-EMERGYENC MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
 
-                do {
-                    STACK[0].build.shift();
-                       console.log('><><>>>>-=-=-EMERGYENC MODULE ENERGY',getCost(STACK[0].build),STACK[0].memory.role  + '-=-=-=-=<<<<><><');
-                } while (getCost(STACK[0].build) > spawn.room.energyAvailable);
-
-                spawn.canCreateCreep(STACK[0].build);
+                //spawn.canCreateCreep(STACK[0].build);
 
             } else if (STACK[0].length === undefined && STACK[0].length === 0) {
 

@@ -320,6 +320,8 @@ function movement(creep) {
 
                     }
                 }
+            } else if(_goal === null) {
+                creep.moveMe( roleParent.movement.getRoomPos(creep), { reusePath: 50 ,segment:true, ignoreCreeps: true });
             } else { // If 
                 if (creep.memory.workContain !== undefined) {
                     let container = Game.getObjectById(creep.memory.workContain);

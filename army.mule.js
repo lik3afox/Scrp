@@ -362,7 +362,7 @@ class muleClass extends roleParent {
                             return;
                         }
                         for (var l in stor.store) {
-                            if (stor.store[l] > 0) {
+                            if (stor.store[l] > 0 && l !== RESOURCE_ENERGY) {
                                 creep.withdraw(stor, l);
                                 break;
                             }

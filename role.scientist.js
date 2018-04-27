@@ -61,8 +61,8 @@ function labNeedReducing(creep) {
     var e = theplans.length;
     while (e--) {
         let lab = Game.getObjectById(theplans[e].id);
-        if (lab !== null && theplans[e].emptied && lab.room.name == creep.room.name && lab.mineralAmount >= 500) {
-            creep.say('redo');
+        if (lab !== null && theplans[e].emptied && lab.room.name == creep.room.name && lab.mineralAmount >= 250 && creep.carryTotal !== creep.carryCapacity) {
+////            creep.say('redo');
             if (creep.pos.isNearTo(lab)) {
                 creep.withdraw(lab, lab.mineralType);
                 return true;
@@ -148,14 +148,13 @@ class scientistRole extends roleParent {
 
         } else {
             var _labs = labsBuild.getLabs(creep.room.name);
-            creep.say(_labs.length);
             if ( !labNeedReducing(creep))
                 if (_labs.length > 0) { // If there are labs. 
                     var i = _labs.length;
                     var plan = labsBuild.getPlans(_labs[0].pos.roomName); // get the plans
                     while (i--) { // go through them
 
-                        if (plan[i].id == _labs[i].id && (plan[i].resource !== _labs[i].mineralType) && (_labs[i].mineralAmount > plan[i].emptied ? 500 : 0) && _labs[i].id !== creep.room.memory.boostLabID) {
+                        if (plan[i].id == _labs[i].id && (plan[i].resource !== _labs[i].mineralType) &&(_labs[i].mineralAmount > plan[i].emptied ? 500 : 0) &&  _labs[i].id !== creep.room.memory.boostLabID) {
                             creep.say('clear');
 
                             if (creep.pos.isNearTo(_labs[i])) {

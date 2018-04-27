@@ -930,13 +930,9 @@ class buildLab {
     static moveToTransfer(creep) {
         let What;
         if (creep.carryTotal !== 0) {
-            What = creep.carrying; //whatDoIHave(creep);
-        } else {
-            for (var a in creep.carry) {
-                if (creep.carry[a] > 0)
-                    What = a;
-            }
-        }
+            What = creep.carrying; 
+        } 
+        
         let Where = whereDoIPut(creep, What);
         creep.say('m' + Where);
         if (Where === undefined) return false;

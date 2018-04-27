@@ -995,7 +995,7 @@ module.exports = function() {
         }
         let result = PathFinder.search(this.pos, baddies, { flee: true });
         let edz = this.move(this.pos.getDirectionTo(result.path[0]));
-        console.log(roomLink(this.room.name), 'doing new runFrom,', edz);
+//        console.log(roomLink(this.room.name), 'doing new runFrom,', edz);
         if (edz === OK) {
             return true;
         } else {
@@ -1619,17 +1619,22 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                         this.memory.inter_room_exitTarget = this.memory.inter_room_exit[index + 1];
                     }
                 }
-                    if(this.memory.role === 'demolisher') {
-                        console.log(this.room.name, this.memory.inter_room_path.indexOf(this.room.name),this.memory.inter_room_path.length-2);
-                    }
+      //              if(this.memory.role === 'demolisher') {
+    //                    console.log(this.room.name, this.memory.inter_room_path.indexOf(this.room.name),this.memory.inter_room_path.length-2);
+  //                  }
                 if (this.memory.inter_room_target !== undefined) {
-                    if (index === this.memory.inter_room_path.length - 2) {
-                        console.log("this is close to target room, using location");
-                        if (target.pos !== undefined) target = target.pos;
-                        target = new RoomPosition(target.x, target.y, target.roomName);
-                        move_opts.maxRooms = 3;
-
-                    } else {
+                    if (index === this.memory.inter_room_path.length - 2 ) {
+//                        console.log("this is close to target room, using location",index, this.memory.inter_room_path.length - 2,this.memory.role,this.room.name,target.pos.x,target.pos.y);
+                        var tmp;
+                        if(target.pos !== undefined) {
+                                tmp = new RoomPosition(target.pos.x,target.pos.y,this.memory.inter_room_target);
+                        } else {
+                                tmp = new RoomPosition(target.x,target.y,this.memory.inter_room_target);
+                        }
+                            target = tmp;
+                            move_opts.maxRooms = 3;
+                    } 
+                    else {  
                         target = new RoomPosition(25, 25, this.memory.inter_room_target);
                     }
 
