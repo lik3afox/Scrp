@@ -46,15 +46,15 @@ var allParty = {
         ['demolisher', 0, 10],
     ],
     bandit: [
-        ['fighter', 1, 10],
+        ['thief', 2, 6],
         ['mage', 1, 6],
-        //        ['thief', 4, 5],
+        ['fighter', 1, 10],
     ],
 
     mineral:[
-        ['guard',1,0],
         ['mineral',1,7],
         ['ztransport',1,1],
+        ['guard',1,0],
     ],
     mineral2:[
 //        ['guard',1,0],
@@ -458,7 +458,10 @@ class partyInteract {
                             }
 
                             if (point === undefined || creep.id !== point.id) {
-                                if (creep.memory.role === 'mage' || creep.memory.role === 'healer') {
+                                if( creep.memory.role === 'healer'){
+                                    healers.unshift(creep);
+                                } else {}
+                                if (creep.memory.role === 'mage' ) {
                                     healers.push(creep);
                                 } else {
                                     others.push(creep);
@@ -582,7 +585,9 @@ if (flag.name.substr(0, 5) !== 'power') {
         if (flag.memory.party === undefined) {
             flag.memory.party = currentParty;
         }
+        //var e = currentParty.length;
         for (var e in currentParty) {
+
             for (var i in totalParty) {
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
                     //Add to stack 

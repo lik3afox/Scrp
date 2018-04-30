@@ -8,7 +8,7 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
-    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, CARRY]
+    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, CARRY]
 
 ];
 
@@ -25,7 +25,7 @@ function memoryCheck(creep) {
         let vr = creep.room.find(FIND_STRUCTURES, {
             filter: s => s.structureType == STRUCTURE_EXTRACTOR
         });
-        if(vr.length > 0) {
+        if (vr.length > 0) {
             creep.room.memory.extractID = vr[0].id;
             creep.memory.extractID = vr[0].id;
         }
@@ -35,10 +35,10 @@ function memoryCheck(creep) {
 class mineralRole extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        if( _.isArray(classLevels[level])) {
+        if (_.isArray(classLevels[level])) {
             return classLevels[level];
         }
-        if (_.isObject(classLevels[level]) ) {
+        if (_.isObject(classLevels[level])) {
             return classLevels[level].body;
         } else {
             return classLevels[level];
@@ -52,10 +52,10 @@ class mineralRole extends roleParent {
         }
         memoryCheck(creep);
         if (Game.shard.name === 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
-    //        let boost = [];
-//            boost.push('UO');
-  //          _.uniq(boost);
-        }        
+            //        let boost = [];
+            //            boost.push('UO');
+            //          _.uniq(boost);
+        }
         if (creep.ticksToLive > 1200 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
             creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
         }
@@ -94,13 +94,13 @@ class mineralRole extends roleParent {
                             } else {
                                 creep.memory.mineralContainID = 'none';
 
-    let isBuilt = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3, {
-        filter: object => (object.structureType == STRUCTURE_CONTAINER)
-    });
-    // If you find a construction site
-    if (isBuilt.length > 0) {
-                                creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
-    }
+                                let isBuilt = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 3, {
+                                    filter: object => (object.structureType == STRUCTURE_CONTAINER)
+                                });
+                                // If you find a construction site
+                                if (isBuilt.length > 0) {
+                                    creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
+                                }
                             }
                         }
                     }
@@ -118,31 +118,13 @@ class mineralRole extends roleParent {
             //if(creep.memory.mineralContainID != undefined && creep.memory.mineralContainID != 'none') 
             let contain = Game.getObjectById(creep.memory.mineralContainID);
             if (contain === null || contain === undefined) {
-
-                    if (!super.containers.moveToTerminal(creep)) {
-                        super.containers.moveToStorage(creep);
+                if (!super.containers.moveToTerminal(creep)) {
+                    super.containers.moveToStorage(creep);
                 }
             } else {
-                let containTotal = _.sum(contain.store);
-/*                if (containTotal > contain.storeCapacity - 50) {
-                    if (!super._containers.moveToTerminal(creep)) {
-                        super._containers.moveToStorage(creep);
-                    }
-
-                } else {*/
-                    var keys = Object.keys(creep.carry);
-                    var z = keys.length;
-                    while (z--) {
-                        var e = keys[z];
-                        if (creep.carry[e] > 0) {
-                            if(creep.transfer(contain, e)=== -9 ){
-                                creep.moveTo(contain);
-                            }
-
-                            return;
-                        }
-                    }
-///                }
+                if (creep.transfer(contain, creep.carrying) === -9) {
+                    creep.moveTo(contain);
+                }
             }
         }
 

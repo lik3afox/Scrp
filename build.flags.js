@@ -1112,7 +1112,7 @@
                             let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                             if (res.length > 0) {
                                 for (let ee in res) {
-                                    if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_CONTROLLER)) {
+                                    if (res[ee].structure !== undefined && res[ee].structureType !== STRUCTURE_CONTROLLER) {
                                         flag.memory.target = res[ee].structure.id;
                                         break;
                                     }
@@ -1202,15 +1202,18 @@
                             }
                             if (flag.memory.target === undefined && flag.memory.nextTargets.length === 0) {
                                 // Setting up target
-                                let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
-                                for (var ee in res) {
-                                    if (res[ee].structure !== undefined) {
+                            let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
+                            if (res.length > 0) {
+                                for (let ee in res) {
+                                    if (res[ee].structure !== undefined && res[ee].structureType !== STRUCTURE_CONTROLLER) {
                                         flag.memory.target = res[ee].structure.id;
                                         break;
                                     }
                                 }
+                            }
+
                                 // Lets add some targets to next
-                                if (flag.memory.target === undefined) findFlagTarget(flag);
+//                                if (flag.memory.target === undefined) findFlagTarget(flag);
                             }
                             /*
                              let bads = flag.room.find(FIND_HOSTILE_CREEPS);
@@ -1310,7 +1313,7 @@
                                                         if (flag.memory.timer < 0) {
                             //                                flag.remove();
                                                         } */
-                            //                            console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
+                                                        console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
                             if (flag.room !== undefined) {
                                 // So here we check if we remove the flag
                                 // We first give it an 1500 timer.

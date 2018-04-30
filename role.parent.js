@@ -121,8 +121,8 @@ function creepParts(creep, boost) {
             type = TOUGH;
             break;
         default:
-        type = WORK;
-        break;
+            type = WORK;
+            break;
     }
     var e = creep.body.length;
     while (e--) {
@@ -212,10 +212,10 @@ class baseParent {
         switch (task.order) {
             case "keeperMoveTo":
             case "moveTo":
-            if(task.pos === undefined || task.pos.x === undefined ||task.pos.y === undefined ||task.pos.roomName === undefined ){
-                orderComplete = true;
-                break;
-            }
+                if (task.pos === undefined || task.pos.x === undefined || task.pos.y === undefined || task.pos.roomName === undefined) {
+                    orderComplete = true;
+                    break;
+                }
                 var tmp2 = new RoomPosition(task.pos.x, task.pos.y, task.pos.roomName);
 
                 if (task.rangeHappy === undefined || task.rangeHappy === 0) {
@@ -255,17 +255,17 @@ class baseParent {
 
                     if (badz.length === 0) {
                         if (task.energyPickup) { //!creep.isHome
-                                                        if (!constr.withdrawFromTombstone(creep, 4)) {
-                            if (creep.moveMe(tmp2, task.options) == OK) {
-                                if (task.count) {
-                                    if (creep.memory.distance === undefined) {
-                                        creep.memory.distance = 0;
+                            if (!constr.withdrawFromTombstone(creep, 4)) {
+                                if (creep.moveMe(tmp2, task.options) == OK) {
+                                    if (task.count) {
+                                        if (creep.memory.distance === undefined) {
+                                            creep.memory.distance = 0;
 
+                                        }
+                                        creep.memory.distance++;
                                     }
-                                    creep.memory.distance++;
                                 }
                             }
-                                   }
                         } else {
                             if (creep.moveMe(tmp2, task.options) == OK) {
                                 if (task.count) {
@@ -325,7 +325,7 @@ class baseParent {
     }
 
     static boosted(creep, boosted) {
-        if (creep.ticksToLive < 1000  ||(creep.room.controller !== undefined && creep.room.controller.level < 6) ){
+        if (creep.ticksToLive < 1000 || (creep.room.controller !== undefined && creep.room.controller.level < 6)) {
             return false;
         }
         if (creep.memory.boostNeeded === undefined) {
@@ -334,25 +334,25 @@ class baseParent {
         creep.say('💊' + creep.memory.boostNeeded.length);
 
         if (creep.memory.boostNeeded !== undefined && creep.memory.boostNeeded.length > 0 && creep.memory.home == creep.room.name) {
-                var neededMin = numberOfBody(creep, creep.memory.boostNeeded[0]) * 30;
-//                var needBoost = creepParts(creep, creep.memory.boostNeeded[0]);
-           //     if (neededMin) { // this checks an existanced boost already happened.
-                    creep.room.memory.boost = {
-                        mineralType: creep.memory.boostNeeded[0],
-                        timed: 20,
-                        mineralAmount: neededMin
-                    };
+            var neededMin = numberOfBody(creep, creep.memory.boostNeeded[0]) * 30;
+            //                var needBoost = creepParts(creep, creep.memory.boostNeeded[0]);
+            //     if (neededMin) { // this checks an existanced boost already happened.
+            creep.room.memory.boost = {
+                mineralType: creep.memory.boostNeeded[0],
+                timed: 20,
+                mineralAmount: neededMin
+            };
 
-                    if (creep.room.memory.boostLabID !== undefined) {
-                        let laber = creep.room.boostLab;
-                        if (laber !== null) {
-                            if (!creep.pos.isNearTo(laber)) {
-                                creep.moveTo(laber);
-                            }
-                            creep.room.visual.line(creep.pos, laber.pos);
-                            return true;
-                        }
+            if (creep.room.memory.boostLabID !== undefined) {
+                let laber = creep.room.boostLab;
+                if (laber !== null) {
+                    if (!creep.pos.isNearTo(laber)) {
+                        creep.moveTo(laber);
                     }
+                    creep.room.visual.line(creep.pos, laber.pos);
+                    return true;
+                }
+            }
         }
     }
 
@@ -435,13 +435,16 @@ class baseParent {
 
         var D3Bad = creep.pos.findInRange(D4Bad, 3);
         if (D3Bad.length > 0 && D4Bad.length - D3Bad.length != D4Bad.length) {
-              let resz = creep.runFrom(D4Bad);
-              if(resz){
+            let resz = creep.runFrom(D4Bad);
+            if (resz) {
                 creep.memory.sleep = 5;
-              }
+            }
+            return true;
+        } else if (D4Bad.length > 0) {
             return true;
         } else {
             return false;
+
         }
     }
 
@@ -487,8 +490,8 @@ class baseParent {
         if (creep.memory.partied) return false;
         var partyFlag = creep.partyFlag;
         if (partyFlag === undefined) return false;
-        if( partyFlag.memory.rallyFlag === undefined ) return false;
-        if (partyFlag.memory.rallyFlag !== false ) {
+        if (partyFlag.memory.rallyFlag === undefined) return false;
+        if (partyFlag.memory.rallyFlag !== false) {
             if (partyFlag.memory.rallyFlag !== 'home') {
                 var pFlag = Game.flags[partyFlag.memory.rallyFlag];
                 creep.moveTo(pFlag, { reusePath: 50 });
@@ -497,8 +500,8 @@ class baseParent {
             }
             creep.say('R move');
             return true;
-        } 
-        
+        }
+
         return false;
     }
 

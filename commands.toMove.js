@@ -14,18 +14,18 @@ function moveToRallyFlag(creep) {
     if (moveToPos !== undefined) {
         if (creep.room.name === creep.partyFlag.pos.roomName) {
             if (!creep.pos.isEqualTo(moveToPos)) {
-                creep.moveMe(moveToPos, { ignoreCreeps: true ,reusePath: 25 });
+                creep.moveMe(moveToPos, { reusePath: 25 });
             }
         } else {
             if (!creep.pos.isEqualTo(moveToPos))
-                creep.moveMe(moveToPos, { ignoreCreeps: true , reusePath: 50 });
+                creep.moveMe(moveToPos, { reusePath: 50 });
         }
         return true;
     }
 
     if (Game.flags[creep.memory.party] === undefined) return false;
     if (creep.room.name == Game.flags[creep.memory.party]) {
-        creep.moveMe(Game.flags[creep.memory.party], { ignoreCreeps: true });
+        creep.moveMe(Game.flags[creep.memory.party], { });
     } else {
         creep.moveMe(Game.flags[creep.memory.party], { reusePath: 50 });
     }

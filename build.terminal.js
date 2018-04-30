@@ -1466,7 +1466,7 @@ class roleTerminal {
     }
 
 
-    static runNewTerminal(roomName) {
+    static offShardTerminalRun(roomName) {
         // Satalite room for the main room, these are only on shard0/1 .
         var main;
         if (Game.shard.name === 'shard2') main = 'E19S49';
@@ -1554,7 +1554,7 @@ class roleTerminal {
         var doNewTrade = ['E19S49', 'E1S11', 'E38S72', 'E11S47', 'W53S35'];
         var didTrade = false;
         if (_.contains(doNewTrade, roomName)) {
-            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 20000)
+            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000)
                 if (newTradeEnergy(Game.rooms[roomName].terminal)) {
                     didTrade = true;
                 }
@@ -1645,7 +1645,7 @@ class roleTerminal {
                                             }
                                         }
                                     } else {
-                                        getPower(terminal);
+                                //        getPower(terminal);
 
                                     }
                                 }
@@ -1660,7 +1660,7 @@ class roleTerminal {
                                         }
                                     }
                                 } else {
-                                    getPower(terminal);
+                     //               getPower(terminal);
 
                                 }
                             }

@@ -1075,6 +1075,9 @@ function getMarketPrices() {
 
 function analyzeNeeds(shardObject) {
     if (Game.time % 33 !== 0) return;
+
+
+    console.log("analyzing needs");
     if (Game.shard.name !== 'shard1') return;
 
     if (shardObject.shard0 === undefined || shardObject.shard0.marketData === undefined ||
@@ -1767,7 +1770,7 @@ module.exports.loop = blackMagic(function() {
                         _terminal.runTerminal(roomName);
                     }
                 } else {
-                    _terminal.runNewTerminal(roomName);
+                    _terminal.offShardTerminalRun(roomName);
                 }
             }
 
@@ -1804,6 +1807,9 @@ module.exports.loop = blackMagic(function() {
                     font: 0.5,
                     align: RIGHT
                 });
+                if(Game.spawns[title].spawning.remainingTime === 0) {
+                    console.log('spawning here,', Game.spawns[title].pos.roomName);
+                }
 
             }
 

@@ -235,7 +235,6 @@ class roleGuard extends roleParent {
             return;
         } else {
             creep.smartHeal();
-
         }
 
         if (creep.partyFlag.memory.mineral) {
@@ -256,7 +255,7 @@ class roleGuard extends roleParent {
                 }
                 creep.moveMe(creep.partyFlag, { reusePath: 50 });
             } else if (creep.hits === creep.hitsMax) {
-
+                creep.say('should SL');
                 let gota = Game.getObjectById(creep.memory.keeperLair[creep.memory.goTo]);
                 if(gota !== null)
                 creep.sleep(gota.ticksToSpawn + Game.time - 1);

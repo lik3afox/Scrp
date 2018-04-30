@@ -212,13 +212,15 @@ if(bads.length > 0){
                 });
                 if (zz.length > 0) {
                     creep.memory.powerbankID = zz[0].id;
+                }else {
+                    creep.memory.death = true;
                 }
             }
 
             let pBank = Game.getObjectById(creep.memory.powerbankID);
             if (pBank === null) {
 
-                if (!power.findNewPowerParty(creep))
+//                if (!power.findNewPowerParty(creep))
                     creep.memory.death = true;
                 return false;
             }

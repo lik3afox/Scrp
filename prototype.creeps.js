@@ -681,7 +681,7 @@ module.exports = function() {
                 return false;
 
             }
-            return true;
+        //    return true;
         } else {
             if (this.memory.role === 'guard') return false;
             // Echo Healing.
@@ -1121,6 +1121,7 @@ module.exports = function() {
             FIND_EXIT_BOTTOM,
             FIND_EXIT_LEFT
         ];
+        if(options === undefined) options = {};
         var closest = 100;
         var exited;
 
@@ -1173,7 +1174,8 @@ module.exports = function() {
             }
         }
         if (exited !== undefined) {
-            this.moveMe(exited);
+            options.maxRooms = 1;
+            this.moveMe(exited,options);
         }
     };
 
@@ -1632,7 +1634,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                                 tmp = new RoomPosition(target.x,target.y,this.memory.inter_room_target);
                         }
                             target = tmp;
-                            move_opts.maxRooms = 3;
+                            move_opts.maxRooms = 1;
                     } 
                     else {  
                         target = new RoomPosition(25, 25, this.memory.inter_room_target);

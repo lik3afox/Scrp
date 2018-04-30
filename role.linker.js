@@ -192,7 +192,7 @@ function doPowerSpawn(creep) {
 
 
 function oneLinkRoom(creep, fill) {
-//    console.log(creep.pos.roomName, 'doing 1LinkRoom');
+    //    console.log(creep.pos.roomName, 'doing 1LinkRoom');
     if (!fill) {
         //    if ( creep.moveToPickUp(FIND_DROPPED_RESOURCES) ){
         //   creep.say('zzes');
@@ -458,12 +458,12 @@ function boostLabWork(creep) {
                     creep.say('PutE');
                     return;
                 } else {
-                    if(creep.room.storage.total < 1000000){
-                    creep.moveToTransfer(creep.room.storage, RESOURCE_ENERGY);    
-                } else {
-                    creep.moveToTransfer(creep.room.terminal, RESOURCE_ENERGY);
-                }
-                    
+                    if (creep.room.storage.total < 1000000) {
+                        creep.moveToTransfer(creep.room.storage, RESOURCE_ENERGY);
+                    } else {
+                        creep.moveToTransfer(creep.room.terminal, RESOURCE_ENERGY);
+                    }
+
                     creep.say('putM');
                     return;
                 }
@@ -494,9 +494,9 @@ function boostLabWork(creep) {
                 boost.mineralType = 'none';
             }
 
-            if (creep.room.terminal.store[boost.mineralType] === undefined || creep.room.terminal.store[boost.mineralType] === 0 || creep.room.terminal.store[boost.mineralType] <  boost.mineralAmount ) {
-                creep.say('request'+_terminal_().requestMineral(creep.room.name, boost.mineralType,boost.mineralAmount));
-                
+            if (creep.room.terminal.store[boost.mineralType] === undefined || creep.room.terminal.store[boost.mineralType] === 0 || creep.room.terminal.store[boost.mineralType] < boost.mineralAmount) {
+                creep.say('request' + _terminal_().requestMineral(creep.room.name, boost.mineralType, boost.mineralAmount));
+
                 return;
             }
             //console.log(lab.mineralType, boost.mineralType, lab.mineralAmount);
@@ -562,7 +562,7 @@ function boostLabWork(creep) {
 }
 
 function simple(creep) {
-//    console.log(creep.pos.roomName, 'doing simple');
+    //    console.log(creep.pos.roomName, 'doing simple');
     if (creep.carryTotal === 0) {
         creep.memory.empty = true;
     } else if (creep.carryTotal === creep.carryCapacity) {
@@ -578,7 +578,7 @@ function simple(creep) {
     if (creep.room.energyAvailable === creep.room.energyCapacityAvailable)
         if (creep.room.memory.labsNeedWork) {
             require('role.scientist').run(creep);
-//            creep.say('Labs');
+            //            creep.say('Labs');
             return;
         }
 
@@ -606,7 +606,7 @@ function simple(creep) {
             creep.say('drp');
             return;
         }
-        if (creep.memory.roleID >= 1 &&  creep.room.controller !== undefined &&  creep.room.controller.level <= 5 && creep.room.terminal !== undefined) {
+        if (creep.memory.roleID >= 1 && creep.room.controller !== undefined && creep.room.controller.level <= 5 && creep.room.terminal !== undefined) {
             for (var e in creep.room.terminal.store) {
                 if (creep.room.terminal.store[e] > 0 && e !== RESOURCE_ENERGY) {
                     creep.moveToWithdraw(creep.room.terminal, e);
@@ -679,13 +679,13 @@ function simple(creep) {
         }
 
     } else {
-        if (creep.saying === 'mBal' ) {
-            if(creep.room.terminal.total > 290000) {
-            if (creep.moveToTransfer(creep.room.storage, creep.carrying) !== OK)
-                creep.say('mBal');
+        if (creep.saying === 'mBal') {
+            if (creep.room.terminal.total > 290000) {
+                if (creep.moveToTransfer(creep.room.storage, creep.carrying) !== OK)
+                    creep.say('mBal');
             } else {
-            if (creep.moveToTransfer(creep.room.terminal, creep.carrying) !== OK)
-                creep.say('mBal');
+                if (creep.moveToTransfer(creep.room.terminal, creep.carrying) !== OK)
+                    creep.say('mBal');
             }
             return;
         }
@@ -756,7 +756,7 @@ function simple(creep) {
             tgt = creep.room.terminal;
         }
 
-        creep.moveToTransfer(tgt, e, { reusePath: 20,maxRooms:1 });
+        creep.moveToTransfer(tgt, e, { reusePath: 20, maxRooms: 1 });
         //        var target = creep.room.terminal;
         /*
                 if (creep.room.controller.level == 5 && creep.room.storage !== undefined) {
@@ -774,6 +774,68 @@ function simple(creep) {
     }
 
 }
+
+
+
+function roomJobs(roomName) {
+    var jobList = {
+        //        filler : [], // unlimited last
+        //        unassigned : [],
+        link: null,
+        boost: null,
+//        labs: null,
+//        mineral: null,
+//        tombStone: null,
+//        pickup: null,
+    };
+    var room = Game.rooms[roomName];
+    if (Game.rooms[roomName].memory.jobList === undefined) {
+      Game.rooms[roomName].memory.jobList = jobList;
+    }
+    jobList = Game.rooms[roomName].memory.jobList;
+    var num = 0;
+  //  if(jobList === undefined) joblist = 
+    console.log('doing joblist',jobList.link);
+    for (let job in jobList) {
+        console.log('dfh',job,jobList[job]);
+        let creep = Game.creeps[jobList[job]];
+        if (creep === undefined) {
+            // Lets find a creep to assign this job too.
+//            var linker = ;
+            linker = _.filter(room.find(FIND_MY_CREEPS), function(o) {
+                return o.memory.role === 'linker' && o.memory.job === undefined;
+            });
+            console.log("job is empty",linker.length, "found");
+
+            if(linker.length > 0){
+                linker[0].memory.job = job;
+//                linker[0].memory.follower = true; // this disables it from normal run.
+                jobList[job] = linker[0].name;
+                creep = linker[0];
+            }else {
+//                continue;
+            }
+        }
+        // Room visuals
+        room.visual.text(job+":"+jobList[job], 15, 15+num, font);
+        var font = { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT, backgroundColor: '#0F0F0F' };
+        room.visual.text(job+":"+jobList[job], 15, 15+num, font);
+        num++;
+
+        // Do the action
+        switch (job) {
+            case 'link':
+            // Link has two jobs, take from masterLink and deposit either to Storage or terminal.
+                break;
+            case 'boost':
+
+            break;
+        }
+
+    }
+
+}
+
 
 
 class roleLinker extends roleParent {
@@ -857,20 +919,21 @@ class roleLinker extends roleParent {
             return;
 
         } */
-if(creep.room.name == 'E19xxS49') {
-    if(creep.carryTotal > 0){
-        creep.moveToTransfer(creep.room.storage,creep.carrying);
-    } else {
-//        creep.moveToWithdraw(creep.room.terminal,'power');
-    }
-    return;
-}
-if(creep.room.name == 'E19S49'&& creep.carrying === RESOURCE_ENERGY && creep.room.terminal.store[RESOURCE_ENERGY] < 20000) {
-    if(creep.carryTotal > 0){
-        creep.moveToTransfer(creep.room.terminal,creep.carrying);
-    } 
-    return;
-}
+        if (creep.room.name == 'E19S49') {
+//             roomJobs('E19S49');
+        //    if (creep.carryTotal > 0) {
+      //          creep.moveToTransfer(creep.room.storage, creep.carrying);
+    //        } else {
+                //        creep.moveToWithdraw(creep.room.terminal,'power');
+//            }
+  //          return;
+        }
+        if (creep.room.name == 'E19S49' && creep.carrying === RESOURCE_ENERGY && creep.room.terminal.store[RESOURCE_ENERGY] < 20000) {
+            if (creep.carryTotal > 0) {
+                creep.moveToTransfer(creep.room.terminal, creep.carrying);
+            }
+            return;
+        }
         this.rebirth(creep);
         super.renew(creep);
         // control progress
@@ -897,7 +960,7 @@ if(creep.room.name == 'E19S49'&& creep.carrying === RESOURCE_ENERGY && creep.roo
         var goto;
         if (creep.room.memory.boost !== undefined && creep.room.memory.boost.mineralType !== 'none' && creep.room.memory.boost.mineralAmount !== 0 && creep.room.memory.boostLabID !== undefined) {
             boostLabWork(creep);
-//            creep.say('lab');
+            //            creep.say('lab');
             return;
         }
         if (creep.room.name == 'E19xxS49') {
