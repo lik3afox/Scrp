@@ -458,6 +458,7 @@ module.exports = function() {
         if (this.getActiveBodyparts(WORK) === 0) {
             return false;
         }
+if(this.partyFlag !== undefined) {        
         var target = Game.getObjectById(this.partyFlag.memory.target);
         if (target !== null) {
             if (this.pos.isNearTo(target)) {
@@ -466,6 +467,7 @@ module.exports = function() {
                 return true;
             }
         }
+    }
         var bads = this.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
         bads = _.filter(bads, function(o) {
             return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL;
@@ -529,6 +531,7 @@ module.exports = function() {
             return true;
         }
 
+if(this.partyFlag !== undefined) {
         var target = Game.getObjectById(this.partyFlag.memory.target);
         if (target !== null) {
             if (this.pos.isNearTo(target) && target.structureType !== STRUCTURE_WALL && target.structureType !== STRUCTURE_ROAD && target.structureType !== STRUCTURE_CONTAINER) {
@@ -542,7 +545,7 @@ module.exports = function() {
         if (sus.length > 0) {
             this.rangedAttack(sus);
         }
-
+}
         /*        if ((this.room.name === this.partyFlag.pos.roomName) || (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.enemies, this.room.controller.owner.username)) || (this.room.controller !== undefined && this.room.controller.reservation !== undefined && _.contains(fox.enemies, this.room.controller.reservation.username))) {
                     
                     this.say('kr');

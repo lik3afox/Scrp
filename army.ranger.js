@@ -225,6 +225,7 @@ class rangerClass extends roleParent {
     }
 
     static run(creep) {
+        creep.memory.death = creep.partyFlag === undefined;
 
         if (creep.ticksToLive > 1495 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
 creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);

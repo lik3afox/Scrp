@@ -1486,8 +1486,8 @@ class roleTerminal {
             }
             if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 21000 || Game.rooms[roomName].terminal.total === 300000) {
 
-                 newTradeEnergy(Game.rooms[roomName].terminal);
-                return;
+//                 newTradeEnergy(Game.rooms[roomName].terminal);
+  //              return;
             }
             return;
         } else {
@@ -1555,9 +1555,9 @@ class roleTerminal {
         var didTrade = false;
         if (_.contains(doNewTrade, roomName)) {
             if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000)
-                if (newTradeEnergy(Game.rooms[roomName].terminal)) {
+//                if (newTradeEnergy(Game.rooms[roomName].terminal)) {
                     didTrade = true;
-                }
+  //              }
         }
 
         let terminal = Game.rooms[roomName].terminal;

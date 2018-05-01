@@ -985,7 +985,7 @@
                 }
 
                 // All flags need to have a target
-                if (flag.room !== undefined && flag.room.controller !== undefined && !flag.room.controller.my) {
+/*                if (flag.room !== undefined && flag.room.controller !== undefined && !flag.room.controller.my) {
                     let tgt = Game.getObjectById(flag.memory.target);
                     if (flag.memory.target === undefined) {
                         let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
@@ -1003,7 +1003,7 @@
                     } else if (tgt === null) {
                         findFlagTarget(flag);
                     }
-                }
+                } */
                 // Mineral flag that will turn off when it's fully extracted.
                 if (flag.memory.mineral && flag.room !== undefined) {
                     if (flag.room.mineral !== undefined) {

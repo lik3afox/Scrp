@@ -274,8 +274,8 @@ function movement(creep) {
                         creep.cleanMe();
 
 
-                        var partner = _.filter(creep.room.find(FIND_CREEPS), function(o) {
-                            return o.pos.isNearTo(creep) && o.ticksToLive < creep.ticksToLive && o.memory.role == 'transport';
+                        var partner = _.filter(creep.room.find(FIND_MY_CREEPS), function(o) {
+                            return o.pos.isNearTo(creep) && o.ticksToLive < creep.ticksToLive ;
                         });
                         if (partner.length > 0) {
                             if (creep.carry[RESOURCE_ENERGY]) {
@@ -289,7 +289,7 @@ function movement(creep) {
                         }
                         if (partner.length > 1) {
                             var max = _.max(partner,a=> a.carryTotal);
-                            max.memory.goHome = true;
+                            if(max.memory !== undefined)                           max.memory.goHome = true;
                         }
 
                         if (creep.room.memory.mineInfo === undefined) {

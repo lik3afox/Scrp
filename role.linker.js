@@ -858,17 +858,16 @@ class roleLinker extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-        /*
-        if (Game.shard.name === 'shardx2') {
+        if (creep.room.name  === 'W5xx3S35') {
             if (creep.carryTotal > 0) {
                 creep.drop(creep.carrying);
-
             } else {
 
-                creep.moveToWithdraw(creep.room.terminal, 'X');
+                creep.moveToWithdraw(creep.room.terminal, 'L');
             }
             return;
         }
+        /*
                 if(creep.ticksLeftToLive === 1 ) {
                     // Right before death, we find the one to follow the link. Which will now be the first.
                     var my = creep.room.find(FIND_MY_CREEPS);

@@ -202,7 +202,10 @@ module.exports = function() {
                         this.memory.observerID = bb[0].id;
                 }
                 this._observer = Game.getObjectById(this.memory.observerID);
-                if (this._observer === null) this.memory.observerID = undefined;
+                if (this._observer === null) {
+                    this.memory.observerID = undefined;
+                    return undefined;
+                }
                 return this._observer;
             }
 

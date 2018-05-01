@@ -256,9 +256,11 @@ class roleGuard extends roleParent {
                 creep.moveMe(creep.partyFlag, { reusePath: 50 });
             } else if (creep.hits === creep.hitsMax) {
                 creep.say('should SL');
+                if(creep.memory !== undefined && creep.memory.goTo !== undefined){
                 let gota = Game.getObjectById(creep.memory.keeperLair[creep.memory.goTo]);
                 if(gota !== null)
                 creep.sleep(gota.ticksToSpawn + Game.time - 1);
+        }
             }
             return;
         }

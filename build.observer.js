@@ -327,7 +327,7 @@ class buildObserver {
         let room = Game.rooms[roomName];
         if (room === undefined) return;
         if (room.controller !== undefined && room.controller.level < 8) return;
-        if (room.observer === undefined) return;
+        if (room.observer === undefined || room.observer === null) return;
         //     console.log('roomname is doing new observer!',room.memory.observeTarget,Game.rooms[room.memory.observeTarget]);
         if (room.memory.observeTarget === undefined) {
             room.memory.observeTarget = getRandomRoom(roomName, 10);

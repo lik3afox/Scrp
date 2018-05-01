@@ -1163,7 +1163,7 @@ function analyzeNeeds(shardObject) {
                 lowestAmount = shardObject.shard0.marketData[min].buy;
             }
             if (shardObject.shard1.marketData[min]) {
-                if (lowestAmount === null || lowestAmount === undefined || shardObject.shard1.marketData[min].buy.price > lowestAmount.price) {
+                if (lowestAmount === null || lowestAmount === undefined || (shardObject.shard1.marketData[min].buy !== null && shardObject.shard1.marketData[min].buy.price > lowestAmount.price)) {
                     lowestShard = 'shard1';
                     lowestAmount = shardObject.shard1.marketData[min].buy;
                 }

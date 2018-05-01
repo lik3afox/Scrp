@@ -59,9 +59,9 @@ function squadMemory(squaded, bads, analysis) {
             var squadSpots = [
                 { pos: X, role: 'point', },
                 { pos: (X * 10) + (X), role: 'healer', }, // Behind point
+                { pos: (f(X - 1) * 10) + X,  role: 'healer', },
                 { pos: f(X - 1), role: 'melee', }, // Left of point
                 { pos: f(X + 1), role: 'melee', }, // right of point
-                { pos: (f(X - 1) * 10) + X, role: (f(X - 1) * 10) + X, },
                 { pos: (X10 + f(X + 1)), role: (X10 + (X + 1)), },
 
                 { pos: f(X - 1) * 10 + f(X - 1), role: f(X - 1) * 10 + (X - 1), },
@@ -70,20 +70,20 @@ function squadMemory(squaded, bads, analysis) {
                 { pos: f(X - 2) * 10 + f(X - 1), role: f(X - 2) * 10 + (X - 1), },
             ];
 
-            if(squad[0].partyFlag.pos.x === 2 || squad[0].partyFlag.pos.x === 47 || squad[0].partyFlag.pos.y === 2 || squad[0].partyFlag.pos.y=== 47){
+            if (squad[0].partyFlag.pos.x === 2 || squad[0].partyFlag.pos.x === 47 || squad[0].partyFlag.pos.y === 2 || squad[0].partyFlag.pos.y === 47) {
                 // This means that the flag is near the edge posistion - or an target that is near the endge. 
                 squadSpots = [
-                { pos: X, role: 'point', },
-                { pos: f(X - 1), role: 'melee', }, // Left of point
-                { pos: f(X + 1), role: 'healer', }, // right of point
-                { pos: (X * 10) + (X),  },// Behind point
-                { pos: (f(X - 1) * 10) + X, role: (f(X - 1) * 10) + X, },
-                { pos: (X10 + f(X + 1)), role: (X10 + (X + 1)), },
+                    { pos: X, role: 'point', },
+                    { pos: f(X - 1), role: 'melee', }, // Left of point
+                    { pos: f(X + 1), role: 'healer', }, // right of point
+                    { pos: (X * 10) + (X), }, // Behind point
+                    { pos: (f(X - 1) * 10) + X, role: (f(X - 1) * 10) + X, },
+                    { pos: (X10 + f(X + 1)), role: (X10 + (X + 1)), },
 
-                { pos: f(X - 1) * 10 + f(X - 1), role: f(X - 1) * 10 + (X - 1), },
-                { pos: f(X + 1) * 10 + f(X + 1), role: f(X + 1) * 10 + (X + 1), },
-                { pos: f(X + 1) * 10 + f(X + 2), role: f(X + 1) * 10 + (X + 2), },
-                { pos: f(X - 2) * 10 + f(X - 1), role: f(X - 2) * 10 + (X - 1), },
+                    { pos: f(X - 1) * 10 + f(X - 1), role: f(X - 1) * 10 + (X - 1), },
+                    { pos: f(X + 1) * 10 + f(X + 1), role: f(X + 1) * 10 + (X + 1), },
+                    { pos: f(X + 1) * 10 + f(X + 2), role: f(X + 1) * 10 + (X + 2), },
+                    { pos: f(X - 2) * 10 + f(X - 1), role: f(X - 2) * 10 + (X - 1), },
                 ];
             }
 
@@ -161,13 +161,13 @@ function squadMemory(squaded, bads, analysis) {
             for (let z in squad) {
                 if (squadSpots.length > 0) {
                     squad[z].memory.formationPos = squadSpots.shift().pos;
-                    
+
                 } else {
                     squad[z].memory.formationPos = undefined;
                 }
             }
 
-            
+
 
             bads = _.filter(bads, function(o) {
                 return (o.getActiveBodyparts(ATTACK) > 0 || o.getActiveBodyparts(RANGED_ATTACK) > 0);
@@ -187,7 +187,7 @@ function squadMemory(squaded, bads, analysis) {
             if (close !== undefined) {
                 var distance = point.pos.getRangeTo(close);
 
-                
+
                 if (distance < 3) {
                     var dire = point.pos.getDirectionTo(close);
                     dire = dire + 4;
@@ -211,6 +211,9 @@ function squadMemory(squaded, bads, analysis) {
                     // Leader point man here
                     creep.memory.formationPos = 0;
                     //let dir = Game.getObjectById(creep.memory.directingID);
+                    if(dir !== null){
+                    creep.room.visual.line(creep.pos, dir.pos, { color: 'red' });
+                }
                     if (creep.pos.isNearTo(dir)) {
                         creep.say('ToFlag');
                         creep.memory.happy = true;
@@ -225,6 +228,9 @@ function squadMemory(squaded, bads, analysis) {
                 } else if (creep.memory.directingID === undefined) {
                     // Last person
                     let fol = Game.getObjectById(creep.memory.followingID);
+                    if(fol !== null){
+                        creep.room.visual.line(creep.pos, fol.pos, { color: 'green' });
+                    }
                     if (creep.pos.isNearTo(fol)) {
                         creep.memory.happy = true;
                     }
@@ -232,7 +238,14 @@ function squadMemory(squaded, bads, analysis) {
                 } else {
                     // everyone else;
                     let fol = Game.getObjectById(creep.memory.followingID);
-                    // dir = Game.getObjectById(creep.memory.directingID);
+                    let dir = Game.getObjectById(creep.memory.directingID);
+                    if(fol !== null){
+                    creep.room.visual.line(creep.pos, fol.pos, { color: 'red' });
+                    }
+                    if(dir !== null){
+                    creep.room.visual.line(creep.pos, dir.pos, { color: 'green' });
+                    }
+
                     if (creep.pos.isNearTo(dir) && creep.pos.isNearTo(fol)) {
                         creep.memory.happy = true;
                     }
@@ -245,9 +258,9 @@ function squadMemory(squaded, bads, analysis) {
                 }
                 if (creep.isAtEdge) {
                     doMovement = true;
-    //                if (creep.memory.point && !creep.pos.isNearTo(dir)) {
-  //                      doMovement = false;
-//                    }
+                    //                if (creep.memory.point && !creep.pos.isNearTo(dir)) {
+                    //                      doMovement = false;
+                    //                    }
 
                 }
 
@@ -260,17 +273,26 @@ function squadMemory(squaded, bads, analysis) {
 function squadMovement(creep) {
     switch (creep.partyFlag.memory.squadMode) {
         case 'battle':
-                if (runMovement !== undefined) {
-                    if (runMovement === 0) {
-//                        console.log('creep doing run movement', runMovement);
-                    } else {
-                        creep.move(runMovement);
-                    }
-                    creep.say('r');
+            if (runMovement !== undefined) {
+                if (runMovement === 0) {
+                    //                        console.log('creep doing run movement', runMovement);
                 } else {
-                    movement.flagMovement(creep); // This is imperfect, but it's a start.
+                    creep.move(runMovement);
                 }
-//                    creep.say(creep.memory.formationPos);
+                creep.say('r');
+                if (creep.stats('rangedAttack') > 0) {
+                    let tgt = Game.getObjectById(creep.partyFlag.memory.target);
+                    if (tgt !== null) {
+                        let distance = creep.pos.getRangeTo(tgt);
+                        if (distance > 3) {
+                            creep.moveMe(tgt);
+                        }
+                    }
+                }
+            } else {
+                movement.flagMovement(creep); // This is imperfect, but it's a start.
+            }
+            //                    creep.say(creep.memory.formationPos);
             break;
         case 'travel':
             if (creep.memory.followingID === undefined) {
@@ -278,32 +300,32 @@ function squadMovement(creep) {
                 let dir = Game.getObjectById(creep.memory.directingID);
                 if (doMovement && !creep.pos.isNearTo(creep.partyFlag)) {
                     //movement.flagMovement(creep);
-                    creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+                    creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
                     creep.say('🚆' + doMovement);
                 }
             } else if (creep.memory.directingID === undefined) {
                 // Last person
                 let fol = Game.getObjectById(creep.memory.followingID);
-                if(fol !== null){
-                if (doMovement) {
-                    creep.move(creep.pos.getDirectionTo(fol));
-                    creep.say('🚆');
-                } else if (!creep.memory.happy) {
-                    creep.moveTo(fol);
-                    creep.say(':(');
+                if (fol !== null) {
+                    if (doMovement) {
+                        creep.move(creep.pos.getDirectionTo(fol));
+                        creep.say('🚆');
+                    } else if (!creep.memory.happy) {
+                        creep.moveTo(fol);
+                        creep.say(':(');
+                    }
                 }
-            }
             } else {
                 // everyone else;
                 let fol = Game.getObjectById(creep.memory.followingID);
-                if(fol !== null){
-                if (doMovement) {
-                    creep.move(creep.pos.getDirectionTo(fol));
-                    creep.say('🚆');
-                } else if (!creep.memory.happy) {
-                    creep.moveTo(fol);
-                    creep.say(':(');
-                }
+                if (fol !== null) {
+                    if (doMovement) {
+                        creep.move(creep.pos.getDirectionTo(fol));
+                        creep.say('🚆');
+                    } else if (!creep.memory.happy) {
+                        creep.moveTo(fol);
+                        creep.say(':(');
+                    }
                 }
             }
             break;
@@ -311,25 +333,30 @@ function squadMovement(creep) {
 }
 
 function squadAction(creep) {
-var doHeal = true;
+    var doHeal = true;
 
     if (doHeal && creep.stats('heal') > 0 && creep.memory.role !== 'fighter') {
-        if(creep.smartHeal()) {
+        if (!creep.smartHeal()) { // Does close heal
             creep.rangedMassAttack();
+        } else if(creep.memory.reHealID !== undefined){ // It did range heal? so lets get close.
+            let tgt = Game.getObjectById(creep.memory.reHealID);
+            if(tgt !== null && !creep.pos.isNearTo(tgt)&&creep.atFlagRoom ) {
+                creep.moveMe(tgt);
+            }
         }
-            return;
+        return;
     } else if (creep.stats('attack') > 0) {
         creep.smartAttack();
     }
     if (creep.stats('rangedAttack') === 10) {
         creep.rangedMassAttack();
     } else if (creep.stats('rangedAttack') > 0) {
-        if( creep.smartRangedAttack() ){
+        if (creep.smartRangedAttack()) {
             doHeal = false;
             creep.smartCloseHeal();
         }
     }
-    
+
     if (creep.stats('dismantle') > 0) {
         creep.smartDismantle();
     }
@@ -379,7 +406,7 @@ function setTravelSquad(squad) {
 
 
     // Here we setup the travel caravan;
-//    console.log('SETTING CARAVAN', healers.length, others.length, point);
+    //    console.log('SETTING CARAVAN', healers.length, others.length, point);
 
     var caravan = [];
     caravan.push(point);
@@ -402,7 +429,7 @@ function setTravelSquad(squad) {
             caravan.push(others.shift());
         }
     }
-//    console.log('AFTERSETTING CARAVAN', caravan.length);
+    //    console.log('AFTERSETTING CARAVAN', caravan.length);
     flag.memory.squadID = [];
     for (let a = 0; a < caravan.length; a++) {
 
@@ -464,7 +491,7 @@ class commandsToSquad {
 
 
         // Here we setup the travel caravan;
-//        console.log('SETTING CARAVAN', healers.length, others.length, point);
+        //        console.log('SETTING CARAVAN', healers.length, others.length, point);
 
         var caravan = [];
         caravan.push(point);
@@ -487,7 +514,7 @@ class commandsToSquad {
                 caravan.push(others.shift());
             }
         }
-//        console.log('AFTERSETTING CARAVAN', caravan.length);
+        //        console.log('AFTERSETTING CARAVAN', caravan.length);
         flag.memory.squadID = [];
         for (let a = 0; a < caravan.length; a++) {
 

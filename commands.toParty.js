@@ -460,8 +460,7 @@ class partyInteract {
                             if (point === undefined || creep.id !== point.id) {
                                 if( creep.memory.role === 'healer'){
                                     healers.unshift(creep);
-                                } else {}
-                                if (creep.memory.role === 'mage' ) {
+                                } else if (creep.memory.role === 'mage' ) {
                                     healers.push(creep);
                                 } else {
                                     others.push(creep);
