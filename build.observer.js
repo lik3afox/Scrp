@@ -27,8 +27,11 @@ var roomsObserve = [
 var shard0PowerRooms = ['E36S70','E37S70','E38S70','E39S70','E40S70',
 'E40S71','E40S72','E40S73'];
 
-var shard2PowerRooms = ['E17S50','E18S50','E19S50','E20S50','E21S50','E22S50',
-                        'E20S51','E20S49','E20S48',];
+var shard2PowerRooms = ['E17S50','E18S50','E19S50','E20S50','E21S50','E22S50','E23S50','E24S50','E25S50','E26S50','E27S50','E28S50','E29S50','E30S50','E31S50','E32S50','E33S50',
+                        'E20S48','E20S49','E20S51','E20S52','E20S53',
+                        'E30S44','E30S45','E30S46','E30S47','E30S48','E30S49','E30S50','E30S51','E30S52',
+
+                        ];
 
 var shard1PowerRooms = [
     'E30S40', 'E30S41', 'E30S42', 'E30S43', 'E30S44', 'E30S45', 'E30S46', 'E30S47', 'E30S48', 'E30S49', 'E30S50',
@@ -214,6 +217,11 @@ function controllerCheck(target) {
             Memory.hostile_rooms = _.uniq(Memory.hostile_rooms);
             //            console.log('hostile room added to global hostile_rooms',target,controller.owner.username);
         }
+    } else if (controller.owner === undefined){
+        let zze = _.indexOf(Memory.hostile_rooms,target);
+        if(zze > 0){
+            Memory.hostile_rooms.splice(zze,1);
+        }
     }
 }
 
@@ -328,7 +336,7 @@ class buildObserver {
         if (room === undefined) return;
         if (room.controller !== undefined && room.controller.level < 8) return;
         if (room.observer === undefined || room.observer === null) return;
-        //     console.log('roomname is doing new observer!',room.memory.observeTarget,Game.rooms[room.memory.observeTarget]);
+//             console.log(roomName,' is doing new observer!',room.memory.observeTarget,Game.rooms[room.memory.observeTarget]);
         if (room.memory.observeTarget === undefined) {
             room.memory.observeTarget = getRandomRoom(roomName, 10);
         }

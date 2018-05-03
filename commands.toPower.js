@@ -335,9 +335,14 @@ class PowerInteract {
                     flagCol2: COLOR_RED
                 };
                 var half = ['E30S41','E30S42','E30S43','E30S44','E30S45','E30S46','E30S47','E30S48','E30S49'];
+                var second = [];
                 let zz;
 
                 if (_.contains(half, powerBank.pos.roomName)) {
+                    if (powerBank.pos.x < 25) {
+                        zz = room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
+                    }
+                } else if (_.contains(second, powerBank.pos.roomName)) {
                     if (powerBank.pos.x < 25) {
                         zz = room.createFlag(mem.flagPos, mem.flagName, mem.flagCol, mem.flagCol2);
                     }

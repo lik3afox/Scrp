@@ -495,10 +495,19 @@ function boostLabWork(creep) {
             }
 
             if (creep.room.terminal.store[boost.mineralType] === undefined || creep.room.terminal.store[boost.mineralType] === 0 || creep.room.terminal.store[boost.mineralType] < boost.mineralAmount) {
-                creep.say('request' + _terminal_().requestMineral(creep.room.name, boost.mineralType, boost.mineralAmount));
-
+                let zze = _terminal_().requestMineral(creep.room.name, boost.mineralType, boost.mineralAmount);
+                creep.say('req:'+boost.mineralType + zze);
+                if(!zze) boost.timed--;
                 return;
             }
+  //          if(creep.room.name == 'E29S48'){
+//            }
+            if(lab.energy <= 800){
+                 console.log(lab.energy , (boost.mineralAmount*20),'LAB ENERGY TRANDFEr')   ;
+                creep.moveToWithdraw(creep.room.storage,RESOURCE_ENERGY);
+                return;
+            }
+
             //console.log(lab.mineralType, boost.mineralType, lab.mineralAmount);
             if (lab.mineralType !== undefined && lab.mineralType === boost.mineralType && lab.mineralAmount > boost.mineralAmount) {
                 creep.say('reuce');
@@ -957,9 +966,10 @@ class roleLinker extends roleParent {
 
 
         var goto;
+//        if(creep.room.name == 'E29S48')
         if (creep.room.memory.boost !== undefined && creep.room.memory.boost.mineralType !== 'none' && creep.room.memory.boost.mineralAmount !== 0 && creep.room.memory.boostLabID !== undefined) {
             boostLabWork(creep);
-            //            creep.say('lab');
+//            creep.say('lab');
             return;
         }
         if (creep.room.name == 'E19xxS49') {

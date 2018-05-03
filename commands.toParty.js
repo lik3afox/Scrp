@@ -46,8 +46,8 @@ var allParty = {
         ['demolisher', 0, 10],
     ],
     bandit: [
-        ['thief', 2, 6],
-        ['mage', 1, 6],
+//        ['thief', 2, 6],
+        ['mage', 1, 7],
         ['fighter', 1, 10],
     ],
 
@@ -441,10 +441,11 @@ class partyInteract {
                             creep.partyFlag.setColor(COLOR_ORANGE, COLOR_ORANGE);
 
                             if (point === undefined) {
-                                if (creep.memory.role === 'fighter') {
+                                if (creep.memory.role === 'healer') {
                                     point = creep;
-                                } else
-                                if (creep.memory.role === 'demolisher') {
+                                }
+                                 else
+                                if (creep.memory.role === 'mage') {
                                     point = creep;
                                 }
                                 /*else

@@ -193,14 +193,14 @@ function doAttack(creep) {
 function powerAction(creep) {
     var power = require('commands.toPower');
 
-            var bads = creep.room.find(FIND_HOSTILE_CREEPS);
-            bads = _.filter(bads, function(o) {
-                return o.owner.username === 'Screeps';
-            });
-//            bads = creep.pos.findInRange(bads,3);
-if(bads.length > 0){
-            console.log('FOUND looking around for bads',bads.length);
-}
+    var bads = creep.room.find(FIND_HOSTILE_CREEPS);
+    bads = _.filter(bads, function(o) {
+        return o.owner.username === 'Screeps';
+    });
+    //            bads = creep.pos.findInRange(bads,3);
+    if (bads.length > 0) {
+        console.log('FOUND looking around for bads', bads.length);
+    }
 
     if (Game.flags[creep.memory.party] !== undefined) {
 
@@ -212,7 +212,7 @@ if(bads.length > 0){
                 });
                 if (zz.length > 0) {
                     creep.memory.powerbankID = zz[0].id;
-                }else {
+                } else {
                     creep.memory.death = true;
                 }
             }
@@ -220,8 +220,8 @@ if(bads.length > 0){
             let pBank = Game.getObjectById(creep.memory.powerbankID);
             if (pBank === null) {
 
-//                if (!power.findNewPowerParty(creep))
-                    creep.memory.death = true;
+                //                if (!power.findNewPowerParty(creep))
+                creep.memory.death = true;
                 return false;
             }
             if (creep.pos.isNearTo(pBank) && creep.hits === creep.hitsMax) {
@@ -237,8 +237,8 @@ if(bads.length > 0){
 
         } else {
             creep.countDistance();
-            creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:60,ignoreCreeps:true});
-  /*          let task = {};
+            creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 60, ignoreCreeps: true });
+            /*          let task = {};
             task.options = {
                 reusePath: 50
             };
@@ -297,34 +297,35 @@ function banditAction(creep) {
                         creep.attack(tgt);
                     }
                     creep.moveTo(tgt);
-
-                    if (creep.memory.calledTrans === undefined) {
-                        var trans = _.fitler(bads, function(o) {
+                    var tombs = creep.room.find(FIND_TOMBSTONES);
+                    if (creep.memory.calledTrans === undefined && tombs.length > 0) {
+                        var trans = _.filter(bads, function(o) {
                             return o.getActiveBodyparts(CARRY) > 0;
                         });
-//            let spawnID = ;
-if(trans.length){
-let spawn = require('commands.toSpawn');
-let numOfcreep = 0;
-  do {
-                let transport = {
-                    build: [MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,
-                            MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,
-                            MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,
-                            MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,
-                            MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,MOVE,CARRY,],
-                    memory: {
-                        role: "thief",
-                        home: creep.memory.home,
-                        parent: creep.memory.parent,
-                        level: 5,
-                        party: "bandit"
-                    }
-                };
-                spawn.requestCreep(transport, spawnID);
-                numOfcreep++;
-            } while (numOfcreep <= trans.length);
-}
+                        //            let spawnID = ;
+                        if (trans.length) {
+                            let spawn = require('commands.toSpawn');
+                            let numOfcreep = 0;
+                            do {
+                                let transport = {
+                                    build: [MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                    ],
+                                    memory: {
+                                        role: "thief",
+                                        home: creep.memory.home,
+                                        parent: creep.memory.parent,
+                                        level: 5,
+                                        party: "bandit"
+                                    }
+                                };
+                                spawn.requestCreep(transport, spawnID);
+                                numOfcreep++;
+                            } while (numOfcreep <= trans.length);
+                        }
                         creep.memory.calledTrans = true;
                     }
 
@@ -359,7 +360,7 @@ class fighterClass extends roleParent {
 
     static run(creep) {
         creep.say('fight');
-         creep.memory.death = creep.partyFlag === undefined;
+        creep.memory.death = creep.partyFlag === undefined;
         if (super.spawnRecycle(creep)) {
             return;
         }
@@ -379,35 +380,35 @@ class fighterClass extends roleParent {
         if (creep.memory.party == 'bandit') {
             creep.say('bandit');
             banditAction(creep);
-            
+
             return;
         }
 
         var enemy;
 
         if (super.goToPortal(creep)) return;
-/*
-        enemy = creep.room.hostilesHere();
-        enemy = _.filter(enemy,
-            function(object) {
-                return (!_.contains(fox.friends, object.owner.username) && !object.pos.lookForStructure(STRUCTURE_RAMPART) && object.owner.username !== 'Source Keeper');
-            }
-        );
+        /*
+                enemy = creep.room.hostilesHere();
+                enemy = _.filter(enemy,
+                    function(object) {
+                        return (!_.contains(fox.friends, object.owner.username) && !object.pos.lookForStructure(STRUCTURE_RAMPART) && object.owner.username !== 'Source Keeper');
+                    }
+                );
 
-        let close = creep.pos.findClosestByRange(enemy);
-        let distance = creep.pos.getRangeTo(close);
-        var kill;
-        creep.say(enemy.length + 'E');
-        if (enemy.length > 0 && distance <= 1) {
-            creep.attack(close);
-        } else {*/
-            if (!creep.smartAttack()) {
-                if (creep.hits < creep.hitsMax) creep.selfHeal();
-            }
-//        }
+                let close = creep.pos.findClosestByRange(enemy);
+                let distance = creep.pos.getRangeTo(close);
+                var kill;
+                creep.say(enemy.length + 'E');
+                if (enemy.length > 0 && distance <= 1) {
+                    creep.attack(close);
+                } else {*/
+        if (!creep.smartAttack()) {
+            if (creep.hits < creep.hitsMax) creep.selfHeal();
+        }
+        //        }
 
-//        movement.flagMovement(creep);
-creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+        //        movement.flagMovement(creep);
+        creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
     }
 }
 

@@ -146,10 +146,10 @@ class roleUpbuilder extends roleParent {
  if(creep.room.stats.storageEnergy < 850000){
     creep.memory.reportDeath = true;
  }        
-        if (Memory.war && creep.ticksToLive < 1300 || creep.room.memory.alert) {
-            require('role.wallworker').run(creep);
-            return;
-        }
+      //  if (Memory.war && creep.ticksToLive < 1300 || creep.room.memory.alert) {
+//            require('role.wallworker').run(creep);
+  //          return;
+    //    }
 
         var doUpgrade = ['E29S48', 'E14S43']; //'E18S36','E23S42','E14S47','E14S37','E28S42',
         var justgh = []; // 'E27S34'

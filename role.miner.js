@@ -322,6 +322,7 @@ class settler extends roleParent {
                 task.options = {
                     reusePath: 49,
                     ignoreCreep: true,
+                    swampCost:1,
                     segment: true,
                     visualizePathStyle: {
                         fill: 'transparent',

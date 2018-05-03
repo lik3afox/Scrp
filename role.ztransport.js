@@ -182,8 +182,8 @@ class transportz extends roleParent {
             }
         }
 
-
-        if (!creep.memory.gohome && creep.carryTotal > creep.carryCapacity - 45) {
+//!creep.memory.gohome &&
+        if ( creep.carryTotal > creep.carryCapacity - 45) {
             creep.memory.gohome = true;
             creep.memory.empty = false;
         }
@@ -199,7 +199,7 @@ class transportz extends roleParent {
                     if (creep.ticksToLive < 100) creep.memory.death = true;
                     creep.memory.goal = creep.partyFlag.memory.mineralID;
                     if (!super.guardRoom(creep)) {
-                        creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true });
+                        creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true, swampCost : 1 });
                     }
                     creep.say('zFlag');
                     return;

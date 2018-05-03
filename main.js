@@ -137,9 +137,7 @@ function scanForRemoteSources() {
                             let BUILD = {
                                 source: source[eee].id,
                                 sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
-                                mineral: false,
-                                ztransport: false,
-                                expLevel: 10
+                                expLevel: 11
                             };
                             if (parseInt(eee) === 0 && source[eee].room.controller !== undefined) {
                                 BUILD.controller = false;
@@ -1808,7 +1806,7 @@ module.exports.loop = blackMagic(function() {
                     align: RIGHT
                 });
                 if(Game.spawns[title].spawning.remainingTime === 0) {
-                    console.log('spawning here,', Game.spawns[title].pos.roomName);
+                    console.log('spawning ERROR ERROR here,', Game.spawns[title].pos.roomName);
                 }
 
             }

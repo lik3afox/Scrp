@@ -31,7 +31,7 @@
                 for (var a in creeps) {
                     creeps[a].memory.runAway = true;
                     creeps[a].memory.runFrom = flag.name;
-                    if(creeps[a].memory.sleeping !== undefined) {
+                    if (creeps[a].memory.sleeping !== undefined) {
                         creeps[a].memory.sleeping = undefined;
                     }
                 }
@@ -794,11 +794,19 @@
                     if (flag.room.controller.level === 8) {
                         flag.memory.module = [
                             ['linker', 1, 5],
-                            ['harvester', 1, 4],
                             ['minHarvest', 1, 7]
                         ];
                         if (flag.room.stats.storageEnergy > 100000) {
                             flag.memory.module.push(['wallwork', 1, 5]);
+                        }
+                        if (flag.memory.sourceNumber === undefined) {
+                            flag.memory.sourceNumber = flag.room.find(FIND_SOURCES).length;
+                        } else {
+                            flag.memory.module.push(['harvester', flag.memory.sourceNumber, 3]);
+                        }
+
+                        if (flag.room.alphaSpawn.memory.warCreate.length > 0) {
+                            flag.memory.module.push(['first', 1, 6]);
                         }
                         if (flag.room.controller.ticksToDowngrade < 50000) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
@@ -985,25 +993,25 @@
                 }
 
                 // All flags need to have a target
-/*                if (flag.room !== undefined && flag.room.controller !== undefined && !flag.room.controller.my) {
-                    let tgt = Game.getObjectById(flag.memory.target);
-                    if (flag.memory.target === undefined) {
-                        let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
-                        if (res.length > 0) {
-                            for (let ee in res) {
-                                if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_CONTROLLER)) {
-                                    flag.memory.target = res[ee].structure.id;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
-                   //     flag.setPosition(tgt.pos);
-                    } else if (tgt === null) {
-                        findFlagTarget(flag);
-                    }
-                } */
+                /*                if (flag.room !== undefined && flag.room.controller !== undefined && !flag.room.controller.my) {
+                                    let tgt = Game.getObjectById(flag.memory.target);
+                                    if (flag.memory.target === undefined) {
+                                        let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
+                                        if (res.length > 0) {
+                                            for (let ee in res) {
+                                                if (res[ee].structure !== undefined && (res[ee].structureType !== STRUCTURE_CONTROLLER)) {
+                                                    flag.memory.target = res[ee].structure.id;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
+                                   //     flag.setPosition(tgt.pos);
+                                    } else if (tgt === null) {
+                                        findFlagTarget(flag);
+                                    }
+                                } */
                 // Mineral flag that will turn off when it's fully extracted.
                 if (flag.memory.mineral && flag.room !== undefined) {
                     if (flag.room.mineral !== undefined) {
@@ -1178,10 +1186,20 @@
                             }
                             require('commands.toSquad').runSquad(squad);
                         } else {
-                            flag.memory.setColor = {
-                                color: COLOR_YELLOW,
-                                secondaryColor: COLOR_YELLOW
-                            };
+                            if (flag.memory.numberOfAttack === undefined) {
+                                flag.memory.setColor = {
+                                    color: COLOR_YELLOW,
+                                    secondaryColor: COLOR_YELLOW
+                                };
+                            } else {
+                                flag.memory.numberOfAttack--;
+                                if (flag.memory.numberOfAttack > 0) {
+                                    flag.memory.setColor = {
+                                        color: COLOR_YELLOW,
+                                        secondaryColor: COLOR_YELLOW
+                                    };
+                                }
+                            }
                         }
 
                         // Here we determine targets for the flag. 
@@ -1202,18 +1220,18 @@
                             }
                             if (flag.memory.target === undefined && flag.memory.nextTargets.length === 0) {
                                 // Setting up target
-                            let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
-                            if (res.length > 0) {
-                                for (let ee in res) {
-                                    if (res[ee].structure !== undefined && res[ee].structureType !== STRUCTURE_CONTROLLER) {
-                                        flag.memory.target = res[ee].structure.id;
-                                        break;
+                                let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
+                                if (res.length > 0) {
+                                    for (let ee in res) {
+                                        if (res[ee].structure !== undefined && res[ee].structureType !== STRUCTURE_CONTROLLER) {
+                                            flag.memory.target = res[ee].structure.id;
+                                            break;
+                                        }
                                     }
                                 }
-                            }
 
                                 // Lets add some targets to next
-//                                if (flag.memory.target === undefined) findFlagTarget(flag);
+                                //                                if (flag.memory.target === undefined) findFlagTarget(flag);
                             }
                             /*
                              let bads = flag.room.find(FIND_HOSTILE_CREEPS);
@@ -1304,8 +1322,7 @@
 
 
                         if (flag.name == 'bandit') {
-
-                            flag.memory.rallyFlag = 'home';
+                            flag.memory.rally = 'home';
                             /*                            if (flag.memory.timer === undefined) {
                                                             flag.memory.timer = 1200;
                                                         }
@@ -1313,7 +1330,7 @@
                                                         if (flag.memory.timer < 0) {
                             //                                flag.remove();
                                                         } */
-                                                        console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
+                            console.log("Bandit set @ room:", roomLink(flag.pos.roomName));
                             if (flag.room !== undefined) {
                                 // So here we check if we remove the flag
                                 // We first give it an 1500 timer.

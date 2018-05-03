@@ -137,7 +137,7 @@ function banditAction(creep) {
                     }
         */
         //        }
-        movement.flagMovement(creep);
+        //movement.flagMovement(creep);
     }
 }
 

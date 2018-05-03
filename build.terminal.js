@@ -19,7 +19,7 @@ let basic = [
 ];
 var s1LabRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37', 'E22S48', 'W53S35',
     'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27', 'E27S45', 'E29S48', 'E18S46', 'E32S34',
-    'E11S47', 'E1S11', 'E33S54','E2S24'
+    'E11S47', 'E1S11', 'E33S54', 'E2S24'
 ];
 var s0LabRooms = ['E38S81'];
 
@@ -104,7 +104,7 @@ function shareEnergy(terminal) {
             if (s1LabRooms[e] !== 'E14S38' && storage === undefined) {
                 lowestStore = 0;
                 currentLow = storage.store[RESOURCE_ENERGY];
-            } else if (storage !== undefined && s1LabRooms[e] !== 'E14S38' && storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total !== 300000 && Game.rooms[s1LabRooms[e]].controller.level > 5) {
+            } else if (storage !== undefined && s1LabRooms[e] !== 'E14S38' && storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total < 295000 && Game.rooms[s1LabRooms[e]].controller.level > 5) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
             }
@@ -117,7 +117,7 @@ function shareEnergy(terminal) {
 
     let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
     let zz = terminal.send(RESOURCE_ENERGY, amount, lowestStore.room.name, 'Sharing Energy');
-    //    // console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
+    console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
     return true;
 }
 
@@ -292,6 +292,8 @@ function newTradeEnergy(terminal) {
             }
         }
     }
+
+    if (target.room === undefined) return;
     //    // console.log('in newtrade', target.room, target.price);
 
     let trans = EnergyNum; // (Math.floor(eTotal / (1 + target.cost)));
@@ -1442,12 +1444,14 @@ class roleTerminal {
                                     amount = amount >> 2;
                                 }
                             }
+                            if (amount < 100) amount = 100;
                             let msg;
                             if (amount === 101) {
                                 msg = 'segmentTransactions';
                             }
+
                             let sentResult = term.send(mineral, amount, targetRoom, msg);
-                            //                            // console.log('request for mineral @', targetRoom, sentResult, mineral, term.store[mineral] - 1);
+                            //                                                         console.log(sentResult,'request for mineral @',mineral,amount,targetRoom);
                             if (sentResult === OK) return sentResult;
 
                         }
@@ -1472,7 +1476,7 @@ class roleTerminal {
         if (Game.shard.name === 'shard2') main = 'E19S49';
         if (Game.shard.name === 'shard0') main = 'E38S72';
         let terminal = Game.rooms[roomName].terminal;
-//        console.log(roomName, main);
+        //        console.log(roomName, main);
         if (roomName === main) {
             doTrap(roomName);
             if (roomName === 'E38S72') {
@@ -1484,32 +1488,37 @@ class roleTerminal {
                     }
                 }
             }
-            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 21000 || Game.rooms[roomName].terminal.total === 300000) {
+            //          if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 21000 || Game.rooms[roomName].terminal.total === 300000) {
 
-//                 newTradeEnergy(Game.rooms[roomName].terminal);
-  //              return;
-            }
+            //                 newTradeEnergy(Game.rooms[roomName].terminal);
+            //              return;
+            //            }
             return;
         } else {
-            if(Game.rooms[main].terminal.total === 300000){
-                Game.rooms[main].terminal.send('energy',5000,roomName);
+            if (Game.rooms[main].terminal.total.saoi === 300000 && Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] < 21000) {
+                Game.rooms[main].terminal.send('energy', 5000, roomName);
             }
+            if (Game.rooms[roomName].terminal.total === 300000) {
+                Game.rooms[roomName].terminal.send('energy', 5000, main);
+            }
+            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000 && Game.rooms[main].terminal.store[RESOURCE_ENERGY] < 20000) {
+                Game.rooms[roomName].terminal.send('energy', 20000, main);
+            }
+
         }
-        if(terminal === undefined) return;
+        if (terminal === undefined) return;
 
         var energy = terminal.store[RESOURCE_ENERGY];
         var total = terminal.total;
-        if (terminal.total !== terminal.store[RESOURCE_ENERGY] && roomName !== 'E38S81') {
+
+        if (terminal.total !== terminal.store[RESOURCE_ENERGY] && roomName !== 'E38S81' && terminal.room.boost !== undefined && terminal.room.boost.mineralType !== 'none') {
             let needed = labs.neededMinerals(terminal.pos.roomName);
-            if (terminal.room.boost !== undefined && terminal.room.boost.mineralType !== 'none') {
-                needed.push(terminal.room.boost.mineralType);
-            }
             for (let e in terminal.store) {
 
-                if (!_.contains(needed, e) && e !== RESOURCE_ENERGY&& e !== 'XGH2O' && terminal.store[e] !== undefined) {
+                if (!_.contains(needed, e) && e !== RESOURCE_ENERGY && terminal.store[e] !== undefined) {
                     let amnt = 1250;
                     if (amnt > terminal.store[e]) amnt = terminal.store[e];
-                    if(amnt < 100) continue;
+                    if (amnt < 100) continue;
                     let ez = Game.rooms[roomName].terminal.send(e, amnt, main, 'Balance');
                     console.log(roomName, 'getting rid of excess', e, '@', main, 'xx', ez);
                     return;
@@ -1519,7 +1528,7 @@ class roleTerminal {
         if (Game.rooms[roomName].storage.store[RESOURCE_ENERGY] < 1000) {
             Game.rooms[main].terminal.send(RESOURCE_ENERGY, 1250, roomName, 'Balance');
             return;
-            
+
         }
     }
 
@@ -1555,9 +1564,9 @@ class roleTerminal {
         var didTrade = false;
         if (_.contains(doNewTrade, roomName)) {
             if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000)
-//                if (newTradeEnergy(Game.rooms[roomName].terminal)) {
-                    didTrade = true;
-  //              }
+                //                if (newTradeEnergy(Game.rooms[roomName].terminal)) {
+                didTrade = true;
+            //              }
         }
 
         let terminal = Game.rooms[roomName].terminal;
@@ -1625,48 +1634,47 @@ class roleTerminal {
                                 } */
                 if (total === 300000) {
                     // console.log(roomLink(terminal.room.name), "is full and less than 20K energy");
-                    if (!tradeEnergy(terminal)) {
-                        reduceTerminal(terminal);
-                    } else {
-                        return;
+                    if (!shareEnergy(terminal)) {
+                        if (!tradeEnergy(terminal)) {
+                            reduceTerminal(terminal);
+                        } else {
+                            return;
+                        }
                     }
                 } else
                 if (total > 295000) {
                     if (energy > 21000) {
-                        if (!upgradeTransfer) {
-                            upgradeTransfer = upgradeRoom(terminal);
-                            if (!upgradeTransfer) {
-                                if (!share) {
-                                    share = shareEnergy(terminal);
-                                    if (!share) {
-                                        if (terminal.room.name !== 'E14S37') {
-                                            if (!tradeEnergy(terminal)) {
-
-                                            }
-                                        }
-                                    } else {
-                                //        getPower(terminal);
-
-                                    }
-                                }
-                            }
-                        } else {
+                        //                        if (!upgradeTransfer) {
+                        //  upgradeTransfer = upgradeRoom(terminal);
+                        //      if (!upgradeTransfer) {
+                        if (!share) {
+                            share = shareEnergy(terminal);
                             if (!share) {
-                                share = shareEnergy(terminal);
-                                if (!share) {
-                                    if (terminal.room.name !== 'E14S37') {
-                                        if (!tradeEnergy(terminal)) {
+                                if (terminal.room.name !== 'E14S37') {
+                                    if (!tradeEnergy(terminal)) {
 
+                                    }
+                                }
+                            } else {
+                                
+                            }
+                        }
+                        //    }
+                        /*        } else {
+                                    if (!share) {
+                                        share = shareEnergy(terminal);
+                                        if (!share) {
+                                            if (terminal.room.name !== 'E14S37') {
+                                                if (!tradeEnergy(terminal)) {
+
+                                                }
+                                            }
+                                        } else {
                                         }
                                     }
-                                } else {
-                     //               getPower(terminal);
-
-                                }
-                            }
 
 
-                        }
+                                }*/
 
                     } else {}
                 }

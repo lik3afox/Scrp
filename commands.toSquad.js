@@ -21,11 +21,16 @@ function f(number) {
     return number;
 }
 var runMovement;
+var healType;
 
 function squadMemory(squaded, bads, analysis) {
     let squad = [];
+    let damaged = [];
     for (var e in squaded) {
         squad.push(squaded[e]);
+        if (squaded[e].hits < squaded[e].hitsMax) {
+            damaged.push(squaded[e]);
+        }
     }
     switch (squad[0].partyFlag.memory.squadMode) {
         case 'battle':
@@ -38,9 +43,18 @@ function squadMemory(squaded, bads, analysis) {
                 BOTTOM_LEFT: 6,
                 LEFT: 7,
                 TOP_LEFT: 8, */
+
+            // Two types of healing 
+            // Preventive And Reactive, it is determined by current status of creeps.
+
+            if (damaged.length > 0) {
+                healType = 'react';
+            } else {
+                healType = 'prevent';
+            }
+
+
             var point = Game.getObjectById(squad[0].partyFlag.memory.pointID);
-
-
             var attackDir;
 
             if (squad[0].partyFlag.memory.attackDirection === undefined) {
@@ -58,9 +72,9 @@ function squadMemory(squaded, bads, analysis) {
             var X10 = X * 10;
             var squadSpots = [
                 { pos: X, role: 'point', },
-                { pos: (X * 10) + (X), role: 'healer', }, // Behind point
-                { pos: (f(X - 1) * 10) + X,  role: 'healer', },
                 { pos: f(X - 1), role: 'melee', }, // Left of point
+                { pos: (X * 10) + (X), role: 'healer', }, // Behind point
+                { pos: (f(X - 1) * 10) + X, role: 'healer', },
                 { pos: f(X + 1), role: 'melee', }, // right of point
                 { pos: (X10 + f(X + 1)), role: (X10 + (X + 1)), },
 
@@ -186,9 +200,7 @@ function squadMemory(squaded, bads, analysis) {
             //            var close = Game.flags.Flag28;
             if (close !== undefined) {
                 var distance = point.pos.getRangeTo(close);
-
-
-                if (distance < 3) {
+                if (distance < 2) {
                     var dire = point.pos.getDirectionTo(close);
                     dire = dire + 4;
                     if (dire > 8)
@@ -211,9 +223,9 @@ function squadMemory(squaded, bads, analysis) {
                     // Leader point man here
                     creep.memory.formationPos = 0;
                     //let dir = Game.getObjectById(creep.memory.directingID);
-                    if(dir !== null){
-                    creep.room.visual.line(creep.pos, dir.pos, { color: 'red' });
-                }
+                    if (dir !== null) {
+                        creep.room.visual.line(creep.pos, dir.pos, { color: 'red' });
+                    }
                     if (creep.pos.isNearTo(dir)) {
                         creep.say('ToFlag');
                         creep.memory.happy = true;
@@ -228,7 +240,7 @@ function squadMemory(squaded, bads, analysis) {
                 } else if (creep.memory.directingID === undefined) {
                     // Last person
                     let fol = Game.getObjectById(creep.memory.followingID);
-                    if(fol !== null){
+                    if (fol !== null) {
                         creep.room.visual.line(creep.pos, fol.pos, { color: 'green' });
                     }
                     if (creep.pos.isNearTo(fol)) {
@@ -239,11 +251,11 @@ function squadMemory(squaded, bads, analysis) {
                     // everyone else;
                     let fol = Game.getObjectById(creep.memory.followingID);
                     let dir = Game.getObjectById(creep.memory.directingID);
-                    if(fol !== null){
-                    creep.room.visual.line(creep.pos, fol.pos, { color: 'red' });
+                    if (fol !== null) {
+                        creep.room.visual.line(creep.pos, fol.pos, { color: 'red' });
                     }
-                    if(dir !== null){
-                    creep.room.visual.line(creep.pos, dir.pos, { color: 'green' });
+                    if (dir !== null) {
+                        creep.room.visual.line(creep.pos, dir.pos, { color: 'green' });
                     }
 
                     if (creep.pos.isNearTo(dir) && creep.pos.isNearTo(fol)) {
@@ -280,11 +292,19 @@ function squadMovement(creep) {
                     creep.move(runMovement);
                 }
                 creep.say('r');
+                let tgt = Game.getObjectById(creep.partyFlag.memory.target);
                 if (creep.stats('rangedAttack') > 0) {
-                    let tgt = Game.getObjectById(creep.partyFlag.memory.target);
                     if (tgt !== null) {
                         let distance = creep.pos.getRangeTo(tgt);
                         if (distance > 3) {
+                            creep.moveMe(tgt);
+                        }
+                    }
+                }
+                if (creep.stats('heal') > 0) {
+                    if (tgt !== null) {
+                        let distance = creep.pos.getRangeTo(tgt);
+                        if (distance > 2) {
                             creep.moveMe(tgt);
                         }
                     }
@@ -336,14 +356,37 @@ function squadAction(creep) {
     var doHeal = true;
 
     if (doHeal && creep.stats('heal') > 0 && creep.memory.role !== 'fighter') {
-        if (!creep.smartHeal()) { // Does close heal
-            creep.rangedMassAttack();
-        } else if(creep.memory.reHealID !== undefined){ // It did range heal? so lets get close.
-            let tgt = Game.getObjectById(creep.memory.reHealID);
-            if(tgt !== null && !creep.pos.isNearTo(tgt)&&creep.atFlagRoom ) {
-                creep.moveMe(tgt);
+
+        if (healType === 'react') {
+            if (!creep.smartHeal()) { // Does close heal
+                creep.rangedMassAttack();
             }
+        } else {
+            //maybe heal point?
+            let pnt = Game.getObjectById(creep.partyFlag.memory.pointID);
+            if (pnt !== null) {
+                if (creep.pos.isNearTo(pnt)) {
+                    creep.heal(pnt);
+                } else {
+                    creep.rangedHeal(pnt);
+                }
+            }
+            // Maybe Heal Random
+            // Maybe do reHealing?
+            if (creep.memory.reHealID !== undefined) {
+                let pnt = Game.getObjectById(creep.memory.reHealID);
+                if (pnt !== null) {
+                    if (creep.pos.isNearTo(pnt)) {
+                        creep.heal(pnt);
+                    } else {
+                        creep.rangedHeal(pnt);
+                    }
+                }
+            }
+
         }
+
+
         return;
     } else if (creep.stats('attack') > 0) {
         creep.smartAttack();
