@@ -1563,10 +1563,10 @@ class roleTerminal {
         var doNewTrade = ['E19S49', 'E1S11', 'E38S72', 'E11S47', 'W53S35'];
         var didTrade = false;
         if (_.contains(doNewTrade, roomName)) {
-            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000)
-                //                if (newTradeEnergy(Game.rooms[roomName].terminal)) {
-                didTrade = true;
-            //              }
+            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000 && Game.rooms[roomName].storage.store[RESOURCE_ENERGY] > 900000)
+                if (newTradeEnergy(Game.rooms[roomName].terminal)) {
+                    didTrade = true;
+                }
         }
 
         let terminal = Game.rooms[roomName].terminal;
@@ -1656,7 +1656,7 @@ class roleTerminal {
                                     }
                                 }
                             } else {
-                                
+
                             }
                         }
                         //    }

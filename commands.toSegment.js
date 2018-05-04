@@ -4,6 +4,8 @@ var roomSegment = {
     // Shard0 
     E38S72: 10,
     E38S81: 11,
+    E23S45: 12,
+
     // Shard1
     E23S38: 10,
     E25S37: 11,
