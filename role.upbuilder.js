@@ -79,10 +79,10 @@ function rampartDefense(creep) {
 
 function getSpot(roomName) {
     switch (roomName) {
-  //      case "E38S72":
-//            return new RoomPosition(36, 34, roomName);
+        //      case "E38S72":
+        //            return new RoomPosition(36, 34, roomName);
         case "E18S36":
-            return new RoomPosition(37,25, roomName);
+            return new RoomPosition(37, 25, roomName);
         case "E23S38":
             return new RoomPosition(35, 8, roomName);
         case "E13S34":
@@ -93,15 +93,15 @@ function getSpot(roomName) {
             return new RoomPosition(30, 39, roomName);
         case "E17S34":
             return new RoomPosition(17, 13, roomName);
-        case "E38S72":
-            return new RoomPosition(37, 37, roomName);
+            //      case "E38S72":
+            //            return new RoomPosition(37, 37, roomName);
         case "E32S34":
             return new RoomPosition(40, 34, roomName);
         case "E18S46":
             return new RoomPosition(33, 10, roomName);
         case "W53S35":
             return new RoomPosition(26, 40, roomName);
-            
+
         default:
             return;
     }
@@ -140,16 +140,16 @@ class roleUpbuilder extends roleParent {
         if (super.doTask(creep)) {
             return;
         }
-  //      if (Game.shard.name === 'shard1')
-//            super.rebirth(creep);
+        //      if (Game.shard.name === 'shard1')
+        //            super.rebirth(creep);
 
- if(creep.room.stats.storageEnergy < 850000){
-    creep.memory.reportDeath = true;
- }        
-      //  if (Memory.war && creep.ticksToLive < 1300 || creep.room.memory.alert) {
-//            require('role.wallworker').run(creep);
-  //          return;
-    //    }
+        if (creep.room.stats.storageEnergy < 850000) {
+            creep.memory.reportDeath = true;
+        }
+        //  if (Memory.war && creep.ticksToLive < 1300 || creep.room.memory.alert) {
+        //            require('role.wallworker').run(creep);
+        //          return;
+        //    }
 
         var doUpgrade = ['E29S48', 'E14S43']; //'E18S36','E23S42','E14S47','E14S37','E28S42',
         var justgh = []; // 'E27S34'
@@ -158,7 +158,7 @@ class roleUpbuilder extends roleParent {
             boost = [];
             if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH2O > 50000) {
                 boost.push('GH2O');
-            } 
+            }
             _.uniq(boost);
         }
         if (_.contains(justgh, creep.room.name) && creep.ticksToLive === 1499 && creep.memory.level === 8 || creep.memory.level === 4) {
@@ -167,11 +167,11 @@ class roleUpbuilder extends roleParent {
             }
             _.uniq(boost);
         }
-   //     if (creep.room.name == 'E1S11' && super.boosted(creep, ['XLH2O'])) {
-   //         return;
-    //    }
+        //     if (creep.room.name == 'E1S11' && super.boosted(creep, ['XLH2O'])) {
+        //         return;
+        //    }
 
-        if (Game.shard.name === 'shard1' && super.boosted(creep,boost)) {
+        if (Game.shard.name === 'shard1' && super.boosted(creep, boost)) {
             return;
         }
 
@@ -179,9 +179,9 @@ class roleUpbuilder extends roleParent {
 
 
         // Logic here to determine action.
-        if ( creep.carry.energy <= creep.stats('upgrading')) {
- creep.pickUpEnergy();
-//            super.constr.pickUpEnergy(creep);
+        if (creep.carry.energy <= creep.stats('upgrading')) {
+            creep.pickUpEnergy();
+            //            super.constr.pickUpEnergy(creep);
             creep.memory.wallTargetID = undefined;
             if (creep.room.name == 'E17S34' || creep.room.name == 'E28S73') {
                 super.containers.withdrawFromTerminal(creep);
@@ -189,19 +189,19 @@ class roleUpbuilder extends roleParent {
 
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
                     //                    if (super._containers.withdrawFromTerminal(creep))
-//                    if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
-                        if (!super.containers.moveToWithdraw(creep)) {
+                    //                    if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
+                    if (!super.containers.moveToWithdraw(creep)) {
 
-                        }
+                    }
 
-             //       }
+                    //       }
                 } else {
-                  //  if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
-                        if (!super.containers.withdrawFromStorage(creep))
-                            if (!super.containers.moveToWithdraw(creep)) {
-                                //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
-                            }
-                //    }
+                    //  if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
+                    if (!super.containers.withdrawFromStorage(creep))
+                        if (!super.containers.moveToWithdraw(creep)) {
+                            //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
+                        }
+                    //    }
 
                 }
             } else if (creep.pos.isNearTo(creep.room.storage)) {
@@ -211,23 +211,22 @@ class roleUpbuilder extends roleParent {
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
                     if (super.containers.withdrawFromTerminal(creep))
                         if (!super.containers.moveToWithdraw(creep)) {
-//                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
+                            //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
 
-                 //           }
+                            //           }
 
                         }
                 } else {
-                	if (!roleParent.constr.withdrawFromTombstone(creep)) {
-                    if (!super.containers.withdrawFromStorage(creep))
-                        if (!super.containers.moveToWithdraw(creep)) {
-if (!creep.moveToWithdrawSource()) {
-}
-                      //      if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
+                    if (!roleParent.constr.withdrawFromTombstone(creep)) {
+                        if (!super.containers.withdrawFromStorage(creep))
+                            if (!super.containers.moveToWithdraw(creep)) {
+                                if (!creep.moveToWithdrawSource()) {}
+                                //      if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
                                 //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 
-                        //    }
-                        }
-}
+                                //    }
+                            }
+                    }
                 }
             }
 
@@ -246,49 +245,48 @@ if (!creep.moveToWithdrawSource()) {
             return;
         }
 
-            //            var spawn = require('commands.toSpawn');
-            var number = 0;
-            var doNot = []; //'E14S43',&& !_.contains(doNot, creep.room.name)
+        //            var spawn = require('commands.toSpawn');
+        var number = 0;
+        var doNot = []; //'E14S43',&& !_.contains(doNot, creep.room.name)
 
-            var strucs = Game.getObjectById(creep.memory.constructionID);
+        var strucs = Game.getObjectById(creep.memory.constructionID);
 
-            if (strucs !== null  ) {
-                if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
+        if (strucs !== null) {
+            if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
 
 
-                    creep.moveMe(strucs,{ignoreCreeps:true});
+                creep.moveMe(strucs, { ignoreCreeps: true });
+            }
+        } else {
+            creep.memory.constructionID = undefined;
+            if (creep.memory.foundCon) {
+                creep.memory.foundCon = false;
+                creep.room.memory.spawnTargets = undefined;
+            }
+            let spot = getSpot(creep.room.name);
+            let zz = creep.upgradeController(creep.room.controller);
+            if (spot !== undefined) {
+                if (creep.pos.isEqualTo(spot)) {
+                    if (zz == OK) {
+                        creep.say('⚡');
+                        creep.cleanMe();
+                    }
+                    creep.memory._move = undefined;
+                } else {
+                    if (creep.moveMe(spot, { ignoreCreeps: true }) == OK) {
+
+                    }
                 }
             } else {
-                creep.memory.constructionID = undefined;
-                if (creep.memory.foundCon) {
-                    creep.memory.foundCon = false;
-                    creep.room.memory.spawnTargets = undefined;
+                if (zz === ERR_NOT_IN_RANGE) {
+                    creep.moveMe(creep.room.controller, { ignoreCreeps: true });
                 }
-                let spot = getSpot(creep.room.name);
-                if (spot !== undefined) {
-                    if (creep.pos.isEqualTo(spot)) {
-                        let zz = creep.upgradeController(creep.room.controller);
-                        if (zz == OK) {
-                            creep.say('⚡');
-                            creep.cleanMe();
-                        }
-                        creep.memory._move = undefined;
-                    } else {
-                        if (creep.moveMe(spot,{ignoreCreeps:true}) == OK) {
-
-                        }
-                    }
-                } else {
-                    let zz = creep.upgradeController(creep.room.controller);
-                    if (zz === ERR_NOT_IN_RANGE) {
-                        creep.moveMe(creep.room.controller,{ignoreCreeps:true});
-                    }
-                }
-
-
             }
 
-        
+
+        }
+
+
     }
 }
 

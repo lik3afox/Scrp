@@ -1476,10 +1476,11 @@ class roleTerminal {
         if (Game.shard.name === 'shard2') main = 'E19S49';
         if (Game.shard.name === 'shard0') main = 'E38S72';
         let terminal = Game.rooms[roomName].terminal;
-        //        console.log(roomName, main);
+        if (terminal === undefined) return;
+
         if (roomName === main) {
             doTrap(roomName);
-            if (roomName === 'E38S72') {
+/*            if (roomName === 'E38S72') {
                 for (let e in terminal.store) {
                     if (e !== RESOURCE_ENERGY && terminal.store[e] > 10000) {
 
@@ -1487,7 +1488,7 @@ class roleTerminal {
                         return;
                     }
                 }
-            }
+            } */
             //          if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 21000 || Game.rooms[roomName].terminal.total === 300000) {
 
             //                 newTradeEnergy(Game.rooms[roomName].terminal);
@@ -1495,23 +1496,31 @@ class roleTerminal {
             //            }
             return;
         } else {
-            if (Game.rooms[main].terminal.total.saoi === 300000 && Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] < 21000) {
-                Game.rooms[main].terminal.send('energy', 5000, roomName);
+            if (Game.rooms[main].terminal.total === 300000 && Game.rooms[roomName].terminal.total !== 300000) {
+                let amt;
+                if(Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 20000){
+                   amt = Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] - 20000;
+                }else {
+                    amt = Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] >> 1;
+                }
+                Game.rooms[main].terminal.send('energy', amt, roomName);
+                return;
             }
-            if (Game.rooms[roomName].terminal.total === 300000) {
+            if (Game.rooms[roomName].terminal.total === 300000 && Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 5000) {
                 Game.rooms[roomName].terminal.send('energy', 5000, main);
+                return;
             }
             if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000 && Game.rooms[main].terminal.store[RESOURCE_ENERGY] < 20000) {
                 Game.rooms[roomName].terminal.send('energy', 20000, main);
+                return;
             }
 
         }
-        if (terminal === undefined) return;
 
         var energy = terminal.store[RESOURCE_ENERGY];
         var total = terminal.total;
 
-        if (terminal.total !== terminal.store[RESOURCE_ENERGY] && roomName !== 'E38S81' && terminal.room.boost !== undefined && terminal.room.boost.mineralType !== 'none') {
+        if (terminal.total !== terminal.store[RESOURCE_ENERGY]  && (terminal.room.boost === undefined || terminal.room.boost.mineralType === 'none')) {
             let needed = labs.neededMinerals(terminal.pos.roomName);
             for (let e in terminal.store) {
 
@@ -1732,14 +1741,6 @@ class roleTerminal {
 
         switch (Game.shard.name) {
             case 'shard0':
-                /*              if (Game.rooms.E38S81.terminal.store[RESOURCE_ENERGY] < 20000) {
-                    Game.rooms.E38S72.terminal.send('energy', 10000, 'E38S81', 'trade');
-                }
-                if (Game.rooms.E38S72.terminal.store[RESOURCE_ENERGY] > 290000 && Game.rooms.E38S81.terminal.store[RESOURCE_ENERGY] < 290000) {
-                    Game.rooms.E38S72.terminal.send('energy', 10000, 'E38S81', 'trade');
-                }
-                doTrap('E38S72');
-*/
                 return;
             case 'shard1':
                 focusMinerals(focusID, focusMin);

@@ -15,8 +15,6 @@ var classLevels = [
 ];
 
 var roleParent = require('role.parent');
-var labsBuild = require('build.labs');
-var struc = require('commands.toStructure');
 
 function mineralContainerEmpty(creep) {
     //    if (creep.memory.containsGood) return false;

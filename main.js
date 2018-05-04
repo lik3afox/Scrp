@@ -1747,7 +1747,6 @@ module.exports.loop = blackMagic(function() {
             //                      var constr = require('commands.toStructure');
 
             //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
-
             spawnsDo.checkBuild(Game.spawns[title]);
             doRoomReport(Game.spawns[title].room);
             let roomName = Game.spawns[title].pos.roomName;

@@ -337,7 +337,7 @@ class muleClass extends roleParent {
                             creep.memory.death = true;
                             return;
                         }
-                        creep.say('%' + stor.structureType);
+                        creep.say(creep.memory.pickup.mineralType+'%'+creep.memory.pickup.mineralAmount+"@" + stor.structureType);
                         let min = creep.memory.pickup.mineralType;
                         let amnt = creep.memory.pickup.mineralAmount;
                         if (Game.shard.name === 'shard1' && (creep.room.terminal.store[min] === undefined || creep.room.terminal.store[min] < amnt)) {
@@ -348,7 +348,7 @@ class muleClass extends roleParent {
 //                            creep.memory.death = true;
     //                        return;
                         } else if (min === RESOURCE_POWER && creep.room.terminal.store[min] === undefined || creep.room.terminal.store[min] === 0) {
-  //                          creep.memory.death = true;
+                            creep.memory.death = true;
                             return;
                         }
                         if (creep.room.terminal.store[min] > 0 && amnt > 0 && creep.room.terminal.store[min] < amnt) { amnt = creep.room.terminal.store[min]; }
@@ -362,9 +362,15 @@ class muleClass extends roleParent {
                             creep.memory.death = true;
                             return;
                         }
+                        if(stor.store[RESOURCE_ENERGY] === stor.total ) {
+                                    creep.memory.death = true;
+                            return;
+                        }
                         for (var l in stor.store) {
                             if (stor.store[l] > 0 && l !== RESOURCE_ENERGY) {
-                                creep.withdraw(stor, l);
+                                if( creep.withdraw(stor, l) === OK) {
+                                    creep.memory.happy = true;
+                                }
                                 break;
                             }
                         }

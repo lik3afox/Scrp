@@ -9,7 +9,7 @@ var transportLevel = 20000;
 
 
 var allModule = [
-    ['squire', require('role.squire')],
+//    ['squire', require('role.squire')],
     ['harass', require('army.harass')],
     ['assistant', require('role.assistant')],
     ['troll', require('army.troll')],
@@ -20,10 +20,10 @@ var allModule = [
     ['mule', require('army.mule')],
     ['Acontroller', require('army.controller')],
     ['healer', require('army.healer')], // Gather and move - just carry 
-    ['nuker', require('role.nuker')],
+
+
     ['mage', require('army.mage')],
     ['shooter', require('keeper.shooter')],
-    ['tower', require('role.tower')],
     ['minHarvest', require('role.mineral')],
     ['mineral', require('keeper.scientist')],
     ['engineer', require('army.engineer')],
@@ -34,14 +34,18 @@ var allModule = [
     ['fighter', require('army.fighter')],
     ['upbuilder', require('role.upbuilder')],
     ['controller', require('role.controller')],
-    ['scientist', require('role.scientist')],
     ['ztransport', require('role.ztransport')], // Harvester - experiemnt w/o carry
     ['upgrader', require('role.upgrader')],
     ['Aupgrader', require('army.upgrader')],
     ['wallwork', require('role.wallworker')],
     ['guard', require('keeper.guard2')],
+
     ['linker', require('role.linker')],
     ['first', require('role.first')], // Should never have more firsts than containers...maybe..mmmm
+    ['scientist', require('role.scientist')],
+//    ['nuker', require('role.nuker')],
+//    ['tower', require('role.tower')],
+
     ['harvester', require('role.harvester')],
     ['transport', require('role.transport')], // Gather and move - just carry 
     ['miner', require('role.miner')] // Harvester - experiemnt w/o carry
@@ -294,16 +298,16 @@ class theSpawn {
 
             let min = Game.getObjectById(spawn.room.memory.mineralID);
             let nuke = spawn.room.nuke;
-            var alertProhib = ['minHarvest', 'assistant', 'nuker'];
+            var alertProhib = ['minHarvest', 'assistant'];
             if (currentModule[type][_number] === 0) {
                 // No count so don't count.
             } else if(currentModule[type][_name] == 'wallworker' && Game.rooms[creep.room.name].memory.weakestWall !== undefined && Game.rooms[creep.room.name].memory.weakestWall > 299000000){
 console.log('room has "max" walls!',spawn.room.name);  
             }else if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
 
-            } else if ((currentModule[type][_name] == 'nuker') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
+            } else /*if ((currentModule[type][_name] == 'nukered') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
 
-            } else if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
+            } else*/ if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
 
             } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
 

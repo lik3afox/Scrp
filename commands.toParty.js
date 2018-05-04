@@ -133,14 +133,14 @@ var allParty = {
 
     rampart: [ // This is what currently si in effect, but 
         // Rampart Will be range,repair,tower,and other things needed that is not attack.
-        ['tower', 1, 0],
+   //     ['tower', 1, 0],
         ['wallwork', 2, 5],
         ['rampartGuard', 1, 0]
     ],
-    tower: [ // This is what currently si in effect, but 
+ //   tower: [ // This is what currently si in effect, but 
         // Rampart Will be range,repair,tower,and other things needed that is not attack.
-        ['tower', 1, 0]
-    ],
+//        ['tower', 1, 0]
+//    ],
 
     // This is a rampart dude that is placed and will always go to that location. 
     soloGuard: [

@@ -21,82 +21,18 @@ class PowerInteract {
             let powerS = Game.rooms[roomName].powerspawn;
             if (powerS !== undefined) {
                 let room = Game.rooms[roomName];
-                if (room.memory.powerCount === undefined) room.memory.powerCount = 0;
-
-                if (room.controller.level == 8 && powerS !== undefined && powerS.power !== 0 && powerS.energy >= 50 &&
-                    room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
-                ) {
+                if (powerS.power > 0 && powerS.energy >= 50 && room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > storageEnergyLimit) {
                     if (powerS.processPower() == OK) {
                         Memory.stats.powerProcessed++;
                         powerS.room.visual.text("🔌", powerS.pos, {
-                            color: '#e42f43 ',
+                            color: '#e42fFF ',
                             stroke: '#000000 ',
                             strokeWidth: 0.123,
                             font: 0.5
                         });
                     }
                 }
-
-
-
-            } else {
-                Game.rooms[roomName].memory.powerSpawnID = undefined;
             }
-        }
-    }
-
-    static run() {
-        let report = '';
-        let total = 0;
-        for (var e in Game.rooms) {
-            if (Game.rooms[e].memory.powerSpawnID !== undefined) {
-                let powerS = Game.rooms[e].powerspawn;
-                if (powerS !== null) {
-                    let room = Game.rooms[e];
-                    if (room.memory.powerCount === undefined) room.memory.powerCount = 0;
-
-                    if (!Memory.war) {
-                        if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
-                            room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > 890000
-                        ) {
-                            if (powerS.processPower() == OK) {
-                                room.memory.powerCount++;
-                                total++;
-                                powerS.room.visual.text("🔌", powerS.pos, {
-                                    color: '#e42f43 ',
-                                    stroke: '#000000 ',
-                                    strokeWidth: 0.123,
-                                    font: 0.5
-                                });
-                            }
-                        }
-                    } else {
-                        if (room.controller.level == 8 && powerS !== null && powerS.power !== 0 && powerS.energy >= 50 &&
-                            room.terminal.total > 299000 && room.storage.store[RESOURCE_ENERGY] > 999000
-                        ) {
-                            //                        report = report + " " + room + "(" + room.memory.powerCount + ")";
-                            if (powerS.processPower() == OK) {
-                                room.memory.powerCount++;
-                                total++;
-                                powerS.room.visual.text("!", powerS.pos, {
-                                    color: '#e42f43 ',
-                                    stroke: '#000000 ',
-                                    strokeWidth: 0.123,
-                                    font: 0.5
-                                });
-                            }
-                        }
-
-                    }
-
-
-                } else {
-                    Game.rooms[e].memory.powerSpawnID = undefined;
-                }
-            }
-        }
-        if (total !== 0) {
-            Memory.stats.powerProcessed = total;
         }
     }
 
@@ -233,7 +169,7 @@ class PowerInteract {
             }
             if (zz.length === 0) {
                 flag.memory = undefined;
-                 flag.remove();
+                flag.remove();
             }
             return;
         }
@@ -267,7 +203,7 @@ class PowerInteract {
                         } */
         // So here when decay is at 1000 we will start creating the transports
         //                    theRoom.memory.transSent = undefined;
-        if(Game.shard.name !== 'shard1') {
+        if (Game.shard.name !== 'shard1') {
             transportCall = 300000;
         }
         if (powerB.hits < transportCall && !theRoom.memory.transSent) {
@@ -334,7 +270,7 @@ class PowerInteract {
                     flagCol: COLOR_YELLOW,
                     flagCol2: COLOR_RED
                 };
-                var half = ['E30S41','E30S42','E30S43','E30S44','E30S45','E30S46','E30S47','E30S48','E30S49'];
+                var half = ['E30S41', 'E30S42', 'E30S43', 'E30S44', 'E30S45', 'E30S46', 'E30S47', 'E30S48', 'E30S49'];
                 var second = [];
                 let zz;
 

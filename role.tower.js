@@ -22,7 +22,9 @@ function getEnergy(creep) {
 
         var close = creep.room.find(FIND_DROPPED_RESOURCES);
         if (close.length === 0) {
-            if (!containers.withdrawFromStorage(creep)) {}
+            if (!containers.withdrawFromStorage(creep)) {
+                
+            }
             return;
         }
         let high = _.max(close,a=>a.amount);

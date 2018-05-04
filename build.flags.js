@@ -791,6 +791,7 @@
             case COLOR_PURPLE:
                 // Purple will mean that it's setup for low CPU usage.
                 if (flag.room !== undefined) {
+                        flag.room.memory.simple = true;
                     if (flag.room.controller.level === 8) {
                         flag.memory.module = [
                             ['linker', 1, 5],
@@ -824,7 +825,6 @@
                         if (flag.room.alphaSpawn.memory.roadsTo.length > 0) {
                             flag.memory.module.push(['homeDefender', 1, 7]);
                         }
-                        flag.room.memory.simple = true;
                         //                    console.log( flag.room.stats.parts,'parts',flag.room.name);
 
                         if (flag.room.stats.parts > 1000) {
