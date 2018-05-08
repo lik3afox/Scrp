@@ -1385,6 +1385,9 @@
                                         if (flag.memory.party[eae][1] > 0 && flag.memory.party[eae][0] !== 'thief') {
                                             flag.memory.party[eae][1] = 0;
                                         }
+                                        if (flag.memory.party[eae][1] === 0 && flag.memory.party[eae][0] === 'thief') {
+                                            flag.memory.party[eae][1] = 2;
+                                        }                                        
                                     }
 
                                     _.map(flag.room.find(FIND_MY_CREEPS), function(o) {

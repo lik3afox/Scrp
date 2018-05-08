@@ -248,7 +248,7 @@ class transportz extends roleParent {
                         if (!super.guardRoom(creep)) {
                             if (!creep.pos.inRangeTo(_goal, 2)) {
                                 if (!super.guardRoom(creep)) {
-                                    creep.moveMe(_goal, { reusePath: 50, useSKPathing: true, });
+                                    creep.moveMe(_goal, { reusePath: 50, useSKPathing: true, swampCost : 1 });
                                 }
                             } else {
                                 let sci = Game.getObjectById(creep.memory.scientistID);

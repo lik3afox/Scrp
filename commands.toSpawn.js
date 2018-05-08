@@ -365,18 +365,14 @@ class SpawnInteract {
                 } else {
                     STACK.shift();
                 }
-            } else if (STACK[0].memory.role === 'linker' && ee === ERR_NOT_ENOUGH_ENERGY) {
-                //                STACK[0].build = [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, ];
-                //              console.log('><><>>>>-=-=-EMERGYENC MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
+            } else if (STACK[0].memory.role === 'linker' && ee === ERR_NOT_ENOUGH_ENERGY&& STACK.length > 2) {
                 let zzed = spawn.room.energyAvailable;
                 if (zzed < 300) zzed = 300;
-                if (getCost(STACK[0].build) > zzed) {
+                if (getCost(STACK[0].build) > zzed ) {
                     do {
                         STACK[0].build.shift();
                         console.log(roomLink(spawn.room.name)+'><><>>>>-=-=-EMERGYENC MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
                     } while (getCost(STACK[0].build) > zzed);
-
-                    //spawn.canCreateCreep(STACK[0].build);
                 }
             } else if (STACK[0].length === undefined && STACK[0].length === 0) {
 

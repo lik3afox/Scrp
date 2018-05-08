@@ -494,12 +494,14 @@ class baseParent {
         if (partyFlag.memory.rallyFlag !== false) {
             if (partyFlag.memory.rallyFlag !== 'home') {
                 var pFlag = Game.flags[partyFlag.memory.rallyFlag];
-                creep.moveTo(pFlag, { reusePath: 50 });
+                creep.moveTo(pFlag, { reusePath: 20 });
+            creep.say('HR move');
+            return true;
             } else {
                 creep.moveTo(creep.homeFlag, { reusePath: 50 });
-            }
             creep.say('R move');
             return true;
+            }
         }
 
         return false;

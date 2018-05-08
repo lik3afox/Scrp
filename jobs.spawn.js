@@ -108,15 +108,22 @@ class jobs {
     static doRefill(creep) {
         // Creeps that need refill - wallWorker
         if (creep.room.memory.wallworkID === undefined) creep.room.memory.wallworkID = null;
+        if(_.isNumber(creep.room.memory.wallworkID)) {
+        	creep.room.memory.wallworkID --;
+        	creep.say(creep.room.memory.wallworkID+'xze' );
+        	if(creep.room.memory.wallworkID  > 0 ) return false;
+        }
         var wall = Game.getObjectById(creep.room.memory.wallworkID);
         if (wall === null) {
             wall = _.filter(creep.room.find(FIND_MY_CREEPS), function(o) {
                 return o.memory.role === 'wallwork';
             });
-            if (wall.length === 0) return;
+            if (wall.length === 0){
+            	creep.room.memory.wallworkID = 100;
+            	return false;
+            }
             wall = wall[0];
         }
-//        console.log('Found wall',wall.carry[RESOURCE_ENERGY],roomLink(creep.room.name));
         if(wall.carry[RESOURCE_ENERGY] < wall.carryCapacity>>1){
             if(creep.carrying !== RESOURCE_ENERGY){
                 creep.moveToTransfer(creep.room.storage,creep.carrying);
@@ -139,8 +146,6 @@ class jobs {
             }
             creep.say('Giving');
             return true;
-        } else {
-
         }
         return false;
     }

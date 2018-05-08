@@ -46,7 +46,7 @@ var allParty = {
         ['demolisher', 0, 10],
     ],
     bandit: [
-//        ['thief', 2, 6],
+        ['thief', 0, 6],
         ['mage', 1, 7],
         ['fighter', 1, 10],
     ],
@@ -416,10 +416,11 @@ class partyInteract {
             flag.memory.totalNumber = totalParty;
             if (flag.memory.squadLogic && totalParty > 0) {
                 if (rallied !== undefined && rallied.room !== undefined) {
-                    let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 5);
+                    let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 10);
                     crps = _.filter(crps, function(o) {
                         return o.memory.party == flag.name && o.memory.boostNeeded !== undefined && o.memory.boostNeeded.length === 0;
                     });
+                    console.log( crps.length);
                     //                rallied.room.visual.text("💥" + flag.memory.totalNumber, totalParty, crps.length, rallied.room, 'total# check', rallied.pos.x - 5.5, rallied.pos.y - 5.5, { color: 'green', font: 0.8 });
                     //                  rallied.room.visual.rect(rallied.pos.x - 5.5, rallied.pos.y - 5.5,
                     //                        11, 11, { fill: 'transparent', stroke: '#f00' });
