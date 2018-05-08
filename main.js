@@ -15,26 +15,6 @@ function returnClosestRoom(roomName) {
     return spawn;
 }
 
-
-function testFlagFunction() {
-    //if(Game.flags.test === undefined) return;
-    //    let testFlag = Game.flags.test;
-    var testPos = new RoomPosition(25, 25, 'E20S49');
-    var testPos2 = new RoomPosition(20, 20, 'E20S49');
-
-    //if(Game.flags.test === undefined){
-    console.log('create', Game.rooms.E19S49.createFlag(25, 25, 'test'));
-    let testFlag = Game.flags.test;
-    //    console.log("remove", testFlag.remove() );
-    // console.log("setPos",testFlag.setPosition(testPos),testFlag.pos);
-    //  console.log("setColor", testFlag.setColor(COLOR_YELLOW,COLOR_WHITE) );
-
-    //}
-
-}
-
-
-
 function scanForRemoteSources() {
     var observer = require('build.observer');
 
@@ -823,6 +803,7 @@ function makeBody(carryNeeded) {
     do {
         body.push(MOVE);
         body.push(CARRY);
+        if(body.length >= 50) return body;
         carryNeeded--;
     } while (carryNeeded > 0);
     return body;
@@ -889,7 +870,7 @@ function doInstructions(instructions) {
                 };
                 if (current.mineralAmount > 0) {
                     alphaSpawn.memory.expandCreate.push(temp);
-                    console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
+//                    console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
                 }
                 // So the issue here is that we need to notify that we're sending materials to shard.
                 current.mineralAmount -= temp.memory.pickup.mineralAmount;
@@ -950,7 +931,7 @@ function doInstructions(instructions) {
                     // This is to limit the amount of mules made at one time to control transports a bit better.                
                     if (current.mineralAmount > 0) {
                         alphaSpawn.memory.expandCreate.push(temp);
-                        console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
+//                        console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
                     }
                     current.mineralAmount -= temp.memory.pickup.mineralAmount;
                     if (current.mineralAmount <= 0) {
@@ -1718,9 +1699,6 @@ module.exports.loop = blackMagic(function() {
         require('prototype.room')
     ];
     doMemory();
-    //if(Game.shard.name === 'shard2'){
-    //    testFlagFunction();
-    //}
     for (let i = 0, e = prototypes.length; i < e; i++) {
         prototypes[i]();
     }
@@ -1787,12 +1765,12 @@ module.exports.loop = blackMagic(function() {
                     (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
                     spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
                 }
-                ccSpawn.newRenewCreep(Game.spawns[title].pos.roomName);
             }
 
 
             if (Game.spawns[title].spawning === null) {
                 ccSpawn.createFromStack(Game.spawns[title]);
+                ccSpawn.newRenewCreep(Game.spawns[title].pos.roomName);
             } else {
                 //                Game.spawns[title].memory.lastSpawn = 0;
                 Game.spawns[title].spawning.setDirections(Game.spawns[title].memory.spawnDir);

@@ -70,7 +70,8 @@ class scientistRole extends roleParent {
     }
 
     static run(creep) {
-
+//        creep.memory.role = 'linker';
+//console.log('here',roomLink(creep.room.name));
         if (super.doTask(creep)) {
             return;
         }

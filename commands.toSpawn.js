@@ -209,7 +209,9 @@ class SpawnInteract {
             if (zzz == OK) {
                 creep.memory.goToSpawn = undefined;
 
-                if (creep.carry[RESOURCE_ENERGY] < fillTarget.energy - fillTarget.energyCapacity) creep.moveMe(creep.room.storage, { maxOpts: 100, reusePath: 1 });
+                if (creep.carry[RESOURCE_ENERGY] < fillTarget.energy - fillTarget.energyCapacity) {
+                    creep.moveMe(creep.room.storage, { maxOpts: 100, reusePath: 1, ignoreCreeps: true });
+                }
 
 
             } else if (zzz == -8) {
@@ -342,15 +344,15 @@ class SpawnInteract {
 
                 do {
                     STACK[0].build.shift();
-                    console.log('><><>>>>-=-=-DOWNGRADE MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
+                    console.log('><><>>>>-=-=-DOWNGRADE MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + STACK[0].memory.party + '-=-=-=-=<<<<><><');
                 } while (getCost(STACK[0].build) > spawn.room.energyCapacityAvailable);
 
-//                spawn.canCreateCreep(STACK[0].build);
+                //                spawn.canCreateCreep(STACK[0].build);
 
             } else if (ee === ERR_INVALID_ARGS && STACK[0].build.length > 50) {
                 do {
                     STACK[0].build.shift();
-                    console.log('><><>>>>-=-=-DOWNGRADE MODULE 50+', STACK[0].build.length, STACK[0].memory.role + '-=-=-=-=<<<<><><');
+                    console.log('><><>>>>-=-=-DOWNGRADE MODULE 50+', STACK[0].build.length, STACK[0].memory.role + STACK[0].memory.party + '-=-=-=-=<<<<><><');
                 } while (STACK[0].build.length > 50);
                 //spawn.canCreateCreep(STACK[0].build);
 
@@ -363,12 +365,19 @@ class SpawnInteract {
                 } else {
                     STACK.shift();
                 }
-            } else if (STACK[0].memory.role === 'first' && ee === ERR_NOT_ENOUGH_ENERGY && spawn.room.energyAvailable <= 500) {
-                STACK[0].build = [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, ];
-                console.log('><><>>>>-=-=-EMERGYENC MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
+            } else if (STACK[0].memory.role === 'linker' && ee === ERR_NOT_ENOUGH_ENERGY) {
+                //                STACK[0].build = [CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, ];
+                //              console.log('><><>>>>-=-=-EMERGYENC MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
+                let zzed = spawn.room.energyAvailable;
+                if (zzed < 300) zzed = 300;
+                if (getCost(STACK[0].build) > zzed) {
+                    do {
+                        STACK[0].build.shift();
+                        console.log(roomLink(spawn.room.name)+'><><>>>>-=-=-EMERGYENC MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
+                    } while (getCost(STACK[0].build) > zzed);
 
-                //spawn.canCreateCreep(STACK[0].build);
-
+                    //spawn.canCreateCreep(STACK[0].build);
+                }
             } else if (STACK[0].length === undefined && STACK[0].length === 0) {
 
                 console.log("ERROR", spawn, spawn.pos);

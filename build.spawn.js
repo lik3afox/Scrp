@@ -342,7 +342,7 @@ console.log('room has "max" walls!',spawn.room.name);
                                 spawn.memory.created++;
                             }
                         } else
-                        if (currentModule[type][_name] == 'first' || currentModule[type][_name] == 'linker') {
+                        if (currentModule[type][_name] == 'linker') {
                             spawn.memory.create.unshift(temp);
                             totalCreeps[currentModule[type][_name]].count++;
                             spawn.memory.created++;
@@ -371,9 +371,6 @@ console.log('room has "max" walls!',spawn.room.name);
             if (source === null) {
                 if (remoteInfo.sourcePos !== undefined) {
                     let obser = require('build.observer');
-                    if(remoteInfo.sourcePos.roomName === 'E55S35') {
-                        console.log('wtf is something looking @ E55S35',spawn.room.name,mod);
-                    }
                     obser.reqestRoom(remoteInfo.sourcePos.roomName, 2);
                 }
                 return;

@@ -199,7 +199,7 @@ function movement(creep) {
 //    let bads = [];
 //    bads = getBads(creep);
 //    if (bads.length !== 0) {
-    if (roleParent.guardRoom(creep)) {
+    if (creep.memory.goal !== '59f1a4ab82100e1594f3d4a9' && roleParent.guardRoom(creep)) {
 //creep.say("BADS");
 //        creep.runFrom(bads);
         creep.memory.cachePath = undefined;
@@ -214,6 +214,13 @@ function movement(creep) {
             }
 
             creep.countDistance();
+
+            if(creep.memory.goal === '59f1a4ab82100e1594f3d4a9' && creep.room.name === 'E24S45'){
+                creep.moveTo(new RoomPosition(0,30,'E24S45'),{maxRooms:1});
+                return;
+
+            }
+
             if (Game.rooms[creep.memory.home].storage.total !== 1000000) {
 
                 creep.moveMe(Game.rooms[creep.memory.home].storage, {
@@ -374,12 +381,7 @@ class transport extends roleParent {
 
         empting = false;
         withdrawing = false;
-        if (creep.room.name == 'E29xxS48' && super.link.newTransfer(creep)) {
-            if (creep.carry[RESOURCE_ENERGY] > 800) {
-                return;
-            }
-            empting = true;
-        } else if (super.link.transfer(creep)) {
+        if (super.link.transfer(creep)) {
             if (creep.carry[RESOURCE_ENERGY] > 800) {
                 return;
             }
@@ -391,20 +393,6 @@ class transport extends roleParent {
 
             creep.memory.cachePath = undefined;
             return;
-        }
-
-        if (creep.carryTotal < creep.carryCapacity - 10) {
-/*            let bads = [];
-            if (_goal !== null && _goal.energyCapacity === 4000) {
-                bads = getBads(creep);
-            }
-
-            if (bads.length !== 0) {
-                creep.runFrom(bads);
-                creep.memory.cachePath = undefined;
-            } else {
-                //if (_goal !== null && _goal.energyCapacity === 4000 && super.constr.moveToPickUpEnergyIn(creep, 6)) {
-            } */
         }
 
         interactContainer(creep);

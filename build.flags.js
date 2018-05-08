@@ -369,8 +369,19 @@
                             if (roomEnergy >= 1200) {
                                 flag.memory.module[ez][_level] = 4;
                             }
+                            flag.memory.module[ez][_number] = 3;
                             break;
-
+                        case 4:
+                            if (roomEnergy >= 2250) {
+                                flag.memory.module[ez][_level] = 5;
+                                flag.memory.module[ez][_number] = 3;
+                            }
+                            break;
+                        case 5:
+                            if (roomEnergy >= 2500) {
+                                flag.memory.module[ez][_level] = 6;
+                                flag.memory.module[ez][_number] = 3;
+                            }
                     }
                 }
 
@@ -453,18 +464,21 @@
                                 flag.memory.module[ez][_level] = 5;
                             }
                             break;
+
                     }
                 }
                 break;
 
             case 'first':
                 // Harvest Checking
-                ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
+            /*    ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
+                                flag.memory.module[ez][_number] = 0;                
+                
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else {
                     roomEnergy = flag.room.energyCapacityAvailable;
-
+                    flag.memory.module[ez][_number] = 0;
                     switch (flag.memory.module[ez][_level]) {
                         case 0:
                             if (roomEnergy >= 550) {
@@ -502,7 +516,7 @@
                             break;
                     }
 
-                }
+                } */
                 break;
 
             case 'homeDefender':
@@ -531,7 +545,8 @@
                 break;
             case 'scientist':
                 // Harvest Checking
-                ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
+/*                ez = _.findIndex(flag.memory.module, function(o) { return o[_name] == ee; });
+                                flag.memory.module[ez][_number] = 0;                
                 if (ez === -1) {
                     flag.memory.module.push([ee, 0, 0]);
                 } else if (Game.shard.name === 'shard1') {
@@ -553,7 +568,7 @@
                             }
                             break;
                     }
-                }
+                } */
                 break;
 
             case 'minHarvest':
@@ -791,12 +806,12 @@
             case COLOR_PURPLE:
                 // Purple will mean that it's setup for low CPU usage.
                 if (flag.room !== undefined) {
-                        flag.room.memory.simple = true;
+                    flag.room.memory.simple = true;
                     if (flag.room.controller.level === 8) {
                         flag.memory.module = [
-                            ['linker', 1, 5],
                             ['minHarvest', 1, 7]
                         ];
+                        let linkNum = 1;
                         if (flag.room.stats.storageEnergy > 100000) {
                             flag.memory.module.push(['wallwork', 1, 5]);
                         }
@@ -807,7 +822,8 @@
                         }
 
                         if (flag.room.alphaSpawn.memory.warCreate.length > 0) {
-                            flag.memory.module.push(['first', 1, 6]);
+//                            flag.memory.module.push(['first', 1, 6]);
+                            linkNum++;
                         }
                         if (flag.room.controller.ticksToDowngrade < 50000) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
@@ -828,7 +844,8 @@
                         //                    console.log( flag.room.stats.parts,'parts',flag.room.name);
 
                         if (flag.room.stats.parts > 1000) {
-                            flag.memory.module.push(['first', 1, 6]);
+                            linkNum++;
+                            //                          flag.memory.module.push(['first', 1, 6]);
                         }
                         if (flag.room.stats.parts > 1500) {
                             //                            flag.room.memory.simple = false;
@@ -838,7 +855,8 @@
                         }
                         if (flag.room.stats.parts > 3000) {
                             flag.room.memory.simple = false; // This means that the linker becomes a dedicated link spot.
-                            flag.memory.module.push(['scientist', 1, 6]);
+                            //                            flag.memory.module.push(['scientist', 1, 6]);
+                            linkNum++;
 
                         }
                         /*     flag.room.memory.towers = [];
@@ -850,6 +868,7 @@
                              for (var i in towers) {
                                  flag.room.memory.towers.push(towers[i].id);
                              }*/
+                        flag.memory.module.push(['linker', linkNum, 5]);
 
                     } else { adjustModule(flag); }
                 }
@@ -1321,8 +1340,14 @@
                         }
 
 
-                        if (flag.name == 'bandit') {
-                            flag.memory.rally = 'home';
+                        if (flag.name == 'bandit' || flag.name == 'thief') {
+                            if(flag.name !== 'thief'){
+                                flag.memory.rally = 'home';
+
+                            } else {
+                                flag.memory.musterType = 'thief';
+                                flag.memory.musterRoom = 'close';
+                            }
                             /*                            if (flag.memory.timer === undefined) {
                                                             flag.memory.timer = 1200;
                                                         }
@@ -1334,11 +1359,11 @@
                             if (flag.room !== undefined) {
                                 // So here we check if we remove the flag
                                 // We first give it an 1500 timer.
-                                var strucd = flag.room.find(FIND_STRUCTURES);
-                                var testz2 = _.filter(strucd, function(o) {
-                                    return o.structureType === STRUCTURE_CONTAINER;
-                                });
+                                var testz2 = flag.room.find(FIND_TOMBSTONES);
 
+                                var testz3 = _.filter(testz2, function(o) {
+                                    return o.total < 100;
+                                });
                                 // Start countingdown to see if bandits have failed to kill caravan.
                                 if (flag.memory.countDown === undefined) {
                                     flag.memory.countDown = 1000;
@@ -1348,12 +1373,8 @@
                                     flag.remove();
                                 }
 
-                                // Now we check to see if the containers are empty and
-                                var testz3 = _.filter(strucd, function(o) {
-                                    return o.structureType === STRUCTURE_CONTAINER && o.total === 0;
-                                });
                                 //                                console.log('Bandit room available, containers found:', testz2.length, "emp:", testz3.length, flag.memory.timer);
-                                if (testz2.length !== 0 && testz2.length == testz3.length) {
+                                if (testz2.length > 0 && testz2.length == testz3.length) {
                                     flag.remove();
                                 }
                                 var cara = _.filter(flag.room.find(FIND_CREEPS), function(o) {

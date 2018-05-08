@@ -139,10 +139,10 @@ class settler extends roleParent {
         }
 
         var _source = Game.getObjectById(creep.memory.goal);
-        if (creep.memory.goal == '5982ff12b097071b4adc20caxx') {
+    //    if (creep.memory.goal == '5982ff12b097071b4adc20caxx') {
             //creep.memory.reportDeath = false;
-            console.log(creep.room.name);
-        }
+//            console.log(creep.room.name);
+  //      }
 
         var resting; // = restingSpot(creep);
         // if(!resting ?creep.pos.isNearTo(_source):creep.pos.isEqualTo(resting)){
@@ -322,7 +322,7 @@ class settler extends roleParent {
                 task.options = {
                     reusePath: 49,
                     ignoreCreep: true,
-                    swampCost:1,
+//                    swampCost:1,
                     segment: true,
                     visualizePathStyle: {
                         fill: 'transparent',

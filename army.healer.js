@@ -296,7 +296,6 @@ class healerClass extends roleParent {
             return classLevels[level];
         }
         if (_.isObject(classLevels[level])) {
-            console.log("HEALER RETURNED ", level, classLevels[level].body.length);
             return classLevels[level].body;
         } else {
             return classLevels[level];

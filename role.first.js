@@ -34,11 +34,7 @@ class roleFirst extends roleParent {
     }
 
     static run(creep) {
-        if (creep.memory.home === undefined) creep.memory.home = creep.room.name;
-        super.rebirth(creep);
-        if (super.baseRun(creep)) {
-            return;
-        }
+        console.log(roomLink(creep.room.name),'still has first?');
         if (!jobs.doRoomEnergy(creep)) {
             creep.sleep(3);
         }

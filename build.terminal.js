@@ -117,7 +117,7 @@ function shareEnergy(terminal) {
 
     let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
     let zz = terminal.send(RESOURCE_ENERGY, amount, lowestStore.room.name, 'Sharing Energy');
-    console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
+//    console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
     return true;
 }
 
@@ -1510,6 +1510,9 @@ class roleTerminal {
                 Game.rooms[roomName].terminal.send('energy', 5000, main);
                 return;
             }
+                if(Game.shard.name === 'shard2' && roomName === 'E29S48'){
+                  main = 'E23S45';   
+                }
             if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000 && Game.rooms[main].terminal.store[RESOURCE_ENERGY] < 20000) {
                 Game.rooms[roomName].terminal.send('energy', 20000, main);
                 return;

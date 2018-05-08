@@ -298,7 +298,7 @@ class segmentCommand {
  let maxMemory = 100*1024;
  let mx = rawData.length;
 var needed_segments = Math.ceil(mx/maxMemory);
-console.log(roomName,needed_segments,mx,"/",maxMemory);
+//console.log(roomName,needed_segments,mx,"/",maxMemory);
         if (roomSegment[roomName] !== undefined) {
             if (RawMemory.segments[roomSegment[roomName]] === undefined && setActive[roomSegment[roomName]] === undefined) {
                 if (_.isNumber(roomSegment[roomName]))
@@ -336,7 +336,7 @@ console.log(roomName,needed_segments,mx,"/",maxMemory);
     static setPartySegmentData(partyName, rawData) {
 
         var seg = partyNameToSegmentNumber(partyName);
-        console.log("set party segment", seg, RawMemory.segments[seg]);
+//        console.log("set party segment", seg, RawMemory.segments[seg]);
 
         if (RawMemory.segments[seg] === undefined) {
             if (seg !== undefined)

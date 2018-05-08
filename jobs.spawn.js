@@ -105,8 +105,48 @@ function mineralContainerEmpty(creep) {
 
 class jobs {
 
+    static doRefill(creep) {
+        // Creeps that need refill - wallWorker
+        if (creep.room.memory.wallworkID === undefined) creep.room.memory.wallworkID = null;
+        var wall = Game.getObjectById(creep.room.memory.wallworkID);
+        if (wall === null) {
+            wall = _.filter(creep.room.find(FIND_MY_CREEPS), function(o) {
+                return o.memory.role === 'wallwork';
+            });
+            if (wall.length === 0) return;
+            wall = wall[0];
+        }
+//        console.log('Found wall',wall.carry[RESOURCE_ENERGY],roomLink(creep.room.name));
+        if(wall.carry[RESOURCE_ENERGY] < wall.carryCapacity>>1){
+            if(creep.carrying !== RESOURCE_ENERGY){
+                creep.moveToTransfer(creep.room.storage,creep.carrying);
+                return;
+            }
+            if(creep.carry[RESOURCE_ENERGY] > 0){
+                if(creep.pos.isNearTo(wall)){
+                    creep.transfer(wall,RESOURCE_ENERGY);
+//                    wall.memory.wallTargetID = undefined;
+                } else {
+                    creep.moveTo(wall);
+                }
+            } else {
+                if(creep.room.storage.store[RESOURCE_ENERGY] > 0){
+                creep.moveToWithdraw(creep.room.storage,RESOURCE_ENERGY);
+                } else {
+                    creep.moveToWithdraw(creep.room.terminal,RESOURCE_ENERGY);
+                }
+
+            }
+            creep.say('Giving');
+            return true;
+        } else {
+
+        }
+        return false;
+    }
+
     static doTower(creep) {
-        console.log(creep, '@ doTower', roomLink(creep.room.name));
+//        console.log(creep, '@ doTower', roomLink(creep.room.name));
         if (creep.carry[RESOURCE_ENERGY] > 0) {
             let zz;
             if (creep.memory.towerTargetID === undefined) {
@@ -153,32 +193,33 @@ class jobs {
             return false;
         }
         let powerspawn = creep.room.powerspawn;
+        if(creep.carry[RESOURCE_POWER] > 0 && powerspawn.power == 100){
+            creep.moveToTransfer(creep.room.terminal,RESOURCE_POWER);
+        }
         if (powerspawn.power >= 10 && powerspawn.energy > 50) return false;
         if (Memory.stats.totalMinerals.power < 500 && (creep.room.terminal.store[RESOURCE_POWER] === undefined || creep.room.terminal.store[RESOURCE_POWER] === 0) && creep.carry[RESOURCE_POWER] === undefined) {
             return false;
         }
         if (creep.carry[RESOURCE_ENERGY] > 0 && creep.room.powerspawn.energy > 4000) {
-                return false;
-            }        
+            return false;
+        }
 
         var target;
         var noPower = true;
         if (creep.room.terminal.store[RESOURCE_POWER] === undefined && creep.room.powerspawn.power === 0 && creep.carry[RESOURCE_POWER] === undefined || creep.carry[RESOURCE_POWER] === 0) {
-            if (!_terminal_().requestMineral(creep.room.name, RESOURCE_POWER)) {
-            }
+            if (!_terminal_().requestMineral(creep.room.name, RESOURCE_POWER)) {}
             return false;
         }
-        if((creep.room.terminal.store[RESOURCE_POWER] === undefined || creep.room.terminal.store[RESOURCE_POWER] === 0) && creep.carry[RESOURCE_POWER] !== undefined){
-            if (!_terminal_().requestMineral(creep.room.name, RESOURCE_POWER)) {
-            }
+        if ((creep.room.terminal.store[RESOURCE_POWER] === undefined || creep.room.terminal.store[RESOURCE_POWER] === 0) && creep.carry[RESOURCE_POWER] !== undefined) {
+            if (!_terminal_().requestMineral(creep.room.name, RESOURCE_POWER)) {}
             return false;
         }
-//        console.log(creep, '@ doPowerspawn', roomLink(creep.room.name),creep.room.terminal.store[RESOURCE_POWER]);
+        //        console.log(creep, '@ doPowerspawn', roomLink(creep.room.name),creep.room.terminal.store[RESOURCE_POWER]);
 
         creep.say('pw2Sp');
         if (creep.carryTotal === 0) {
             creep.say('g');
-            if (powerspawn.power < 10 && (creep.room.terminal.store[RESOURCE_POWER] !== undefined && creep.room.terminal.store[RESOURCE_POWER] > 0 )) {
+            if (powerspawn.power < 10 && (creep.room.terminal.store[RESOURCE_POWER] !== undefined && creep.room.terminal.store[RESOURCE_POWER] > 0)) {
                 let amt = 100;
                 if (amt > creep.room.terminal.store[RESOURCE_POWER]) {
                     amt = creep.room.terminal.store[RESOURCE_POWER];
@@ -191,7 +232,7 @@ class jobs {
                 creep.say('gE');
                 return true;
             }
-                return false;
+            return false;
         } else {
             if (creep.carry[RESOURCE_POWER] > 0 && powerspawn.power < 100) {
                 creep.say('PP');
@@ -213,7 +254,9 @@ class jobs {
                     creep.moveTo(powerspawn);
                 }
                 return true;
-            } 
+            } else {
+                creep.moveToTransfer(creep.room.terminal,creep.carrying);
+            }
             return true;
         }
         return false;
@@ -223,8 +266,15 @@ class jobs {
         if (creep.room.energyAvailable == creep.room.energyCapacityAvailable) {
             return false;
         }
+         if( roleParent.depositNonEnergy(creep)){
+            return true;
+         }
         // console.log(creep, '@ doRoomEnergy', roomLink(creep.room.name));
-
+  //      if(creep.carryTotal !== creep.carry[RESOURCE_ENERGY]){
+          //  creep.moveToTransfer(creep.room.storage,creep.carrying);
+//          creep.say('@2124');
+//            return true;
+    //    } 
         if (!creep.memory.deposit && creep.carryTotal > creep.carryCapacity - 5) {
             creep.memory.deposit = true;
         } else if (creep.carry.energy === 0) {
@@ -255,116 +305,116 @@ class jobs {
     }
 
 
-static doUpgradeRoom(creep, fill) {
-    var goto;
-    var target = creep.room.storage;
-    if (creep.room.terminal !== undefined && creep.room.controller.level > 3) {
-        target = creep.room.terminal;
-    }
-    if (!fill && creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
-        target = creep.room.storage;
-    }
+    static doUpgradeRoom(creep, fill) {
+        var goto;
+        var target = creep.room.storage;
+        if (creep.room.terminal !== undefined && creep.room.controller.level > 3) {
+            target = creep.room.terminal;
+        }
+        if (!fill && creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
+            target = creep.room.storage;
+        }
 
-    var tgt = new RoomPosition(32, 10, 'E14S38');
+        var tgt = new RoomPosition(32, 10, 'E14S38');
 
-    if (creep.memory.roleID !== 0)
-        tgt = new RoomPosition(34, 10, 'E14S38');
-    if (!creep.pos.isEqualTo(tgt)) {
-        creep.say('hug' + creep.moveTo(tgt));
+        if (creep.memory.roleID !== 0)
+            tgt = new RoomPosition(34, 10, 'E14S38');
+        if (!creep.pos.isEqualTo(tgt)) {
+            creep.say('hug' + creep.moveTo(tgt));
 
-    }
+        }
 
-    let lab = Game.getObjectById(creep.room.memory.boostLabID);
-    if ((lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000) && creep.room.terminal.store.XGH2O !== undefined) || creep.carry.XGH2O > 1) {
-        if (!fill) {
-            if (creep.room.storage.store.XGH2O > 0) {
+        let lab = Game.getObjectById(creep.room.memory.boostLabID);
+        if ((lab !== null && (lab.mineralAmount === undefined || lab.mineralAmount < 3000) && creep.room.terminal.store.XGH2O !== undefined) || creep.carry.XGH2O > 1) {
+            if (!fill) {
+                if (creep.room.storage.store.XGH2O > 0) {
 
-                creep.withdraw(creep.room.storage, 'XGH2O');
+                    creep.withdraw(creep.room.storage, 'XGH2O');
+                } else {
+                    creep.withdraw(creep.room.terminal, 'XGH2O');
+                }
             } else {
-                creep.withdraw(creep.room.terminal, 'XGH2O');
+                if (creep.carry[RESOURCE_ENERGY] > 0) {
+                    if (lab.energy !== lab.energyCapacity) {
+                        creep.transfer(lab, RESOURCE_ENERGY);
+                    } else {
+                        creep.transfer(creep.room.storage, RESOURCE_ENERGY);
+                    }
+                } else {
+
+                    if (lab.mineralAmount !== 3000) {
+                        for (var e in creep.carry) {
+                            creep.transfer(lab, e);
+                        }
+                    } else {
+                        for (var ee in creep.carry) {
+                            creep.transfer(creep.room.storage, ee);
+                        }
+                    }
+                }
+
+            }
+            creep.say('GH' + fill);
+            return;
+        }
+        if (!fill) {
+            creep.say(fill);
+            switch (creep.memory.roleID) {
+                default:
+                    //            if (!constr.pickUpEnergy(creep))
+                    if (!roleParent.constr.withdrawFromTombstone(creep)) {
+                        let zzze = creep.moveToPickUp(FIND_DROPPED_RESOURCES, 100);
+                        if (zzze !== 0) {
+                            if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
+                                if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
+                            }
+                        }
+                    }
+
+                break;
             }
         } else {
-            if (creep.carry[RESOURCE_ENERGY] > 0) {
-                if (lab.energy !== lab.energyCapacity) {
+            switch (creep.memory.roleID) {
+                default:
+
+                    let tower = Game.getObjectById('5a07418fec922a4a7a8492e8');
+                if (tower !== null && tower.energy < 100 && creep.room.controller.level > 2) {
+                    creep.transfer(tower, RESOURCE_ENERGY);
+                    return;
+                }
+                let lab = Game.getObjectById(creep.room.memory.boostLabID);
+                if (lab !== null && lab.energy !== lab.energyCapacity && creep.room.controller.level > 5) {
                     creep.transfer(lab, RESOURCE_ENERGY);
-                } else {
-                    creep.transfer(creep.room.storage, RESOURCE_ENERGY);
+                    return;
                 }
-            } else {
-
-                if (lab.mineralAmount !== 3000) {
-                    for (var e in creep.carry) {
-                        creep.transfer(lab, e);
-                    }
-                } else {
-                    for (var ee in creep.carry) {
-                        creep.transfer(creep.room.storage, ee);
-                    }
-                }
-            }
-
-        }
-        creep.say('GH' + fill);
-        return;
-    }
-    if (!fill) {
-        creep.say(fill);
-        switch (creep.memory.roleID) {
-            default:
-                //            if (!constr.pickUpEnergy(creep))
-                if (!roleParent.constr.withdrawFromTombstone(creep)) {
-                    let zzze = creep.moveToPickUp(FIND_DROPPED_RESOURCES, 100);
-                    if (zzze !== 0) {
-                        if (target !== null && creep.room.storage.store[RESOURCE_ENERGY] < 998000) {
-                            if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {}
-                        }
-                    }
-                }
-
-            break;
-        }
-    } else {
-        switch (creep.memory.roleID) {
-            default:
-
-                let tower = Game.getObjectById('5a07418fec922a4a7a8492e8');
-            if (tower !== null && tower.energy < 100 && creep.room.controller.level > 2) {
-                creep.transfer(tower, RESOURCE_ENERGY);
-                return;
-            }
-            let lab = Game.getObjectById(creep.room.memory.boostLabID);
-            if (lab !== null && lab.energy !== lab.energyCapacity && creep.room.controller.level > 5) {
-                creep.transfer(lab, RESOURCE_ENERGY);
-                return;
-            }
-            let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
-            if (spawn !== null && spawn.energy < 175) {
-                if (creep.pos.isNearTo(spawn)) {
-                    creep.transfer(spawn, RESOURCE_ENERGY);
-                } else {}
-                return;
-            }
-            if (creep.room.controller.level > 3) {
-                if (target.structureType == STRUCTURE_STORAGE && creep.room.controller.level > 5) {
-                    target = creep.room.terminal;
-                } else {
-                    target = creep.room.storage;
-                }
-
-                if (target !== undefined) {
-                    if (creep.pos.isNearTo(target)) {
-                        for (var eee in creep.carry) {
-                            creep.transfer(target, eee);
-                        }
+                let spawn = Game.getObjectById('5a03400a3e83cd1e5374cf65');
+                if (spawn !== null && spawn.energy < 175) {
+                    if (creep.pos.isNearTo(spawn)) {
+                        creep.transfer(spawn, RESOURCE_ENERGY);
                     } else {}
+                    return;
+                }
+                if (creep.room.controller.level > 3) {
+                    if (target.structureType == STRUCTURE_STORAGE && creep.room.controller.level > 5) {
+                        target = creep.room.terminal;
+                    } else {
+                        target = creep.room.storage;
+                    }
+
+                    if (target !== undefined) {
+                        if (creep.pos.isNearTo(target)) {
+                            for (var eee in creep.carry) {
+                                creep.transfer(target, eee);
+                            }
+                        } else {}
+                    }
+
                 }
 
+                break;
             }
-
-            break;
         }
     }
-}
 
     static doBoostLab(creep) {
         if (creep.room.memory.boost === undefined || creep.room.memory.boost.mineralType === 'none' || creep.room.memory.boost.mineralAmount === 0 || creep.room.memory.boostLabID === undefined) {
@@ -573,9 +623,15 @@ static doUpgradeRoom(creep, fill) {
         if (targetContain === null || targetContain.total < 1000 || min === null || min.mineralAmount === 0) {
             return false;
         }
-//        console.log(creep, '@ doMinContain', roomLink(creep.room.name),targetContain);
+        //        console.log(creep, '@ doMinContain', roomLink(creep.room.name),targetContain);
+        if (creep.carryTotal > 0) {
+            creep.moveToTransfer(creep.room.terminal, creep.carrying);
+            creep.say('!');
+        } else {
+            mineralContainerEmpty(creep);
+            creep.say('!!');
 
-        mineralContainerEmpty(creep);
+        }
         return true;
     }
 
@@ -583,8 +639,8 @@ static doUpgradeRoom(creep, fill) {
     static doLabs(creep) {
         if (!creep.room.memory.labsNeedWork) return false;
 
-//        console.log(creep, '@ doLabs', roomLink(creep.room.name));
-//        creep.say('labs');
+        //        console.log(creep, '@ doLabs', roomLink(creep.room.name));
+        //        creep.say('labs');
 
         var total = creep.carryTotal;
         if (total === 0) {
@@ -600,7 +656,8 @@ static doUpgradeRoom(creep, fill) {
                     roleParent.containers.moveToStorage(creep);
                 } else {
                     creep.say('term');
-                    roleParent.containers.moveToTerminal(creep);
+                    //roleParent.containers.moveToTerminal(creep);
+                    creep.moveToTransfer(creep.room.terminal,creep.carrying);
                 }
                 return true;
             }
@@ -620,7 +677,7 @@ static doUpgradeRoom(creep, fill) {
                                     creep.memory.putaway = true;
                                 }
                             } else {
-                                creep.moveMe(_labs[i]);
+                                creep.moveMe(_labs[i],{ignoreCreeps:true,reusePath:15});
                             }
                             return true;
                         }

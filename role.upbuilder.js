@@ -251,10 +251,8 @@ class roleUpbuilder extends roleParent {
 
         var strucs = Game.getObjectById(creep.memory.constructionID);
 
-        if (strucs !== null) {
+        if (strucs !== null && creep.memory.isBoosted.length === 0) {
             if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
-
-
                 creep.moveMe(strucs, { ignoreCreeps: true });
             }
         } else {

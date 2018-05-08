@@ -146,38 +146,6 @@ class buildLink {
 
 
     }
-    static newTransfer(creep) {
-        if (creep.carry[RESOURCE_ENERGY] === 0) return false;
-        if (creep.room.controller === undefined) return false;
-        if (creep.room.controller.level < 5) return false;
-        let n = 0;
-        var ret = ulamSpiral(n);
-        while (true) {
-            ret = ulamSpiral(n);
-            n += 1;
-            if (ret.x > -1 || ret.x < 50 || rey.y > -1 || rey.y < 50) {
-                return true;
-              /*  let nlinkz = creep.room.lookAt(ret.x, ret.y);
-
-                for (var i in nlinkz) {
-                    //            if (nlinkz[i].structure !== undefined && nlinkz[i].structure.structureType == 'link' && nlinkz[i].structure.energy < 800) {
-                    if (nlinkz[i].structure !== undefined && nlinkz[i].structure.energy !== undefined && nlinkz[i].structure.energy !== nlinkz[i].structure.energyCapacity) {
-
-                        if (creep.room.memory.roomLinksID !== undefined && !_.contains(creep.room.memory.roomLinksID, nlinkz[i].structure.id) && nlinkz[i].structure.structureType == 'link') {
-                            creep.room.memory.roomLinksID.push(nlinkz[i].structure.id);
-                        }
-
-                        if (creep.transfer(nlinkz[i].structure, RESOURCE_ENERGY) == OK) {
-                            if (nlinkz[i].structure.structureType == 'link' && nlinkz[i].structure.cooldown === 0) {
-                                return true;
-                            }
-                            return false;
-                        }
-                    }
-                }*/
-            }
-        }
-    }
 
     static deposit(creep) { // Used by harvesters
 

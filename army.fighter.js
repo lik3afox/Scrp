@@ -297,36 +297,41 @@ function banditAction(creep) {
                         creep.attack(tgt);
                     }
                     creep.moveTo(tgt);
-                    var tombs = creep.room.find(FIND_TOMBSTONES);
-                    if (creep.memory.calledTrans === undefined && tombs.length > 0) {
-                        var trans = _.filter(bads, function(o) {
-                            return o.getActiveBodyparts(CARRY) > 0;
-                        });
-                        //            let spawnID = ;
-                        if (trans.length) {
-                            let spawn = require('commands.toSpawn');
-                            let numOfcreep = 0;
-                            do {
-                                let transport = {
-                                    build: [MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
-                                        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
-                                        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
-                                        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
-                                        MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
-                                    ],
-                                    memory: {
-                                        role: "thief",
-                                        home: creep.memory.home,
-                                        parent: creep.memory.parent,
-                                        level: 5,
-                                        party: "bandit"
-                                    }
-                                };
-                                spawn.requestCreep(transport, spawnID);
-                                numOfcreep++;
-                            } while (numOfcreep <= trans.length);
+                    if (Game.flags.thief !== undefined) {
+                        var tombs = creep.room.find(FIND_TOMBSTONES);
+                        /*if (creep.memory.calledTrans === undefined && tombs.length > 0) {
+                            var trans = _.filter(bads, function(o) {
+                                return o.getActiveBodyparts(CARRY) > 0;
+                            });
+                            //            let spawnID = ;
+                            if (trans.length) {
+                                let spawn = require('commands.toSpawn');
+                                let numOfcreep = 0;
+                                do {
+                                    let transport = {
+                                        build: [MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                            MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                            MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                            MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                            MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY,
+                                        ],
+                                        memory: {
+                                            role: "thief",
+                                            home: creep.memory.home,
+                                            parent: creep.memory.parent,
+                                            level: 5,
+                                            party: "bandit"
+                                        }
+                                    };
+                                    spawn.requestCreep(transport, spawnID);
+                                    numOfcreep++;
+                                } while (numOfcreep <= trans.length);
+                            }
+                            creep.memory.calledTrans = true;
+                        }*/
+                        if (tombs.length > 0) {
+                            creep.room.createFlag(25, 25, 'thief', COLOR_YELLOW, COLOR_YELLOW);
                         }
-                        creep.memory.calledTrans = true;
                     }
 
                 } else {

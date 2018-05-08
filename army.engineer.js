@@ -283,16 +283,13 @@ class engineerClass extends roleParent {
                     creep.say('!' + creep.memory.boostType);
                 } else {
                     if (!super.constr.moveToBuild(creep)) {
-                        if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(creep.room.controller);
-                        }
                     }
                     creep.say('!@');
                 }
             } else {
                 creep.pickUpEnergy();
                 if (creep.room.storage === undefined || creep.room.storage.store[RESOURCE_ENERGY] <= 10000 || !super.containers.withdrawFromStorage(creep)) {
-                    if (!roleParent.constr.withdrawFromTombstone(creep)) {
+//                    if (!roleParent.constr.withdrawFromTombstone(creep)) {
                         if (!super.containers.withdrawFromStorage(creep)) {
                             if (!super.containers.withdrawFromTerminal(creep)) {
                                 if (!super.containers.moveToWithdraw(creep)) {
@@ -304,7 +301,7 @@ class engineerClass extends roleParent {
                                 }
                             }
                         }
-                    }
+  //                  }
 
                 }
             }

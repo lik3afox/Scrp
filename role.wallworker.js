@@ -111,7 +111,7 @@ class roleWallWorker extends roleParent {
                 if (strucs !== null) creep.memory.constructionID = strucs.id;
                 creep.memory.wallTargetID = undefined;
             } else {
-                creep.moveTo(target);
+                creep.moveMe(target,{ignoreCreeps:true,reusePath:20});
             }
             return;
         }
@@ -125,9 +125,13 @@ class roleWallWorker extends roleParent {
             } else {
                 creep.room.memory.spawnTargets = undefined;
                 creep.memory.constructionID = undefined;
+                let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+                if (strucs !== null) creep.memory.constructionID = strucs.id;
             }
         } else {
-            super.constr.moveToRepairWall(creep);
+           if( super.constr.moveToRepairWall(creep) ){
+            roleParent.constr.doCloseRoadRepair(creep);
+           }
         }
 
     }
