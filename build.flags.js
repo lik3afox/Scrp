@@ -92,8 +92,6 @@
                     flag.memory.invadeDelay = 100;
 
                 if (flag.memory.invadeDelay < 0) {
-                    //                    var constr = require('commands.toStructure');
-                    //                    constr.checkSnapShot(flag.pos.roomName);
 
                     flag.memory.invadeDelay = undefined;
                     flag.memory.invaderTimed = undefined;
@@ -695,31 +693,6 @@
 
                 var keys = Object.keys(roomer);
                 var status = keys[flag.memory.checkWhat];
-
-                flag.room.visual.text('Remote Modules:' + ' Status:', status, xx, yy, font);
-                if (flag.memory.alphaSpawn !== undefined) {
-                    let spwn = Game.getObjectById(flag.memory.alphaSpawn);
-                    if (spwn !== null) {
-                        var cc = spwn.memory.create.length;
-                        var wc = spwn.memory.warCreate.length;
-                        var ec = spwn.memory.expandCreate.length;
-
-                        flag.room.visual.text('Remote Modules:' + cc + ':' + wc + ':' + cc + ' Status:', xx, ++yy, font);
-                        flag.room.visual.text("Remote:", xx, ++yy, font);
-                        for (e in spwn.memory.roadsTo) {
-                            let remote = spwn.memory.roadsTo[e];
-                            var opt = ['mineral', 'miner', 'transport', 'controller', 'ztransport'];
-                            for (var ze in remote) {
-                                if (_.contains(opt, ze)) {
-                                    var report = '0 / 0 :' + ze + '   ' + remote.source;
-                                    flag.room.visual.text(report, xx, ++yy, font);
-                                }
-                            }
-                        }
-                        //                        flag.room.visual.text(report, xx, ++yy,font); 
-
-                    }
-                }
                 break;
 
             case COLOR_RED:
@@ -778,6 +751,18 @@
         }
         // Whiteflag functions as a control for that room.
         // When the secondary is set to white - nothing occurs.
+        flag.memory.nextTargets = undefined;
+        flag.memory.rallyCreateCount = undefined;
+        flag.memory.totalNumber = undefined;
+        flag.memory.portal = undefined;
+        flag.memory.rallyFlag = undefined;
+        flag.memory.musterRoom = undefined;
+        flag.memory.musterType = undefined;
+        flag.memory.wayPath = undefined;
+        flag.memory.target = undefined;
+        flag.memory.killBase = undefined;
+        flag.memory.squadLogic = undefined;
+
         switch (flag.secondaryColor) {
             case COLOR_WHITE:
                 // Nothing, maybe even clearing it. 
@@ -794,7 +779,6 @@
                 // This color also means that it's pulled as module for build.spaw
                 if (flag.memory.checkWhat >= 0)
                     adjustModule(flag);
-                //                flag.room.memory.simple = undefined;
 
                 break;
 
@@ -807,6 +791,7 @@
                 // Purple will mean that it's setup for low CPU usage.
                 if (flag.room !== undefined) {
                     flag.room.memory.simple = true;
+
                     if (flag.room.controller.level === 8) {
                         flag.memory.module = [
                             ['minHarvest', 1, 7]
@@ -822,13 +807,26 @@
                         }
 
                         if (flag.room.alphaSpawn.memory.warCreate.length > 0) {
-//                            flag.memory.module.push(['first', 1, 6]);
                             linkNum++;
                         }
+                        if (flag.room.stats.parts > 1000) {
+                            linkNum++;
+                        }
+                        if (flag.room.stats.parts > 1500) {
+                            //                            flag.room.memory.simple = false;
+                        }
+                        if (flag.room.stats.parts > 2500) {
+                        }
+                        if (flag.room.stats.parts > 3000) {
+                            flag.room.memory.simple = false; // This means that the linker becomes a dedicated link spot.
+                            linkNum++;
+
+                        }
+
                         if (flag.room.controller.ticksToDowngrade < 50000) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
                         }
-                        if (flag.room.storage.store[RESOURCE_ENERGY] > 900000) {
+                        if (flag.room.storage.store[RESOURCE_ENERGY] >= 850000) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
                         }
                         if (flag.room.stats.creepNumber > 10) {
@@ -841,33 +839,8 @@
                         if (flag.room.alphaSpawn.memory.roadsTo.length > 0) {
                             flag.memory.module.push(['homeDefender', 1, 7]);
                         }
-                        //                    console.log( flag.room.stats.parts,'parts',flag.room.name);
+flag.room.visual.text(linkNum+":🚗:"+flag.room.stats.parts, flag.pos.x, flag.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });                    
 
-                        if (flag.room.stats.parts > 1000) {
-                            linkNum++;
-                            //                          flag.memory.module.push(['first', 1, 6]);
-                        }
-                        if (flag.room.stats.parts > 1500) {
-                            //                            flag.room.memory.simple = false;
-                        }
-                        if (flag.room.stats.parts > 2500) {
-                            // Linker becomes specialized. Like other non simple.
-                        }
-                        if (flag.room.stats.parts > 3000) {
-                            flag.room.memory.simple = false; // This means that the linker becomes a dedicated link spot.
-                            //                            flag.memory.module.push(['scientist', 1, 6]);
-                            linkNum++;
-
-                        }
-                        /*     flag.room.memory.towers = [];
-
-                             towers = flag.room.find(FIND_MY_STRUCTURES);
-                             towers = _.filter(towers, function(o) {
-                                 return o.structureType == STRUCTURE_TOWER;
-                             });
-                             for (var i in towers) {
-                                 flag.room.memory.towers.push(towers[i].id);
-                             }*/
                         flag.memory.module.push(['linker', linkNum, 5]);
 
                     } else { adjustModule(flag); }
@@ -1377,10 +1350,10 @@
                                 if (testz2.length > 0 && testz2.length == testz3.length) {
                                     flag.remove();
                                 }
-                                var cara = _.filter(flag.room.find(FIND_CREEPS), function(o) {
+/*                                var cara = _.filter(flag.room.find(FIND_CREEPS), function(o) {
                                     return o.owner.username == 'Screeps';
-                                });
-                                if (testz2.length > 0 && cara.length === 0) {
+                                }); */
+                                if (testz2.length > 0) {
                                     for (var eae in flag.memory.party) {
                                         if (flag.memory.party[eae][1] > 0 && flag.memory.party[eae][0] !== 'thief') {
                                             flag.memory.party[eae][1] = 0;
@@ -1389,13 +1362,6 @@
                                             flag.memory.party[eae][1] = 2;
                                         }                                        
                                     }
-
-                                    _.map(flag.room.find(FIND_MY_CREEPS), function(o) {
-                                        if ((o.memory.role == 'fighter' || o.memory.role == 'mage') && o.memory.party == flag.name) {
-                                            o.memory.death = true;
-                                        }
-                                    });
-
                                 }
 
                             }

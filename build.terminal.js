@@ -1296,13 +1296,18 @@ function doTrap(roomname) {
     buyTrap = Game.rooms[roomname].memory.marketBuyTrap;
 
     for (var e in buyTrap) {
-        var orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: buyTrap[e], price: 0.01, roomName: roomname });
+        var trapPrice = 0.01;
+        if(buyTrap[e] === RESOURCE_ENERGY) {
+            trapPrice = 0.005;
+        }
+
+        var orders = Game.market.getAllOrders({ type: ORDER_BUY, resourceType: buyTrap[e], price:trapPrice, roomName: roomname });
         if (orders.length === 0) {
             // console.log('TRAP BUY@', roomname, 'W:', buyTrap[e], Game.shard.name, orders.length);
             //So if no buy orders, we'll setup an real cheap buy order.
             var amount = 10000;
             if (buyTrap[e] === RESOURCE_ENERGY) amount = 100000;
-            Game.market.createOrder(ORDER_BUY, buyTrap[e], 0.01, amount, roomname);
+            Game.market.createOrder(ORDER_BUY, buyTrap[e],trapPrice, amount, roomname);
 
         }
     }
@@ -1480,15 +1485,23 @@ class roleTerminal {
 
         if (roomName === main) {
             doTrap(roomName);
-/*            if (roomName === 'E38S72') {
+            if (roomName === 'E38S72') {
                 for (let e in terminal.store) {
                     if (e !== RESOURCE_ENERGY && terminal.store[e] > 10000) {
 
-                        terminal.send(e, 1250, 'E38S81', 'stuf');
+                        terminal.send(e, 2500, 'E38S81', 'stuf');
                         return;
                     }
                 }
-            } */
+                if(terminal.total > 290000) {
+                    if(Game.rooms.E38S81.terminal.total !== 300000){
+                        terminal.send(RESOURCE_ENERGY, 20000, 'E38S81', 'stuf');
+                    } else {
+                        tradeEnergy(Game.rooms[roomName].terminal);
+                    }
+                    return;
+                }
+            } 
             //          if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 21000 || Game.rooms[roomName].terminal.total === 300000) {
 
             //                 newTradeEnergy(Game.rooms[roomName].terminal);
@@ -1496,7 +1509,7 @@ class roleTerminal {
             //            }
             return;
         } else {
-            if (Game.rooms[main].terminal.total === 300000 && Game.rooms[roomName].terminal.total !== 300000) {
+            if (Game.rooms[main].terminal.full  && !Game.rooms[roomName].terminal.full) {
                 let amt;
                 if(Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 20000){
                    amt = Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] - 20000;
@@ -1506,7 +1519,7 @@ class roleTerminal {
                 Game.rooms[main].terminal.send('energy', amt, roomName);
                 return;
             }
-            if (Game.rooms[roomName].terminal.total === 300000 && Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 5000) {
+            if (Game.rooms[roomName].terminal.full && Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 5000) {
                 Game.rooms[roomName].terminal.send('energy', 5000, main);
                 return;
             }

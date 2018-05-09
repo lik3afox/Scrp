@@ -108,36 +108,41 @@ function banditAction(creep) {
     creep.memory.reportDeath = true;
 
     if (Game.flags[creep.memory.party] !== undefined) {
-        //   if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
-        creep.rangedMassAttack();
-        creep.smartHeal();
-        /*            good = creep.room.find(FIND_MY_CREEPS);
-                    good = _.filter(good, function(o) {
-                        return o.id !== creep.id && o.getActiveBodyparts(ATTACK) > 0 && o.memory.party === creep.memory.party;
-                    });
-                    if (good.length > 0) {
-                        if(creep.pos.isNearTo(good[0])){
-                            creep.move(creep.pos.getDirectionTo(good[0]));
-                        } else {
-                            
-                            creep.moveTo(good[0],{reusePath:50});
-                        }
+//        creep.rangedMassAttack();
+//        creep.smartHeal();
+        if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+            good = creep.room.find(FIND_MY_CREEPS);
+            good = _.filter(good, function(o) {
+                return o.memory.role === 'fighter';
+            });
+            if (good.length > 0) {
+                if (creep.pos.isNearTo(good[0])) {
+                    creep.move(creep.pos.getDirectionTo(good[0]));
+                } else {
 
-                        if ( creep.hits < creep.hitsMax ) {
-                            creep.selfHeal();
-                        } else {
-                            if(creep.pos.isNearTo(good[0])){                    
-                                creep.heal(good[0]);
-                            } else {
-                                creep.rangedHeal(good[0]);    
-                            }
+                    creep.moveTo(good[0], { reusePath: 50 });
+                }
 
+                if (creep.hits < creep.hitsMax) {
+                    creep.selfHeal();
+                } else {
+                    if (creep.pos.isNearTo(good[0])) {
+                        if(creep.heal(good[0])){
+                            creep.smartRangedAttack();
                         }
-                        return true;
+                    } else {
+                        if(creep.rangedHeal(good[0])){
+                            creep.rangedMassAttack();
+                        }
                     }
-        */
-        //        }
-        //movement.flagMovement(creep);
+
+                }
+                creep.memory.death = good[0].memory.death;
+                return true;
+            }
+
+        }
+        movement.flagMovement(creep);
     }
 }
 
@@ -211,14 +216,14 @@ class rangerClass extends roleParent {
 
         //creep.smartRangedAttack();
         //creep.smartHeal();
-//        creep.rangedMassAttack();
+        //        creep.rangedMassAttack();
         //creep.say(creep.memory.party);
         //creep.selfHeal();
-          //  if(creep.smartRangedAttack()) {
+        //  if(creep.smartRangedAttack()) {
         //  creep.selfHeal();
         //      }
-        if(!creep.smartHeal()) {
-           creep.smartRangedAttack();
+        if (!creep.smartHeal()) {
+            creep.smartRangedAttack();
         }
         /*
          else 
@@ -226,7 +231,7 @@ class rangerClass extends roleParent {
 
         if (creep.hits > creep.hitsMax - 100) {
             //movement.flagMovement(creep);
-                creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
+            creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
         } else {
             creep.runFrom(creep.partyFlag);
         }

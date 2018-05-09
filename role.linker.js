@@ -20,7 +20,7 @@ var classLevels = [
         MOVE, MOVE, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, CARRY, CARRY, CARRY, CARRY,
-    ], 
+    ],
 
     [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]
 ];
@@ -137,16 +137,12 @@ function linkTerminalStorageBalance(creep) {
     } else if (creep.carryTotal !== creep.carry[RESOURCE_ENERGY]) {
         creep.memory.empty = false;
     }
-
+    creep.say("trfn" + creep.memory.empty);
     if (creep.memory.empty) {
 
 
         creep.pickUpEnergy();
 
-        if (creep.room.memory.simple && job.doMineralContainer(creep)) {
-            creep.say('GMin');
-            return;
-        }
         let cc = Game.getObjectById(creep.room.memory.masterLinkID);
         if (cc !== null && cc.energy > 200 && creep.memory.roleID === 0) {
             if (creep.pos.isNearTo(cc)) {
@@ -178,19 +174,22 @@ function linkTerminalStorageBalance(creep) {
             return;
         }
         // Remove all minerals from storage.
+        //        if(creep.room.name == 'E38S72')
+        //        console.log('creep.room.terminal.full',);
         if (Game.shard.name !== 'shard1') {
-            if (creep.room.memory.simple && creep.room.controller !== undefined && creep.room.controller.level >= 6 && creep.room.storage.store[RESOURCE_ENERGY] !== creep.room.storage.total && creep.room.terminal !== undefined && creep.room.terminal.total !== 300000) {
+            //creep.room.memory.simple &&
+            if (creep.room.controller !== undefined && creep.room.controller.level >= 6 && creep.room.storage.store[RESOURCE_ENERGY] !== creep.room.storage.total && creep.room.terminal !== undefined && !creep.room.terminal.full) {
                 if (creep.pos.isNearTo(creep.room.storage)) {
                     for (let zz in creep.room.storage.store) {
                         if (zz !== RESOURCE_ENERGY) {
                             creep.withdraw(creep.room.storage, zz);
                             creep.say('mBal');
-                            return;
                         }
                     }
                 } else {
                     creep.moveTo(creep.room.storage);
                 }
+                return;
             }
         } else {
             if (creep.room.controller.level === 8 && manageStorageMinerals(creep)) {
@@ -200,7 +199,7 @@ function linkTerminalStorageBalance(creep) {
 
         }
         // Balancing
-        if (creep.room.controller !== undefined && creep.room.controller.level >= 6 && creep.room.storage.store[RESOURCE_ENERGY] < storageEnergyLimit && creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] > (21000 + creep.stats('carry'))) {
+        if (creep.room.controller !== undefined && creep.room.controller.level >= 6 && !creep.room.storage.full && creep.room.storage.store[RESOURCE_ENERGY] < storageEnergyLimit && creep.room.terminal !== undefined && creep.room.terminal.store[RESOURCE_ENERGY] > (21000 + creep.stats('carry'))) {
             if (creep.pos.isNearTo(creep.room.terminal)) {
                 creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
             } else {
@@ -229,13 +228,7 @@ function linkTerminalStorageBalance(creep) {
             return;
         }
         if (creep.saying === 'mBal') {
-            if (creep.room.terminal.total > 290000) {
-                if (creep.moveToTransfer(creep.room.storage, creep.carrying) !== OK)
-                    creep.say('mBal');
-            } else {
-                if (creep.moveToTransfer(creep.room.terminal, creep.carrying) !== OK)
-                    creep.say('mBal');
-            }
+            creep.moveToTransfer(creep.room.terminal, creep.carrying);
             return;
         }
 
@@ -377,7 +370,7 @@ class roleLinker extends roleParent {
 
         switch (creep.memory.roleID) {
             case 0:
-                //                checkJobs();
+
                 if (workers === 1) {
                     if (job.doBoostLab(creep)) {
                         break;
@@ -391,6 +384,11 @@ class roleLinker extends roleParent {
                     if (job.doPowerspawn(creep)) {
                         break;
                     }
+                    if (creep.room.memory.simple && job.doMineralContainer(creep)) {
+                        creep.say('GMin');
+                        return;
+                    }
+
                     linkTerminalStorageBalance(creep);
                     break;
                 }
@@ -406,6 +404,10 @@ class roleLinker extends roleParent {
                     break;
                 }
                 if (creep.room.memory.simple && job.doRefill(creep)) {
+                    return;
+                }
+                if (creep.room.memory.simple && job.doMineralContainer(creep)) {
+                    creep.say('GMin');
                     return;
                 }
                 linkTerminalStorageBalance(creep);
@@ -454,11 +456,20 @@ class roleLinker extends roleParent {
                     return;
                 }
 
-                creep.sleep(3);
+                if (creep.carryTotal !== creep.carryCapacity) {
+                    creep.moveToWithdraw(creep.room.storage, RESOURCE_ENERGY);
+                } else {
+                    creep.sleep(3);
+                }
 
                 break;
             default:
-                if (!job.doRoomEnergy(creep)) {
+                if (job.doRoomEnergy(creep)) {
+                    return;
+                }
+                if (creep.carryTotal !== creep.carryCapacity) {
+                    creep.moveToWithdraw(creep.room.storage, RESOURCE_ENERGY);
+                } else {
                     creep.sleep(3);
                 }
                 break;

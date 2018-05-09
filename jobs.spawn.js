@@ -110,7 +110,7 @@ class jobs {
         if (creep.room.memory.wallworkID === undefined) creep.room.memory.wallworkID = null;
         if(_.isNumber(creep.room.memory.wallworkID)) {
         	creep.room.memory.wallworkID --;
-        	creep.say(creep.room.memory.wallworkID+'xze' );
+//        	creep.say(creep.room.memory.wallworkID+'xze' );
         	if(creep.room.memory.wallworkID  > 0 ) return false;
         }
         var wall = Game.getObjectById(creep.room.memory.wallworkID);

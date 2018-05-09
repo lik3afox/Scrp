@@ -130,52 +130,6 @@ module.exports = function() {
         }
     });
 
-    /*
-     */
-    /*
-               if (creep.memory.stats !== undefined) return;
-
-               let wParts = _.filter(creep.body, { type: WORK }).length;
-               let mParts = _.filter(creep.body, { type: MOVE }).length;
-               let hParts = _.filter(creep.body, { type: HEAL }).length;
-               let rParts = _.filter(creep.body, { type: RANGED_ATTACK }).length;
-               let aParts = _.filter(creep.body, { type: ATTACK }).length;
-               let cParts = _.filter(creep.body, { type: CARRY }).length;
-               let cost = getCost(creep.body);
-               let stats = {
-                   //            birthTime: Game.time
-                   // === 0 ? undefined : wParts
-                   work: wParts,
-                   heal: hParts,
-                   carry: cParts,
-                   move: mParts,
-                   energyCost: cost,
-                   spawnTime: creep.body.length * 3,
-                   mining: wParts * 2,
-                   harvesting: wParts,
-                   attack: aParts * 30,
-                   build: wParts * 5,
-                   repair: wParts * 100,
-                   repairEnergy: wParts,
-                   upgrade: wParts,
-                   carryMax: cParts * 50,
-                   dismanle: wParts * 50,
-                   healMax: hParts * 12,
-                   rangeHeal: hParts * 4,
-                   massMax: rParts * 1,
-                   massMid: rParts * 4,
-                   massMin: rParts * 10,
-                   range: rParts * 10,
-                   recovery: mParts,
-                   fatigue: (creep.body.length - mParts),
-                   swamp: (creep.body.length - mParts) * 5,
-                   renewCost: Math.ceil(cost / 2.5 / creep.body.length),
-                   renewTime: Math.floor(600 / creep.body.length),
-
-                   level: creep.memory.level
-               };
-*/
-
 
     Object.defineProperty(Structure.prototype, "total", {
         configurable: true,
@@ -186,6 +140,12 @@ module.exports = function() {
                 this._storage_sum = _.sum(this.store);
                 return this._storage_sum;
             }
+        },
+    });
+    Object.defineProperty(Structure.prototype, "full", {
+        configurable: true,
+        get: function() {
+            return this.total === this.storeCapacity;
         },
     });
     Object.defineProperty(Tombstone.prototype, "total", {
@@ -851,166 +811,6 @@ module.exports = function() {
         return true;
     };
 
-    /*    Creep.prototype.killBase = function(options) {
-            //        if (this.hits !== this.hitsMax) return false;
-
-            if (this.room.controller !== undefined && this.room.controller.owner !== undefined && _.contains(fox.friends, this.room.controller.owner.username)) {
-                return;
-            }
-
-            var target = Game.getObjectById(this.partyFlag.memory.target);
-            if (target !== null) {
-                if (this.pos.isNearTo(target)) {
-                    this.attack(target);
-                    return;
-                } else {
-                    this.moveTo(target);
-                    let bads = this.pos.findInRange(FIND_STRUCTURES, 1);
-                    if (bads.length > 0) {
-                        this.attack(bads[0]);
-                    }
-                    return;
-                }
-                //            var font = { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT, backgroundColor: '#0F0F0F' };
-                //           this.room.visual.text(target.hits, this.pos.x + 1.5, this.pos.y, font);
-            }
-
-            if (this.room.controller !== undefined && this.room.controller.owner !== undefined &&
-
-                _.contains(fox.friends, this.room.controller.owner.username)) return false;
-            /*        if (this.memory.role == 'demolisher') {
-
-                    } 
-            var struc = this.room.find(FIND_STRUCTURES);
-
-            var site = this.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-            site = _.filter(site, function(o) {
-                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progress > 2000;
-            });
-            if (site.length > 0) {
-                var zzz = this.pos.findClosestByRange(site);
-                this.moveTo(zzz);
-                return;
-            }
-
-
-            if (this.memory.targetID === undefined) {
-                if (this.room.controller === undefined) {
-                    let test2 = _.filter(struc, function(o) {
-                        return o.structureType === STRUCTURE_WALL && o.structureType === STRUCTURE_ROAD && o.structureType === STRUCTURE_CONTAINER;
-                    });
-
-                    if (test2.length !== 0) {
-                        this.memory.targetID = this.pos.findClosestByRange(test2).id;
-                    }
-                } else if (this.room.controller !== undefined && this.room.controller.owner === 'undefined') {
-                    if (this.room.storage !== undefined && this.room.storage.pos.lookForStructure(STRUCTURE_RAMPART)) {
-                        this.memory.targetID = this.room.storage.id;
-                    } else if (this.room.terminal !== undefined && this.room.terminal.pos.lookForStructure(STRUCTURE_RAMPART)) {
-                        this.memory.targetID = this.room.terminal.id;
-                    }
-                } else if (this.room.controller !== undefined) {
-                    if (1 == 2 && this.room !== undefined && this.room.terminal !== undefined && this.room.terminal.pos.lookForStructure(STRUCTURE_RAMPART)) {
-                        //                    this.memory.targetID = this.room.terminal.id;
-                        var test2z = _.filter(struc, function(o) {
-                            return (!o.pos.lookForStructure(STRUCTURE_TERMINAL) && o.structureType == STRUCTURE_RAMPART);
-                        }); // This is something is not on a rampart
-                        if (test2z.length > 0) {
-                            this.memory.targetID = test2z[0].id;
-                        }
-                    } else {
-
-
-                        var filter = [STRUCTURE_WALL, STRUCTURE_ROAD, STRUCTURE_CONTROLLER, STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
-                        var test2 = _.filter(struc, function(o) {
-                            return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(filter, o.structureType);
-                        }); // This is something is not on a rampart
-
-                        if (test2.length !== 0) {
-                            this.memory.targetID = this.pos.findClosestByRange(test2).id;
-                        } else {
-                            filter = [STRUCTURE_WALL, STRUCTURE_CONTROLLER, STRUCTURE_CONTAINER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
-                            var test = _.filter(struc, function(o) {
-                                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(filter, o.structureType);
-                            });
-                            if (test.length !== 0) {
-                                this.memory.targetID = this.pos.findClosestByRange(test).id;
-                            } else {
-                                filter = [STRUCTURE_WALL, STRUCTURE_CONTROLLER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
-                                bads = _.filter(struc, function(o) {
-                                    return !_.contains(filter, o.structureType);
-                                }); // these are the ramparts
-                                if (bads.length > 0) {
-                                    this.memory.targetID = this.pos.findClosestByRange(bads).id;
-                                } else {
-                                    filter = [STRUCTURE_CONTROLLER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL];
-                                    bads = _.filter(struc, function(o) {
-                                        return !_.contains(filter, o.structureType);
-                                    }); // these are the ramparts
-                                    if (bads.length > 0) {
-                                        this.memory.targetID = this.pos.findClosestByRange(bads).id;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                } else {
-                    var tester2 = _.filter(this.room.find(FIND_STRUCTURES), function(o) {
-                        return o.structureType === STRUCTURE_ROAD && o.structureType === STRUCTURE_CONTAINER;
-                    }); // This is something is not on a rampart
-
-                    if (tester2.length !== 0) {
-                        this.memory.targetID = tester2[0].id;
-                    }
-                }
-
-
-
-            }
-            close = Game.getObjectById(this.memory.targetID);
-            //    this.say('blah'+this.memory.targetID);
-
-            if (close !== null) {
-                if (this.getActiveBodyparts(ATTACK) > 0) {
-                    if (this.pos.isNearTo(close)) {
-                        this.attack(close);
-                    } else {
-                        this.moveTo(close);
-                    }
-                    return true;
-
-                } else if (this.getActiveBodyparts(RANGED_ATTACK) > 0) {
-                    if (this.pos.inRangeTo(close, 3)) {
-                        this.rangedAttack(close);
-                    } else {
-                        this.moveTo(close);
-                    }
-                    return true;
-                } else {
-                    if (this.pos.isNearTo(close)) {
-                        this.dismantle(close);
-                    } else {
-                        this.moveTo(close);
-                    }
-                    return true;
-                }
-            } else {
-                this.memory.targetID = undefined;
-            }
-            return false;
-        };*/
-    /*
-        Creep.prototype.dragHealer = function(options) {
-            if (this.memory.healerID !== undefined) {
-                heal = Game.getObjectById(this.memory.healerID);
-                if (this.memory.healerID === null) {
-                    this.memory.healerID = undefined;
-                } else {
-                    this.move(heal.pos.getDirectionTo(this), options);
-                }
-            }
-        };*/
 
     Creep.prototype.runFrom = function(badguy, options) {
 
@@ -1031,93 +831,7 @@ module.exports = function() {
         } else {
             return false;
         }
-        //        }
-
-        /*    if (_.isArray(badguy)) {
-                let target = this.pos.findClosestByRange(badguy);
-                badguy = target;
-            }
-
-
-            //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
-            //this.move(this.pos.getDirectionTo(result.path[0]))
-            //        this.move(this.pos.getDirectionTo(result.path[0]));
-            var direction = this.pos.getDirectionTo(badguy);
-            direction = direction + 4;
-            if (direction > 8)
-                direction = direction - 8;
-            var moveStatus = this.move(direction, options);
-            this.say('><', true);
-            if(moveStatus === OK) return true;
-            return false;*/
     };
-    /*
-        Creep.prototype.runFrom = function(badguy, options) {
-
-            if (_.isArray(badguy)) {
-                let target = this.pos.findClosestByRange(badguy);
-                badguy = target;
-            }
-
-
-            //        var result = PathFinder.search(this.pos, { pos: badguy.pos, range: 3 }, { flee: true });
-
-            //this.move(this.pos.getDirectionTo(result.path[0]))
-            //        this.move(this.pos.getDirectionTo(result.path[0]));
-            var direction = this.pos.getDirectionTo(badguy);
-            direction = direction + 4;
-            if (direction > 8)
-                direction = direction - 8;
-            var moveStatus = this.move(direction, options);
-            this.memory.cachePath = undefined;
-            this.say('><', true);
-        };*/
-
-    /*    Spawn.prototype.deadCheck = function() {
-            // first off a spawn needs to have a memory check too make sure
-            // it wants to do this deadCheck
-            // Leveling rooms do not want this.
-            if (this.memory.deadCheck === undefined) {
-                if (this.room.name != 'E27S75') {
-                    this.memory.deadCheck = true;
-                } else {
-                    this.memory.deadCheck = false;
-                }
-            }
-            if (!this.memory.deadCheck) return;
-            if (this.spawning !== undefined) return;
-
-            if (this.room.energyAvailable < 300 && this.memory.totalCreep < 5 && this.room.controller.level >= 4) {
-                if (this.room.memory.roomFailure === undefined)
-                    this.room.memory.roomFailure = 0;
-                this.room.memory.roomFailure++;
-            } else {
-                this.room.memory.roomFailure = 0;
-            }
-
-
-            if (this.room.memory.roomFailure > 10000) {
-                let body = [MOVE, CARRY, CARRY, MOVE];
-                let name = 'Emergcy';
-                let mem = {
-                    role: 'first',
-                    home: this.room.name,
-                    parent: this.id,
-                    level: 1
-                };
-                let zz = this.spawnCreep(body, name, mem);
-                if (zz === 0) this.room.memory.roomFailure = -1500;
-
-            }
-
-            // If spawns haven't spawn in a while
-            // if creeps are less than 5
-            // spawn.memory.totalCreep
-
-
-        }; */
-
-    //    var fox = require('foxGlobals');
     Creep.prototype.sing = function(lyrics, public) {
         var word = _.indexOf(lyrics, this.saying) + 1;
         this.say(lyrics[word >= lyrics.length ? 0 : word], public);
@@ -1578,7 +1292,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
                 if (this.room.memory.exitPoints[this.memory.inter_room_exitTarget] !== undefined) {
                     var newz = new RoomPosition(this.room.memory.exitPoints[this.memory.inter_room_exitTarget].x, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].y, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].roomName);
-                    let zz = this.moveMe(newz); // Never needs to be segmented.
+                    let zz = this.moveMe(newz,move_opts); // Never needs to be segmented.
                     this.say('🚏' + zz);
                     return zz;
                 }

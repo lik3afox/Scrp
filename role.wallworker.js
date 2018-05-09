@@ -125,8 +125,8 @@ class roleWallWorker extends roleParent {
             } else {
                 creep.room.memory.spawnTargets = undefined;
                 creep.memory.constructionID = undefined;
-                let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-                if (strucs !== null) creep.memory.constructionID = strucs.id;
+            //    let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+              //  if (strucs !== null) creep.memory.constructionID = strucs.id;
             }
         } else {
            if( super.constr.moveToRepairWall(creep) ){

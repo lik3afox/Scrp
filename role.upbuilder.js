@@ -93,8 +93,8 @@ function getSpot(roomName) {
             return new RoomPosition(30, 39, roomName);
         case "E17S34":
             return new RoomPosition(17, 13, roomName);
-            //      case "E38S72":
-            //            return new RoomPosition(37, 37, roomName);
+                case "E38S72":
+                        return new RoomPosition(37, 37, roomName);
         case "E32S34":
             return new RoomPosition(40, 34, roomName);
         case "E18S46":
@@ -254,7 +254,7 @@ class roleUpbuilder extends roleParent {
 
         var strucs = Game.getObjectById(creep.memory.constructionID);
 
-        if (strucs !== null && creep.memory.isBoosted.length === 0) {
+        if (strucs !== null && creep.memory.isBoosted !== undefined && creep.memory.isBoosted.length === 0) {
             if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
                 creep.moveMe(strucs, { ignoreCreeps: true });
             }

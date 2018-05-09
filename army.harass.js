@@ -216,7 +216,7 @@ class roleGuard extends roleParent {
             creep.memory.death = true;
         }
         //          if(creep.room.name == 'E26S48')
-        //console.log( creep.room.controller.reservation.username);
+        console.log( creep.room.controller.reservation.username);
 
         let bads = getHostiles(creep);
         if (creep.room.name == 'E21S47') {

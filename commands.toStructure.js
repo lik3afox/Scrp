@@ -87,9 +87,14 @@ class StructureInteract {
                 creep.memory.tombStoneID = tombStone[0].id;
                 if (creep.pos.isNearTo(tombStone[0])) {
                     if (energy) {
-                        for (let e in tombStone[0].store) {
-                            creep.withdraw(tombStone, e);
+                        var keys = Object.keys(tombStone[0].store);
+                        var e = keys.length;
+                        var a;
+                        while (e--) {
+                            a = keys[e];
+                            creep.withdraw(tombStone, a);
                         }
+
                     } else {
                         for (let e in tombStone[0].store) {
                             if (e !== RESOURCE_ENERGY)
@@ -285,7 +290,7 @@ class StructureInteract {
             creep.say(creep.memory.repairCounter);
             if (creep.memory.repairCounter < 0) {
                 creep.memory.repairCounter = 75;
-                let str = creep.pos.findInRange(FIND_STRUCTURES,5);
+                let str = creep.pos.findInRange(FIND_STRUCTURES, 5);
                 let structs = _.filter(str,
                     function(object) {
                         return object.structureType == STRUCTURE_RAMPART && object.isPublic && object.hits < 1000000;
@@ -309,14 +314,14 @@ class StructureInteract {
                 if (creep.pos.inRangeTo(target, 3)) {
 
                     creep.cleanMe();
-                    if(creep.repair(target) == OK){
-                                    creep.memory.repairCounter--;
+                    if (creep.repair(target) == OK) {
+                        creep.memory.repairCounter--;
 
                     }
                     return true;
                 } else {
                     creep.moveMe(target, { ignoreCreeps: true, reusePath: 30 });
-                    
+
                     return false;
                 }
             } else {
