@@ -798,12 +798,12 @@ function runShardRoom(roomName) {
 }
 
 function makeBody(carryNeeded) {
-    if(carryNeeded > 50 ) carryNeeded = 50;
+    if (carryNeeded > 50) carryNeeded = 50;
     let body = [];
     do {
         body.push(MOVE);
         body.push(CARRY);
-        if(body.length >= 50) return body;
+        if (body.length >= 50) return body;
         carryNeeded--;
     } while (carryNeeded > 0);
     return body;
@@ -870,7 +870,7 @@ function doInstructions(instructions) {
                 };
                 if (current.mineralAmount > 0) {
                     alphaSpawn.memory.expandCreate.push(temp);
-//                    console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
+                    //                    console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
                 }
                 // So the issue here is that we need to notify that we're sending materials to shard.
                 current.mineralAmount -= temp.memory.pickup.mineralAmount;
@@ -911,7 +911,7 @@ function doInstructions(instructions) {
                             partyFlag = 'portal2';
                             break;
                     }
-                let parts = Math.ceil(current.mineralAmount / 50);
+                    let parts = Math.ceil(current.mineralAmount / 50);
                     let temp = {
                         build: makeBody(parts),
                         name: 'send' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
@@ -931,7 +931,7 @@ function doInstructions(instructions) {
                     // This is to limit the amount of mules made at one time to control transports a bit better.                
                     if (current.mineralAmount > 0) {
                         alphaSpawn.memory.expandCreate.push(temp);
-//                        console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
+                        //                        console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
                     }
                     current.mineralAmount -= temp.memory.pickup.mineralAmount;
                     if (current.mineralAmount <= 0) {
@@ -1020,35 +1020,26 @@ function getMarketPrices() {
     var minerals = [
         "H", "O", "U", "L", "K", "Z", "X", "G", "energy",
         "OH", "ZK", "UL",
-        "UH", "UO", "KH", "KO", "LH", "LO", "ZH", "ZO", "GH", "GO",
-        "UH2O", "UHO2", "KH2O", "KHO2", "LH2O", "LHO2", "ZH2O", "ZHO2", "GH2O", "GHO2",
+//        "UH", "UO", "KH", "KO", "LH", "LO", "ZH", "ZO", "GH", "GO",
+//        "UH2O", "UHO2", "KH2O", "KHO2", "LH2O", "LHO2", "ZH2O", "ZHO2", "GH2O", "GHO2",
         "XUH2O", "XUHO2", "XKH2O", "XKHO2", "XLH2O", "XLHO2", "XZH2O", "XZHO2", "XGH2O", "XGHO2",
     ];
+    var room = getShardRoom(Game.shard.name, min);
+    if (Game.rooms[room] === undefined || Game.rooms[room].terminal === undefined) {
+        console.log("how does this room:", room, "not have terminal", Game.shard.name, min);
+        return;
+    }
+
     for (var e in minerals) {
         let min = minerals[e];
-        var room = getShardRoom(Game.shard.name, min);
-        if (Game.rooms[room] === undefined || Game.rooms[room].terminal === undefined) {
-            console.log("how does this room:", room, "not have terminal", Game.shard.name, min);
-            continue;
-        }
         if ((Game.rooms[room].terminal.store[min] !== undefined)) {
             rtn[min] = {
-                //               buy: _.max(Game.market.getAllOrders({ type: ORDER_BUY, resourceType: min }), o => o.price),
-                //                sell: _.min(Game.market.getAllOrders({ type: ORDER_SELL, resourceType: min }), o => o.price),
                 buy: _.max(Game.market.getAllOrders(o => o.type === ORDER_BUY && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
                 sell: _.min(Game.market.getAllOrders(o => o.type === ORDER_SELL && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
             };
 
         }
-        /*else if (min === 'energy') {
-                   rtn[min] = {
-                       buy: _.max(Game.market.getAllOrders({ type: ORDER_BUY, resourceType: min }), o => o.price),
-                       sell: _.min(Game.market.getAllOrders({ type: ORDER_SELL, resourceType: min }), o => o.price),
-                   };
-               } */
-
     }
-
     return rtn;
 }
 
@@ -1461,7 +1452,7 @@ function analyzeShards(shardObject) {
         for (let e in requestMineral0) {
             //if (requestMineral0[e] > 0){
             if (requestMineral0[e] > 0) {
-//                console.log('delay for request0', e, requestMineral0[e]);
+                //                console.log('delay for request0', e, requestMineral0[e]);
                 requestMineral0[e]--;
             }
             //}
@@ -1533,7 +1524,7 @@ function analyzeShards(shardObject) {
         for (let e in requestMineral2) {
             //    if (requestMineral2[e] > 0){
             if (requestMineral2[e] > 0) {
-        //        console.log('delay for request2', e, requestMineral2[e]);
+                //        console.log('delay for request2', e, requestMineral2[e]);
                 requestMineral2[e]--;
             }
 
@@ -1541,7 +1532,7 @@ function analyzeShards(shardObject) {
         }
 
         for (let i in shardObject.shard2.request) {
-//            console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
+            //            console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
             if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000) {
                 continue;
             }
@@ -1616,10 +1607,7 @@ function getShardRoom(shard, min) {
 var instructionCache;
 
 function setInterShardData() {
-    //Memory.setInterShardData--;
-    //  if (Memory.setInterShardData < 0) {
-    //        Memory.setInterShardData = 100;
-    //   segmentChange--;
+
     var rawData = RawMemory.interShardSegment;
     var rawObject = JSON.parse(rawData);
 
@@ -1633,7 +1621,6 @@ function setInterShardData() {
         }
 
     }
-
     var shardObject = rawObject[Game.shard.name];
 
     if (rawObject[Game.shard.name] === undefined) {
@@ -1641,18 +1628,20 @@ function setInterShardData() {
 
         };
     }
+
     if (Game.shard.name === 'shard1') {
-        if (Game.time % 10 === 0 || rawObject[Game.shard.name] === undefined) {
+
+        if (Game.time % 500 === 0 || rawObject[Game.shard.name] === undefined) {
             rawObject[Game.shard.name] = {
                 marketData: getMarketPrices(),
             };
         }
         analyzeShards(rawObject);
-        analyzeMarkets(rawObject);
-        analyzeNeeds(rawObject);
+        analyzeMarkets(rawObject); //if (Game.time % 500 > 21) return;    	
+        analyzeNeeds(rawObject); //if (Game.time % 33 !== 0) return;
 
     } else if (Game.shard.name === 'shard0') {
-        if (Game.time % 10 === 0 || rawObject[Game.shard.name] === undefined) {
+        if (Game.time % 500 === 0 || rawObject[Game.shard.name] === undefined) {
             let sharData = runShardRoom('E38S72');
             rawObject[Game.shard.name] = {
                 request: sharData.needed, // needed
@@ -1662,7 +1651,7 @@ function setInterShardData() {
             };
         }
     } else if (Game.shard.name === 'shard2') {
-        if (Game.time % 10 === 0 || rawObject[Game.shard.name] === undefined) {
+        if (Game.time % 500 === 0 || rawObject[Game.shard.name] === undefined) {
             let sharData = runShardRoom('E19S49');
             rawObject[Game.shard.name] = {
                 request: sharData.needed, // needed
@@ -1672,6 +1661,7 @@ function setInterShardData() {
             };
         }
     }
+
     //instructions are added by analzyingShards, and each shard needs to go through instructions 
     doInstructions(rawObject.instructions);
 
@@ -1682,6 +1672,7 @@ function setInterShardData() {
 
 var spawnCount;
 module.exports.loop = blackMagic(function() {
+    var start = Game.cpu.getUsed();
     var _terminal = require('build.terminal');
     //    this._terminal = require('build.terminal');
     var flag = require('build.flags');
@@ -1698,11 +1689,18 @@ module.exports.loop = blackMagic(function() {
         require('prototype.global'),
         require('prototype.room')
     ];
+    //    var start = Game.cpu.getUsed();	
+    //   if (Game.shard.name === 'shard1')
+    //        console.log('nitalize,', Game.cpu.getUsed() - start);
+    start = Game.cpu.getUsed();
     doMemory();
     for (let i = 0, e = prototypes.length; i < e; i++) {
         prototypes[i]();
     }
     addCounters();
+    //    if (Game.shard.name === 'shard1')
+    //        console.log('Memory/Counter,', Game.cpu.getUsed() - start);
+    start = Game.cpu.getUsed();
 
     flag.run(spawnCount); // We do this part of the first stuff so we can go and find things in the flag rooms
 
@@ -1710,14 +1708,23 @@ module.exports.loop = blackMagic(function() {
         console.log('XXXX XXXXX 200 tick break after flag logic XXXX XXXX');
         return;
     }
+    if (Game.shard.name === 'shard1')
+        console.log('Flag Run,', Game.cpu.getUsed() - start);
+    start = Game.cpu.getUsed();
     spawnCount = addSpawnQuery(spawnsDo.runCreeps()); // This will not work with old counting.
     var spawnReport = {};
     //    console.log('it should do something here');
-    var seg = require('commands.toSegment');
     //    console.log(seg);
+    //    if (Game.shard.name === 'shard1')
+    //        console.log('runCreeps,', Game.cpu.getUsed() - start);
+    var seg = require('commands.toSegment');
+    start = Game.cpu.getUsed();
     seg.run();
     var title;
     Memory.stats.powerProcessed = 0;
+    //    if (Game.shard.name === 'shard1')
+    //        console.log('Segments,', Game.cpu.getUsed() - start);
+    start = Game.cpu.getUsed();
 
     for (title in Game.spawns) {
 
@@ -1739,11 +1746,7 @@ module.exports.loop = blackMagic(function() {
             }
             if (isTenTime === 0) {
                 if (Game.shard.name == 'shard1') {
-                    if (Game.spawns[title].room.memory.simple) {
-                        _terminal.runSimple(roomName);
-                    } else {
-                        _terminal.runTerminal(roomName);
-                    }
+                    _terminal.runSimple(roomName);
                 } else {
                     _terminal.offShardTerminalRun(roomName);
                 }
@@ -1782,7 +1785,7 @@ module.exports.loop = blackMagic(function() {
                     font: 0.5,
                     align: RIGHT
                 });
-                if(Game.spawns[title].spawning.remainingTime === 0) {
+                if (Game.spawns[title].spawning.remainingTime === 0) {
                     console.log('spawning ERROR ERROR here,', Game.spawns[title].pos.roomName);
                 }
 
@@ -1808,6 +1811,9 @@ module.exports.loop = blackMagic(function() {
             }
         }
     } // End of Spawns Loops
+    if (Game.shard.name === 'shard1')
+        console.log('SpawnLoop,', Game.cpu.getUsed() - start);
+    start = Game.cpu.getUsed();
 
     Memory.stats.rooms = spawnReport;
     if (isTenTime === 0) {
@@ -1816,13 +1822,24 @@ module.exports.loop = blackMagic(function() {
     if (Game.shard.name !== 'shard2') {
         memoryStatsUpdate();
     }
+    if (Game.shard.name === 'shard1')
+        console.log('terminal.run,', Game.cpu.getUsed() - start);
+    start = Game.cpu.getUsed();
+
 
     doUpgradeRooms();
     resetCounters();
     scanForRemoteSources();
     scanForCleanRoom();
-    consoleLogReport();
+    //    if (Game.shard.name === 'shard1')
+    //        console.log('Everything but,', Game.cpu.getUsed() - start);
+    start = Game.cpu.getUsed();
+
     setInterShardData();
+    if (Game.shard.name === 'shard1')
+        console.log('inerSEgments,', Game.cpu.getUsed() - start);
+    start = Game.cpu.getUsed();
+        consoleLogReport();
 
     //        cleanMemory();
 });

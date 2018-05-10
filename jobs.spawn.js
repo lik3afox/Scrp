@@ -107,7 +107,12 @@ class jobs {
 
     static doRefill(creep) {
         // Creeps that need refill - wallWorker
-        if (creep.room.memory.wallworkID === undefined) creep.room.memory.wallworkID = null;
+//        if (creep.room.memory.wallworkID === undefined) 
+        
+        if(creep.room.controller === undefined){
+        creep.room.memory.wallworkID = undefined;
+          return;  
+        } 
         if(_.isNumber(creep.room.memory.wallworkID)) {
         	creep.room.memory.wallworkID --;
 //        	creep.say(creep.room.memory.wallworkID+'xze' );
@@ -565,7 +570,6 @@ class jobs {
         console.log(creep, '@ doNuke', roomLink(creep.room.name));
         if (creep.carryTotal === 0) {
             if (nuke.energy < nuke.energyCapacity) {
-
                 if (creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
                     if (creep.pos.isNearTo(creep.room.storage)) {
                         creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
@@ -592,32 +596,13 @@ class jobs {
             }
 
         } else {
-            if (creep.carry.G > 0 && nuke.ghodium == nuke.ghodiumCapacity && nuke.energy == nuke.energyCapacity) {
-                if (creep.pos.isNearTo(creep.room.terminal)) {
-                    for (var a in creep.carry) {
-                        creep.transfer(creep.room.terminal, a);
-                    }
-                } else {
-                    creep.moveTo(creep.room.terminal);
-                }
 
-            } else if (creep.carry[RESOURCE_ENERGY] > 0 && nuke.energy == nuke.energyCapacity) {
-                if (creep.pos.isNearTo(creep.room.terminal)) {
-                    for (var z in creep.carry) {
-                        creep.transfer(creep.room.terminal, z);
-                    }
-                } else {
-                    creep.moveTo(creep.room.terminal);
-                }
-
+            if (creep.carrying === 'G' && nuke.ghodium == nuke.ghodiumCapacity) {
+                creep.moveToTransfer(creep.room.terminal,creep.carrying);
+            } else if (creep.carrying === RESOURCE_ENERGY &&  nuke.energy == nuke.energyCapacity) {
+                creep.moveToTransfer(creep.room.terminal,creep.carrying);
             } else {
-                if (creep.pos.isNearTo(nuke)) {
-                    for (var e in creep.carry) {
-                        creep.transfer(nuke, e);
-                    }
-                } else {
-                    creep.moveTo(nuke);
-                }
+                creep.moveToTransfer(nuke,creep.carrying);
             }
         }
     }
@@ -625,7 +610,7 @@ class jobs {
         var targetContain = Game.getObjectById(creep.room.memory.mineralContainID);
 
         var min = Game.getObjectById(creep.room.memory.mineralID);
-        if (targetContain === null || targetContain.total < 1000 || min === null || min.mineralAmount === 0) {
+        if (targetContain === null || targetContain.total < 1000 || min === null ) {
             return false;
         }
         //        console.log(creep, '@ doMinContain', roomLink(creep.room.name),targetContain);

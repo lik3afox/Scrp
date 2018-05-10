@@ -86,7 +86,7 @@ class roleNewDefender extends roleParent {
 
     static run(creep) {
         // So this guy will stay by his spawn
-        if (creep.memory.renewSpawnID === undefined && !creep.room.memory.simple && creep.room.alphaSpawn !== undefined) {
+        if (creep.memory.renewSpawnID === undefined &&  creep.room.alphaSpawn !== undefined) {
             creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
             var ccSpawn = require('commands.toSpawn');
             ccSpawn.newWantRenew(creep);

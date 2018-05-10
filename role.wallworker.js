@@ -61,7 +61,7 @@ class roleWallWorker extends roleParent {
 
     static run(creep) {
         if (super.baseRun(creep)) return;
-        if (creep.room.memory.simple && creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
+        if (creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
             if (creep.memory.boostNeeded === undefined) {
                 creep.memory.boostNeeded = ['LH'];
             }

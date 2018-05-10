@@ -153,7 +153,7 @@ class PowerInteract {
         if (theRoom.memory.powerbankID === undefined) {
             let find = theRoom.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
             if (find.length > 0)
-                theRoom.memory.powerbankID = find[0].id;
+                flag.memory.powerbankID = find[0].id;
             flag.memory.spawn = true;
         }
 
@@ -162,7 +162,7 @@ class PowerInteract {
         if (powerB === null) {
             theRoom.memory.powerbankID = undefined;
             flag.memory.spawn = false;
-            theRoom.memory.transSent = false;
+            flag.memory.transSent = false;
             let zz = flag.pos.findInRange(FIND_DROPPED_RESOURCES, 1);
             for (var e in flag.memory.party) {
                 flag.memory.party[e][1] = 0;
@@ -184,7 +184,7 @@ class PowerInteract {
                 }
             }
         }
-        let damageDone = theRoom.memory.powerHits - powerB.hits;
+        let damageDone = flag.memory.powerHits - powerB.hits;
         if (damageDone === 0) {
             //console.log('PowerBank targeted:',powerB.pos,"Est: none"+"/D:"+powerB.ticksToDecay," hp:",powerB.hits,'0');
             let msg = powerB.hits + "/" + powerB.ticksToDecay;
@@ -206,7 +206,7 @@ class PowerInteract {
         if (Game.shard.name !== 'shard1') {
             transportCall = 300000;
         }
-        if (powerB.hits < transportCall && !theRoom.memory.transSent) {
+        if (powerB.hits < transportCall && !flag.memory.transSent) {
 
             let carryAmount = 150;
             let boost = ['KH2O'];
@@ -246,10 +246,10 @@ class PowerInteract {
                 spawn.requestCreep(transport, spawnID);
                 numOfcreep--;
             } while (numOfcreep > 0);
-            theRoom.memory.transSent = true;
+            flag.memory.transSent = true;
 
         }
-        theRoom.memory.powerHits = powerB.hits;
+        flag.memory.powerHits = powerB.hits;
 
     }
 

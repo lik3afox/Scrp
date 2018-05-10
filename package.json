@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "grunt-contrib-jshint": "^1.1.0",
-    "grunt-screeps": "^1.4.0"
+    "grunt-screeps": "^1.4.0",
+    "screeps-profiler": "^2.0.1"
   }
 }
