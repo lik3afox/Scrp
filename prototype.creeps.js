@@ -224,6 +224,16 @@ module.exports = function() {
         return redFlags;
     };
 */
+    Creep.prototype.pickUpEverything = function() {
+        let zz = this.room.lookAtArea((this.pos.y - 1 < 0 ? 0 : this.pos.y - 1), (this.pos.x - 1 < 0 ? 0 : this.pos.x - 1), (this.pos.y + 1 > 49 ? 49 : this.pos.y + 1), (this.pos.x + 1 > 49 ? 49 : this.pos.x + 1), true);
+        for (var e in zz) {
+            if (zz[e].type == 'resource') {
+                if (this.pickup(zz[e].resource) == OK)
+                    return true;
+            }
+        }
+        return false;
+    };
 
     Creep.prototype.pickUpEnergy = function() {
         let zz = this.room.lookAtArea((this.pos.y - 1 < 0 ? 0 : this.pos.y - 1), (this.pos.x - 1 < 0 ? 0 : this.pos.x - 1), (this.pos.y + 1 > 49 ? 49 : this.pos.y + 1), (this.pos.x + 1 > 49 ? 49 : this.pos.x + 1), true);
@@ -1292,7 +1302,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
                 if (this.room.memory.exitPoints[this.memory.inter_room_exitTarget] !== undefined) {
                     var newz = new RoomPosition(this.room.memory.exitPoints[this.memory.inter_room_exitTarget].x, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].y, this.room.memory.exitPoints[this.memory.inter_room_exitTarget].roomName);
-                    let zz = this.moveMe(newz,move_opts); // Never needs to be segmented.
+                    let zz = this.moveMe(newz, move_opts); // Never needs to be segmented.
                     this.say('🚏' + zz);
                     return zz;
                 }

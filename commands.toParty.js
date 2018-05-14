@@ -204,6 +204,7 @@ function getSpawnCreating(flag) {
         //        if (flag.memory.spawn) return allParty.smartPowerParty;
         flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
         return flag.memory.musterRoom;
+
     }
 
     if (flag.memory.musterRoom != 'none') {
@@ -218,12 +219,13 @@ function getCurrentParty(flag) {
     if (flag.memory.party !== undefined) {
         return flag.memory.party;
     }
-    if (flag.name.substr(0, 5) == 'power') {
+    if (flag.memory.power || flag.name.substr(0, 5) == 'power') {
         flag.memory.power = true;
+        
         if (Game.shard.name === 'shard1' || Game.shard.name === 'shard2') {
-            if (flag.memory.spawn) return allParty.smarterPowerParty;
+            if (flag.memory.spawn === undefined || flag.memory.spawn) return allParty.smarterPowerParty;
         } else {
-            if (flag.memory.spawn) return allParty.smallPowerParty;
+            if (flag.memory.spawn === undefined || flag.memory.spawn) return allParty.smallPowerParty;
         }
     }
     if (flag.name == 'bandit') {
@@ -344,8 +346,6 @@ function findParty(flag, spawnCount) {
                 }
             }
         }
-        if (flag.name === 'getMinE25')
-            console.log(flag.name + " Party:" + currentParty[i][_name] + " Found:" + total[currentParty[i][_name]] + ':::@' + roomLink(flag.pos.roomName));
 
     }
 
@@ -412,7 +412,6 @@ class partyInteract {
                     }
                 }
             }
-//            console.log(flag,flag.memory.rallyFlag,totalParty );
             flag.memory.totalNumber = totalParty;
             if (flag.memory.squadLogic && totalParty > 0) {
                 if (rallied !== undefined && rallied.room !== undefined) {
@@ -420,7 +419,7 @@ class partyInteract {
                     crps = _.filter(crps, function(o) {
                         return o.memory.party == flag.name && o.memory.boostNeeded !== undefined && o.memory.boostNeeded.length === 0;
                     });
-                    console.log( crps.length);
+//                    console.log( crps.length);
                     //                rallied.room.visual.text("💥" + flag.memory.totalNumber, totalParty, crps.length, rallied.room, 'total# check', rallied.pos.x - 5.5, rallied.pos.y - 5.5, { color: 'green', font: 0.8 });
                     //                  rallied.room.visual.rect(rallied.pos.x - 5.5, rallied.pos.y - 5.5,
                     //                        11, 11, { fill: 'transparent', stroke: '#f00' });
@@ -590,6 +589,9 @@ if (flag.name.substr(0, 5) !== 'power') {
         for (var e in currentParty) {
 
             for (var i in totalParty) {
+//                if(flag.memory.power)
+//        console.log(flag,currentParty[e][_name],i,totalParty[i] , currentParty[e][_number]);
+
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
                     //Add to stack 
                     let rando = Math.floor(Math.random() * flag.name.length);
@@ -617,7 +619,7 @@ if (flag.name.substr(0, 5) !== 'power') {
                         }
                     };
 
-                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81' )) {
+                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81' ) ) {
                         var terminalStuff;
                         terminalStuff = 0;
                         let term = Game.rooms[home].terminal;
@@ -626,7 +628,7 @@ if (flag.name.substr(0, 5) !== 'power') {
                                 terminalStuff += term.store[eez];
                             }
                         }
-                        if (terminalStuff > 1250) {
+                        if (terminalStuff > 1250 && Game.rooms[home].energyAvailable === Game.rooms[home].energyCapacityAvailable) {
                             let toSpawn = require('commands.toSpawn');
                             toSpawn.addToWarStack(temp);
                             totalParty[i]++;

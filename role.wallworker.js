@@ -96,11 +96,11 @@ class roleWallWorker extends roleParent {
             return;
         }
 
-        var target = (creep.room.name == 'E29S48' || creep.room.name == 'E18S46') ? creep.room.storage : creep.room.terminal;
+        var target;// = (creep.room.name == 'E29S48' || creep.room.name == 'E18S46') ? creep.room.storage : creep.room.terminal;
         
-        if (creep.room.name == 'E11S47' || creep.room.name == 'E19S49'|| creep.room.name == 'E22S49') {
+  //      if (creep.room.name == 'E11S47' || creep.room.name == 'E19S49'|| creep.room.name == 'E22S49') {
             target = creep.room.storage;
-        }
+//        }
         if (creep.carry.energy > creep.carryCapacity - 50 && creep.pos.isNearTo(target)) {
             //  creep.memory.repair = true;
         } else if (creep.carry.energy < creep.stats('work')) {

@@ -69,7 +69,7 @@ class ContainerInteract {
 
         if (storage === undefined) return false;
 
-        if (storage.store[RESOURCE_ENERGY] === 0) {
+        if (storage.store[RESOURCE_ENERGY] === 0 || storage.store[RESOURCE_ENERGY] === undefined ) {
            return false;
         }
 

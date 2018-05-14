@@ -86,7 +86,7 @@ module.exports = function() {
     });
 
     Object.defineProperty(Room.prototype, 'towers', {
-        // Returns any(my/enemy) towers.
+        // To slow - do not do.
         configurable: true,
         get: function() {
             if (this._towers !== undefined) {
@@ -103,12 +103,12 @@ module.exports = function() {
         // Returns any(my/enemy) towers.
         configurable: true,
         get: function() {
-            if (this._spawns !== undefined) {
-                return this._spawns;
-            } else {
-                this._spawns = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_SPAWN });
-                return this._spawns;
-            }
+            
+                var spwns = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_SPAWN });
+                this.memory.spawns = [];
+                for(var e in spwns){
+                    this.memory.spawns.push(spwns[e].id);
+                }
 
         }
     });

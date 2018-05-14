@@ -125,13 +125,13 @@ function estimateDamageAndAttack(target, allies, towers) {
     if (damageTotal + currentLossHp < totalToughHp && toughParts > 0) {
         return false;
     }
-if(Game.shard.name == 'shard2')
-    console.log('est damage',toughParts, target, totalToughHp, damageTotal, damageTotal > totalToughHp);
+    if (Game.shard.name == 'shard2')
+        console.log('est damage', toughParts, target, totalToughHp, damageTotal, damageTotal > totalToughHp);
     target.room.visual.text(damageTotal, target.pos, { color: 'red', font: 0.8 });
     //    console.log(damageTotal, target.pos);
     var e;
     for (e in towers) {
-        console.log(towers[e].attack(target), 'focus fire @',target);
+        console.log(towers[e].attack(target), 'focus fire @', target);
     }
     for (e in allies) {
         if (allies[e].getActiveBodyparts(ATTACK) > 0) {
@@ -416,9 +416,8 @@ class roleTower {
         }
 
         towers = [];
-        for (var ea in room.memory.towers) {
-            var zz = Game.getObjectById(room.memory.towers[ea]);
-            if (zz !== null) towers.push(zz);
+        for(let e in room.memory.towers){
+            towers.push(Game.getObjectById(room.memory.towers[e]));
         }
 
         if (Memory.towerTarget !== 'none') {
@@ -433,29 +432,11 @@ class roleTower {
         }
 
         if (towers.length > 0) {
-            showTowerRange(towers);
+            //            showTowerRange(towers);
             var creeps = Game.rooms[roomName].find(FIND_CREEPS);
             var hostiles = _.filter(creeps, function(o) {
                 return !_.contains(fox.friends, o.owner.username);
             });
-            //        if(hostiles.length > 0) {
-            // Here we need to find a rampartFlag in the room
-            // IF we find one, we should look at the timer of how long it's been there.
-            //  spawn.room.createFlag(nearRampart[0].pos, named, COLOR_PURPLE);
-            /*            var named = 'rampartD' + roomName;
-                        let zz = Game.flags[named];
-                        if (zz !== undefined) { // Here we say if the attack has gone on for 500 ticks, we're not going to kill it
-                            // SO we should just repair and make it longer
-                            for (var bad in hostiles) {
-                                if (estimateDamageAndAttack(hostiles[bad], mycreeps, towers)) {
-                                    return;
-                                }
-                            }
-                            if (zz.memory.invaderTimed > 350) {
-                                repairRampart(towers);
-                            }
-                        } */
-            //      }
             var hurt = _.filter(creeps, function(thisCreep) {
                 return thisCreep.hits < thisCreep.hitsMax && _.contains(fox.friends, thisCreep.owner.username);
             });
@@ -468,12 +449,13 @@ class roleTower {
                     if (!defendRoom(towers, hostiles)) {}
                 }
             } else {
-
-                if (!defendRoom(towers, hostiles)) {
-                    if (!healRoom(towers, hurt)) {
-                        repairRoom(towers);
+                
+                    if (hostiles.length === 0 || !defendRoom(towers, hostiles)) {
+                        if (!healRoom(towers, hurt)) {
+                            repairRoom(towers);
+                        }
                     }
-                }
+                
             }
 
             if (hostiles.length > 0) {

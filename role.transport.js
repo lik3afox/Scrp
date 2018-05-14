@@ -215,12 +215,6 @@ function movement(creep) {
 
             creep.countDistance();
 
-            if(creep.memory.goal === '59f1a4ab82100e1594f3d4a9' && creep.room.name === 'E24S45'){
-                creep.moveTo(new RoomPosition(0,30,'E24S45'),{maxRooms:1});
-                return;
-
-            }
-
             if (Game.rooms[creep.memory.home].storage.total !== 1000000) {
 
                 creep.moveMe(Game.rooms[creep.memory.home].storage, {
@@ -381,6 +375,7 @@ class transport extends roleParent {
 
         empting = false;
         withdrawing = false;
+
         if (super.link.transfer(creep)) {
             if (creep.carry[RESOURCE_ENERGY] > 800) {
                 return;

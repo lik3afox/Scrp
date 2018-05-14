@@ -95,6 +95,8 @@ function getSpot(roomName) {
             return new RoomPosition(17, 13, roomName);
                 case "E38S72":
                         return new RoomPosition(37, 37, roomName);
+                case "E23S45":
+                        return new RoomPosition(26, 29, roomName);
         case "E32S34":
             return new RoomPosition(40, 34, roomName);
         case "E18S46":
@@ -152,7 +154,7 @@ class roleUpbuilder extends roleParent {
         //    }
 
         var doUpgrade = ['E29S48', 'E14S43']; //'E18S36','E23S42','E14S47','E14S37','E28S42',
-        var justgh = []; // 'E27S34'
+        var justgh = ['E23S45']; // 'E27S34'
         // && _.contains(doUpgrade, creep.room.name)
         if (Game.shard.name == 'shard1' && creep.ticksToLive === 1499 && (creep.memory.level === 8 || creep.memory.level === 4)) {
             boost = [];
@@ -164,7 +166,7 @@ class roleUpbuilder extends roleParent {
             }
             _.uniq(boost);
         }
-        if (_.contains(justgh, creep.room.name) && creep.ticksToLive === 1499 && creep.memory.level === 8 || creep.memory.level === 4) {
+        if (_.contains(justgh, creep.room.name) && creep.ticksToLive === 1499) {
             if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH > 85000) {
                 boost.push('GH');
             }

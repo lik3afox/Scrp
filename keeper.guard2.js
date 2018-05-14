@@ -29,7 +29,7 @@ var fox = require('foxGlobals');
 function getHostiles(creep, range) {
     if (creep.room.name !== creep.partyFlag.pos.roomName || creep.memory.keeperLair === undefined || creep.memory.keeperLair.length === 1) {
         range = 3;
-    } 
+    }
 
     let tgt = Game.getObjectById(creep.memory.playerTargetId);
     if (tgt !== null && tgt.owner.username !== 'Invader') {
@@ -37,9 +37,9 @@ function getHostiles(creep, range) {
     } else if (tgt !== null && tgt.owner.username === 'Invader') {
         let bads = creep.room.find(FIND_HOSTILE_CREEPS);
         bads = _.filter(bads, function(o) {
-            return !_.contains(fox.friends, o.owner.username) && o.pos.inRangeTo(creep,3);
+            return !_.contains(fox.friends, o.owner.username) && o.pos.inRangeTo(creep, 3);
         });
-        if(bads.length > 0) return bads;
+        if (bads.length > 0) return bads;
         return [tgt];
     } else {
         creep.memory.playerTargetId = undefined;
@@ -61,10 +61,10 @@ function getHostiles(creep, range) {
     let invader = _.filter(bads, function(o) {
         return o.owner.username === 'Invader';
     });
-    if(invader.length){
+    if (invader.length) {
         creep.memory.playerTargetId = invader[0].id;
         return invader;
-    } 
+    }
 
     if (bads.length && range === undefined) {
         let close = creep.pos.findClosestByRange(bads);
@@ -72,9 +72,9 @@ function getHostiles(creep, range) {
             creep.memory.playerTargetId = close.id;
         }
         return [close];
-    }else if( range !== undefined){
+    } else if (range !== undefined) {
         let close = creep.pos.findClosestByRange(bads);
-        if(close !== null && creep.pos.inRangeTo(close,range)){
+        if (close !== null && creep.pos.inRangeTo(close, range)) {
             return [close];
         } else {
             return [];
@@ -112,18 +112,18 @@ function attackCreep(creep, bads) {
             }
         }
     } else if (distance < 4) {
-//        var  = _.filter()
-    var heals = _.filter(bads, function(o) {
-        return o.getActiveBodyparts(HEAL) > 0;
-    });
-    if(heals.length > 0){
+        //        var  = _.filter()
+        var heals = _.filter(bads, function(o) {
+            return o.getActiveBodyparts(HEAL) > 0;
+        });
+        if (heals.length > 0) {
             creep.rangedMassAttack();
-    } else {
+        } else {
             creep.rangedAttack(enemy);
-    }
-    //    if (bads.length <= 2) {
-  //      } else {
-//        }
+        }
+        //    if (bads.length <= 2) {
+        //      } else {
+        //        }
         creep.selfHeal();
         creep.moveMe(enemy, { ignoreCreeps: true, maxRooms: 1 });
 
@@ -225,7 +225,7 @@ class roleGuard extends roleParent {
         }
 
 
-        if (creep.memory.home !== creep.partyFlag.memory.musterRoom) creep.memory.reportDeath = true;
+        //        if (creep.memory.home !== creep.partyFlag.memory.musterRoom) creep.memory.reportDeath = true;
 
         let bads;
         bads = getHostiles(creep);
@@ -255,12 +255,11 @@ class roleGuard extends roleParent {
                 }
                 creep.moveMe(creep.partyFlag, { reusePath: 50 });
             } else if (creep.hits === creep.hitsMax) {
-                creep.say('should SL');
-                if(creep.memory !== undefined && creep.memory.goTo !== undefined){
-                let gota = Game.getObjectById(creep.memory.keeperLair[creep.memory.goTo]);
-                if(gota !== null)
-                creep.sleep(gota.ticksToSpawn + Game.time - 1);
-        }
+                if (creep.memory !== undefined && creep.memory.keeperLair.length === 1) {
+                    let gota = Game.getObjectById(creep.memory.keeperLair[0]);
+                    if (gota !== null)
+                        creep.sleep(gota.ticksToSpawn + Game.time - 1);
+                }
             }
             return;
         }

@@ -646,7 +646,8 @@
             case COLOR_PURPLE:
                 // Purple will mean that it's setup for low CPU usage.
                 //                console.log(flag.memory.checkWhat);
-                if (flag.room !== undefined && Game.time % 100 === 0) {
+
+                if (flag.room !== undefined ) {
 
                     if (flag.room.controller.level === 8) {
                         flag.memory.module = [
@@ -688,9 +689,10 @@
                         if (flag.room.alphaSpawn.memory.roadsTo.length > 0) {
                             flag.memory.module.push(['homeDefender', 1, 7]);
                         }
-                        flag.room.visual.text(linkNum + ":🚗:" + flag.room.stats.parts, flag.pos.x, flag.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });
 
                         flag.memory.module.push(['linker', linkNum, 5]);
+        flag.room.visual.text(linkNum+":🚗:" + flag.room.stats.parts, flag.pos.x, flag.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });
+
                     }
 
                 } else { adjustModule(flag); }
@@ -801,12 +803,22 @@
 
             let zFlags = Game.flags;
             //_.filter(Game.flags, function(o) { return o.color != COLOR_GREY && o.color != COLOR_CYAN; });
+            /*
+            for (let a in Memory.flags) {
+                if (Game.flags[a] === undefined) {
+                    delete Memory.flags[a];
+                }
+            } */
+
+            //  }
+            //o.color != COLOR_WHITE
+            //           var e = zFlags.length;
             var flag;
             for (let i in zFlags) {
                 flag = zFlags[i];
-                if (flag.room === undefined && flag.color !== COLOR_BROWN) {
-                    console.log('flag room not there', roomLink(flag.pos.roomName));
-                }
+       //         if (flag.room === undefined && flag.color !== COLOR_BROWN) {
+//                    console.log('flag room not there', roomLink(flag.pos.roomName));
+         //       }
 
                 if (flag.name === 'nuke') {
 
@@ -951,6 +963,7 @@
                         rampartThings(flag);
                         break;
                     case COLOR_WHITE:
+                        //                        removeRA(flag);
                         break;
                     case COLOR_RED:
                         if (flag.room === undefined) {
@@ -963,6 +976,31 @@
                         break;
 
                     case COLOR_BROWN:
+                        if (flag.room !== undefined) {
+
+                            let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
+                            if (res.length > 0) {
+                                for (let ee in res) {
+                                    if (res[ee].structure !== undefined && res[ee].structureType !== STRUCTURE_CONTROLLER) {
+                                        flag.memory.target = res[ee].structure.id;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            let tgt = Game.getObjectById(flag.memory.target);
+
+                            if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
+                                flag.setPosition(tgt.pos);
+                            } else if (tgt === null) {
+                                flag.memory.target = undefined;
+                            }
+
+                            if (flag.memory.target === undefined || tgt === null) {
+                                findFlagTarget(flag);
+                            }
+                        }
+                        // Lets add some targets to next
                         break;
                     case COLOR_ORANGE: // This color is for squad running, leave empty due to it being to the creep.run role;
                         var squad;
@@ -973,6 +1011,40 @@
                             return o.memory.party === flag.name;
                         });
                         if (squad !== undefined && squad.length > 0) {
+                            if (squad.length === 1 && flag.room !== undefined) {
+                                /*
+                                let strucs = flag.room.find(FIND_STRUCTURES);
+
+                                var towers = _.filter(strucs, function(o) {
+                                    return o.structureType == STRUCTURE_TOWER && o.energy > 0;
+                                });
+                                var spawns = _.filter(strucs, function(o) {
+                                    return o.structureType == STRUCTURE_SPAWN;
+                                });
+                                var bads = squad[0].room.find(FIND_CREEPS);
+                                bads = _.filter(bads, function(o) {
+                                    return !_.contains(require('foxGlobals').friends, o.owner.username);
+                                });
+                                if (spawns.length === 0 && bads.length === 0) {
+                                    flag.memory.party = [
+                                        ['fighter', 2, 10]
+                                    ];
+                                }
+                                if (spawns.length === 0 && bads.length === 0 && towers.length === 0) {
+                                    flag.memory.party = [
+                                        ['fighter', 2, 10],
+
+                                    ];
+                                } */
+                                // Kill all structures not on rampart.                                 
+                                // Here we can analyze the room for changes in how squad is setup. 
+                                // If no spawns.
+                                // When do we determine if there is no more healing needed?
+                                // If no towers.
+                                // When do we determine if we need to start controller?
+                                // When room is uncontrolled we are done.
+
+                            }
                             require('commands.toSquad').runSquad(squad);
                         } else {
                             if (flag.memory.numberOfAttack === undefined) {
@@ -1082,7 +1154,19 @@
                         break;
 
                     case COLOR_BLUE:
-                    break;
+                        /*
+                                                let guard = flag;
+                                                if (guard.memory.guardCreateCount === undefined) {
+                                                    guard.memory.guardCreateCount = 0;
+                                                }
+
+                                                guard.memory.guardCreateCount--;
+                                                if (guard.memory.guardCreateCount < 0) {
+                                                    guard.memory.guardCreateCount = delayBetweenScan;
+                                                    require('commands.toGuard').create(flag);
+                                                }
+                                                break; 
+                        */
                     case COLOR_YELLOW:
                         // This will mean power flag if it's green/red.
                         let rally = flag;
@@ -1183,3 +1267,5 @@
     }
 
     module.exports = buildFlags;
+
+    // 11,14 E25S74

@@ -216,10 +216,10 @@ class engineerClass extends roleParent {
                 require('commands.toSpawn').newWantRenew(creep);
             }
 
-            var tw = creep.pos.isNearAny(creep.room.towers);
-            if (tw !== undefined) {
-                creep.transfer(tw, RESOURCE_ENERGY);
-            }
+//            var tw = creep.pos.isNearAny(creep.room.towers);
+  //          if (tw !== undefined) {
+    //            creep.transfer(tw, RESOURCE_ENERGY);
+      //      }
 
             if (creep.carry[RESOURCE_ENERGY] === 0) {
                 creep.memory.building = false;

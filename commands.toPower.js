@@ -137,6 +137,7 @@ class PowerInteract {
         return false;
     }
 
+
     static calcuate(flag) {
 
         var roomName = flag.pos.roomName;
@@ -152,9 +153,10 @@ class PowerInteract {
 
         if (theRoom.memory.powerbankID === undefined) {
             let find = theRoom.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_POWER_BANK });
-            if (find.length > 0)
-                flag.memory.powerbankID = find[0].id;
-            flag.memory.spawn = true;
+            if (find.length > 0) {
+                theRoom.memory.powerbankID = find[0].id;
+                flag.memory.spawn = true;
+            }
         }
 
         let powerB = Game.getObjectById(theRoom.memory.powerbankID);

@@ -429,8 +429,8 @@ function doRoomReport(room) {
         if (goods.length <= 1) {
             for (var i in goods) {
                 if (goods[i].memory.role == 'linker') {
-                    goods[i].memory.role = 'first';
-                    goods[i].memory.reportDeath = true;
+                    //      goods[i].memory.role = 'first';
+                    //    goods[i].memory.reportDeath = true;
                 } else if (goods[i].memory.role == 'homeDefender') {
                     goods[i].memory.death = true;
                 }
@@ -849,6 +849,16 @@ function doInstructions(instructions) {
             }
             let alphaSpawn = Game.rooms[roomCreate].alphaSpawn;
             //  console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
+            if (current.mineralAmount <= 0 || Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
+                console.log(current.mineralAmount, current.mineralType, ' and Spliced from instructions', Game.rooms[roomCreate].terminal.store[current.mineralType], roomCreate);
+                instructions.splice(i, 1);
+                continue;
+            }
+            if (current.mineralAmount < 500) {
+                console.log(current.mineralAmount, current.mineralType, ' to low and removed');
+                instructions.splice(i, 1);
+                continue;
+            }
 
             if (alphaSpawn.memory.expandCreate.length === 0) {
                 let parts = Math.ceil(current.mineralAmount / 50);
@@ -879,11 +889,6 @@ function doInstructions(instructions) {
             if (Game.rooms[roomCreate].terminal.store[current.mineralType] <= 1250) {
                 _terminal_().requestMineral(roomCreate, current.mineralType, 1250);
             }
-            if (current.mineralAmount <= 0 || Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
-
-                console.log(current.mineralAmount, current.mineralType, ' and Spliced from instructions', Game.rooms[roomCreate].terminal.store[current.mineralType], roomCreate);
-                instructions.splice(i, 1);
-            }
             continue;
         }
         if (shard === Game.shard.name) {
@@ -902,6 +907,11 @@ function doInstructions(instructions) {
 
                 if (alphaSpawn.memory.expandCreate.length === 0) {
                     //                    var temp = createSendCreep(current);
+                    if (current.mineralAmount <= 500) {
+                        console.log(' too low and spliced');
+                        instructions.splice(i, 1);
+                        continue;
+                    }
                     var partyFlag;
                     switch (Game.shard.name) {
                         case 'shard2':
@@ -1020,18 +1030,18 @@ function getMarketPrices() {
     var minerals = [
         "H", "O", "U", "L", "K", "Z", "X", "G", "energy",
         "OH", "ZK", "UL",
-//        "UH", "UO", "KH", "KO", "LH", "LO", "ZH", "ZO", "GH", "GO",
-//        "UH2O", "UHO2", "KH2O", "KHO2", "LH2O", "LHO2", "ZH2O", "ZHO2", "GH2O", "GHO2",
+        //        "UH", "UO", "KH", "KO", "LH", "LO", "ZH", "ZO", "GH", "GO",
+        //        "UH2O", "UHO2", "KH2O", "KHO2", "LH2O", "LHO2", "ZH2O", "ZHO2", "GH2O", "GHO2",
         "XUH2O", "XUHO2", "XKH2O", "XKHO2", "XLH2O", "XLHO2", "XZH2O", "XZHO2", "XGH2O", "XGHO2",
     ];
-    var room = getShardRoom(Game.shard.name, min);
-    if (Game.rooms[room] === undefined || Game.rooms[room].terminal === undefined) {
-        console.log("how does this room:", room, "not have terminal", Game.shard.name, min);
-        return;
-    }
+    /*    if (Game.rooms[room] === undefined || Game.rooms[room].terminal === undefined) {
+            console.log("how does this room:", room, "not have terminal", Game.shard.name, min);
+            return;
+        } */
 
     for (var e in minerals) {
         let min = minerals[e];
+        var room = getShardRoom(Game.shard.name, min);
         if ((Game.rooms[room].terminal.store[min] !== undefined)) {
             rtn[min] = {
                 buy: _.max(Game.market.getAllOrders(o => o.type === ORDER_BUY && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
@@ -1637,7 +1647,7 @@ function setInterShardData() {
             };
         }
         analyzeShards(rawObject);
-        analyzeMarkets(rawObject); //if (Game.time % 500 > 21) return;    	
+        analyzeMarkets(rawObject); //if (Game.time % 500 > 21) return;      
         analyzeNeeds(rawObject); //if (Game.time % 33 !== 0) return;
 
     } else if (Game.shard.name === 'shard0') {
@@ -1689,7 +1699,7 @@ module.exports.loop = blackMagic(function() {
         require('prototype.global'),
         require('prototype.room')
     ];
-    //    var start = Game.cpu.getUsed();	
+    //    var start = Game.cpu.getUsed();   
     //   if (Game.shard.name === 'shard1')
     //        console.log('nitalize,', Game.cpu.getUsed() - start);
     start = Game.cpu.getUsed();
@@ -1722,15 +1732,19 @@ module.exports.loop = blackMagic(function() {
     seg.run();
     var title;
     Memory.stats.powerProcessed = 0;
-    //    if (Game.shard.name === 'shard1')
-    //        console.log('Segments,', Game.cpu.getUsed() - start);
-    start = Game.cpu.getUsed();
 
+    //        if (Game.spawns[title].roomName == 'E24S33')
+    start = Game.cpu.getUsed();
+    console.log('****************************************');
+    var target = 'E24S33';
+    if (Game.flags.infoTarget !== undefined) {
+        target = Game.flags.infoTarget.pos.roomName;
+    }
     for (title in Game.spawns) {
+        var start2 = Game.cpu.getUsed();
 
         if (Game.spawns[title].memory.alphaSpawn) {
             //                      var constr = require('commands.toStructure');
-
             //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
             spawnsDo.checkBuild(Game.spawns[title]);
             doRoomReport(Game.spawns[title].room);
@@ -1744,6 +1758,7 @@ module.exports.loop = blackMagic(function() {
             } else {
                 observer.runRoom(roomName);
             }
+
             if (isTenTime === 0) {
                 if (Game.shard.name == 'shard1') {
                     _terminal.runSimple(roomName);
@@ -1751,32 +1766,43 @@ module.exports.loop = blackMagic(function() {
                     _terminal.offShardTerminalRun(roomName);
                 }
             }
-
         }
-
 
         if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
             //            doRoomVisual(Game.spawns[title].room);
-            rampartCheck(Game.spawns[title]);
-            if (Game.cpu.bucket > 1000) {
-                safemodeCheck(Game.spawns[title]);
-            }
             ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
 
             if (Game.spawns[title].memory.alphaSpawn) {
+                rampartCheck(Game.spawns[title]);
+
+                if (Game.cpu.bucket > 1000) {
+                    safemodeCheck(Game.spawns[title]);
+                }
+if(Game.spawns[title].pos.roomName === 'E18S36x') {
+console.log('************************************E18S36',Game.time%5===0,"Queries",Game.spawns[title].memory.create.length,Game.spawns[title].memory.warCreate.length,Game.spawns[title].memory.expandCreate.length);
+                if (Game.time%5 === 0 && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
+                    (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
+                    spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
+                }
+            Game.spawns[title].memory.totalParts = (spawnCount[Game.spawns[title].id].bodyCount * 3);
+            Game.spawns[title].memory.totalCreep = spawnCount[Game.spawns[title].id].total;
+
+console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>E18S36',Game.time%5===0,"Queries",Game.spawns[title].memory.create.length,Game.spawns[title].memory.warCreate.length,Game.spawns[title].memory.expandCreate.length);
+} else {
+
                 if (Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
                     spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
                 }
+}
             }
 
 
             if (Game.spawns[title].spawning === null) {
                 ccSpawn.createFromStack(Game.spawns[title]);
-                ccSpawn.newRenewCreep(Game.spawns[title].pos.roomName);
+//                ccSpawn.newRenewCreep(Game.spawns[title].pos.roomName);
             } else {
-                //                Game.spawns[title].memory.lastSpawn = 0;
-                Game.spawns[title].spawning.setDirections(Game.spawns[title].memory.spawnDir);
+//            	console.log(Game.spawns[title].spawning.directions);
                 let spawn = Game.spawns[title];
                 spawn.room.visual.text("🔧" + spawn.spawning.name, spawn.pos.x + 1, spawn.pos.y, {
                     color: '#97c39a ',
@@ -1788,9 +1814,7 @@ module.exports.loop = blackMagic(function() {
                 if (Game.spawns[title].spawning.remainingTime === 0) {
                     console.log('spawning ERROR ERROR here,', Game.spawns[title].pos.roomName);
                 }
-
             }
-
             if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
                 let spawn = Game.spawns[title];
                 let spawnStats = {
@@ -1810,7 +1834,13 @@ module.exports.loop = blackMagic(function() {
                 spawnReport[Game.spawns[title].room.name] = spawnStats;
             }
         }
+
+        if (Game.spawns[title].pos.roomName == target)
+            console.log('Last report using start2,', Game.cpu.getUsed() - start2);
+
+
     } // End of Spawns Loops
+    console.log('****************************************');
     if (Game.shard.name === 'shard1')
         console.log('SpawnLoop,', Game.cpu.getUsed() - start);
     start = Game.cpu.getUsed();
@@ -1833,13 +1863,13 @@ module.exports.loop = blackMagic(function() {
     scanForCleanRoom();
     //    if (Game.shard.name === 'shard1')
     //        console.log('Everything but,', Game.cpu.getUsed() - start);
-    start = Game.cpu.getUsed();
+//    start = Game.cpu.getUsed();
 
     setInterShardData();
-    if (Game.shard.name === 'shard1')
-        console.log('inerSEgments,', Game.cpu.getUsed() - start);
-    start = Game.cpu.getUsed();
-        consoleLogReport();
+//    if (Game.shard.name === 'shard1')
+      //  console.log('inerSEgments,', Game.cpu.getUsed() - start);
+    //start = Game.cpu.getUsed();
+  //  consoleLogReport();
 
     //        cleanMemory();
 });

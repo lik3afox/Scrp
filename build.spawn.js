@@ -9,7 +9,7 @@ var transportLevel = 20000;
 
 
 var allModule = [
-//    ['squire', require('role.squire')],
+    //    ['squire', require('role.squire')],
     ['harass', require('army.harass')],
     ['assistant', require('role.assistant')],
     ['troll', require('army.troll')],
@@ -43,8 +43,8 @@ var allModule = [
     ['linker', require('role.linker')],
     ['first', require('role.first')], // Should never have more firsts than containers...maybe..mmmm
     ['scientist', require('role.scientist')],
-//    ['nuker', require('role.nuker')],
-//    ['tower', require('role.tower')],
+    //    ['nuker', require('role.nuker')],
+    //    ['tower', require('role.tower')],
 
     ['harvester', require('role.harvester')],
     ['transport', require('role.transport')], // Gather and move - just carry 
@@ -287,9 +287,9 @@ class theSpawn {
         if (spawnCount !== undefined) {
             totalCreeps = spawnCount[spawn.id];
             spawn.memory.totalParts = (spawnCount[spawn.id].bodyCount * 3);
-            spawn._totalParts = (spawnCount[spawn.id].bodyCount * 3);
+  //          spawn._totalParts = (spawnCount[spawn.id].bodyCount * 3);
             spawn.memory.totalCreep = spawnCount[spawn.id].total;
-            spawn._totalCreep = (spawnCount[spawn.id].bodyCount * 3);
+//            spawn._totalCreep = (spawnCount[spawn.id].bodyCount * 3);
         }
 
         // Flag Module Check Add Module.
@@ -301,15 +301,17 @@ class theSpawn {
             var alertProhib = ['minHarvest', 'assistant'];
             if (currentModule[type][_number] === 0) {
                 // No count so don't count.
-            } else if(currentModule[type][_name] == 'wallworker' && Game.rooms[creep.room.name].memory.weakestWall !== undefined && Game.rooms[creep.room.name].memory.weakestWall > 299000000){
-console.log('room has "max" walls!',spawn.room.name);  
-            }else if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
+            } else if (currentModule[type][_name] == 'wallworker' && Game.rooms[creep.room.name].memory.weakestWall !== undefined && Game.rooms[creep.room.name].memory.weakestWall > 299000000) {
+                console.log('room has "max" walls!', spawn.room.name);
+            } else if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
 
-            } else /*if ((currentModule[type][_name] == 'nukered') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
+            } else
+                /*if ((currentModule[type][_name] == 'nukered') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
 
-            } else*/ if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
+                           } else*/
+                if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
 
-            } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
+                } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
 
             } else {
                 if (totalCreeps[currentModule[type][_name]] === undefined) {
@@ -449,7 +451,7 @@ console.log('room has "max" walls!',spawn.room.name);
                                 break;
                             case 'controller':
 
-                                if (remoteInfo.controller !== undefined &&( source.energyCapacity === 3000||source.energyCapacity === 1500 ) ) {
+                                if (remoteInfo.controller !== undefined && (source.energyCapacity === 3000 || source.energyCapacity === 1500)) {
 
                                     var level;
                                     let controlLeft = source.room.controller;
