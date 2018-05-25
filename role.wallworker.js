@@ -61,19 +61,21 @@ class roleWallWorker extends roleParent {
 
     static run(creep) {
         if (super.baseRun(creep)) return;
-        if (creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
+/*        if (creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
             if (creep.memory.boostNeeded === undefined) {
                 creep.memory.boostNeeded = ['LH'];
             }
             require('role.upbuilder').run(creep);
             return;
-        } else if (Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
+        } else 
+        if (Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
             require('role.upbuilder').run(creep);
             return;
         } else if (Game.shard.name == 'shard2' && creep.ticksToLive > 1450) {
             require('role.upbuilder').run(creep);
             return;
-        } else if (Game.shard.name == 'shard1' && creep.ticksToLive > 1300 && creep.room.controller !== undefined && creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 10000) {
+        } else */
+        if (Game.shard.name == 'shard1' && creep.ticksToLive > 1300 && creep.room.controller !== undefined && creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 10000) {
             creep.memory.role = 'upbuilder';
             creep.memory.reportDeath = true;
             return;
@@ -84,11 +86,12 @@ class roleWallWorker extends roleParent {
             boost.push('XLH2O');
             _.uniq(boost);
         }
+        /*
         if (creep.room.name === 'E1S11' || creep.room.name === 'E2S24' ) {
             if (super.boosted(creep, ['XLH2O'])) {
                 return;
             }
-        }
+        } */
 
         if (creep.ticksToLive > 1400 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
             creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
@@ -120,7 +123,7 @@ class roleWallWorker extends roleParent {
             var strucs = Game.getObjectById(creep.memory.constructionID);
             if (strucs !== null) {
                 if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(strucs, { reusePath: 15 });
+                    creep.moveMe(strucs, { reusePath: 15 });
                 }
             } else {
                 creep.room.memory.spawnTargets = undefined;

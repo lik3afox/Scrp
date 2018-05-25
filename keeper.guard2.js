@@ -260,6 +260,13 @@ class roleGuard extends roleParent {
                     if (gota !== null)
                         creep.sleep(gota.ticksToSpawn + Game.time - 1);
                 }
+            } else {
+                let gota = Game.getObjectById(creep.memory.keeperLair[0]);
+                if (gota !== null && gota.ticksToSpawn !== undefined) {
+                    if(creep.ticksToLive < gota.ticksToSpawn){
+                        creep.suicide();
+                    }
+                }
             }
             return;
         }

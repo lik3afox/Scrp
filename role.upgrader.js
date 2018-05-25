@@ -41,14 +41,10 @@ function doUpgradeIn(creep) {
     var pos;
 
     switch (creep.pos.roomName) {
-        case "E2S24":
+        case "E27S55":
             pos = [
-//                new RoomPosition(31, 22, creep.room.name),
-                new RoomPosition(39, 36, creep.room.name),
-                new RoomPosition(40, 35, creep.room.name),
-                new RoomPosition(40, 34, creep.room.name),
-                new RoomPosition(40, 33, creep.room.name),
-                new RoomPosition(39, 33, creep.room.name),
+                new RoomPosition(27, 30, creep.room.name),
+                new RoomPosition(29, 30, creep.room.name),
 ///                new RoomPosition(31, 22, creep.room.name),
 //                new RoomPosition(31, 21, creep.room.name),
             ];

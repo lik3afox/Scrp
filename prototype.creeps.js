@@ -148,6 +148,14 @@ module.exports = function() {
             return this.total === this.storeCapacity;
         },
     });
+    Object.defineProperty(Structure.prototype, "storing", {
+        configurable: true,
+        get: function() {
+            for(var i in this.store){
+                if(this.store[i]> 0) return i;
+            }
+        },
+    });
     Object.defineProperty(Tombstone.prototype, "total", {
         configurable: true,
         get: function() {
@@ -336,11 +344,21 @@ module.exports = function() {
         if (this.memory.pickUpId === undefined) {
             if (amount === undefined) amount = 0;
             if (FIND === FIND_DROPPED_RESOURCES) {
-                close = _.max(this.room.find(FIND, {
-                    filter: function(object) {
-                        return object.amount > amount; //&& object.resourceType !== 'energy'
-                    }
-                }), o => o.amount);
+                if (this.memory.role === 'linker' && this.room !== undefined) {
+                    //                    console.log(.name);
+                    close = _.max(this.room.find(FIND, {
+                        filter: function(object) {
+                            console.log(object.pos.roomName);
+                            return object.amount > amount && !object.pos.isEqualTo(Game.flags[object.pos.roomName]);
+                        }
+                    }), o => o.amount);
+                } else {
+                    close = _.max(this.room.find(FIND, {
+                        filter: function(object) {
+                            return object.amount > amount; //&& object.resourceType !== 'energy'
+                        }
+                    }), o => o.amount);
+                }
             } else {
                 close = this.pos.findClosestByRange(FIND, {
                     filter: function(object) {
@@ -433,7 +451,7 @@ module.exports = function() {
                 });
             }
         } else {
-            this.moveTo(source, { maxRooms: 1, reusePath: 50, ignoreCreeps: true });
+            this.moveMe(source, { maxRooms: 1, reusePath: 50, ignoreCreeps: true });
         }
 
         return true;
@@ -1411,6 +1429,10 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 this.memory._move.time = this.memory._move.time + 1;
             return;
         }
+        if (this.memory.stopMoving !== undefined) {
+            this.memory.stopMoving = undefined;
+            return;
+        }
 
         if (xxx !== undefined) {
             target = new RoomPosition(target, options, this.room.name);
@@ -1757,9 +1779,9 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                                     if (ret.sq > aggro_radius) {
                                         break;
                                     } else if (ret.sq === aggro_radius) {
-                                        aggro_cost = 10;
+                                        aggro_cost = 20;
                                     } else {
-                                        aggro_cost = 10;
+                                        aggro_cost = 20;
                                     }
                                     tar_x = c.pos.x + ret.x;
                                     tar_y = c.pos.y + ret.y;

@@ -22,7 +22,7 @@ var classLevels = [
     //6 3400/48
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
     //7 4000/50    
-    [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,  MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,CARRY, MOVE,],
+    [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, ],
 
     {
         body: [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
@@ -151,17 +151,38 @@ class mineralRole extends roleParent {
 
 
         } else if (!creep.pos.isNearTo(_source)) {
-                if (!super.guardRoom(creep)) {
-                    creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep), {
-                        reusePath: 49,
-                        segment: true,
-                        useSKPathing: true,
-                        //                    visualizePathStyle: visPath
-                    });
-                }
+  //          if (!super.guardRoom(creep)) {
+                creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep), {
+                    reusePath: 49,
+                    segment: true,
+                    useSKPathing: true,
+                    //                    visualizePathStyle: visPath
+                });
+//            }
         } else {
             // First he mines and fill up.
             if (creep.memory.mining) {
+
+                let gota = Game.getObjectById(creep.memory.keeperLairID);
+                if (gota !== null && gota.ticksToSpawn === undefined) {
+
+                    let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+                    badz = _.filter(badz, function(object) {
+                        return object.owner.username === 'Invader' && object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(RANGED_ATTACK) > 0;
+                    });
+                    if (badz.length > 0) {
+                        if(creep.pos.getRangeTo( badz[0] ) >= 4 ) {
+
+                        } else {
+                            creep.runFrom(badz[0]);
+                            creep.say('AHHHHH');
+                        }
+                        return;
+                    }
+                }
+
+
+
                 if (_source !== null && _source.mineralAmount === 0) creep.memory.goHome = true;
 
                 if (creep.pos.isNearTo(_source)) {

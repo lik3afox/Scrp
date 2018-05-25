@@ -463,21 +463,21 @@ function consoleLogReport() {
     let endColor = '</a>';
     let shard = Game.shard.name;
     let segmentNumUsed = Memory.shardNeed.length;
-    segmentNumUsed = JSON.stringify(segmentNumUsed).padStart(2, "0");
+    //segmentNumUsed = JSON.stringify(segmentNumUsed).padStart(2, "0");
     let powerProcessed = Memory.stats.powerProcessed;
     if (powerProcessed === undefined) powerProcessed = 0;
     let segmentsUsed = report;
     let gameTime = Game.time;
-    gameTime = JSON.stringify(gameTime).padStart(8, "0");
+  //  gameTime = JSON.stringify(gameTime).padStart(8, "0");
     let creepTotal = Memory.creepTotal;
-    creepTotal = JSON.stringify(creepTotal).padStart(3, "0");
+//    creepTotal = JSON.stringify(creepTotal).padStart(3, "0");
     //let cpuUsed = dif;
     let cpuLimit = Game.cpu.limit;
-    cpuLimit = JSON.stringify(cpuLimit).padStart(3, "0");
+    //cpuLimit = JSON.stringify(cpuLimit).padStart(3, "0");
     let cpuCeil = Game.cpu.tickLimit;
-    cpuCeil = JSON.stringify(cpuCeil).padStart(3, "0");
+  //  cpuCeil = JSON.stringify(cpuCeil).padStart(3, "0");
     let cpuBucket = Game.cpu.bucket;
-    cpuBucket = JSON.stringify(cpuBucket).padStart(5, "0");
+//    cpuBucket = JSON.stringify(cpuBucket).padStart(5, "0");
     let filler = "###" + Game.shard.name + "###";
     switch (Game.shard.name) {
         case "shard0":
@@ -724,11 +724,13 @@ function doMemory() {
 
 }
 var ticksInARow;
+//const profiler = require('screeps-profiler');
 
 function blackMagic(fn) {
     let memory;
     let tick;
     return () => {
+    // Main.js logic should go here.
 
         if (tick && tick + 1 === Game.time && memory) {
             delete global.Memory;
@@ -908,7 +910,7 @@ function doInstructions(instructions) {
                 if (alphaSpawn.memory.expandCreate.length === 0) {
                     //                    var temp = createSendCreep(current);
                     if (current.mineralAmount <= 500) {
-                        console.log(' too low and spliced');
+                        console.log(' too low and spliced',current.mineralAmount,current.mineralType);
                         instructions.splice(i, 1);
                         continue;
                     }
@@ -1401,7 +1403,7 @@ function analyzeMarkets(shardObject) {
                     }
                     //if(estimateProfit>100 )
                     console.log(rating + '@', min, "#", amnt, ' EST Profit:', estimateProfit.toFixed(2), "Energy Est:", total, "*", energyHigh + "(eng avg)  Est Cred=", estimateTransferCreditCost.toFixed(2), "Gain from selling", estimateGain.toFixed(2));
-                    if (estimateProfit > 200) {
+                    if (estimateProfit > 175) {
                         if (bestDeal === undefined) {
                             bestDeal = {
                                 req: request,
@@ -1493,17 +1495,17 @@ function analyzeShards(shardObject) {
             }
             if (requestMineral0[request.mineralType] === undefined) requestMineral0[request.mineralType] = 0;
             if (requestMineral0[request.mineralType] > 0) doRequest = false;
+            if( request.mineralAmount < 500  )doRequest = false;
 
             if (doRequest) {
                 requestMineral0[request.mineralType] = 1000;
                 shardObject.instructions.push(request);
-                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length);
+                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length,request.mineralType,request.mineralAmount);
             }
 
         }
         for (let i in shardObject.shard0.sending) {
             //            console.log('shard0 sending out', shardObject.shard0.sending[i].mineralType, ":", shardObject.shard0.sending[i].mineralAmount, shardObject.shard0.shardRoom);
-
 
             let request = {
                 type: 'send',
@@ -1519,10 +1521,11 @@ function analyzeShards(shardObject) {
                     break;
                 }
             }
+            if( request.mineralAmount < 500  )doRequest = false;
 
             if (doRequest) {
                 shardObject.instructions.push(request);
-                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length);
+                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length,request.mineralType,request.mineralAmount);
             }
         }
     }
@@ -1543,7 +1546,7 @@ function analyzeShards(shardObject) {
 
         for (let i in shardObject.shard2.request) {
             //            console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
-            if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000) {
+            if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000 || shardObject.shard2.request[i].mineralAmount < 500) {
                 continue;
             }
             let request = {
@@ -1568,12 +1571,16 @@ function analyzeShards(shardObject) {
             if (doRequest) {
                 requestMineral2[request.mineralType] = 1000;
                 shardObject.instructions.push(request);
-                console.log(' SHard 2 adding to isntructions', shardObject.instructions.length);
+                console.log(' SHard 2 adding to isntructions', shardObject.instructions.length,request.mineralType,request.mineralAmount);
             }
 
         }
         for (let i in shardObject.shard2.sending) {
             //       console.log('shard2 sending out', shardObject.shard2.sending[i].mineralType, ":", shardObject.shard2.sending[i].mineralAmount, shardObject.shard2.shardRoom);
+            if(shardObject.shard2.sending[i].mineralAmount < 500){
+                continue;
+            }
+
             let request = {
                 type: 'send',
                 shard: 'shard2',
@@ -1591,7 +1598,7 @@ function analyzeShards(shardObject) {
             }
             if (doRequest) {
                 shardObject.instructions.push(request);
-                console.log(' SHard 2 adding to isntructions', shardObject.instructions.length);
+                console.log(' SHaRd 2 adding to isntructions', shardObject.instructions.length,request.mineralType,request.mineralAmount);
             }
         }
     }
@@ -1682,7 +1689,10 @@ function setInterShardData() {
 
 var spawnCount;
 module.exports.loop = blackMagic(function() {
-    var start = Game.cpu.getUsed();
+
+//profiler.enable();
+// profiler.wrap(function() {
+
     var _terminal = require('build.terminal');
     //    this._terminal = require('build.terminal');
     var flag = require('build.flags');
@@ -1699,18 +1709,11 @@ module.exports.loop = blackMagic(function() {
         require('prototype.global'),
         require('prototype.room')
     ];
-    //    var start = Game.cpu.getUsed();   
-    //   if (Game.shard.name === 'shard1')
-    //        console.log('nitalize,', Game.cpu.getUsed() - start);
-    start = Game.cpu.getUsed();
     doMemory();
     for (let i = 0, e = prototypes.length; i < e; i++) {
         prototypes[i]();
     }
     addCounters();
-    //    if (Game.shard.name === 'shard1')
-    //        console.log('Memory/Counter,', Game.cpu.getUsed() - start);
-    start = Game.cpu.getUsed();
 
     flag.run(spawnCount); // We do this part of the first stuff so we can go and find things in the flag rooms
 
@@ -1718,30 +1721,16 @@ module.exports.loop = blackMagic(function() {
         console.log('XXXX XXXXX 200 tick break after flag logic XXXX XXXX');
         return;
     }
-    if (Game.shard.name === 'shard1')
-        console.log('Flag Run,', Game.cpu.getUsed() - start);
-    start = Game.cpu.getUsed();
+
     spawnCount = addSpawnQuery(spawnsDo.runCreeps()); // This will not work with old counting.
     var spawnReport = {};
-    //    console.log('it should do something here');
-    //    console.log(seg);
-    //    if (Game.shard.name === 'shard1')
-    //        console.log('runCreeps,', Game.cpu.getUsed() - start);
     var seg = require('commands.toSegment');
-    start = Game.cpu.getUsed();
     seg.run();
     var title;
     Memory.stats.powerProcessed = 0;
 
     //        if (Game.spawns[title].roomName == 'E24S33')
-    start = Game.cpu.getUsed();
-    console.log('****************************************');
-    var target = 'E24S33';
-    if (Game.flags.infoTarget !== undefined) {
-        target = Game.flags.infoTarget.pos.roomName;
-    }
     for (title in Game.spawns) {
-        var start2 = Game.cpu.getUsed();
 
         if (Game.spawns[title].memory.alphaSpawn) {
             //                      var constr = require('commands.toStructure');
@@ -1778,31 +1767,21 @@ module.exports.loop = blackMagic(function() {
                 if (Game.cpu.bucket > 1000) {
                     safemodeCheck(Game.spawns[title]);
                 }
-if(Game.spawns[title].pos.roomName === 'E18S36x') {
-console.log('************************************E18S36',Game.time%5===0,"Queries",Game.spawns[title].memory.create.length,Game.spawns[title].memory.warCreate.length,Game.spawns[title].memory.expandCreate.length);
-                if (Game.time%5 === 0 && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
+                if (Game.time % 5 === 0 && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
                     spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
                 }
-            Game.spawns[title].memory.totalParts = (spawnCount[Game.spawns[title].id].bodyCount * 3);
-            Game.spawns[title].memory.totalCreep = spawnCount[Game.spawns[title].id].total;
-
-console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>E18S36',Game.time%5===0,"Queries",Game.spawns[title].memory.create.length,Game.spawns[title].memory.warCreate.length,Game.spawns[title].memory.expandCreate.length);
-} else {
-
-                if (Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
-                    (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
-                    spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
-                }
-}
+                Game.spawns[title]._totalParts = (spawnCount[Game.spawns[title].id].bodyCount * 3);
+                Game.spawns[title]._totalCreep = (spawnCount[Game.spawns[title].id].bodyCount * 3);
             }
 
+                Game.spawns[title].room.renewCreep = undefined;
 
             if (Game.spawns[title].spawning === null) {
                 ccSpawn.createFromStack(Game.spawns[title]);
-//                ccSpawn.newRenewCreep(Game.spawns[title].pos.roomName);
+                //                ccSpawn.newRenewCreep(Game.spawns[title].pos.roomName);
             } else {
-//            	console.log(Game.spawns[title].spawning.directions);
+                //              console.log(Game.spawns[title].spawning.directions);
                 let spawn = Game.spawns[title];
                 spawn.room.visual.text("🔧" + spawn.spawning.name, spawn.pos.x + 1, spawn.pos.y, {
                     color: '#97c39a ',
@@ -1835,15 +1814,8 @@ console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>E18S36',Game.time%5===0,"Querie
             }
         }
 
-        if (Game.spawns[title].pos.roomName == target)
-            console.log('Last report using start2,', Game.cpu.getUsed() - start2);
-
 
     } // End of Spawns Loops
-    console.log('****************************************');
-    if (Game.shard.name === 'shard1')
-        console.log('SpawnLoop,', Game.cpu.getUsed() - start);
-    start = Game.cpu.getUsed();
 
     Memory.stats.rooms = spawnReport;
     if (isTenTime === 0) {
@@ -1852,24 +1824,15 @@ console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>E18S36',Game.time%5===0,"Querie
     if (Game.shard.name !== 'shard2') {
         memoryStatsUpdate();
     }
-    if (Game.shard.name === 'shard1')
-        console.log('terminal.run,', Game.cpu.getUsed() - start);
-    start = Game.cpu.getUsed();
 
 
     doUpgradeRooms();
     resetCounters();
     scanForRemoteSources();
     scanForCleanRoom();
-    //    if (Game.shard.name === 'shard1')
-    //        console.log('Everything but,', Game.cpu.getUsed() - start);
-//    start = Game.cpu.getUsed();
-
     setInterShardData();
-//    if (Game.shard.name === 'shard1')
-      //  console.log('inerSEgments,', Game.cpu.getUsed() - start);
-    //start = Game.cpu.getUsed();
-  //  consoleLogReport();
+    consoleLogReport();
+ // });
 
     //        cleanMemory();
 });

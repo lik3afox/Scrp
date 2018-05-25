@@ -627,7 +627,7 @@ class baseParent {
 
             creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
             var ccSpawn = require('commands.toSpawn');
-            ccSpawn.newWantRenew(creep);
+//            ccSpawn.newWantRenew(creep);
             creep.memory.reportDeath = true;
         }
         return true;

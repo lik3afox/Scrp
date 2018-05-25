@@ -19,7 +19,7 @@ let basic = [
 ];
 var s1LabRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37', 'E22S48', 'W53S35',
     'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27', 'E27S45', 'E29S48', 'E18S46', 'E32S34',
-    'E11S47', 'E1S11', 'E33S54', 'E2S24'
+    'E11S47', 'E1S11', 'E33S54', 'E2S24','E27S55'
 ];
 var s0LabRooms = ['E38S81'];
 
@@ -763,12 +763,6 @@ function energyCheck(terminal) {
     return false;
 }
 
-function newgetMostTerminal(mineralz, target) {
-    // get rooms that have terminal
-    // Sort it by the mineral
-
-}
-
 function getLeastTerminal(mineralz, target) {
     let highest = 300000;
     var bested;
@@ -831,6 +825,7 @@ function getMostTerminal(mineralz, target) {
 
 }
 //UH, GO, LO, ZO
+/*
 function giveInviso() {
     var mins = ['XGHO2', 'XUH2O', 'XLHO2', 'XZHO2', 'XZH2O', 'XKHO2'];
     var minAmount = 44999;
@@ -844,7 +839,7 @@ function giveInviso() {
             }
         }
     }
-}
+} */
 
 function doDebt() {
 
@@ -1586,12 +1581,6 @@ class roleTerminal {
                 }
             }
         }
-//        needEnergy(terminal);
-
-
-
-        //        if (Game.shard.name == 'shard1')
-        //          forEveryStorage(terminal);
 
         let needed = labs.neededMinerals(terminal.pos.roomName);
         if (terminal.room.boost !== undefined && terminal.room.boost.mineralType !== 'none') {

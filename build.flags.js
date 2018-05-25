@@ -647,13 +647,27 @@
                 // Purple will mean that it's setup for low CPU usage.
                 //                console.log(flag.memory.checkWhat);
 
-                if (flag.room !== undefined ) {
+                if (flag.room !== undefined) {
 
                     if (flag.room.controller.level === 8) {
                         flag.memory.module = [
                             ['minHarvest', 1, 7]
                         ];
                         let linkNum = 1;
+let create = flag.room.alphaSpawn.memory.create;
+let creat2 = flag.room.alphaSpawn.memory.warCreate;
+let creat3 = flag.room.alphaSpawn.memory.expandCreate;
+var totalBody = 0;
+for(let i in create){
+    totalBody += ( create[i].build.length*3 );
+}
+for(let i in creat2){
+    totalBody += ( creat2[i].build.length*3 );
+}
+for(let i in creat3){
+    totalBody += ( creat3[i].build.length*3 );
+}
+totalBody +=flag.room.stats.parts;
                         if (flag.room.stats.storageEnergy > 100000) {
                             flag.memory.module.push(['wallwork', 1, 5]);
                         }
@@ -663,13 +677,13 @@
                             flag.memory.module.push(['harvester', flag.memory.sourceNumber, 3]);
                         }
                         if (flag.room.alphaSpawn.memory.warCreate === undefined) flag.room.alphaSpawn.memory.warCreate = [];
-                        if (flag.room.alphaSpawn.memory.warCreate.length > 0) {
+                        //                    if (flag.room.alphaSpawn.memory.warCreate.length > 0) {
+                        //                          linkNum++;
+                        //                        }
+                        if (totalBody > 1000) {
                             linkNum++;
                         }
-                        if (flag.room.stats.parts > 1000) {
-                            linkNum++;
-                        }
-                        if (flag.room.stats.parts > 3000) {
+                        if (totalBody > 3000) {
                             linkNum++;
                         }
 
@@ -691,11 +705,11 @@
                         }
 
                         flag.memory.module.push(['linker', linkNum, 5]);
-        flag.room.visual.text(linkNum+":🚗:" + flag.room.stats.parts, flag.pos.x, flag.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });
+                        flag.room.visual.text(linkNum + ":🚗:" + flag.room.stats.parts+"/"+totalBody, flag.pos.x, flag.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });
 
-                    }
+                    } else { adjustModule(flag); }
 
-                } else { adjustModule(flag); }
+                }
 
 
 
@@ -784,7 +798,7 @@
             let defendTotal = 0;
             Memory.clearFlag--;
             if (Memory.clearFlag < 0) {
-                Memory.clearFlag = 30;
+                Memory.clearFlag = 10;
                 var keys = Object.keys(Memory.flags);
                 var e = keys.length;
                 var a;
@@ -802,6 +816,9 @@
             }
 
             let zFlags = Game.flags;
+            if(Game.flags.bandit === undefined) {
+                Memory.flags.bandit = undefined;
+            }
             //_.filter(Game.flags, function(o) { return o.color != COLOR_GREY && o.color != COLOR_CYAN; });
             /*
             for (let a in Memory.flags) {
@@ -816,9 +833,9 @@
             var flag;
             for (let i in zFlags) {
                 flag = zFlags[i];
-       //         if (flag.room === undefined && flag.color !== COLOR_BROWN) {
-//                    console.log('flag room not there', roomLink(flag.pos.roomName));
-         //       }
+                //         if (flag.room === undefined && flag.color !== COLOR_BROWN) {
+                //                    console.log('flag room not there', roomLink(flag.pos.roomName));
+                //       }
 
                 if (flag.name === 'nuke') {
 

@@ -156,7 +156,7 @@ function powerAction(creep) {
             }
         } else {
             if (Game.flags[creep.memory.party] !== undefined) {
-                creep.moveTo(Game.flags[creep.memory.party], {ignoreCreeps:true, reusePath: 100 });
+                creep.moveMe(Game.flags[creep.memory.party], {ignoreCreeps:true, reusePath: 100 });
             } else {
                 creep.memory.death = true;
             }

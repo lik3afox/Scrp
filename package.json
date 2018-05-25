@@ -20,6 +20,7 @@
     "grunt": "^1.0.2"
   },
   "dependencies": {
+    "@types/screeps-profiler": "^1.2.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-screeps": "^1.4.0",
     "screeps-profiler": "^2.0.1"

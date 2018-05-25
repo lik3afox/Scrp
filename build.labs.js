@@ -416,7 +416,7 @@ function labDo(roomName, created, labz, laby) {
     //&& Game.rooms[roomName].memory.lab2Mode !== 'none'
     if (!lab3.room.memory.labsNeedWork) {
         if (lab2.mineralType === null || lab3.mineralType === null) {
-            console.log(lab3.room.name, 'tigger0',labs[labz - 1].resource,labs[laby - 1].resource);
+            console.log(lab3.room.name, 'tigger0', labs[labz - 1].resource, labs[laby - 1].resource);
             lab3.room.memory.labsNeedWork = true;
             return false;
         }
@@ -627,7 +627,7 @@ function updateRoomLabsMemory(roomName) {
 
 
             if (Game.rooms[roomName].memory.labMode === 'shift') {
-                shiftingMats = _.shuffle(["UH", "UO", "ZH", "ZO", "KH", "KO", "LH", "LO", "GH", "GO", 'ZK', 'UL', 'G', 'OH', 'GH', 'GH2O', 'XGH2O', 'XZH2O', 'XGHO2', 'XKHO2', 'XKH2O', 'XLHO2', 'XZHO2', 'XUH2O', 'XLH2O','XUHO2', "UH2O", "UHO2", "ZH2O", "ZHO2", "KH2O", "KHO2", "LH2O", "LHO2", "GH2O", "GHO2", ]);
+                shiftingMats = _.shuffle(["UH", "UO", "ZH", "ZO", "KH", "KO", "LH", "LO", "GH", "GO", 'ZK', 'UL', 'G', 'OH', 'GH', 'GH2O', 'XGH2O', 'XZH2O', 'XGHO2', 'XKHO2', 'XKH2O', 'XLHO2', 'XZHO2', 'XUH2O', 'XLH2O', 'XUHO2', "UH2O", "UHO2", "ZH2O", "ZHO2", "KH2O", "KHO2", "LH2O", "LHO2", "GH2O", "GHO2", ]);
             }
             if (Game.rooms[roomName].memory.labMode === 'shiftGH') {
                 shiftingMats = _.shuffle(['XGH2O', 'GH2O', 'OH', 'GH', 'G']);
@@ -768,8 +768,17 @@ class buildLab {
             ez = ['E19S49'];
         }
         if (Game.time % 5 === 0) {
+            if (Game.rooms[roomName].memory.labs === undefined) {
+                Game.rooms[roomName].memory.labs = [{
+                    id: 'none',
+                }];
+            }
+            if (Game.rooms[roomName].memory.labMode === undefined) {
+                Game.rooms[roomName].memory.labMode = 'none';
+            }
 
-            if (_.contains(ez, roomName)) {
+
+            if ((Game.rooms[roomName].memory.labMode !== undefined && Game.rooms[roomName].memory.labMode === 'shift') || _.contains(ez, roomName)) {
                 if (Game.rooms[roomName] !== undefined) {
                     updateRoomLabsMemory(roomName);
                     //                    console.log(, 'Labs @ ', roomName);
@@ -812,7 +821,13 @@ class buildLab {
                             doMix = false;
                         }
                     }
-                    if(mat === 'none'){
+                    if (mat == 'GH' || mat == 'GH2O') {
+                        if (Memory.stats.totalMinerals.H < 50000) {
+                            doMix = false;
+                        }
+                    }
+
+                    if (mat === 'none') {
                         doMix = false;
                     }
 
@@ -832,14 +847,7 @@ class buildLab {
 
                         for (var a in oneMatMix) {
                             let form = oneMatMix[a];
-      //                      if ( result === undefined || !result) {
-                                //result = 
-                                labDo(roomName, form[0], form[1], form[2]);
-
-    //                        } else {
-                                //                                console.log('Not doing labs');
-//                                Game.rooms[roomName].memory.labShift -= 1;
-  //                          }
+                            labDo(roomName, form[0], form[1], form[2]);
                         }
                     }
 
@@ -930,9 +938,9 @@ class buildLab {
     static moveToTransfer(creep) {
         let What;
         if (creep.carryTotal !== 0) {
-            What = creep.carrying; 
-        } 
-        
+            What = creep.carrying;
+        }
+
         let Where = whereDoIPut(creep, What);
         creep.say('m' + Where);
         if (Where === undefined) return false;

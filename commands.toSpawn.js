@@ -365,12 +365,12 @@ class SpawnInteract {
                     STACK.shift();
                 }
             } else if (STACK[0].memory.role === 'linker' && ee === ERR_NOT_ENOUGH_ENERGY&& STACK.length > 3 && spawn.pos.roomName !== 'E38S81' ) {
-                if (getCost(STACK[0].build) > 300 ) {
+/*                if (getCost(STACK[0].build) > 300 ) {
                     do {
                         STACK[0].build.shift();
                         console.log(roomLink(spawn.room.name)+'><><>>>>-=-=-EMERGYENC MODULE ENERGY', getCost(STACK[0].build), STACK[0].memory.role + '-=-=-=-=<<<<><><');
                     } while (getCost(STACK[0].build) > 300);
-                }
+                } */
 
             } else if (STACK[0].length === undefined && STACK[0].length === 0) {
 

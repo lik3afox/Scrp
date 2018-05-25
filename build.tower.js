@@ -411,13 +411,16 @@ class roleTower {
                 return o.structureType == STRUCTURE_TOWER;
             });
             for (var i in towers) {
+                if(towers[i].id !== null)
                 room.memory.towers.push(towers[i].id);
             }
         }
 
         towers = [];
         for(let e in room.memory.towers){
-            towers.push(Game.getObjectById(room.memory.towers[e]));
+            let tgt = Game.getObjectById(room.memory.towers[e]);
+            if(tgt !== null)
+            towers.push(tgt);
         }
 
         if (Memory.towerTarget !== 'none') {

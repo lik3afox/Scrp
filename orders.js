@@ -30,7 +30,7 @@ Game.rooms.E18S32.terminal.send('energy', 100000, 'E38S72', 'trade');
 
 Game.market.cancelOrder('5a9714b6d51df80354b2a81a');
 
-Game.rooms.E27S45.terminal.send('',10000, 'E38S72', 'trade');
+Game.rooms.E27S45.terminal.send('energy',80000, 'E27S55', 'trade');
 
 
 Game.rooms.E29S48.terminal.send('X', 20000, 'E22S52', 'trade');

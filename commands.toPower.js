@@ -272,7 +272,7 @@ class PowerInteract {
                     flagCol: COLOR_YELLOW,
                     flagCol2: COLOR_RED
                 };
-                var half = ['E30S41', 'E30S42', 'E30S43', 'E30S44', 'E30S45', 'E30S46', 'E30S47', 'E30S48', 'E30S49'];
+                var half = [];
                 var second = [];
                 let zz;
 

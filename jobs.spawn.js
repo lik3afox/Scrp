@@ -115,12 +115,10 @@ class jobs {
         }
         if (_.isNumber(creep.room.memory.wallworkID)) {
             if (creep.room.memory.wallworkID > 0) {
+                creep.room.memory.wallworkID--;
+                creep.say(creep.room.memory.wallworkID+'xze' );
                 return false;
-            } else {
-            creep.room.memory.wallworkID--;
-            creep.say(creep.room.memory.wallworkID+'xze' );
             }
-
         }
         var wall = Game.getObjectById(creep.room.memory.wallworkID);
         if (wall === null) {
@@ -139,7 +137,7 @@ class jobs {
                 creep.moveToTransfer(creep.room.storage, creep.carrying);
                 return false;
             }
-            if (creep.carry[RESOURCE_ENERGY] >  wall.carryCapacity >> 1 ) {
+            if (creep.carry[RESOURCE_ENERGY] >  wall.carryCapacity >> 1 || creep.carry[RESOURCE_ENERGY]===creep.carryCapacity ) {
                 if (creep.pos.isNearTo(wall)) {
                     creep.transfer(wall, RESOURCE_ENERGY);
                     //                    wall.memory.wallTargetID = undefined;
@@ -155,6 +153,11 @@ class jobs {
 
             }
             creep.say('Giving');
+            let zed = wall.cancelOrder('move');
+            wall.memory.stopMoving = true;
+            if(zed === 0){
+              console.log('cancel order', zed ,roomLink(wall.pos.roomName) );
+            }
             return true;
         }
         return false;
@@ -505,7 +508,7 @@ class jobs {
                     let zze = _terminal_().requestMineral(creep.room.name, boost.mineralType, boost.mineralAmount);
                     creep.say('req:' + boost.mineralType + zze);
                     if (!zze) boost.timed--;
-                    return true;
+                    return false;
                 }
                 //          if(creep.room.name == 'E29S48'){
                 //            }
@@ -624,11 +627,19 @@ class jobs {
         var targetContain = Game.getObjectById(creep.room.memory.mineralContainID);
 
         var min = Game.getObjectById(creep.room.memory.mineralID);
-        if (targetContain === null || targetContain.total < 1000 || min === null) {
+        if (targetContain === null || min === null || (targetContain.total < 1000 && (creep.memory.emptyMin || creep.memory.emptyMin === undefined) ) ) {
             return false;
         }
-        //        console.log(creep, '@ doMinContain', roomLink(creep.room.name),targetContain);
-        if (creep.carryTotal > 0) {
+        if(creep.carryTotal === 0){
+            creep.memory.emptyMin = true;
+        } else if(creep.carryCapacity === creep.carryTotal){
+            creep.memory.emptyMin = false;
+        } else if(creep.memory.emptyMin === undefined){
+            creep.memory.emptyMin = true;
+        }
+
+
+        if (!creep.memory.emptyMin || creep.carry[RESOURCE_ENERGY] !== 0 ) {
             creep.moveToTransfer(creep.room.terminal, creep.carrying);
             creep.say('!');
         } else {

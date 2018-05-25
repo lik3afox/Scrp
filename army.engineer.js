@@ -197,12 +197,14 @@ class engineerClass extends roleParent {
         }
         if (creep.memory.isBoosted !== undefined && creep.memory.isBoosted.length > 0) {
             if (creep.memory.boostType === undefined) {
-                if (_.contains(creep.memory.isBoosted, ['XGH2O','GH2O','GH'])) {
-                    creep.memory.boostType = 'upgrader';
+                if (creep.memory.isBoosted.length === 0) {
+                    creep.memory.boostType = 'normal';
                 } else if (_.contains(creep.memory.isBoosted, 'XLH2O')) {
                     creep.memory.boostType = 'builder';
+                } else if (_.contains(creep.memory.isBoosted, 'LH')) {
+                    creep.memory.boostType = 'builder';
                 } else {
-                    creep.memory.boostType = 'normal';
+                    creep.memory.boostType = 'upgrader';
                 }
             }
         }
@@ -213,7 +215,7 @@ class engineerClass extends roleParent {
 
             if (creep.memory.renewSpawnID === undefined && creep.room.alphaSpawn !== undefined && creep.memory.isBoosted !== undefined && creep.memory.isBoosted.length === 0) {
                 creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
-                require('commands.toSpawn').newWantRenew(creep);
+//                require('commands.toSpawn').newWantRenew(creep);
             }
 
 //            var tw = creep.pos.isNearAny(creep.room.towers);
@@ -289,7 +291,7 @@ class engineerClass extends roleParent {
             } else {
                 creep.pickUpEnergy();
                 if (creep.room.storage === undefined || creep.room.storage.store[RESOURCE_ENERGY] <= 10000 || !super.containers.withdrawFromStorage(creep)) {
-//                    if (!roleParent.constr.withdrawFromTombstone(creep)) {
+                    if (!roleParent.constr.withdrawFromTombstone(creep)) {
                         if (!super.containers.withdrawFromStorage(creep)) {
                             if (!super.containers.withdrawFromTerminal(creep)) {
                                 if (!super.containers.moveToWithdraw(creep)) {
@@ -301,7 +303,7 @@ class engineerClass extends roleParent {
                                 }
                             }
                         }
-  //                  }
+                    }
 
                 }
             }

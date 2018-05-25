@@ -52,9 +52,9 @@ var allParty = {
     ],
 
     mineral:[
+        ['guard',1,0],
         ['mineral',1,7],
         ['ztransport',1,1],
-        ['guard',1,0],
     ],
     mineral2:[
 //        ['guard',1,0],

@@ -287,9 +287,9 @@ class theSpawn {
         if (spawnCount !== undefined) {
             totalCreeps = spawnCount[spawn.id];
             spawn.memory.totalParts = (spawnCount[spawn.id].bodyCount * 3);
-  //          spawn._totalParts = (spawnCount[spawn.id].bodyCount * 3);
+            spawn._totalParts = (spawnCount[spawn.id].bodyCount * 3);
             spawn.memory.totalCreep = spawnCount[spawn.id].total;
-//            spawn._totalCreep = (spawnCount[spawn.id].bodyCount * 3);
+            spawn._totalCreep = (spawnCount[spawn.id].bodyCount * 3);
         }
 
         // Flag Module Check Add Module.

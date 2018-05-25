@@ -236,13 +236,12 @@ class muleClass extends roleParent {
                 var partner = Game.getObjectById(creep.memory.engineerID);
                 if (partner !== null) {
                     creep.moveToTransfer(partner, RESOURCE_ENERGY, { maxOpts: 100,maxRooms:1 });
+                    partner.memory.building = true;
                 } else {
                     creep.memory.engineerID = undefined;
                     creep.memory.mining = true;
                 }
-            }
-
-            if (creep.memory.mining) {
+            } else {
       //          if (roleParent.constr.withdrawFromTombstone(creep)) {
     //                if (!creep.moveToPickEnergy(100)) {
                         if (!creep.moveToWithdrawSource()) {

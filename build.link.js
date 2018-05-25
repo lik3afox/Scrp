@@ -120,7 +120,7 @@ class buildLink {
                                 if (LINK.structureType !== STRUCTURE_LINK) {
                                     linksID.splice(zz, 1);
                                 } else {
-                                    if (mLink !== null && mLink.energy < 100) {
+                                    if (mLink !== null && mLink.energy < 200) {
                                         LINK.room.visual.line(LINK.pos, mLink.pos, { color: 'white' });
                                         
                                         if (LINK.transferEnergy(mLink) == OK) {
