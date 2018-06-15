@@ -491,6 +491,10 @@ module.exports = function() {
             this.dismantle(bads[0]);
             return true;
         }
+        if(this.atFlagRoom){
+            this.killRoads();
+            return true;
+        }
     };
 
     Creep.prototype.killRoads = function() {
@@ -543,6 +547,7 @@ module.exports = function() {
             } else {
                 this.rangedAttack(az);
             }
+            this.say('azed');
             return true;
         }
 
@@ -554,6 +559,7 @@ module.exports = function() {
                     return true;
                 } else if (this.pos.inRangeTo(target, 3)) {
                     this.rangedAttack(target);
+                    this.say('!@!');
                     return true;
                 }
             }
@@ -951,6 +957,38 @@ module.exports = function() {
         }
     };
 
+/*function standardizeRoomName(roomName) {
+    if (roomName.length === 6) return roomName;
+    //       var match = roomName.match(/([WE])([0-9]+)([NS])([0-9]+)/g);
+    let match = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(roomName);
+    var threeBad;
+    var oneBad;
+    if (match[2].length === 1) {
+        oneBad = true;
+    }
+    if (match[4].length === 1) {
+        threeBad = true;
+    }
+
+    var newString = "";
+    newString += match[1];
+    if (oneBad) {
+        newString += "0" + match[2];
+    } else {
+        newString += match[2];
+    }
+    newString += match[3];
+    if (threeBad) {
+        newString += "0" + match[4];
+    } else {
+        newString += match[4];
+    }
+
+    console.log('none standarize RoomName changing',newString);
+    return newString;
+} */
+
+
     function serializePath(creep) {
         // This function will take an object that is a _move.
         // and turn into an object that is passed.
@@ -984,15 +1022,18 @@ destination Current Pos Path
             currentPos += stringPosY[0];
             currentPos += stringPosY[1];
         }
-        currentPos += creep.pos.roomName;
+
+
+
+        currentPos +=  creep.pos.roomName ;
         // then it needs to calcuate teh direction between current pos and the pos
 
         var move = creep.memory._move;
         var dest = "" + (move.dest.x < 10 ? "0" + move.dest.x : move.dest.x) +
-            (move.dest.y < 10 ? "0" + move.dest.y : move.dest.y) + move.dest.room;
+            (move.dest.y < 10 ? "0" + move.dest.y : move.dest.y) +  move.dest.room ;
 
 
-        //        console.log('Seralized Path', dest, currentPos, path);
+           //     console.log('Seralized Path', dest, currentPos, path);
 
         return dest + currentPos + path;
     }
@@ -1057,20 +1098,23 @@ destination Current Pos Nx Pos  Path
 4345 E23S39 3100 E23S39 30 01   655555555555566665555555544445444444444455444
 xxxx yyyyyy yyyy yyyyyy XX yy
 */
+var goalRoomName = goalPos.roomName;
+var currentRoomName = currentPos.roomName;
+
         var test = rawData;
 
-        if (test[i + 4] !== goalPos.roomName[0]) return false;
-        if (test[i + 5] !== goalPos.roomName[1]) return false;
-        if (test[i + 6] !== goalPos.roomName[2]) return false;
-        if (test[i + 7] !== goalPos.roomName[3]) return false;
-        if (test[i + 8] !== goalPos.roomName[4]) return false;
-        if (test[i + 9] !== goalPos.roomName[5]) return false;
-        if (test[i + 14] !== currentPos.roomName[0]) return false;
-        if (test[i + 15] !== currentPos.roomName[1]) return false;
-        if (test[i + 16] !== currentPos.roomName[2]) return false;
-        if (test[i + 17] !== currentPos.roomName[3]) return false;
-        if (test[i + 18] !== currentPos.roomName[4]) return false;
-        if (test[i + 19] !== currentPos.roomName[5]) return false;
+        if (test[i + 4] !== goalRoomName[0]) return false;
+        if (test[i + 5] !== goalRoomName[1]) return false;
+        if (test[i + 6] !== goalRoomName[2]) return false;
+        if (test[i + 7] !== goalRoomName[3]) return false;
+        if (test[i + 8] !== goalRoomName[4]) return false;
+        if (test[i + 9] !== goalRoomName[5]) return false;
+        if (test[i + 14] !== currentRoomName[0]) return false;
+        if (test[i + 15] !== currentRoomName[1]) return false;
+        if (test[i + 16] !== currentRoomName[2]) return false;
+        if (test[i + 17] !== currentRoomName[3]) return false;
+        if (test[i + 18] !== currentRoomName[4]) return false;
+        if (test[i + 19] !== currentRoomName[5]) return false;
 
         if (currentPos.x < 10) {
             if (parseInt(test[i + 10]) !== 0) return false;
@@ -1433,7 +1477,6 @@ xxxx yyyyyy yyyy yyyyyy XX yy
             this.memory.stopMoving = undefined;
             return;
         }
-
         if (xxx !== undefined) {
             target = new RoomPosition(target, options, this.room.name);
             options = xxx;
@@ -1447,6 +1490,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
         if (this.memory.position !== undefined) {
             if (_.isString(this.memory.position)) {
+                console.log('xedd');
                 var de = stringToRoomPos(this.memory.position);
                 stuck = this.pos.isEqualTo(de);
                 if (de === undefined) {
@@ -1472,7 +1516,10 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 this.memory.stuckCount--;
             }
         }
-        if (this.memory.stuckCount > 0)
+        if(this.memory.stuckCount === 5 ){
+this.say('ST'+ this.memory.stuckCount + target);
+        }
+        else if (this.memory.stuckCount > 0)
             this.say('St' + this.memory.stuckCount);
 
         if (options.visualizePathStyle === undefined) {

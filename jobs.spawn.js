@@ -116,7 +116,7 @@ class jobs {
         if (_.isNumber(creep.room.memory.wallworkID)) {
             if (creep.room.memory.wallworkID > 0) {
                 creep.room.memory.wallworkID--;
-                creep.say(creep.room.memory.wallworkID+'xze' );
+//                creep.say(creep.room.memory.wallworkID+'xze' );
                 return false;
             }
         }
@@ -504,11 +504,11 @@ class jobs {
                     boost.mineralType = 'none';
                 }
 
-                if (creep.room.terminal.store[boost.mineralType] === undefined || creep.room.terminal.store[boost.mineralType] === 0 || creep.room.terminal.store[boost.mineralType] < boost.mineralAmount) {
+                if((creep.room.terminal.store[boost.mineralType] === undefined || creep.room.terminal.store[boost.mineralType] === 0 || creep.room.terminal.store[boost.mineralType] < boost.mineralAmount) && ( creep.room.storage.store[boost.mineralType] === undefined || creep.room.storage.store[boost.mineralType]  <  boost.mineralAmount)) {
                     let zze = _terminal_().requestMineral(creep.room.name, boost.mineralType, boost.mineralAmount);
                     creep.say('req:' + boost.mineralType + zze);
                     if (!zze) boost.timed--;
-                    return false;
+                    return true;
                 }
                 //          if(creep.room.name == 'E29S48'){
                 //            }

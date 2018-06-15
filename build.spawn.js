@@ -649,9 +649,9 @@ class theSpawn {
                 }
                 if ((Game.creeps[name].memory.sleeping !== undefined && Game.creeps[name].memory.sleeping > 0)) {
                     if (Game.creeps[name].memory.sleeping < 1000) {
-                        if (Game.creeps[name].ticksToLive <= Game.creeps[name].memory.sleeping) {
-                            Game.creeps[name].suicide();
-                        }
+    //                    if (Game.creeps[name].ticksToLive <= Game.creeps[name].memory.sleeping) {
+  //                          Game.creeps[name].suicide();
+//                        }
                         Game.creeps[name].say('💤' + Game.creeps[name].memory.sleeping);
                         Game.creeps[name].memory.sleeping--;
                     } else {
@@ -699,6 +699,7 @@ class theSpawn {
 
     static reportDeath(creep) {
         var spawn = Game.getObjectById(creep.memory.parent);
+        if(spawn.memory.expandCreate === undefined) spawn.memory.expandCreate =[];
         if (spawn !== null) {
             switch (creep.memory.role) {
                 case "miner":

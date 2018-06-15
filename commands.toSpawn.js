@@ -268,7 +268,7 @@ class SpawnInteract {
             if (spawn.memory.roadsTo === undefined) {
                 spawn.memory.roadsTo = [];
                 console.log('----------------Create Spawn RoadsTo ----------------');
-                Game.spawns[title].memory.roadsTo.push({
+                spawn.memory.roadsTo.push({
                     source: 'xxxx',
                     sourcePos: new RoomPosition(5, 5, 'xxnx'),
                     miner: false,

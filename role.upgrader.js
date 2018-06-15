@@ -40,11 +40,18 @@ var roleParent = require('role.parent');
 function doUpgradeIn(creep) {
     var pos;
 
+// first in array is the last posisiton for older creeps.
     switch (creep.pos.roomName) {
-        case "E27S55":
+        case "E39S57":
             pos = [
-                new RoomPosition(27, 30, creep.room.name),
-                new RoomPosition(29, 30, creep.room.name),
+//                new RoomPosition(42, 21, creep.room.name),
+//                new RoomPosition(42, 22, creep.room.name),
+//                new RoomPosition(43, 22, creep.room.name),
+                new RoomPosition(43, 23, creep.room.name),
+                new RoomPosition(44, 23, creep.room.name),
+                new RoomPosition(45, 23, creep.room.name),
+                new RoomPosition(45, 22, creep.room.name),
+//                new RoomPosition(29, 30, creep.room.name),
 ///                new RoomPosition(31, 22, creep.room.name),
 //                new RoomPosition(31, 21, creep.room.name),
             ];

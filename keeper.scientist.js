@@ -22,7 +22,7 @@ var classLevels = [
     //6 3400/48
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
     //7 4000/50    
-    [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, ],
+    [CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, ],
 
     {
         body: [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
@@ -86,9 +86,18 @@ class mineralRole extends roleParent {
         if (creep.partyFlag !== undefined && creep.partyFlag.memory.mineral) {
             if (!creep.atFlagRoom) {
                 creep.memory.goal = creep.partyFlag.memory.mineralID;
-                creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true, segment: true });
+                var tgt = Game.getObjectById(creep.memory.goal);
+                if (tgt !== null) {
+                    creep.moveMe(tgt, { reusePath: 50, useSKPathing: true, segment: true });
+                } else {
+                    
+                    creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true, segment: true });
+
+                }
                 creep.say('zFlag');
                 return;
+            } else {
+                creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true, segment: true, maxRooms: 1 });
             }
         }
 
@@ -102,6 +111,9 @@ class mineralRole extends roleParent {
         if (creep.memory.party === undefined && super.keeperWatch(creep)) { // two parter - keeperFind happens when
             return;
         }
+
+        //        if(creep.memory.party === undefined ) creep.memory.death = true;
+
         if (creep.memory.party !== undefined && creep.partyFlag.color === COLOR_WHITE && (carry > creep.carryCapacity - creep.stats('mineral'))) {
             //                    creep.moveToTransfer(creep.homeRoom.terminal,creep.carrying,{reusePath:50,useSKPathing:true});
             creep.memory.death = true;
@@ -151,14 +163,19 @@ class mineralRole extends roleParent {
 
 
         } else if (!creep.pos.isNearTo(_source)) {
-  //          if (!super.guardRoom(creep)) {
-                creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep), {
-                    reusePath: 49,
-                    segment: true,
-                    useSKPathing: true,
-                    //                    visualizePathStyle: visPath
-                });
-//            }
+            //          if (!super.guardRoom(creep)) {
+            var eda;
+            if (creep.atFlagRoom) {
+                eda = 1;
+            }
+            creep.moveMe(_source !== null ? _source : movement.getRoomPos(creep), {
+                reusePath: 49,
+                segment: true,
+                useSKPathing: true,
+                maxRooms: eda,
+                //                    visualizePathStyle: visPath
+            });
+            //            }
         } else {
             // First he mines and fill up.
             if (creep.memory.mining) {
@@ -171,7 +188,7 @@ class mineralRole extends roleParent {
                         return object.owner.username === 'Invader' && object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(RANGED_ATTACK) > 0;
                     });
                     if (badz.length > 0) {
-                        if(creep.pos.getRangeTo( badz[0] ) >= 4 ) {
+                        if (creep.pos.getRangeTo(badz[0]) >= 4) {
 
                         } else {
                             creep.runFrom(badz[0]);

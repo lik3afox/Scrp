@@ -4,8 +4,11 @@ var classLevels = [
     [MOVE, WORK, WORK, MOVE, MOVE, WORK, WORK, WORK, CARRY, WORK], // 550(700)
     [WORK, WORK, WORK, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, CARRY], // 800
     [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY], // 1300 
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY],
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY, CARRY]
+
+    //6m/12w/1c - 1550 energy
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY],
+    //7m,14w/1c
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, ]
 
 ];
 
@@ -37,6 +40,7 @@ function getBads(creep) {
 
 function doWork(creep) {
     //    if(!super.guardRoom(creep)) false;
+    creep.say('dowork');
     if (creep.memory.keeperLairID !== undefined && creep.memory.keeperLairID != 'none') { // THis is obtained when 
         let keeper = Game.getObjectById(creep.memory.keeperLairID);
 
@@ -61,7 +65,7 @@ function doWork(creep) {
             return true;
         }
     } else {
-        if(creep.pos.isEqualTo(contain)){
+        if (creep.pos.isEqualTo(contain)) {
 
         } else if (creep.pos.isNearTo(contain)) {
             if (contain.store != contain.storeCapacity) {
@@ -83,16 +87,17 @@ function markDeath(sourceID) {
     });
 
 }
-    function shouldDie(creep) {
-        if (creep.hits == creep.hitsMax) return;
-        if (creep.getActiveBodyparts(MOVE) === 0) {
-            creep.suicide();
-            return;
-        }
-        if (creep.hits < creep.hitsMax - 800) {
-            creep.suicide();
-        }
+
+function shouldDie(creep) {
+    if (creep.hits == creep.hitsMax) return;
+    if (creep.getActiveBodyparts(MOVE) === 0) {
+        creep.suicide();
+        return;
     }
+    if (creep.hits < creep.hitsMax - 800) {
+        creep.suicide();
+    }
+}
 
 class settler extends roleParent {
     static levels(level) {
@@ -139,10 +144,10 @@ class settler extends roleParent {
         }
 
         var _source = Game.getObjectById(creep.memory.goal);
-    //    if (creep.memory.goal == '5982ff12b097071b4adc20caxx') {
-            //creep.memory.reportDeath = false;
-//            console.log(creep.room.name);
-  //      }
+        //    if (creep.memory.goal == '5982ff12b097071b4adc20caxx') {
+        //creep.memory.reportDeath = false;
+        //            console.log(creep.room.name);
+        //      }
 
         var resting; // = restingSpot(creep);
         // if(!resting ?creep.pos.isNearTo(_source):creep.pos.isEqualTo(resting)){
@@ -160,7 +165,7 @@ class settler extends roleParent {
                 }
 
             } else {
-                 creep.memory.mineSpot = new RoomPosition(contain.pos.x, contain.pos.y, contain.pos.roomName);
+                creep.memory.mineSpot = new RoomPosition(contain.pos.x, contain.pos.y, contain.pos.roomName);
                 resting = creep.memory.mineSpot;
             }
         }
@@ -186,10 +191,11 @@ class settler extends roleParent {
 
 
 
-            //var string = creep.room.memory.mineInfo[creep.memory.goal];
+            var string;
 
             var spn = Game.getObjectById(creep.memory.parent);
-            if (spn !== null) {
+
+            if (spn !== null && spn.memory.totalParts < 4500) {
                 for (var e in spn.memory.roadsTo) {
                     let zz = spn.memory.roadsTo[e];
                     let maxLevel = 8;
@@ -197,8 +203,8 @@ class settler extends roleParent {
                         if (_source.energyCapacity === 4000) {
                             if (zz.expLevel < 3) zz.expLevel = 3;
                             //                            maxLevel = 9; // Max level 9/10 have 3 transports, let turn that off for now. 1/16/2018
-                            if (zz.expLevel > maxLevel){
-                              zz.expLevel = maxLevel;   
+                            if (zz.expLevel > maxLevel) {
+                                zz.expLevel = maxLevel;
                             }
                         }
                         if (creep.room.memory.mineInfo[creep.memory.goal] < -5000 && zz.expLevel > 3) {
@@ -212,12 +218,12 @@ class settler extends roleParent {
                             if (zz.expLevel > maxLevel) zz.expLevel = maxLevel;
                             creep.room.memory.mineInfo[creep.memory.goal] = -2000;
                             markDeath(creep.memory.goal);
-                        } else if(creep.room.memory.mineInfo[creep.memory.goal] > 5000 && zz.expLevel === maxLevel ) {
-                        }
-                     //   string = string + "[" + zz.expLevel + "]";
+                        } else if (creep.room.memory.mineInfo[creep.memory.goal] > 5000 && zz.expLevel === maxLevel) {}
+                        string = creep.room.memory.mineInfo[creep.memory.goal] + "[" + zz.expLevel + "]";
+
                     }
                 }
-
+                creep.room.visual.text(string, creep.pos);
             }
 
 
@@ -225,7 +231,7 @@ class settler extends roleParent {
             if (creep.room.memory.mineInfo[creep.memory.goal] < -100000) creep.room.memory.mineInfo[creep.memory.goal] = -100000;
 
 
-//            super.constr.pickUpEnergy(creep);
+            //            super.constr.pickUpEnergy(creep);
             if (creep.carryTotal >= creep.carryCapacity - 15 && _source.energy !== 0) {
                 if (creep.memory.workContainer === undefined) {
                     let range = 2;
@@ -249,9 +255,10 @@ class settler extends roleParent {
                 }
             }
 
-            if (contain === null ||  _source.energy !== 0 || (creep.pos.isEqualTo(contain) || contain.total < contain.storeCapacity)) {
-
-                if (creep.harvest(_source) == OK) {
+            if (contain === null || (creep.pos.isEqualTo(contain) || contain.total < contain.storeCapacity) && _source.energy !== 0) {
+                let hvt = creep.harvest(_source);
+                creep.say('hrvst' + hvt);
+                if (hvt == OK) {
                     if (_source.energyCapacity == 4000 && creep.memory.keeperLairID === undefined) {
                         super.keeperFind(creep);
                     }
@@ -290,24 +297,37 @@ class settler extends roleParent {
                 }
 
             } else if (_source.energy === undefined || _source.energy === 0) {
-
+                if (creep.carry[RESOURCE_ENERGY] === 0 && contain.store[RESOURCE_ENERGY] === 0) {
+                    if (_source.energyCapacity === 3000) {
+                        creep.say(Game.time + " " + _source.ticksToRegeneration);
+                        creep.sleep(Game.time + _source.ticksToRegeneration - 1);
+                    } else {
+                        creep.sleep(3);
+                    }
+                } else
                 if (contain.hits < contain.hitsMax) {
                     creep.repair(contain);
                     if (creep.carry[RESOURCE_ENERGY] < 20 && contain.store[RESOURCE_ENERGY] > 20) {
                         creep.withdraw(contain, RESOURCE_ENERGY);
                     }
                 } else {
-                    creep.sleep(3);
+                    if (_source.energyCapacity === 3000) {
+                        creep.say(Game.time + " " + _source.ticksToRegeneration);
+                        creep.sleep(Game.time + _source.ticksToRegeneration - 1);
+                    } else {
+                        creep.sleep(3);
+                    }
                 }
             } else {
                 creep.sleep(3);
             }
 
         } else {
-            if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.countDistance();
-                
 
-                
+            if (!creep.memory.isThere && _source !== null && _source.pos.roomName != creep.room.name) creep.countDistance();
+
+
+
             if (creep.room.name == super.movement.getRoomPos(creep).roomName) {
                 var bad = getBads(creep);
                 creep.say(bad.length);
@@ -315,40 +335,40 @@ class settler extends roleParent {
                     creep.moveMe(!resting ? _source : resting);
                 }
                 return;
-            } 
-            
+            }
 
-                let task = {};
-                task.options = {
-                    reusePath: 49,
-                    ignoreCreep: true,
-//                    swampCost:1,
-                    segment: true,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#ff0',
-                        lineStyle: 'dotted',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                };
-                task.pos = _source !== null ? _source.pos : super.movement.getRoomPos(creep);
-                task.count = true;
-                task.order = "moveTo";
-                task.enemyWatch = true;
-                task.rangeHappy = 1;
-                if(creep.memory.resting !== undefined){
-                    task.pos = creep.memory.resting;
-                    task.rangeHappy = 0;
-                } 
-                creep.memory.task.push(task);
-                roleParent.doTask(creep);
-            
+
+            let task = {};
+            task.options = {
+                reusePath: 49,
+                ignoreCreep: true,
+                //                    swampCost:1,
+                segment: true,
+                visualizePathStyle: {
+                    fill: 'transparent',
+                    stroke: '#ff0',
+                    lineStyle: 'dotted',
+                    strokeWidth: 0.15,
+                    opacity: 0.5
+                }
+            };
+            task.pos = _source !== null ? _source.pos : super.movement.getRoomPos(creep);
+            task.count = true;
+            task.order = "moveTo";
+            task.enemyWatch = true;
+            task.rangeHappy = 1;
+            if (creep.memory.resting !== undefined) {
+                task.pos = creep.memory.resting;
+                task.rangeHappy = 0;
+            }
+            creep.memory.task.push(task);
+            roleParent.doTask(creep);
+
 
 
         }
 
-//        creep.cleanMe();
+        //        creep.cleanMe();
 
     }
 }

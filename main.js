@@ -426,7 +426,7 @@ function doRoomReport(room) {
     if (room.controller.level > 3) {
 
         var goods = room.find(FIND_MY_CREEPS);
-        if (goods.length <= 1) {
+        if (goods.length === 0) {
             for (var i in goods) {
                 if (goods[i].memory.role == 'linker') {
                     //      goods[i].memory.role = 'first';
@@ -468,16 +468,16 @@ function consoleLogReport() {
     if (powerProcessed === undefined) powerProcessed = 0;
     let segmentsUsed = report;
     let gameTime = Game.time;
-  //  gameTime = JSON.stringify(gameTime).padStart(8, "0");
+    //  gameTime = JSON.stringify(gameTime).padStart(8, "0");
     let creepTotal = Memory.creepTotal;
-//    creepTotal = JSON.stringify(creepTotal).padStart(3, "0");
+    //    creepTotal = JSON.stringify(creepTotal).padStart(3, "0");
     //let cpuUsed = dif;
     let cpuLimit = Game.cpu.limit;
     //cpuLimit = JSON.stringify(cpuLimit).padStart(3, "0");
     let cpuCeil = Game.cpu.tickLimit;
-  //  cpuCeil = JSON.stringify(cpuCeil).padStart(3, "0");
+    //  cpuCeil = JSON.stringify(cpuCeil).padStart(3, "0");
     let cpuBucket = Game.cpu.bucket;
-//    cpuBucket = JSON.stringify(cpuBucket).padStart(5, "0");
+    //    cpuBucket = JSON.stringify(cpuBucket).padStart(5, "0");
     let filler = "###" + Game.shard.name + "###";
     switch (Game.shard.name) {
         case "shard0":
@@ -730,7 +730,7 @@ function blackMagic(fn) {
     let memory;
     let tick;
     return () => {
-    // Main.js logic should go here.
+        // Main.js logic should go here.
 
         if (tick && tick + 1 === Game.time && memory) {
             delete global.Memory;
@@ -910,7 +910,7 @@ function doInstructions(instructions) {
                 if (alphaSpawn.memory.expandCreate.length === 0) {
                     //                    var temp = createSendCreep(current);
                     if (current.mineralAmount <= 500) {
-                        console.log(' too low and spliced',current.mineralAmount,current.mineralType);
+                        console.log(' too low and spliced', current.mineralAmount, current.mineralType);
                         instructions.splice(i, 1);
                         continue;
                     }
@@ -1044,7 +1044,7 @@ function getMarketPrices() {
     for (var e in minerals) {
         let min = minerals[e];
         var room = getShardRoom(Game.shard.name, min);
-        if ((Game.rooms[room].terminal.store[min] !== undefined)) {
+        if (Game.rooms[room] !== undefined && Game.rooms[room].terminal !== undefined && Game.rooms[room].terminal.store[min] !== undefined) {
             rtn[min] = {
                 buy: _.max(Game.market.getAllOrders(o => o.type === ORDER_BUY && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
                 sell: _.min(Game.market.getAllOrders(o => o.type === ORDER_SELL && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
@@ -1495,12 +1495,12 @@ function analyzeShards(shardObject) {
             }
             if (requestMineral0[request.mineralType] === undefined) requestMineral0[request.mineralType] = 0;
             if (requestMineral0[request.mineralType] > 0) doRequest = false;
-            if( request.mineralAmount < 500  )doRequest = false;
+            if (request.mineralAmount < 500) doRequest = false;
 
             if (doRequest) {
                 requestMineral0[request.mineralType] = 1000;
                 shardObject.instructions.push(request);
-                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length,request.mineralType,request.mineralAmount);
+                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length, request.mineralType, request.mineralAmount);
             }
 
         }
@@ -1521,11 +1521,11 @@ function analyzeShards(shardObject) {
                     break;
                 }
             }
-            if( request.mineralAmount < 500  )doRequest = false;
+            if (request.mineralAmount < 500) doRequest = false;
 
             if (doRequest) {
                 shardObject.instructions.push(request);
-                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length,request.mineralType,request.mineralAmount);
+                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length, request.mineralType, request.mineralAmount);
             }
         }
     }
@@ -1571,13 +1571,13 @@ function analyzeShards(shardObject) {
             if (doRequest) {
                 requestMineral2[request.mineralType] = 1000;
                 shardObject.instructions.push(request);
-                console.log(' SHard 2 adding to isntructions', shardObject.instructions.length,request.mineralType,request.mineralAmount);
+                console.log(' SHard 2 adding to isntructions', shardObject.instructions.length, request.mineralType, request.mineralAmount);
             }
 
         }
         for (let i in shardObject.shard2.sending) {
             //       console.log('shard2 sending out', shardObject.shard2.sending[i].mineralType, ":", shardObject.shard2.sending[i].mineralAmount, shardObject.shard2.shardRoom);
-            if(shardObject.shard2.sending[i].mineralAmount < 500){
+            if (shardObject.shard2.sending[i].mineralAmount < 500) {
                 continue;
             }
 
@@ -1598,13 +1598,14 @@ function analyzeShards(shardObject) {
             }
             if (doRequest) {
                 shardObject.instructions.push(request);
-                console.log(' SHaRd 2 adding to isntructions', shardObject.instructions.length,request.mineralType,request.mineralAmount);
+                console.log(' SHaRd 2 adding to isntructions', shardObject.instructions.length, request.mineralType, request.mineralAmount);
             }
         }
     }
 }
 
 function calcuateTotalCost(request) {
+    if (request.shardRoom === undefined || request.order.roomName === undefined || request.shardRoom === null || request.order.roomName === null) return undefined;
     var amount = request.mineralAmount;
     var distanceBetweenRooms = Game.map.getRoomLinearDistance(request.shardRoom, request.order.roomName, true);
     let rtn = Math.ceil(amount * (1 - Math.exp(-distanceBetweenRooms / 30)));
@@ -1687,11 +1688,33 @@ function setInterShardData() {
     RawMemory.interShardSegment = JSON.stringify(rawObject);
 }
 
+function standardizeRoomName(roomName) {
+    if (roomName.length === 6) return roomName;
+    let match = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(roomName);
+    var threeBad;
+    var oneBad;
+    if (match[2].length === 1) {
+        match[2] = _.padLeft(match[2], 2, "0");
+    }
+    if (match[4].length === 1) {
+        match[4] = _.padLeft(match[4], 2, "0");
+    }
+
+    var newString = "";
+    newString += match[1];
+    newString += match[2];
+    newString += match[3];
+    newString += match[4];
+
+    console.log('none standarize RoomName changing', newString);
+    return newString;
+}
+
 var spawnCount;
 module.exports.loop = blackMagic(function() {
 
-//profiler.enable();
-// profiler.wrap(function() {
+    //profiler.enable();
+    // profiler.wrap(function() {
 
     var _terminal = require('build.terminal');
     //    this._terminal = require('build.terminal');
@@ -1775,7 +1798,7 @@ module.exports.loop = blackMagic(function() {
                 Game.spawns[title]._totalCreep = (spawnCount[Game.spawns[title].id].bodyCount * 3);
             }
 
-                Game.spawns[title].room.renewCreep = undefined;
+            Game.spawns[title].room.renewCreep = undefined;
 
             if (Game.spawns[title].spawning === null) {
                 ccSpawn.createFromStack(Game.spawns[title]);
@@ -1832,7 +1855,15 @@ module.exports.loop = blackMagic(function() {
     scanForCleanRoom();
     setInterShardData();
     consoleLogReport();
- // });
+//    let eddcc = 'E1S1';
+//    console.log(eddcc, standardizeRoomName(eddcc));
+//    console.log('E19s49', standardizeRoomName('E19s49'));
+    // });
 
     //        cleanMemory();
+    /*    for(var e in Game.constructionSites){
+            if(Game.constructionSites[e].room !== undefined) {
+                console.log(roomLink(Game.constructionSites[e].pos.roomName));
+            }
+        }*/
 });

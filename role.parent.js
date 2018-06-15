@@ -331,9 +331,9 @@ class baseParent {
         if (creep.memory.boostNeeded === undefined) {
             creep.memory.boostNeeded = _.uniq(boosted);
         }
-        creep.say('💊' + creep.memory.boostNeeded.length);
 
         if (creep.memory.boostNeeded !== undefined && creep.memory.boostNeeded.length > 0 && creep.memory.home == creep.room.name) {
+        creep.say('💊' + creep.memory.boostNeeded.length);
             var neededMin = numberOfBody(creep, creep.memory.boostNeeded[0]) * 30;
             //                var needBoost = creepParts(creep, creep.memory.boostNeeded[0]);
             //     if (neededMin) { // this checks an existanced boost already happened.
@@ -541,12 +541,13 @@ class baseParent {
     static moveToSignControl(creep) {
         if (Memory.war) return false;
         if (creep.room.controller === undefined) return false;
+        if(creep.room.controller.owner !== undefined && _.contains(fox.friends, creep.room.controller.owner.username) ) return false;
         if (creep.room.controller.sign === undefined || creep.room.controller.sign.text != sign) {
             creep.say('resign');
             if (creep.pos.isNearTo(creep.room.controller)) {
                 creep.signController(creep.room.controller, sign);
             } else {
-                creep.moveTo(creep.room.controller);
+                creep.moveMe(creep.room.controller,{reusePath:50,maxRooms:1});
             }
             return true;
         }

@@ -366,7 +366,7 @@ let parent = Game.getObjectById(creep.memory.parent);
                let parent = Game.getObjectById(creep.memory.parent);
                 //            if (!super.avoidArea(creep)) {
                 //                    creep.moveTo(parent, { reusePath: 75 });
-                creep.tuskenTo(parent.room.terminal, creep.partyFlag.pos.roomName,{segment:true,reusePath:50});
+                creep.tuskenTo(parent.room.terminal, creep.partyFlag.pos.roomName,{segment:true,reusePath:50,useSKPathing:true});
                 //                creep.moveTo(parent, { reusePath: 75 });
                 //              }
                 creep.countDistance();
@@ -375,7 +375,7 @@ let parent = Game.getObjectById(creep.memory.parent);
                 //        if (!super.avoidArea(creep)) {
                 //              movement.flagMovement(creep);
                 //            }
-                let zz = creep.tuskenTo(creep.partyFlag, creep.memory.home,{segment:true,reusePath:50});
+                let zz = creep.tuskenTo(creep.partyFlag, creep.memory.home,{segment:true,reusePath:50,useSKPathing:true});
                 //                let zz = creep.moveTo(creep.partyFlag, { reusePath: 75 });
                 //                creep.say('thief'+zz);
 

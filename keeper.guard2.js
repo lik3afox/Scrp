@@ -6,13 +6,13 @@ var classLevels = [
         MOVE, MOVE, MOVE, MOVE, MOVE,
         MOVE, MOVE, MOVE, MOVE, MOVE,
         MOVE, MOVE, MOVE, MOVE, MOVE,
-        MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, ATTACK,
 
         ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
         ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
         ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-        ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-        ATTACK, ATTACK, HEAL, MOVE, HEAL
+        ATTACK, ATTACK, ATTACK, ATTACK, HEAL,
+        HEAL, HEAL, HEAL, MOVE, HEAL
     ],
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
         ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
@@ -226,18 +226,23 @@ class roleGuard extends roleParent {
 
 
         //        if (creep.memory.home !== creep.partyFlag.memory.musterRoom) creep.memory.reportDeath = true;
-
-        let bads;
-        bads = getHostiles(creep);
-        if (bads !== undefined && bads.length > 0) {
-            attackCreep(creep, bads);
-            creep.memory.goTo = undefined;
-            return;
-        } else {
-            creep.smartHeal();
-        }
-
         if (creep.partyFlag.memory.mineral) {
+
+            let bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+            bads = _.filter(bads, function(o) {
+                return !_.contains(fox.friends, o.owner.username) ;
+            });
+            //      this.say(bads.length + "x");
+            if (bads.length > 0) {
+                if (creep.pos.isNearTo(bads[0])) {
+                    creep.attack(bads[0]);
+                } else {
+                    creep.moveTo(bads[0]);
+                }
+                return true;
+            }
+            creep.smartHeal();
+
             if (creep.partyFlag.color === COLOR_WHITE || creep.partyFlag.color === COLOR_BROWN) {
                 creep.memory.reportDeath = true;
             }
@@ -263,20 +268,36 @@ class roleGuard extends roleParent {
             } else {
                 let gota = Game.getObjectById(creep.memory.keeperLair[0]);
                 if (gota !== null && gota.ticksToSpawn !== undefined) {
-                    if(creep.ticksToLive < gota.ticksToSpawn){
+                    if (creep.ticksToLive < gota.ticksToSpawn) {
                         creep.suicide();
                     }
                 }
             }
             return;
         }
+        let bads;
+        bads = getHostiles(creep);
+        if (bads !== undefined && bads.length > 0) {
+            attackCreep(creep, bads);
+            creep.memory.goTo = undefined;
+            return;
+        } else {
+            creep.smartHeal();
+        }
+
+
 
 
         if (creep.memory.keeperLair === undefined && creep.atFlagRoom) {
-            creep.memory.keeperLair = [];
-            var lairs = creep.room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_KEEPER_LAIR } });
-            for (var e in lairs) {
-                creep.memory.keeperLair.push(lairs[e].id);
+            if (creep.room.name === 'E35S56') {
+                creep.memory.keeperLair = [];
+                creep.memory.keeperLair.push('59bbc5012052a716c3ce8d5f');
+            } else {
+                creep.memory.keeperLair = [];
+                var lairs = creep.room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_KEEPER_LAIR } });
+                for (var e in lairs) {
+                    creep.memory.keeperLair.push(lairs[e].id);
+                }
             }
         }
         if (creep.memory.keeperLair) {

@@ -174,14 +174,14 @@ class buildLink {
                     }
 
 
-                    if (creep.room.memory.masterLinkID !== undefined) {
+/*                    if (creep.room.memory.masterLinkID !== undefined) {
                         let mLink = Game.getObjectById(creep.room.memory.masterLinkID);
                         if (mLink !== null) {
                             if (nlinkz[i].structure.energy > 700)
                                 nlinkz[i].structure.transferEnergy(mLink);
                             nlinkz[i].structure.room.visual.line(nlinkz[i].structure.pos, mLink.pos, { color: 'green' });
                         }
-                    }
+                    } */
                     if (creep.memory.containerID !== undefined) {
                         var zz = Game.getObjectById(creep.memory.containerID);
                         if (zz !== null) {
@@ -198,14 +198,14 @@ class buildLink {
             }
         } else {
             let LINK = getCached(creep.memory.linkID);
-            if (creep.pos.isNearTo(LINK)) {
+            if (creep.pos.isNearTo(LINK)&& LINK.energy < LINK.energyCapacity) {
                 creep.transfer(LINK, RESOURCE_ENERGY);
-                if (LINK.energy > 700 && creep.room.memory.masterLinkID !== undefined) {
+/*                if (LINK.energy > 700 && creep.room.memory.masterLinkID !== undefined) {
                     let mLink = Game.getObjectById(creep.room.memory.masterLinkID);
                     if (mLink !== undefined) {
                         LINK.transferEnergy(mLink);
                     }
-                }
+                }*/
 
                 return true;
             }

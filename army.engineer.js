@@ -203,6 +203,8 @@ class engineerClass extends roleParent {
                     creep.memory.boostType = 'builder';
                 } else if (_.contains(creep.memory.isBoosted, 'LH')) {
                     creep.memory.boostType = 'builder';
+                } else if (_.contains(creep.memory.isBoosted, 'LH2O')) {
+                    creep.memory.boostType = 'builder';
                 } else {
                     creep.memory.boostType = 'upgrader';
                 }

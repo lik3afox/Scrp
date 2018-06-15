@@ -94,7 +94,7 @@ module.exports = function() {
     };
 
     global.roleCircle = function(pos, role) {
-        if(pos === undefined) return false;
+        if (pos === undefined) return false;
         if (Game.rooms[pos.roomName] === undefined) return false;
         var col;
 
@@ -157,7 +157,7 @@ module.exports = function() {
         },
         configurable: true
     });
-    
+
     Object.defineProperty(global, 'storageEnergyLimit', {
         get: function() {
             return 850000;
@@ -170,9 +170,39 @@ module.exports = function() {
         return require('build.terminal');
     };
 
+    global.standardizeRoomName = function(roomName) {
+        if (roomName.length === 6) return roomName;
+        let match = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(roomName);
+        var threeBad;
+        var oneBad;
+        if (match[2].length === 1) {
+            match[2] = _.padLeft(match[2], 2, "0");
+        }
+        if (match[4].length === 1) {
+            match[4] = _.padLeft(match[4], 2, "0");
+        }
+
+        var newString = "";
+        newString += match[1];
+        newString += match[2];
+        newString += match[3];
+        newString += match[4];
+
+        console.log('none standarize RoomName changing', newString);
+        return newString;
+    };
+
     global.stringToRoomPos = function(string) {
         //input XXYYE12S23
         //input 0123456789
+        //        00 23 E23S42 0023E23S
+        let match = /^([0-9][0-9])([0-9][0-9])(([WE])([0-9]+)([NS])([0-9]+))$/.exec(string);
+        if (match !== null) {
+            return new RoomPosition(parseInt(match[1]), parseInt(match[2]), match[3]);
+        } else {
+            console.log(string, 'doing stringotRoomPos');
+            console.log(match);
+        }
         if (string.length !== 10) return;
         var goalRoom = string[4] + string[5] + string[6] + string[7] + string[8] + string[9];
         return new RoomPosition(parseInt(string[0] + string[1]), parseInt(string[2] + string[3]), goalRoom);
@@ -206,105 +236,105 @@ module.exports = function() {
         }
 
         let dif = { x: 0, y: 0 };
-            switch (formationPos) {
-                case 1:
-                    dif.y = -1;
-                    break;
-                case 2:
-                    dif.x = 1;
-                    dif.y = -1;
-                    break;
-                case 3:
-                    dif.x = 1;
-                    break;
-                case 4:
-                    dif.x = 1;
-                    dif.y = 1;
-                    break;
-                case 5:
-                    dif.y = 1;
-                    break;
-                case 6:
-                    dif.x = -1;
-                    dif.y = 1;
-                    break;
-                case 7:
-                    dif.x = -1;
-                    break;
-                case 8:
-                    dif.x = -1;
-                    dif.y = -1;
-                    break;
-                case 11:
-                    dif.y = -2;
-                    break;
-                case 12:
-                case 21:
-                    dif.x = 1;
-                    dif.y = -2;
-                    break;
-                case 22:
-                    dif.x = +2;
-                    dif.y = -2;
-                    break;
-                case 23:
-                case 32:
-                    dif.x = 2;
-                    dif.y = -1;
-                    break;
-                case 33:
-                    dif.x = 2;
-                    break;
-                case 34:
-                case 43:
-                    dif.x = 2;
-                    dif.y = 1;
-                    break;
-                case 44:
-                    dif.x = 2;
-                    dif.y = 2;
-                    break;
-                case 45:
-                case 54:
-                    dif.x = 1;
-                    dif.y = 2;
-                    break;
-                case 55:
-                    dif.y = 2;
-                    break;
-                case 56:
-                case 65:
-                    dif.x = -1;
-                    dif.y = 2;
-                    break;
-                case 66:
-                    dif.x = -2;
-                    dif.y = 2;
-                    break;
-                case 67:
-                case 76:
-                    dif.x = -2;
-                    dif.y = 1;
-                    break;
-                case 77:
-                    dif.x = -2;
-                    break;
-                case 78:
-                case 87:
-                    dif.x = -2;
-                    dif.y = -1;
-                    break;
-                case 88:
-                    dif.x = -2;
-                    dif.y = -2;
-                    break;
-                case 18:
-                case 81:
-                    dif.x = -1;
-                    dif.y = -2;
-                    break;
+        switch (formationPos) {
+            case 1:
+                dif.y = -1;
+                break;
+            case 2:
+                dif.x = 1;
+                dif.y = -1;
+                break;
+            case 3:
+                dif.x = 1;
+                break;
+            case 4:
+                dif.x = 1;
+                dif.y = 1;
+                break;
+            case 5:
+                dif.y = 1;
+                break;
+            case 6:
+                dif.x = -1;
+                dif.y = 1;
+                break;
+            case 7:
+                dif.x = -1;
+                break;
+            case 8:
+                dif.x = -1;
+                dif.y = -1;
+                break;
+            case 11:
+                dif.y = -2;
+                break;
+            case 12:
+            case 21:
+                dif.x = 1;
+                dif.y = -2;
+                break;
+            case 22:
+                dif.x = +2;
+                dif.y = -2;
+                break;
+            case 23:
+            case 32:
+                dif.x = 2;
+                dif.y = -1;
+                break;
+            case 33:
+                dif.x = 2;
+                break;
+            case 34:
+            case 43:
+                dif.x = 2;
+                dif.y = 1;
+                break;
+            case 44:
+                dif.x = 2;
+                dif.y = 2;
+                break;
+            case 45:
+            case 54:
+                dif.x = 1;
+                dif.y = 2;
+                break;
+            case 55:
+                dif.y = 2;
+                break;
+            case 56:
+            case 65:
+                dif.x = -1;
+                dif.y = 2;
+                break;
+            case 66:
+                dif.x = -2;
+                dif.y = 2;
+                break;
+            case 67:
+            case 76:
+                dif.x = -2;
+                dif.y = 1;
+                break;
+            case 77:
+                dif.x = -2;
+                break;
+            case 78:
+            case 87:
+                dif.x = -2;
+                dif.y = -1;
+                break;
+            case 88:
+                dif.x = -2;
+                dif.y = -2;
+                break;
+            case 18:
+            case 81:
+                dif.x = -1;
+                dif.y = -2;
+                break;
 
-            }
+        }
         let zz;
         zz = new RoomPosition(coronateCheck(dif.x + target.pos.x), coronateCheck(dif.y + target.pos.y), target.pos.roomName);
         return zz;
@@ -331,7 +361,7 @@ module.exports = function() {
 
         let ret = Game.map.findRoute(start_room, end_room, {
             routeCallback: (roomName) => {
-                if(opts.avoidRooms === undefined) opts.avoidRooms= [];
+                if (opts.avoidRooms === undefined) opts.avoidRooms = [];
                 if (opts.avoidRooms.length > 0) {
                     //NOTE: This is above opts.preferRooms --> so will overwrite any preferRooms
                     if (opts.avoidRooms.includes(roomName)) {

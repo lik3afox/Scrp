@@ -103,6 +103,9 @@ var allParty = {
     scout: [
         ['scout', 1, 0]
     ],
+    sign: [
+        ['scout', 1, 1]
+    ],
     test: [
         ['scout', 1, 1]
 
@@ -378,6 +381,9 @@ class partyInteract {
         }
         if (flag.memory.rallyFlag === undefined) {
             flag.memory.rallyFlag = false; // This needs to be set true in order for creeps to rally then portal.
+        }
+        if (flag.memory.tusken === undefined) {
+            flag.memory.tusken = true; // This needs to be set true in order for creeps to rally then portal.
         }
         if (flag.memory.musterRoom === undefined) {
             flag.memory.musterRoom = 'none';

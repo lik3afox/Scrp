@@ -59,7 +59,7 @@ function getEnergy(creep) {
             if (containerz.length > 0) {
                 for (let a in containerz) {
 
-                    if (containerz[a].store[RESOURCE_ENERGY]  > targetAmount) {
+                    if (containerz[a].store[RESOURCE_ENERGY] > targetAmount) {
                         target = containerz[a].id;
                         targetAmount = containerz[a].store[RESOURCE_ENERGY];
                         //            isDropped = true;
@@ -182,8 +182,8 @@ class transportz extends roleParent {
             }
         }
 
-//!creep.memory.gohome &&
-        if ( creep.carryTotal > creep.carryCapacity - 45) {
+        //!creep.memory.gohome &&
+        if (creep.carryTotal > creep.carryCapacity - 45) {
             creep.memory.gohome = true;
             creep.memory.empty = false;
         }
@@ -198,14 +198,25 @@ class transportz extends roleParent {
                 if (!creep.atFlagRoom && creep.carryTotal === 0) {
                     if (creep.ticksToLive < 100) creep.memory.death = true;
                     creep.memory.goal = creep.partyFlag.memory.mineralID;
-                    if (!super.guardRoom(creep)) {
-                        creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true, swampCost : 1 });
+                    //                  if (!super.guardRoom(creep)) {
+                    if (_goal === null) {
+                        creep.moveMe(creep.partyFlag, { reusePath: 50, useSKPathing: true, swampCost: 1 });
+                    } else {
+                        creep.moveMe(_goal, { reusePath: 50, useSKPathing: true, swampCost: 1 });
                     }
+                    //                    }
                     creep.say('zFlag');
                     return;
                 } else {
                     creep.memory.goal = creep.room.mineral.id;
                     _goal = creep.room.mineral;
+                    if(!creep.pos.inRangeTo(_goal,2)){
+                        creep.moveMe(_goal, { reusePath: 50, useSKPathing: true, swampCost: 1 });
+                    }else {
+
+                        //creep.moveMe(creep.partyFlag);
+                    }
+                    return;
                 }
                 creep.memory.task = [];
             }
@@ -237,7 +248,7 @@ class transportz extends roleParent {
             //
 
             if (creep.memory.party !== undefined && super.constr.withdrawFromTombstone(creep, 5, false)) {
-                if (_goal.mineralAmount === 0 && creep.carryTotal > 0) creep.memory.death = true;
+                if (_goal !== null && _goal.mineralAmount === 0 && creep.carryTotal > 0) creep.memory.death = true;
                 return true;
             }
             if (_goal !== null && creep.room.name == _goal.pos.roomName) {
@@ -248,7 +259,7 @@ class transportz extends roleParent {
                         if (!super.guardRoom(creep)) {
                             if (!creep.pos.inRangeTo(_goal, 2)) {
                                 if (!super.guardRoom(creep)) {
-                                    creep.moveMe(_goal, { reusePath: 50, useSKPathing: true, swampCost : 1 });
+                                    creep.moveMe(_goal, { reusePath: 50, useSKPathing: true, swampCost: 1 });
                                 }
                             } else {
                                 let sci = Game.getObjectById(creep.memory.scientistID);

@@ -690,13 +690,15 @@ totalBody +=flag.room.stats.parts;
 
                         if (flag.room.controller.ticksToDowngrade < 50000) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
-                        }
-                        if (flag.room.storage.store[RESOURCE_ENERGY] >= 850000) {
+                        } else if (flag.room.storage.store[RESOURCE_ENERGY] >= 850000) {
+                            flag.memory.module.push(['upbuilder', 1, 8]);
+                        }else if (flag.room.terminal.total === 300000 || flag.room.storage.total === 1000000 ) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
                         }
                         if (flag.room.stats.creepNumber > 10) {
                             //                        flag.memory.module.push(['upbuilder', 1, 8]);
                         }
+                        if(flag.room.alphaSpawn.memory.roadsTo === undefined) flag.room.alphaSpawn.memory.roadsTo = [];
                         if (flag.room.alphaSpawn.memory.roadsTo[0] !== undefined && flag.room.alphaSpawn.memory.roadsTo[0].source === 'xxxx') {
                             flag.room.alphaSpawn.memory.roadsTo.splice(0, 1);
                         }

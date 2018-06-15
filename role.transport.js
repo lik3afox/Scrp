@@ -243,6 +243,10 @@ function movement(creep) {
             }
 
             let container = Game.getObjectById(creep.memory.workContain);
+            if(container === null && creep.room.name == 'E38S82'){
+                creep.moveTo(_goal);
+                return;
+            }
             if (_goal !== null && creep.room.name !== _goal.pos.roomName) {
                 let task = {};
 
@@ -390,6 +394,7 @@ class transport extends roleParent {
             return;
         }
 
+if(creep.memory.home == 'E25S43') creep.memory.reportDeath = true;
         interactContainer(creep);
         updateMemory(creep);
         movement(creep);

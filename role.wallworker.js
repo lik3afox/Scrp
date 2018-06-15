@@ -61,37 +61,35 @@ class roleWallWorker extends roleParent {
 
     static run(creep) {
         if (super.baseRun(creep)) return;
-/*        if (creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
-            if (creep.memory.boostNeeded === undefined) {
-                creep.memory.boostNeeded = ['LH'];
-            }
-            require('role.upbuilder').run(creep);
-            return;
-        } else 
-        if (Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
-            require('role.upbuilder').run(creep);
-            return;
-        } else if (Game.shard.name == 'shard2' && creep.ticksToLive > 1450) {
-            require('role.upbuilder').run(creep);
-            return;
-        } else */
+        /*        if (creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
+                    if (creep.memory.boostNeeded === undefined) {
+                        creep.memory.boostNeeded = ['LH'];
+                    }
+                    require('role.upbuilder').run(creep);
+                    return;
+                } else 
+                if (Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
+                    require('role.upbuilder').run(creep);
+                    return;
+                } else if (Game.shard.name == 'shard2' && creep.ticksToLive > 1450) {
+                    require('role.upbuilder').run(creep);
+                    return;
+                } else */
         if (Game.shard.name == 'shard1' && creep.ticksToLive > 1300 && creep.room.controller !== undefined && creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 10000) {
             creep.memory.role = 'upbuilder';
             creep.memory.reportDeath = true;
             return;
         } else if (Game.shard.name == 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
+            let boost = [];
             boost.push('LH');
             _.uniq(boost);
+            creep.memory.boostNeeded = boost;
         } else if (creep.room.memory.nukeIncoming && creep.ticksToLive == 1499) {
+            let boost = [];
             boost.push('XLH2O');
             _.uniq(boost);
+            creep.memory.boostNeeded = boost;
         }
-        /*
-        if (creep.room.name === 'E1S11' || creep.room.name === 'E2S24' ) {
-            if (super.boosted(creep, ['XLH2O'])) {
-                return;
-            }
-        } */
 
         if (creep.ticksToLive > 1400 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
             creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
@@ -99,14 +97,14 @@ class roleWallWorker extends roleParent {
             return;
         }
 
-        var target;// = (creep.room.name == 'E29S48' || creep.room.name == 'E18S46') ? creep.room.storage : creep.room.terminal;
-        
-  //      if (creep.room.name == 'E11S47' || creep.room.name == 'E19S49'|| creep.room.name == 'E22S49') {
-            target = creep.room.storage;
-//        }
-        if (creep.carry.energy > creep.carryCapacity - 50 && creep.pos.isNearTo(target)) {
-            //  creep.memory.repair = true;
-        } else if (creep.carry.energy < creep.stats('work')) {
+        var target; // = (creep.room.name == 'E29S48' || creep.room.name == 'E18S46') ? creep.room.storage : creep.room.terminal;
+
+        target = creep.room.storage;
+
+        /*        if (creep.carry.energy > creep.carryCapacity - 50 && creep.pos.isNearTo(target)) {
+                      creep.memory.repair = true;
+                } else  */
+        if (creep.carry.energy < creep.stats('work')) {
             if (creep.pos.isNearTo(target)) {
                 creep.say('t:' + target.structureType);
                 creep.withdraw(target, RESOURCE_ENERGY);
@@ -114,7 +112,7 @@ class roleWallWorker extends roleParent {
                 if (strucs !== null) creep.memory.constructionID = strucs.id;
                 creep.memory.wallTargetID = undefined;
             } else {
-                creep.moveMe(target,{ignoreCreeps:true,reusePath:20});
+                creep.moveMe(target, { ignoreCreeps: true, reusePath: 20 });
             }
             return;
         }
@@ -128,13 +126,17 @@ class roleWallWorker extends roleParent {
             } else {
                 creep.room.memory.spawnTargets = undefined;
                 creep.memory.constructionID = undefined;
-            //    let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-              //  if (strucs !== null) creep.memory.constructionID = strucs.id;
+                //    let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+                //  if (strucs !== null) creep.memory.constructionID = strucs.id;
             }
         } else {
-           if( super.constr.moveToRepairWall(creep) ){
-            roleParent.constr.doCloseRoadRepair(creep);
-           }
+            if (super.constr.moveToRepairWall(creep)) {
+                roleParent.constr.doCloseRoadRepair(creep);
+            } else {
+                let strucs = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+                if (strucs !== null) creep.memory.constructionID = strucs.id;
+
+            }
         }
 
     }

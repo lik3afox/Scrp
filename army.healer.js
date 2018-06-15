@@ -408,7 +408,12 @@ class healerClass extends roleParent {
         } else {
 //            if (doMove) {
             //    movement.flagMovement(creep);
-            creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+    if(creep.partyFlag.tusken){
+        creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
+    } else {
+        creep.moveMe(creep.partyFlag,{reusePath:50});
+    }
+
   //          }
         }
 

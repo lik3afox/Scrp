@@ -209,7 +209,7 @@ class muleClass extends roleParent {
                 // }
 
             } else {
-                creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home, { reusePath: 50 });
+                creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home, { reusePath: 50,useSKPathing:true });
             }
             return;
         } else if (creep.memory.level >= 10 && creep.atFlagRoom) {
@@ -265,11 +265,11 @@ class muleClass extends roleParent {
 
                 if (!creep.atFlagRoom) {
                     if (creep.memory.party === 'portal' || creep.memory.level >= 10) {
-                        creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home, { segment: true, reusePath: 50 });
+                        creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home, { segment: true, reusePath: 50,useSKPathing:true });
                     } else if (creep.memory.party == 'Flag9' || creep.memory.party == 'Flag12') {
-                        creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home, { reusePath: 50 });
+                        creep.tuskenTo(Game.flags[creep.memory.party], creep.memory.home, { reusePath: 50,useSKPathing:true });
                     } else {
-                        creep.moveMe(Game.flags[creep.memory.party], { reusePath: 50, ignoreCreeps: false });
+                        creep.moveMe(Game.flags[creep.memory.party], { reusePath: 50, ignoreCreeps: false,useSKPathing:true });
                         creep.say('!');
                     }
                     creep.countDistance();
@@ -400,7 +400,7 @@ class muleClass extends roleParent {
                     creep.say('trs2');
                     return;
                 } else {
-                    creep.moveMe(creep.partyFlag, { reusePath: 50 });
+                    creep.moveMe(creep.partyFlag, { reusePath: 50,useSKPathing:true });
                 }
                 /*                let zz = Game.getObjectById(creep.memory.parent);
                                 if (zz !== null && creep.carryTotal > 0) {
