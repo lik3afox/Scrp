@@ -111,6 +111,13 @@ class settler extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
         shouldDie(creep);
@@ -333,6 +340,9 @@ class settler extends roleParent {
                 creep.say(bad.length);
                 if (bad.length === 0) {
                     creep.moveMe(!resting ? _source : resting);
+
+                }else if (bad.length > 0){
+                    creep.runFrom(bad);
                 }
                 return;
             }

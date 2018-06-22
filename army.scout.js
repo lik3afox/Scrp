@@ -67,9 +67,9 @@ function moveToRandomExit(creep, options) {
             exited = creep.pos.findClosestByRange(Exits[e]);
             creep.memory.targetPos = exited;
              e = Math.floor(Math.random() * 4);
-            console.log(Exits[e], e, exited);
-            cont++;
-        } while (exited === null || cont > 10);
+            console.log(Exits[e], e, exited,cont);
+            if(cont > 10) return;
+        } while (exited === null && cont < 10);
     } else {
         exited = creep.memory.targetPos;
     }
@@ -94,6 +94,12 @@ class scoutClass extends roleParent {
         } else {
             return classLevels[level];
         }
+    }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);}
+        return;
     }
 
     static run(creep) {

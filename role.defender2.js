@@ -12,7 +12,7 @@ var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL],
 
     //7
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,  MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
         CARRY, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
         RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, MOVE, HEAL, HEAL, HEAL
     ]
@@ -47,13 +47,13 @@ function attackCreep(creep, bads) {
         creep.heal(creep);
         // Move
         creep.moveTo(enemy, {
-            maxOpts:300,
+            maxOpts: 300,
             maxRooms: 1
         });
     } else if (distance >= 4) {
         creep.heal(creep);
         creep.moveTo(enemy, {
-            maxOpts:300,
+            maxOpts: 300,
             maxRooms: 1
         });
     }
@@ -61,8 +61,9 @@ function attackCreep(creep, bads) {
 
 function getHostiles(creep) {
     //!_.contains(fox.friends, creep.owner.username);
-    //    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
-    var bads = creep.room.find(FIND_HOSTILE_CREEPS);
+    var bads;
+    //        bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+    bads = creep.room.find(FIND_HOSTILE_CREEPS);
     bads = _.filter(bads, function(o) {
         return !_.contains(fox.friends, o.owner.username);
     });
@@ -83,14 +84,21 @@ class roleNewDefender extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+            return _.clone(classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
         // So this guy will stay by his spawn
-        if (creep.memory.renewSpawnID === undefined &&  creep.room.alphaSpawn !== undefined) {
-            creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
-            var ccSpawn = require('commands.toSpawn');
-//            ccSpawn.newWantRenew(creep);
-        }
+ //       if (creep.memory.renewSpawnID === undefined && creep.room.alphaSpawn !== undefined) {
+//            creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
+//            var ccSpawn = require('commands.toSpawn');
+            //            ccSpawn.newWantRenew(creep);
+   //     }
         if (super.spawnRecycle(creep)) {
             return;
         }
@@ -99,15 +107,23 @@ class roleNewDefender extends roleParent {
 
             let badzs = getHostiles(creep);
             if (badzs.length > 0) {
-            creep.say('nDef' + badzs.length);
+                creep.say('nDef' + badzs.length);
                 attackCreep(creep, badzs);
             }
 
             return true;
         } else { // go to mom and renew
-            let badzs = getHostiles(creep);
+//            let badzs = getHostiles(creep);
+            let badzs;
+            badzs = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
+            //        bads = creep.room.find(FIND_HOSTILE_CREEPS);
+            badzs = _.filter(badzs, function(o) {
+                return !_.contains(fox.friends, o.owner.username);
+            });
+            //    return bads;
+
             if (badzs.length > 0) {
-            creep.say('nDef' + badzs.length);
+                creep.say('nDef' + badzs.length);
                 attackCreep(creep, badzs);
                 return true;
             }
@@ -118,16 +134,16 @@ class roleNewDefender extends roleParent {
                 return;
             } else if (!creep.isHome) {
                 if (super.constr.withdrawFromTombstone(creep, 5, false)) return true;
-            } 
-                let mom = Game.rooms[creep.memory.home].alphaSpawn;
-                if (mom !== null) {
-                    if (creep.pos.isNearTo(mom)) {
-                        creep.sleep(5);
-                    } else {
-                        creep.moveTo(mom);
-                    }
+            }
+            let mom = Game.flags[creep.memory.home];
+            if (mom !== null) {
+                if (creep.pos.isEqualTo(mom)) {
+                    creep.sleep(5);
+                } else {
+                    creep.moveTo(mom);
                 }
-            
+            }
+
         }
 
     }

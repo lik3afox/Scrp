@@ -46,7 +46,7 @@ function doUpgradeIn(creep) {
             pos = [
 //                new RoomPosition(42, 21, creep.room.name),
 //                new RoomPosition(42, 22, creep.room.name),
-//                new RoomPosition(43, 22, creep.room.name),
+                new RoomPosition(43, 22, creep.room.name),
                 new RoomPosition(43, 23, creep.room.name),
                 new RoomPosition(44, 23, creep.room.name),
                 new RoomPosition(45, 23, creep.room.name),
@@ -132,6 +132,13 @@ class roleUpgrader extends roleParent {
         }
     }
 
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     /** @param {Creep} creep **/
     static run(creep) {
@@ -161,7 +168,7 @@ class roleUpgrader extends roleParent {
             return;
         }
         if (super.depositNonEnergy(creep)) return;
-        if (creep.memory.level > 5) super.renew(creep);
+//        if (creep.memory.level > 5) super.renew(creep);
         going = undefined;
 
         if (!doUpgradeIn(creep)) {

@@ -173,6 +173,13 @@ class engineerClass extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
         if (super.spawnRecycle(creep)) {
@@ -215,10 +222,10 @@ class engineerClass extends roleParent {
             creep.tuskenTo(creep.partyFlag, creep.home, { reusePath: 50, useSKPathing: true });
         } else {
 
-            if (creep.memory.renewSpawnID === undefined && creep.room.alphaSpawn !== undefined && creep.memory.isBoosted !== undefined && creep.memory.isBoosted.length === 0) {
-                creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
-//                require('commands.toSpawn').newWantRenew(creep);
-            }
+      //      if (creep.memory.renewSpawnID === undefined && creep.room.alphaSpawn !== undefined && creep.memory.isBoosted !== undefined && creep.memory.isBoosted.length === 0) {
+    //            creep.memory.renewSpawnID = creep.room.alphaSpawn.id;
+////                require('commands.toSpawn').newWantRenew(creep);
+//            }
 
 //            var tw = creep.pos.isNearAny(creep.room.towers);
   //          if (tw !== undefined) {

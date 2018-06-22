@@ -208,19 +208,31 @@ class roleGuard extends roleParent {
             return classLevels[level];
         }
     }
-
-    static run(creep) {
-        super.rebirth(creep);
-        if (creep.ticksToLive === 1499 && creep.memory.level > 0) {
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (level >= 1) {
+            var boost = [];
             if (Memory.stats.totalMinerals.KO > 20000) {
                 boost.push('KO');
             }
             if (Memory.stats.totalMinerals.LO > 20000) {
                 boost.push('LO');
             }
-            _.uniq(boost);
+            return _.uniq(boost);
+        } else {
+
+            if (_.isObject(classLevels[level])) {
+                return classLevels[level].boost;
+            }
+
+
         }
-        if (creep.memory.level > 0 && super.boosted(creep, boost)) {
+            return;        
+    }
+    static run(creep) {
+        super.rebirth(creep);
+        if (creep.ticksToLive === 1499 && creep.memory.level > 0) {}
+        if (creep.memory.level > 0 && super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
 
@@ -230,7 +242,7 @@ class roleGuard extends roleParent {
 
             let bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
             bads = _.filter(bads, function(o) {
-                return !_.contains(fox.friends, o.owner.username) ;
+                return !_.contains(fox.friends, o.owner.username);
             });
             //      this.say(bads.length + "x");
             if (bads.length > 0) {
@@ -260,12 +272,12 @@ class roleGuard extends roleParent {
                 }
                 creep.moveMe(creep.partyFlag, { reusePath: 50 });
             } else if (creep.hits === creep.hitsMax) {
-                if (creep.memory !== undefined && creep.memory.keeperLair.length === 1) {
+                if (creep.memory !== undefined && creep.memory.keeperLair !== undefined && creep.memory.keeperLair.length === 1) {
                     let gota = Game.getObjectById(creep.memory.keeperLair[0]);
                     if (gota !== null)
                         creep.sleep(gota.ticksToSpawn + Game.time - 1);
                 }
-            } else {
+            } else if (creep.memory.keeperLair !== undefined) {
                 let gota = Game.getObjectById(creep.memory.keeperLair[0]);
                 if (gota !== null && gota.ticksToSpawn !== undefined) {
                     if (creep.ticksToLive < gota.ticksToSpawn) {

@@ -46,7 +46,6 @@ function doNukeRamparts(creep) {
 }
 
 class roleWallWorker extends roleParent {
-
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         if (_.isArray(classLevels[level])) {
@@ -58,37 +57,28 @@ class roleWallWorker extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (Game.shard.name == 'shard1' && Memory.stats.totalMinerals.LH > 20000) {
+            let boost = [];
+            boost.push('LH');
+            _.uniq(boost);
+            return boost;
+        } 
+
+        if (_.isObject(classLevels[level])) {
+            return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
         if (super.baseRun(creep)) return;
-        /*        if (creep.ticksToLive > 1470 && creep.room.name !== 'E19S49') {
-                    if (creep.memory.boostNeeded === undefined) {
-                        creep.memory.boostNeeded = ['LH'];
-                    }
-                    require('role.upbuilder').run(creep);
-                    return;
-                } else 
-                if (Game.shard.name == 'shard0' && creep.ticksToLive > 1450) {
-                    require('role.upbuilder').run(creep);
-                    return;
-                } else if (Game.shard.name == 'shard2' && creep.ticksToLive > 1450) {
-                    require('role.upbuilder').run(creep);
-                    return;
-                } else */
+
         if (Game.shard.name == 'shard1' && creep.ticksToLive > 1300 && creep.room.controller !== undefined && creep.room.controller.level == 8 && creep.room.controller.ticksToDowngrade < 10000) {
             creep.memory.role = 'upbuilder';
             creep.memory.reportDeath = true;
             return;
-        } else if (Game.shard.name == 'shard1' && creep.ticksToLive == 1499 && Memory.stats.totalMinerals.LH > 20000) {
-            let boost = [];
-            boost.push('LH');
-            _.uniq(boost);
-            creep.memory.boostNeeded = boost;
-        } else if (creep.room.memory.nukeIncoming && creep.ticksToLive == 1499) {
-            let boost = [];
-            boost.push('XLH2O');
-            _.uniq(boost);
-            creep.memory.boostNeeded = boost;
         }
 
         if (creep.ticksToLive > 1400 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {

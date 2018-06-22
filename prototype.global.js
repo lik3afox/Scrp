@@ -151,12 +151,6 @@ module.exports = function() {
         },
         configurable: true
     });
-    Object.defineProperty(global, 'storageEnergyLimit', {
-        get: function() {
-            return 850000;
-        },
-        configurable: true
-    });
 
     Object.defineProperty(global, 'storageEnergyLimit', {
         get: function() {

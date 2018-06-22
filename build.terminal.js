@@ -18,7 +18,7 @@ let basic = [
     'KO', 'KHO2', 'XKHO2',
 ];
 var s1LabRooms = ['E28S37', 'E18S36', 'E17S34', 'E23S38', 'E18S32', 'E17S45', 'E25S37', 'E13S34', 'E14S37', 'E22S48', 'W53S35',
-    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47', 'E14S38', 'E25S27', 'E27S45', 'E29S48', 'E18S46', 'E32S34',
+    'E27S34', 'E14S43', 'E23S42', 'E28S42', 'E24S33', 'E25S43', 'E14S47', 'E25S47',  'E25S27', 'E27S45', 'E29S48', 'E18S46', 'E32S34',
     'E11S47', 'E1S11', 'E33S54', 'E2S24', 'E27S55','E39S57',
 ];
 var s0LabRooms = ['E38S81'];
@@ -33,6 +33,9 @@ var labs = require('build.labs');
 var shard1Rooms = 25;
 var terminalStorage = 50000;
 var xStorage = {
+    XGH2O: { amount: 2000
+
+    },
     XGHO2: {
         amount: (labs.maxMinerals().XGHO2 - terminalStorage) / shard1Rooms
     },
@@ -101,10 +104,11 @@ function shareEnergy(terminal) {
         if (storage === undefined) continue;
         if (storage !== null && s1LabRooms[e] !== terminal.room.name) {
             //          // console.log(s1LabRooms[e],storage.store[RESOURCE_ENERGY] , currentLow, terminal.total);
-            if (s1LabRooms[e] !== 'E14S38' && storage === undefined) {
-                lowestStore = 0;
-                currentLow = storage.store[RESOURCE_ENERGY];
-            } else if (storage !== undefined && s1LabRooms[e] !== 'E14S38' && storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total < 295000 && Game.rooms[s1LabRooms[e]].controller.level > 5) {
+//            if (s1LabRooms[e] !== 'E14S38' && storage === undefined) {
+//                lowestStore = 0;
+  //              currentLow = storage.store[RESOURCE_ENERGY];
+            //} else
+             if (s1LabRooms[e] !== 'E14S38' && storage.store[RESOURCE_ENERGY] < currentLow && storage.room.terminal.total < 295000 && Game.rooms[s1LabRooms[e]].controller.level > 5) {
                 lowestStore = storage;
                 currentLow = storage.store[RESOURCE_ENERGY];
             }
@@ -117,7 +121,7 @@ function shareEnergy(terminal) {
 
     let amount = terminal.store[RESOURCE_ENERGY] * 0.1;
     let zz = terminal.send(RESOURCE_ENERGY, amount, lowestStore.room.name, 'Sharing Energy');
-    //    console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
+        console.log(terminal.pos, "sHaring energy to", lowestStore.room.name, ":", amount, zz);
     return true;
 }
 
@@ -1414,7 +1418,7 @@ class roleTerminal {
                 if (term !== undefined) {
 //                    if(s1LabRooms[e] === '')
                     let needed = labs.neededMinerals(term.pos.roomName);
-                    if (term.cooldown === 0 && term.store[mineral] !== undefined && term.store[mineral] > 100 && !_.contains(needed, mineral)) {
+                    if (term.cooldown === 0 && term.store[mineral] !== undefined && term.store[mineral] > 100 && !_.contains(needed, mineral) && term._didSend === undefined) {
                         if (mineral === RESOURCE_POWER) {
                             let amt = term.store[mineral] * 0.5;
                             if (term.store[mineral] < 1000) {
@@ -1422,8 +1426,11 @@ class roleTerminal {
                             }
 
                             let sentResult = term.send(mineral, amt, targetRoom, 'tradezz');
-                                                           console.log('request for mineral @', targetRoom, sentResult, mineral, term.store[mineral] - 1);
-                            if (sentResult === OK) return true;
+                            console.log(term.pos,'request for mineral @', targetRoom, sentResult, mineral, term.store[mineral] - 1,term._didSend);
+                            if (sentResult === OK) {
+                                term._didSend = true;
+                                return true;
+                            }
 
                         } else {
                             if (amount === undefined) {
@@ -1563,19 +1570,21 @@ class roleTerminal {
         }
 
         doTrap(roomName);
-        var doNewTrade = ['E19S49', 'E1S11', 'E38S72', 'E11S47', 'W53S35'];
-        if (_.contains(doNewTrade, roomName)) {
-            if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000 && Game.rooms[roomName].storage.store[RESOURCE_ENERGY] > 850000)
-                if (newTradeEnergy(Game.rooms[roomName].terminal)) {
-                    return;
-                }
-        }
+     //   var doNewTrade = ['E19S49', 'E1S11', 'E38S72', 'E11S47', 'W53S35'];
+       // if (_.contains(doNewTrade, roomName)) {
+          //  if (Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] > 22000 && Game.rooms[roomName].storage.store[RESOURCE_ENERGY] > 850000)
+//            console.log('doing new trade',roomName);
+          //      if (newTradeEnergy(Game.rooms[roomName].terminal)) {
+           //         return;
+          //      }
+      //  }
 
         let terminal = Game.rooms[roomName].terminal;
         if (terminal === undefined) return;
         var energy = terminal.store[RESOURCE_ENERGY];
         var total = terminal.total;
         if (total > 295000) {
+            console.log('total is above 295000',roomName);
             if (!shareEnergy(terminal)) {
                 if (!tradeEnergy(terminal)) {
                     reduceTerminal(terminal);
@@ -1739,7 +1748,7 @@ class roleTerminal {
 
     /** @param {Creep} creep **/
     static run() {
-        cleanUpOrders();
+        if(Game.time%10 === 0) cleanUpOrders();
         adjustOldPrices();
         anyLikeOrder('Z', 'E17S47', ORDER_SELL);
         trackSegmentSharing();

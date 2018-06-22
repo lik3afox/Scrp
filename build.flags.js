@@ -212,6 +212,7 @@
         let zzz;
         var roomEnergy = flag.room.energyCapacityAvailable;
         //    console.log( roomer[ee],ee,flag.memory.checkWhat,'ADJUST CHECKING',flag.room.name);
+        flag.room.visual.text(flag.memory.checkWhat, flag.pos);
         switch (ee) {
             case "tower":
                 flag.room.memory.towers = [];
@@ -300,6 +301,9 @@
                     if (zzz.length === 1) {
                         //                        console.log(flag, 'FOUND MasterLab', zzz[0].structureType);
                         flag.room.memory.boostLabID = zzz[0].id;
+                    }
+                    if (zzz.length === 10) {
+                        flag.room.memory.boostLabID = zzz[9].id;
                     }
                 }
 
@@ -654,21 +658,25 @@
                             ['minHarvest', 1, 7]
                         ];
                         let linkNum = 1;
-let create = flag.room.alphaSpawn.memory.create;
-let creat2 = flag.room.alphaSpawn.memory.warCreate;
-let creat3 = flag.room.alphaSpawn.memory.expandCreate;
-var totalBody = 0;
-for(let i in create){
-    totalBody += ( create[i].build.length*3 );
-}
-for(let i in creat2){
-    totalBody += ( creat2[i].build.length*3 );
-}
-for(let i in creat3){
-    totalBody += ( creat3[i].build.length*3 );
-}
-totalBody +=flag.room.stats.parts;
-                        if (flag.room.stats.storageEnergy > 100000) {
+                        if (flag.room.alphaSpawn === undefined) {
+                            console.log('missing alpha', flag.room.name);
+                            break;
+                        }
+                        let create = flag.room.alphaSpawn.memory.create;
+                        let creat2 = flag.room.alphaSpawn.memory.warCreate;
+                        let creat3 = flag.room.alphaSpawn.memory.expandCreate;
+                        var totalBody = 0;
+                        for (let i in create) {
+                            totalBody += (create[i].build.length * 3);
+                        }
+                        for (let i in creat2) {
+                            totalBody += (creat2[i].build.length * 3);
+                        }
+                        for (let i in creat3) {
+                            totalBody += (creat3[i].build.length * 3);
+                        }
+                        totalBody += flag.room.stats.parts;
+                        if (flag.room.stats.storageEnergy > storageEnergyLimit && flag.room.terminal.store[RESOURCE_ENERGY] > 30000) {
                             flag.memory.module.push(['wallwork', 1, 5]);
                         }
                         if (flag.memory.sourceNumber === undefined) {
@@ -677,37 +685,39 @@ totalBody +=flag.room.stats.parts;
                             flag.memory.module.push(['harvester', flag.memory.sourceNumber, 3]);
                         }
                         if (flag.room.alphaSpawn.memory.warCreate === undefined) flag.room.alphaSpawn.memory.warCreate = [];
-                        //                    if (flag.room.alphaSpawn.memory.warCreate.length > 0) {
-                        //                          linkNum++;
-                        //                        }
                         if (totalBody > 1000) {
                             linkNum++;
                         }
                         if (totalBody > 3000) {
                             linkNum++;
                         }
+                        if (flag.room.extractor !== undefined && flag.room.mineral.mineralAmount > 0 && linkNum == 1) {
+                            linkNum++;
+                        }
 
 
                         if (flag.room.controller.ticksToDowngrade < 50000) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
-                        } else if (flag.room.storage.store[RESOURCE_ENERGY] >= 850000) {
+                        } else if (flag.room.storage.store[RESOURCE_ENERGY] >= storageEnergyLimit + 1000) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
-                        }else if (flag.room.terminal.total === 300000 || flag.room.storage.total === 1000000 ) {
+                        } else if (flag.room.terminal.total === 300000 || flag.room.storage.total === 1000000) {
                             flag.memory.module.push(['upbuilder', 1, 8]);
                         }
                         if (flag.room.stats.creepNumber > 10) {
                             //                        flag.memory.module.push(['upbuilder', 1, 8]);
                         }
-                        if(flag.room.alphaSpawn.memory.roadsTo === undefined) flag.room.alphaSpawn.memory.roadsTo = [];
-                        if (flag.room.alphaSpawn.memory.roadsTo[0] !== undefined && flag.room.alphaSpawn.memory.roadsTo[0].source === 'xxxx') {
-                            flag.room.alphaSpawn.memory.roadsTo.splice(0, 1);
-                        }
-                        if (flag.room.alphaSpawn.memory.roadsTo.length > 0) {
-                            flag.memory.module.push(['homeDefender', 1, 7]);
+                        //                        if () flag.room.alphaSpawn.memory.roadsTo = [];
+                        if (flag.room.alphaSpawn.memory.roadsTo !== undefined) {
+                            if (flag.room.alphaSpawn.memory.roadsTo[0] !== undefined && flag.room.alphaSpawn.memory.roadsTo[0].source === 'xxxx') {
+                                flag.room.alphaSpawn.memory.roadsTo.splice(0, 1);
+                            }
+                            if (flag.room.alphaSpawn.memory.roadsTo.length > 0) {
+                                flag.memory.module.push(['homeDefender', 1, 7]);
+                            }
                         }
 
                         flag.memory.module.push(['linker', linkNum, 5]);
-                        flag.room.visual.text(linkNum + ":🚗:" + flag.room.stats.parts+"/"+totalBody, flag.pos.x, flag.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });
+                        flag.room.visual.text(linkNum + ":🚗:" + flag.room.stats.parts + "/" + totalBody, flag.pos.x, flag.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });
 
                     } else { adjustModule(flag); }
 
@@ -818,7 +828,7 @@ totalBody +=flag.room.stats.parts;
             }
 
             let zFlags = Game.flags;
-            if(Game.flags.bandit === undefined) {
+            if (Game.flags.bandit === undefined) {
                 Memory.flags.bandit = undefined;
             }
             //_.filter(Game.flags, function(o) { return o.color != COLOR_GREY && o.color != COLOR_CYAN; });
@@ -1015,7 +1025,20 @@ totalBody +=flag.room.stats.parts;
                                 flag.memory.target = undefined;
                             }
 
-                            if (flag.memory.target === undefined || tgt === null) {
+                            if (flag.memory.nextTargets.length > 0) {
+                                for (let ae in flag.memory.nextTargets) {
+                                    let tgt = Game.getObjectById(flag.memory.nextTargets[ae]);
+                                    if (tgt !== null) {
+                                        tgt.room.visual.text("X", tgt.pos.x, tgt.pos.y);
+                                    }
+                                }
+                            }
+
+                            if (flag.memory.target === undefined && flag.memory.nextTargets.length > 0) {
+                                if (flag.memory.target === undefined) {
+                                    flag.memory.target = flag.memory.nextTargets.shift();
+                                }
+                            } else if (flag.memory.target === undefined || tgt === null) {
                                 findFlagTarget(flag);
                             }
                         }
@@ -1026,44 +1049,17 @@ totalBody +=flag.room.stats.parts;
                         //                   if (flag.memory.squadID === undefined || flag.memory.squadID.length !== flag.memory.totalNumber) {
                         // This is setup by the commands.toParty.rally section.
                         ///                      } else {
-                        squad = _.filter(Game.creeps, function(o) {
+                        let potSquad = _.filter(Game.creeps, function(o) {
                             return o.memory.party === flag.name;
                         });
+                        squad = _.filter(potSquad, function(o) {
+                            return o.memory.partied;
+                        });
+                        if (potSquad.length !== squad.length) {
+
+                        }
                         if (squad !== undefined && squad.length > 0) {
-                            if (squad.length === 1 && flag.room !== undefined) {
-                                /*
-                                let strucs = flag.room.find(FIND_STRUCTURES);
 
-                                var towers = _.filter(strucs, function(o) {
-                                    return o.structureType == STRUCTURE_TOWER && o.energy > 0;
-                                });
-                                var spawns = _.filter(strucs, function(o) {
-                                    return o.structureType == STRUCTURE_SPAWN;
-                                });
-                                var bads = squad[0].room.find(FIND_CREEPS);
-                                bads = _.filter(bads, function(o) {
-                                    return !_.contains(require('foxGlobals').friends, o.owner.username);
-                                });
-                                if (spawns.length === 0 && bads.length === 0) {
-                                    flag.memory.party = [
-                                        ['fighter', 2, 10]
-                                    ];
-                                }
-                                if (spawns.length === 0 && bads.length === 0 && towers.length === 0) {
-                                    flag.memory.party = [
-                                        ['fighter', 2, 10],
-
-                                    ];
-                                } */
-                                // Kill all structures not on rampart.                                 
-                                // Here we can analyze the room for changes in how squad is setup. 
-                                // If no spawns.
-                                // When do we determine if there is no more healing needed?
-                                // If no towers.
-                                // When do we determine if we need to start controller?
-                                // When room is uncontrolled we are done.
-
-                            }
                             require('commands.toSquad').runSquad(squad);
                         } else {
                             if (flag.memory.numberOfAttack === undefined) {
@@ -1097,6 +1093,13 @@ totalBody +=flag.room.stats.parts;
                                 if (zzzzz === null) {
                                     flag.memory.target = flag.memory.nextTargets.shift();
                                 }
+                                for (let ae in flag.memory.nextTargets) {
+                                    let tgt = Game.getObjectById(flag.memory.nextTargets[ae]);
+                                    if (tgt !== null) {
+                                        tgt.room.visual.text("X", tgt.pos.x, tgt.pos.y);
+                                    }
+                                }
+
                             }
                             if (flag.memory.target === undefined && flag.memory.nextTargets.length === 0) {
                                 // Setting up target
@@ -1111,7 +1114,7 @@ totalBody +=flag.room.stats.parts;
                                 }
 
                                 // Lets add some targets to next
-                                //                                if (flag.memory.target === undefined) findFlagTarget(flag);
+                                if (flag.memory.target === undefined) findFlagTarget(flag);
                             }
                             /*
                              let bads = flag.room.find(FIND_HOSTILE_CREEPS);
@@ -1131,6 +1134,17 @@ totalBody +=flag.room.stats.parts;
                             } else if (!flag.pos.isEqualTo(zz)) {
                                 flag.setPosition(zz.pos);
                             } else if (zz !== null) { // Visualization of hp and stuff.
+                                if (zz.structureType !== STRUCTURE_RAMPART && zz.pos.lookForStructure(STRUCTURE_RAMPART)) {
+                                    let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
+                                    if (res.length > 0) {
+                                        for (let ee in res) {
+                                            if (res[ee].structure !== undefined && res[ee].structure.structureType === STRUCTURE_RAMPART) {
+                                                flag.memory.target = res[ee].structure.id;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
                                 if (zz.room !== undefined && zz.room.memory.targetLastHits !== undefined) {
                                     let tmp = zz.hits - zz.room.memory.targetLastHits;
                                     strng = zz.hits + "/" + tmp + "=" + (tmp === 0 ? 0 : Math.ceil((zz.hits / (tmp)) * -1));

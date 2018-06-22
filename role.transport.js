@@ -200,8 +200,6 @@ function movement(creep) {
 //    bads = getBads(creep);
 //    if (bads.length !== 0) {
     if (creep.memory.goal !== '59f1a4ab82100e1594f3d4a9' && roleParent.guardRoom(creep)) {
-//creep.say("BADS");
-//        creep.runFrom(bads);
         creep.memory.cachePath = undefined;
     } else  {
         var skRooms = ['E16S45'];
@@ -354,6 +352,13 @@ class transport extends roleParent {
         } else {
             return classLevels[level];
         }
+    }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
     }
 
     static run(creep) {

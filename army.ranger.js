@@ -223,29 +223,39 @@ class rangerClass extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
-        creep.memory.death = creep.partyFlag === undefined;
+//        creep.memory.death = creep.partyFlag === undefined;
+        if (super.spawnRecycle(creep)) {
+            return;
+        }
 
         if (creep.ticksToLive > 1495 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
-creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
+            creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
 
         } else if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
-        if (super.spawnRecycle(creep)) {
-            return;
-        }
+    //    creep.say("1");
+  //      creep.say("2");
         if (super.goToPortal(creep)) return;
-        if (creep.pos.isNearTo(Game.flags.kill)) {
-            creep.memory.waypoint = false;
-        }
+    //    if (creep.pos.isNearTo(Game.flags.kill)) {
+  //          creep.memory.waypoint = false;
+//        }
 
-        if (super.doTask(creep)) {
-            return;
-        }
+      //  if (super.doTask(creep)) {
+    //        return;
+  //      }
+//        creep.say("3");
         if (super.rallyFirst(creep)) return;
-        if (super.goToPortal(creep)) return;
+//        if (super.goToPortal(creep)) return;
 
 //        if (!doAttack(creep)) {
   //      }
@@ -259,10 +269,14 @@ creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);
                         return;
                     }
                 }*/
+                if((creep.room.name === 'E43S58x' ||creep.room.name === 'E42S5x8') && creep.memory.party == 'Flag7'){
+                    creep.moveTo(new RoomPosition(1, 46,'E43S58'));
+
+                } else {
 
 creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
         //movement.flagMovement(creep);
-        //          }
+                  }
     }
 
 

@@ -301,6 +301,13 @@ class healerClass extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
         doMove = false;
@@ -408,6 +415,10 @@ class healerClass extends roleParent {
         } else {
 //            if (doMove) {
             //    movement.flagMovement(creep);
+                if((creep.room.name === 'E43xS58' ||creep.room.name === 'E42Sx58') && creep.memory.party == 'Flag7'){
+                    creep.moveTo(new RoomPosition(2, 46,'E43S58'));
+
+                } else             
     if(creep.partyFlag.tusken){
         creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
     } else {

@@ -57,8 +57,8 @@ module.exports = function() {
                         this.memory.extractorID = rtn[0].id;
                     }
                 }
-                let ext = Game.getObjectById( this.memory.extractorID );
-                if(ext === null) ext = undefined;
+                let ext = Game.getObjectById(this.memory.extractorID);
+                if (ext === null) ext = undefined;
                 this._extractor = ext;
                 return this._extractor;
             }
@@ -77,8 +77,8 @@ module.exports = function() {
                         this.memory.mineralID = rtn[0].id;
                     }
                 }
-                let ext = Game.getObjectById( this.memory.mineralID );
-                if(ext === null) ext = undefined;
+                let ext = Game.getObjectById(this.memory.mineralID);
+                if (ext === null) ext = undefined;
                 this._mineral = ext;
                 return this._mineral;
             }
@@ -103,12 +103,12 @@ module.exports = function() {
         // Returns any(my/enemy) towers.
         configurable: true,
         get: function() {
-            
-                var spwns = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_SPAWN });
-                this.memory.spawns = [];
-                for(var e in spwns){
-                    this.memory.spawns.push(spwns[e].id);
-                }
+
+            var spwns = this.find(FIND_STRUCTURES, { filter: o => o.structureType == STRUCTURE_SPAWN });
+            this.memory.spawns = [];
+            for (var e in spwns) {
+                this.memory.spawns.push(spwns[e].id);
+            }
 
         }
     });
@@ -218,6 +218,17 @@ module.exports = function() {
                 return this._boostLab;
             } else {
                 if (this.memory.boostLabID === undefined) {
+                    if (this.controller.level === 8 ) {
+                       let zzz = this.find(FIND_MY_STRUCTURES);
+                        zzz = _.filter(zzz, function(structure) {
+                            return (structure.structureType == STRUCTURE_LAB);
+                        });
+                        console.log('looking for boostLab',zzz.length,this.name);
+                        if (zzz.length === 10) {
+                            this.memory.boostLabID = zzz[9].id;
+                            return zzz[9];
+                        }
+                    }
                     return undefined;
                 }
                 this._boostLab = Game.getObjectById(this.memory.boostLabID);

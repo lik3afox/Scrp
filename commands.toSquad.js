@@ -14,6 +14,8 @@ var movement = require('commands.toMove');
 
 var doMovement;
 
+var reformSquad;
+
 
 function f(number) {
     if (number > 8) return number - 8;
@@ -55,6 +57,9 @@ function squadMemory(squaded, bads, analysis) {
 
 
             var point = Game.getObjectById(squad[0].partyFlag.memory.pointID);
+            if(point === null) {
+//                reformSquad = true;
+            }
             var attackDir;
 
             if (squad[0].partyFlag.memory.attackDirection === undefined) {
@@ -73,9 +78,9 @@ function squadMemory(squaded, bads, analysis) {
             var squadSpots = [
                 { pos: X, role: 'point', },
                 { pos: f(X - 1), role: 'melee', }, // Left of point
-                { pos: (X * 10) + (X), role: 'healer', }, // Behind point
-                { pos: (f(X - 1) * 10) + X, role: 'healer', },
                 { pos: f(X + 1), role: 'melee', }, // right of point
+                { pos: (X * 10) + (X), }, // Behind point
+                { pos: (f(X - 1) * 10) + X, },
                 { pos: (X10 + f(X + 1)), role: (X10 + (X + 1)), },
 
                 { pos: f(X - 1) * 10 + f(X - 1), role: f(X - 1) * 10 + (X - 1), },
@@ -89,8 +94,8 @@ function squadMemory(squaded, bads, analysis) {
                 squadSpots = [
                     { pos: X, role: 'point', },
                     { pos: f(X - 1), role: 'melee', }, // Left of point
-                    { pos: f(X + 1), role: 'healer', }, // right of point
-                    { pos: (X * 10) + (X), }, // Behind point
+                    { pos: f(X + 1),  role: 'melee', }, // right of point
+                    { pos: (X * 10) + (X),role: 'healer', }, // Behind point
                     { pos: (f(X - 1) * 10) + X, role: (f(X - 1) * 10) + X, },
                     { pos: (X10 + f(X + 1)), role: (X10 + (X + 1)), },
 
@@ -134,48 +139,64 @@ function squadMemory(squaded, bads, analysis) {
 
             //squad[0] = point;
             //squad[1] = healer;
+            var z;
+//            for(let z = squad.length; z--; z> 0){
+        z = squad.length;
+        while (z--) {
 
-            for (let z in squad) {
                 if (squad[z].memory.point && squadSpots.length > 0) {
 
                     if (!squad[z].pos.inRangeTo(squad[z].partyFlag, 3) && runMovement === undefined) {
                         squad[z].partyFlag.memory.squadMode = 'travel';
                     }
                     squad[z].memory.formationPos = squadSpots.shift().pos;
-
-
                     squad.splice(z, 1);
                     break;
                 }
             }
 
-            for (let z in squad) {
+        z = squad.length;
+        while (z--) {
 
+//            for(let z = squad.length; z--; z> 0){
+//            for (let z in squad) {
+
+//console.log('setting Squad for ',squad[z].memory.role, squadSpots[0].role,squadSpots.length );
+                if (squad[z].memory.role !== undefined && (squad[z].memory.role == 'fighter' || squad[z].memory.role == 'demolisher') && squadSpots.length > 0 && squadSpots[0].role == 'melee') {
+                    squad[z].memory.formationPos = squadSpots.shift().pos;
+
+                    squad.splice(z, 1);
+
+                }
+            }
+
+//            for(let z = squad.length; z--; z> 0){
+        z = squad.length;
+        while (z--) {
+
+//console.log('setting Squad for ',squad[z].memory.role, squadSpots[0].role);
                 if ((squad[z].memory.role == 'mage' || squad[z].memory.role == 'healer') && squadSpots.length > 0 && squadSpots[0].role == 'healer') {
                     squad[z].memory.formationPos = squadSpots.shift().pos;
-
                     squad.splice(z, 1);
                     break;
                 }
             }
 
+
+/*
             for (let z in squad) {
-
-                if ((squad[z].memory.role == 'fighter' || squad[z].memory.role == 'demolisher') && squadSpots.length > 0 && squadSpots[0].role == 'melee') {
-
+                if (squadSpots.length > 0 && squad[z].memory.role !== 'healer') {
                     squad[z].memory.formationPos = squadSpots.shift().pos;
 
-
-                    squad.splice(z, 1);
-
+                } else {
+                    squad[z].memory.formationPos = undefined;
                 }
-            }
-
-
-            for (let z in squad) {
+            } */
+        z = squad.length;
+        while (z--) {
                 if (squadSpots.length > 0) {
                     squad[z].memory.formationPos = squadSpots.shift().pos;
-
+                    squad.splice(z, 1);
                 } else {
                     squad[z].memory.formationPos = undefined;
                 }
@@ -196,7 +217,7 @@ function squadMemory(squaded, bads, analysis) {
                 }
             }
             if (point === null || point === undefined) break;
-            var close = point.pos.findClosestByRange(bads);
+/*            var close = point.pos.findClosestByRange(bads);
             //            var close = Game.flags.Flag28;
             if (close !== undefined) {
                 var distance = point.pos.getRangeTo(close);
@@ -209,12 +230,13 @@ function squadMemory(squaded, bads, analysis) {
                 } else if (distance === 3) {
                     runMovement = 0;
                 }
-            }
+            } */
 
             break;
 
         case 'travel':
             doMovement = true;
+            healType = 'react';
             for (let a in squad) {
                 let creep = squad[a];
                 creep.memory.happy = false;
@@ -311,6 +333,7 @@ function squadMovement(creep) {
                 }
             } else {
                 movement.flagMovement(creep); // This is imperfect, but it's a start.
+                creep.say('fmove');
             }
             //                    creep.say(creep.memory.formationPos);
             break;
@@ -318,6 +341,9 @@ function squadMovement(creep) {
             if (creep.memory.followingID === undefined) {
                 // Leader point man here
                 let dir = Game.getObjectById(creep.memory.directingID);
+                if(dir === null){
+                    reformSquad = true;
+                }
                 if (doMovement && !creep.pos.isNearTo(creep.partyFlag)) {
                     //movement.flagMovement(creep);
                     creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
@@ -326,6 +352,10 @@ function squadMovement(creep) {
             } else if (creep.memory.directingID === undefined) {
                 // Last person
                 let fol = Game.getObjectById(creep.memory.followingID);
+                if(fol === null){
+                    reformSquad  = true;
+                }
+
                 if (fol !== null) {
                     if (doMovement) {
                         creep.move(creep.pos.getDirectionTo(fol));
@@ -338,6 +368,9 @@ function squadMovement(creep) {
             } else {
                 // everyone else;
                 let fol = Game.getObjectById(creep.memory.followingID);
+                if(fol === null){
+                    reformSquad  = true;
+                }
                 if (fol !== null) {
                     if (doMovement) {
                         creep.move(creep.pos.getDirectionTo(fol));
@@ -355,8 +388,8 @@ function squadMovement(creep) {
 function squadAction(creep) {
     var doHeal = true;
 
-    if (doHeal && creep.stats('heal') > 0 && creep.memory.role !== 'fighter') {
-
+    if (doHeal && creep.stats('heal') > 0 && creep.memory.role !== 'fighter'&& creep.memory.role !== 'demolisher') {
+        creep.say(healType);
         if (healType === 'react') {
             if (!creep.smartHeal()) { // Does close heal
                 creep.rangedMassAttack();
@@ -584,7 +617,10 @@ class commandsToSquad {
         if (squad[0].partyFlag === undefined) return;
         runMovement = undefined;
         // First we determine if this is a two man squad or more.
-
+if(reformSquad){
+    setTravelSquad(squad);
+    reformSquad = undefined;
+}
         // First is updateMemory
         let bads = squad[0].room.find(FIND_HOSTILE_CREEPS);
         let analysis = {};
@@ -598,10 +634,10 @@ class commandsToSquad {
         squadVisual(squad);
 
         _.forEach(squad, function(creep) {
-            // Movement. 
-            squadMovement(creep);
             // Actions
             squadAction(creep, bads);
+            // Movement. 
+            squadMovement(creep);
         });
     }
 

@@ -141,6 +141,13 @@ class muleClass extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
         // First if it's home it will go to storage.
@@ -339,21 +346,24 @@ class muleClass extends roleParent {
                         creep.say(creep.memory.pickup.mineralType+'%'+creep.memory.pickup.mineralAmount+"@" + stor.structureType);
                         let min = creep.memory.pickup.mineralType;
                         let amnt = creep.memory.pickup.mineralAmount;
+
                         if (Game.shard.name === 'shard1' && (creep.room.terminal.store[min] === undefined || creep.room.terminal.store[min] < amnt)) {
                             _terminal_().requestMineral(creep.room.name, min);
                         }
                         if (Game.shard.name !== 'shard1' && creep.room.terminal.store[min] !== undefined && creep.room.terminal.store[min] < 5000 && min !== RESOURCE_POWER) {
-                            if(creep.room.terminal.store[RESOURCE_POWER] > 0) min = RESOURCE_POWER;
-//                            creep.memory.death = true;
-    //                        return;
+                            if(creep.room.terminal.store[RESOURCE_POWER] > 0) {
+                                min = RESOURCE_POWER;
+                            } 
                         } else if (min === RESOURCE_POWER && creep.room.terminal.store[min] === undefined || creep.room.terminal.store[min] === 0) {
                             creep.memory.death = true;
+                            //min = RESOURCE_ENERGY;
                             return;
                         }
                         if (creep.room.terminal.store[min] > 0 && amnt > 0 && creep.room.terminal.store[min] < amnt) { amnt = creep.room.terminal.store[min]; }
                         if (creep.room.terminal.store[min] >= amnt && creep.withdraw(stor, min, amnt) === OK) {
                             creep.memory.happy = true;
                         } else {
+                            if(creep.room.terminal.store[min] === undefined || creep.room.terminal.store[min] === 0 ) creep.withdraw(stor,RESOURCE_ENERGY);
                             return;
                         }
                     } else if (creep.room.name == 'E38S81') {

@@ -9,7 +9,6 @@ var transportLevel = 20000;
 
 
 var allModule = [
-    //    ['squire', require('role.squire')],
     ['harass', require('army.harass')],
     ['assistant', require('role.assistant')],
     ['troll', require('army.troll')],
@@ -20,7 +19,6 @@ var allModule = [
     ['mule', require('army.mule')],
     ['Acontroller', require('army.controller')],
     ['healer', require('army.healer')], // Gather and move - just carry 
-
 
     ['mage', require('army.mage')],
     ['shooter', require('keeper.shooter')],
@@ -42,9 +40,7 @@ var allModule = [
 
     ['linker', require('role.linker')],
     ['first', require('role.first')], // Should never have more firsts than containers...maybe..mmmm
-    ['scientist', require('role.scientist')],
-    //    ['nuker', require('role.nuker')],
-    //    ['tower', require('role.tower')],
+    //    ['scientist', require('role.scientist')],
 
     ['harvester', require('role.harvester')],
     ['transport', require('role.transport')], // Gather and move - just carry 
@@ -143,6 +139,7 @@ function rebuildCreep(creep) {
     // Here we need to determine if the creep is an expansion creep or home creep.
     // expansion creep.
     let _body = [];
+    let _boost = [];
 
     if (creep.memory.role == 'miner' || creep.memory.role == 'transport' || creep.memory.role == 'ztransport') {
         let spawn = Game.getObjectById(creep.memory.parent);
@@ -154,6 +151,7 @@ function rebuildCreep(creep) {
                     for (var uo in _module) {
                         if (_module[uo][_name] === creep.memory.role) {
                             _body = getModuleRole(_module[uo][_name]).levels(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room);
+                            _boost = getModuleRole(_module[uo][_name]).boosts(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room);
                         }
                     }
                 }
@@ -169,7 +167,7 @@ function rebuildCreep(creep) {
         for (var type in currentModule) {
             if (currentModule[type][_name] == creep.memory.role) {
                 _body = getModuleRole(currentModule[type][_name]).levels(currentModule[type][_level], creep.memory.home);
-                /**/
+                _boost = getModuleRole(currentModule[type][_name]).boosts(currentModule[type][_level], creep.memory.home);
                 break;
             }
         }
@@ -198,6 +196,7 @@ function rebuildCreep(creep) {
             role: creep.memory.role,
             home: creep.memory.home,
             parent: creep.memory.parent,
+            boostNeeded: _boost,
             deathCount: creep.memory.deathCount,
             level: creep.memory.level,
             goal: creep.memory.goal,
@@ -221,6 +220,58 @@ function rebuildCreep(creep) {
     return temp;
 }
 
+function numberOfBody(creep, boost) {
+    var total = 0;
+    let type;
+    if (boost === undefined) {
+        //        console.log(creep, "trying to do boost for:", boost);
+        return;
+    }
+    switch (boost) {
+        case "UH":
+        case "UH2O":
+        case "XUH2O":
+            type = ATTACK;
+            break;
+        case "LO":
+        case "LHO2":
+        case "XLHO2":
+            type = HEAL;
+            break;
+        case "KO":
+        case "KHO2":
+        case "XKHO2":
+            type = RANGED_ATTACK;
+            break;
+        case "ZO":
+        case "ZHO2":
+        case "XZHO2":
+            type = MOVE;
+            break;
+        case "KH":
+        case "KH2O":
+        case "XKH2O":
+            type = CARRY;
+            break;
+        case "GO":
+        case "GHO2":
+        case "XGHO2":
+            type = TOUGH;
+            break;
+        default:
+            type = WORK;
+            break;
+
+    }
+    var e = creep.body.length;
+    while (e--) {
+        if (creep.body[e].type == type) {
+            total++;
+        }
+    }
+
+    return total;
+}
 
 function doSpawnCount(creep) {
     if (creep === undefined) {
@@ -305,13 +356,8 @@ class theSpawn {
                 console.log('room has "max" walls!', spawn.room.name);
             } else if ((currentModule[type][_name] == 'minHarvest' || currentModule[type][_name] == 'assistant') && (min !== null) && (min.mineralAmount === 0)) {
 
-            } else
-                /*if ((currentModule[type][_name] == 'nukered') && (nuke.ghodium == nuke.ghodiumCapacity) && (nuke.energy == nuke.energyCapacity)) {
-
-                           } else*/
-                if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {
-
-                } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
+            } else if (spawn.room.memory.alert && _.contains(alertProhib, currentModule[type][_name])) {} else if (currentModule[type][_name] == 'upbuilder' && ((spawn.room.powerspawn !== undefined && spawn.room.powerspawn.power > 0) && (spawn.room.controller.ticksToDowngrade > 25000))) { // current stop for power.
+            } else if (currentModule[type][_name] == 'upgrader' && spawn.room.controller.level === 8) {
 
             } else {
                 if (totalCreeps[currentModule[type][_name]] === undefined) {
@@ -332,18 +378,13 @@ class theSpawn {
                             name: currentModule[type][_name] + totalCreeps[currentModule[type][_name]].count + "*" + spawn.memory.created,
                             memory: {
                                 role: currentModule[type][_name],
+                                boostNeeded: mod.boosts(currentModule[type][_level]),
                                 home: spawn.room.name,
                                 parent: spawn.id,
                                 level: currentModule[type][_level]
                             }
                         };
-                        if (currentModule[type][_name] == 'upbuilderxx') {
-                            if (spawn.room.controller.ticksToDowngrade < 50000 || Game.shard.name == 'shard2') {
-                                spawn.memory.create.push(temp);
-                                totalCreeps[currentModule[type][_name]].count++;
-                                spawn.memory.created++;
-                            }
-                        } else
+
                         if (currentModule[type][_name] == 'linker') {
                             spawn.memory.create.unshift(temp);
                             totalCreeps[currentModule[type][_name]].count++;
@@ -361,7 +402,7 @@ class theSpawn {
         }
 
         // Expand check
-        if (spawn.memory.roadsTo.length === 0) return;
+        if (spawn.memory.roadsTo === undefined || spawn.memory.roadsTo.length === 0) return;
 
         for (let mod in spawn.memory.roadsTo) {
             let remoteInfo = spawn.memory.roadsTo[mod];
@@ -414,6 +455,7 @@ class theSpawn {
                                 role: expandRole[e],
                                 home: spawn.room.name,
                                 parent: spawn.id,
+                                boostNeeded: getModuleRole(expandRole[e]).boosts(roleInfo[expandRole[e]].level),
                                 goal: remoteInfo.source,
                                 level: roleInfo[expandRole[e]].level
                             }
@@ -493,6 +535,7 @@ class theSpawn {
                                     spawn.memory.expandCreate.push(temp);
                                 }
                                 break;
+
                             default:
                                 totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                 spawn.memory.expandCreate.push(temp);
@@ -649,9 +692,9 @@ class theSpawn {
                 }
                 if ((Game.creeps[name].memory.sleeping !== undefined && Game.creeps[name].memory.sleeping > 0)) {
                     if (Game.creeps[name].memory.sleeping < 1000) {
-    //                    if (Game.creeps[name].ticksToLive <= Game.creeps[name].memory.sleeping) {
-  //                          Game.creeps[name].suicide();
-//                        }
+                        //                    if (Game.creeps[name].ticksToLive <= Game.creeps[name].memory.sleeping) {
+                        //                          Game.creeps[name].suicide();
+                        //                        }
                         Game.creeps[name].say('💤' + Game.creeps[name].memory.sleeping);
                         Game.creeps[name].memory.sleeping--;
                     } else {
@@ -675,11 +718,57 @@ class theSpawn {
                             if (Game.creeps[name].memory.role == allModule[type][_name]) { // if they are the same
                                 roleIndex[Game.creeps[name].memory.role] = type;
                                 allModule[type][_require].run(Game.creeps[name]); // Then run the require of that role.
+                                if (Game.creeps[name].memory.home === 'E24S33' && Game.creeps[name].memory.parent !== '5a9609b01fdc475500bd30bd') {
+                                    Game.creeps[name].memory.reportDeath = true;
+                                }
                                 break;
                             }
                         }
                     } else {
                         allModule[roleIndex[Game.creeps[name].memory.role]][_require].run(Game.creeps[name]); // Then run the require of that role.     
+                                if (Game.creeps[name].memory.home === 'E24S33' && Game.creeps[name].memory.parent !== '5a9609b01fdc475500bd30bd') {
+                                    Game.creeps[name].memory.reportDeath = true;
+                                }
+                    }
+                } else if (Game.creeps[name].spawning) {
+                   // if (Game.creeps[name].pos.isNearTo(Game.creeps[name].room.boostLab)) {
+                  //      console.log('creep spawning is near boostLab', Game.creeps[name].pos.roomName, Game.creeps[name].memory.role, Game.creeps[name].memory.boostNeeded);
+                    //}
+                    if (Game.creeps[name].memory.boostNeeded !== undefined && Game.creeps[name].memory.boostNeeded.length > 0 && Game.creeps[name].room.boostLab !== undefined && Game.creeps[name].room.boostLab.pos.isNearTo(Game.creeps[name]) && Game.creeps[name].room.boostLab._didBoost === undefined ) {
+                        var neededMin = numberOfBody(Game.creeps[name], Game.creeps[name].memory.boostNeeded[0]) * 30;
+                        Game.creeps[name].room.memory.boost = {
+                            mineralType: Game.creeps[name].memory.boostNeeded[0],
+                            timed: 20,
+                            mineralAmount: neededMin
+                        };
+                        let lab = Game.creeps[name].room.boostLab;
+                        console.log(roomLink(Game.creeps[name].room.name),'trying to do boost,',Game.creeps[name].room.memory.boost.mineralType,Game.creeps[name].room.memory.boost.mineralAmount,Game.creeps[name].room.boostLab._didBoost);
+                        if(Game.creeps[name].room.boostLab._didBoost){
+                            console.log('This shouldnt do a boost due to,',Game.creeps[name].room.boostLab._didBoost);
+                            console.log('This shouldnt do a boost due to,',Game.creeps[name].room.boostLab._didBoost);
+                            console.log('This shouldnt do a boost due to,',Game.creeps[name].room.boostLab._didBoost);
+                            console.log('This shouldnt do a boost due to,',Game.creeps[name].room.boostLab._didBoost);
+                        }
+                        if (lab !== undefined && Game.creeps[name].room.memory.boost.mineralAmount >= lab.mineralAmount && Game.creeps[name].room.memory.boost.mineralType == lab.mineralType ) {
+                            //            console.log('doing boost', good.length, roomLink(roomName));
+                            let result = lab.boostCreep(Game.creeps[name]);
+                            if (result === OK) {
+                                if (Game.creeps[name].memory.isBoosted === undefined) Game.creeps[name].memory.isBoosted = [];
+                                Game.creeps[name].room.boostLab._didBoost = true;
+                                Game.creeps[name].memory.isBoosted.push(Game.creeps[name].memory.boostNeeded.shift());
+                                console.log('SPAWNING BOOST', Game.creeps[name].memory.isBoosted,Game.creeps[name].room.boostLab._didBoost,roomLink(Game.creeps[name].room.name));
+                                Game.creeps[name].room.memory.boost = {
+                                    mineralType: 'none',
+                                    timed: 20,
+                                    mineralAmount: neededMin
+                                };
+                                //                                ;
+                            }
+                        }
+
+
+
+
                     }
                 }
             }
@@ -699,7 +788,8 @@ class theSpawn {
 
     static reportDeath(creep) {
         var spawn = Game.getObjectById(creep.memory.parent);
-        if(spawn.memory.expandCreate === undefined) spawn.memory.expandCreate =[];
+        if (spawn !== null && spawn.memory.expandCreate === undefined) spawn.memory.expandCreate = [];
+        if (spawn !== null && spawn.memory.create === undefined) spawn.memory.create = [];
         if (spawn !== null) {
             switch (creep.memory.role) {
                 case "miner":

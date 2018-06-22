@@ -232,6 +232,50 @@ module.exports = function() {
         return redFlags;
     };
 */
+    Creep.prototype.getNearNonEnergy = function() {
+        var around = this.room.lookAtArea(coronateCheck(this.pos.y - 1), coronateCheck(this.pos.x - 1),
+            coronateCheck(this.pos.y + 1), coronateCheck(this.pos.x + 1), true);
+        var e = around.length;
+        while (e--) {
+            switch( around[e].type ) {
+                case 'tombstone':
+                        let tombstone = around[e].tombstone;
+                        for(let i in tombstone.store ){
+                            if(i !== RESOURCE_ENERGY && tombstone.store[i] > 0) {
+                                this.withdraw(tombstone,i);
+                                this.say('tomestone');
+                                console.log(this,'@',this.pos,'doing tombstone pick');
+                                return true;
+                            }
+                        }
+                break;
+                case 'resource':
+                    let resource = around[e].resource;
+                    if(resource.resourceType !== RESOURCE_ENERGY) {
+                        this.pickup(resource);
+                        this.say('resource');
+                                console.log(this,'@',this.pos,'doing resource pick');
+                        return true;
+                    }
+
+                break;
+                case 'creep':
+                    let creep = around[e].creep;
+                    if(creep.carryCapacity > 0 && creep.carrying !== RESOURCE_ENERGY && creep.id !== this.id && creep.carryTotal > creep.carryCapacity>>1){
+                        //this.withdraw(creep,creep.carrying);
+                        creep.transfer(this,creep.carrying);
+                        this.say('creep');
+                        console.log(this,'@',this.pos,'doing creep pick',creep,creep.carrying,creep.carryCapacity>>1);
+                        return true;
+                    }
+
+            } 
+        }
+
+
+        return false;
+    };
+
     Creep.prototype.pickUpEverything = function() {
         let zz = this.room.lookAtArea((this.pos.y - 1 < 0 ? 0 : this.pos.y - 1), (this.pos.x - 1 < 0 ? 0 : this.pos.x - 1), (this.pos.y + 1 > 49 ? 49 : this.pos.y + 1), (this.pos.x + 1 > 49 ? 49 : this.pos.x + 1), true);
         for (var e in zz) {

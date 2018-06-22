@@ -21,7 +21,7 @@ class PowerInteract {
             let powerS = Game.rooms[roomName].powerspawn;
             if (powerS !== undefined) {
                 let room = Game.rooms[roomName];
-                if (powerS.power > 0 && powerS.energy >= 50 && room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > storageEnergyLimit) {
+                if (powerS.power > 0 && powerS.energy >= 50 && room.terminal.store[RESOURCE_ENERGY] > 19000 && room.storage.store[RESOURCE_ENERGY] > storageEnergyLimit-10000) {
                     if (powerS.processPower() == OK) {
                         Memory.stats.powerProcessed++;
                         powerS.room.visual.text("🔌", powerS.pos, {

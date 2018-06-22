@@ -126,6 +126,24 @@ class roleUpbuilder extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+
+        let boost = [];
+        if (Game.shard.name == 'shard1') {
+            if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.XGH2O > 250000) {
+                boost.push('XGH2O');
+            }else if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH2O > 50000) {
+                boost.push('GH2O');
+            }
+            return _.uniq(boost);
+        }
+
+        if (_.isObject(classLevels[level])) {
+            return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     /** @param {Creep} creep **/
     static run(creep) {
@@ -154,19 +172,7 @@ class roleUpbuilder extends roleParent {
         //          return;
         //    }
 
-        var doUpgrade = ['E29S48', 'E14S43']; //'E18S36','E23S42','E14S47','E14S37','E28S42',
-        var justgh = ['E23S45']; // 'E27S34'
-        // && _.contains(doUpgrade, creep.room.name)
-            boost = [];
-        if (Game.shard.name == 'shard1' && creep.ticksToLive === 1499 && creep.room.controller.level === 8) {
-            if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.XGH2O > 250000) {
-                boost.push('XGH2O');
-            }else 
-            if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH2O > 50000) {
-                boost.push('GH2O');
-            }
-            _.uniq(boost);
-        }/*
+/*
         if (_.contains(justgh, creep.room.name) && creep.ticksToLive === 1499) {
             if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH > 85000) {
                 boost.push('GH');

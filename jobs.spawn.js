@@ -286,7 +286,7 @@ class jobs {
         }
         // console.log(creep, '@ doRoomEnergy', roomLink(creep.room.name));
               if(creep.carryTotal !== creep.carry[RESOURCE_ENERGY]){
-          creep.moveToTransfer(creep.room.storage,creep.carrying);
+          creep.moveToTransfer(creep.room.storage,creep.carrying,{reusePath:10,ignoreCreeps:true});
                   creep.say('@2124');
                     return true;
                } 
@@ -508,7 +508,7 @@ class jobs {
                     let zze = _terminal_().requestMineral(creep.room.name, boost.mineralType, boost.mineralAmount);
                     creep.say('req:' + boost.mineralType + zze);
                     if (!zze) boost.timed--;
-                    return true;
+//                    return true;
                 }
                 //          if(creep.room.name == 'E29S48'){
                 //            }
@@ -587,20 +587,12 @@ class jobs {
         console.log(creep, '@ doNuke', roomLink(creep.room.name));
         if (creep.carryTotal === 0) {
             if (nuke.energy < nuke.energyCapacity) {
-                if (creep.room.terminal.store[RESOURCE_ENERGY] === 0) {
+                if(creep.room.storage.store[RESOURCE_ENERGY] < 850000) return false;
                     if (creep.pos.isNearTo(creep.room.storage)) {
                         creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
                     } else {
                         creep.moveTo(creep.room.storage);
                     }
-
-                } else {
-                    if (creep.pos.isNearTo(creep.room.terminal)) {
-                        creep.withdraw(creep.room.terminal, RESOURCE_ENERGY);
-                    } else {
-                        creep.moveTo(creep.room.terminal);
-                    }
-                }
             } else if (nuke.ghodium < nuke.ghodiumCapacity) { //&& terminal.store[RESOURCE_GHODIUM] !== undefined
                 if (creep.room.terminal.store.G === undefined || creep.room.terminal.store.G === 0) {
                     _terminal_().requestMineral(creep.room.name, 'G');
@@ -613,7 +605,6 @@ class jobs {
             }
 
         } else {
-
             if (creep.carrying === 'G' && nuke.ghodium == nuke.ghodiumCapacity) {
                 creep.moveToTransfer(creep.room.terminal, creep.carrying);
             } else if (creep.carrying === RESOURCE_ENERGY && nuke.energy == nuke.energyCapacity) {
@@ -622,6 +613,7 @@ class jobs {
                 creep.moveToTransfer(nuke, creep.carrying);
             }
         }
+        return true;
     }
     static doMineralContainer(creep) {
         var targetContain = Game.getObjectById(creep.room.memory.mineralContainID);
@@ -640,7 +632,11 @@ class jobs {
 
 
         if (!creep.memory.emptyMin || creep.carry[RESOURCE_ENERGY] !== 0 ) {
-            creep.moveToTransfer(creep.room.terminal, creep.carrying);
+        	if(creep.room.terminal.total === 300000){
+	            creep.moveToTransfer(creep.room.terminal, creep.carrying);
+        	} else {
+        		creep.moveToTransfer(creep.room.storage, creep.carrying);
+        	}
             creep.say('!');
         } else {
             mineralContainerEmpty(creep);

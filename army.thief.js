@@ -272,6 +272,13 @@ class thiefClass extends roleParent {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
         if (this.doTask(creep)) return true;
@@ -297,6 +304,23 @@ class thiefClass extends roleParent {
 
         creep.memory.death = creep.partyFlag === undefined;
         
+        if(creep.room.name === 'E43S58' && creep.room.terminal.store[RESOURCE_ENERGY]> 0){
+            if(creep.carryTotal === 0){
+                creep.moveToWithdraw(creep.room.terminal,RESOURCE_ENERGY);
+            } else {
+                creep.drop(creep.carrying);
+            }
+            return;
+        }
+        if(creep.room.name === 'E43S58' && (creep.room.storage.store[RESOURCE_ENERGY]> 0 || creep.carry[RESOURCE_ENERGY] > 0 )){
+            if(creep.carryTotal === 0){
+                creep.moveToWithdraw(creep.room.storage,RESOURCE_ENERGY);
+            } else {
+                creep.drop(creep.carrying);
+            }
+            return;
+        }
+
         let creepCarry = creep.carryTotal;
         /*
                 if (creep.memory.party == 'Flag1' && creep.isHome && creep.carryTotal === 0) {

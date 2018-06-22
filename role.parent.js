@@ -182,6 +182,7 @@ class baseParent {
     constructor() {}
 
     levels(level) {}
+    boosts(level) {}
 
     static doTask(creep) {
         if (creep.memory.task === undefined) {
@@ -325,6 +326,9 @@ class baseParent {
     }
 
     static boosted(creep, boosted) {
+        if(creep.ticksToLive === 1499){
+//            if()
+        }
         if (creep.ticksToLive < 1000 || (creep.room.controller !== undefined && creep.room.controller.level < 6)) {
             return false;
         }
@@ -434,10 +438,10 @@ class baseParent {
         });
 
         var D3Bad = creep.pos.findInRange(D4Bad, 3);
-        if (D3Bad.length > 0 && D4Bad.length - D3Bad.length != D4Bad.length) {
+        if (D3Bad.length > 0 ) { //&& D4Bad.length - D3Bad.length != D4Bad.length
             let resz = creep.runFrom(D4Bad);
             if (resz) {
-                creep.memory.sleep = 5;
+//                creep.memory.sleep = 5;
             }
             return true;
         } else if (D4Bad.length > 0) {
@@ -614,7 +618,7 @@ class baseParent {
         return false;
     }
 
-    static renew(creep) {
+/*    static renew(creep) {
         //        if (creep.memory.birthTime === undefined) creep.memory.birthTime = Game.time;
 
         if (creep.ticksToLive > 750) return false;
@@ -632,7 +636,7 @@ class baseParent {
             creep.memory.reportDeath = true;
         }
         return true;
-    }
+    } */
 
 }
 

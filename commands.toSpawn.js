@@ -142,6 +142,12 @@ class SpawnInteract {
         var e = around.length;
         while (e--) {
             if (around[e].type == 'structure') {
+
+                if(around[e].structure.structureType === STRUCTURE_LINK && around[e].structure.energy > 0 && creep.carryTotal !== creep.carryCapacity>>1){
+                    if( creep.withdraw(around[e].structure, RESOURCE_ENERGY) == OK){
+                        return true;
+                    }
+                }
                 if ((around[e].structure.structureType != STRUCTURE_LINK && around[e].structure.structureType != STRUCTURE_NUKER) && around[e].structure.energy < around[e].structure.energyCapacity) {
                     if (creep.transfer(around[e].structure, RESOURCE_ENERGY) == OK) {
                         if (creep.carry[RESOURCE_ENERGY] < 51) {
@@ -149,6 +155,10 @@ class SpawnInteract {
                         }
                         return true;
                     }
+                }
+            }else if(around[e].type == 'creep' && around[e].creep.memory.role === 'wallwork' && around[e].creep.carryTotal < around[e].creep.carryCapacity){
+                if( creep.transfer(around[e].creep,RESOURCE_ENERGY) === OK){
+                    return true;
                 }
             }
         }
@@ -266,15 +276,19 @@ class SpawnInteract {
                 console.log('----------------Create Spawn Created Count----------------');
             }
             if (spawn.memory.roadsTo === undefined) {
-                spawn.memory.roadsTo = [];
+//                spawn.memory.roadsTo = [];
                 console.log('----------------Create Spawn RoadsTo ----------------');
-                spawn.memory.roadsTo.push({
-                    source: 'xxxx',
-                    sourcePos: new RoomPosition(5, 5, 'xxnx'),
-                    miner: false,
-                    transport: false,
-                    expLevel: 0
-                });
+//                console.log('looking for other spawns that match room and has roadTo info to grab from');
+                for(var e in Game.spawns){
+      //              if(Game.spawns[e].memory.roadsTo !== undefined){
+  //                      console.log(Game.spawns[e].room.name , spawn.room.name, Game.spawns[e].memory.alphaSpawn, Game.spawns[e].memory.roadsTo);
+    //                }
+                    if(Game.spawns[e].room.name === spawn.room.name && !Game.spawns[e].memory.alphaSpawn && Game.spawns[e].memory.roadsTo !== undefined){
+        //                console.log('found');
+                        spawn.memory.roadsTo = Game.spawns[e].memory.roadsTo;
+                        break;
+                    }
+                }
             }
 
 
@@ -313,19 +327,20 @@ class SpawnInteract {
             }
         }
     }
-    static newWantRenew(creep) {
-        if (creep.room.memory.renewCreep === undefined) {
-            creep.room.memory.renewCreep = [];
-        }
-        creep.room.memory.renewCreep.push(creep.name);
-    }
+//    static newWantRenew(creep) {
+      //  if (creep.room.memory.renewCreep === undefined) {
+    //        creep.room.memory.renewCreep = [];
+  //      }
+//        creep.room.memory.renewCreep.push(creep.name);
+  //  }
 
     static createFromStack(spawn) {
         if (spawn.spawning) return;
         var STACK = getStack(spawn);
-        if (spawn.memory.spawnDir === undefined) {
-            spawn.memory.spawnDir = 1;
-        }
+    //    if (spawn.memory.spawnDir === undefined) {
+//            spawn.memory.spawnDir = 1;
+  //      }
+        spawn.memory.spawnDir = undefined;
         if (STACK !== undefined && STACK.length > 0) {
             if (!_.isArray(STACK[0].build)) {
                 console.log('clearing stak of error', STACK[0].build);

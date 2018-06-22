@@ -639,6 +639,7 @@ function addSpawnQuery(spawnCount) {
 
                     let war = spwn.memory.warCreate;
                     let expand = spwn.memory.expandCreate;
+                    if (expand === undefined) expand = [];
                     let a;
                     let iMax;
 
@@ -958,6 +959,21 @@ function doInstructions(instructions) {
                 let order = current.order;
                 roomCreate = order.shardRoom;
                 if (roomCreate === undefined) roomCreate = getShardRoom(Game.shard.name, current.mineralType);
+                if(Game.rooms[roomCreate].terminal.didAction) {
+                    console.log('skip didAction');
+                    continue;
+                }
+                if(Game.rooms[roomCreate].terminal.cooldown > 0){
+
+                    if (Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
+                        console.log('spliced?');
+                        instructions.splice(i, 1);
+                    } else {
+    //                    console.log('skip Term Cooldown');                        
+                    }
+
+                    continue;
+                }
                 //              console.log(current.mineralType, order.id, current.mineralAmount, roomCreate, Game.shard.name);
                 //                console.log(Game.rooms[roomCreate].terminal.store[current.mineralType]);
                 var zez = Game.market.getOrderById(order.id);
@@ -977,19 +993,20 @@ function doInstructions(instructions) {
                         }
                     }
 
-
                 }
                 let ez = Game.market.deal(order.id, amoutn, roomCreate);
 
-                console.log(ez, 'FulFill buy order on ', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate, order.id, order.amount);
+                console.log(Game.rooms[roomCreate].terminal.didAction,ez, 'FulFill buy order on ', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate, order.id, order.amount);
 
                 if (ez === OK) {
                     //        console.log("selling SUCCESS", current.mineralType);
+                    Game.rooms[roomCreate].terminal.didAction = true;
                     instructions.splice(i, 1);
                     continue;
                 } else {
-                    //       console.log('Selling FAILED2', ez);
+                           console.log('Selling FAILED2', ez);
                     if (Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
+                        console.log('spliced?');
                         instructions.splice(i, 1);
                     }
                 }
@@ -1044,7 +1061,7 @@ function getMarketPrices() {
     for (var e in minerals) {
         let min = minerals[e];
         var room = getShardRoom(Game.shard.name, min);
-        if (Game.rooms[room] !== undefined && Game.rooms[room].terminal !== undefined && Game.rooms[room].terminal.store[min] !== undefined) {
+        if (Game.rooms[room] !== undefined && Game.rooms[room].terminal !== undefined && Game.rooms[room].terminal.store[min] !== undefined && Game.rooms[room].terminal.store[min]> 100) {
             rtn[min] = {
                 buy: _.max(Game.market.getAllOrders(o => o.type === ORDER_BUY && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
                 sell: _.min(Game.market.getAllOrders(o => o.type === ORDER_SELL && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
@@ -1754,7 +1771,10 @@ module.exports.loop = blackMagic(function() {
 
     //        if (Game.spawns[title].roomName == 'E24S33')
     for (title in Game.spawns) {
-
+        if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
+            ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
+        }
+        Game.spawns[title].memory.wantRenew = undefined;
         if (Game.spawns[title].memory.alphaSpawn) {
             //                      var constr = require('commands.toStructure');
             //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
@@ -1782,10 +1802,27 @@ module.exports.loop = blackMagic(function() {
 
         if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
             //            doRoomVisual(Game.spawns[title].room);
-            ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
+
 
             if (Game.spawns[title].memory.alphaSpawn) {
+                Game.spawns[title].room.memory.alphaSpawnID = Game.spawns[title].id;
+
                 rampartCheck(Game.spawns[title]);
+                Game.spawns[title].room.visual.text("A", Game.spawns[title].pos.x - 0.5, Game.spawns[title].pos.y + 0.5, {
+                    color: '#FFFFFF ',
+                    stroke: '#000000 ',
+                    strokeWidth: 0.123,
+                    font: 1.5,
+                    align: RIGHT
+                });
+                if (Game.spawns[title].room.boostLab !== undefined)
+                    Game.spawns[title].room.visual.text("B", Game.spawns[title].room.boostLab.pos.x - 0.5, Game.spawns[title].room.boostLab.pos.y + 0.5, {
+                        color: '#FFFFFF ',
+                        stroke: '#000000 ',
+                        strokeWidth: 0.123,
+                        font: 1.5,
+                        align: RIGHT
+                    });
 
                 if (Game.cpu.bucket > 1000) {
                     safemodeCheck(Game.spawns[title]);
@@ -1814,7 +1851,7 @@ module.exports.loop = blackMagic(function() {
                     align: RIGHT
                 });
                 if (Game.spawns[title].spawning.remainingTime === 0) {
-                    console.log('spawning ERROR ERROR here,', Game.spawns[title].pos.roomName);
+                    console.log('spawning ERROR ERROR here,', Game.spawns[title].pos.roomName,Game.spawns[title].pos.x,Game.spawns[title].pos.y);
                 }
             }
             if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
@@ -1855,9 +1892,9 @@ module.exports.loop = blackMagic(function() {
     scanForCleanRoom();
     setInterShardData();
     consoleLogReport();
-//    let eddcc = 'E1S1';
-//    console.log(eddcc, standardizeRoomName(eddcc));
-//    console.log('E19s49', standardizeRoomName('E19s49'));
+    //    let eddcc = 'E1S1';
+    //    console.log(eddcc, standardizeRoomName(eddcc));
+    //    console.log('E19s49', standardizeRoomName('E19s49'));
     // });
 
     //        cleanMemory();

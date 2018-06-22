@@ -35,7 +35,7 @@ var classLevels = [
             MOVE, MOVE, MOVE, MOVE, MOVE,
             ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
         ],
-        boost: [],
+   //     boost: [],
     },
     // Level 6
     {
@@ -193,14 +193,14 @@ function doAttack(creep) {
 function powerAction(creep) {
     var power = require('commands.toPower');
 
-/*    var bads = creep.room.find(FIND_HOSTILE_CREEPS);
-    bads = _.filter(bads, function(o) {
-        return o.owner.username === 'Screeps';
-    });
-    //            bads = creep.pos.findInRange(bads,3);
-    if (bads.length > 0) {
-        console.log('FOUND looking around for bads', bads.length);
-    } */
+    /*    var bads = creep.room.find(FIND_HOSTILE_CREEPS);
+        bads = _.filter(bads, function(o) {
+            return o.owner.username === 'Screeps';
+        });
+        //            bads = creep.pos.findInRange(bads,3);
+        if (bads.length > 0) {
+            console.log('FOUND looking around for bads', bads.length);
+        } */
 
     if (Game.flags[creep.memory.party] !== undefined) {
 
@@ -326,10 +326,18 @@ class fighterClass extends roleParent {
         }
     }
 
+    static boosts(level) {
+            if (level > classLevels.length - 1) level = classLevels.length - 1;
+            if (_.isObject(classLevels[level])) {
+return _.clone( classLevels[level].boost);
+        }
+        return;
+    }
+
 
     static run(creep) {
         creep.say('fight');
-//        creep.memory.death = creep.partyFlag === undefined;
+        //        creep.memory.death = creep.partyFlag === undefined;
         if (super.spawnRecycle(creep)) {
             return;
         }

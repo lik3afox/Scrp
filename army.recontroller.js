@@ -15,18 +15,25 @@ var roleParent = require('role.parent');
 class hacker2Class extends roleParent {
     static levels(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        if( _.isArray(classLevels[level])) {
+        if (_.isArray(classLevels[level])) {
             return classLevels[level];
         }
-        if (_.isObject(classLevels[level]) ) {
+        if (_.isObject(classLevels[level])) {
             return classLevels[level].body;
         } else {
             return classLevels[level];
         }
     }
+    static boosts(level) {
+        if (level > classLevels.length - 1) level = classLevels.length - 1;
+        if (_.isObject(classLevels[level])) {
+            return _.clone(classLevels[level].boost);
+        }
+        return;
+    }
 
     static run(creep) {
-//console.log('RECONTROLLER',creep.pos,roomLink(creep.room.name));
+        //console.log('RECONTROLLER',creep.pos,roomLink(creep.room.name));
         if (Game.flags.recontrol !== undefined && creep.pos.roomName == Game.flags.recontrol.pos.roomName) {
             creep.say('there?');
 
@@ -58,9 +65,9 @@ class hacker2Class extends roleParent {
 
                         break;
                 }
-           }
+            }
         } else {
-                movement.flagMovement(creep);
+            movement.flagMovement(creep);
         }
 
     }
