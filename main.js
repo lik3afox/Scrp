@@ -548,21 +548,21 @@ function getWallLow(roomName) {
     if (Game.rooms[roomName] === undefined) return 0;
     if (Game.shard.name === 'shard3') return 0;
     let room = Game.rooms[roomName];
-    if(!room.memory.weakestWall) return 0;
+    if (!room.memory.weakestWall) return 0;
     if (Game.time % 1500 !== 0) return room.memory.weakestWall;
-    if(Memory.threeLowestWalls === undefined){
-        Memory.threeLowestWalls = ['E39S51','E13S18','E21S49'];
+    if (Memory.threeLowestWalls === undefined) {
+        Memory.threeLowestWalls = ['E39S51', 'E13S18', 'E21S49'];
     }
-    if(!_.contains(Memory.threeLowestWalls,roomName)){
-        for(let i in Memory.threeLowestWalls){
-            if(Game.rooms[Memory.threeLowestWalls[i]]){
-                let wall = Game.rooms[ Memory.threeLowestWalls[i] ].memory.weakestWall;
-                if(room.memory.weakestWall < wall-1000000 ){
+    if (!_.contains(Memory.threeLowestWalls, roomName)) {
+        for (let i in Memory.threeLowestWalls) {
+            if (Game.rooms[Memory.threeLowestWalls[i]]) {
+                let wall = Game.rooms[Memory.threeLowestWalls[i]].memory.weakestWall;
+                if (room.memory.weakestWall < wall - 1000000) {
                     Memory.threeLowestWalls[i] = roomName;
                     break;
                 }
             } else {
-                console.log(Memory.threeLowestWalls[i],"ROOM NOT THERE?");
+                console.log(Memory.threeLowestWalls[i], "ROOM NOT THERE?");
             }
         }
     }
@@ -637,7 +637,7 @@ module.exports.loop = blackMagic(function() {
     }
     var start = Game.cpu.getUsed();
     var startCpu;
-    //if(Game.shard.name === 'shard1') showCPU = true;
+    if (Game.shard.name === 'shard1') showCPU = true;
     if (showCPU) {
         startCpu = Game.cpu.getUsed();
         console.log('----NEW TICK:', Game.time, Game.cpu.bucket);
@@ -697,10 +697,10 @@ module.exports.loop = blackMagic(function() {
     if (Game.shard.name === 'shard1') pCreeps.runPowerCreeps();
     if (showCPU) {
         let cnt = Game.cpu.getUsed() - powerCreepCPU;
-         
-                
 
-        console.log('PowerCrpCPU Run:', cnt,Object.keys(Game.powerCreeps).length);
+
+
+        console.log('PowerCrpCPU Run:', cnt, Object.keys(Game.powerCreeps).length);
     }
 
     let flagCPU = Game.cpu.getUsed();
@@ -720,8 +720,8 @@ module.exports.loop = blackMagic(function() {
     }
     let runCreepCPU = Game.cpu.getUsed();
     if (showCPU) {
-        let cnt = Game.cpu.getUsed() - startCpu;
-        console.log('Before Creep Run:', cnt);
+        //      let cnt = Game.cpu.getUsed() - startCpu;
+        //        console.log('Before Creep Run:', cnt);
         startCpu = Game.cpu.getUsed();
     }
 
@@ -740,12 +740,20 @@ module.exports.loop = blackMagic(function() {
     }
 
     var spawnReport = {};
+
     seg.run();
-    seg.setInterShardData();
+
 
     if (showCPU) {
         let cnt = Game.cpu.getUsed() - startCpu;
         console.log('Segment Run CPU:', cnt);
+        startCpu = Game.cpu.getUsed();
+    }
+
+    seg.setInterShardData();
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - startCpu;
+        console.log('Segment interShardData CPU:', cnt);
         startCpu = Game.cpu.getUsed();
     }
 
@@ -759,7 +767,7 @@ module.exports.loop = blackMagic(function() {
     var spawnCpu;
     if (showCPU) {
         let cnt = Game.cpu.getUsed() - startCpu;
-        console.log('After Flag Run:', cnt);
+        //        console.log('After Flag Run:', cnt);
         startCpu = Game.cpu.getUsed();
         spawnCpu = Game.cpu.getUsed();
 
@@ -786,7 +794,7 @@ module.exports.loop = blackMagic(function() {
             }
 
             if (Game.spawns[title].memory.alphaSpawn) {
-                if(Game.rooms[roomName].memory.segmentReset){
+                if (Game.rooms[roomName].memory.segmentReset) {
                     Game.rooms[roomName].memory.segmentReset -= 5;
                 }
                 if (Game.spawns[title].room.controller.level === 8) Game.spawns[title].room.memory.allGood = true;
@@ -816,7 +824,7 @@ module.exports.loop = blackMagic(function() {
                 }
                 let totalQuery = spawn.memory.expandCreate.length + spawn.memory.create.length + spawn.memory.warCreate.length;
                 spawn.memory.totalQuery = totalQuery;
-                spawn.room.visual.text(totalQuery, spawn.pos, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });                
+                spawn.room.visual.text(totalQuery, spawn.pos, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });
                 spawnReport[Game.spawns[title].room.name] = {
                     storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
                     storageTotal: spawn.room.storage === undefined ? 0 : spawn.room.storage.total,
@@ -831,51 +839,17 @@ module.exports.loop = blackMagic(function() {
                     expandQ: totalQuery,
                 };
                 totalEnergy += spawnReport[Game.spawns[title].room.name].storageEnergy + spawnReport[Game.spawns[title].room.name].terminalEnergy;
-                if(spawn.room.memory.alphaSpawnOperated){
-                    spawn.room.memory.alphaSpawnOperated --;
-                    if(spawn.room.memory.alphaSpawnOperated <= 0){
+                if (spawn.room.memory.alphaSpawnOperated) {
+                    spawn.room.memory.alphaSpawnOperated--;
+                    if (spawn.room.memory.alphaSpawnOperated <= 0) {
                         spawn.room.memory.alphaSpawnOperated = undefined;
                     }
-                spawn.room.visual.text(spawn.room.memory.alphaSpawnOperated, spawn.pos.x,spawn.pos.y-1, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });                
+                    spawn.room.visual.text(spawn.room.memory.alphaSpawnOperated, spawn.pos.x, spawn.pos.y - 1, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });
                 }
             }
-//            if(!Game.spawns[title] && Game.spawns[title].room.memory.alphaSpawnOperated || Game.spawns[title].spawns[title].memory.alphaSpawn){
-    if(!Game.spawns[title].room.memory.alphaSpawnOperated || Game.spawns[title].memory.alphaSpawn ||Game.spawns[title].room.powerLevels[PWR_OPERATE_SPAWN].level !== 5){
+            if (!Game.spawns[title].room.memory.alphaSpawnOperated || Game.spawns[title].memory.alphaSpawn || Game.spawns[title].room.powerLevels[PWR_OPERATE_SPAWN].level !== 5) {
                 comSpawn.createFromStack(Game.spawns[title]);
-    }
-  //          }
-
-
-            /*            if (Game.spawns[title].room.memory.terminalText !== undefined) {
-                            let xx = 40;
-                            let yy = 28;
-                            Game.spawns[title].room.visual.text(Game.spawns[title].room.memory.labMode + "(Lab)W:" + Game.spawns[title].room.memory.labsNeedWork + " Min:" + Game.spawns[title].room.memory.lab2Mode + " time:" + Game.spawns[title].room.memory.labShift, xx, yy + 1, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
-
-                            if (Game.spawns[title].room.memory.terminalText.sent !== undefined) {
-                                Game.spawns[title].room.visual.text(Game.spawns[title].room.memory.terminalText.sent, xx, yy + 2, {
-                                    color: '#97c39a ',
-                                    stroke: '#000000 ',
-                                    strokeWidth: 0.123,
-                                    font: 0.5,
-                                });
-                            }
-                            if (Game.spawns[title].room.memory.terminalText.recieved !== undefined) {
-                                Game.spawns[title].room.visual.text(Game.spawns[title].room.memory.terminalText.recieved, xx, yy + 3, {
-                                    color: '#97c39a ',
-                                    stroke: '#000000 ',
-                                    strokeWidth: 0.123,
-                                    font: 0.5,
-                                });
-                            }
-                            if (Game.spawns[title].room.memory.terminalText.deal !== undefined) {
-                                Game.spawns[title].room.visual.text(Game.spawns[title].room.memory.terminalText.deal, xx, yy + 4, {
-                                    color: '#97c39a ',
-                                    stroke: '#000000 ',
-                                    strokeWidth: 0.123,
-                                    font: 0.5,
-                                });
-                            }
-                        }*/
+            }
 
         }
 
@@ -892,13 +866,13 @@ module.exports.loop = blackMagic(function() {
     Memory.stats.rooms = spawnReport;
     if (isTenTime === 0) {
         _terminal.run();
+        if (showCPU) {
+            let cnt = Game.cpu.getUsed() - startCpu;
+            console.log('After Terminal Run:', cnt);
+            startCpu = Game.cpu.getUsed();
+        }
     }
 
-    if (showCPU) {
-        let cnt = Game.cpu.getUsed() - startCpu;
-        console.log('After Terminal Run:', cnt);
-        startCpu = Game.cpu.getUsed();
-    }
 
     if (Game.shard.name !== 'shard2') {
         memoryStatsUpdate(); // This is to send info to Grafnaa.
@@ -921,7 +895,7 @@ module.exports.loop = blackMagic(function() {
     //  }
     if (showCPU) {
         let cnt = Game.cpu.getUsed() - startCpu;
-        console.log('memoryStatsUpdate Run:', cnt);
+        //        console.log('memoryStatsUpdate Run:', cnt);
         startCpu = Game.cpu.getUsed();
     }
 

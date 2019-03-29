@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/lik3afox/Scrp#readme",
   "devDependencies": {
-    "grunt": "^1.0.2",
-    "grunt-contrib-concat": "^1.0.1"
+    "grunt": "^1.0.4",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-uglify": "^4.0.1",
+    "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony"
   },
   "dependencies": {
     "@types/screeps-profiler": "^1.2.1",

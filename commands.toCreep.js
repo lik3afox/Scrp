@@ -287,27 +287,27 @@ function rebuildCreep(creep) {
         }
     } else if (creep.memory.role == 'harvester') {
         if (Game.flags[creep.memory.home] !== undefined) { // THis is desgined to rebuild the harvester and has enough minerals to do 1/1/1
-            if (Memory.empireSettings && Memory.empireSettings.boost.harvest && creep.room.controller.level === 8 ) {
+            if (Memory.empireSettings && Memory.empireSettings.boost.harvest && creep.room.controller.level === 8) {
                 // Creating 1/1/1 bodies only when rebuilt.
                 creep.memory.level = 10;
                 _body = _.clone(getModuleRole('harvester').levels(10, creep.memory.home));
                 _boost = getModuleRole('harvester').boosts(10, creep.memory.home);
-                if(creep.room.memory.powerLevels && creep.room.memory.powerLevels[PWR_REGEN_SOURCE]){
-                        // so base is 3000 - each level adds 1k
-                        // 6(7) base
-                        // 30 
-                        // 1000/300 
-                        // 2 * 2 * 300 = 1200
-                        var neededWork = creep.room.memory.powerLevels[PWR_REGEN_SOURCE].level*2;
-                        var boostedWork = Math.ceil(neededWork/7);
-                        if(boostedWork < 1) boostedWork = 1;
-                        for(let i = 0; i < boostedWork; i++){
-                            _body.push(WORK);
-                            if(i%2 === 0) _body.push(MOVE);
-                            if(i%2 === 0) _body.push(CARRY);
-                        }
-//                    console.log(roomLink(creep.room.name),'Created Harveseter with',_body.length,creep.room.memory.powerLevels[PWR_REGEN_SOURCE].level);
-                    
+                if (creep.room.memory.powerLevels && creep.room.memory.powerLevels[PWR_REGEN_SOURCE]) {
+                    // so base is 3000 - each level adds 1k
+                    // 6(7) base
+                    // 30 
+                    // 1000/300 
+                    // 2 * 2 * 300 = 1200
+                    var neededWork = creep.room.memory.powerLevels[PWR_REGEN_SOURCE].level * 2;
+                    var boostedWork = Math.ceil(neededWork / 7);
+                    if (boostedWork < 1) boostedWork = 1;
+                    for (let i = 0; i < boostedWork; i++) {
+                        _body.push(WORK);
+                        if (i % 2 === 0) _body.push(MOVE);
+                        if (i % 2 === 0) _body.push(CARRY);
+                    }
+                    //                    console.log(roomLink(creep.room.name),'Created Harveseter with',_body.length,creep.room.memory.powerLevels[PWR_REGEN_SOURCE].level);
+
 
                     /*
                     let goal = Game.getObjectById(creep.memory.sourceID);
@@ -499,7 +499,7 @@ class theSpawn {
                     goal: []
                 };
             }
-            if(spawn.room.controller.isPowerEnabled){
+            if (spawn.room.controller.isPowerEnabled) {
                 /*if(currentModule[type][_name] === 'harvester'){
 
                 }*/
@@ -554,7 +554,7 @@ class theSpawn {
                     let mod = getModuleRole(currentModule[type][_name]);
                     if (mod !== undefined) {
 
-                        var theBuild = mod.levels(currentModule[type][_level],spawn.room.name);
+                        var theBuild = mod.levels(currentModule[type][_level], spawn.room.name);
                         let temp = {
                             build: theBuild,
                             name: currentModule[type][_name] + totalCreeps[currentModule[type][_name]].count + "*" + spawn.memory.created,
@@ -737,101 +737,6 @@ class theSpawn {
             }
         }
     }
-    // Newcount needs ID of an object in order to 
-    // New count looks through game.creeps to find creeps that's parent
-    // Id matches and returns an array of current count. 
-/*
-    static runPowerCreeps() {
-        for (let i in Game.powerCreeps) {
-            let power = Game.powerCreeps[i];
-            if (!power.ticksToLive) {
-                // Here we spawn.
-                if(Game.flags[power.name] && Game.flags[Game.powerCreeps[i].name].room){
-                    let zz =                     power.spawn(Game.flags[Game.powerCreeps[i].name].room.powerspawn);
-                }
-            } else if(power.ticksToLive > 0) {
-               // console.log(Game.flags[Game.powerCreeps[i].name] ,power.pos , power.pos.roomName , Game.flags[Game.powerCreeps[i].name].pos.roomName);
-                if(Game.flags[Game.powerCreeps[i].name] && power.pos && power.pos.roomName !== Game.flags[Game.powerCreeps[i].name].pos.roomName){
-                    power.memory.death = true;
-                }
-            }
-
-            if (power.shard === Game.shard.name) {
-                if (!power.memory.role) power.memory.role = 'job';
-//                if (!power.memory.home) power.memory.home = 'E13S18';
-                if (!power.memory.parent) power.memory.parent = power.room.powerspawn.id;
-                if (power.powers[PWR_GENERATE_OPS].cooldown === 0) {
-                    let tgt = power.usePower(PWR_GENERATE_OPS);
-                }
-
-
-                if(power.memory.death){
-                    if(power.carryTotal > 0){
-                        power.moveToTransfer(power.room.storage,power.carrying);
-                    }else {
-                        power.suicide();
-                    }
-                    power.say('D');
-                    return;
-                }
-
-                if (power.room.controller && !power.room.controller.isPowerEnabled && _.contains(power.pos.roomName, powerRoom)) {
-                    if (power.pos.isNearTo(power.room.controller)) {
-                        power.enableRoom(power.room.controller);
-                    } else {
-                        power.moveTo(power.room.controller);
-                    }
-                } else {
-                    return;
-                }
-
-                if(power.powers[PWR_REGEN_SOURCE].cooldown === 0){
-                    var sources = power.room.find(FIND_SOURCES);
-                    for(let i in sources){
-                        if(power.pos.isNearTo(sources[i])){
-                            power.usePower(PWR_REGEN_SOURCE,sources[i]);
-                        } else {
-                            power.moveTo(sources[i]);
-                        }
-                    }
-                }
-
-
-                if ((power.memory.sleeping !== undefined && power.memory.sleeping > 0)) {
-                    if (power.memory.sleeping < 1000) {
-                        power.say('💤');
-                        power.memory.sleeping--;
-                    } else {
-                        if (Game.time >= power.memory.sleeping) {
-                            power.memory.sleeping = undefined;
-                        } else {
-                            if (power.ticksToLive <= power.memory.sleeping - Game.time) {
-                                power.suicide();
-                            }
-                            power.say('💤');
-                        }
-                    }
-                } else {
-                    power.memory.sleeping = undefined;
-                    if (roleIndex[power.memory.role] === undefined) {
-                        var type = allModule.length;
-                        while (type--) {
-                            if (power.memory.role == allModule[type][_name]) { // if they are the same
-                                roleIndex[power.memory.role] = type;
-                                power.say('Running?');
-                                //allModule[type][_require].run(power); // Then run the require of that role.
-
-                                break;
-                            }
-                        }
-                    } else {
-//                        allModule[roleIndex[power.memory.role]][_require].run(power); // Then run the require of that role.     
-                    }
-
-                }
-            }
-        }
-    }*/
 
     static runCreeps() {
         var ee;
@@ -1015,13 +920,15 @@ class theSpawn {
         var totalRoles = {};
         var cpuUsed = {};
         var countCPU;// = true;
+        var roleCount;// = 'homeDefender';
+        var roleCPU;
         spawnCount = {};
         if (roleIndex === undefined) roleIndex = {};
-
+        if (roleCount && Game.shard.name === 'shard1') {
+            console.log('LOOKING AT ', roleCount, Game.cpu.bucket);
+        }
         for (let name in Memory.creeps) {
-            if (Game.shard.name === 'shard1' && countCPU) start = Game.cpu.getUsed();
-
-
+            if (countCPU && Game.shard.name === 'shard1') start = Game.cpu.getUsed();
             if (!Game.creeps[name]) { // Check to see if this needs deletion
                 delete Memory.creeps[name]; // If it does then it does.
             } else {
@@ -1037,16 +944,6 @@ class theSpawn {
                     Memory.creepTotal++;
                 }
                 if ((Game.creeps[name].memory.sleeping !== undefined && Game.creeps[name].memory.sleeping > 0)) {
-                    /*if (Game.creeps[name].memory.role === 'homeDefender') {
-                        Game.creeps[name].memory.tombstoneID = undefined;
-                        Game.creeps[name].memory.delayMoveTo = undefined;
-                        Game.creeps[name].memory.runFrom = undefined;
-                        if (Game.creeps[name].room.memory.defenderActive) {
-                            Game.creeps[name].memory.sleeping = undefined;
-                        } else {
-                            Game.creeps[name].say('💤💤');
-                        }
-                    } else*/
                     if (Game.creeps[name].memory.sleeping < 1000) {
                         Game.creeps[name].say('💤');
                         Game.creeps[name].memory.sleeping--;
@@ -1061,15 +958,28 @@ class theSpawn {
 
                         }
                     }
+                    if (roleCount && Game.creeps[name].memory.role === roleCount) {
+                        if (!Game.creeps[name].memory.cpu) {
+                            Game.creeps[name].memory.cpu = [];
+                        }
+                        Game.creeps[name].memory.cpu.push(0);
+                        if (Game.creeps[name].memory.cpu.length > 300) {
+                            Game.creeps[name].memory.cpu.shift();
+                        }
 
+                        console.log(Game.creeps[name].memory.role, roomLink(Game.creeps[name].pos.roomName), "CpUZZ", _.sum(Game.creeps[name].memory.cpu), "/", Game.creeps[name].memory.cpu.length, "=", (_.sum(Game.creeps[name].memory.cpu) / Game.creeps[name].memory.cpu.length));
+
+                    }
                 } else if (Game.creeps[name].memory.follower) {
                     // So here instead of doing what the creep normally does, it will want to see if it can find it's party 
                 } else if (!Game.creeps[name].spawning) {
                     Game.creeps[name].memory.sleeping = undefined;
-                    var time;
-                    //                    if ((Game.creeps[name].memory.role === 'job' && Game.creeps[name].pos.roomName === 'E58S51') || (Game.creeps[name].memory.role === 'linker' && Game.creeps[name].pos.roomName === 'E2S24')) {
-                    //                      time =  Game.cpu.getUsed();
-                    //                  }
+                    if (roleCount && Game.creeps[name].memory.role === roleCount) {
+                        roleCPU = Game.cpu.getUsed();
+                    } else {
+                        roleCPU = undefined;
+                    }
+
                     if (roleIndex[Game.creeps[name].memory.role] === undefined) {
                         var type = allModule.length;
                         while (type--) {
@@ -1085,16 +995,18 @@ class theSpawn {
                         allModule[roleIndex[Game.creeps[name].memory.role]][_require].run(Game.creeps[name]); // Then run the require of that role.     
                     }
 
-                    /*                  if((Game.creeps[name].memory.role === 'job'&&Game.creeps[name].pos.roomName === 'E58S51')||(Game.creeps[name].memory.role === 'linker' && Game.creeps[name].pos.roomName === 'E2S24')){
-                                        if(!Game.creeps[name].memory.cpu ){
-                                            Game.creeps[name].memory.cpu = [];
-                                        }
-                                        Game.creeps[name].memory.cpu.push(Game.cpu.getUsed()-time);
-                                        console.log(Game.creeps[name].memory.role,Game.creeps[name].pos.roomName,'timed :',Game.cpu.getUsed()-time, _.sum(Game.creeps[name].memory.cpu),"/",Game.creeps[name].memory.cpu.length,"=",(_.sum(Game.creeps[name].memory.cpu)/Game.creeps[name].memory.cpu.length));
-                                        if(Game.creeps[name].memory.cpu.length > 256){
-                                            Game.creeps[name].memory.cpu.shift();
-                                        }
-                                      }*/
+                    if (roleCPU) {
+                        if (!Game.creeps[name].memory.cpu) {
+                            Game.creeps[name].memory.cpu = [];
+                        }
+                        Game.creeps[name].memory.cpu.push(Game.cpu.getUsed() - roleCPU);
+                        if (Game.creeps[name].memory.cpu.length > 300) {
+                            Game.creeps[name].memory.cpu.shift();
+                        }
+
+                        console.log(Game.cpu.getUsed() - roleCPU,Game.creeps[name].memory.role, roomLink(Game.creeps[name].pos.roomName), "CpU", _.sum(Game.creeps[name].memory.cpu), "/", Game.creeps[name].memory.cpu.length, "=", (_.sum(Game.creeps[name].memory.cpu) / Game.creeps[name].memory.cpu.length));
+
+                    }
 
                 } else if (Game.creeps[name].spawning) {}
             }
@@ -1147,7 +1059,7 @@ class theSpawn {
             }
 
             roleCPUCount = _.sortBy(roleCPUCount, function(n) { return n.sumTotalCPU; });
-            console.log('CPU COUNTER : Ranked by Lowest to Highest CPU use',Game.cpu.bucket);
+            console.log('CPU COUNTER : Ranked by Lowest to Highest CPU use', Game.cpu.bucket);
             for (let ee in roleCPUCount) {
                 let toal = cpuRankings[roleCPUCount[ee].roleName].length;
                 console.log("Role:", roleCPUCount[ee].roleName, "     Last Tick Ave:", Math.floor((roleCPUCount[ee].totalCPU / roleCPUCount[ee].totalCreeps) * 100), "=", "(" + roleCPUCount[ee].totalCreeps + "/" + roleCPUCount[ee].totalCPU + ")   TotalCPU:", Math.floor(roleCPUCount[ee].sumTotalCPU / toal), roleCPUCount[ee].roleName, "Total:", roleCPUCount[ee].sumTotalCPU, " Input #:", toal);
