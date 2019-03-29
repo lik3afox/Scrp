@@ -22,7 +22,9 @@ var classLevels = [
     //6 3400/48
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY],
     //7 4000/50    
-    [CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, ],
+    [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK,
+    ],
 
     {
         body: [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
@@ -58,7 +60,7 @@ class mineralRole extends roleParent {
         return;
     }
     static run(creep) {
-        if (super.baseRun(creep)) return;
+        if (super.spawnRecycle(creep)) return true;
 
         let carry = creep.carryTotal;
         if (creep.ticksToLive > 1200 && creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
@@ -70,7 +72,6 @@ class mineralRole extends roleParent {
 
         memoryCheck(creep);
 
-        if (super.spawnRecycle(creep)) return;
         if (movement.runAway(creep)) return;
         this.rebirth(creep);
         if (creep.partyFlag !== undefined) {
@@ -83,7 +84,7 @@ class mineralRole extends roleParent {
                 creep.memory.goal = creep.partyFlag.memory.mineralID;
                 _mineral = Game.getObjectById(creep.memory.goal);
             } else {
-                _mineral = movement.getRoomPos(creep);
+                _mineral = movement.getSourcePos(creep);
             }
             if (_mineral === null) {
                 console.log('Bad Mineral ending movement');
@@ -91,11 +92,15 @@ class mineralRole extends roleParent {
             }
         }
 
-        if (creep.memory.party === undefined && super.keeperWatch(creep)) { // two parter - keeperFind happens when
+        if ( super.keeperWatch(creep)) { // two parter - keeperFind happens when
             return;
         }
 
         if (creep.memory.party !== undefined && creep.partyFlag.color === COLOR_WHITE && (carry > creep.carryCapacity - creep.stats('mineral'))) {
+            creep.memory.death = true;
+            return;
+        }
+        if(!creep.memory.party && creep.room.controller && creep.room.controller.level < 6 && creep.room.name === 'E14S38') {
             creep.memory.death = true;
             return;
         }
@@ -114,46 +119,49 @@ class mineralRole extends roleParent {
                 creep.memory.ztransportID = trans[0].id;
             }
         } else if (creep.memory.ztransportID !== undefined) {
-            if (Game.getObjectById(creep.memory.ztransportID) === null) {
+            let ztran = Game.getObjectById(creep.memory.ztransportID);
+            if (ztran === null) {
                 creep.memory.ztransportID = undefined;
+            } else if (creep.pos.isNearTo(ztran) && (creep.carryTotal > (creep.carryCapacity - 100) || (ztran.carryCapacity - ztran.carryTotal) <= creep.carryTotal)) { // && ztran.carryCapacity-ztran.carryTotal >= creep.carry[creep.carrying]
+                creep.transfer(ztran, creep.carrying);
             }
         }
-
-        let badz = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
-        badz = _.filter(badz, function(object) {
-            return object.owner.username === 'Invader' && object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(RANGED_ATTACK) > 0;
-        });
-        if (badz.length > 0) {
-            if (creep.pos.getRangeTo(badz[0]) >= 4) {
+        if (creep.hits <= 200) creep.suicide();
+        if (creep.partyFlag && creep.room.name === creep.partyFlag.pos.roomName && creep.pos.inRangeTo(creep.partyFlag,7)) {
+            let badz = creep.partyFlag.pos.findInRange(creep.room.notAllies, 7);
+            // So if _mineral/party flag has bads around it. 
+            //    badz = _.filter(badz, function(object) {
+            //            return object.owner.username === 'Invader' && object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(RANGED_ATTACK) > 0;
+            //      });
+            if (badz.length > 0) {
+                creep.sleep(5);
                 return;
+                /*            let distance = creep.pos.getRangeTo(badz[0]) ;
+                            if (distance > 4) {
+                                return;
 
-            } else {
-                creep.runFrom(badz[0]);
-                creep.say('AHHHHH');
-                return;
+                            } else if (distance === 4 && creep.pos.inRangeTo(_mineral,5)) {
+
+                            } else {
+                                creep.runFrom(badz[0]);
+                                creep.say('AHHHHH',true);
+                                return;
+                            } */
             }
         }
-
-        if (!creep.pos.isNearTo(_mineral)) {
+        if (_mineral && !creep.pos.isNearTo(_mineral)) {
             var eda;
 
             creep.moveMe(_mineral, {
                 reusePath: 49,
-                segment: true,
+                ignoreCreeps: true,
+//                swampCost: 1,
                 useSKPathing: true,
             });
 
             //   }
 
         } else {
-
-
-            //    let gota = Game.getObjectById(creep.memory.keeperLairID);
-            //      if (gota !== null && gota.ticksToSpawn === undefined) {
-            //    }
-
-
-            //  if (creep.pos.isNearTo(_mineral)) {
             let extract = creep.room.extractor;
             if (extract !== null && extract.cooldown === 0 && creep.carryTotal !== creep.carryCapacity) {
                 if (creep.harvest(_mineral) == OK) {
@@ -165,7 +173,6 @@ class mineralRole extends roleParent {
                 }
 
             }
-            //   }
         }
 
     }

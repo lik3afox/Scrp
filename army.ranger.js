@@ -112,9 +112,9 @@ var fox = require('foxGlobals');
 
 function rangeAttack(creep, targets) {
     var E18S64targets = targets;
-    var bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+    var bads = creep.pos.findInRange(creep.room.notAllies, 3);
     bads = _.filter(bads, function(o) {
-        return !o.pos.lookForStructure(STRUCTURE_RAMPART) && !_.contains(fox.friends, o.owner.username);
+        return !o.pos.lookForStructure(STRUCTURE_RAMPART);
     });
     if (bads.length === 0) {
 
@@ -178,10 +178,7 @@ function doAttack(creep) {
                         } */
             rangeAttack(creep, ['59511202d6fb6910572a40b5']);
 
-            bads = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 4);
-            bads = _.filter(bads, function(o) {
-                return !_.contains(fox.friends, o.owner.username);
-            });
+            bads = creep.pos.findInRange(creep.room.notAllies, 4);
 
             if (bads.length > 2) {
                 creep.rangedMassAttack();
@@ -250,9 +247,6 @@ return _.clone( classLevels[level].boost);
   //          creep.memory.waypoint = false;
 //        }
 
-      //  if (super.doTask(creep)) {
-    //        return;
-  //      }
 //        creep.say("3");
         if (super.rallyFirst(creep)) return;
 //        if (super.goToPortal(creep)) return;

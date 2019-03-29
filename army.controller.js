@@ -4,7 +4,7 @@
 var classLevels = [
     [MOVE, MOVE, MOVE, MOVE, MOVE, CLAIM],
     [CLAIM, CLAIM, MOVE, MOVE, CLAIM, CLAIM, MOVE, MOVE, CLAIM, MOVE],
-    [CLAIM, CLAIM, MOVE, MOVE, CLAIM, CLAIM, MOVE, MOVE, CLAIM, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+    [CLAIM, CLAIM, MOVE, MOVE, CLAIM, CLAIM, MOVE, MOVE, CLAIM, MOVE,CLAIM, CLAIM, MOVE, MOVE, CLAIM, CLAIM, MOVE, MOVE, CLAIM, MOVE,],
 ];
 
 var movement = require('commands.toMove');
@@ -25,7 +25,7 @@ class hackerClass extends roleParent {
     static boosts(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         if (_.isObject(classLevels[level])) {
-            return _.clone( classLevels[level].boost);
+            return _.clone(classLevels[level].boost);
         }
         return;
     }
@@ -34,25 +34,24 @@ class hackerClass extends roleParent {
         if (super.goToPortal(creep)) return;
 
         // E23S38
-//        console.log('Control checking in', creep.pos);
+
         if (this.spawnRecycle(creep)) {
             return false;
         }
 
-        //console.log('acon',Game.flags.control , creep.pos.roomName , Game.flags.control.pos.roomName);
         if (Game.flags[creep.memory.party] !== undefined && creep.pos.roomName == Game.flags[creep.memory.party].pos.roomName) {
             if (creep.room.controller !== undefined) {
                 let what;
                 if (creep.getActiveBodyparts(CLAIM) >= 5) {
                     //                    what = creep.attackController(creep.room.controller);
                     what = creep.claimController(creep.room.controller);
-                    creep.say(what + 'a');
-                    if (creep.room.name == 'E19S48' && creep.room.controller.upgradeBlocked > 900){
-                                creep.memory.death = true;
+//                    creep.say(what + 'a');
+                    if (creep.room.name == 'E19S48' && creep.room.controller.upgradeBlocked > 900) {
+                        creep.memory.death = true;
                     }
                 } else {
                     what = creep.claimController(creep.room.controller);
-                    creep.say(what + 'c');
+//                    creep.say(what + 'c');
                 }
 
                 switch (what) {
@@ -71,17 +70,24 @@ class hackerClass extends roleParent {
                         break;
 
                     default:
-                        let attk = creep.attackController(creep.room.controller);
-                        if (attk == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(creep.room.controller);
-                        }
-                        if (attk === OK) {
-                            creep.partyFlag.memory.delaySpawn = 650;
-                        } else if (attk == -7) {
-                            if (creep.room.name == 'E19S48')
-                                creep.memory.death = true;
-                        }
+                        if (creep.room.controller.owner === undefined || creep.room.controller.owner.username !== 'likeafox') {
+                            let attk = creep.attackController(creep.room.controller);
+                            if (attk == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(creep.room.controller);
+                            }
+                            if (attk === OK) {
+                                creep.partyFlag.memory.delaySpawn = 650;
+                                if(creep.ticksToLive > 500) {
+                                    creep.memory.death = true;
+                                } else {
+                                    creep.suicide();
+                                }
 
+                            } else if (attk == -7) {
+                                if (creep.room.name == 'E19S48')
+                                    creep.memory.death = true;
+                            }
+                        }
                         break;
                 }
             } else {
@@ -90,26 +96,7 @@ class hackerClass extends roleParent {
         } else {
 
 
-//            if (!super.avoidArea(creep)){
-//                creep.tuskenTo(creep.partyFlag,creep.memory.home,{useSKPathing:true,reusePath:50});
-//                            movement.flagMovement(creep);
-/*if(creep.memory.didIt === undefined){
-    creep.moveMe(Game.flags.flagger,{useSKPathing:true,reusePath:50});
-    if(creep.room.name === Game.flags.flagger.pos.roomName){
-        creep.memory.didIt = true;
-    }
-    creep.say('zzzz');
-    return;
-
-} else { */
-//    creep.moveMe(creep.partyFlag,{useSKPathing:true,reusePath:50});
-if(creep.partyFlag.memory.tusken){
-    creep.tuskenTo(creep.partyFlag,creep.memory.home,{useSKPathing:true,reusePath:50});
-} else {
-creep.moveMe(creep.partyFlag,{useSKPathing:true,reusePath:50});
-}
-//}
-  //          }
+            creep.tuskenTo(creep.partyFlag, creep.memory.home, { useSKPathing: true, reusePath: 50 });
         }
 
     }

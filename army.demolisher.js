@@ -34,7 +34,7 @@ var classLevels = [
             WORK, WORK, WORK, WORK, WORK,
             MOVE, MOVE, MOVE, MOVE, MOVE,
             MOVE, MOVE, MOVE, MOVE, MOVE,
-            WORK, WORK, WORK, WORK, HEAL,
+            WORK, WORK, WORK, WORK, WORK,
         ],
         boost: [],
     },
@@ -117,80 +117,6 @@ var movement = require('commands.toMove');
 var roleParent = require('role.parent');
 var fox = require('foxGlobals');
 
-function doAttack(creep) {
-    //    if(creep.room.name !== Game.flags[creep.memory.party].pos.roomName) return;
-    let target;
-    var E18S64targets;
-    switch (creep.room.name) {
-        case "W55S33":
-            E18S64targets = ['59f45823233302090ecbfade'];
-            for (var a in E18S64targets) {
-                target = Game.getObjectById(E18S64targets[a]);
-                if (target !== null) {
-                    if (creep.pos.isNearTo(target)) {
-                        creep.dismantle(target);
-                        return true;
-                    }
-                }
-            }
-            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-            bads = _.filter(bads, function(o) {
-                return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL;
-            });
-            if (bads.length > 0) {
-                creep.dismantle(bads[0]);
-                return true;
-            }
-            return false;
-
-        default:
-            /*            if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.wallTarget !== undefined) {
-                            E18S64targets = [Game.flags[creep.memory.party].memory.wallTarget];
-                            for (var b in E18S64targets) {
-                                target = Game.getObjectById(E18S64targets[b]);
-                                if (target !== null) {
-                                    if (creep.pos.isNearTo(target)) {
-                                        creep.dismantle(target);
-                                        //          return true;
-                                    }
-                                }
-                            }
-                            bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-                            bads = _.filter(bads, function(o) {
-                                return !_.contains(fox.friends, o.owner.username);
-                            });
-                            if (bads.length > 0) {
-                                creep.dismantle(bads[0]);
-                                //                  return true;
-                            }
-                        } else { */
-            bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
-            //            bads = _.filter(bads, function(o) {
-            //                  return !_.contains(fox.friends, o.owner.username);
-            //                });
-            if (bads.length > 0) {
-              //  creep.dismantle(bads[0]);
-                return true;
-            }
-            if (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && creep.room.controller.owner.username !== 'likeafox') {
-                bads = creep.pos.findInRange(FIND_STRUCTURES, 1);
-                if (bads.length > 0) {
-                   // creep.dismantle(bads[0]);
-                    //                    return true;
-                }
-            }
-            return false;
-            /*        default:
-                        bads = creep.pos.findInRange(FIND_HOSTILE_STRUCTURES, 1);
-                        if (bads.length > 0) {
-                            creep.dismantle(bads[0]);
-                            break;
-                        }
-
-                        break; */
-    }
-    return false;
-}
 
 //STRUCTURE_POWER_BANK:
 class demolisherClass extends roleParent {
@@ -208,17 +134,13 @@ class demolisherClass extends roleParent {
     static boosts(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         if (_.isObject(classLevels[level])) {
-return _.clone( classLevels[level].boost);
+            return _.clone(classLevels[level].boost);
         }
         return;
     }
 
     static run(creep) {
-   //     creep.memory.death = creep.partyFlag === undefined;
         if (super.spawnRecycle(creep)) {
-            return;
-        }
-        if (super.doTask(creep)) {
             return;
         }
 
@@ -229,51 +151,70 @@ return _.clone( classLevels[level].boost);
         }
         if (super.rallyFirst(creep)) return;
         if (super.goToPortal(creep)) return;
+        if(creep.partyFlag === undefined){
+            creep.memory.death = true;
+            return;   
+        }
 
+        if (creep.partyFlag && creep.partyFlag.memory.demolisherOpts === undefined) {
+            creep.partyFlag.memory.demolisherOpts = {
+                clearBase: false,
+            };
+        }
+        if(creep.memory.party === 'Flag9'){
+            if(creep.partyFlag.pos.roomName !== 'E3S14'){
+                creep.moveMe(creep.partyFlag,{reusePath:50});
+                return;
+            }
+            let tgt = Game.getObjectById('5990c0201a86b65f23e6b82a');
+            if(tgt){
+                if(creep.pos.isNearTo(tgt)){
+                    creep.dismantle(tgt);
+                } else {
+                    creep.moveMe(tgt,{reusePath:50});
+                }
+            } else if(!tgt && creep.room.name === 'E3S14'){
+                    //require('commands.toParty').changeRoleCount(creep.partyFlag,creep.memory.role,0);
+                    //require('commands.toParty').changeRoleCount(creep.partyFlag,'thief',1);
+                    creep.memory.death = true;
+                    creep.partyFlag.memory.remove = true;
+            }
+            return;
+        }
 
-//        if (creep.partyFlag.memory.target !== undefined) {
-            /*            let fTar = Game.getObjectById(creep.partyFlag.memory.target);
-                        if (fTar !== null) {
-                            if (creep.pos.isNearTo(fTar)) {
-                                creep.dismantle(fTar);
-                            }
-                        }*/
-            creep.smartDismantle();
-      //      if (creep.room.name === creep.partyFlag.pos.roomName) {
-    //            creep.moveMe(creep.partyFlag, { ignoreCreeps: true });
-  //          } else {
-  //  if(!creep.pos.isNearTo(creep.partyFlag)){
-  	if(creep.partyFlag.tusken){
-        creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
-  	} else {
-        creep.moveMe(creep.partyFlag,{reusePath:50});
-  	}
-//    }
-//                movement.flagMovement(creep);
-//            }
-//        } else if (!doAttack(creep)) {
-  //                          creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
-
-  //          movement.flagMovement(creep);
-    //    } else {
-      //                      creep.tuskenTo(creep.partyFlag,creep.memory.home,{reusePath:50});
-
-    //        movement.flagMovement(creep);
-       // }
-
-        if (creep.room.name === creep.partyFlag.pos.roomName) {
-            if (creep.memory._move !== undefined && creep.memory._move.path !== undefined && creep.memory._move.path === "") {
-               var str = creep.room.find(FIND_HOSTILE_STRUCTURES);
-//                console.log(str.length,"trying");
-                if(str.length > 0){
-	               var tgt = creep.pos.findClosestByRange(str);
-                	creep.partyFlag.memory.target = tgt.id;
+        if (creep.partyFlag.memory.demolisherOpts.clearBase === true && creep.room.name === creep.partyFlag.pos.roomName) {
+            if (creep.memory.targetID === undefined || Game.time % 128 === 0) {
+                creep.memory.targetID = creep.getClearBaseTarget();
+                if (creep.memory.targetID === false) {
+                    require('commands.toParty').changeRoleCount(creep.partyFlag,creep.memory.role,0);
+                    require('commands.toParty').changeRoleCount(creep.partyFlag,'thief',0);
+                    creep.memory.death = true;
                 }
             }
+            let tgt = Game.getObjectById(creep.memory.targetID);
+            if (tgt) {
+                if (creep.pos.isNearTo(tgt)) {
+                    creep.dismantle(tgt);
+                } else {
+                    creep.moveMe(tgt, { reusePath: 50,maxRooms:1 });
+                    creep.smartDismantle();
+                }
+                creep.say('G2');
+            } else {
+                creep.memory.targetID = undefined;
+            }
+            return;
         }
-        /*        var target = Game.getObjectById('588587458b65791f39f134c1');
-                if (target !== null)
-                    creep.dismantle(target); */
+        creep.smartDismantle();
+
+        if (creep.pos.isNearTo(creep.partyFlag)) {
+            creep.memory.stuckCount--;
+        }
+        if (creep.memory.leaderID && creep.pos.inRangeTo(creep.partyFlag, 2)) {
+            creep.moveTo(creep.partyFlag);
+        } else {
+            creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 }); //,useSKPathing:true
+        }
 
     }
 }

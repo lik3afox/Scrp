@@ -1,191 +1,307 @@
-function returnClosestRoom(roomName) {
-    var distance = 100;
-    var spawn;
-    for (var e in Game.spawns) {
-        if (Game.spawns[e].memory.alphaSpawn) {
-            if (Game.spawns[e].room.name === 'E14S37') {
-                var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
-                if (tempDis < distance) {
-                    distance = tempDis;
-                    spawn = Game.spawns[e];
-                }
-            }
+var codePush;
+var showCPU;
+var ticksInARow;
+
+function changeEmpireSettings() {
+
+    if (Game.time % 1500 !== 0 && ticksInARow !== undefined) return;
+    if (Game.shard.name !== 'shard1') return;
+    Memory.empireSettings = {
+        processPower: true, // sellPower:false, stops jobs.spawns, stops commands.topower. 
+        sellPower: 0.75, // if there is 
+        buyPower: 0.30,
+        maxWallSize: 299000000, // This is the setting for max wall size. 
+        maxController: 100000, // When upgrader is made. - 1500
+        // MaxController has a random factor of up to 15000;
+        // If room has energy in it's random * 15000 + 10000;
+        maxMineralAmount: 600000, // This is the threshold to sell minerals.
+
+        boostObserverRoom: {
+            shard1: 'E18S36',
+        },
+
+
+        // Cheap energy buy, at most is 150000 - we would at most pay 75000 at a max price of 0.005 - so 
+        // 0.0075(transferPercent + 1 * maxPrice) = 0.0075
+        cheapEnergyBuy: {
+            amount: 100000, // Amount at most we would buy 
+            transferPercent: 0.5, // The amount of transfer we would accept
+            maxPrice: 0.007, // Price we would accpet at highest.
+        },
+
+
+        boost: {
+            power: true, // Disable Power Boosting
+            guard: true, // Disable SKGuard boosting
+            upgrade: true, // Disable Upgrade boosting
+
+
+            wallwork: true, // Wallwork
+            harvest: true, // Harverst - room
+            mineral: true, // Mineral 
+        },
+        market: {
+            energy: true, // Enables NewEnergyTrade.
+            basic: true, // Turn off/on to create sell orders for minerals above maxMineralAmount
+            token: true, // Turn off/on to create/match token orders.
+            value: true, // Turn off/on to create sell Power and other valueable stuff above maxMineralAmount.
+            tier1: true,
+
+
+            // Minerals seem to be worth around .04 
+            // Lab time is roughly around .003 per ALT to .02 per ALT
+            // 
+
+            tier1Sell: 0.1, // This is the value to sell at. 1.4/2 = 0.7 ALT = 10
+            tier1GSell: 0.35, // This is the value to sell at. 5 = 0.7 ALT = 15
+
+            tier2: true,
+            tier2Sell: 0.285, // This is the value to sell at. 2.8/4 = 0.7  ALT = 35
+            tier2GSell: 0.6, // This is the value to sell at. 7 = 0.7 ALT = 50/65
+
+            tier3: true, // Will auto sell Tier3 Mats if they are above a value.
+            tier3Sell: 3.5, // This is the value to sell at. 3.5/5 = 0.7 ALT = 95~
+            tier3GSell: 5, // This is the value to sell at. 8 = 0.7 ALT = 130-200~
+            tier3Buy: 0.9, // This is the value to sell at. 3.5/5 = 0.7 ALT = 95~
+            tier3GBuy: 0.9, // This is the value to sell at. 8 = 0.7 ALT = 130-200~
+
         }
-    }
-    return spawn;
+    };
+
+    let energyCost = Memory.mineralAverage.energy.buy;
+    let HBuyCost = Memory.mineralAverage.H.buy;
+    let OBuyCost = Memory.mineralAverage.O.buy;
+    let UBuyCost = Memory.mineralAverage.U.buy;
+    let LBuyCost = Memory.mineralAverage.L.buy;
+    let KBuyCost = Memory.mineralAverage.K.buy;
+    let ZBuyCost = Memory.mineralAverage.Z.buy;
+    let XBuyCost = Memory.mineralAverage.X.buy;
+
+    let OHBuyCost = HBuyCost + OBuyCost;
+    let GBuyCost = UBuyCost + LBuyCost + ZBuyCost + KBuyCost;
+    let averageBasic = GBuyCost / 4;
+    let tier1Cost = averageBasic + (OHBuyCost * 0.5);
+    let tier2Cost = tier1Cost + OHBuyCost;
+    let tier3Cost = tier2Cost + XBuyCost;
+
+    let tier1GCost = GBuyCost + (OHBuyCost * 0.5);
+    let tier2GCost = tier1GCost + OHBuyCost;
+    let tier3GCost = tier2GCost + XBuyCost;
+
+    // 0.05 = .005 credits per cooldown.  Current setup makes .005 credits per cooldown.
+    Memory.empireSettings.tier1Sell = tier1Cost + 0.05;
+    Memory.empireSettings.tier2Sell = tier2Cost + 0.10;
+
+    Memory.empireSettings.tier3Buy = tier3Cost; // * 1.2;
+    Memory.empireSettings.tier3GBuy = tier3GCost; // * 1.2;
+
+    Memory.empireSettings.tier1GSell = tier1GCost + 0.10;
+    Memory.empireSettings.tier2GSell = tier2GCost + 0.25;
+    console.log('SHARD AVERAGE:  energy', energyCost, "TotalEnergy:", Memory.stats.empireEnergy, "H:", HBuyCost, "Basic4Ave:", averageBasic, "T1Cost:", Memory.empireSettings.tier1Sell, "T2Cost:", Memory.empireSettings.tier2Sell, "T3Cost:", tier3Cost, "/", Memory.empireSettings.tier3Sell);
+    //  console.log("G SELLLING basic:", GBuyCost, "T1:", Memory.empireSettings.tier1GSell, "T2:", Memory.empireSettings.tier2GSell, "T3:", tier3GCost);
+    //    console.log("BUY THRESHOLDS T3:", Memory.empireSettings.tier3Buy, "T3G:", Memory.empireSettings.tier3GBuy);
+    /*if (energyCost > 0.035) {
+        //    console.log("MAX ENERGY SELL");
+        //     Memory.empireSettings.maxWallSize = 050000000;
+//        Memory.empireSettings.maxController -= 9000;
+//        Memory.terminalDoNewTrade = true;
+        console.log('EMPIRE SETTING At: max Tier', Memory.empireSettings.maxWallSize, Memory.empireSettings.maxController, Memory.terminalDoNewTrade);
+    } else if (energyCost > 0.02) {
+        // First tier change.
+        //  console.log("TIER1 Change");
+        //   Memory.empireSettings.maxWallSize = 150000000;
+        //Memory.empireSettings.maxController -= 4500;
+        Memory.terminalDoNewTrade = undefined;
+        console.log('EMPIRE SETTING At: Tier 2', Memory.empireSettings.maxWallSize, Memory.empireSettings.maxController, Memory.terminalDoNewTrade);
+    } else if (energyCost >= 0.010) {
+        Memory.empireSettings.maxController -= 1500;
+        console.log('EMPIRE SETTING At: Tier1', Memory.empireSettings.maxWallSize, Memory.empireSettings.maxController, Memory.terminalDoNewTrade);
+    } else { // So if below 0.02 do not change anything
+        Memory.empireSettings.maxWallSize = 299000000;
+        //        Memory.empireSettings.maxController = 100000;
+        Memory.terminalDoNewTrade = undefined;
+        console.log('EMPIRE SETTING At: Base Tier', Memory.empireSettings.maxWallSize, Memory.empireSettings.maxController, Memory.terminalDoNewTrade);
+    }*/
+    if (Memory.empireSettings.maxController < 10000) Memory.empireSettings.maxController = 10000;
+
+    if (codePush === undefined) codePush = Game.time;
+    console.log('Last CodePush:', codePush, "Time Passed:", (Game.time - codePush));
 }
 
-function scanForRemoteSources() {
-    var observer = require('build.observer');
 
-    if (Game.flags.remote === undefined && Game.flags.mineral === undefined) return false;
-    let flag = Game.flags.remote;
-    if (flag !== undefined) {
-        if (flag.memory.spawnRoom === undefined) {
-            var zz;
-
-            flag.memory.spawnRoom = 'none';
-        }
-        if (flag.room === undefined) {
-
-            observer.reqestRoom(flag.pos.roomName, 5);
-        } else {
-            if (flag.memory.spawnRoom === 'none') {
-                flag.room.visual.text('SETROOM', flag.pos);
-            } else {
-                let source = flag.room.find(FIND_SOURCES);
-                let room = Game.rooms[flag.memory.spawnRoom];
-                let spwn = room.find(FIND_STRUCTURES);
-                spwn = _.filter(spwn, function(o) {
-                    return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
-                });
-                if (spwn.length === 1 && source.length > 0 && room !== undefined) {
-                    let remote = spwn[0].memory.roadsTo;
-                    let has;
-                    for (let eee in source) {
-                        for (let zzz in remote) {
-                            has = false;
-                            if (remote[zzz].source === source[eee].id) {
-                                has = true;
-                                break;
-                            }
-
-                        }
-                        if (!has) {
-
-                            // Here we add info to spwn.
-                            let BUILD = {
-                                source: source[eee].id,
-                                sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
-                                miner: false,
-                                transport: false,
-                                expLevel: 4
-                            };
-                            if (parseInt(eee) === 0 && source[eee].room.controller !== undefined) {
-                                BUILD.controller = false;
-                            }
-                            remote.push(BUILD);
-                            //                            console.log('RRRemote added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
-                        }
-                    }
-
-                    flag.memory.spawnRoom = 'none';
-                    flag.remove();
-                }
-
-            }
-        }
-
-    }
-
-    flag = Game.flags.mineral;
-    if (flag !== undefined) {
-
-        if (flag.memory.spawnRoom === undefined) {
-            flag.memory.spawnRoom = 'none';
-        }
-        if (flag.room === undefined) {
-            //    var observer = require('build.observer');
-
-            observer.reqestRoom(flag.pos.roomName, 5);
-        } else {
-            if (flag.memory.spawnRoom === 'none') {
-                flag.room.visual.text('SETROOM', flag.pos);
-            } else {
-                let source = flag.room.find(FIND_MINERALS);
-                let room = Game.rooms[flag.memory.spawnRoom];
-                if (room === undefined) return;
-                let spwn = room.find(FIND_STRUCTURES);
-                spwn = _.filter(spwn, function(o) {
-                    return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
-                });
-                if (spwn.length === 1 && source.length > 0 && room !== undefined) {
-                    let remote = spwn[0].memory.roadsTo;
-                    let has;
-                    for (let eee in source) {
-                        for (let zzz in remote) {
-                            has = false;
-                            if (remote[zzz].source === source[eee].id) {
-                                has = true;
-                                break;
-                            }
-
-                        }
-                        if (!has) {
-
-                            // Here we add info to spwn.
-                            let BUILD = {
-                                source: source[eee].id,
-                                sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
-                                expLevel: 11
-                            };
-                            if (parseInt(eee) === 0 && source[eee].room.controller !== undefined) {
-                                BUILD.controller = false;
-                            }
-                            remote.push(BUILD);
-                            //                            console.log('Minearl added', BUILD.source, '@', BUILD.sourcePos, spwn[0].room.name, 'Lvl:', BUILD.expLevel, remote.length);
-                        }
-                    }
-
-                    flag.memory.spawnRoom = 'none';
-                    flag.remove();
-                }
-            }
-
-        }
-    }
-}
-
-function scanForCleanRoom() {
-    if (Game.flags.clearRoom === undefined && Game.flags.clearRoom === undefined) return false;
-    var room = Game.flags.clearRoom.room;
-    if (room === undefined) return false;
-    var stru = room.find(FIND_STRUCTURES);
-    var test2 = _.filter(stru, function(o) {
-        return o.structureType !== STRUCTURE_NUKER && o.structureType !== STRUCTURE_STORAGE && o.structureType !== STRUCTURE_TERMINAL && o.structureType !== STRUCTURE_CONTROLLER;
+function showMineInfo(roomName) {
+    if (Game.rooms[roomName] === undefined) return;
+    if (Game.rooms[roomName].memory.mineInfo === undefined) return;
+    //if (Game.shard.name !== 'shard1') return;
+    if (Game.rooms[roomName].memory.mineInfo['undefined'] !== undefined) Game.rooms[roomName].memory.mineInfo.undefined = undefined;
+    let room = Game.rooms[roomName];
+    var lineY = 0;
+    var totalHarvest = 0;
+    var totalSpent = 0;
+    var totalAverage = 0;
+    var font = { color: '#00FF00 ', stroke: '#111111 ', strokeWidth: 0.123, font: 0.5, align: RIGHT };
+    /*
+    Game.rooms[roomName].memory.mineInfo = _.sortBy(Game.rooms[roomName].memory.mineInfo, function(n) {
+      return n;
     });
-    for (let a in test2) {
-        test2[a].destroy();
-
-    }
-    if (test2.length === 0) Game.flags.clearRoom.remove();
-
-
-}
-
-function whoWorksFor(goal) {
-    var keys = Object.keys(Game.creeps);
-    var a = keys.length;
-    var e;
-    while (a--) {
-        e = keys[a];
-        if (Game.creeps[e].memory.goal == goal) {
-            //            console.log(goal, Game.creeps[e].memory.home, Game.creeps[e].name, Game.creeps[e].memory.role, Game.creeps[e].pos, "lvl:", Game.creeps[e].memory.level);
+    */
+    for (var e in Game.rooms[roomName].memory.mineInfo) {
+        if (!_.isObject(Game.rooms[roomName].memory.mineInfo[e])) {
+            Game.rooms[roomName].memory.mineInfo[e] = undefined;
+            continue;
         }
-    }
-}
+        if (e === 'undefined') {
+            Game.rooms[roomName].memory.mineInfo[e] = undefined;
+            continue;
+        }
+        // Showing info - ID
+        let xx = 1;
+        let yy = 1 + lineY;
+        room.visual.text(e, xx - 5, yy, font);
 
+        xx = 5;
+        if (!Game.rooms[roomName].memory.mineInfo[e].pos) {
+            let tgt = Game.getObjectById(e);
+            if (tgt) {
+                Game.rooms[roomName].memory.mineInfo[e].pos = {
+                    x: tgt.pos.x,
+                    y: tgt.pos.y,
+                    roomName: tgt.pos.roomName,
+                };
+            }
+        }
+        if (Game.rooms[roomName].memory.mineInfo[e].pos) {
+            if (Game.rooms[roomName].memory.mineInfo[e].isSkSource) {
+                room.visual.text("*" + Game.rooms[roomName].memory.mineInfo[e].pos.roomName + ":" + Game.rooms[roomName].memory.mineInfo[e].pos.x + "," + Game.rooms[roomName].memory.mineInfo[e].pos.y, xx, yy, font);
+            } else {
+                room.visual.text(Game.rooms[roomName].memory.mineInfo[e].pos.roomName + ":" + Game.rooms[roomName].memory.mineInfo[e].pos.x + "," + Game.rooms[roomName].memory.mineInfo[e].pos.y, xx, yy, font);
+            }
+        }
+
+        xx = 10;
+        // harvest total for last 15000
+        room.visual.text(Game.rooms[roomName].memory.mineInfo[e].mean + "[" + Game.rooms[roomName].memory.mineInfo[e].history[Game.rooms[roomName].memory.mineInfo[e].history.length - 1].harvested + "]" + "(" + Game.rooms[roomName].memory.mineInfo[e].harvested + ")", xx, yy, font);
+        totalAverage += Game.rooms[roomName].memory.mineInfo[e].mean;
+        // Spent
+        xx = 20;
+        room.visual.text(Game.rooms[roomName].memory.mineInfo[e].spent, xx, yy, font);
+        totalSpent += Game.rooms[roomName].memory.mineInfo[e].spent;
+        //xx = 25;
+        //      room.visual.text('time' ,xx,yyy,font);
+        // Level
+        xx = 17;
+        if (Game.rooms[roomName].memory.mineInfo[e].level === undefined) Game.rooms[roomName].memory.mineInfo[e].level = 0; // This will be for home sources.
+        if (Game.rooms[roomName].memory.mineInfo[e].counter === undefined) Game.rooms[roomName].memory.mineInfo[e].counter = 0; // This will be for home sources.
+
+        room.visual.text(Game.rooms[roomName].memory.mineInfo[e].level, xx, yy, font); //+"("+Game.rooms[roomName].memory.mineInfo[e].counter+")"
+
+        //      room.visual.text(Game.rooms[roomName].memory.mineInfo[e].reset-Game.time ,xx,yy,font);
+        xx = 25;
+
+        room.visual.text(Game.rooms[roomName].memory.mineInfo[e].profit, xx, yy, font);
+        xx = 30;
+
+        room.visual.text(Game.rooms[roomName].memory.mineInfo[e].efficient + "%", xx, yy, font);
+        lineY++;
+
+    }
+
+
+    let yyy = 0;
+    let xx = 1;
+    room.visual.text('id', xx, 0, font);
+    xx = 10;
+    room.visual.text('harvested[last](current)', xx, 0, font);
+    xx = 17;
+    room.visual.text('Level', xx, 0, font);
+    xx = 20;
+    room.visual.text('Spent', xx, 0, font);
+    xx = 25;
+    room.visual.text('Profit', xx, 0, font);
+    xx = 30;
+    room.visual.text('efficient', xx, 0, font);
+
+
+    font = { color: '#FF0000', stroke: '#111111 ', strokeWidth: 0.123, font: 0.5, };
+    //      room.visual.text("Total Harvest: "+totalHarvest ,10, lineY+1,font);
+    room.visual.text("Total Average: " + totalAverage, 12, lineY + 1, font);
+    room.visual.text("Total Spent  : " + totalSpent, 20, lineY + 1, font);
+    //      room.visual.text("Diff: "+(totalAverage-totalSpent) ,25, lineY+1,font);
+
+}
 
 
 function rampartCheck(spawn) {
-    var HardD = ['E35S83'];
-    var mediumD = [];
-    var fox = require('foxGlobals');
-
-    let targets = spawn.room.find(FIND_HOSTILE_CREEPS);
-    targets = _.filter(targets, function(object) {
-        return (object.owner.username != 'Invader' && !_.contains(fox.friends, object.owner.username));
+    let targets = spawn.room.enemies;
+    targets = _.filter(targets, function(o) {
+        return o.body.length > 5;
     });
-    //var www = spawn.room.find(FIND_CREEPS);
-    /*www = _.filter(targets,function(o){
-        return (object.owner.username != 'likeafox');
-    }); */
     if (targets.length === 0) return;
+    var HardD = [];
+    var mediumD = [];
+    var flagName;
+
+
+    let structures = spawn.room.find(FIND_STRUCTURES);
+
+    var ramp = _.filter(structures, function(o) {
+        return ((o.structureType === STRUCTURE_RAMPART && !o.isPublic) || o.structureType === STRUCTURE_WALL) && o.hits < 500000;
+    });
+    if (ramp.length > 1) {
+        if (targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
+            spawn.room.controller.activateSafeMode();
+            flagName = 'safemode' + spawn.room.name;
+            if (Game.flags[flagName] === undefined) {
+                spawn.room.createFlag(25, 25, flagName, COLOR_YELLOW, COLOR_YELLOW);
+            }
+            Game.notify('SAFE MODE ACTIVATED DUE TO WEAK WALLS' + spawn.room.name);
+        }
+    }
+    let rangerCount = 0;
+    flagName = 'wallwork' + spawn.room.name;
+    // Defense Against Rangers/Mage isn't to create melee, but it's to create counter repairers. 
+    if (!Game.flags[flagName] || !Game.flags[flagName].memory.analyzed) {
+        for (let ee in targets) {
+            let ana = analyzeCreep(targets[ee]);
+            if (ana.type === 'ranger' || ana.type === 'mage') {
+                rangerCount++;
+            }
+        }
+        if (rangerCount > 0) {
+            let level = 5;
+            if (rangerCount > 6) {
+                rangerCount = 2;
+                level = 6;
+            } else if (rangerCount > 3) {
+                rangerCount = 1;
+                level = 6;
+            }
+            let flag = Game.flags[flagName];
+            if (flag === undefined) {
+
+                spawn.room.createFlag(25, 25, flagName, COLOR_YELLOW, COLOR_YELLOW);
+            } else {
+                flag.memory.musterRoom = spawn.room.name;
+                flag.memory.analyzed = true;
+                if (flag.memory.removeFlagCount === undefined) flag.memory.removeFlagCount = 1250;
+                if (flag.memory.party === undefined) {
+                    flag.memory.party = [
+                        ['wallwork', rangerCount, level]
+                    ];
+                }
+                Game.notify(targets[0].owner.username + ' is attacking and RANGER/MAGE attack to creating wallwork to counter' + spawn.room.name);
+            }
+        }
+    }
+
     let e = targets.length;
     let named2 = 'RA2' + spawn.room.name;
     let named = 'rampartD' + spawn.room.name;
     let named3 = 'RA3' + spawn.room.name;
-    let structures = spawn.room.find(FIND_STRUCTURES);
+    if (targets[0].body.length > 10) {
+        Game.notify(targets[0].owner.username + '  is in room: ' + spawn.room.name + " time: " + roomHistory(spawn.room.name, Game.time) + "  Num:" + e + "x" + targets[0].body.length, 180);
+
+    }
     while (e--) {
 
         /*            let nearRampart = targets[e].pos.findInRange(FIND_STRUCTURES, 1, {
@@ -259,206 +375,110 @@ function rampartCheck(spawn) {
     }
 }
 
-function safemodeCheck(spawn) {
-    var fox = require('foxGlobals');
 
-    if (spawn.room.name == 'W53S35') {
-        var targetss = spawn.room.find(FIND_HOSTILE_CREEPS);
-        targetss = _.filter(targetss, function(object) {
-            return (object.owner.username != 'Invader' && !_.contains(fox.friends, object.owner.username) && (object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(RANGED_ATTACK) > 0));
-        });
-        if (targetss > 0) {
-            spawn.room.controller.activateSafeMode();
+function doRoomReport(room, isTenTime) {
+    var nukes = room.find(FIND_NUKES);
+    let name = 'nukeRepair' + room.name;
+    if (nukes.length === 0) {
+        if (Game.flags[name]) {
+            Game.flags[name].memory.remove = true;
         }
     }
-    if (spawn.room.controller.level !== 8) return;
-    var targets = spawn.room.find(FIND_HOSTILE_CREEPS, 1);
-    targets = _.filter(targets, function(object) {
-        return (object.owner.username != 'Invader' && !_.contains(fox.friends, object.owner.username));
-    });
-    if (targets.length > 1) {
-        var ramp = spawn.room.find(FIND_STRUCTURES);
-        ramp = _.filter(ramp, function(o) {
-            return (o.structureType === STRUCTURE_RAMPART || o.structureType === STRUCTURE_WALL) && o.hits < 500000;
-        });
-        if (ramp.length > 1) {
-            if (targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
-                spawn.room.controller.activateSafeMode();
-                if (Game.flags.safemode === undefined) {
-                    spawm.room.createFlag(25, 25, 'safemode', COLOR_YELLOW, COLOR_YELLOW);
-                }
-            }
-        }
-
-    }
-}
-
-function doUpgradeRooms() { //5836b82d8b8b9619519f19be
-    if (Memory.war)
-        return;
-    if (Game.shard.name !== 'shard1') return;
-
-    // Lets count how many ticks left for enhanced upgrading.
-    if (Memory.stats.playerTrade === undefined) {
-        Memory.stats.playerTrade = {};
-    }
-
-
-    if (Game.flags.upgradeRoom !== undefined) {
-        let flag = Game.flags.upgradeRoom;
-        let room = flag.room;
-        if (room.controller.level > 3) {
-            //            if (room.controller.level > 5) {
-            let total = room.storage.store[RESOURCE_ENERGY] + room.terminal.store[RESOURCE_ENERGY];
-            room.visual.text(total, room.storage.pos);
-            if (total > 1200000) {
-                flag.memory.party[0][1] = 4;
-            } else if (total > 1100000) {
-                flag.memory.party[0][1] = 3;
-            } else if (total > 900000) {
-                flag.memory.party[0][1] = 2;
-
-            } else if (total > 700000) {
-                flag.memory.party[0][1] = 1;
-            } else if (total > 500000) {
-                flag.memory.party[0][1] = 1;
-            } else if (total < 50000) {
-                flag.memory.party[0][1] = 0;
-            }
-        }
-        //}
-
-    }
-
-    let spwns = ['5a03400a3e83cd1e5374cf65']; //,''
-    if (Game.flags.recontrol !== undefined) return;
-    var e = spwns.length;
-    while (e--) {
-        let spawn = Game.getObjectById(spwns[e]);
-        if (spawn === null) return;
-
-        let control = spawn.room.controller;
-        if (control.level < 7) return;
-
-
-
-        if (control.progress > 9000000) {
-            if (Game.flags.recontrol === undefined) {
-                var targets = spawn.room.find(FIND_MY_CREEPS);
-                targets = _.filter(targets, function(object) {
-                    return (object.memory.boosted && object.memory.role == 'Aupgrader');
-                });
-
-                var total = 0;
-                for (var ze in targets) {
-                    total += targets[ze].ticksToLive;
-                }
-                var limit = 4000;
-                spawn.room.visual.text(total + "/" + limit, spawn.room.storage.pos.x, spawn.room.storage.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
-                if (total > limit) {
-                    spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-                }
-            }
-
-        } else if (control.level === 8 || control.progress > 10900000) {
-            spawn.room.createFlag(control.pos, 'recontrol', COLOR_YELLOW);
-        }
-    }
-}
-
-
-function isBoost(body) {
-    for (var e in body) {
-
-        if (body[e].boost !== undefined)
-            return true;
-    }
-    return false;
-}
-
-function analyzeHostiles(bads) {
-    var report = {};
-    var boost = 0;
-    for (var e in bads) {
-        var bad = bads[e];
-        if (isBoost(bad.body)) {
-            boost++;
-        }
-    }
-    var fox = require('foxGlobals');
-
-    //    if (Memory.testing === undefined) {
-    //        var message = _.toString(boost + ':boost ' + bads.length + ':Bad guys found @' + bads[0].room + 'from:' + bads[0].owner.username);
-    //        Game.notify(message);
-    //      Memory.testing = 1;
-    //    }
-    //    console.log(boost, ':boost ', bads.length, ':Bad guys found @', bads[0].room, 'from:', bads[0].owner.username);
-    if (bads.length > 0 && !_.contains(fox.friends, bads[0].owner.username)) {}
-    return {};
-}
-
-function doRoomReport(room) {
-
-
-
-    if (room.name == 'E14S38') return;
-    var fox = require('foxGlobals');
-
-    bads = room.find(FIND_HOSTILE_CREEPS);
-    bads = _.filter(bads, function(creep) {
-        return (!_.contains(fox.friends, creep.owner.username));
-    });
-    var numBads = bads.length;
-    if (numBads > 0 && bads[0].owner.username !== 'Invader') {
-        var report = analyzeHostiles(bads); // Here we get a report of the bads.
-        room.memory.alert = true; // This will force walls/ramparts to start looking at damage.
-    } else {
-        room.memory.alert = false;
-    }
-
-    var nuke = room.find(FIND_NUKES);
-    if (nuke.length > 0) {
-        console.log('NUKE INCOMING @' + nuke[0].room + ' from:');
+    if (nukes.length > 0) {
         room.memory.nukeIncoming = true;
-        Game.notify('NUKE INCOMING @' + nuke[0].room + ' from:');
-    }
+        for (var e in nukes) {
 
-    if (room.controller.level > 3) {
-
-        var goods = room.find(FIND_MY_CREEPS);
-        if (goods.length === 0) {
-            for (var i in goods) {
-                if (goods[i].memory.role == 'linker') {
-                    //      goods[i].memory.role = 'first';
-                    //    goods[i].memory.reportDeath = true;
-                } else if (goods[i].memory.role == 'homeDefender') {
-                    goods[i].memory.death = true;
-                }
+            console.log(nukes.length, 'NUKE INCOMING @', nukes[e].room, ' from:', nukes[e].launchRoomName, name, 'landing time', nukes[e].timeToLand);
+            if (Game.flags[name] === undefined && nukes[e].timeToLand > 1500) {
+                room.createFlag(nukes[e].pos, name, COLOR_YELLOW, COLOR_YELLOW);
+            } else if (Game.flags[name]) {
+                Game.flags[name].memory.musterRoom = room.name;
+                Game.flags[name].memory.party = [
+                    ['wallwork', 1, 6]
+                ];
             }
-            if (room.energyAvailable >= 300) {
-                var zz = room.alphaSpawn.spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY], 'emegyfir' + Math.floor(Math.random() * 100), {
-                    memory: {
-                        role: 'first',
-                        roleID: 0,
-                        //                        home: room.pos.roomName,
-                        parent: "none",
-                        level: 3
-                    }
-                });
+
+            if (nukes[e].timeToLand < 150) {
+                let evacName = 'eva' + room.name;
+                if (Game.flags[evacName] === undefined) {
+                    room.createFlag(nukes[e].pos, evacName, COLOR_WHITE, COLOR_WHITE);
+                } else {
+                    let flag = Game.flags[evacName];
+                    if (flag.memory.evacuateTimer === undefined) flag.memory.evacuateTimer = 102;
+                    flag.memory.evacuate = true;
+                }
             }
 
         }
     }
 
+    if (isTenTime === undefined) isTenTime = Game.time % 10;
+
+    switch (isTenTime) {
+        case 1:
+            var bads = room.enemies;
+            var numBads = bads.length;
+            if (numBads > 0) {
+                //        var report = analyzeHostiles(bads); // Here we get a report of the bads.
+                Game.notify(numBads + '# of ' + bads[0].owner.username + ' guys found @' + bads[0].room + "  " + Game.time);
+            }
+            break;
+        case 2:
+            if (room.controller.level >= 3 && room.name !== 'E59S51') {
+
+                var goods = room.find(FIND_MY_CREEPS);
+                goods = _.filter(goods, function(o) {
+                    return o.memory.home === room.name && (o.memory.role === 'job' || o.memory.role === 'first');
+                });
+                room.memory.currentJobWorkers = goods.length;
+                if (goods.length === 0 && room.alphaSpawn.spawning === null && room.energyAvailable >= 300 && room.energyAvailable < 2400) { //&& room.energyAvailable < 2400
+                    Game.notify(room.name + " has emegyfir created @ " + roomHistory(room.name, Game.time));
+                    var zz = room.alphaSpawn.spawnCreep([CARRY, CARRY, MOVE, MOVE, CARRY, CARRY, ], 'emegyfir' + Math.floor(Math.random() * 100), {
+                        memory: {
+                            role: 'first',
+                            roleID: 0,
+                            home: room.name,
+                            parent: "none",
+                            level: 3
+                        }
+                    });
+
+                }
+            }
+
+            break;
+        case 3:
+            break;
+    }
+
+
+
 }
 
-function consoleLogReport() {
-    //        if(Game.shard.name !== 'shard1') return;
+function consoleLogReport(breakNum) {
+    //    if(Game.shard.name !== 'shard2'){
+    if (Game.time % 256 > 0) {
+        return;
+    }
+    //  }
     let report = "";
     for (let a in Memory.shardNeed) {
         report += " " + Memory.shardNeed[a];
     }
 
+    let breakTimed = "";
+    if (Game.shard.name === 'shard1') {
+        if (breakNum === 0) {
+            //            breakTimed = "X500X";
+            console.log("BREAK BREAK XXXX < 500 - no CREEP MOVEMENT");
+            Memory.delayCount = 5;
+        } else if (breakNum === 1) {
+            //          breakTimed = "Y1000";
+            console.log("BREAK BREAK YYYY - NOTHING AFTER CREEPS");
+        } else {
+            //        breakTimed = "+++++";
+        }
+    }
     let color = '<a style="color:#0afaff">';
     let endColor = '</a>';
     let shard = Game.shard.name;
@@ -490,9 +510,13 @@ function consoleLogReport() {
             color = '<a style="color:#aaaaff">';
             filler = "%%%" + Game.shard.name + "%%%";
             break;
+        case "shard2":
+            color = '<a style="color:#af0aff">';
+            filler = "$$$" + Game.shard.name + "$$$";
+            break;
     }
     if (Game.cpu.getHeapStatistics !== undefined) {
-        console.log(color + shard + "[" + ticksInARow + "]" + filler + "  Tick #" + gameTime + "  Total Creeps:(" + creepTotal + ") Bucket: " + cpuBucket + " " + cpuLimit + "/" + cpuCeil + filler + " Seg#" + segmentNumUsed + " PP:" + powerProcessed + "#" + (`Used ${Game.cpu.getHeapStatistics().total_heap_size} / ${Game.cpu.getHeapStatistics().heap_size_limit}`));
+        console.log(color + shard + "[" + ticksInARow + "]" + filler + breakTimed + "  Tick #" + gameTime + "  Total Creeps:(" + creepTotal + ") Bucket: " + cpuBucket + " " + cpuLimit + "/" + cpuCeil + filler + " Seg#" + segmentNumUsed + " PP:" + powerProcessed + "#" + (`Used ${Game.cpu.getHeapStatistics().total_heap_size} / ${Game.cpu.getHeapStatistics().heap_size_limit}`));
     } else {
 
         console.log(color + shard + filler + "  Tick #" + gameTime + "  Total Creeps:(" + creepTotal + ") Bucket: " + cpuBucket + " " + cpuLimit + "/" + cpuCeil + filler + " Seg#" + segmentNumUsed + " PP:" + powerProcessed);
@@ -501,57 +525,6 @@ function consoleLogReport() {
 
 }
 
-function doRoomVisual(room) {
-    if (Memory.stats.totalMinerals === undefined) return;
-
-    if (room.memory.labMode !== undefined &&
-        room.memory.labMode.substr(0, 5) === 'shift') {
-
-        room.visual.text(room.memory.labMode + ":", 10, 41, {
-            color: room.memory.primaryLab ? '#10c3ba' : '#FFFFFF ',
-            stroke: '#000000 ',
-            strokeWidth: 0.123,
-            font: 0.5
-        });
-
-        room.visual.text(room.memory.lab2Mode + ":" + Memory.stats.totalMinerals[room.memory.lab2Mode] + "/" + require('build.labs').maxMinerals()[room.memory.lab2Mode] + ":" + room.memory.labShift, 10, 42, {
-            color: room.memory.primaryLab ? '#000000' : '#10c3ba ',
-            stroke: '#000000 ',
-            strokeWidth: 0.123,
-            font: 0.5
-        });
-
-    } else {
-
-        room.visual.text(room.memory.labMode + ":" + Memory.stats.totalMinerals[room.memory.labMode], 10, 41, {
-            color: room.memory.primaryLab ? '#10c3ba' : '#000000 ',
-            stroke: '#000000 ',
-            strokeWidth: 0.123,
-            font: 0.5
-        });
-        room.visual.text(room.memory.lab2Mode + ":" + Memory.stats.totalMinerals[room.memory.lab2Mode] + ":", 10, 42, {
-            color: room.memory.primaryLab ? '#000000' : '#10c3ba ',
-            stroke: '#000000 ',
-            strokeWidth: 0.123,
-            font: 0.5
-        });
-    }
-    /*        if (room.memory.boost !== undefined)
-                room.visual.text(room.memory.boost.mineralType, 10, 43, {
-                    color: '#10c3ba ',
-                    stroke: '#000000 ',
-                    strokeWidth: 0.123,
-                    font: 0.5
-                }); */
-    room.visual.text("w:" + room.memory.labsNeedWork, 10, 43, {
-        color: '#10c3ba ',
-        stroke: '#000000 ',
-        strokeWidth: 0.123,
-        font: 0.5
-    });
-
-
-}
 
 function memoryStatsUpdate() {
 
@@ -571,136 +544,31 @@ function memoryStatsUpdate() {
 }
 
 function getWallLow(roomName) {
-    if (Game.rooms[roomName] === undefined) return false;
-    if (Game.rooms[roomName].memory.weakestWall !== undefined) return Game.rooms[roomName].memory.weakestWall;
-    Memory.wallCount--;
-    if (Memory.wallCount > 0) return;
-    Memory.wallCount = 150;
+    //    if (Game.rooms[roomName] && Game.rooms[roomName].memory.weakestWall !== undefined) return Game.rooms[roomName].memory.weakestWall;
+    if (Game.rooms[roomName] === undefined) return 0;
+    if (Game.shard.name === 'shard3') return 0;
     let room = Game.rooms[roomName];
-    let walls = _.filter(room.find(FIND_STRUCTURES), function(o) {
-        return o.structureType == STRUCTURE_WALL || (o.structureType == STRUCTURE_RAMPART && !o.isPublic);
-    });
-    let highest = _.min(walls, a => a.hits);
-
-    return highest.hits;
-
-}
-
-function cleanMemory() {
-    for (var e in Game.rooms) {
-        var room = Game.rooms[e];
-        var memory = room.memory;
-        if (memory.invasionFlag !== undefined) {
-            memory.invasionFlag = undefined;
-        }
-        if (memory.hostileID !== undefined) {
-            memory.hostileID = undefined;
-        }
-        if (memory.hostileScanTimer !== undefined) {
-            memory.hostileScanTimer = undefined;
-        }
-        if (room.controller !== undefined && room.controller.owner !== undefined && room.controller.owner.username === 'likeafox') {
-
-        } else {
-            if (memory.roomLinksID !== undefined) {
-                //                console.log('DEL roomLInk', roomLink(room.name));
-                memory.roomLinksID = undefined;
-            }
-            if (Game.flags[memory.invasionFlag] === undefined) {
-                if (memory.invasionFlag !== undefined) {
-                    memory.invasionFlag = undefined;
-                    memory.hostileID = undefined;
-                    memory.hostileScanTimer = undefined;
-                    //                  console.log('DEL invasion Info', roomLink(room.name));
+    if(!room.memory.weakestWall) return 0;
+    if (Game.time % 1500 !== 0) return room.memory.weakestWall;
+    if(Memory.threeLowestWalls === undefined){
+        Memory.threeLowestWalls = ['E39S51','E13S18','E21S49'];
+    }
+    if(!_.contains(Memory.threeLowestWalls,roomName)){
+        for(let i in Memory.threeLowestWalls){
+            if(Game.rooms[Memory.threeLowestWalls[i]]){
+                let wall = Game.rooms[ Memory.threeLowestWalls[i] ].memory.weakestWall;
+                if(room.memory.weakestWall < wall-1000000 ){
+                    Memory.threeLowestWalls[i] = roomName;
+                    break;
                 }
-
+            } else {
+                console.log(Memory.threeLowestWalls[i],"ROOM NOT THERE?");
             }
         }
     }
+    return room.memory.weakestWall;
 
 }
-
-function addSpawnQuery(spawnCount) {
-    var e;
-    if (spawnCount !== undefined) {
-
-        for (e in Game.spawns) {
-            if (Game.spawns[e].memory.alphaSpawn) {
-                if (spawnCount[Game.spawns[e].id] === undefined) {
-                    spawnCount[Game.spawns[e].id] = {
-                        bodyCount: 0
-                    };
-                }
-                if (spawnCount[Game.spawns[e].id] !== undefined) {
-                    let spwn = Game.spawns[e];
-                    let spwnCount = spawnCount[Game.spawns[e].id];
-                    if (spwn.memory.create === undefined) spwn.memory.create = [];
-                    let create = spwn.memory.create;
-
-                    let war = spwn.memory.warCreate;
-                    let expand = spwn.memory.expandCreate;
-                    if (expand === undefined) expand = [];
-                    let a;
-                    let iMax;
-
-                    iMax = create.length;
-
-                    for (a = 0; a < iMax; a++) {
-                        if (spwnCount[create[a].memory.role] !== undefined) {
-                            spwnCount[create[a].memory.role].count++;
-                        } else {
-                            spwnCount[create[a].memory.role] = {
-                                count: 1,
-                                goal: []
-                            };
-                        }
-                    }
-                    if (war !== undefined) {
-                        iMax = war.length;
-                        for (a = 0; a < iMax; a++) {
-                            if (spwnCount[war[a].memory.role] !== undefined) {
-                                spwnCount[war[a].memory.role].count++;
-                            } else {
-                                spwnCount[war[a].memory.role] = {
-                                    count: 1,
-                                    goal: []
-                                };
-                            }
-                        }
-                    }
-                    iMax = expand.length;
-                    for (a = 0; a < iMax; a++) {
-                        if (spwnCount[expand[a].memory.role] !== undefined) {
-                            spwnCount[expand[a].memory.role].count++;
-                            spwnCount[expand[a].memory.role].goal.push(expand[a].memory.goal);
-                        } else {
-                            spwnCount[expand[a].memory.role] = {
-                                count: 1,
-                                goal: [expand[a].memory.goal]
-                            };
-
-                        }
-                    }
-                }
-            }
-
-        }
-    }
-
-    return spawnCount;
-}
-
-function addCounters() {
-    //        Memory.marketRunCounter--;
-    //       labs = require('build.labs');
-}
-
-function resetCounters() {
-    //     if (Memory.marketRunCounter <= 0) {
-    //       Memory.marketRunCounter = 9;
-    // }
-}
-
 
 function doMemory() {
     if (Memory.stats === undefined) Memory.stats = {};
@@ -724,14 +592,25 @@ function doMemory() {
     if (Memory.empire_rooms !== undefined) Memory.empire_rooms = [];
 
 }
-var ticksInARow;
 //const profiler = require('screeps-profiler');
 
 function blackMagic(fn) {
+
     let memory;
     let tick;
+    var prototypes = [
+        require('prototype.global'),
+        require('prototype.creeps'),
+        require('prototype.room')
+    ];
     return () => {
         // Main.js logic should go here.
+
+        if (ticksInARow === undefined) {
+            for (let i = 0, e = prototypes.length; i < e; i++) {
+                prototypes[i]();
+            }
+        }
 
         if (tick && tick + 1 === Game.time && memory) {
             delete global.Memory;
@@ -740,1124 +619,207 @@ function blackMagic(fn) {
         memory = Memory;
         tick = Game.time;
         fn();
-        if (ticksInARow === undefined) {
-            ticksInARow = 0;
-        }
+        if (ticksInARow === undefined) { ticksInARow = 0; }
         ticksInARow++;
         RawMemory._parsed = Memory;
     };
 }
 
-function runShardRoom(roomName) {
-    //shard room is room on a seperate shard
-    let room = Game.rooms[roomName];
-    if (room === undefined) return;
-    let terminal = room.terminal;
-    var min = 5000;
-    var max = 7500;
-    var minerals = _.shuffle([
-        "H", "O", "U", "L", "K", "Z", "X", "G",
-        "OH", "ZK", "UL",
-        "UH", "UO", "KH", "KO", "LH", "LO", "ZH", "ZO", "GH", "GO",
-        "UH2O", "UHO2", "KH2O", "KHO2", "LH2O", "LHO2", "ZH2O", "ZHO2", "GH2O", "GHO2",
-        "XUH2O", "XUHO2", "XKH2O", "XKHO2", "XLH2O", "XLHO2", "XZH2O", "XZHO2", "XGH2O", "XGHO2",
-    ]);
-    var mined = [];
-    var maxed = [];
-    for (var e in minerals) {
-        if (terminal.store[minerals[e]] !== undefined) {
-            //     console.log(roomName,'Doing Shard Room check:',minerals[e],terminal.store[minerals[e]],min,max);
-            if (terminal.store[minerals[e]] < min) {
-                mined.push({
-                    mineralType: minerals[e],
-                    mineralAmount: min - terminal.store[minerals[e]],
-                });
-                // request this mineral.
-            } else if (terminal.store[minerals[e]] > max) {
-                maxed.push({
-                    mineralType: minerals[e],
-                    mineralAmount: terminal.store[minerals[e]] - max,
-                });
-                // Send mienrals
-            }
-        } else {
-            mined.push({
-                mineralType: minerals[e],
-                mineralAmount: min,
-            });
-        }
-    }
-    if (Game.shard.name !== 'shard1' && terminal.store[RESOURCE_POWER] > 1250) {
-        maxed.push({
-            mineralType: RESOURCE_POWER,
-            mineralAmount: terminal.store[RESOURCE_POWER],
-        });
-    }
-    return {
-        room: roomName,
-        needed: mined,
-        sending: maxed,
-    };
-}
-
-function makeBody(carryNeeded) {
-    if (carryNeeded > 50) carryNeeded = 50;
-    let body = [];
-    do {
-        body.push(MOVE);
-        body.push(CARRY);
-        if (body.length >= 50) return body;
-        carryNeeded--;
-    } while (carryNeeded > 0);
-    return body;
-}
-
-function doInstructions(instructions) {
-    //    console.log(Game.shard.name, "doing instructions", instructions.length);
-    let i = instructions.length;
-    while (i--) {
-        let current = instructions[i];
-        let shard = current.shard;
-
-        let roomCreate;
-        let flagTarget;
-
-        // Here we're checking to see if there's any other instruction that is simliar that can cancel each other out.
-        //        var similiar = _.filter(instructions, function(o){
-        //      return o.mineralType === current.mineralType && o !== current ;
-        //    });
-        //      if(similiar.length)
-        //        console.log(similiar.length,current.mineralType,"Thesad");
-
-        if (Game.shard.name === 'shard1' && current.type === 'request') {
-            // Here shard1 fulfills any request that is made.
-            //            console.log('shard1 wants to fulfill REQUEST for', current.shard);
-            //            current.mineralType,current.mineralAmount,
-            if (current.shard === 'shard0') {
-                if (Math.floor(Math.random() * 2) === 0) {
-                    roomCreate = 'E23S38';
-                } else {
-                    roomCreate = 'E23S42';
-                }
-
-                flagTarget = 'portal3';
-            }
-            if (current.shard === 'shard2') {
-                if (Math.floor(Math.random() * 2) === 0) {
-                    roomCreate = 'E22S48';
-                } else {
-                    roomCreate = 'E18S46';
-                }
-                flagTarget = 'portal';
-            }
-            let alphaSpawn = Game.rooms[roomCreate].alphaSpawn;
-            //  console.log('REQUESTTo:', current.shard, roomCreate, 'Min:', current.mineralType, 'Amt:', current.mineralAmount, 'Shard1/REQUEST');
-            if (current.mineralAmount <= 0 || Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
-                console.log(current.mineralAmount, current.mineralType, ' and Spliced from instructions', Game.rooms[roomCreate].terminal.store[current.mineralType], roomCreate);
-                instructions.splice(i, 1);
-                continue;
-            }
-            if (current.mineralAmount < 500) {
-                console.log(current.mineralAmount, current.mineralType, ' to low and removed');
-                instructions.splice(i, 1);
-                continue;
-            }
-
-            if (alphaSpawn.memory.expandCreate.length === 0) {
-                let parts = Math.ceil(current.mineralAmount / 50);
-                let temp = {
-
-                    build: makeBody(parts),
-                    name: 'request' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
-                    memory: {
-                        role: 'mule',
-                        home: roomCreate,
-                        party: flagTarget,
-                        parent: Game.rooms[roomCreate].memory.alphaSpawnID,
-                        level: 5,
-                        pickup: {
-                            mineralType: current.mineralType,
-                            mineralAmount: current.mineralAmount > 1250 ? 1250 : current.mineralAmount,
-                        }
-                    }
-                };
-                if (current.mineralAmount > 0) {
-                    alphaSpawn.memory.expandCreate.push(temp);
-                    //                    console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
-                }
-                // So the issue here is that we need to notify that we're sending materials to shard.
-                current.mineralAmount -= temp.memory.pickup.mineralAmount;
-
-            }
-            if (Game.rooms[roomCreate].terminal.store[current.mineralType] <= 1250) {
-                _terminal_().requestMineral(roomCreate, current.mineralType, 1250);
-            }
-            continue;
-        }
-        if (shard === Game.shard.name) {
-
-
-            // Here the shards make the creeps to send.
-            if (current.type === 'send') {
-                var alphaSpawn = Game.rooms[current.shardRoom].alphaSpawn;
-
-                //          console.log('/SENDTo shard1, From', Game.shard.name, current.shardRoom, 'Min:', current.mineralType, 'Amt:', current.mineralAmount);
-                if (Game.rooms[roomCreate] !== undefined && Game.rooms[roomCreate].store[current.mineralType] <= 5000) {
-                    console.log("bad slicing ");
-                    instructions.splice(i, 1);
-                    continue;
-                }
-
-                if (alphaSpawn.memory.expandCreate.length === 0) {
-                    //                    var temp = createSendCreep(current);
-                    if (current.mineralAmount <= 500) {
-                        console.log(' too low and spliced', current.mineralAmount, current.mineralType);
-                        instructions.splice(i, 1);
-                        continue;
-                    }
-                    var partyFlag;
-                    switch (Game.shard.name) {
-                        case 'shard2':
-                            partyFlag = 'portal';
-                            break;
-                        case 'shard0':
-                            partyFlag = 'portal2';
-                            break;
-                    }
-                    let parts = Math.ceil(current.mineralAmount / 50);
-                    let temp = {
-                        build: makeBody(parts),
-                        name: 'send' + Game.shard.name + ":" + Math.floor(Math.random() * 2000),
-                        memory: {
-                            role: 'mule',
-                            home: current.shardRoom,
-                            party: partyFlag,
-                            parent: Game.rooms[current.shardRoom].memory.alphaSpawnID,
-                            level: 5,
-                        }
-                    };
-
-                    temp.memory.pickup = {
-                        mineralType: current.mineralType,
-                        mineralAmount: current.mineralAmount > 1250 ? 1250 : current.mineralAmount,
-                    };
-                    // This is to limit the amount of mules made at one time to control transports a bit better.                
-                    if (current.mineralAmount > 0) {
-                        alphaSpawn.memory.expandCreate.push(temp);
-                        //                        console.log('added to alphaSpawn', current.mineralAmount, temp.memory.pickup.mineralAmount);
-                    }
-                    current.mineralAmount -= temp.memory.pickup.mineralAmount;
-                    if (current.mineralAmount <= 0) {
-                        console.log(' and Spliced from instructions');
-                        instructions.splice(i, 1);
-                    }
-                }
-
-            }
-
-            if (current.type === 'fillBuyOrder') {
-                let order = current.order;
-                roomCreate = order.shardRoom;
-                if (roomCreate === undefined) roomCreate = getShardRoom(Game.shard.name, current.mineralType);
-                if(Game.rooms[roomCreate].terminal.didAction) {
-                    console.log('skip didAction');
-                    continue;
-                }
-                if(Game.rooms[roomCreate].terminal.cooldown > 0){
-
-                    if (Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
-                        console.log('spliced?');
-                        instructions.splice(i, 1);
-                    } else {
-    //                    console.log('skip Term Cooldown');                        
-                    }
-
-                    continue;
-                }
-                //              console.log(current.mineralType, order.id, current.mineralAmount, roomCreate, Game.shard.name);
-                //                console.log(Game.rooms[roomCreate].terminal.store[current.mineralType]);
-                var zez = Game.market.getOrderById(order.id);
-                if (zez === null) {
-                    instructions.splice(i, 1);
-                    continue;
-                } else {
-                    //    console.log(zez.resourceType, current.mineralType, current.order.resourceType);
-                }
-                var amoutn = current.mineralAmount;
-                if (amoutn > Game.rooms[roomCreate].terminal.store[current.mineralType]) {
-                    amoutn = Game.rooms[roomCreate].terminal.store[current.mineralType];
-                    for (var l in instructions) {
-                        if (instructions[l].mineralType === current.mineralType && instructions[l].shard !== current.shard) {
-                            instructions[l].mineralAmount = amoutn;
-                            break;
-                        }
-                    }
-
-                }
-                let ez = Game.market.deal(order.id, amoutn, roomCreate);
-
-                console.log(Game.rooms[roomCreate].terminal.didAction,ez, 'FulFill buy order on ', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate, order.id, order.amount);
-
-                if (ez === OK) {
-                    //        console.log("selling SUCCESS", current.mineralType);
-                    Game.rooms[roomCreate].terminal.didAction = true;
-                    instructions.splice(i, 1);
-                    continue;
-                } else {
-                           console.log('Selling FAILED2', ez);
-                    if (Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
-                        console.log('spliced?');
-                        instructions.splice(i, 1);
-                    }
-                }
-            }
-            if (current.type === 'fillSellOrder') {
-                let order = current.order;
-                roomCreate = order.shardRoom;
-                if (Game.market.getOrderById(order.id) === null) {
-                    instructions.splice(i, 1);
-                    continue;
-                } else {
-                    //console.log (zez.resourceType );
-                }
-                if (roomCreate === undefined) {
-                    roomCreate = getShardRoom(Game.shard.name, current.mineralType);
-                    if (Game.shard.name === 'shard1') {
-                        roomCreate = 'E22S48';
-                    }
-                }
-                //            console.log(current.mineralType, order.id, current.mineralAmount, roomCreate, Game.shard.name);
-                let ez = Game.market.deal(order.id, current.mineralAmount, roomCreate);
-                console.log(ez, 'FulFill Sell order on ', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate, order.id, order.amount);
-                if (ez === OK) {
-                    //                    console.log("buying SUCCESS", current.mineralType);
-                    instructions.splice(i, 1);
-                    continue;
-                } else {
-                    //                  console.log('Buying FAILED', ez);
-                }
-            }
-
-
-        }
-    }
-}
-
-
-function getMarketPrices() {
-    var rtn = {};
-    var minerals = [
-        "H", "O", "U", "L", "K", "Z", "X", "G", "energy",
-        "OH", "ZK", "UL",
-        //        "UH", "UO", "KH", "KO", "LH", "LO", "ZH", "ZO", "GH", "GO",
-        //        "UH2O", "UHO2", "KH2O", "KHO2", "LH2O", "LHO2", "ZH2O", "ZHO2", "GH2O", "GHO2",
-        "XUH2O", "XUHO2", "XKH2O", "XKHO2", "XLH2O", "XLHO2", "XZH2O", "XZHO2", "XGH2O", "XGHO2",
-    ];
-    /*    if (Game.rooms[room] === undefined || Game.rooms[room].terminal === undefined) {
-            console.log("how does this room:", room, "not have terminal", Game.shard.name, min);
-            return;
-        } */
-
-    for (var e in minerals) {
-        let min = minerals[e];
-        var room = getShardRoom(Game.shard.name, min);
-        if (Game.rooms[room] !== undefined && Game.rooms[room].terminal !== undefined && Game.rooms[room].terminal.store[min] !== undefined && Game.rooms[room].terminal.store[min]> 100) {
-            rtn[min] = {
-                buy: _.max(Game.market.getAllOrders(o => o.type === ORDER_BUY && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
-                sell: _.min(Game.market.getAllOrders(o => o.type === ORDER_SELL && o.resourceType === min && !Game.market.orders[o.id]), o => o.price),
-            };
-
-        }
-    }
-    return rtn;
-}
-
-function analyzeNeeds(shardObject) {
-    if (Game.time % 33 !== 0) return;
-
-
-    console.log("analyzing needs");
-    if (Game.shard.name !== 'shard1') return;
-
-    if (shardObject.shard0 === undefined || shardObject.shard0.marketData === undefined ||
-        shardObject.shard1 === undefined || shardObject.shard1.marketData === undefined ||
-        shardObject.shard2 === undefined || shardObject.shard2.marketData === undefined) {
-        return;
-    }
-    var minerals = [
-        "H", "O", "U", "L", "K", "Z", "X",
-    ];
-
-    for (var e in minerals) {
-        var stats = Memory.stats.totalMinerals;
-        if (stats[minerals[e]] < 50000) {
-            // This means we need to create an order.
-            let lowestShard;
-            let lowestAmount;
-            let min = minerals[e];
-            //for(var l in shardObject.shard0.marketData)
-            // {
-            //      console.log( shardObject.shard0.marketData.U,shardObject.shard1.marketData.U,shardObject.shard2.marketData.U);
-            // }
-            if (shardObject.shard0.marketData[min]) {
-                lowestShard = 'shard0';
-                lowestAmount = shardObject.shard0.marketData[min].sell;
-            }
-            if (shardObject.shard1.marketData[min]) {
-                if (lowestAmount === null || lowestAmount === undefined || shardObject.shard1.marketData[min].sell.price < lowestAmount.price) {
-                    lowestShard = 'shard1';
-                    lowestAmount = shardObject.shard1.marketData[min].sell;
-                }
-            }
-            if (shardObject.shard2.marketData[min]) {
-                if (lowestAmount === null || lowestAmount === undefined || shardObject.shard2.marketData[min].sell.price < lowestAmount.price) {
-                    lowestShard = 'shard2';
-                    lowestAmount = shardObject.shard2.marketData[min].sell;
-                }
-            }
-            if (lowestAmount === undefined) {
-                continue;
-            }
-            let request = {
-                type: 'fillSellOrder',
-                shard: lowestShard,
-                order: lowestAmount,
-                mineralType: minerals[e],
-                shardRoom: lowestShard === 'shard1' ? 'E22S48' : getShardRoom(lowestShard, min),
-                mineralAmount: lowestAmount.remainingAmount > 2000 ? 2000 : lowestAmount.remainingAmount,
-            };
-            let doRequest = true;
-            if (doRequest) {
-                for (let e in shardObject.instructions) {
-                    if (shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type && shardObject.instructions[e].mineralType === request.mineralType) {
-                        doRequest = false;
-                        break;
-                    }
-                }
-            }
-            /*
-                let zz = _.filter(Game.market.orders, function(order) {
-                    return (order.resourceType == min && order.type == ORDER_SELL);
-                });
-                if (zz.length > 0) {
-                    continue;
-                } */
-
-
-            if (doRequest) {
-                console.log('TOO LOWPush on to instructions,', minerals[e], lowestShard, request.mineralAmount, lowestAmount.price, "=", (request.mineralAmount * lowestAmount.price));
-                if (lowestAmount.price < 0.20) {
-                    shardObject.instructions.push(request);
-                }
-            }
-
-
-        } else if (stats[minerals[e]] > 300000) {
-            let lowestShard;
-            let lowestAmount;
-            let min = minerals[e];
-
-            if (shardObject.shard0.marketData[min]) {
-                lowestShard = 'shard0';
-                lowestAmount = shardObject.shard0.marketData[min].buy;
-            }
-            if (shardObject.shard1.marketData[min]) {
-                if (lowestAmount === null || lowestAmount === undefined || (shardObject.shard1.marketData[min].buy !== null && shardObject.shard1.marketData[min].buy.price > lowestAmount.price)) {
-                    lowestShard = 'shard1';
-                    lowestAmount = shardObject.shard1.marketData[min].buy;
-                }
-            }
-            if (shardObject.shard2.marketData[min]) {
-                if (lowestAmount === null || lowestAmount === undefined || (shardObject.shard2.marketData[min].buy !== null && shardObject.shard2.marketData[min].buy.price > lowestAmount.price)) {
-                    lowestShard = 'shard2';
-                    lowestAmount = shardObject.shard2.marketData[min].buy;
-                }
-            }
-            if (lowestAmount === undefined || lowestAmount === null) {
-                continue;
-            }
-            let request = {
-                type: 'fillBuyOrder',
-                shard: lowestShard,
-                order: lowestAmount,
-                mineralType: minerals[e],
-                shardRoom: lowestShard === 'shard1' ? 'E22S48' : getShardRoom(lowestShard, min),
-                mineralAmount: lowestAmount.remainingAmount > 1750 ? 1750 : lowestAmount.remainingAmount,
-            };
-            let doRequest = true;
-            if (doRequest) {
-                for (let e in shardObject.instructions) {
-                    if (shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type && shardObject.instructions[e].mineralType === request.mineralType) {
-                        doRequest = false;
-                        break;
-                    }
-                }
-            }
-
-            if (doRequest) {
-                console.log('TOO MUCH Push on to instructions,', minerals[e], lowestShard, request.mineralAmount, lowestAmount.price, "=", (request.mineralAmount * lowestAmount.price));
-                if (lowestAmount.price < 0.50) {
-                    shardObject.instructions.push(request);
-                }
-            }
-
-
-        }
-    }
-}
-
-
-function cleanOrders(shardObject, min) {
-    if (shardObject.shard1.marketData[min]) {
-
-        if (shardObject.shard1.marketData[min].buy === null || shardObject.shard1.marketData[min].buy === undefined) {
-            shardObject.shard1.marketData[min].buy = {
-                price: 0.01,
-            };
-        }
-        if (shardObject.shard1.marketData[min].sell === null) {
-            shardObject.shard1.marketData[min].sell = {
-                price: 1000,
-            };
-        }
-    }
-    if (shardObject.shard2.marketData[min]) {
-        if (shardObject.shard2.marketData[min].buy === null) {
-            shardObject.shard2.marketData[min].buy = {
-                price: 0.01,
-            };
-        }
-        if (shardObject.shard2.marketData[min].sell === null) {
-            shardObject.shard2.marketData[min].sell = {
-                price: 1000,
-            };
-        }
-    }
-    if (shardObject.shard0.marketData[min]) {
-        if (shardObject.shard0.marketData[min].buy === null) {
-            shardObject.shard0.marketData[min].buy = {
-                price: 0.01,
-            };
-        }
-        if (shardObject.shard0.marketData[min].sell === null) {
-            shardObject.shard0.marketData[min].sell = {
-                price: 1000,
-            };
-        }
-    }
-}
-
-function analyzeMarkets(shardObject) {
-    //    shardObject.instructions= [];
-    //[Game.shard.name]
-    //if (Game.shard.name === 'shard1') return;
-    //console.log(shardObject.shard0.marketData, shardObject.shard1.marketData, shardObject.shard2.marketData);
-    if (Game.time % 500 > 21) return;
-    var minerals = [
-        "H", "O", "U", "L", "K", "Z", "X", "G",
-        "OH", "ZK", "UL",
-        "UH", "UO", "KH", "KO", "LH", "LO", "ZH", "ZO", "GH", "GO",
-        "UH2O", "UHO2", "KH2O", "KHO2", "LH2O", "LHO2", "ZH2O", "ZHO2", "GH2O", "GHO2",
-        "XUH2O", "XUHO2", "XKH2O", "XKHO2", "XLH2O", "XLHO2", "XZH2O", "XZHO2", "XGH2O", "XGHO2",
-    ];
-
-    if (shardObject.shard0 === undefined || shardObject.shard0.marketData === undefined ||
-        shardObject.shard1 === undefined || shardObject.shard1.marketData === undefined ||
-        shardObject.shard2 === undefined || shardObject.shard2.marketData === undefined) {
-        return;
-    }
-
-    // We are looking for the highest BUY Price
-    var energyHigh;
-    if (shardObject.shard0.marketData.energy.buy === null || shardObject.shard1.marketData.energy.buy === null || shardObject.shard2.marketData.energy.buy === null) {
-        energyHigh = 0.2;
-    } else {
-        energyHigh = shardObject.shard0.marketData.energy.buy.price + shardObject.shard1.marketData.energy.buy.price + shardObject.shard2.marketData.energy.buy.price;
-        energyHigh = energyHigh / 3;
-        energyHigh = energyHigh.toFixed(2);
-    }
-
-    var bestDeal;
-    var highestShard;
-    var highestAmount;
-    var lowestShard;
-    var lowestAmount;
-
-    for (let i in minerals) {
-        highestShard = undefined;
-        highestAmount = undefined;
-        lowestShard = undefined;
-        lowestAmount = undefined;
-
-        let min = minerals[i];
-
-        cleanOrders(shardObject, min);
-        // We are looking for the highest BUY Price
-
-        if (shardObject.shard0.marketData[min]) {
-            highestShard = 'shard0';
-            highestAmount = shardObject.shard0.marketData[min].sell;
-        }
-        // if(min === 'U') console.log('Low Sell',shardObject.shard2.marketData[min].sell.price , highestAmount.price);
-        if (shardObject.shard1.marketData[min]) {
-            if (highestAmount === undefined || shardObject.shard1.marketData[min].sell.price < highestAmount.price) {
-                highestShard = 'shard1';
-                highestAmount = shardObject.shard1.marketData[min].sell;
-            }
-        }
-        //   if(min === 'U') console.log('Low Sell',shardObject.shard2.marketData[min].sell.price , highestAmount.price);
-        if (shardObject.shard2.marketData[min]) {
-            if (highestAmount === undefined || shardObject.shard2.marketData[min].sell.price < highestAmount.price) {
-                highestShard = 'shard2';
-                highestAmount = shardObject.shard2.marketData[min].sell;
-            }
-        }
-
-        if (shardObject.shard0.marketData[min]) {
-            lowestShard = 'shard0';
-            lowestAmount = shardObject.shard0.marketData[min].buy;
-        }
-
-        if (shardObject.shard1.marketData[min]) {
-            if (lowestAmount === undefined || shardObject.shard1.marketData[min].buy.price > lowestAmount.price) {
-                lowestShard = 'shard1';
-                lowestAmount = shardObject.shard1.marketData[min].buy;
-            }
-        }
-        if (shardObject.shard2.marketData[min]) {
-            if (lowestAmount === undefined || shardObject.shard2.marketData[min].buy.price > lowestAmount.price) {
-                lowestShard = 'shard2';
-                lowestAmount = shardObject.shard2.marketData[min].buy;
-            }
-        }
-        // Then we get who has the highest sell of this mineral
-        // If Buy is greater than Sell     
-        //0.112 for: U Highest Buy order shard1 @ 0.113 Lowest Sell order shard1 @ 0.001
-        // WE are looking for the lowest SELL price
-
-        //        console.log('for:',min,'Highest Buy order',lowestShard,'@',lowestAmount.price,'Lowest Sell order',highestShard,'@',highestAmount.price);
-
-        // This is to setup an order if we need to sell an mineral we have too much of and we don't need to verify.
-        /*        if (lowestAmount !== undefined && Memory.stats.totalMinerals[min] > 300000 && lowestAmount.price > 0.20 && _.contains(['X', 'O', 'H', 'L', 'U', 'Z', 'K'], minerals[i])) {
-
-                    let request = {
-                        type: 'fillBuyOrder',
-                        shard: lowestShard,
-                        order: lowestAmount,
-                        mineralType: minerals[i],
-                        shardRoom: getShardRoom(lowestShard, min),
-                        mineralAmount: 1750,
-                    };
-                    if (shardObject.instructions.length < 4) {
-
-                        console.log('added just a buy order to instructions:', min, "@", lowestAmount.price, Memory.stats.totalMinerals[min]);
-                        shardObject.instructions.push(request);
-                        continue;
-                    }
-                } */
-
-        if (lowestAmount !== undefined && highestAmount !== undefined) {
-
-            var profit = lowestAmount.price - highestAmount.price;
-            if (profit > 0) {
-
-                var amnt = 1250;
-                if (lowestAmount.remaingAmount < 1250) {
-                    amnt = lowestAmount.remaingAmount;
-                }
-                if (highestAmount.remaingAmount < 1250) {
-                    amnt = highestAmount.remaingAmount;
-                }
-                if (highestAmount.remaingAmount < amnt) {
-                    amnt = highestAmount.remaingAmount;
-                }
-                if (lowestAmount.remaingAmount < amnt) {
-                    amnt = lowestAmount.remaingAmount;
-                }
-                if (amnt < 100) continue;
-                let request = {
-                    type: 'fillBuyOrder',
-                    shard: lowestShard,
-                    order: lowestAmount,
-                    mineralType: minerals[i],
-                    shardRoom: getShardRoom(lowestShard, min),
-                    mineralAmount: amnt,
-                };
-                let request2 = {
-                    type: 'fillSellOrder',
-                    shard: highestShard,
-                    order: highestAmount,
-                    mineralType: minerals[i],
-                    shardRoom: highestShard === 'shard1' ? 'E22S48' : getShardRoom(lowestShard, min),
-                    mineralAmount: amnt,
-                };
-                const segmentCost = 1700;
-                var request1TransferCost = calcuateTotalCost(request);
-                var request2TransferCost = calcuateTotalCost(request2);
-                var energyCost = energyHigh;
-                var total = segmentCost + request1TransferCost + request2TransferCost;
-                var estimateTransferCreditCost = energyCost * total;
-                var estimateGain = profit * request.mineralAmount;
-                var estimateProfit = estimateGain - estimateTransferCreditCost;
-                if (estimateProfit > 0) {
-                    var rating;
-                    if (estimateProfit < 100) {
-                        rating = "D";
-                    } else if (estimateProfit < 200) {
-                        rating = "C";
-
-                    } else if (estimateProfit < 300) {
-                        rating = "B";
-
-                    } else if (estimateProfit < 400) {
-                        rating = "A";
-
-                    } else if (estimateProfit < 500) {
-
-                        rating = "A+";
-                    } else {
-                        rating = "S";
-                    }
-                    //if(estimateProfit>100 )
-                    console.log(rating + '@', min, "#", amnt, ' EST Profit:', estimateProfit.toFixed(2), "Energy Est:", total, "*", energyHigh + "(eng avg)  Est Cred=", estimateTransferCreditCost.toFixed(2), "Gain from selling", estimateGain.toFixed(2));
-                    if (estimateProfit > 175) {
-                        if (bestDeal === undefined) {
-                            bestDeal = {
-                                req: request,
-                                req2: request2,
-                                estimateProfit: estimateProfit,
-                            };
-                        } else if (estimateProfit > bestDeal.estimateProfit) {
-                            bestDeal = {
-                                req: request,
-                                req2: request2,
-                                estimateProfit: estimateProfit,
-                            };
-                        }
-
-                    }
-
-                }
-
-
-            }
-        }
-
-    }
-    if (bestDeal !== undefined) {
-
-        console.log('for:', 'highest Buy order', lowestShard, '@', lowestAmount.price, 'lowest Sell order', highestShard, '@', highestAmount.price);
-        var doRequest = true;
-        if (shardObject.instructions.length > 4) doRequest = false;
-        if (doRequest) {
-            for (let e in shardObject.instructions) {
-                if ((shardObject.instructions[e].shard === bestDeal.req.shard && shardObject.instructions[e].type === bestDeal.req.type && shardObject.instructions[e].mineralType === bestDeal.req.mineralType) ||
-                    (shardObject.instructions[e].shard === bestDeal.req2.shard && shardObject.instructions[e].type === bestDeal.req2.type && shardObject.instructions[e].mineralType === bestDeal.req2.mineralType)) {
-                    doRequest = false;
-                    break;
-                }
-            }
-        }
-        // 
-        if (doRequest && bestDeal.req.mineralType === bestDeal.req2.mineralType) {
-            //            console.log('Pushing the best Deal is', bestDeal.req.mineralType, "estimateProfit:", bestDeal.estimateProfit, 'exist?', doRequest, shardObject.instructions.length);
-            console.log('Pushing the best Deal is', bestDeal.req2.mineralType, "estimateProfit:", bestDeal.estimateProfit, 'exist?', doRequest, shardObject.instructions.length);
-            shardObject.instructions.push(bestDeal.req);
-            shardObject.instructions.push(bestDeal.req2);
-        }
-
-    }
-}
-var requestMineral0;
-var requestMineral2;
-
-function analyzeShards(shardObject) {
-    //    shardObject.instructions= [];
-    //[Game.shard.name]
-    //if (Game.shard.name === 'shard1') return;
-    if (shardObject.shard0 !== undefined) {
-
-        if (requestMineral0 === undefined) requestMineral0 = {};
-        for (let e in requestMineral0) {
-            //if (requestMineral0[e] > 0){
-            if (requestMineral0[e] > 0) {
-                //                console.log('delay for request0', e, requestMineral0[e]);
-                requestMineral0[e]--;
-            }
-            //}
-        }
-
-        let room = Game.rooms[shardObject.shard0.shardRoom];
-        for (let i in shardObject.shard0.request) {
-            //            console.log('shard0 requests for', shardObject.shard0.request[i].mineralType, ":", shardObject.shard0.request[i].mineralAmount, shardObject.shard0.shardRoom);
-            if (Memory.stats.totalMinerals[shardObject.shard0.request[i].mineralType] < 1000) {
-                continue;
-            }
-
-            let request = {
-                type: 'request',
-                // Requests only happen from shard1 to shardX
-                shard: 'shard0', // Should be shard1, requests happen from shard1.
-                shardRoom: shardObject.shard0.shardRoom, // If from shard 
-                mineralAmount: shardObject.shard0.request[i].mineralAmount,
-                mineralType: shardObject.shard0.request[i].mineralType,
-            };
-            //            console.log('request object',request.shard,request.shardRoom);
-            let doRequest = true;
-            for (let e in shardObject.instructions) {
-                if (shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type) {
-                    doRequest = false;
-                    break;
-                }
-            }
-            if (requestMineral0[request.mineralType] === undefined) requestMineral0[request.mineralType] = 0;
-            if (requestMineral0[request.mineralType] > 0) doRequest = false;
-            if (request.mineralAmount < 500) doRequest = false;
-
-            if (doRequest) {
-                requestMineral0[request.mineralType] = 1000;
-                shardObject.instructions.push(request);
-                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length, request.mineralType, request.mineralAmount);
-            }
-
-        }
-        for (let i in shardObject.shard0.sending) {
-            //            console.log('shard0 sending out', shardObject.shard0.sending[i].mineralType, ":", shardObject.shard0.sending[i].mineralAmount, shardObject.shard0.shardRoom);
-
-            let request = {
-                type: 'send',
-                shard: 'shard0',
-                shardRoom: shardObject.shard0.shardRoom,
-                mineralAmount: shardObject.shard0.sending[i].mineralAmount,
-                mineralType: shardObject.shard0.sending[i].mineralType,
-            };
-            let doRequest = true;
-            for (let e in shardObject.instructions) {
-                if (shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type) {
-                    doRequest = false;
-                    break;
-                }
-            }
-            if (request.mineralAmount < 500) doRequest = false;
-
-            if (doRequest) {
-                shardObject.instructions.push(request);
-                console.log(' SHard 0 adding to isntructions', shardObject.instructions.length, request.mineralType, request.mineralAmount);
-            }
-        }
-    }
-
-    if (shardObject.shard2 !== undefined) {
-        let room = Game.rooms[shardObject.shard2.shardRoom];
-        if (requestMineral2 === undefined) requestMineral2 = {};
-
-        for (let e in requestMineral2) {
-            //    if (requestMineral2[e] > 0){
-            if (requestMineral2[e] > 0) {
-                //        console.log('delay for request2', e, requestMineral2[e]);
-                requestMineral2[e]--;
-            }
-
-            // }
-        }
-
-        for (let i in shardObject.shard2.request) {
-            //            console.log('shard2 requests for', shardObject.shard2.request[i].mineralType, ":", shardObject.shard2.request[i].mineralAmount, shardObject.shard2.shardRoom);
-            if (Memory.stats.totalMinerals[shardObject.shard2.request[i].mineralType] < 1000 || shardObject.shard2.request[i].mineralAmount < 500) {
-                continue;
-            }
-            let request = {
-                type: 'request',
-                // Requests only happen from shard1 to shardX
-                shard: 'shard2', // Should be shard1, requests happen from shard1.
-                shardRoom: shardObject.shard2.shardRoom, // If from shard 
-                mineralAmount: shardObject.shard2.request[i].mineralAmount,
-                mineralType: shardObject.shard2.request[i].mineralType,
-            };
-            //            console.log('request object',request.shard,request.shardRoom);
-            let doRequest = true;
-            for (let e in shardObject.instructions) {
-                if (shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type) {
-                    doRequest = false;
-                    break;
-                }
-            }
-            // We should add a 'delay of 1k ticks between doing '
-            if (requestMineral2[request.mineralType] === undefined) requestMineral2[request.mineralType] = 0;
-            if (requestMineral2[request.mineralType] > 0) doRequest = false;
-            if (doRequest) {
-                requestMineral2[request.mineralType] = 1000;
-                shardObject.instructions.push(request);
-                console.log(' SHard 2 adding to isntructions', shardObject.instructions.length, request.mineralType, request.mineralAmount);
-            }
-
-        }
-        for (let i in shardObject.shard2.sending) {
-            //       console.log('shard2 sending out', shardObject.shard2.sending[i].mineralType, ":", shardObject.shard2.sending[i].mineralAmount, shardObject.shard2.shardRoom);
-            if (shardObject.shard2.sending[i].mineralAmount < 500) {
-                continue;
-            }
-
-            let request = {
-                type: 'send',
-                shard: 'shard2',
-                shardRoom: shardObject.shard2.shardRoom,
-                mineralAmount: shardObject.shard2.sending[i].mineralAmount,
-                mineralType: shardObject.shard2.sending[i].mineralType,
-            };
-
-            let doRequest = true;
-            for (let e in shardObject.instructions) {
-                if (shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type) {
-                    doRequest = false;
-                    break;
-                }
-            }
-            if (doRequest) {
-                shardObject.instructions.push(request);
-                console.log(' SHaRd 2 adding to isntructions', shardObject.instructions.length, request.mineralType, request.mineralAmount);
-            }
-        }
-    }
-}
-
-function calcuateTotalCost(request) {
-    if (request.shardRoom === undefined || request.order.roomName === undefined || request.shardRoom === null || request.order.roomName === null) return undefined;
-    var amount = request.mineralAmount;
-    var distanceBetweenRooms = Game.map.getRoomLinearDistance(request.shardRoom, request.order.roomName, true);
-    let rtn = Math.ceil(amount * (1 - Math.exp(-distanceBetweenRooms / 30)));
-    return rtn;
-}
-
-function getShardRoom(shard, min) {
-    switch (shard) {
-        case "shard0":
-            return 'E38S72';
-        case "shard2":
-            return 'E19S49';
-        case "shard1":
-            return _terminal_().getRoomMostMineral(min);
-    }
-}
-var instructionCache;
-
-function setInterShardData() {
-
-    var rawData = RawMemory.interShardSegment;
-    var rawObject = JSON.parse(rawData);
-
-    if (rawObject.instructions === undefined) {
-        if (instructionCache !== undefined) {
-            console.log("Why is this being reset?,saved by cache");
-            rawObject.instructions = instructionCache;
-        } else {
-            console.log("Why is this being reset?, not saved.");
-            rawObject.instructions = [];
-        }
-
-    }
-    var shardObject = rawObject[Game.shard.name];
-
-    if (rawObject[Game.shard.name] === undefined) {
-        rawObject[Game.shard.name] = {
-
-        };
-    }
-
-    if (Game.shard.name === 'shard1') {
-
-        if (Game.time % 500 === 0 || rawObject[Game.shard.name] === undefined) {
-            rawObject[Game.shard.name] = {
-                marketData: getMarketPrices(),
-            };
-        }
-        analyzeShards(rawObject);
-        analyzeMarkets(rawObject); //if (Game.time % 500 > 21) return;      
-        analyzeNeeds(rawObject); //if (Game.time % 33 !== 0) return;
-
-    } else if (Game.shard.name === 'shard0') {
-        if (Game.time % 500 === 0 || rawObject[Game.shard.name] === undefined) {
-            let sharData = runShardRoom('E38S72');
-            rawObject[Game.shard.name] = {
-                request: sharData.needed, // needed
-                sending: sharData.sending,
-                shardRoom: sharData.room,
-                marketData: getMarketPrices(),
-            };
-        }
-    } else if (Game.shard.name === 'shard2') {
-        if (Game.time % 500 === 0 || rawObject[Game.shard.name] === undefined) {
-            let sharData = runShardRoom('E19S49');
-            rawObject[Game.shard.name] = {
-                request: sharData.needed, // needed
-                sending: sharData.sending,
-                shardRoom: sharData.room,
-                marketData: getMarketPrices(),
-            };
-        }
-    }
-
-    //instructions are added by analzyingShards, and each shard needs to go through instructions 
-    doInstructions(rawObject.instructions);
-
-    // Instructions are made b
-    instructionCache = rawObject.instructions;
-    RawMemory.interShardSegment = JSON.stringify(rawObject);
-}
-
-function standardizeRoomName(roomName) {
-    if (roomName.length === 6) return roomName;
-    let match = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(roomName);
-    var threeBad;
-    var oneBad;
-    if (match[2].length === 1) {
-        match[2] = _.padLeft(match[2], 2, "0");
-    }
-    if (match[4].length === 1) {
-        match[4] = _.padLeft(match[4], 2, "0");
-    }
-
-    var newString = "";
-    newString += match[1];
-    newString += match[2];
-    newString += match[3];
-    newString += match[4];
-
-    console.log('none standarize RoomName changing', newString);
-    return newString;
-}
 
 var spawnCount;
 module.exports.loop = blackMagic(function() {
+    if (Memory.delayCount && Memory.delayCount > 0) {
+        Memory.delayCount--;
+        console.log(Memory.delayCount, "NO action recoup ticks.", Game.cpu.bucket);
+        return;
+    } else {
+        Memory.delayCount = undefined;
+    }
+    var start = Game.cpu.getUsed();
+    var startCpu;
+    //if(Game.shard.name === 'shard1') showCPU = true;
+    if (showCPU) {
+        startCpu = Game.cpu.getUsed();
+        console.log('----NEW TICK:', Game.time, Game.cpu.bucket);
+    }
 
-    //profiler.enable();
-    // profiler.wrap(function() {
+    changeEmpireSettings();
 
     var _terminal = require('build.terminal');
-    //    this._terminal = require('build.terminal');
     var flag = require('build.flags');
-    var power = require('commands.toPower');
+    var power = require('build.power');
+    var pCreeps = require('commands.toPower');
     var observer = require('build.observer');
     var tower = require('build.tower');
-    var spawnsDo = require('build.spawn');
-    var ccSpawn = require('commands.toSpawn');
+    var comCreeps = require('commands.toCreep');
+    var comSpawn = require('commands.toSpawn');
     var link = require('build.link');
     var labs = require('build.labs');
+    var seg = require('commands.toSegment');
+
     var isTenTime = Game.time % 10;
-    var prototypes = [
-        require('prototype.creeps'),
-        require('prototype.global'),
-        require('prototype.room')
-    ];
-    doMemory();
-    for (let i = 0, e = prototypes.length; i < e; i++) {
-        prototypes[i]();
+
+    if (Game.shard.name === 'shard1') {
+        if (Game.time % 100 < 7) {
+            let room = Game.rooms.E21S31;
+            if (room === undefined) {
+                require('build.observer').reqestRoom('E21S31', 1);
+            } else {
+                let mins = ['X', 'U', 'L', 'Z', 'K', 'O', 'H'];
+                for (let i in mins) {
+                    if (Memory.stats.totalMinerals[mins[i]] > 100000 && (!room.terminal.store[mins[i]] || room.terminal.store[mins[i]] < 10000)) {
+                        let rsut = roomRequestMineral('E21S31', mins[i], 2000);
+                        break;
+                    }
+                }
+            }
+        }
     }
-    addCounters();
+    doMemory();
 
+    let creepStopCPU;
+    switch (Game.shard.name) {
+        case 'shard0':
+            creepStopCPU = 100;
+            break;
+        case 'shard1':
+            creepStopCPU = 500;
+            break;
+        case 'shard2':
+            creepStopCPU = 100;
+            break;
+        case 'shard3':
+            creepStopCPU = 100;
+            break;
+    }
+
+    let powerCreepCPU = Game.cpu.getUsed();
+    if (Game.shard.name === 'shard1') pCreeps.runPowerCreeps();
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - powerCreepCPU;
+         
+                
+
+        console.log('PowerCrpCPU Run:', cnt,Object.keys(Game.powerCreeps).length);
+    }
+
+    let flagCPU = Game.cpu.getUsed();
     flag.run(spawnCount); // We do this part of the first stuff so we can go and find things in the flag rooms
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - flagCPU;
+        console.log('FlagCPU Run:', cnt);
+    }
 
-    if (Game.shard.name === 'shard1' && Game.cpu.bucket <= 200) {
-        console.log('XXXX XXXXX 200 tick break after flag logic XXXX XXXX');
+    if (Game.cpu.bucket <= creepStopCPU) {
+        spawnCount = undefined;
+        if (showCPU) {
+            console.log("STOPPAGE STOPPAGE - Game.cpu.bucket <= creepStopCPU Stoppage", Game.cpu.bucket, creepStopCPU);
+        }
+        consoleLogReport(0);
+        return;
+    }
+    let runCreepCPU = Game.cpu.getUsed();
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - startCpu;
+        console.log('Before Creep Run:', cnt);
+        startCpu = Game.cpu.getUsed();
+    }
+
+    spawnCount = comSpawn.addSpawnQuery(comCreeps.runCreeps()); // This will not work with old counting.
+
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - startCpu;
+        console.log('Creep Run CPU:', cnt);
+        startCpu = Game.cpu.getUsed();
+    }
+
+    if ((Game.cpu.getUsed() - runCreepCPU) > 300 && Game.time % 5 > 0 && Game.bucket < 1000) {
+        if (showCPU) console.log("Stoppage due to > 300 CPU used by creeps and game.time%5 !== 0");
+        consoleLogReport(0);
         return;
     }
 
-    spawnCount = addSpawnQuery(spawnsDo.runCreeps()); // This will not work with old counting.
     var spawnReport = {};
-    var seg = require('commands.toSegment');
     seg.run();
+    seg.setInterShardData();
+
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - startCpu;
+        console.log('Segment Run CPU:', cnt);
+        startCpu = Game.cpu.getUsed();
+    }
+
     var title;
     Memory.stats.powerProcessed = 0;
+    if (Game.cpu.bucket <= creepStopCPU && Game.time % 5 !== 0 && Game.cpu.bucket < 700) {
+        consoleLogReport(1);
+        return;
+    }
+    var totalEnergy = 0;
+    var spawnCpu;
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - startCpu;
+        console.log('After Flag Run:', cnt);
+        startCpu = Game.cpu.getUsed();
+        spawnCpu = Game.cpu.getUsed();
 
-    //        if (Game.spawns[title].roomName == 'E24S33')
+
+    }
+
+
     for (title in Game.spawns) {
-        if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
-            ccSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
-        }
-        Game.spawns[title].memory.wantRenew = undefined;
-        if (Game.spawns[title].memory.alphaSpawn) {
-            //                      var constr = require('commands.toStructure');
-            //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
-            spawnsDo.checkBuild(Game.spawns[title]);
-            doRoomReport(Game.spawns[title].room);
-            let roomName = Game.spawns[title].pos.roomName;
-            tower.run(roomName); // Tower doing stuff.
-            labs.roomLab(roomName);
-            power.roomRun(roomName);
-            link.roomRun(roomName);
-            if (Game.shard.name == 'shard2' || Game.shard.name == 'shard0') {
-                observer.runRoom2(roomName);
-            } else {
-                observer.runRoom(roomName);
-            }
+        if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0 && Game.spawns[title].room.name !== 'E14S38') {
 
-            if (isTenTime === 0) {
-                if (Game.shard.name == 'shard1') {
-                    _terminal.runSimple(roomName);
-                } else {
-                    _terminal.offShardTerminalRun(roomName);
+            let roomName = Game.spawns[title].pos.roomName;
+            if (Game.spawns[title].room.memory.allGood === undefined) {
+                comSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
+                if (Game.spawns[title].memory.alphaSpawn) {
+                    let roomName = Game.spawns[title].pos.roomName;
+                    //                      var constr = require('commands.toStructure');
+                    //                        constr.takeSnapShot(Game.spawns[title].pos.roomName);
+                    if (Game.spawns[title].memory.buildLevel != Game.spawns[title].room.controller.level) {
+                        var constr = require('commands.toStructure');
+                        constr.buildConstrLevel(Game.spawns[title].room.controller);
+                        Game.spawns[title].memory.buildLevel = Game.spawns[title].room.controller.level;
+                    }
                 }
             }
-        }
-
-        if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0) {
-            //            doRoomVisual(Game.spawns[title].room);
-
 
             if (Game.spawns[title].memory.alphaSpawn) {
-                Game.spawns[title].room.memory.alphaSpawnID = Game.spawns[title].id;
+                if(Game.rooms[roomName].memory.segmentReset){
+                    Game.rooms[roomName].memory.segmentReset -= 5;
+                }
+                if (Game.spawns[title].room.controller.level === 8) Game.spawns[title].room.memory.allGood = true;
+                if (Game.shard.name == 'shard2' || Game.shard.name == 'shard0' || Game.shard.name == 'shard3') {
+                    observer.runRoom2(roomName);
+                    if (isTenTime === 0) _terminal.offShardTerminalRun(roomName);
+                } else {
+                    observer.runRoom(roomName);
+                    if (isTenTime === 0) _terminal.runSimple(roomName);
+                }
 
+                doRoomReport(Game.spawns[title].room, isTenTime);
                 rampartCheck(Game.spawns[title]);
-                Game.spawns[title].room.visual.text("A", Game.spawns[title].pos.x - 0.5, Game.spawns[title].pos.y + 0.5, {
-                    color: '#FFFFFF ',
-                    stroke: '#000000 ',
-                    strokeWidth: 0.123,
-                    font: 1.5,
-                    align: RIGHT
-                });
-                if (Game.spawns[title].room.boostLab !== undefined)
-                    Game.spawns[title].room.visual.text("B", Game.spawns[title].room.boostLab.pos.x - 0.5, Game.spawns[title].room.boostLab.pos.y + 0.5, {
-                        color: '#FFFFFF ',
-                        stroke: '#000000 ',
-                        strokeWidth: 0.123,
-                        font: 1.5,
-                        align: RIGHT
-                    });
+                power.roomRun(roomName);
+                labs.roomLab(roomName);
+                link.roomRun(roomName);
+                tower.roomTower(roomName);
+                let spawn = Game.spawns[title];
 
-                if (Game.cpu.bucket > 1000) {
-                    safemodeCheck(Game.spawns[title]);
-                }
-                if (Game.time % 5 === 0 && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
+                if (Game.cpu.bucket >= creepStopCPU && Game.time % 5 === 0 && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
-                    spawnsDo.spawnQuery(Game.spawns[title], spawnCount);
+                    comCreeps.spawnQuery(Game.spawns[title], spawnCount);
                 }
-                Game.spawns[title]._totalParts = (spawnCount[Game.spawns[title].id].bodyCount * 3);
-                Game.spawns[title]._totalCreep = (spawnCount[Game.spawns[title].id].bodyCount * 3);
-            }
-
-            Game.spawns[title].room.renewCreep = undefined;
-
-            if (Game.spawns[title].spawning === null) {
-                ccSpawn.createFromStack(Game.spawns[title]);
-                //                ccSpawn.newRenewCreep(Game.spawns[title].pos.roomName);
-            } else {
-                //              console.log(Game.spawns[title].spawning.directions);
-                let spawn = Game.spawns[title];
-                spawn.room.visual.text("🔧" + spawn.spawning.name, spawn.pos.x + 1, spawn.pos.y, {
-                    color: '#97c39a ',
-                    stroke: '#000000 ',
-                    strokeWidth: 0.123,
-                    font: 0.5,
-                    align: RIGHT
-                });
-                if (Game.spawns[title].spawning.remainingTime === 0) {
-                    console.log('spawning ERROR ERROR here,', Game.spawns[title].pos.roomName,Game.spawns[title].pos.x,Game.spawns[title].pos.y);
+                if (spawnCount[Game.spawns[title].id]) {
+                    Game.spawns[title]._totalParts = (spawnCount[Game.spawns[title].id].bodyCount * 3);
+                    Game.spawns[title]._totalCreep = spawnCount[Game.spawns[title].id].creepCount;
                 }
-            }
-            if (Game.spawns[title].memory.alphaSpawn && Memory.showInfo > 2) {
-                let spawn = Game.spawns[title];
-                let spawnStats = {
+                let totalQuery = spawn.memory.expandCreate.length + spawn.memory.create.length + spawn.memory.warCreate.length;
+                spawn.memory.totalQuery = totalQuery;
+                spawn.room.visual.text(totalQuery, spawn.pos, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });                
+                spawnReport[Game.spawns[title].room.name] = {
                     storageEnergy: spawn.room.storage === undefined ? 0 : spawn.room.storage.store[RESOURCE_ENERGY],
+                    storageTotal: spawn.room.storage === undefined ? 0 : spawn.room.storage.total,
                     terminalEnergy: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.store[RESOURCE_ENERGY],
                     terminalTotal: spawn.room.terminal === undefined ? 0 : spawn.room.terminal.total,
                     parts: spawn._totalParts,
@@ -1865,42 +827,104 @@ module.exports.loop = blackMagic(function() {
                     energy: spawn.room.energyAvailable,
                     maxEnergy: spawn.room.energyCapacityAvailable,
                     controllerLevel: spawn.room.controller.level,
-                    createQ: spawn.memory.create.length,
-                    warQ: spawn.memory.warCreate.length,
                     wallSize: getWallLow(Game.spawns[title].room.name),
-                    expandQ: spawn.memory.expandCreate.length
+                    expandQ: totalQuery,
                 };
-                spawnReport[Game.spawns[title].room.name] = spawnStats;
+                totalEnergy += spawnReport[Game.spawns[title].room.name].storageEnergy + spawnReport[Game.spawns[title].room.name].terminalEnergy;
+                if(spawn.room.memory.alphaSpawnOperated){
+                    spawn.room.memory.alphaSpawnOperated --;
+                    if(spawn.room.memory.alphaSpawnOperated <= 0){
+                        spawn.room.memory.alphaSpawnOperated = undefined;
+                    }
+                spawn.room.visual.text(spawn.room.memory.alphaSpawnOperated, spawn.pos.x,spawn.pos.y-1, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });                
+                }
             }
+//            if(!Game.spawns[title] && Game.spawns[title].room.memory.alphaSpawnOperated || Game.spawns[title].spawns[title].memory.alphaSpawn){
+    if(!Game.spawns[title].room.memory.alphaSpawnOperated || Game.spawns[title].memory.alphaSpawn ||Game.spawns[title].room.powerLevels[PWR_OPERATE_SPAWN].level !== 5){
+                comSpawn.createFromStack(Game.spawns[title]);
+    }
+  //          }
+
+
+            /*            if (Game.spawns[title].room.memory.terminalText !== undefined) {
+                            let xx = 40;
+                            let yy = 28;
+                            Game.spawns[title].room.visual.text(Game.spawns[title].room.memory.labMode + "(Lab)W:" + Game.spawns[title].room.memory.labsNeedWork + " Min:" + Game.spawns[title].room.memory.lab2Mode + " time:" + Game.spawns[title].room.memory.labShift, xx, yy + 1, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+
+                            if (Game.spawns[title].room.memory.terminalText.sent !== undefined) {
+                                Game.spawns[title].room.visual.text(Game.spawns[title].room.memory.terminalText.sent, xx, yy + 2, {
+                                    color: '#97c39a ',
+                                    stroke: '#000000 ',
+                                    strokeWidth: 0.123,
+                                    font: 0.5,
+                                });
+                            }
+                            if (Game.spawns[title].room.memory.terminalText.recieved !== undefined) {
+                                Game.spawns[title].room.visual.text(Game.spawns[title].room.memory.terminalText.recieved, xx, yy + 3, {
+                                    color: '#97c39a ',
+                                    stroke: '#000000 ',
+                                    strokeWidth: 0.123,
+                                    font: 0.5,
+                                });
+                            }
+                            if (Game.spawns[title].room.memory.terminalText.deal !== undefined) {
+                                Game.spawns[title].room.visual.text(Game.spawns[title].room.memory.terminalText.deal, xx, yy + 4, {
+                                    color: '#97c39a ',
+                                    stroke: '#000000 ',
+                                    strokeWidth: 0.123,
+                                    font: 0.5,
+                                });
+                            }
+                        }*/
+
         }
 
+    }
 
-    } // End of Spawns Loops
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - startCpu;
+        console.log('After Spawn Run:', cnt);
+        startCpu = Game.cpu.getUsed();
+    }
+
+    Memory.stats.empireEnergy = totalEnergy;
 
     Memory.stats.rooms = spawnReport;
     if (isTenTime === 0) {
         _terminal.run();
     }
+
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - startCpu;
+        console.log('After Terminal Run:', cnt);
+        startCpu = Game.cpu.getUsed();
+    }
+
     if (Game.shard.name !== 'shard2') {
-        memoryStatsUpdate();
+        memoryStatsUpdate(); // This is to send info to Grafnaa.
+    }
+
+    consoleLogReport();
+    //    if (Game.time % 10 === 0) {
+    /*        for (var e in Game.constructionSites) {
+                if (Game.constructionSites[e].room !== undefined) {
+                    if (Game.constructionSites[e].progress < 20) {
+                        if (Game.constructionSites[e].room && Game.constructionSites[e].room.controller && Game.constructionSites[e].room.controller.level ) {
+
+                        } else if(!Game.constructionSites[e].room.controller || !Game.constructionSites[e].room.controller.owner || Game.constructionSites[e].room.controller.owner.username !== 'likeafox'){
+                         //   Game.constructionSites[e].remove();
+                            console.log(roomLink(Game.constructionSites[e].pos.roomName), Game.constructionSites[e].structureType, Game.constructionSites[e].progress);
+                        }
+                    }
+                }
+            }*/
+    //  }
+    if (showCPU) {
+        let cnt = Game.cpu.getUsed() - startCpu;
+        console.log('memoryStatsUpdate Run:', cnt);
+        startCpu = Game.cpu.getUsed();
     }
 
 
-    doUpgradeRooms();
-    resetCounters();
-    scanForRemoteSources();
-    scanForCleanRoom();
-    setInterShardData();
-    consoleLogReport();
-    //    let eddcc = 'E1S1';
-    //    console.log(eddcc, standardizeRoomName(eddcc));
-    //    console.log('E19s49', standardizeRoomName('E19s49'));
-    // });
 
-    //        cleanMemory();
-    /*    for(var e in Game.constructionSites){
-            if(Game.constructionSites[e].room !== undefined) {
-                console.log(roomLink(Game.constructionSites[e].pos.roomName));
-            }
-        }*/
 });

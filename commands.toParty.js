@@ -4,6 +4,23 @@
 
 
 var allParty = {
+    Issacar:[
+        ['fighter', 1, 1]
+    ],
+    SKIssacar:[
+        ['engineer', 1, 14]
+    ],
+
+    templar: [
+        ['templar', 1, 0]
+    ],
+    manager: [
+        ['manager', 1, 0]
+    ],
+    reclaimer: [
+        ['reclaimer', 1, 0]
+    ],
+
     shooter: [
         ['shooter', 1, 4]
     ],
@@ -16,14 +33,32 @@ var allParty = {
     firstWave: [
         ['engineer', 1, 10], // Builder Engineer
         ['mule', 1, 10],
+        ['engineer', 2, 11], // Builder Engineer
     ],
     secondWave: [
-        ['engineer', 2, 12], // Upgrade Engineer
-        ['mule', 3, 9],
+        ['engineer', 4, 12], // Upgrade Engineer
+        ['mule', 5, 9],
     ],
     thirdWave: [
-        ['engineer', 2, 7], //  Builder Engineer
-        ['mule', 3, 9],
+        ['engineer', 4, 7], //  Builder Engineer
+        ['mule', 5, 9],
+    ],
+
+    cleanUp:[
+        ['demolisher', 1, 8],
+        ['thief', 4, 5],
+    ],
+    operator:[
+        ['healer', 0, 10], // Healer    
+        ['mage', 0, 10],
+        ['ranger', 0, 10],
+        ['paladin', 0, 10],
+        ['fighter', 0, 10],
+        ['demolisher', 0, 10],
+        ['thief', 0, 10],
+        ['mule', 0, 10],
+        ['engineer', 0, 10],
+        ['Acontroller', 0, 1],
     ],
 
     warParty: [
@@ -47,7 +82,7 @@ var allParty = {
     ],
     bandit: [
         ['thief', 0, 6],
-        ['mage', 1, 7],
+        ['mage', 1, 13],
         ['fighter', 1, 10],
     ],
 
@@ -62,7 +97,7 @@ var allParty = {
         ['ztransport', 1, 1],
     ],
     thief: [
-        ['thief', 1, 4],
+        ['thief', 1, 5],
     ],
     safemode: [
         ['wallwork', 3, 5]
@@ -101,7 +136,7 @@ var allParty = {
     ],
 
     scout: [
-        ['scout', 1, 0]
+        ['scout', 0, 0]
     ],
     sign: [
         ['scout', 1, 1]
@@ -123,7 +158,7 @@ var allParty = {
     ],
 
     mule: [
-        ['mule', 2, 4],
+        ['mule', 2, 5],
     ],
 
     hmule: [
@@ -169,7 +204,7 @@ var _level = 2;
 var spawn = require('commands.toSpawn');
 
 function getModuleRole(role) {
-    var spawnsDo = require('build.spawn');
+    var spawnsDo = require('commands.toCreep');
     let allModule = spawnsDo.allModule();
     for (var a in allModule) {
         if (allModule[a][_name] == role) {
@@ -193,7 +228,7 @@ function getSpawnCreating(flag) {
     }
     if (flag.name.substr(0, 6) == 'getMin' && flag.memory.musterRoom === 'none') {
         flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
-        return returnClosestRoom(flag.pos.roomName);
+        return flag.memory.musterRoom;
     }
 
     if (flag.name.substr(0, 5) == 'rampa') {
@@ -202,10 +237,36 @@ function getSpawnCreating(flag) {
     if (flag.name.substr(0, 2) == 'RA') {
         return flag.room.name;
     }
-    if (flag.name.substr(0, 5) == 'power' || flag.name == 'bandit') {
+     
+    if ( flag.memory.bandit || flag.name.substr(0, 6) == 'bandit') {
+                                flag.memory.bandit = true;
+        flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
+        if (flag.memory.musterRoom === 'E53S59') {
+            return 'E52S57';
+        }
+        if (flag.memory.musterRoom === 'E25S37') {
+            return 'E28S37';
+        }
+        if (flag.memory.musterRoom === 'E54S53') {
+            flag.memory.musterRoom ='E58S51';
+        }
+        return flag.memory.musterRoom;
+
+    }
+
+    if (flag.name.substr(0, 5) == 'power' ) {
         flag.memory.power = true;
         //        if (flag.memory.spawn) return allParty.smartPowerParty;
         flag.memory.musterRoom = returnClosestRoom(flag.pos.roomName);
+        if (flag.memory.musterRoom === 'E53S59') {
+            return 'E52S57';
+        }
+        if (flag.memory.musterRoom === 'E25S37') {
+            return 'E28S37';
+        }
+        if (flag.memory.musterRoom === 'E54S53') {
+            flag.memory.musterRoom ='E58S51';
+        }
         return flag.memory.musterRoom;
 
     }
@@ -218,6 +279,18 @@ function getSpawnCreating(flag) {
 
 
 function getCurrentParty(flag) {
+    if (flag.memory.mineral || flag.name.substr(0, 6) == 'getMin') {
+        flag.memory.mineral = true;
+        if (flag.memory.noSKMineral || (flag.pos.roomName[2] === '5' && flag.pos.roomName[5] === '5')) {
+            flag.memory.noSKMineral = true;
+            return allParty.mineral2;
+        }
+        return allParty.mineral;
+
+    }
+    if (flag.name.substr(0, 6) == 'safemode') {
+        return allParty.safemode;
+    }
 
     if (flag.memory.party !== undefined) {
         return flag.memory.party;
@@ -225,25 +298,26 @@ function getCurrentParty(flag) {
     if (flag.memory.power || flag.name.substr(0, 5) == 'power') {
         flag.memory.power = true;
 
-        if (Game.shard.name === 'shard1' || Game.shard.name === 'shard2') {
-            if (flag.memory.spawn === undefined || flag.memory.spawn) return allParty.smarterPowerParty;
-        } else {
-            if (flag.memory.spawn === undefined || flag.memory.spawn) return allParty.smallPowerParty;
-        }
+        //if (Game.shard.name === 'shard1' || Game.shard.name === 'shard2') {
+            //if (flag.memory.spawn === undefined || flag.memory.spawn) return allParty.smallPowerParty;
+            flag.memory.spawnCounter = 1;
+            if (flag.memory.spawn === undefined || flag.memory.spawn){
+                //if(Memory.stats.totalMinerals.UH2O > 100000){
+                if(Memory.empireSettings.boost.power){
+                  return allParty.smarterPowerParty;   
+                } else {
+                  return allParty.smallPowerParty;   
+                }
+            }
+        //} else {
+    //        if (flag.memory.spawn === undefined || flag.memory.spawn) return allParty.smallPowerParty;
+      //  }
     }
-    if (flag.name == 'bandit') {
+    if ( flag.memory.bandit || flag.name.substr(0, 6) == 'bandit') {
+
         return allParty.bandit;
     }
     //    console.log(flag.name.substr(0, ));
-    if (flag.name.substr(0, 6) == 'getMin') {
-        flag.memory.mineral = true;
-        if (flag.pos.roomName[2] === '5' && flag.pos.roomName[5] === '5') {
-            return allParty.mineral2;
-        }
-        return allParty.mineral;
-        //            mineral2
-
-    }
 
     if (flag.name.substr(0, 5) == 'rampa') {
         return allParty.rampart;
@@ -274,15 +348,27 @@ function returnClosestRoom(roomName) {
     var spawn;
 
     switch (roomName) {
+    	case 'E51S50':
+    	case 'E52S50':
+    	case 'E53S50':
+    	case 'E54S50':
+    		return 'E58S51';
         case 'E20S37':
         case 'E20S38':
         case 'E20S39':
             return 'E23S38';
+        case 'E60S43':
+        case 'E60S44':
+        case 'E60S45':
+        case 'E60S46':
+        case 'E60S47':
+            return 'E59S42';
+
     }
 
     for (var e in Game.spawns) {
         if (Game.spawns[e].memory.alphaSpawn) {
-            if (Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E14S37' && Game.spawns[e].room.controller.level === 8) {
+            if (Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E54S53' && Game.spawns[e].room.name !== 'E14S37' && Game.spawns[e].room.controller.level === 8) {
                 var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
                 if (tempDis < distance) {
                     distance = tempDis;
@@ -296,35 +382,8 @@ function returnClosestRoom(roomName) {
 }
 
 // This get the current total of each party member of currentParty.
-function findParty(flag, spawnCount) {
-    if (spawnCount !== undefined && spawnCount[flag.name] !== undefined) {
-        let currentParty = getCurrentParty(flag);
-        let total = [];
-        for (let i in currentParty) {
-            if (spawnCount[flag.name][currentParty[i][_name]] !== undefined) {
-                total[currentParty[i][_name]] = spawnCount[flag.name][currentParty[i][_name]].count;
-            } else {
-                if (total[currentParty[i][_name]] == undefined) total[currentParty[i][_name]] = 0;
-            }
-            for (let o in Game.spawns) {
-                if (!Game.spawns[o].memory.alphaSpawn) continue;
-                let spawnz = Game.spawns[o];
-                for (let z in spawnz.memory.warCreate) {
-                    if (currentParty[i][_name] == spawnz.memory.warCreate[z].memory.role && spawnz.memory.warCreate[z].memory.party == flag.name) {
-                        total[currentParty[i][_name]]++;
-                    }
-                }
-                for (let z in spawnz.memory.expandCreate) {
-                    if (currentParty[i][_name] == spawnz.memory.expandCreate[z].memory.role && spawnz.memory.expandCreate[z].memory.party == flag.name) {
-                        //                        if( total[currentParty[i][_name]] == undefined) total[currentParty[i][_name]] = 0;
-                        total[currentParty[i][_name]]++;
-                    }
-                }
-            }
-        }
 
-        return total;
-    }
+function findPartyOld(flag) {
 
     let currentParty = getCurrentParty(flag);
     let total = [];
@@ -354,7 +413,73 @@ function findParty(flag, spawnCount) {
     }
 
     return total;
+}
+var partiedCreeps;
 
+function findParty(flag, spawnCount) {
+    /*
+    if (spawnCount !== undefined && spawnCount[flag.name] !== undefined) {
+        let currentParty = getCurrentParty(flag);
+        let total = [];
+        for (let i in currentParty) {
+            total[currentParty[i][_name]] = 0;
+            if (spawnCount[flag.name][currentParty[i][_name]] !== undefined) {
+                total[currentParty[i][_name]] = spawnCount[flag.name][currentParty[i][_name]].count;
+            }
+            for (let o in Game.spawns) {
+                if (!Game.spawns[o].memory.alphaSpawn) continue;
+                let spawnz = Game.spawns[o];
+                for (let z in spawnz.memory.warCreate) {
+                    if (currentParty[i][_name] == spawnz.memory.warCreate[z].memory.role && spawnz.memory.warCreate[z].memory.party == flag.name) {
+                        total[currentParty[i][_name]]++;
+                    }
+                }
+                for (let z in spawnz.memory.expandCreate) {
+                    if (currentParty[i][_name] == spawnz.memory.expandCreate[z].memory.role && spawnz.memory.expandCreate[z].memory.party == flag.name) {
+                        //                        if( total[currentParty[i][_name]] == undefined) total[currentParty[i][_name]] = 0;
+                        total[currentParty[i][_name]]++;
+                    }
+                }
+            }
+  //          if(total[currentParty[i][_name]] === 0)
+//                console.log(flag.name,'New Find Party:',currentParty[i][_name],":",spawnCount[flag.name][currentParty[i][_name]].count,total[currentParty[i][_name]] );
+        }
+
+        return total;
+    } */
+
+    let currentParty = getCurrentParty(flag);
+    let total = [];
+    let partyCreeps = _.filter(Game.creeps, function(o) {
+        return o.memory.party === flag.name;
+    });
+    partiedCreeps = partyCreeps;
+
+    for (var i in currentParty) {
+        total[currentParty[i][_name]] = 0;
+        for (var e in partyCreeps) {
+            if (partyCreeps[e].memory.role == currentParty[i][_name]) {
+                total[currentParty[i][_name]]++;
+            }
+        }
+
+        for (var o in Game.spawns) {
+            let spawnz = Game.spawns[o];
+            for (var z in spawnz.memory.warCreate) {
+                if (currentParty[i][_name] == spawnz.memory.warCreate[z].memory.role && spawnz.memory.warCreate[z].memory.party == flag.name) {
+                    total[currentParty[i][_name]]++;
+                }
+            }
+            for (z in spawnz.memory.expandCreate) {
+                if (currentParty[i][_name] == spawnz.memory.expandCreate[z].memory.role && spawnz.memory.expandCreate[z].memory.party == flag.name) {
+                    total[currentParty[i][_name]]++;
+                }
+            }
+        }
+
+    }
+
+    return total;
 }
 
 function getCost(module) {
@@ -368,8 +493,63 @@ function getCost(module) {
     }
     return total;
 }
+    function returnRoleModule(flag, role) {
+        if (flag.memory.party === undefined || flag.memory.party.length === 0) return;
+        let allParty = flag.memory.party;
+        for (let i in allParty) {
+            if (allParty[i][0] === role) {
+                return allParty[i];
+            }
+        }
+        return;
+    }
+
 
 class partyInteract {
+        static getPartyModule(flag, role) {
+            return returnRoleModule(flag, role);
+        }
+        static addRole(flag,role,count,level){
+            let module = returnRoleModule(flag, role);
+            if (!module) {
+                flag.memory.party.push([role,count,level]);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        static removeRole(flag,role){
+            let module = returnRoleModule(flag, role);
+            if (module) {
+                module = undefined;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        static changeRoleCount(flag, role, number,level) {
+            console.log('here?');
+            let module = returnRoleModule(flag, role);
+            if (module) {
+                module[1] = number;
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+        static changeRoleLevel(flag, role, level) {
+            let module = returnRoleModule(flag, role);
+            if (module) {
+                module[2] = level;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
 
     static returnClosestRoom(roomName) {
         return returnClosestRoom(roomName);
@@ -377,223 +557,280 @@ class partyInteract {
 
     static rally(flag) {
         var currentParty; // = getCurrentParty(flag);
-        if (flag.memory.portal === undefined) {
-            flag.memory.portal = false; // This needs to be set true in order for creeps to rally then portal.
-        }
-        if (flag.memory.rallyFlag === undefined) {
-            flag.memory.rallyFlag = false; // This needs to be set true in order for creeps to rally then portal.
-        }
-        if (flag.memory.tusken === undefined) {
-            flag.memory.tusken = true; // This needs to be set true in order for creeps to rally then portal.
-        }
-        if (flag.memory.musterRoom === undefined) {
-            flag.memory.musterRoom = 'none';
-        }
-        if (flag.memory.musterType === undefined) {
-            flag.memory.musterType = 'none';
-        }
+
 
         var o;
         var a;
-
-
-        if (flag.memory.rallyFlag !== false && flag.memory.rallyFlag !== undefined) {
-
-            var rallied;
-            if (flag.memory.rallyFlag === 'home') {
-                var home = getSpawnCreating(flag);
-                rallied = Game.flags[home];
-            } else {
-                rallied = Game.flags[flag.memory.rallyFlag];
-            }
-            //          if(Game.shard.name === 'shard2')
-            //            console.log(flag);
+        if (flag.memory.waypointFlag !== undefined && flag.memory.waypointFlag !== false) {
+            let rallied;
+            rallied = Game.flags[flag.memory.rallyFlag];
             if (rallied === undefined) return;
 
-            currentParty = getCurrentParty(flag);
-            var totalParty = 0;
-            for (var e in currentParty) {
-                {
-                    if (currentParty[e][_name] !== 'scientist' && currentParty[e][_name] !== 'first') {
-                        totalParty += currentParty[e][_number];
+
+            if (rallied !== undefined && rallied.room !== undefined) {
+                let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 10);
+                crps = _.filter(crps, function(o) {
+                    if(o.memory.boostNeeded && o.memory.boostNeeded.length === 0 && o.memory.party == flag.name){
+                        o.memory.partied = true;
+                        return true;
+                    }else if (!o.memory.boostNeeded && o.memory.party == flag.name) {
+                        o.memory.partied = true;
+                        return true;
                     }
+                });
+            }
+        }
+
+        if (!flag.memory.rallyFlag) {
+            return;
+        }
+        //  if ( flag.memory.rallyFlag !== undefined && flag.room === undefined && flag.memory.rallyFlag !== false) {
+
+        let rallied;
+        if (flag.memory.rallyFlag === 'home') {
+            var home = getSpawnCreating(flag);
+            rallied = Game.flags[home];
+        } else {
+            rallied = Game.flags[flag.memory.rallyFlag];
+        }
+        if (rallied === undefined) return;
+
+        currentParty = getCurrentParty(flag);
+        var totalParty = 0;
+        for (var e in currentParty) {
+            {
+                if (currentParty[e][_name] !== 'scientist' && currentParty[e][_name] !== 'first') {
+                    totalParty += currentParty[e][_number];
                 }
             }
-            flag.memory.totalNumber = totalParty;
-            if (flag.memory.squadLogic && totalParty > 0) {
-                if (rallied !== undefined && rallied.room !== undefined) {
-                    let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 10);
-                    crps = _.filter(crps, function(o) {
-                        return o.memory.party == flag.name && o.memory.boostNeeded !== undefined && o.memory.boostNeeded.length === 0;
-                    });
-                    //                    console.log( crps.length);
-                    //                rallied.room.visual.text("💥" + flag.memory.totalNumber, totalParty, crps.length, rallied.room, 'total# check', rallied.pos.x - 5.5, rallied.pos.y - 5.5, { color: 'green', font: 0.8 });
-                    //                  rallied.room.visual.rect(rallied.pos.x - 5.5, rallied.pos.y - 5.5,
-                    //                        11, 11, { fill: 'transparent', stroke: '#f00' });
+        }
 
-                    if (flag.memory.totalNumber !== 0 && crps.length >= flag.memory.totalNumber) {
-                        var total = 0;
-                        flag.memory.setColor = {
-                            color: COLOR_ORANGE,
-                            secondaryColor: COLOR_ORANGE
-                        };
-                        flag.memory.squadMode = 'travel';
+//        console.log(flag, "doing rally check @ ", flag.pos, roomLink(rallied.pos.roomName));
+        flag.memory.totalNumber = totalParty;
+        if(flag.memory.powerCreepFlag){
+                let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 2);
 
-                        var healers = [];
-                        var others = [];
-                        var point;
-                        let a = crps.length;
-                        while (a--) {
-                            var creep = crps[a];
-                            creep.partyFlag.setColor(COLOR_ORANGE, COLOR_ORANGE);
+                crps = _.filter(crps, function(o) {
+                    return o.memory.party == flag.name && (!o.memory.boostNeeded||(o.memory.boostNeeded !== undefined && o.memory.boostNeeded.length === 0));
+                });
 
-                            if (point === undefined) {
-                                if (creep.memory.role === 'demolisher') {
-                                    point = creep;
-                                }
-                                /* else
-                                if (creep.memory.role === 'mage') {
-                                    point = creep;
-                                }
-                                else
-                                                                    if (creep.memory.role === 'mage') {
-                                                                        point = creep;
-                                                                    }*/
-                                else
-                                if (a === 0) {
-                                    point = creep;
-                                }
+                if (flag.memory.totalNumber !== 0 && crps.length >= flag.memory.totalNumber) {
+                    let total = 0;
+                    flag.memory.squadMode = 'travel';
+
+                    let healers = [];
+                    let others = [];
+                    let point;
+                    let a = crps.length;
+                    while (a--) {
+                        let creep = crps[a];
+                        creep.memory.partied = true;
+                        creep.memory.follower = true; // setup squad logic too.
+                    }
+
+                    flag.memory.squadID = [];
+                    let caravan = crps;
+                    for (let a = 0; a < caravan.length; a++) {
+                            // Posistion for Battle and
+                        caravan[a].memory.battlePos = a+1; 
+                        flag.memory.squadID.push(caravan[a].id);
+                        if (a === 0) {
+                            caravan[a].memory.directingID = caravan[a+1].id;
+                            caravan[a].memory.point = true;
+                        } else if (a === caravan.length - 1) {
+                            caravan[a].memory.followingID = caravan[a-1].id;
+                            caravan[a].memory.point = false;
+                        } else {
+                            caravan[a].memory.directingID = caravan[a+1].id;
+                            caravan[a].memory.followingID = caravan[a-1].id;
+                            caravan[a].memory.point = false;
+                        }
+                    }
+
+
+                }
+            
+        } else  if (flag.memory.squadLogic && totalParty > 0) {
+            if (rallied !== undefined && rallied.room !== undefined) {
+                let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 2);
+
+                crps = _.filter(crps, function(o) {
+                    return o.memory.party == flag.name && (!o.memory.boostNeeded||(o.memory.boostNeeded !== undefined && o.memory.boostNeeded.length === 0));
+                });
+
+  //                                console.log( flag,crps.length);
+//                                rallied.room.visual.text("💥" + flag.memory.totalNumber, totalParty, crps.length, rallied.room, 'total# check', rallied.pos.x - 5.5, rallied.pos.y - 5.5, { color: 'green', font: 0.8 });
+                //                  rallied.room.visual.rect(rallied.pos.x - 5.5, rallied.pos.y - 5.5,
+                //                        11, 11, { fill: 'transparent', stroke: '#f00' });
+
+                if (flag.memory.totalNumber !== 0 && crps.length >= flag.memory.totalNumber) {
+                    var total = 0;
+                    flag.memory.setColor = {
+                        color: COLOR_ORANGE,
+                        secondaryColor: COLOR_ORANGE
+                    };
+                    flag.memory.squadMode = 'travel';
+
+                    var healers = [];
+                    var others = [];
+                    var point;
+                    let a = crps.length;
+                    while (a--) {
+                        var creep = crps[a];
+//                        creep.partyFlag.setColor(COLOR_ORANGE, COLOR_ORANGE);
+
+                        if (point === undefined) {
+                            if (creep.memory.role !== 'healer') {
+                                point = creep;
                             }
-
-                            if (point === undefined || creep.id !== point.id) {
-                                if (creep.memory.role === 'healer') {
-                                    healers.unshift(creep);
-                                } else if (creep.memory.role === 'mage') {
-                                    healers.push(creep);
-                                } else {
-                                    others.push(creep);
-                                }
+                            /* else
+                            if (creep.memory.role === 'mage') {
+                                point = creep;
                             }
-
-                            creep.memory.partied = true;
-                            creep.memory.follower = true; // setup squad logic too.
-                            // createWayPath(creep);
+                            else
+                                                                if (creep.memory.role === 'mage') {
+                                                                    point = creep;
+                                                                }*/
+                            else
+                            if (a === 0) {
+                                point = creep;
+                            }
                         }
 
+                        if (point === undefined || creep.id !== point.id) {
+                            if (creep.memory.role === 'healer') {
+                                healers.unshift(creep);
+                            } else if (creep.memory.role === 'mage') {
+                                healers.push(creep);
+                            } else {
+                                others.push(creep);
+                            }
+                        }
 
-                        // Here we setup the travel caravan;
-                        //                        console.log('SETTING CARAVAN', healers.length, others.length, point);
+                        creep.memory.partied = true;
+                        creep.memory.follower = true; // setup squad logic too.
+                        // createWayPath(creep);
+                    }
 
-                        var caravan = [];
-                        caravan.push(point);
-                        if (point === undefined) return;
-                        flag.memory.pointID = point.id;
+
+                    // Here we setup the travel caravan;
+                    //                        console.log('SETTING CARAVAN', healers.length, others.length, point);
+
+                    var caravan = [];
+                    caravan.push(point);
+                    if (point === undefined) return;
+                    flag.memory.pointID = point.id;
+                    if (healers.length > 0) {
+                        caravan.push(healers.shift());
+                    }
+                    if (others.length > 0) {
+                        caravan.push(others.shift());
+                    }
+                    while (healers.length > 0 || others.length > 0) {
+                        if (others.length > 0) {
+                            caravan.push(others.shift());
+                        }
                         if (healers.length > 0) {
                             caravan.push(healers.shift());
                         }
                         if (others.length > 0) {
                             caravan.push(others.shift());
                         }
-                        while (healers.length > 0 || others.length > 0) {
-                            if (others.length > 0) {
-                                caravan.push(others.shift());
-                            }
-                            if (healers.length > 0) {
-                                caravan.push(healers.shift());
-                            }
-                            if (others.length > 0) {
-                                caravan.push(others.shift());
-                            }
-                        }
-                        //                        console.log('AFTERSETTING CARAVAN', caravan.length);
-                        flag.memory.squadID = [];
-                        for (let a = 0; a < caravan.length; a++) {
-
-                            var ne = 1 + a;
-                            var af = ne - 2;
-                            flag.memory.squadID.push(caravan[a].id);
-                            if (a === 0) {
-                                caravan[a].memory.directingID = caravan[ne].id;
-                                caravan[a].memory.point = true;
-                            } else if (a === caravan.length - 1) {
-                                caravan[a].memory.followingID = caravan[af].id;
-                                caravan[a].memory.point = false;
-                            } else {
-                                caravan[a].memory.directingID = caravan[ne].id;
-                                caravan[a].memory.followingID = caravan[af].id;
-                                caravan[a].memory.point = false;
-                            }
-                        }
-
-
                     }
-                }
-                // So logic dictacts 
-                // If you have just the followerID - your the leader.
-                // Maybe the leader needs an additional Flag - so if he has no followers someone can find him. 
-                // iF you have both ID's your middle. 
-                // iF you just have the leader ID - your the last follower.
-
-            } else if (flag.memory.totalNumber === 2) {
-                if (rallied !== undefined && rallied.room !== undefined) {
-                    let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 5);
-                    crps = _.filter(crps, function(o) {
-                        return o.memory.party == flag.name;
-                    });
-                    for (let a in crps) {
-                        if (crps[a].memory.role === 'fighter') {
-                            crps[a].memory.leader = true;
-                        }
-                    }
-                    if (crps.length >= flag.memory.totalNumber) {
-
-
-                        if (flag.name.substr(0, 5) !== 'power') {
-                            flag.memory.setColor = {
-                                color: COLOR_ORANGE,
-                                secondaryColor: COLOR_WHITE
-                            };
-                            flag.setColor(COLOR_ORANGE, COLOR_WHITE);
-                        }
-
-                        if (crps[0].memory.leader) {
-                            crps[0].memory.leaderID = crps[1].id;
-                            crps[0].memory.partied = true;
-
-                            crps[1].memory.followerID = crps[0].id;
-                            crps[1].memory.partied = true;
+                    //                        console.log('AFTERSETTING CARAVAN', caravan.length);
+                    flag.memory.squadID = [];
+                    for (let a = 0; a < caravan.length; a++) {
+                            // Posistion for Battle and
+                        caravan[a].memory.battlePos = a+1; 
+                        flag.memory.squadID.push(caravan[a].id);
+                        if (a === 0) {
+                            caravan[a].memory.directingID = caravan[a+1].id;
+                            caravan[a].memory.point = true;
+                        } else if (a === caravan.length - 1) {
+                            caravan[a].memory.followingID = caravan[a-1].id;
+                            caravan[a].memory.point = false;
                         } else {
-                            crps[1].memory.leaderID = crps[0].id;
-                            crps[1].memory.partied = true;
-
-                            crps[0].memory.followerID = crps[1].id;
-                            crps[0].memory.partied = true;
-
+                            caravan[a].memory.directingID = caravan[a+1].id;
+                            caravan[a].memory.followingID = caravan[a-1].id;
+                            caravan[a].memory.point = false;
                         }
-
                     }
-                }
-            } else if (flag.memory.totalNumber === 1) {
-                if (rallied !== undefined && rallied.room !== undefined) {
-                    let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 5);
-                    crps = _.filter(crps, function(o) {
-                        return o.memory.party == flag.name;
-                    });
-                    for (let a in crps) {
-                        crps[0].memory.partied = true;
-                    }
-                }
 
 
-            } else {
-                //                console.log('ERROR for These creeps, enable squadLogic',flag.name,roomLink(flag.pos.roomName));
+                }
             }
+            // So logic dictacts 
+            // If you have just the followerID - your the leader.
+            // Maybe the leader needs an additional Flag - so if he has no followers someone can find him. 
+            // iF you have both ID's your middle. 
+            // iF you just have the leader ID - your the last follower.
 
+        } else if (flag.memory.totalNumber === 2) {
+            if (rallied !== undefined && rallied.room !== undefined) {
+                let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 5);
+                //            console.log(crps.length);
+                crps = _.filter(crps, function(o) {
+                    //                  console.log(o.memory.party,flag.name);
+                    return o.memory.party == flag.name;
+                });
+                  //              console.log('2',crps.length,rallied,flag);
+                /*for (let a in crps) {
+                    if (crps[a].memory.role === 'fighter') {
+                        crps[a].memory.leader = true;
+                    }
+                } */
+                if (crps.length >= flag.memory.totalNumber) {
+
+                    if (flag.memory.squadLogic && !flag.memory.power && flag.secondaryColor !== COLOR_BLUE) {
+                        flag.memory.setColor = {
+                            color: COLOR_ORANGE,
+                            secondaryColor: COLOR_WHITE
+                        };
+                        flag.setColor(COLOR_ORANGE, COLOR_WHITE);
+                    } 
+                    if(flag.memory.power){
+                        crps[0].memory.leaderID = crps[1].id;
+                        crps[0].memory.partied = true;
+
+                        crps[1].memory.followerID = crps[0].id;
+                        crps[1].memory.partied = true;
+                    }else if (crps[0].memory.leader) {
+                        crps[0].memory.leaderID = crps[1].id;
+                        crps[0].memory.partied = true;
+
+                        crps[1].memory.followerID = crps[0].id;
+                        crps[1].memory.partied = true;
+                    } else {
+                        crps[1].memory.leaderID = crps[0].id;
+                        crps[1].memory.partied = true;
+
+                        crps[0].memory.followerID = crps[1].id;
+                        crps[0].memory.partied = true;
+
+                    }
+
+                }
+            }
+        } else if (flag.memory.totalNumber === 1) {
+            if (rallied !== undefined && rallied.room !== undefined) {
+                let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 5);
+                crps = _.filter(crps, function(o) {
+                    return o.memory.party == flag.name;
+                });
+                for (let a in crps) {
+                    crps[0].memory.partied = true;
+                }
+            }
+        } else {
+                           console.log('ERROR for These creeps, enable squadLogic',flag.name,roomLink(flag.pos.roomName));
         }
+
+
     }
 
     static create(flag, spawnCount) {
         var totalParty = findParty(flag, spawnCount);
+        //        var testParty = findParty2(flag);
         var currentParty = getCurrentParty(flag);
         let totalPartyed = 0;
         for (let e in flag.memory.party) {
@@ -604,14 +841,16 @@ class partyInteract {
             flag.memory.party = currentParty;
         }
         //var e = currentParty.length;
+
+        var allSpawned = true;
         for (var e in currentParty) {
 
             for (var i in totalParty) {
-                //                if(flag.memory.power)
-                //        console.log(flag,currentParty[e][_name],i,totalParty[i] , currentParty[e][_number]);
+
 
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
                     //Add to stack 
+                    allSpawned = false;
                     let rando = Math.floor(Math.random() * flag.name.length);
                     let rando3 = Math.floor(Math.random() * 1000);
 
@@ -633,26 +872,31 @@ class partyInteract {
                             party: flag.name,
                             parent: undefined,
                             reportDeath: death,
-                            boostNeeded: getModuleRole(currentParty[e][_name]).boosts(currentParty[e][_level]),
+                            boostNeeded: getModuleRole(currentParty[e][_name]).boosts(currentParty[e][_level],home),
                             level: currentParty[e][_level]
                         }
                     };
+                    if(flag.memory.power){
+//                        console.log('adding powerParty Memory to creeps');
+                        temp.memory.powerParty = true;
+                    }
                     //console.log('Creating a unit',temp.memory.boostNeeded.length,'boost length');
-                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81')) {
-                        var terminalStuff;
-                        terminalStuff = 0;
-                        let term = Game.rooms[home].terminal;
-                        for (var eez in term.store) {
-                            if (eez !== RESOURCE_ENERGY) {
-                                terminalStuff += term.store[eez];
-                            }
-                        }
-                        if (terminalStuff > 1250 && Game.rooms[home].energyAvailable === Game.rooms[home].energyCapacityAvailable) {
-                            let toSpawn = require('commands.toSpawn');
-                            toSpawn.addToWarStack(temp);
-                            totalParty[i]++;
-                        }
-                    } else if (currentParty[e][_name] == 'mule') {
+                    /*                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81')) {
+                                            var terminalStuff;
+                                            terminalStuff = 0;
+                                            let term = Game.rooms[home].terminal;
+                                            for (var eez in term.store) {
+                                                if (eez !== RESOURCE_ENERGY) {
+                                                    terminalStuff += term.store[eez];
+                                                }
+                                            }
+                                            if (terminalStuff > 1250 && Game.rooms[home].energyAvailable === Game.rooms[home].energyCapacityAvailable) {
+                                                let toSpawn = require('commands.toSpawn');
+                                                toSpawn.addToWarStack(temp);
+                                                totalParty[i]++;
+                                            }
+                                        } else */
+                    if (currentParty[e][_name] == 'mule') {
                         //                        console.log('heresz?',toSpawn.pos.roomName);
                         let toSpawn = require('commands.toSpawn');
                         toSpawn.addToExpandStack(temp);
@@ -676,6 +920,30 @@ class partyInteract {
                 }
             }
         }
+        if (allSpawned) {
+            //       console.log('all sapned');
+            if (partiedCreeps.length > 0) {
+                let tgt = _.min(partiedCreeps, o => o.ticksToLive);
+                if (flag.memory.totalNumber === partiedCreeps.length) {
+                    if (partiedCreeps[0].ticksToLive === undefined) {
+                        flag.memory.rallyCreateCount = 250;
+                    } else {
+                        flag.memory.rallyCreateCount = tgt.ticksToLive;
+
+                    }
+                } else if (partiedCreeps[0].ticksToLive === undefined) {
+                    flag.memory.rallyCreateCount = 30;
+                } else {
+                    flag.memory.rallyCreateCount = 15;
+                }
+
+            } else {
+                flag.memory.rallyCreateCount = 150;
+            }
+//            console.log('doing create', flag, roomLink(flag.pos.roomName), allSpawned, partiedCreeps.length, flag.memory.rallyCreateCount);
+
+        }
+
     }
 
 }

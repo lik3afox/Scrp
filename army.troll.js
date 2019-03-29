@@ -51,9 +51,6 @@ return _.clone( classLevels[level].boost);}
         if (super.spawnRecycle(creep)) {
             return;
         }
-        if (super.doTask(creep)) {
-            return;
-        }
         if (creep.ticksToLive > 1495 &&  creep.memory.boostNeeded === undefined && _.isObject(classLevels[creep.memory.level])) {
 //            creep.memory.boostNeeded = classLevels[creep.memory.level].boost;
 creep.memory.boostNeeded = _.clone(classLevels[creep.memory.level].boost);

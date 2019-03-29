@@ -10,11 +10,6 @@ RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE, HEA
 */
 // only 1 level and 
 // 800 Sets
-var classLevels = [
-    [MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL]
-];
 
 var classLevels = [
     // Level 0
@@ -29,44 +24,80 @@ var classLevels = [
     [RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
     // Level 5
     {
-        body: [RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
+        body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
         boost: [],
     },
+
+    /*  {
+        body: [ MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
+        boost: ['LO', 'KO'],
+    },
+*/
     // Level 6
-    {
-        body: [RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
-        boost: ['KO', 'LO'],
+    { // low harass change. - Double value + little bit of reduction
+        body: [TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
+        boost: ['GO', 'LO', 'KO'],
     },
     // Level 7
-    {
-        body: [RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
-        boost: ['XKHO2', 'XLHO2'],
+    { // Triple Value + tough
+        body: [TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
+        boost: ['GHO2', 'LHO2', 'KHO2'],
     },
     // Level 8
-    {
-        body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
-        boost: ['XZHO2', 'XKHO2', 'XLHO2'],
+    { // Quad Value
+        body: [TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
+        boost: ['XGHO2', 'XZHO2', 'XKHO2', 'XLHO2'],
     },
     // Level 9
 
-    {
-        body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK],
-        boost: ['XGHO2', 'XLH2O', 'KO'],
+    { // Designed to work alone and assist in power banks, does back 288 damage and heals. This is what I will be using mostly.
+        //        3t/24ra/6h/17
+        body: [TOUGH, TOUGH, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            MOVE, MOVE, MOVE, MOVE,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE,
+        ],
+        boost: ['XZHO2', 'XGHO2', 'XKHO2', 'XLHO2'],
     },
     // Level 10
     {
-        body: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
+        body: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            MOVE, MOVE, MOVE, MOVE, MOVE,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK,
+            HEAL, HEAL, HEAL, HEAL,
+            HEAL, HEAL, HEAL, HEAL,
+        ],
         boost: ['XZHO2', 'XGHO2', 'XKHO2', 'XLHO2'],
     },
     // Level 11
-    {
-        body: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
-        boost: ['XGHO2', 'XKHO2', 'XLHO2', 'XZHO2'],
+    { // Designed to need a 2nd healer at 25/25
+        body: [TOUGH, TOUGH, TOUGH,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        ],
+        boost: ['ZHO2', 'XGHO2', 'XKHO2', ],
     },
     // Level 12
     {
-        body: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
-        boost: ['XGHO2', 'XKHO2', 'XLHO2', 'XZHO2'],
+        body: [],
+        boost: [],
     },
     // Level 13
     {
@@ -79,27 +110,86 @@ var roleParent = require('role.parent');
 var movement = require('commands.toMove');
 var fox = require('foxGlobals');
 
+function powerAction(creep) {
+    var power = require('build.power');
+    /*
+    let bads = creep.room.notAllies;
+    if(bads.length > 0){
+        creep.smartRangedAttack();
+        creep.selfHeal();
+        break;
+    } */
+    if (creep.partyFlag && creep.partyFlag.memory.harassers && creep.partyFlag.memory.ready === undefined) {
+        creep.partyFlag.memory.ready = false;
+    }
+    if (Game.flags[creep.memory.party] !== undefined) {
+        if (creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
+
+
+            if (creep.partyFlag.memory.harassers) {
+                creep.partyFlag.memory.ready = true;
+                attackCreep(creep, creep.room.notAllies);
+                creep.say('GO');
+                return true;
+            }
+
+
+
+            if (creep.memory.powerBankID === undefined) {
+                creep.memory.powerBankID = creep.partyFlag.memory.powerBankID;
+            }
+            let pBank = Game.getObjectById(creep.memory.powerBankID);
+            if (pBank === null) {
+                creep.memory.death = true;
+                return false;
+            }
+            creep.selfHeal();
+            if (creep.pos.inRangeTo(pBank, 3) && creep.hits === creep.hitsMax) {
+                creep.countStop();
+                creep.rangedAttack(pBank);
+                return true;
+            } else {
+                creep.moveMe(pBank, { reusePath: 100, ignoreCreeps: true });
+                return true;
+            }
+        } else {
+            creep.tuskenTo(creep.partyFlag, { reusePath: 60, ignoreCreeps: true });
+            return true;
+        }
+    } else {
+        creep.memory.death = true;
+    }
+    return creep.memory.powerParty;
+
+}
+
+
 function getHostiles(creep) {
-    let bads = creep.room.find(FIND_HOSTILE_CREEPS);
+    if(creep.room.name === 'E13S17'){
+        return _.filter(creep.room.find(FIND_HOSTILE_CREEPS), function(o) {
+                return _.contains(['admon', 'Geir1983'], o.owner.username);
+            });
+    }
+    let bads = creep.room.notAllies;
 
     if (!creep.atFlagRoom) {
-        bads = creep.pos.findInRange(bads,5);
-    //    bads = _.filter(bads, function(o) {
-            
-//            return o.pos.inRangeTo(creep,5);
-            
-  //      });
+        bads = creep.pos.findInRange(bads, 5);
     }
     var players = _.filter(bads, function(o) {
-        return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper' && !o.isAtEdge && !o.pos.lookForStructure(STRUCTURE_RAMPART);
+        return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper'; // && !o.isAtEdge && !o.pos.lookForStructure(STRUCTURE_RAMPART);
     });
-    //&& creep.pos.inRangeTo(o, 10)
     var sk = _.filter(bads, function(o) {
         return (o.owner.username == 'Invader' || o.owner.username == 'Source Keeper') && creep.pos.inRangeTo(o, 3);
     });
     if (sk.length > 0) return sk;
+    if (players.length > 0) {
+        return players;
+    } else {
+        return _.filter(bads, function(o) {
+            return !_.contains(fox.friends, o.owner.username) && o.owner.username != 'Invader' && o.owner.username != 'Source Keeper';
+        });
+    }
 
-    return players;
 }
 
 function killSK(creep, bads) {
@@ -125,49 +215,73 @@ function killSK(creep, bads) {
 }
 
 function attackCreep(creep, bads) {
-    /*    if(creep.room.name != Game.flags[creep.memory.party].pos.roomName) {
-            bads = _.filter(bads,function(o) {
-                return o.pos.inRangeTo(creep,5);
-            });
-        } */
+    if (bads.length === 0) return;
     let enemy = creep.pos.findClosestByRange(bads);
     let distance = creep.pos.getRangeTo(enemy);
+    if (creep.partyFlag.memory.killRoads === true && distance > 3) {
+        creep.killRoads();
+    } else {
         creep.smartRangedAttack();
-
+    }
     if (enemy.getActiveBodyparts(RANGED_ATTACK) > 0 && enemy.getActiveBodyparts(ATTACK) === 0) { //
-        creep.say('CHRG');
+        //creep.say('CHRG');
+        creep.chaseTo(enemy, { maxRooms: 1, reusePath: 10 });
 
-        //      if (creep.room.controller === undefined || creep.room.controller.owner === undefined || !_.contains(fox.enemies, creep.room.controller.owner.username) || creep.room.controller.level === undefined || creep.room.controller.level !== 8) {
-        //            console.log(creep.room.controller.owner.username);
-        creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
-        //      }
-
-
-    } else
-    if (creep.hits < creep.hitsMax - 200 && enemy.getActiveBodyparts(MOVE) > 0 && distance < 3) {
+    } else if (creep.hits < creep.hitsMax - 200 && enemy.getActiveBodyparts(MOVE) > 0 && distance < 3) {
         creep.moveToEdge();
     } else if (distance == 3 && (enemy.getActiveBodyparts(ATTACK) > 0)) {
 
     } else if ((distance > 2 || enemy.getActiveBodyparts(RANGED_ATTACK) > 0) && enemy.getActiveBodyparts(ATTACK) === 0) {
-        //      if (creep.room.controller === undefined || creep.room.controller.owner === undefined || !_.contains(fox.enemies, creep.room.controller.owner.username)) {
-
-        creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
-        //        }
+        creep.chaseTo(enemy, { maxRooms: 1, reusePath: 10 });
     } else if (distance < 3 && (enemy.getActiveBodyparts(RANGED_ATTACK) > 0 || enemy.getActiveBodyparts(ATTACK) > 0)) {
         creep.moveToEdge();
     } else {
-        //      if (creep.room.controller === undefined || creep.room.controller.owner === undefined || !_.contains(fox.enemies, creep.room.controller.owner.username)) {
-        creep.moveMe(enemy, { maxRooms: 1, reusePath: 10 });
-        //        }
-        //        creep.killRoads();
+        /*if(distance > 5){
+            if(creep.memory.waitMoveTimer){
+                //creep.memory.targetPos = new RoomPosition(enemy.pos.x, enemy.pos.y, enemy.pos.roomName);
+                creep.memory.waitMoveTimer--;
+                if(creep.memory.waitMoveTimer <= 0){
+                    creep.memory.targetPos= new RoomPosition(enemy.pos.x, enemy.pos.y, enemy.pos.roomName);
+                    creep.memory.waitMoveTimer = 5;
+                }
+                creep.moveMe(creep.memory.targetPos, { maxRooms: 1, reusePath: 5 });    
+            } else {
+                creep.memory.targetPos = new RoomPosition(enemy.pos.x, enemy.pos.y, enemy.pos.roomName);
+                creep.memory.waitMoveTimer = 5;
+                creep.moveMe(creep.memory.targetPos, { maxRooms: 1, reusePath: 5 });    
+            }
+        } else { */
+            creep.chaseTo(enemy, { maxRooms: 1, reusePath: 5 });
+        //}
+
     }
-    //if( enemy.getActiveBodyparts(ATTACK) === 0 ) 
 }
 
 function moveCreep(creep) {
-    var zz = require('role.parent');
-        creep.tuskenTo(creep.partyFlag, creep.memory.home, { ignoreCreep: true, reusePath: 50 });
-    //creep.moveMe(creep.partyFlag, { ignoreCreep: true, reusePath: 50 });
+    if (creep.memory.targetMoveID === undefined) {
+        if (creep.memory.waitTimerSites === undefined || creep.memory.waitTimerSites  < 0) {
+            var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+            site = _.filter(site, function(o) {
+                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progress > 0;
+            });
+            if (site.length > 0) {
+                creep.memory.targetMoveID = site[0].id;
+            } else {
+                creep.memory.waitTimerSites = 100;
+            }
+        } else {
+            if(creep.memory.waitTimerSites)
+            creep.memory.waitTimerSites--;
+            creep.tuskenTo(creep.partyFlag, creep.memory.home, { ignoreCreep: true, reusePath: 50 });
+        }
+    } else {
+        let tgt = Game.getObjectById(creep.memory.targetMoveID);
+        if (tgt) {
+            creep.moveMe(tgt, { reusePath: 50 });
+        } else {
+            creep.memory.targetMoveID = undefined;
+        }
+    }
 }
 
 
@@ -188,7 +302,7 @@ class roleGuard extends roleParent {
     static boosts(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         if (_.isObject(classLevels[level])) {
-return _.clone( classLevels[level].boost);
+            return _.clone(classLevels[level].boost);
         }
         return;
     }
@@ -199,11 +313,26 @@ return _.clone( classLevels[level].boost);
         if (super.spawnRecycle(creep)) {
             return;
         }
-        if (super.goToPortal(creep)) return;
-        if (super.rallyFirst(creep)) return;
-        if (super.doTask(creep)) {
+        if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
+        if (super.goToPortal(creep)) return;
+        if (super.rallyFirst(creep)) return;
+
+        if (super.isPowerParty(creep) && powerAction(creep)) {
+            return;
+        }
+        if (creep.partyFlag.memory.killRoads === undefined) {
+            creep.partyFlag.memory.killRoads = false;
+        }
+        if (creep.partyFlag.memory.harassOpts === undefined) {
+            creep.partyFlag.memory.harassOpts = {
+                clearBase: false,
+                leaveRoom: false,
+            };
+        }
+
+
         if (creep.hits < creep.hitsMax) {
             creep.selfHeal();
         } else {
@@ -222,43 +351,83 @@ return _.clone( classLevels[level].boost);
             }
             creep.memory.death = true;
         }
-        //          if(creep.room.name == 'E26S48')
-//        console.log( creep.room.controller.reservation.username);
 
         let bads = getHostiles(creep);
-        if (creep.room.name == 'E21S47') {
-            var zed = Game.getObjectById('5adfd892da0f976c5c1f9a09');
-            if(zed !== null){
-                creep.rangedAttack(zed);
-               creep.moveTo(zed);
-            return;
-        }
-        }
         if (bads.length > 0) {
-
-
-
             attackCreep(creep, bads);
-
             creep.say('bds');
-
         } else if (bads.length > 0 && bads[0].owner.username == 'Source Keeper') {
             killSK(creep, bads);
         } else {
-            moveCreep(creep);
-            if (creep.partyFlag !== undefined) {
-                if (creep.pos.roomName === creep.partyFlag.pos.roomName) {
-            //        if (!creep.killRoads()) {
-                        creep.smartRangedAttack();
-              //      }
+            if (creep.partyFlag.memory.harassOpts.leaveRoom === true) {
+                if (creep.partyFlag.memory.noBadsCount === undefined) {
+                    creep.partyFlag.memory.noBadsCount = 0;
+                } else {
+                    if (creep.room.name === creep.partyFlag.pos.roomName && creep.partyFlag.memory.noBadsCount < 210) {
+                        creep.partyFlag.memory.noBadsCount++;
+                    } else if (creep.partyFlag.memory.noBadsCount > -10) {
+                        creep.partyFlag.memory.noBadsCount--;
+                    }
+                }
+
+                if (!creep.memory.leave && creep.partyFlag.memory.noBadsCount >= 200) {
+                    creep.partyFlag.memory.noBadsCount += 100;
+                    creep.memory.leave = true;
+                }
+                if (creep.memory.leave === true) {
+                    if (creep.partyFlag.memory.noBadsCount <= 0) {
+                        creep.memory.leave = undefined;
+                    }
+
+                    creep.evacuateRoom(creep.partyFlag.pos.roomName);
+                    return;
                 }
             }
-            /*
-                       else if ((creep.room.name === creep.partyFlag.pos.roomName) || (creep.room.controller !== undefined && creep.room.controller.owner !== undefined && _.contains(fox.enemies, creep.room.controller.owner.username)) || (creep.room.controller !== undefined && creep.room.controller.reservation !== undefined && _.contains(fox.enemies, creep.room.controller.reservation.username))) {
-                           creep.say('kr');
-                       }  */
 
-            creep.memory.needed = undefined;
+            if (creep.partyFlag.memory.harassOpts.clearBase === true && creep.room.name === creep.partyFlag.pos.roomName) {
+                if (creep.memory.targetID === undefined || Game.time % 128 === 0) {
+                    creep.memory.targetID = creep.getClearBaseTarget();
+                }
+                let tgt = Game.getObjectById(creep.memory.targetID);
+                if (tgt) {
+                    if(tgt.progress){
+                        creep.moveMe(tgt, { reusePath: 50 }); 
+                    } else if (creep.pos.inRangeTo(tgt, 3)) {
+                        creep.rangedAttack(tgt);
+                    } else {
+                        creep.moveMe(tgt, { reusePath: 50 });
+                    }
+                    creep.say('G2');
+                } else {
+                        //moveCreep(creep);
+                    creep.memory.targetID = undefined;
+                }
+                return;
+            }
+
+
+            if (creep.pos.isNearTo(creep.partyFlag)) {
+                creep.memory.stuckCount--;
+            }
+            moveCreep(creep);
+            if (creep.partyFlag !== undefined) {
+                if (creep.room.name === 'E47S59') {
+                    if (creep.pos.isEqualTo(creep.partyFlag)) {
+                        creep.rangedMassAttack();
+                    }
+                } else
+                if (creep.pos.roomName === creep.partyFlag.pos.roomName) {
+                    if (creep.partyFlag.memory.killRoads === true) {
+                        if (!creep.killRoads()) {
+                            creep.smartRangedAttack();
+                        }
+
+                    } else {
+                        creep.smartRangedAttack();
+                    }
+                }
+            }
+
         }
 
         if (Game.flags[creep.memory.party] !== undefined && Game.flags[creep.memory.party].memory.prohibitDirection === undefined) {

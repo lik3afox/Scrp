@@ -1,13 +1,13 @@
 var classLevels = [
-//0
+    //0
     [WORK, WORK, CARRY, MOVE], // 300
-//1
+    //1
 
     [MOVE, MOVE, CARRY, WORK, WORK, CARRY, MOVE, WORK], // 550
-//2
+    //2
 
     [CARRY, CARRY, MOVE, WORK, WORK, MOVE, MOVE, CARRY, WORK, WORK, CARRY, MOVE], // 800
-//4
+    //4
 
     [
         WORK, WORK, WORK,
@@ -15,7 +15,7 @@ var classLevels = [
         WORK, WORK,
         MOVE, MOVE,
         MOVE, MOVE,
-        CARRY,CARRY,CARRY,CARRY,
+        CARRY, CARRY, CARRY, CARRY,
     ],
 
     [
@@ -35,7 +35,8 @@ var classLevels = [
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY
     ],
 
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY] // 800    
+    [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY] // 800    
+    // MOVE, MOVE, MOVE, MOVE, MOVE,
     // Last level is designed for after level 8 to update.
 ];
 
@@ -85,25 +86,21 @@ function getSpot(roomName) {
         case "E18S36":
             return new RoomPosition(37, 25, roomName);
         case "E23S38":
-            return new RoomPosition(35, 8, roomName);
-        case "E13S34":
-            return new RoomPosition(37, 18, roomName);
+            return new RoomPosition(35, 9, roomName);
         case "E19S49":
             return new RoomPosition(29, 33, roomName);
         case "E14S47":
             return new RoomPosition(30, 39, roomName);
-        case "E17S34":
-            return new RoomPosition(17, 13, roomName);
-                case "E38S72":
-                        return new RoomPosition(37, 37, roomName);
-                case "E23S45":
-                        return new RoomPosition(26, 29, roomName);
-        case "E32S34":
-            return new RoomPosition(40, 34, roomName);
+        case "E38S72":
+            return new RoomPosition(37, 37, roomName);
+        case "E55S58":
+            return new RoomPosition(15, 32, roomName);
         case "E18S46":
             return new RoomPosition(33, 10, roomName);
         case "W53S35":
             return new RoomPosition(26, 40, roomName);
+        case "E33S54":
+            return new RoomPosition(33, 41, roomName);
 
         default:
             return;
@@ -130,17 +127,18 @@ class roleUpbuilder extends roleParent {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
 
         let boost = [];
+        
         if (Game.shard.name == 'shard1') {
-            if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.XGH2O > 250000) {
+            if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.XGH2O > 350000) {
                 boost.push('XGH2O');
-            }else if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH2O > 50000) {
+            } else if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH2O > 173000) {
                 boost.push('GH2O');
             }
             return _.uniq(boost);
-        }
+        } 
 
         if (_.isObject(classLevels[level])) {
-            return _.clone( classLevels[level].boost);
+            return _.clone(classLevels[level].boost);
         }
         return;
     }
@@ -158,27 +156,20 @@ class roleUpbuilder extends roleParent {
         if (super.spawnRecycle(creep)) {
             return;
         }
-        if (super.doTask(creep)) {
-            return;
-        }
         //      if (Game.shard.name === 'shard1')
         //            super.rebirth(creep);
 
         if (creep.room.stats.storageEnergy < 850000) {
             creep.memory.reportDeath = true;
         }
-        //  if (Memory.war && creep.ticksToLive < 1300 || creep.room.memory.alert) {
-        //            require('role.wallworker').run(creep);
-        //          return;
-        //    }
 
-/*
-        if (_.contains(justgh, creep.room.name) && creep.ticksToLive === 1499) {
-            if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH > 85000) {
-                boost.push('GH');
-            }
-            _.uniq(boost);
-        }*/
+        /*
+                if (_.contains(justgh, creep.room.name) && creep.ticksToLive === 1499) {
+                    if (Memory.stats.totalMinerals !== undefined && Memory.stats.totalMinerals.GH > 85000) {
+                        boost.push('GH');
+                    }
+                    _.uniq(boost);
+                }*/
         //     if (creep.room.name == 'E1S11' && super.boosted(creep, ['XLH2O'])) {
         //         return;
         //    }
@@ -192,33 +183,14 @@ class roleUpbuilder extends roleParent {
 
         // Logic here to determine action.
         if (creep.carry.energy <= creep.stats('upgrading')) {
-            creep.pickUpEnergy();
+//            creep.pickUpEnergy();
             //            super.constr.pickUpEnergy(creep);
             creep.memory.wallTargetID = undefined;
-            if (creep.room.name == 'E17S34' || creep.room.name == 'E28S73') {
-                super.containers.withdrawFromTerminal(creep);
-            } else if (creep.room.name == 'x') {
-
-                if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
-                    //                    if (super._containers.withdrawFromTerminal(creep))
-                    //                    if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
-                    if (!super.containers.moveToWithdraw(creep)) {
-
-                    }
-
-                    //       }
-                } else {
-                    //  if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 80)) {
-                    if (!super.containers.withdrawFromStorage(creep))
-                        if (!super.containers.moveToWithdraw(creep)) {
-                            //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
-                        }
-                    //    }
-
-                }
-            } else if (creep.pos.isNearTo(creep.room.storage)) {
+            if(creep.pos.isNearTo(creep.room.masterLink)&&creep.room.masterLink.energy > 0){
+                creep.withdraw(creep.room.masterLink, RESOURCE_ENERGY);
+            } else 
+            if (creep.pos.isNearTo(creep.room.storage)) {
                 creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
-                //                super._containers.withdrawFromStorage(creep);
             } else /* if (creep.carry.energy === 0) */ {
                 if (creep.room.storage !== undefined && creep.room.storage[RESOURCE_ENERGY] === 0) {
                     if (super.containers.withdrawFromTerminal(creep))
@@ -229,15 +201,18 @@ class roleUpbuilder extends roleParent {
 
                         }
                 } else {
-                    if (!roleParent.constr.withdrawFromTombstone(creep)) {
-                        if (!super.containers.withdrawFromStorage(creep))
-                            if (!super.containers.moveToWithdraw(creep)) {
-                                if (!creep.moveToWithdrawSource()) {}
-                                //      if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
-                                //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
+                    if (!super.containers.withdrawFromLink(creep)) {
+//                        if (!roleParent.constr.withdrawFromTombstone(creep)) {
+                            if (!super.containers.withdrawFromStorage(creep))
+                                if (!super.containers.moveToWithdraw(creep)) {
+                                    if (!creep.moveToWithdrawSource()) {}
+                                    //      if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * (creep.memory.level * 15))) {
+                                    //                            if (!constr.moveToPickUpEnergy(creep, creep.memory.roleID * 8)) {
 
-                                //    }
-                            }
+                                    //    }
+                                }
+  //                      }
+  
                     }
                 }
             }
@@ -247,7 +222,7 @@ class roleUpbuilder extends roleParent {
                 if (strucs !== null) {
 
                     creep.memory.constructionID = strucs.id;
-//                    creep.memory.foundCon = true;
+                    //                    creep.memory.foundCon = true;
                 }
             }
         }
@@ -263,16 +238,15 @@ class roleUpbuilder extends roleParent {
 
         var strucs = Game.getObjectById(creep.memory.constructionID);
 
-        if (strucs !== null ) {
+        if (strucs !== null && !creep.memory.isBoosted) {
             if (creep.build(strucs) == ERR_NOT_IN_RANGE) {
                 creep.moveMe(strucs, { ignoreCreeps: true });
             }
         } else {
             creep.memory.constructionID = undefined;
-      //      if (creep.memory.foundCon) {
-    //            creep.memory.foundCon = false;
-  //              creep.room.memory.spawnTargets = undefined;
-//            }
+            //      if (creep.memory.foundCon) {
+            //            creep.memory.foundCon = false;
+            //            }
             let spot = getSpot(creep.room.name);
             let zz = creep.upgradeController(creep.room.controller);
             if (spot !== undefined) {
@@ -290,6 +264,8 @@ class roleUpbuilder extends roleParent {
             } else {
                 if (zz === ERR_NOT_IN_RANGE) {
                     creep.moveMe(creep.room.controller, { ignoreCreeps: true });
+                } else if (zz === OK) {
+                    creep.cleanMe();
                 }
             }
 

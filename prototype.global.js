@@ -1,19 +1,96 @@
 function analyzeBody(body) {
-    var str = 0;
+    var level = 0;
+    var att = 0;
+    var rng = 0;
+    var heal = 0;
+    var work = 0;
+    var tgh = 0;
+    var boosted = false;
+    var strngth = 1;
     for (var e in body) {
+
         if (body[e].boost === undefined) {
-            str++;
+            level++;
+            strngth = 1;
         } else {
             if (body[e].boost.length === 2) {
-                str += 2;
+                level += 2;
+                strngth = 2;
+                boosted = true;
             } else if (body[e].boost.length === 4) {
-                str += 3;
+                level += 3;
+                strngth = 3;
+                boosted = true;
             } else if (body[e].boost.length === 5) {
-                str += 4;
+                level += 4;
+                strngth = 4;
+                boosted = true;
             }
         }
+
+        switch (body[e].type) {
+            case TOUGH:
+                tgh += strngth;
+            break;
+            case ATTACK:
+                att += strngth;
+                break;
+            case RANGED_ATTACK:
+                rng += strngth;
+                break;
+            case HEAL:
+                heal += strngth;
+                break;
+            case WORK:
+                work += strngth;
+                break;
+
+        }
+
     }
-    return Math.ceil(str);
+
+    //    return Math.ceil(str);
+
+    return {
+        strength: level,
+        attack: att,
+        tough: tgh,
+        range: rng,
+        heal: heal,
+        work: work,
+        boost: boosted,
+    };
+}
+
+function determineType(creep, strength) {
+    // this function is designed to determine what type of attacker we have.
+    if (strength <= 50 && creep.owner.username !== 'Invader') return 'weak'; // Means non-boosted type no big deal;
+    // Types will be : fighter,healer,ranger,mage,demolisher,other.
+
+    let attack = creep.getActiveBodyparts(ATTACK);
+    let rattack = creep.getActiveBodyparts(RANGED_ATTACK);
+    let work = creep.getActiveBodyparts(WORK);
+    let heal = creep.getActiveBodyparts(HEAL);
+    let tough = creep.getActiveBodyparts(TOUGH);
+    //    let move = creep.getActiveBodyparts(MOVE);
+    let numberOfParts = creep.body.length;
+    let type = 'other';
+if(creep.owner.username === 'Invader'){
+    if (attack >= 3 && tough >= 2) type = 'fighter';
+    if (heal >= 5 && tough === 0) type = 'healer';
+    if (rattack >= 3 && tough >= 2) type = 'ranger';
+    if (rattack === 1 && attack === 1&& work === 1) type = 'fighter';
+} else {
+    if (attack > 10 && tough >= 10) type = 'fighter';
+    if (heal >= 20 && tough >= 10) type = 'healer';
+    if (rattack > 10 && tough >= 10) type = 'ranger';
+    if (work > 10 && tough >= 10) type = 'demolisher';
+    if (rattack > 10 && heal >= 10) type = 'mage';
+    if (rattack > 10 && attack >= 10) type = 'mage';
+}
+if(type === 'other') console.log(creep.owner.username,attack,rattack,work,heal,tough,numberOfParts,roomLink(creep.room.name));
+
+    return type;
 }
 
 function analyzeHits(creep) {
@@ -36,20 +113,273 @@ function analyzeHits(creep) {
     return Math.ceil(hits);
 }
 
+
 module.exports = function() {
+    // Attack effectiveness    600 hits at range ≤5 to 150 hits at range ≥20
+    // Heal effectiveness  400 hits at range ≤5 to 100 hits at range ≥20
+    // Repair effectiveness    800 hits at range ≤5 to 200 hits at range ≥20
+    /*
+    global.addToTracking = function(creep){
+        var room = Game.rooms[creep.memory.home];
+        if(room === undefined) return;
+        let info = room.memory.mineInfo[creep.memory.goal];
+        if(info === undefined) return;
+        if(creep.memory.role !== 'transport')
+    };
+    */
+    global.arrayBodyCost = function(array) {
+
+        var total = 0;
+        for (var i in array) {
+            if (BODYPART_COST[array[i]]) {
+                total += BODYPART_COST[array[i]];
+            }
+        }
+        return total;
+    };
+
+    global.getBodyCost = function(body) {
+        var total = 0;
+        for (var i in body) {
+            if (BODYPART_COST[body[i].type]) {
+                total += BODYPART_COST[body[i].type];
+            }
+        }
+        return total;
+    };
+
+
+    global.trackMining = function(creep) {
+        if (1 === 1) return;
+        var room = Game.rooms[creep.memory.home];
+        if (room.memory.mineInfo === undefined) {
+            room.memory.mineInfo = {};
+        }
+
+        var _sourceID = creep.memory.goal;
+        if (creep.memory.goal === undefined && creep.memory.sourceID) {
+            _sourceID = creep.memory.sourceID;
+        }
+
+        if (room.memory.mineInfo[_sourceID] === undefined) {
+            room.memory.mineInfo[_sourceID] = {
+                harvested: 0,
+                spent: getBodyCost(creep.body),
+                reset: Game.time + 1500,
+                history: [],
+                //                pos: null,
+                //              level:
+            };
+        }
+
+        let info = room.memory.mineInfo[_sourceID];
+        if (info.pos === undefined || info.level === undefined) {
+            for (var e in room.alphaSpawn.memory.roadsTo) {
+                //                console.log('adding extra info', _sourceID);
+                if (room.alphaSpawn.memory.roadsTo[e].source === _sourceID) {
+                    console.log('has info', room.alphaSpawn.memory.roadsTo[e].sourcePos, room.alphaSpawn.memory.roadsTo[e].expLevel);
+                    info.pos = room.alphaSpawn.memory.roadsTo[e].sourcePos;
+                    info.level = room.alphaSpawn.memory.roadsTo[e].expLevel;
+                    if (room.alphaSpawn.memory.roadsTo[e].controller) {
+                        info.reserver = true;
+                    } else {
+                        info.reserver = false;
+                    }
+                    break;
+                }
+            }
+        }
+        //if (info.counter === undefined) {
+        //      if (creep.room.memory.mineInfo && creep.room.memory.mineInfo[creep.memory.goal]) {
+        //                console.log('wants to add:', creep.room.memory.mineInfo[creep.memory.goal], creep.memory.goal);
+        //              info.counter = creep.room.memory.mineInfo[creep.memory.goal];
+        //        }
+        //}
+
+
+        if (info.history === undefined) info.history = [];
+        if (info.isSkSource === undefined) {
+            let source = Game.getObjectById(_sourceID);
+            if (source && source.energyCapacity === 3000) {
+                info.isSkSource = false;
+                info.roomRemoteCount = creep.room.find(FIND_SOURCES).length;
+            } else {
+                info.isSkSource = true;
+                info.roomRemoteCount = 3;
+            }
+        }
+
+
+
+
+        if (info.reset <= Game.time) {
+            info.reset = Game.time + 1500;
+
+            let totalSpent = 0;
+            let partyCreeps;
+
+            if (info.level) {
+
+                switch (info.level) {
+                    case 1:
+                        totalSpent = 1700;
+                        break;
+                    case 2:
+                        totalSpent = 2300;
+                        break;
+                    case 3:
+                        totalSpent = 3000;
+                        break;
+                    case 4:
+                        totalSpent = 3250;
+                        break;
+                    case 5:
+                        totalSpent = 4150;
+                        break;
+                    case 6:
+                        totalSpent = 5050;
+                        break;
+                    case 7:
+                        totalSpent = 5550;
+                        break;
+                    case 8:
+                        totalSpent = 6750;
+                        break;
+                    case 9:
+                        totalSpent = 7550;
+                        break;
+                    default:
+                        totalSpent = getBodyCost(creep.body);
+                        break;
+                }
+                //                console.log('getting reset info, totalSpent', info.level, totalSpent);
+            } else {
+                totalSpent = getBodyCost(creep.body);
+
+            }
+            /* Taxes
+                SK rooms: area all divided by 3.
+                    ztransports - 2500 per 1500 
+                    Guard - 4310 per 1500
+                Remote Rooms: // need to figure out if 1 or 2 source room.  info.roomRemoteCount
+                    Claim - 1950 per 1500
+                Invader Response: // divided by number of remotes. 
+                    Defender - 4010
+
+             surplus
+                SK rooms: 
+                    SK guards - 600~ x 4 per room per 1500
+
+            */
+            var creepTax = 0;
+            var creepSurplus = 0;
+            var remoteNum = Object.keys(room.memory.mineInfo).length;
+            var containerTax = 750; // So For containers, Every 100 is 5000 - 50 energy =  .5 energy per tick.
+            if (creep.room.name === creep.memory.home) {
+                _sourceID = creep.memory.sourceID;
+                containerTax = 0;
+            }
+
+            if (info.isSkSource) {
+                creepTax += 833; // For ztransports - 2500/3
+                creepTax += 1437; // for guard 4310/3
+                creepTax += 4010 / remoteNum; // For invasion defense
+                creepSurplus += 4000; // 4x600 for Tombstones Room gets 2400*5 / 3 == 4000
+            } else if (creep.memory.home === creep.room.name) {
+                //creepTax = 750; // per 1500 tower cost estimate.
+            } else {
+                creepTax += 4010 / remoteNum; // For invasion defense.
+                creepTax = 1950 / info.roomRemoteCount; // For claim 1950 
+            }
+
+
+            info.spent = Math.ceil(totalSpent + containerTax + creepTax - creepSurplus);
+            info.history.push({
+                harvested: info.harvested,
+                spent: info.spent,
+            });
+
+            if (info.history.length > 10) info.history.shift();
+
+
+            if (info.isSkSource) {
+                info.efficient = info.harvested / 24000 * 100; // 20000 - or
+            } else {
+                info.efficient = info.harvested / 15000 * 100;
+            }
+
+            info.mean = _.sum(info.history, function(o) { return o.harvested; });
+            info.profit = info.history[0].harvested - info.spent;
+            if (creepTax === null) {
+                console.log('null creepTax', remoteNum, info.roomRemoteCount);
+                console.log('null creepTax', remoteNum, info.roomRemoteCount);
+                console.log('null creepTax', remoteNum, info.roomRemoteCount);
+                console.log('null creepTax', remoteNum, info.roomRemoteCount);
+                console.log('null creepTax', remoteNum, info.roomRemoteCount);
+            }
+            console.log(info.profit, '$$  info spent:', info.spent, "=", totalSpent, "+", containerTax, "(contax) +", creepTax, "(crpTax) -", creepSurplus, "Bonus ", roomLink(creep.room.name), info.history.length + "+1");
+            info.harvested = 0;
+        }
+
+        info.harvested += creep.stats('mining');
+
+        var font = { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, };
+        if (info.isSkSource) {
+            creep.room.visual.text("**H:" + info.mean + "[" + info.harvested + "]  S:" + info.spent + " T:" + info.reset + " H:", creep.pos.x, creep.pos.y - 2, font);
+        } else {
+            creep.room.visual.text("H:" + info.mean + "[" + info.harvested + "]  S:" + info.spent + " T:" + info.reset + " H:", creep.pos.x, creep.pos.y - 2, font);
+        }
+        //   if (info.history && info.history.length > 0) {
+        //         creep.room.visual.text(info.history[0].harvested + "#" + info.history.length, creep.pos.x, creep.pos.y - 4, font);
+        //            if (Game.time % 100 < 10) {
+        //          var sum = _.sum(info.history, function(o) {
+        //                return o.harvested - o.spent;
+        //              });
+        //            console.log(sum,info.history.length,"=",sum/info.history.length );
+        //                info.mean = sum / info.history.length;
+        // info.mean = _.sum(info.history, function(o) { return o.harvested; });// / info.history.length;
+        //          }
+        //     }
+
+        //      let meaner = info.mean;
+        //        creep.room.visual.text("Profit:" + meaner, creep.pos.x, creep.pos.y - 3, font);
+
+    };
 
     global.roomLink = function(roomname) {
-        return '<a href=https://screeps.com/a/#!/room/shard1/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
+        if(!roomname) return;
+    //    if (!_.isString(roomname)) {
+            //            console.log(roomname)            ;
+            if (roomname.pos) {
+                roomname = roomname.pos.roomName;
+            } else if (roomname.roomName) {
+                roomname = roomname.roomName;
+            }
+//            return;
+  //      }
+        return '<a href=https://screeps.com/a/#!/room/' + Game.shard.name + '/' + roomname + '  style="color:#aaaaff">' + roomname + '</a>';
     };
+
+    global.roomHistory = function(roomname,time) {
+        return '<a href=https://screeps.com/a/#!/history/' + Game.shard.name + '/' + roomname + '?t='+time+'  style="color:#aaaaff">' + roomname+"@"+time+ '</a>';
+        //              https://screeps.com/a/#!/history/shard1/E37S34?t=13165000
+    };
+
 
     global.analyzeCreep = function(creep) {
         // This get passed a creep, and it will show stats about it. 
         if (creep === null) return;
         if (creep === null && Game.rooms[creep.pos.roomName] === undefined) return;
         var col = 'red';
-        var _strength = analyzeBody(creep.body);
+        //  level: str, - 1 per body, and 1 per tier. Max of 4 per Part. 
+        //    attack: att, Number of attack body parts - max of 4 per part
+        //      ranged: rng, Number of Attack Range Parts - max of 4 per part 
+        //        heal: heal, Number of Heal parts - max of 4 per part
+        //        work: work, Number of Work parts - max of 4 per part
+
+        var _body = analyzeBody(creep.body);
         var _hits = analyzeHits(creep);
-        Game.rooms[creep.pos.roomName].visual.text('s:' + _strength, creep.pos.x, creep.pos.y, {
+/*        Game.rooms[creep.pos.roomName].visual.text('s:' + _body.level, creep.pos.x, creep.pos.y, {
             stroke: col,
             font: 0.25,
         });
@@ -57,8 +387,24 @@ module.exports = function() {
         Game.rooms[creep.pos.roomName].visual.text('' + _hits, creep.pos.x, creep.pos.y + 0.30, {
             stroke: col,
             font: 0.25,
-        });
-        return { strength: _strength, hits: _hits };
+        });*/
+        var _type = determineType(creep, _body.strength);
+        return { strength: _body.strength, hits: _hits, type: _type, body:_body, level:_body.strength };
+    };
+
+    global.marketRecordDeal = function(id, amount, roomTarget) {
+
+        let result = Game.market.deal(id, amount, roomTarget);
+        if (!Game.rooms[roomTarget] || Game.rooms[roomTarget].memory.terminalText === undefined) {
+            return result;
+        }
+        let cost;
+        let order = Game.market.getOrderById(id);
+        cost = Game.market.calcTransactionCost(amount, order.roomName, roomTarget);
+        if (result === OK && Game.rooms[roomTarget]) {
+//            Game.rooms[roomTarget].memory.terminalText.deal = "deal:" + order.resourceType + " #" + amount + " to:" + roomTarget + " @" + Game.time + "$:" + cost;
+        }
+        return result;
     };
 
     global.squadVisual = function(squad) {
@@ -73,6 +419,7 @@ module.exports = function() {
             if (squad[e].memory.point) {
                 squad[e].room.visual.rect(squad[e].pos.x - 6.5, squad[e].pos.y - 6.5,
                     13, 13, { fill: 'transparent', stroke: '#f00' });
+                console.log(squad[e].pos.x, squad[e].pos.y, squad[e].pos.roomName);
                 center = new RoomPosition(squad[e].pos.x, squad[e].pos.y, squad[e].pos.roomName);
             }
             let analyze = analyzeCreep(squad[e]);
@@ -134,27 +481,62 @@ module.exports = function() {
 
     };
 
-
+    global.profitReport = function(roomName, saleType, result, id, mineralAmount, mineralType, mineralCost, targetRoom) {
+        let trans = 0;
+        if (targetRoom) {
+            trans = Game.market.calcTransactionCost(mineralAmount, roomName, targetRoom);
+        }
+        let cost;
+        if (!Memory.mineralAverage || !Memory.mineralAverage.energy || !Memory.mineralAverage.energy.buy) {
+            cost = 0.011;
+        } else {
+            cost = Memory.mineralAverage.energy.buy;
+        }
+        let eCost = Math.round(trans * cost);
+        console.log(Game.time,roomLink(roomName), "Type:", saleType, result, "Profit:", Math.round(mineralAmount * mineralCost), "-", eCost, "=", Math.round((mineralAmount * mineralCost) - eCost), "  Mineral:", mineralType,"@",mineralCost, "  Amount:", mineralAmount, "  TC:", trans, "/", eCost, "  Target Room:", roomLink(targetRoom),Game.cpu.bucket);
+    };
+    //        console.log(roomLink(terminal.room.name), "Max Energy Trade", whatHappened, 'profit:', target.price * trans, '@', (target.price + target.cost) * trans, "/", trans, '(' + target.price + "/" + target.price / (1 + target.cost) + ')', 'EnergyCost', (target.price + target.cost));
+    //                 console.log(roomCreate, ez, 'FulFill buy order on ', Game.shard.name, 'min:', current.mineralType, '#:', amoutn, "/", current.mineralAmount, 'from room', roomCreate,"ID:", order.id,"Order Amnt:", order.amount,"Send Amnt:", amoutn, "terminal amnt:",Game.rooms[roomCreate].terminal.store[current.mineralType]);
     global.coronateCheck = function(number) {
         if (number > 49) return 49;
         if (number < 0) return 0;
         return number;
-
-
     };
-
-    Object.defineProperty(global, '_terminal', {
+    /*
+    const minMinerals = 173000; //33*5000
+    const minMineralsTier3 = 350000;
+    */
+    Object.defineProperty(global, 'maxMinAmount', {
         get: function() {
-            // @todo: adjust limit based on remaining bucket, and log function
-            return require('build.terminal');
-            // return Game.cpu.getUsed() > 9;
+            return 173000;
+        },
+        configurable: true
+    });
+    Object.defineProperty(global, 'maxT3MinAmount', {
+        get: function() {
+            return 350000;
         },
         configurable: true
     });
 
+
+    Object.defineProperty(global, '_terminal', {
+        get: function() {
+            return require('build.terminal');
+        },
+        configurable: true
+    });
+
+
     Object.defineProperty(global, 'storageEnergyLimit', {
         get: function() {
-            return 850000;
+            return 500000;
+        },
+        configurable: true
+    });
+    Object.defineProperty(global, 'terminalEnergyLimit', {
+        get: function() {
+            return 75000;
         },
         configurable: true
     });
@@ -163,28 +545,31 @@ module.exports = function() {
     global._terminal_ = function() {
         return require('build.terminal');
     };
-
-    global.standardizeRoomName = function(roomName) {
-        if (roomName.length === 6) return roomName;
-        let match = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(roomName);
-        var threeBad;
-        var oneBad;
-        if (match[2].length === 1) {
-            match[2] = _.padLeft(match[2], 2, "0");
-        }
-        if (match[4].length === 1) {
-            match[4] = _.padLeft(match[4], 2, "0");
-        }
-
-        var newString = "";
-        newString += match[1];
-        newString += match[2];
-        newString += match[3];
-        newString += match[4];
-
-        console.log('none standarize RoomName changing', newString);
-        return newString;
+    global.roomRequestMineral = function(targetRoom, mineral, amount) {
+        return require('build.terminal').requestMineral(targetRoom, mineral, amount);
     };
+    /*
+        global.standardizeRoomName = function(roomName) {
+            if (roomName.length === 6) return roomName;
+            let match = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(roomName);
+            var threeBad;
+            var oneBad;
+            if (match[2].length === 1) {
+                match[2] = _.padLeft(match[2], 2, "0");
+            }
+            if (match[4].length === 1) {
+                match[4] = _.padLeft(match[4], 2, "0");
+            }
+
+            var newString = "";
+            newString += match[1];
+            newString += match[2];
+            newString += match[3];
+            newString += match[4];
+
+            console.log('none standarize RoomName changing', newString);
+            return newString;
+        };*/
 
     global.stringToRoomPos = function(string) {
         //input XXYYE12S23
@@ -192,15 +577,17 @@ module.exports = function() {
         //        00 23 E23S42 0023E23S
         let match = /^([0-9][0-9])([0-9][0-9])(([WE])([0-9]+)([NS])([0-9]+))$/.exec(string);
         if (match !== null) {
+//            return new RoomPosition(match[1], match[2], match[3]);
             return new RoomPosition(parseInt(match[1]), parseInt(match[2]), match[3]);
         } else {
-            console.log(string, 'doing stringotRoomPos');
-            console.log(match);
+            //            console.log(string, 'doing stringotRoomPos');
+            //          console.log(match);
         }
         if (string.length !== 10) return;
         var goalRoom = string[4] + string[5] + string[6] + string[7] + string[8] + string[9];
         return new RoomPosition(parseInt(string[0] + string[1]), parseInt(string[2] + string[3]), goalRoom);
     };
+    /*
     global.roomPosToString = function(roomPos) {
         if (roomPos.x === undefined) return false;
         var xx = roomPos.x;
@@ -216,7 +603,7 @@ module.exports = function() {
             return;
         }
         return ret;
-    };
+    }; */
 
 
     global.getFormationPos = function(target, formationPos) {
@@ -405,6 +792,175 @@ module.exports = function() {
 
         return ret;
     };
+
+    /*
+
+    // GEIR1983 END TEST CODE// GEIR1983 END TEST CODE// GEIR1983 END TEST CODE
+    // GEIR1983 END TEST CODE
+    // GEIR1983 END TEST CODE
+    // GEIR1983 END TEST CODE
+        RoomVisual.prototype._toJSON = RoomVisual.prototype.toJSON;
+        RoomVisual.prototype.toJSON = function(arg){
+            var color = '<a style="color:#0afaff">';
+            if (global.reportJson) {            
+                try {
+                    undefined.undefind = 13;
+                } catch (err){
+                    console.log("calling toJSON on RoomVisual while stringify on key "+color +global.keyToCheck + " argument " + JSON.stringify(arg) + " error " +err.name + err.stack);              
+                }
+            }
+            return this._toJSON(arg);
+        };
+        
+
+
+
+        PathFinder.CostMatrix.prototype.toJSON = function(arg) {
+            if (global.reportJson) {
+                try {
+                    undefined.undefind = 13;
+                } catch (err) {
+                    var errorString = "calling toJSON! on CostMatrix " + global.keyToCheck + " argument " + JSON.stringify(arg) + " error " + err.name + err.stack;
+                    console.log(errorString);
+                 //   Game.notify(errorString);
+
+                }
+            }
+        };
+
+        Room.prototype.toJSON = function(arg) {
+            if (global.reportJson) {
+                try {
+                    undefined.undefind = 13;
+                } catch (err) {
+                    var errorString = "calling toJSON on Room! " + this.name + " while stringify on key " + global.keyToCheck + " argument " + JSON.stringify(arg) + " error " + err.name + err.stack;
+                    console.log(errorString);
+              //      Game.notify(errorString);
+                }
+            }
+
+        };
+
+        ConstructionSite.prototype.toJSON = function(arg) {
+            if (global.reportJson) {
+                try {
+                    undefined.undefind = 13;
+                } catch (err) {
+                    var errorString = "calling toJSON! ConstructionSite " + this.structureType + this.id + " while stringify on key " + global.keyToCheck + " argument " + JSON.stringify(arg) + " error " + err.name + err.stack;
+                    console.log(errorString);
+           //         Game.notify(errorString);
+                }
+            }
+        };
+
+        OwnedStructure.prototype.toJSON = function(arg) {
+            if (global.reportJson) {
+                try {
+                    undefined.undefind = 13;
+                } catch (err) {
+                    var errorString = "calling toJSON! OwnedStructure " + this.structureType + this.id + " while stringify on key " + global.keyToCheck + " argument " + JSON.stringify(arg) + " error " + err.name + err.stack;
+                    console.log(errorString);
+               //     Game.notify(errorString);
+                }
+            }
+        };
+
+        Creep.prototype.toJSON = function(arg) {
+            if (global.reportJson) {
+                try {
+                    undefined.undefind = 13;
+                } catch (err) {
+                    var errorString = "calling toJSON! Creep " + this.name + " while stringify on key " + global.keyToCheck + " argument " + JSON.stringify(arg) + " error " + err.name + err.stack;
+                    console.log(errorString);
+               //     Game.notify(errorString);
+                }
+            }
+        };
+
+        RoomPosition.prototype.toJSON = function(arg) {
+            if (global.reportJson) {
+                try {
+                    undefined.undefind = 13;
+                } catch (err) {
+                    var errorString = "calling toJSON! RoomPosition " + this.roomName + " " + this.x + ":" + this.y + " while stringify on key " + global.keyToCheck + " argument " + JSON.stringify(arg) + " error " + err.name + err.stack;
+                    console.log(errorString);
+              //      Game.notify(errorString);
+                }
+            }
+        };
+
+
+        global.diagnoseGlobal = function() {
+
+            if (Memory.globalKeyToCheck === undefined) { Memory.globalKeyToCheck = 1; }
+            var check = global;
+            var currentIdx = 0;
+            var checkedKeys = 0;
+            var init = Game.cpu.getUsed();
+            var maxKeys = Object.keys(check).length;
+            if (Memory.globalKeyToCheck >= maxKeys) { Memory.globalKeyToCheck = 1; }
+
+            var mostCpu = 0;
+            var biggestKeyLength = 0;
+            var mostCpuKey;
+            var biggestKey;
+            for (var property in check) {
+                currentIdx++;
+                //  if (currentIdx != Memory.globalKeyToCheck ) { continue; }
+                //  Memory.globalKeyToCheck++;
+
+                if (property === "Game") { continue; } // Here be monsters!
+                if (property === "global") { continue; }
+                if (property === "gc") { continue; }
+                if (property === "RawMemory") { continue; }
+                if (property === "PathFinder") { continue; }
+                if (property === "Constants") { continue; }
+                if (property === "Memory") { continue; } // save some cpu for long term
+
+                if (property === "roomsFindCache") { continue; }
+                if (property === "observe_rooms") { continue; }
+
+
+                var keyUsedCpu = Game.cpu.getUsed();
+
+                checkedKeys++;
+                //  console.log("stringify on key number " + Memory.globalKeyToCheck +"/" +maxKeys + " property " +property);
+                global.keyToCheck = property;
+                var stringified;
+                try {
+                    stringified = JSON.stringify(check[property]);
+                } catch (err) { console.log(Memory.globalKeyToCheck + ' Error running stringify on ' + property + " error: " + err.name + err.stack); }
+
+                keyUsedCpu = Game.cpu.getUsed() - keyUsedCpu;
+                if (keyUsedCpu > mostCpu) {
+                    mostCpu = keyUsedCpu;
+                    mostCpuKey = property;
+                }
+                var usedSize = _.size(stringified);
+                if (usedSize > biggestKeyLength) {
+                    biggestKeyLength = usedSize;
+                    biggestKey = property;
+                }
+
+                /*
+                if (!knownGlobals[property]) {          
+                    console.log("unknown key " + property + " size " + usedSize)
+                }*/
+    //  if (used > 10) { break; }   
+    /*
+        }
+
+
+        var used = Game.cpu.getUsed() - init;
+        var keySizeKb = biggestKeyLength / 1024;
+        console.log("diagnoseGlobal checked " + checkedKeys + "/" + maxKeys + ", used total cpu  " + used.toFixed(1) + " most cpu on key " + mostCpuKey + " - " + mostCpu.toFixed(1) + " biggest key " + biggestKey + " with size " + keySizeKb.toFixed(1) + " kb");
+    };
+
+*/
+    // GEIR1983 END TEST CODE
+    // GEIR1983 END TEST CODE
+    // GEIR1983 END TEST CODE
+
     // Returns the Manhattan distance between two room names
     /*
     global.getManhattanRoomDistance = function(room_1,room_2) {

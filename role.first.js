@@ -35,17 +35,25 @@ class roleFirst extends roleParent {
     static boosts(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         if (_.isObject(classLevels[level])) {
-return _.clone( classLevels[level].boost);
+            return _.clone(classLevels[level].boost);
         }
         return;
     }
 
     static run(creep) {
-        console.log(roomLink(creep.room.name),'still has first?');
-        if (!jobs.doRoomEnergy(creep)) {
-            creep.sleep(3);
+        if(creep.room.energyAvailable === creep.room.energyCapacityAvailable && creep.room.controller.level === 8){
+            creep.suicide();
+        }
+        if (super.spawnRecycle(creep)) return;
+        if(creep.room.controller.level === 8)
+        console.log(roomLink(creep.room.name), 'still has first?');
+        if (creep.room.energyAvailable < creep.room.energyCapacityAvailable && jobs.doRoomEnergy(creep)) {
+            return;
+        } else if(jobs.doTower(creep)){
+            return;
         }
 
+        creep.sleep(3);
     }
 }
 

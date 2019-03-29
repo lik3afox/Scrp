@@ -120,11 +120,7 @@ function getHostiles(creep) {
         }
         creep.memory.playerTargetId = undefined;
 
-        let bads = creep.room.find(FIND_HOSTILE_CREEPS);
-
-        let player = _.filter(bads, function(o) {
-            return o.isEnemy;
-        });
+        let player = creep.room.enemies;
 
         if (player.length > 0) {
             creep.memory.playerTargetId = player[0].id;
@@ -137,17 +133,13 @@ function getHostiles(creep) {
 
         var close = creep.pos.findClosestByRange(bads);
         if (close !== null && bads.owner !== undefined &&
-            bads.owner.username == 'Source Keeper') {
+            close.owner.username == 'Source Keeper') {
             creep.memory.skID = close.id;
             return [close];
         }
         return bads;
     } else {
-        let bads = creep.room.find(FIND_HOSTILE_CREEPS);
-
-        let player = _.filter(bads, function(o) {
-            return o.isEnemy && creep.pos.inRangeTo(o, 3);
-        });
+        let player =  creep.pos.inRangeTo(creep.room.notAllies, 3);
 
         if (player.length > 0) {
             creep.memory.playerTargetId = player[0].id;
@@ -353,7 +345,7 @@ return _.clone( classLevels[level].boost);
             } else {
                 creep.selfHeal();
                 //                movement.guardFlagMove(creep);
-                creep.moveMe(creep.partyFlag, { reusePath: 50, segment: true });
+                creep.moveMe(creep.partyFlag, { reusePath: 50 });
 
             }
             if (creep.memory.distance === undefined) {

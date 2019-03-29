@@ -6,7 +6,7 @@ var classLevels = [
     // Level 0
     [MOVE, HEAL, MOVE, RANGED_ATTACK],
     // Level 1 10/10
-    [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL, HEAL],
+    [MOVE, MOVE, MOVE, MOVE, MOVE,RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL],
     // Level 2 15/15
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL],
     // Level 3 20/20
@@ -93,8 +93,12 @@ var classLevels = [
     },
     // Level 13
     {
-        body: [],
-        boost: [],
+        body: [HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, MOVE,
+            RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        ],
+        boost: ['XKHO2', 'XLHO2',  'XZHO2'],
     },
 
 ];
@@ -108,8 +112,8 @@ function banditAction(creep) {
     creep.memory.reportDeath = true;
 
     if (Game.flags[creep.memory.party] !== undefined) {
-//        creep.rangedMassAttack();
-//        creep.smartHeal();
+        //        creep.rangedMassAttack();
+        //        creep.smartHeal();
         if (Game.flags[creep.memory.party].room !== undefined && creep.room.name == Game.flags[creep.memory.party].pos.roomName) {
             good = creep.room.find(FIND_MY_CREEPS);
             good = _.filter(good, function(o) {
@@ -127,18 +131,20 @@ function banditAction(creep) {
                     creep.selfHeal();
                 } else {
                     if (creep.pos.isNearTo(good[0])) {
-                        if(creep.heal(good[0])){
-                            creep.smartRangedAttack();
+                        if (creep.heal(good[0])) {
+
                         }
+                        creep.smartRangedAttack();
                     } else {
-                        if(creep.rangedHeal(good[0])){
-                            creep.rangedMassAttack();
-                        }
+                        if (creep.rangedHeal(good[0])) {}
+                        creep.rangedMassAttack();
                     }
 
                 }
                 creep.memory.death = good[0].memory.death;
                 return true;
+            } else {
+                creep.rangedMassAttack();
             }
 
         }
@@ -185,7 +191,7 @@ class rangerClass extends roleParent {
     static boosts(level) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
         if (_.isObject(classLevels[level])) {
-return _.clone( classLevels[level].boost);
+            return _.clone(classLevels[level].boost);
         }
         return;
     }
@@ -201,14 +207,15 @@ return _.clone( classLevels[level].boost);
         } else if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }
+        if (creep.partyFlag === undefined) creep.memory.death = true;
 
         if (super.rallyFirst(creep)) return;
         if (super.goToPortal(creep)) return;
-        if (creep.memory.party == 'bandit') {
+        if (creep.partyFlag && creep.partyFlag.memory.bandit) {
             super.rebirth(creep);
             creep.say('bandit');
             banditAction(creep);
-            if (Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
+//            if (Game.flags[creep.memory.party] === undefined) creep.memory.death = true;
             return;
         }
 
@@ -216,33 +223,29 @@ return _.clone( classLevels[level].boost);
             creep.memory.waypoint = false;
         }
 
-        if (super.doTask(creep)) {
-            return;
-        }
+        //if (
+            creep.smartHeal();
+            //) { // IF smartHeal is true - means it's doing a ranged heal.
+                 //       creep.rangedMassAttack();
+        //} // else {
+        creep.smartRangedAttack();
+        // }
 
-        //creep.smartRangedAttack();
-        //creep.smartHeal();
-        //        creep.rangedMassAttack();
-        //creep.say(creep.memory.party);
-        //creep.selfHeal();
-        //  if(creep.smartRangedAttack()) {
-        //  creep.selfHeal();
-        //      }
-        if (!creep.smartHeal()) {
-            creep.smartRangedAttack();
-        }
-          //      creep.rangedMassAttack();
-        /*
-         else 
-        */
 
-        if (creep.hits > creep.hitsMax - 100) {
-            //movement.flagMovement(creep);
-            creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
+
+        if (creep.hits > creep.hitsMax - 300) {
+            if(creep.partyFlag && creep.partyFlag.memory.target){
+                let tgt = Game.getObjectById(creep.partyFlag.memory.target);
+                if(tgt && !creep.pos.inRangeTo(tgt,2)){
+                    creep.tuskenTo(tgt, creep.memory.home, { reusePath: 50 });
+                }
+
+            } else {
+                creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
+            }
         } else {
             creep.runFrom(creep.partyFlag);
         }
-        //          }
     }
 
 

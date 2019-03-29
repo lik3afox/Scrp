@@ -1,6 +1,7 @@
 // Rampart Fighter
 
 var classLevels = [
+// First setup is 16/32 Attack
     [
         ATTACK, MOVE, ATTACK,
         ATTACK, MOVE, ATTACK,
@@ -23,7 +24,19 @@ var classLevels = [
         ATTACK, MOVE, ATTACK,
         MOVE, ATTACK
     ],
-    [MOVE, ATTACK, RANGED_ATTACK, MOVE]
+// 2nd Setup is 45/5 attack
+{
+body: [ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,
+ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,
+ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,
+ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,
+ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,
+MOVE,MOVE,MOVE,MOVE,MOVE],
+boost: [ 'XUH2O'],
+
+},
+
+//    [MOVE, ATTACK, RANGED_ATTACK, MOVE]
 
 ];
 var boost = ['XUH2O'];
@@ -86,18 +99,13 @@ return _.clone( classLevels[level].boost);
     }
 
     static run(creep) {
-
         if (super.spawnRecycle(creep)) {
             return;
         }
-        if (super.doTask(creep)) {
-            return;
-        }
-        var bads = creep.room.find(FIND_HOSTILE_CREEPS);
+        var bads = creep.room.notAllies;
         var tLevel = toughOutThere(bads);
         if (creep.ticksToLive > 500 && tLevel > 15) {
             if (super.boosted(creep, boost)) {
-                //                creep.memory.boosted = true;
                 creep.memory.boostFighting = true;
                 return;
             }
@@ -162,6 +170,8 @@ return _.clone( classLevels[level].boost);
                         opacity: 0.5
                     }
                 });
+            } else {
+                creep.cleanMe();
             }
         }
         //       movement.flagMovement(creep);
