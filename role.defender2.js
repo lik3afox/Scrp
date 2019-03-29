@@ -177,6 +177,7 @@ class roleNewDefender extends roleParent {
             console.log(creep.memory.invadeLevel,'CUSTOM CREATED with < 1000 life', roomLink(creep.room.name),creep.memory.level,Game.cpu.bucket);
         }
 
+
         if (super.boosted(creep, creep.memory.boostNeeded)) {
             return;
         }

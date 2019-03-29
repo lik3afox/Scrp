@@ -232,58 +232,7 @@ function doSourceKeeperMining(creep, _source, contain, resting) {
     } else {
 
         if (!creep.memory.isThere && _sourcePos.roomName != creep.room.name) creep.countDistance();
-        /*if (contain && creep.room.name == contain.pos.roomName && contain.pos.isNearTo(_source)) {
-            let bad = creep.pos.findInRange(creep.room.sourceKeepers, 3);
-            if (bad.length === 0) {
-                creep.moveMe(contain, { reusePath: 25 });
-            } else if (bad.length > 0) {
-                creep.runFrom(bad);
-            }
 
-            creep.say('cg');
-
-            return;
-        } else if (creep.room.name == _sourcePos.roomName) {
-            let bad = creep.pos.findInRange(creep.room.sourceKeepers, 3);
-            if (bad.length === 0) {
-                creep.moveMe(_source, { reusePath: 25 });
-            } else if (bad.length > 0) {
-                creep.runFrom(bad);
-            }
-            creep.say('hg');
-
-            return;
-        }*/
-
-        /*
-                let task = {};
-                task.options = {
-                    reusePath: 49,
-                    ignoreCreep: true,
-
-                    segment: true,
-                    visualizePathStyle: {
-                        fill: 'transparent',
-                        stroke: '#ff0',
-                        lineStyle: 'dotted',
-                        strokeWidth: 0.15,
-                        opacity: 0.5
-                    }
-                };
-
-                task.count = true;
-                task.order = "moveTo";
-                task.enemyWatch = true;
-                task.sleepWait = true;
-                task.rangeHappy = 1;
-                if (creep.memory.resting !== undefined) {
-                    task.pos = creep.memory.resting;
-                    task.rangeHappy = 0;
-                } else {
-                    task.pos = _sourcePos;
-                }
-                creep.memory.task.push(task);
-                roleParent.doTask(creep);*/
         creep.moveMe(_sourcePos, {
             reusePath: 49,
             ignoreCreep: true,
