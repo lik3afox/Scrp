@@ -17,12 +17,15 @@
   },
   "homepage": "https://github.com/lik3afox/Scrp#readme",
   "devDependencies": {
-    "grunt": "^1.0.2"
+    "grunt": "^1.0.2",
+    "grunt-contrib-concat": "^1.0.1"
   },
   "dependencies": {
     "@types/screeps-profiler": "^1.2.1",
+    "concat": "^1.0.3",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-screeps": "^1.4.0",
+    "npm": "^6.9.0",
     "screeps-profiler": "^2.0.1"
   }
 }
