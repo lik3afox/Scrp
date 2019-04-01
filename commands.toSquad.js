@@ -106,6 +106,154 @@ function switchPos(creep, creep2) {
     }
 }
 
+function getZoneToScan(centerPoint, direction, options) {
+    /*
+        This function's design is to provide a centerPoint, and direction that you want to scan in. Can add options to change the height/width and scan distance
+        Output of this function is designed to be used with lookAtArea(10,5,11,7);
+
+        Input :
+        CenterPoint - is an x,y posistion;
+        Direction - In Game direction to get scan area; Undefined direction will return the whole scan box.
+        Options -   squadWidth; squadHeight; detectRange; are the inputs for options
+                    Default - 2x2 hight/width with a 3 distance range.
+           
+
+        Output [Object:{top:0,left:0,bottom:0,right:0}]; This matches lookAtArea's input.
+    */
+
+    // x and y are the "center" point
+    let x = centerPoint.x;
+    let y = centerPoint.y;
+
+    // x and squadHeight are the size of the box.
+    let squadWidth = 2;
+    let squadHeight = 2;
+    let detectRange = 3;
+
+    if (options) {
+        if (options.squadWidth) squadWidth = options.squadWidth;
+        if (options.squadHeight) squadHeight = options.squadHeight;
+        if (options.range) detectRange = options.range;
+    }
+
+    // Following variables is the max size of the scan box from centerPoint - offset by squadsize
+    let boxMaxX = squadWidth + detectRange - 1; // RIGHT most of the scan square
+    let boxMaxY = squadHeight + detectRange - 1; // Bottom most of the scan square
+
+    let boxMinX = detectRange * -1; // Left most of the scan square
+    let boxMinY = detectRange * -1; // Right most of the scan square
+
+    switch (direction) {
+        //      default:
+        //            return { left: boxMinX, right: boxMaxX, top: boxMinY, bottom: boxMaxY };
+
+        case 8:
+            let dir8 = { x: x + boxMinX, y: y + boxMinY };
+            return { left: dir8.x, right: dir8.x + detectRange - 1, top: dir8.y, bottom: dir8.y + detectRange - 1 };
+
+        case 7:
+            let dir7 = { x: x + boxMinX, y: y };
+            return { left: dir7.x, top: dir7.y, right: dir7.x + detectRange - 1, bottom: dir7.y + squadHeight - 1 };
+        case 6:
+            let dir6 = { x: x + boxMinX, y: y + squadHeight };
+            return { left: dir6.x, top: dir6.y, right: dir6.x + detectRange - 1, bottom: dir6.y + detectRange - 1 };
+
+        case 5:
+            let di53 = { x: x, y: y + squadHeight };
+            return { left: di53.x, top: di53.y, right: di53.x + squadHeight - 1, bottom: di53.y + detectRange - 1 };
+
+        case 4:
+            let dir4 = { x: x + squadWidth, y: y + squadHeight };
+            return { left: dir4.x, top: dir4.y, right: dir4.x + detectRange - 1, bottom: dir4.y + detectRange - 1 };
+
+        case 3:
+            let dir3 = { x: x + squadWidth, y: y };
+            return { top: dir3.y, right: dir3.x + detectRange - 1, bottom: dir3.y + squadWidth - 1, left: dir3.x, };
+
+        case 2:
+            let dir2 = { x: x + squadWidth, y: y + boxMinY };
+            return { left: dir2.x, top: dir2.y, right: dir2.x + detectRange - 1, bottom: dir2.y + detectRange - 1 };
+
+        case 1:
+
+            let dir1 = { x: x, y: y + boxMinY };
+            return { top: dir1.y, right: dir1.x + squadHeight - 1, bottom: dir1.y + detectRange - 1, left: dir1.x };
+
+    }
+}
+
+function getExtraScanPoints(centerPoint, direction, options) {
+    /* Due to the corners directions needing an extra two spots to scan.
+    // Example:
+                      8 * * 2
+                      * #,# *
+                      * #,# *
+                      6 * * 4
+
+                      * = extra points to scan.
+
+    For each diagonal direction, you will want the two extra points(*).
+    */
+
+    let x = centerPoint.x;
+    let y = centerPoint.y;
+
+    // x and squadHeight are the size of the box.
+    let squadWidth = 2;
+    let squadHeight = 2;
+
+    if (options) {
+        if (options.squadWidth) squadWidth = options.squadWidth;
+        if (options.squadHeight) squadHeight = options.squadHeight;
+    }
+
+    switch (direction) {
+        case 2:
+            // get the top, right corner and return two points with -1y and +1 x
+            let dir2 = { x: x + squadWidth - 1, y: y };
+            return [{ x: dir2.x, y: dir2.y - 1 }, { x: dir2.x + 1, y: dir2.y }];
+        case 4:
+            // get bottom right corner, and return two points with +1 y and +1 x
+            let dir4 = { x: x + squadWidth - 1, y: y + squadHeight - 1 };
+            return [{ x: dir4.x + 1, y: dir4.y }, { x: dir4.x, y: dir4.y + 1 }];
+        case 6:
+            let dir6 = { x: x, y: y + squadHeight - 1 };
+            // get bottom left corner, and return two points iwht -1 x and +1 y
+            return [{ x: dir6.x - 1, y: dir6.y }, { x: dir6.x, y: dir6.y + 1 }];
+        case 8:
+            let dir8 = { x: x, y: y };
+            // get top left corner, adn return two points with -1 x and -1 y
+            return [{ x: dir8.x - 1, y: dir8.y }, { x: dir8.x, y: dir8.y - 1 }];
+    }
+}
+
+function lookForTargets(groupPoint, direction, roomName) {
+    // This will look at area, analyze what's returned and filter out everything except structures and creeps
+    let room = Game.rooms[roomName];
+    if (!direction || !room) return;
+    let zone = getZoneToScan(groupPoint, direction, { range: 1 });
+    let foundObjects;
+    if (zone) {
+        foundObjects = room.lookAtArea(zone.top, zone.left, zone.bottom, zone.right, true);
+    }
+    let extraZone = getExtraScanPoints(groupPoint, direction);
+    for (let i in extraZone) {
+        let looked = room.lookAt(extraZone[i].x, extraZone[i].y);
+        for (let i in looked) {
+            foundObjects.push(looked[i]);
+        }
+    }
+    let returnArray = [];
+    for (let i in foundObjects) {
+        if (foundObjects[i].structure && foundObjects[i].structure.structureType !== STRUCTURE_ROAD) {
+            returnArray.push(foundObjects[i].structure);
+        } else if (foundObjects[i].creep) {
+            returnArray.push(foundObjects[i].creep);
+        }
+    }
+    return returnArray;
+}
+
 function battleRotate(squad, type) {
     //    if(squadFatique(squad)) return;
     //console.log('battle rotate');
@@ -185,6 +333,7 @@ function battleRotate(squad, type) {
 
 
 
+var siegeTargets;
 
 function squadMemory(squaded, bads, analysis) {
     let squad = [];
@@ -429,16 +578,16 @@ function squadMemory(squaded, bads, analysis) {
         case 'travel':
             doMovement = true;
             healType = 'react';
-            if(bads.length){
+            if (bads.length) {
                 let groupPoint = new RoomPosition(squadFlag.memory.groupPoint.x, squadFlag.memory.groupPoint.y, squadFlag.memory.groupPoint.roomName);
                 let target = groupPoint.findClosestByRange(bads);
-               let distance = squadDistance(squaded, target);
-                if(distance < 11){
+                let distance = squadDistance(squaded, target);
+                if (distance < 11) {
                     switchMode(squadFlag, squad, 'battle');
                     return;
                 }
             }
-            
+
             for (let a in squad) {
                 let creep = squad[a];
                 creep.memory.happy = false;
@@ -456,15 +605,26 @@ function squadMemory(squaded, bads, analysis) {
                         //     creep.say('ToFlag');
                         creep.memory.happy = true;
                     }
-                    if (creep.pos.inRangeTo(creep.partyFlag, 5) && !creep.isNearEdge) {
+                    if (squadFlag.memory.powerCreepFlag) {
+
+
+                        if (creep.pos.inRangeTo(creep.partyFlag, 2)) {
+                            switchMode(squadFlag, squad, 'battle');
+                        }
+                        if (creep.hits < creep.hitsMax) {
+                            switchMode(squadFlag, squad, 'battle');
+                        }
+
+                    } else if (creep.pos.inRangeTo(creep.partyFlag, 5) && !creep.isNearEdge) {
                         //      creep.say('atFLAG');
                         doMovement = false;
                         if (creep.memory.party === 'dangerRoom') {
                             //                            squadFlag.memory.squadMode = 'battle';
+                            console.log('switching to Battle mode');
                             switchMode(squadFlag, squad, 'battle');
-                        }  else if(squadFlag.memory.powerCreepFlag) {
-                            switchMode(squadFlag, squad, 'battle');
-                        } else {
+                        }
+                        //                            switchMode(squadFlag, squad, 'battle');
+                        else {
                             squadFlag.memory.squadMode = 'siege';
                         }
                     }
@@ -496,19 +656,20 @@ function squadMemory(squaded, bads, analysis) {
                     }
                     creep.say('md');
                 }
+                /*
                 if (!creep.memory.happy) {
                     doMovement = false;
-                }
+                }*/
                 if (creep.fatigue !== 0) {
                     doMovement = false;
                 }
-                if(creep.memory.stuckCount === 5){
+                if (creep.memory.stuckCount === 5) {
                     doMovement = true;
                 }
                 // New added to not move while 
-                if (creep.hits !== creep.hitsMax) {
+                /*if (creep.hits !== creep.hitsMax) {
                     doMovement = false;
-                }
+                } */
                 if (creep.isAtEdge) {
                     doMovement = true;
                     //                if (creep.memory.point && !creep.pos.isNearTo(dir)) {
@@ -524,12 +685,14 @@ function squadMemory(squaded, bads, analysis) {
         case 'battle':
         case 'fight':
             // if squad doesn't have posistions yet, then lets set the posistions.
+            //            switchMode(squadFlag, squaded, 'travel');
 
             let groupPoint = new RoomPosition(squadFlag.memory.groupPoint.x, squadFlag.memory.groupPoint.y, squadFlag.memory.groupPoint.roomName);
             let doMove = true;
             let distance;
             var runAway = false;
             var chase = true;
+            let siegeDanger;
             var isSquadFatiqued = squadFatique(squad);
             if (isSquadFatiqued) {
                 doMove = false;
@@ -538,7 +701,6 @@ function squadMemory(squaded, bads, analysis) {
             if (doMove && !squadInPos(squad)) {
                 doMove = false;
             }
-            // bads = [Game.flags.test];
 
             if (bads.length > 0) {
 
@@ -547,8 +709,12 @@ function squadMemory(squaded, bads, analysis) {
                 let attack = target.getActiveBodyparts(ATTACK);
                 let ranged = target.getActiveBodyparts(RANGED_ATTACK);
 
-                // Distance is the distance of furthest squad so... we
+                for (let i in squaded) { // First we can creeps and see if they are near any bads. meleeRange = false/true depending on this.
+                    squaded[i].memory.meleeRange = false;
+                }
 
+                siegeDanger = target;
+                // Distance is the distance of furthest squad so... we
                 if (ranged > 0 && attack === 0) {
 
                 } else if (distance == 4 && (attack > 0)) {
@@ -561,19 +727,21 @@ function squadMemory(squaded, bads, analysis) {
                 } else {
 
                 }
-                if (doMove && squadFlag.memory.squadType !== 'melee' && squadIsNearTo(squaded, target)) doMove = false;
+                //                if (doMove && squadFlag.memory.squadType !== 'melee' && squadIsNearTo(squaded, target)) {
+                //                    doMove = false;
+                //                }
 
 
-                if (doMove && squadIsNearTo(squaded, target)) { //&& ranged === 0 && attack === 0
-                    doMove = false;
-                }
+                //            if (doMove && squadIsNearTo(squaded, target) && ranged === 0 && attack === 0) { //
+                //                  doMove = false;
+                //                }
+
 
                 if (distance <= 2) {
                     let meleeRange = filterNearToBads(squaded, bads);
                     if (meleeRange.length > 0) {
                         // These are the creeps that are near by.
                         for (let i in squaded) { // First we can creeps and see if they are near any bads. meleeRange = false/true depending on this.
-                            squaded[i].memory.meleeRange = false;
                             for (let e in meleeRange) {
                                 if (squaded[i].pos.isNearTo(meleeRange[e])) {
                                     squaded[i].memory.meleeRange = true;
@@ -603,22 +771,26 @@ function squadMemory(squaded, bads, analysis) {
                     }
                 }
             } else {
-                if(_partyFlag.memory.powerCreepFlag){
+                if (_partyFlag.memory.powerCreepFlag) {
                     //_partyFlag.memory.moveRange;
-                    if(_partyFlag.memory.moveSquad){
+                    if (_partyFlag.memory.moveSquad) {
                         target = {
                             pos: new RoomPosition(_partyFlag.memory.moveSquad.x, _partyFlag.memory.moveSquad.y, _partyFlag.memory.moveSquad.roomName),
                         };
                     } else {
-                        target = _partyFlag;
+
+                        //
+
+                        // Here we should find the target for sieging. 
+
                     }
                 } else {
                     target = Game.flags.dangerRoom;
                 }
             }
 
-            if (Game.flags.dangerRoom.pos.roomName !== squaded[0].pos.roomName) {
-                console.log('flag not in room, switching to travel mode');
+            if (squaded[0].memory.party === 'dangerRoom' && Game.flags.dangerRoom.pos.roomName !== squaded[0].pos.roomName) {
+                console.log(dangerRoom, 'flag not in room, switching to travel mode');
                 switchMode(squadFlag, squaded, 'travel');
                 return;
             }
@@ -629,13 +801,19 @@ function squadMemory(squaded, bads, analysis) {
             }
 
             if (doMove) {
+
                 let roomName = squadFlag.pos.roomName;
-                //                tempTarget = target;
+                target = _partyFlag;
+
+                /*
+                    Following code is to determine if target location is the same, so doesn't need to path find. 
+                */
+
                 var samePos = checkPos(target);
-    // moveToArray is not setup for multiple squads..             
+                // moveToArray is not setup for multiple squads..             
                 if (!samePos) {
                     if (!runAway) {
-                        moveToArray = PathFinder.search(groupPoint, target, { roomCallback: roomName => getRoomMatrix(roomName, bads),range:_partyFlag.memory.moveRange }); //, maxOps: 100 
+                        moveToArray = PathFinder.search(groupPoint, target, { roomCallback: roomName => getRoomMatrix(roomName, bads), range: _partyFlag.memory.moveRange }); //, maxOps: 100 
                     } else {
                         moveToArray = PathFinder.search(groupPoint, { pos: target.pos, range: 5 }, {
                             flee: true,
@@ -647,14 +825,68 @@ function squadMemory(squaded, bads, analysis) {
                 }
                 squadMoveDir = groupPoint.getDirectionTo(moveToArray.path[0]);
 
-                console.log('Squad2Memory://move:',target, squadMoveDir, "CPU: ", moveToArray.ops, roomName, groupPoint, "D:", distance, "Flee?", runAway, "RecalPath:", !samePos);
+                // Here we will scan the direction for creeps or structures, if found then we will not do movement.
+                if (squadMoveDir) {
+                    tempTarget = undefined;
+
+                    // So lets see if siege is in danger, if it has a 
+                    var doSiege = true;
+                    if (siegeDanger) {
+                        let distance = squadDistance(squaded, siegeDanger);
+                        if (distance <= 3) {
+                            console.log('close enough to run from siegeDanger');
+                            moveToArray = PathFinder.search(groupPoint, { pos: siegeDanger.pos, range: 4 }, {
+                                flee: true,
+                                roomCallback: roomName => getRoomMatrix(roomName, bads)
+                            });
+                            
+                            let objectsInWay;
+                            squadMoveDir = groupPoint.getDirectionTo(moveToArray.path[0]);
+                            objectsInWay = lookForTargets(groupPoint, squadMoveDir, roomName);
+                            if (objectsInWay.length > 0) {
+                                do {
+        //                            let rando = Math.ceil(Math.random() * 2);
+      //                              if (rando === 1) {
+                                        squadMoveDir++;
+  //                                  } else {
+//                                        squadMoveDir--;
+    //                                }
+                                    if (squadMoveDir > 8) squadMoveDir = 1;
+          //                          if (squadMoveDir < 1) squadMoveDir = 8;
+                                    objectsInWay = lookForTargets(groupPoint, squadMoveDir, roomName);
+                                    console.log('Running in a bad direction!#$',objectsInWay.length,squadMoveDir);
+                                } while (objectsInWay.length > 0);
+                            }
+                            doSiege = false;
+                        }
+                    }
+                    // Following code is where we look for structures or thing stopping us.
+                    if (doSiege) {
+                        let objectsInWay = lookForTargets(groupPoint, squadMoveDir, roomName);
+                        if (objectsInWay && objectsInWay.length > 0) {
+                            squadMoveDir = undefined;
+                            console.log(objectsInWay.length, "FOUND, Cancel MOvement, this squad is sieging, added to siegeTargets", siegeTargets);
+                            siegeTargets = objectsInWay;
+                        } else {
+                            siegeTargets = [];
+
+                        }
+                    } else {
+                        // Now we 
+
+                    }
+
+                }
+
+
+                console.log('Squad2Memory://MOVE:', target, squadMoveDir, "CPU: ", moveToArray.ops, roomName, groupPoint, "D:", distance, "Flee?", runAway, "RecalPath:", !samePos);
                 if (squadMoveDir === undefined) {
                     battleRotate(squad, Math.ceil(Math.random() * 5));
                 }
             } else {
                 squadMoveDir = undefined;
 
-                console.log('SquadMemory://move:',target, squadMoveDir, "CPU: ", moveToArray,  groupPoint, "D:", distance, "Flee?", runAway, "RecalPath:");
+                console.log('SquadMemory://move:', target, squadMoveDir, "CPU: ", moveToArray, groupPoint, "D:", distance, "Flee?", runAway, "RecalPath:");
             }
 
 
@@ -665,80 +897,78 @@ function squadMemory(squaded, bads, analysis) {
 }
 var tempTarget, moveToArray;
 
-function checkPos(target){
+function checkPos(target) {
     var samePos = false;
-       if (target.pos) {
-                    if (tempTarget && tempTarget.x === target.pos.x && tempTarget.y === target.pos.y) {
-                        samePos = true;
-                    }
+    if (target.pos) {
+        if (tempTarget && tempTarget.x === target.pos.x && tempTarget.y === target.pos.y) {
+            samePos = true;
+        }
 
-                    tempTarget = {
-                        x: target.pos.x,
-                        y: target.pos.y,
-                    };
-                } else {
-                    if (tempTarget && tempTarget.x === target.x && tempTarget.y === target.y) {
-                        samePos = true;
-                    }
-                    tempTarget = {
-                        x: target.x,
-                        y: target.y,
-                    };
-                }
-                return samePos;
+        tempTarget = {
+            x: target.pos.x,
+            y: target.pos.y,
+        };
+    } else {
+        if (tempTarget && tempTarget.x === target.x && tempTarget.y === target.y) {
+            samePos = true;
+        }
+        tempTarget = {
+            x: target.x,
+            y: target.y,
+        };
+    }
+    return samePos;
 }
 
 function getRoomMatrix(roomName, bads) { // This is all flag based, it will be stored in flag.
-    let matrix = createBaseRoomMatrix(roomName); 
+    let matrix = createBaseRoomMatrix(roomName);
     bads = _.filter(bads, function(o) {
         return o.getActiveBodyparts(ATTACK) > 0 || o.getActiveBodyparts(RANGED_ATTACK) > 0;
     });
     if (bads) {
         matrix = matrix.clone();
-        badsToMatrix(matrix,bads);
+        badsToMatrix(matrix, bads);
     }
-//        structsToMatrix(matrix); // not created
 
-    const visual = new RoomVisual(roomName);
+    /*    const visual = new RoomVisual(roomName);
 
-    for (let y = 0; y < 50; y++) {
-        for (let x = 0; x < 50; x++) {
-            visual.text(matrix.get(x, y), x, y, { font: 0.5 });
-        }
-    }
+            for (let y = 0; y < 50; y++) {
+                for (let x = 0; x < 50; x++) {
+                    visual.text(matrix.get(x, y), x, y, { font: 0.5 });
+                }
+            }*/
 
     return matrix;
 }
 
-function badsToMatrix(matrix,bads){
+function badsToMatrix(matrix, bads) {
     for (let i in bads) {
-            let xPos = bads[i].pos.x;
-            let yPos = bads[i].pos.y;
-            matrix.set(xPos, yPos, 69);
-            let attack = bads[i].getActiveBodyparts(RANGED_ATTACK);
+        let xPos = bads[i].pos.x;
+        let yPos = bads[i].pos.y;
+        matrix.set(xPos, yPos, 69);
+        let attack = bads[i].getActiveBodyparts(RANGED_ATTACK);
 
-            if (attack > 0) { // Attack is a 2 range approach, because it will always move closer to you.
-                let weight = attack * 3; // *3 multipler due to it being *3 more than ranged attack.
-                for (let x = -2; x < 3; x++) {
-                    for (let y = -2; y < 3; y++) {
-                        addToMatrix(matrix, xPos + x,  yPos + y, weight);
-                    }
+        if (attack > 0) { // Attack is a 2 range approach, because it will always move closer to you.
+            let weight = attack * 3; // *3 multipler due to it being *3 more than ranged attack.
+            for (let x = -4; x < 5; x++) {
+                for (let y = -4; y < 5; y++) {
+                    checkAndSetMatrix(matrix, xPos + x, yPos + y, weight);
                 }
             }
-                let range = bads[i].getActiveBodyparts(RANGED_ATTACK);
-                {
+        }
+        let range = bads[i].getActiveBodyparts(RANGED_ATTACK); {
             if (range > 0) {
                 let weight = range;
                 for (let x = -3; x < 4; x++) {
                     for (let y = -3; y < 4; y++) {
-                        addToMatrix(matrix, xPos + x,  yPos + y, weight);
+                        checkAndSetMatrix(matrix, xPos + x, yPos + y, weight);
                     }
                 }
             }
-                }
-
-
         }
+
+
+    }
     return matrix;
 }
 
@@ -805,7 +1035,7 @@ function switchMode(flag, squad, toMode) {
 
             for (let a = 0; a < caravan.length; a++) {
                 caravan[a].memory.battlePos = a + 1;
-                if(!flag.memory.powerCreepFlag){
+                if (!flag.memory.powerCreepFlag) {
                     flag.memory.squadID.push(caravan[a].id);
                 }
 
@@ -940,6 +1170,10 @@ function squadInPos(squad) {
 
 function squadMovement(squad) {
     var topLeft = squad[0].partyFlag.memory.groupPoint;
+    if (topLeft === undefined) {
+        console.log(topLeft, 'undefined BReak movement');
+        return;
+    }
     let partyFlag = squad[0].partyFlag;
     //  if (!squadIsMaxHits(squad)) {
     //        battleRotate(squad, Math.ceil(Math.random() * 5));
@@ -1021,74 +1255,91 @@ function squadMovement(squad) {
 
 function squadAction(squad, bads) {
     var target;
-    if (bads.length > 0) {
-        let squadFlag = squad[0].partyFlag;
-        let groupPoint = new RoomPosition(squadFlag.memory.groupPoint.x, squadFlag.memory.groupPoint.y, squadFlag.memory.groupPoint.roomName);
-        target = groupPoint.findClosestByRange(bads);
-        let allHappy = squadIsNearTo(squad, target);
-        let nearBy = squadIsNearTo(squad, target);
-
-
+    let towers = squad[0].room.towers;
+    if (bads.length === 0 && towers.length === 0) {
+        // Healing outside of battle
+        let needHealing = [];
         for (let i in squad) {
-            //              target = squad[i].findClosestByRange(bads);
-            distance = squad[i].pos.getRangeTo(target);
-            if (squad[i].stats('rangedAttack') > 0) {
-                if (squad[i].memory.meleeRange) {
-                    squad[i].rangedMassAttack();
-                } else if (squad[i] && distance < 4) {
-                    squad[i].rangedAttack(target);
+            if (squad[i].stats('healing') > 0) {
+                if (squad[i].hits < squad[i].hitsMax) {
+                    squad[i].selfHeal();
+                }
+            } else if (squad[i].hits < squad[i].hitsMax) {
+                needHealing.push(squad[i]);
+            }
+        }
+        if (needHealing.length > 0) {
+            for (let i in squad) {
+                if (squad[i].hits === squad[i].hitsMax) {
+                    squad[i].heal(needHealing[0]);
                 }
             }
-            if (nearBy && squad[i].stats('attack') > 0) {
-                //            so if a creep is an attacker/dismantler it wants a target.
-                target = squad[i].pos.findClosestByRange(bads);
-                distance = squad[i].pos.getRangeTo(target);
-                if (squad[i].pos.isNearTo(target)) {
-                    squad[i].attack(target);
-                } else if (distance < 3) {
-                    allHappy = false;
-                    // we find a way to get closer.
-                    /*  let nearSquadMem = bads.pos.findInRange(squad,1);
-                      nearSquadMem = _.filter( nearSquadMem,function(f) {
-                          return o.stats('attack') === 0 && o.fatigue === 0;
-                          } );
-                      if(nearSquadMem.length > 0){
-                          let temp;// = squad[i].memory.posistion ;
-                          switch(squad[i].memory.posistion){
-                              case 1:
-                              temp = 1;
-                              break;
-                              case 2:
-                              temp = 2;
-                              break;
-                              case 3:
-                              temp = 3;
-                              break;
-                              case 4:
-                              temp = 4;
-                              break;
-                          }
-                          squad[i].memory.posistion = nearSquadMem[0].memory.posistion;
-                          nearSquadMem[0].memory.posistion = temp;
-                      }*/
-                }
-            }
-            //        if (!allHappy && nearBy && !squadFatique(squad)) {
-            //                battleRotate(squad, Math.ceil(Math.random() * 5));
-            //          }
-            //||squad[i].stats('dismantle') > 0
+        }
+        return;
 
-        }
-    } else {
+    }
+
+    let squadFlag = squad[0].partyFlag;
+
+    if (!squadFlag.memory.groupPoint) {
+        console.log(squadFlag.memory.groupPoint, 'ERROR UNDEFINED');
+        return;
+    }
+
+    let groupPoint = new RoomPosition(squadFlag.memory.groupPoint.x, squadFlag.memory.groupPoint.y, squadFlag.memory.groupPoint.roomName);
+    // so we need to find all the targets that are not underRampart;
+    let vulBads = _.filter(bads, function(b) {
+        return !b.pos.lookForStructure(STRUCTURE_RAMPART);
+    });
+    target = groupPoint.findClosestByRange(bads);
+    let allHappy = squadIsNearTo(squad, target);
+    let nearBy = squadIsNearTo(squad, target);
+    if(siegeTargets){
+    console.log('Targest not under rampart', "Ez Targets", vulBads.length, "Siege targets", siegeTargets.length);
+    }
     for (let i in squad) {
-        if (squad[i].stats('healing') > 0) {        
-            if (squad[i].hits < squad[i].hitsMax) {
-                squad[i].selfHeal();
+        distance = squad[i].pos.getRangeTo(target);
+        if (squad[i].stats('rangedAttack') > 0) {
+            if (vulBads.length) {
+                if (squad[i].pos.inRangeTo(vulBads[0], 3)) {
+                    squad[i].rangedAttack(siegeTargets[ae]);
+                    //squad[i].room.visual.line(squad[i].pos, vulBads[0].pos);
+
+                }
+            } else if (siegeTargets && siegeTargets.length) {
+                for (let ae in siegeTargets) {
+                    if (squad[i].pos.inRangeTo(siegeTargets[ae], 3)) {
+                        squad[i].rangedAttack(siegeTargets[ae]);
+                        //squad[i].room.visual.line(squad[i].pos, siegeTargets[ae].pos);
+                        break;
+                    }
+                }
+            } else if (squad[i].memory.meleeRange) {
+                squad[i].rangedMassAttack();
+            } else if (squad[i] && distance < 4) {
+                squad[i].rangedAttack(target);
+                //squad[i].room.visual.line(squad[i].pos, target.pos);
+            } else {
+                squad[i].say('lTgt');
+                //                let tempStructs = creep.pos.findInRange(FIND_STRUCTURES, 3);
+                let closeStr = squad[i].pos.findClosestByRange(FIND_STRUCTURES);
+                if (closeStr && squad[i].pos.inRangeTo(closeStr, 3)) {
+                    squad[i].room.visual.line(squad[i].pos, closeStr.pos);
+                }
+            }
+        }
+        if (nearBy && squad[i].stats('attack') > 0) {
+            //            so if a creep is an attacker/dismantler it wants a target.
+            target = squad[i].pos.findClosestByRange(bads);
+            distance = squad[i].pos.getRangeTo(target);
+            if (squad[i].pos.isNearTo(target)) {
+                squad[i].attack(target);
+            } else if (distance < 3) {
+                allHappy = false;
             }
         }
     }
-    return;
-    }
+
     var needHealing = [];
     // So what we want to first figure out is, does it need to heal it self. 
 
@@ -1097,6 +1348,11 @@ function squadAction(squad, bads) {
             if (squad[i].hits < squad[i].hitsMax && squad[i].hits > squad[i].hitsMax - squad[i].stats('healing')) {
                 squad[i].selfHeal();
                 squad[i]._didHeal = true;
+            } else if (squad[i].memory.echoHealId) {
+                let g = Game.getObjectById(squad[i].memory.echoHealId);
+                if (g) {
+                    squad[i].heal(g);
+                }
             } else if (squad[i].hits < squad[i].hitsMax) {
                 needHealing.push(squad[i]);
             }
@@ -1108,13 +1364,14 @@ function squadAction(squad, bads) {
 
     if (needHealing.length === 0) {
         for (let i in squad) {
-            if (!squad[i]._didHeal) squad[i].selfHeal();
+            if (!squad[i]._didHeal && squad[i].stats('healing') > 0) squad[i].selfHeal();
         }
     } else {
         for (let i in squad) {
-            if (!squad[i]._didHeal) {
+            if (!squad[i]._didHeal && squad[i].stats('healing') > 0) {
                 let random = Math.floor(Math.random() * needHealing.length);
                 squad[i].heal(needHealing[random]);
+                squad[i].memory.echoHealId = needHealing[0].id;
             }
         }
     }
@@ -1122,13 +1379,14 @@ function squadAction(squad, bads) {
 }
 let roomMatrix;
 
-function addToMatrix(matrix, x, y, weight){
+function addToMatrix(matrix, x, y, weight) {
     let base = matrix.get(x, y);
     base += weight;
-    if(base > 255){
+    if (base > 255) {
         base = 255;
     }
 }
+
 function checkAndSetMatrix(matrix, x, y, weight) {
     if (matrix.get(x, y) < weight) {
         matrix.set(x, y, weight);
@@ -1142,7 +1400,7 @@ function createBaseRoomMatrix(roomName) { // This is all flag based, it will be 
     var room = Game.rooms[roomName];
     if (room) {
         if (!roomMatrix[roomName]) {
-            //   if (!room.memory.creepMovementBaseMatrix) {
+            //   if (!room.memory.crexepMovementBaseMatrix) {
             // 
             const terrain = new Room.Terrain(roomName);
             const matrix = new PathFinder.CostMatrix();
@@ -1284,8 +1542,8 @@ function creepMovement(creep) {
                 }
                 if (doMovement && !creep.pos.isNearTo(creep.partyFlag)) {
                     //movement.flagMovement(creep);
-                  creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
-                      creep.say('🚆');
+                    creep.moveMe(creep.partyFlag, { reusePath: 50 });
+                    creep.say('🚆');
                 }
             } else if (creep.memory.directingID === undefined) {
                 // Last person
@@ -1326,12 +1584,6 @@ function creepMovement(creep) {
 function creepAction(creep, bads) {
     var doHeal = true;
     switch (creep.partyFlag.memory.squadMode) {
-        case 'battle':
-            if (bads.length > 0) {
-                creep.selfHeal();
-                creep.rangedMassAttack();
-            }
-            break;
         default:
             if (doHeal && creep.stats('heal') > 0 && creep.memory.role !== 'fighter' && creep.memory.role !== 'demolisher') {
                 //        creep.say(healType);
@@ -1563,6 +1815,8 @@ class commandsToSquad {
 
     static runSquad(squad) {
         _partyFlag = squad[0].partyFlag;
+
+        //        if(_partyFlag) _partyFlag = Game.flags.Rhasta;
         if (squad.length === 0) return;
         if (squad[0].partyFlag === undefined) return;
         runMovement = undefined;
@@ -1586,16 +1840,13 @@ class commandsToSquad {
                 }
             });
         }
-
         squadMemory(squad, bads, analysis);
-  //      if(_partyFlag.memory.l)
-  if(!_partyFlag.memory.powerCreepFlag){
-        squadVisual(squad);
-  }
-
+        if (!_partyFlag.memory.powerCreepFlag) {
+            squadVisual(squad);
+        }
         if (_partyFlag.memory.squadMode === 'battle') {
             squadAction(squad, bads);
-            squadMovement(squad);            
+            squadMovement(squad);
         } else {
             _.forEach(squad, function(creep) {
                 // Actions

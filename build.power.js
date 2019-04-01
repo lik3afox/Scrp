@@ -16,12 +16,13 @@ function makeBody(carryNeeded) {
 class powerBuildings {
 
     static roomRun(roomName) {
-        if (Game.shard.name !== 'shard1') return;
-        if (!Memory.empireSettings.processPower) return;
+//        if (Game.shard.name !== 'shard1') return;
+  //      if (!Memory.empireSettings.processPower) return;
         if (Game.rooms[roomName].controller.level < 8 || !Game.rooms[roomName] || Game.rooms[roomName].powerspawn === undefined || Game.rooms[roomName].controller.isEffected()) return;
         if (Game.rooms[roomName].memory.focusWall) return;
 
         let powerS = Game.rooms[roomName].powerspawn;
+
         if(powerS.isEffected()){
             if (powerS.power >= Game.rooms[roomName].powerLevels[PWR_OPERATE_POWER].level && powerS.energy >= (50 * Game.rooms[roomName].powerLevels[PWR_OPERATE_POWER].level) ) {
                 if (powerS.processPower() == OK) {

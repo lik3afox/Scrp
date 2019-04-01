@@ -394,20 +394,38 @@ class jobSpawns {
 
     static doPowerspawn(creep) {
         let powerspawn = creep.room.powerspawn;
+        if(!powerspawn.my) return false;
         if (!powerspawn) {
             creep.memory.currentJob = undefined;
             return false;
         }
+            if(!creep.room.terminal.store.power )
+            roomRequestMineral(creep.room.name,"power",100);
+
         if (powerspawn.power < 70 && !creep.carry.power && (creep.room.terminal.store[RESOURCE_POWER] !== undefined && creep.room.terminal.store[RESOURCE_POWER] > 0)) {
             creep.say('getP');
+        if(creep.carryAvailable < 1000){
+            if(!creep.room.terminal.full){
+            creep.moveToTransfer(creep.room.terminal,creep.carrying);
+            } else {
+            creep.moveToTransfer(creep.room.storage,creep.carrying);
+            }
+        } else {
+
             let amt = 100 - powerspawn.power;
             if (amt > creep.room.terminal.store[RESOURCE_POWER]) {
                 amt = creep.room.terminal.store[RESOURCE_POWER];
             }
             creep.moveToWithdraw(creep.room.terminal, RESOURCE_POWER, amt);
+        }
             return true;
         } else if (creep.carry.energy === 0 && powerspawn.energy < 2500) {
-            creep.moveToWithdraw(creep.room.terminal, RESOURCE_ENERGY);
+            if(!creep.room.terminal.store[RESOURCE_ENERGY] || creep.room.terminal.store[RESOURCE_ENERGY] === 0){
+            creep.moveToWithdraw(creep.room.storage, RESOURCE_ENERGY);
+
+            } else {
+                creep.moveToWithdraw(creep.room.terminal, RESOURCE_ENERGY);
+            }
             creep.say('gE');
             return true;
         } else if (creep.carry[RESOURCE_POWER] > 0 && powerspawn.power < 70) {
@@ -847,7 +865,7 @@ class jobSpawns {
                     return true;
                 }
 
-                if (Memory.stats.totalMinerals.power > 500 && (!creep.room.terminal.store[RESOURCE_POWER] || creep.room.terminal.store[RESOURCE_POWER] < 100)) {
+                if (Memory.stats.totalMinerals && Memory.stats.totalMinerals.power > 500 && (!creep.room.terminal.store[RESOURCE_POWER] || creep.room.terminal.store[RESOURCE_POWER] < 100)) {
                     if (!roomRequestMineral(creep.room.name, RESOURCE_POWER, 100)) {
 
                     }

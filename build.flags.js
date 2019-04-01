@@ -479,15 +479,6 @@
 
 
     function whiteflag(flag) {
-        if (flag.memory.checkWhat === undefined) {
-            flag.memory.checkWhat = -10;
-        }
-        if (flag.secondaryColor === COLOR_GREEN || flag.secondaryColor === COLOR_PURPLE) {
-            flag.memory.checkWhat++;
-        }
-        if (flag.memory.checkWhat >= Object.keys(roomer).length) {
-            flag.memory.checkWhat = 0;
-        }
         // Whiteflag functions as a control for that room.
         // When the secondary is set to white - nothing occurs.
         /*      flag.memory.nextTargets = undefined;
@@ -523,6 +514,16 @@
                 break;
             case COLOR_PURPLE:
                 // Purple will mean that it's setup for low CPU usage.
+        if (flag.memory.checkWhat === undefined) {
+            flag.memory.checkWhat = -10;
+        }
+        if (flag.secondaryColor === COLOR_GREEN || flag.secondaryColor === COLOR_PURPLE) {
+            flag.memory.checkWhat++;
+        }
+        if (flag.memory.checkWhat >= Object.keys(roomer).length) {
+            flag.memory.checkWhat = 0;
+        }
+                
                 if (Game.time % 10 === 0 && flag.room && flag.pos.roomName === 'E19S49' && Game.shard.name === 'shard3') {
                     let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                     var target;
@@ -647,7 +648,7 @@
 if(Memory.threeLowestWalls){
                             if( _.contains(Memory.threeLowestWalls,flag.pos.roomName) ){
                                 console.log(flag, "gets 3 wallworks",Memory.threeLowestWalls);
-                                flag.memory.module.push(['wallwork', 3, 5]);
+                                flag.memory.module.push(['wallwork', 5, 5]);
                             }
 }
                         
@@ -756,9 +757,6 @@ if(Memory.threeLowestWalls){
                                 }
                             }
                         }
-                        if (flag.pos.roomName === 'E21S49' && linkNum < 2) { // Extra LinkNum for intershard mules.
-                            linkNum++;
-                        }
                         if (flag.room.memory.noAlphaJob) { // For just a replace ment
                             linkNum--;
                         }
@@ -771,6 +769,9 @@ if(Memory.threeLowestWalls){
                             linkNum = 0;
                         }
 
+                        if (flag.pos.roomName === 'E21S49' && linkNum < 1) { // Extra LinkNum for intershard mules.
+                            linkNum = 1;
+                        }
 
                         //require('commands.toSpawn').setModuleRole(powercrp.room.name, 'harvester', powercrp.memory.sourcesID.length, 4);
                         console.log(flag.pos.roomName, linkNum,"LINKED");
@@ -1401,7 +1402,10 @@ if(Memory.threeLowestWalls){
                 flag = zFlags[i];
                 // SETTING UP MEMORY
                 if (flag.color === COLOR_YELLOW) {
-                    if (flag.memory.delaySpawn === undefined) {
+                if (flag.memory.CachedPathOn === undefined) {
+                    flag.memory.CachedPathOn = false;
+                }
+                     if (flag.memory.delaySpawn === undefined) {
                         flag.memory.delaySpawn = 0;
                     }
                     if (flag.memory.spawnCounter === undefined) {
@@ -1490,9 +1494,6 @@ if(Memory.threeLowestWalls){
                             };
                         }
                     }
-                }
-                if (flag.memory.CachedPathOn === undefined) {
-                    flag.memory.CachedPathOn = false;
                 }
 
                 if (flag.memory.CachedPathOn === true) {

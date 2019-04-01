@@ -1541,7 +1541,7 @@ class roleTerminal {
         didTrade = {};
         stopTemple = undefined;
         numOfOrders = Object.keys(Game.market.orders).length;
-
+        Memory.empireRoomNumber = s1LabRooms.length;
 
         if (Game.time % 500 === 0) {
             cleanUpOrders();

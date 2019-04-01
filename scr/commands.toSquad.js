@@ -329,6 +329,7 @@ function squadMemory(squaded, bads, analysis) {
 
                     if (!squad[z].pos.inRangeTo(squad[z].partyFlag, 3) && runMovement === undefined) {
                         squad[z].partyFlag.memory.squadMode = 'travel';
+                        console.log('switching squadMode to travel from siege mode');
                     }
                     squad[z].memory.formationPos = squadSpots.shift().pos;
                     squad.splice(z, 1);
@@ -434,6 +435,7 @@ function squadMemory(squaded, bads, analysis) {
                 let target = groupPoint.findClosestByRange(bads);
                let distance = squadDistance(squaded, target);
                 if(distance < 11){
+                    console.log('swithicng modes to close target');
                     switchMode(squadFlag, squad, 'battle');
                     return;
                 }
@@ -460,11 +462,15 @@ function squadMemory(squaded, bads, analysis) {
                         //      creep.say('atFLAG');
                         doMovement = false;
                         if (creep.memory.party === 'dangerRoom') {
+
                             //                            squadFlag.memory.squadMode = 'battle';
+                            console.log("dangerRoom switching moding to battle in range to flag 5;");
                             switchMode(squadFlag, squad, 'battle');
                         }  else if(squadFlag.memory.powerCreepFlag) {
+                            console.log("powerCreepFlag Switch in Range to flag 5");
                             switchMode(squadFlag, squad, 'battle');
                         } else {
+                            console.log("else witch to siege Switch in Range to flag 5");
                             squadFlag.memory.squadMode = 'siege';
                         }
                     }
@@ -1402,7 +1408,8 @@ function setTravelSquad(squad) {
     var flag = squad[0].partyFlag;
     for (let a in squad) {
         var creep = squad[a];
-        creep.partyFlag.setColor(COLOR_ORANGE, COLOR_ORANGE);
+        if(!creep.partyFlag.memory.powerCreepFlag)         creep.partyFlag.setColor(COLOR_ORANGE, COLOR_ORANGE);
+
 
         if (point === undefined) {
             if (creep.memory.role === 'fighter') {
@@ -1586,7 +1593,7 @@ class commandsToSquad {
                 }
             });
         }
-
+console.log(_partyFlag.memory.squadMode,"squadmode?" );
         squadMemory(squad, bads, analysis);
   //      if(_partyFlag.memory.l)
   if(!_partyFlag.memory.powerCreepFlag){

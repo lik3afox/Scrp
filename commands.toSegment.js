@@ -40,7 +40,7 @@ var roomSegment = {
 };
 
 
-var segmentChange = 10;
+
 //var interShardData;
 
 function getShardRoom2(shard) {
@@ -591,126 +591,59 @@ function doInstructions(instructions) {
             }
 
             if (current.type === 'fillBuyOrder') {
-                // Fill buy order should mean that we're selling... Right?
-                let order = current.order;
-                roomCreate = order.shardRoom;
+                roomCreate = current.order.shardRoom;
                 if (roomCreate === undefined) roomCreate = getShardRoom(Game.shard.name, current.mineralType);
-                //                if(Game.shard.name === 'shard1') console.log('doing filLBuy Order')
-                if (Game.rooms[roomCreate] && Game.rooms[roomCreate].terminal && Game.rooms[roomCreate].terminal.didAction) {
-                    //                    console.log('skip didAction');
+                if (!Game.rooms[roomCreate] || !Game.rooms[roomCreate].terminal) {
+                    console.log('Trying to ',current.type,roomCreate,Game.shard.name);
+                    instructions.splice(i, 1);
                     continue;
                 }
-                if (Game.rooms[roomCreate] && Game.rooms[roomCreate].terminal && (Game.rooms[roomCreate].terminal.cooldown > 0 || Game.rooms[roomCreate].terminal.didAction)) {
 
+                if (Game.rooms[roomCreate].terminal.cooldown > 0 || Game.rooms[roomCreate].terminal.didAction || Game.rooms[roomCreate].terminal.store[RESOURCE_ENERGY] < 25000) {
                     if (Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
-                        //                        console.log('spliced?');
                         instructions.splice(i, 1);
-                    } else {
-                        //                    console.log('skip Term Cooldown');                        
                     }
                     continue;
                 }
-                if(Game.rooms[roomCreate] && Game.rooms[roomCreate].terminal && Game.rooms[roomCreate].terminal.store[RESOURCE_ENERGY] < 25000){
-  //                      console.log('Splicng due to low energy in roomSHard');
-//                        instructions.splice(i, 1);
-                        continue;
+                if (Game.rooms[roomCreate].terminal.cooldown > 0) {
+                    continue;
                 }
-                
-                var zez = Game.market.getOrderById(order.id);
-                if (zez === null) {
-                    //                    console.log('null Market order spliced',current.type,current.mineralType);
+                let order = Game.market.getOrderById(current.order.id);
+                if (order === null || order.amount === 0) {
                     instructions.splice(i, 1);
                     continue;
                 } 
-                var amoutn = current.mineralAmount;
-                if (Game.rooms[roomCreate] && Game.rooms[roomCreate].terminal && amoutn > Game.rooms[roomCreate].terminal.store[current.mineralType]) {
-                    amoutn = Game.rooms[roomCreate].terminal.store[current.mineralType];
-                    for (var l in instructions) {
-                        if (instructions[l].mineralType === current.mineralType && instructions[l].shard !== current.shard) {
-                            instructions[l].mineralAmount = amoutn;
-                            break;
-                        }
-                    }
 
+                var amoutn = current.mineralAmount;
+                if(order.amount < amoutn){
+                    amoutn = order.amount;
+                } 
+                if(Game.rooms[roomCreate].terminal.store[current.mineralType]  < amoutn){
+                    amoutn = Game.rooms[roomCreate].terminal.store[current.mineralType] ;
                 }
-                if (Game.rooms[roomCreate] && amoutn > Game.rooms[roomCreate].terminal.store[RESOURCE_ENERGY]) {
+                if (amoutn > Game.rooms[roomCreate].terminal.store[RESOURCE_ENERGY]) {
                     amoutn = Game.rooms[roomCreate].terminal.store[RESOURCE_ENERGY];
                 }
-                if (Game.rooms[roomCreate] && Game.rooms[roomCreate].terminal && !Game.rooms[roomCreate].terminal.store[current.mineralType]) {
+                if (!Game.rooms[roomCreate].terminal.store[current.mineralType] || amoutn > Game.rooms[roomCreate].terminal.store[current.mineralType]) {
                     if (Game.shard.name === 'shard1') {
                         roomRequestMineral(roomCreate, current.mineralType, amoutn);
                         continue;
                     } else {
                         instructions.splice(i, 1);
-                        //                      console.log("spliced for termianl store about === undefined");
                         continue;
                     }
-
                 }
 
-                if (Game.rooms[roomCreate] && amoutn > Game.rooms[roomCreate].terminal.store[current.mineralType]) {
-                    if (Game.shard.name === 'shard1') {
-                        roomRequestMineral(roomCreate, current.mineralType, amoutn);
-                    }
-
-                    continue;
-                }
-                if (Game.rooms[roomCreate] && Game.rooms[roomCreate].terminal && Game.rooms[roomCreate].terminal.cooldown > 0) {
-                    continue;
-                }
-                if (!Game.rooms[roomCreate] || !Game.rooms[roomCreate].terminal) {
-                    continue;
-                }
-                if (order.amount === 0) {
-                    instructions.splice(i, 1);
-                    //  console.log("spliced for order.amount === 0");
-                    continue;
-                }
-                if(Game.rooms[roomCreate].terminal.store[RESOURCE_ENERGY] < amoutn) continue;
-                /*                if (Game.shard.name !== 'shard1' && Game.rooms[roomCreate].storage.store[current.mineralType] > 1000) {
-                //                    console.log('Splicing fillBuyOrder due to storage having it. Shouldnt be buying extra if storage has what we want.', Game.shard.name, 'min:', current.mineralType, '#:', current.mineralAmount, 'from room', roomCreate);
-                                    Game.rooms[roomCreate].memory.shardNeeded = current.mineralType;
-                                    instructions.splice(i, 1);
-                                    continue;
-                                }*/
 
                 let ez = marketRecordDeal(order.id, amoutn, roomCreate);
-
-                /*
-                OK  0   
-                The operation has been scheduled successfully.
-
-                ERR_NOT_OWNER   -1  
-                You don't have a terminal in the target room.
-
-                ERR_NOT_ENOUGH_RESOURCES    -6  
-                You don't have enough credits or resource units.
-
-                ERR_FULL    -8  
-                You cannot execute more than 10 deals during one tick.
-
-                ERR_INVALID_ARGS    -10 
-                The arguments provided are invalid.
-
-                ERR_TIRED   -11 
-                The target terminal is still cooling down.
-                */
-
-                //                console.log(roomCreate, ez, 'FulFill buy order on ', Game.shard.name, 'min:', current.mineralType, '#:', amoutn, "/", current.mineralAmount, 'from room', roomCreate,"ID:", order.id,"Order Amnt:", order.amount,"Send Amnt:", amoutn, "terminal amnt:",Game.rooms[roomCreate].terminal.store[current.mineralType]);
-                profitReport(roomCreate, "FulFill Buy Order", ez, order.id, amoutn, current.mineralType, zez.price, zez.roomName);
-                //profitReport(roomName,saleType,result,id,mineralAmount,mineralType,mineralCost);
+                profitReport(roomCreate, "FulFill Buy Order", ez, order.id, amoutn, current.mineralType, order.price, order.roomName);
                 if (ez === OK) {
-                    //        console.log("selling SUCCESS", current.mineralType);
                     Game.rooms[roomCreate].terminal.didAction = true;
                     instructions.splice(i, 1);
                     continue;
-                } else {
-                    if (Game.rooms[roomCreate].terminal.store[current.mineralType] === undefined) {
-                        //                        console.log('spliced?');
-                        instructions.splice(i, 1);
-                    }
                 }
             }
+            
             if (current.type === 'fillSellOrder') { // Filling Sell order - means that we're trying to Obtain Minerals by filling sell orders.
 
                 let order = current.order;
@@ -767,8 +700,7 @@ function doInstructions(instructions) {
 
 function analyzeMyMinerals(shardObject) {
     if (Game.shard.name !== 'shard1') return;
-//    if (Game.time % 64 !== 0) return;
-    console.log('analzing my minerals',Game.time);
+
     if (shardObject.shard0 === undefined || shardObject.shard0.marketData === undefined ||
         shardObject.shard1 === undefined || shardObject.shard1.marketData === undefined ||
         shardObject.shard2 === undefined || shardObject.shard2.marketData === undefined) {
@@ -1018,23 +950,9 @@ function getMarketPrices() {
                 }
                 Memory.trackMineralValue[min].push({
                     buy: {
-                        /*id: buyed.id,
-                        created: buyed.created,
-                        type: buyed.type,
-                        resourceType: buyed.resourceType,
-                        roomName: buyed.roomName,
-                        amount: buyed.amount,
-                        remainingAmount: buyed.remainingAmount,*/
                         price: buyed.price
                     },
                     sell: {
-                        /*id: selled.id,
-                        created: selled.created,
-                        type: selled.type,
-                        resourceType: selled.resourceType,
-                        roomName: selled.roomName,
-                        amount: selled.amount,
-                        remainingAmount: selled.remainingAmount,*/
                         price: selled.price
                     }
                 });
@@ -1124,7 +1042,7 @@ function copyEmpireData(shardObject) {
 var shard0tax;
 
 function analyzeMarkets(shardObject) {
-    console.log("analzying Markets",Game.time);
+    
     //    shardObject.instructions= [];
     //[Game.shard.name]
     //if (Game.shard.name === 'shard1') return;
@@ -1139,7 +1057,7 @@ function analyzeMarkets(shardObject) {
 
 
     //    var taxes = [shard0tax, 0, shard0tax];
-
+    /*
     if (shardObject.empireSettings.market.tier1 && Game.time % timer === 0) { //
         for (let e in shards) {
             let min = "power";
@@ -1186,246 +1104,11 @@ function analyzeMarkets(shardObject) {
             }
 
         }
-    }
-
-    /*    if (shardObject.empireSettings.market.tier1 && Game.time % 100 < 10) { //
-            let tier1 = ["UH", "UO", "KH", "KO", "LH", "LO", "ZH", "ZO", "GH", "GO", "UL", "ZK", "G", "OH"];
-            for (let e in shards) {
-                for (let i in tier1) {
-                    let min = tier1[i];
-
-                    if (shardObject[shards[e]].marketData[min] && shardObject[shards[e]].marketData[min].buy) {
-                        let targetPrice = shardObject.empireSettings.tier1Sell;
-                        if (min === "GH" || min === "GO" || min === "G" || min === "OH") {
-                                targetPrice = shardObject.empireSettings.tier1GSell;
-                        }
-
-                        targetPrice += taxes[e];
-
-                        if (shardObject[shards[e]].marketData[min].buy.price >= targetPrice) {
-
-                            let amnt = 1250;
-                            if (shardObject[shards[e]].marketData[min].buy.remaingAmount < 1250) {
-                                amnt = lowestAmount.remaingAmount;
-                            }
-                            if (amnt < 100) continue;
-
-                            let request = {
-                                type: 'fillBuyOrder',
-                                shard: shards[e],
-                                order: shardObject[shards[e]].marketData[min].buy,
-                                mineralType: min,
-                                shardRoom: getShardRoom(shards[e], min),
-                                mineralAmount: amnt,
-                            };
-
-
-
-
-
-                         //   console.log(shardObject.instructions.length, "FOUND tier1 that is above " + targetPrice + " " + shardObject[shards[e]].marketData[min].buy.price, amnt);
-
-                            let doRequest = true;
-                            if (shardObject.instructions.length > 11) doRequest = false;
-                            if (doRequest) {
-                                for (let e in shardObject.instructions) {
-                                    if ((shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type && shardObject.instructions[e].mineralType === request.mineralType)) {
-                                        doRequest = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (doRequest) {
-                                console.log("ADDING TIER1 SOLD:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].buy.price);
-                                shardObject.instructions.push(request);
-                                return;
-                            }
-                        }
-
-
-                    }
-                }
-            }
-        }
-
-
-        if (shardObject.empireSettings.market.tier2 && Game.time % 150 < 10) { // && Game.time % 100 < 10
-            let tier2 = ["UH2O", "UHO2", "KH2O", "KHO2", "LH2O", "LHO2", "ZH2O", "ZHO2", "GH2O", "GHO2", ];
-            for (let e in shards) {
-                for (let i in tier2) {
-                    let min = tier2[i];
-                    if (shardObject[shards[e]].marketData[min] && shardObject[shards[e]].marketData[min].buy) {
-                        let targetPrice = shardObject.empireSettings.tier2Sell;
-                        if (min === "GH2O" || min === "GHO2") {
-                            targetPrice = shardObject.empireSettings.tier2GSell;
-                        }
-                        //                    console.log(min,shardObject[shards[e]].marketData[min].buy.price,"?",targetPrice);
-                        targetPrice += taxes[e];
-
-                        if (shardObject[shards[e]].marketData[min].buy.price >= targetPrice) {
-
-                            let amnt = 1250;
-                            if (shardObject[shards[e]].marketData[min].buy.remaingAmount < 1250) {
-                                amnt = lowestAmount.remaingAmount;
-                            }
-                            if (amnt < 100) continue;
-
-                            let request = {
-                                type: 'fillBuyOrder',
-                                shard: shards[e],
-                                order: shardObject[shards[e]].marketData[min].buy,
-                                mineralType: min,
-                                shardRoom: getShardRoom(shards[e], min),
-                                mineralAmount: amnt,
-                            };
-
-
-
-
-
-                            console.log(shardObject.instructions.length, "FOUND tier2 that is above " + targetPrice + " " + shardObject[shards[e]].marketData[min].buy.price, amnt);
-
-                            let doRequest = true;
-                            if (shardObject.instructions.length > 10) doRequest = false;
-                            if (doRequest) {
-                                for (let e in shardObject.instructions) {
-                                    if ((shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type && shardObject.instructions[e].mineralType === request.mineralType)) {
-                                        doRequest = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (doRequest) {
-                                console.log("ADDING TIER2 SOLD:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].buy.price);
-                                shardObject.instructions.push(request);
-                                return;
-                            }
-
-
-
-                        }
-                    }
-                }
-            }
-        }
-
-        if (shardObject.empireSettings.market.tier3 && Game.time % 350 < 10) {
-            var tier3 = ["XUH2O", "XUHO2", "XKH2O", "XKHO2", "XLH2O", "XLHO2", "XZH2O", "XZHO2", "XGH2O", "XGHO2", ];
-            for (let e in shards) {
-                for (let i in tier3) {
-                    let min = tier3[i];
-                    if (shardObject[shards[e]].marketData[min] && shardObject[shards[e]].marketData[min].sell) {
-                        let targetPrice = shardObject.empireSettings.tier3Buy;
-                        if (min === "XGH2O" || min === "XGHO2") {
-                            targetPrice = shardObject.empireSettings.tier3GBuy;
-                        }
-
-
-                        if (shardObject[shards[e]].marketData[min].sell.price <= targetPrice) {
-
-                            let amnt = 1250;
-                            if (shardObject[shards[e]].marketData[min].sell.remaingAmount < 1250) {
-                                amnt = lowestAmount.remaingAmount;
-                            }
-                            if (amnt < 100) continue;
-
-                            let request = {
-                                type: 'fillSellOrder',
-                                shard: shards[e],
-                                order: shardObject[shards[e]].marketData[min].sell,
-                                mineralType: min,
-                                shardRoom: getShardRoom(shards[e], min),
-                                mineralAmount: amnt,
-                            };
-
-
-
-
-
-                            console.log( tier3[i],"FOUND tier3 that is below " + targetPrice + " " + shardObject[shards[e]].marketData[min].sell.price, amnt,shardObject.instructions.length);
-
-                            let doRequest = true;
-                            if (shardObject.instructions.length > 7) doRequest = false;
-                            if (doRequest) {
-                                for (let e in shardObject.instructions) {
-                                    if ((shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type && shardObject.instructions[e].mineralType === request.mineralType)) {
-                                        doRequest = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (doRequest) {
-                                console.log("ADDING TIER3 SELL:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].sell.price);
-                                shardObject.instructions.push(request);
-                                return;
-                            }
-
-
-
-                        }
-                    }
-                    if (shardObject[shards[e]].marketData[min] && shardObject[shards[e]].marketData[min].buy) {
-                        let targetPrice = shardObject.empireSettings.tier3Sell;
-                        if (min === "XGH2O" || min === "XGHO2") {
-                            targetPrice = shardObject.empireSettings.tier3GSell;
-                        }
-                        targetPrice += taxes[e];
-
-
-                        if (shardObject[shards[e]].marketData[min].buy.price >= targetPrice) {
-
-                            let amnt = 1250;
-                            if (shardObject[shards[e]].marketData[min].buy.remaingAmount < 1250) {
-                                amnt = lowestAmount.remaingAmount;
-                            }
-                            if (amnt < 100) continue;
-
-                            let request = {
-                                type: 'fillBuyOrder',
-                                shard: shards[e],
-                                order: shardObject[shards[e]].marketData[min].buy,
-                                mineralType: min,
-                                shardRoom: getShardRoom(shards[e], min),
-                                mineralAmount: amnt,
-                            };
-
-
-
-
-
-                            console.log("FOUND tier3 that is above " + targetPrice + " " + shardObject[shards[e]].marketData[min].buy.price, amnt);
-
-                            let doRequest = true;
-                            if (shardObject.instructions.length > 7) doRequest = false;
-                            if (doRequest) {
-                                for (let e in shardObject.instructions) {
-                                    if ((shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type && shardObject.instructions[e].mineralType === request.mineralType)) {
-                                        doRequest = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (doRequest) {
-                                console.log("ADDING TIER3 SOLD:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].buy.price);
-                                shardObject.instructions.push(request);
-                                return;
-                            }
-
-
-
-                        }
-                    }
-                }
-            }
-        }*/
-
+    }*/
     var energyHigh;
-    //              rtn.average[min] = {
-    //                    buy: buyTotal / buyCount,
-    //                      sell: sellTotal / sellCount,
-    //                    };
+
     let basic = ["energy", "H", "O", "U", "L", "K", "Z", "X", ];
-    if (Game.time % timer === 0) {
+    if (Game.time%( timer*4) === 0) {
 
         for (let ie in basic) {
             let minSellTotal = 0;
@@ -1725,7 +1408,7 @@ var requestMineral2;
 var requestMineral3;
 
 function analyzeShards(shardObject) {
-console.log("analyze Shards",Game.time);
+
     if (shardObject.shard0 !== undefined) {
 
         if (requestMineral0 === undefined) requestMineral0 = {};
@@ -2114,7 +1797,6 @@ function getShardRoom(shard, min) {
 
 function runShardRoom(roomName) {
     //shard room is room on a seperate shard
-    console.log('running shard room',Game.shard.name,roomName,Game.time);
     let room = Game.rooms[roomName];
     if (room === undefined) return;
     let terminal = room.terminal;
@@ -2382,7 +2064,7 @@ class segmentCommand {
 
 
     static run() {
-        segmentChange = 10; // This needs to always be set to 10 
+        
         if (Memory.shardNeed.length > 1) {
             Memory.shardNeed = _.uniq(Memory.shardNeed);
             while (Memory.shardNeed.length > 10) {

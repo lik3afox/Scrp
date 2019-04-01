@@ -55,7 +55,7 @@ function changeEmpireSettings() {
             tier1Sell: 0.1, // This is the value to sell at. 1.4/2 = 0.7 ALT = 10
             tier1GSell: 0.35, // This is the value to sell at. 5 = 0.7 ALT = 15
 
-            tier2: true,
+            tier2: false,
             tier2Sell: 0.285, // This is the value to sell at. 2.8/4 = 0.7  ALT = 35
             tier2GSell: 0.6, // This is the value to sell at. 7 = 0.7 ALT = 50/65
 
@@ -248,7 +248,7 @@ function rampartCheck(spawn) {
         return ((o.structureType === STRUCTURE_RAMPART && !o.isPublic) || o.structureType === STRUCTURE_WALL) && o.hits < 500000;
     });
     if (ramp.length > 1) {
-        if (targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
+        if (!ramp[0].isEffected() && targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
             spawn.room.controller.activateSafeMode();
             flagName = 'safemode' + spawn.room.name;
             if (Game.flags[flagName] === undefined) {
@@ -637,7 +637,7 @@ module.exports.loop = blackMagic(function() {
     }
     var start = Game.cpu.getUsed();
     var startCpu;
-    if (Game.shard.name === 'shard1') showCPU = true;
+//    if (Game.shard.name === 'shard1') showCPU = true;
     if (showCPU) {
         startCpu = Game.cpu.getUsed();
         console.log('----NEW TICK:', Game.time, Game.cpu.bucket);
