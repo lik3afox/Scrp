@@ -537,6 +537,38 @@ class fighterClass extends roleParent {
                    
                    return;
         }
+        if (creep.room.name === creep.partyFlag.pos.roomName) {
+            
+            if (creep.memory.targetID === undefined || Game.time % 128 === 0) {
+                let bads = creep.room.notAllies;
+                if(bads.length > 0){
+                    creep.memory.targetID = bads[0].id;
+                } else {
+                    let tempTar = creep.room.getClearBaseTarget();
+                    if(tempTar){
+                        creep.memory.targetID = tempTar.id;    
+                    }
+                }
+                
+                if (creep.memory.targetID === false) {
+                    require('commands.toParty').changeRoleCount(creep.partyFlag,creep.memory.role,0);
+                    creep.memory.death = true;
+                }
+            }
+            let tgt = Game.getObjectById(creep.memory.targetID);
+            if (tgt) {
+                if (creep.pos.isNearTo(tgt)) {
+                    creep.attack(tgt);
+                } else {
+                    creep.moveMe(tgt, { reusePath: 50,maxRooms:1 });
+                    creep.smartAttack();
+                }
+                creep.say('AG2');
+            } else {
+                creep.memory.targetID = undefined;
+            }
+            return;
+        }
 
         if (!creep.smartAttack()) {
             if (creep.hits < creep.hitsMax) creep.selfHeal();

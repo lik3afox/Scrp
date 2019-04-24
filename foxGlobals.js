@@ -7,7 +7,7 @@ var containers = require('commands.toContainer');
 */
 
 module.exports = {
-    friends: ['admon','Komir','wolffman122','Publiccert','SteveTrov','omnomwombat','Issacar','weaves', 'NobodysNightmare', 'Vlahn', 'Power Bank', 'likeafox', 'Geir1983'],
+    friends: ['admon','Komir','wolffman122','omnomwombat','Issacar','weaves',  'Power Bank', 'likeafox', 'Geir1983'],
     enemies: ['Atavus', 'Trepidimous','Matsura'],
 //    RETREAT: COLOR_BROWN, // Flag that certain creeps use to defend too.
     DEFEND: COLOR_RED, // Everyone will defend to this.

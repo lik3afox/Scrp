@@ -172,7 +172,7 @@ function newDoTask(roomName) {
             }
             if (ob.isEffected()) {
                 distance = 0;
-                task.options.timed = 0;
+//                task.options.timed = 0;
             } else {
                 distance = Game.map.getRoomLinearDistance(ob.room.name, target);
             }

@@ -114,8 +114,14 @@ var classLevels = [
     },
     // Level 13
     {
-        body: [HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, ],
-        boost: ['XLHO2'],
+        body: [
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+            HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL,
+            ],
+        boost: ['XLHO2', 'XKH2O', 'XZHO2'],
     },
 
 ];
@@ -180,7 +186,7 @@ function powerAction(creep) {
                 creep.memory.distance = 0;
 
                 if (!creep.healOther(5)) {
-                    
+
                     creep.memory.death = true;
                 }
                 return true;
@@ -189,7 +195,8 @@ function powerAction(creep) {
             /*let 
             if (zz && pBank && !creep.pos.inRangeTo(pBank, 2) && !creep.pos.isNearTo(zz)) {
                 creep.moveMe(pBank);
-            } else*/ if (pBank && !creep.pos.inRangeTo(pBank, 2)) {
+            } else*/
+            if (pBank && !creep.pos.inRangeTo(pBank, 2)) {
                 creep.moveMe(pBank);
             }
             if (creep.pos.inRangeTo(pBank, 4)) {
@@ -264,6 +271,30 @@ function returnClosestSpawn(roomName) {
     return spawn;
 }
 
+function powerCreepHeal(creep){
+    let powerCrp = Game.powerCreeps[creep.memory.party];
+    if(!powerCrp) return;
+    if(creep.room.storage && creep.room.storage.my && creep.carryTotal === 0){
+        creep.moveToWithdraw(creep.room.storage,'ops');
+        return;
+    }
+    if(creep.pos.isNearTo(powerCrp)){
+        creep.heal(powerCrp);
+        creep.move(creep.pos.getDirectionTo(powerCrp));
+        if(creep.carry.ops > 0){
+            if(powerCrp.carry.ops < 500){
+                creep.transfer(powerCrp,'ops');
+            }
+        }
+
+    } else {
+        creep.rangedHeal(powerCrp);
+        creep.moveMe(powerCrp,{reusePath:50});
+    }
+
+
+}
+
 function healParty(creep) {
     if (creep.memory.partyID === undefined || creep.memory.partyID.length === 0) return false;
     for (var a in creep.memory.partyID) {
@@ -305,7 +336,7 @@ class healerClass extends roleParent {
 
     static run(creep) {
         if (creep.memory.HL && (creep.partyFlag && !creep.partyFlag.memory.harassers)) {
-            if(creep.hits < creep.hitsMax){
+            if (creep.hits < creep.hitsMax) {
                 creep.selfHeal();
                 return;
             }
@@ -315,7 +346,7 @@ class healerClass extends roleParent {
                 creep.say('HL');
                 return;
             }
-        } else{
+        } else {
             creep.memory.HL = undefined;
         }
         doMove = false;
@@ -333,6 +364,10 @@ class healerClass extends roleParent {
         }
 
         if (super.boosted(creep, creep.memory.boostNeeded)) {
+            return;
+        }
+        if(creep.partyFlag && creep.partyFlag.memory.powerCreepFlag){
+            powerCreepHeal(creep);
             return;
         }
         /*
@@ -378,40 +413,40 @@ class healerClass extends roleParent {
             banditAction(creep);
             return;
         }
-/*
-        var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 7);
+        /*
+                var hurtz = creep.pos.findInRange(FIND_MY_CREEPS, 7);
 
-        hurtz = _.filter(hurtz, function(object) {
-            return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'Baj');
-        });
-        let dmg = _.min(hurtz, o => o.hits);
-*/
+                hurtz = _.filter(hurtz, function(object) {
+                    return object.hits < object.hitsMax && (object.owner.username == 'likeafox' || object.owner.username == 'Baj');
+                });
+                let dmg = _.min(hurtz, o => o.hits);
+        */
         //return;
         creep.smartHeal();
 
         if (super.goToPortal(creep)) return;
 
 
-/*        if (creep.room.name == 'E11xS36') {
-            var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-            site = _.filter(site, function(o) {
-                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progressTotal - o.progress < 1000;
-            });
-            creep.say(site.length);
-            if (site.length > 0) {
-                var zzz = creep.pos.findClosestByRange(site);
-                creep.moveTo(zzz);
-            } else if (doMove) {
-                movement.flagMovement(creep);
-            }
-        } else {*/
-            //if (creep.partyFlag.tusken) {
-                //creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
-            //} else {
-                creep.moveMe(creep.partyFlag, { reusePath: 50 });
-            //}
+        /*        if (creep.room.name == 'E11xS36') {
+                    var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+                    site = _.filter(site, function(o) {
+                        return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progressTotal - o.progress < 1000;
+                    });
+                    creep.say(site.length);
+                    if (site.length > 0) {
+                        var zzz = creep.pos.findClosestByRange(site);
+                        creep.moveTo(zzz);
+                    } else if (doMove) {
+                        movement.flagMovement(creep);
+                    }
+                } else {*/
+        //if (creep.partyFlag.tusken) {
+        //creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
+        //} else {
+        creep.moveMe(creep.partyFlag, { reusePath: 50 });
+        //}
 
-  //      }
+        //      }
 
     }
 }

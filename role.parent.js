@@ -28,7 +28,7 @@ function keeperFindAt(xx, yy, creep) {
             }
         }
         if (creep.memory.keeperLairID === undefined) {
-            creep.memory.keeperLairID = 'none';
+            creep.memory.keeperLairID = null;
         }
     }
 }
@@ -198,19 +198,6 @@ class baseParent {
         return false;
     }
 
-    static isRoomSK(creep) {
-        if (roomTested === undefined) roomTested = {};
-        if (roomTested[creep.room.name] === undefined) {
-            let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creep.room.name);
-            let fMod = parsed[1] % 10;
-            let sMod = parsed[2] % 10;
-            let isSK = !(fMod === 5 && sMod === 5) && ((fMod >= 4) && (fMod <= 6)) &&
-                ((sMod >= 4) && (sMod <= 6));
-            roomTested[creep.room.name] = isSK;
-        }
-        return roomTested[creep.room.name];
-    }
-
     static guardRoom(creep) {
         if (roomTested === undefined) roomTested = {};
         if (roomTested[creep.room.name] === false) {
@@ -240,6 +227,50 @@ class baseParent {
         }
     }
 
+    static keeperWatch2(creep) {
+        // finds the structure 
+        if (!creep.memory.isSkGoal) return;
+        if (!creep.memory.keeperLairID) return;
+        if (creep.memory.keeperLairID !== undefined) { // THis is obtained when 
+            let keeper = Game.getObjectById(creep.memory.keeperLairID);
+            //          if(creep.memory.keeperLairID != undefined &&  keeper.ticksToSpawn  == undefined) return true;
+            if (keeper === null) return false;
+            if (keeper.ticksToSpawn !== undefined)
+                keeper.room.visual.text(keeper.ticksToSpawn, keeper.pos.x, keeper.pos.y, { color: '#97c39b ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+            let _goal = Game.getObjectById(creep.memory.goal);
+
+            if (creep.room.name != _goal.pos.roomName) return;
+
+            if (keeper.ticksToSpawn === undefined || keeper.ticksToSpawn < 10) {
+                let distance = creep.pos.getRangeTo(_goal);
+                if (distance < 7) {
+                    if (distance <= 5) {
+                        var pathfindResult = PathFinder.search(creep.pos, { pos: _goal.pos, range: 6 }, {
+                            flee: true,
+                            maxOps: 20,
+                        });
+                        creep.move(creep.pos.getDirectionTo(pathfindResult.path[0]));
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    static isRoomSK(creep) {
+        if (roomTested === undefined) roomTested = {};
+        if (roomTested[creep.room.name] === undefined) {
+            let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creep.room.name);
+            let fMod = parsed[1] % 10;
+            let sMod = parsed[2] % 10;
+            let isSK = !(fMod === 5 && sMod === 5) && ((fMod >= 4) && (fMod <= 6)) &&
+                ((sMod >= 4) && (sMod <= 6));
+            roomTested[creep.room.name] = isSK;
+        }
+        return roomTested[creep.room.name];
+    }
+
 
     static keeperFind(creep) {
         if (creep.memory.keeperLairID) return;
@@ -254,7 +285,7 @@ class baseParent {
             return false;
         }
         if (creep.memory.death) {
-//            creep.createTrain();
+            //            creep.createTrain();
             if (creep.ticksToLive < 600 && creep.memory.pickUpMinerals && creep.memory.pickUpMinerals > 0) {
                 if (creep.pickUpFeet() === OK) {
                     //creep.memory.pickUpMinerals = undefined;
@@ -296,9 +327,9 @@ class baseParent {
                                     creep.memory.pickUpMinerals = creep.memory.isBoosted.length;
                                 }
                                 creep.memory.isBoosted = [];
-                                if(creep.room.memory.zeroJob && Game.creeps[creep.room.memory.zeroJob]){
+                                if (creep.room.memory.zeroJob && Game.creeps[creep.room.memory.zeroJob]) {
                                     Game.creeps[creep.room.memory.zeroJob].memory.currentJob = 11;
-                                } else if(creep.room.memory.jobsToDo && creep.carryCapacity === 0){
+                                } else if (creep.room.memory.jobsToDo && creep.carryCapacity === 0) {
                                     creep.room.memory.jobsToDo.push(11);
 
                                 }
@@ -385,8 +416,13 @@ class baseParent {
                 creep.say('HR move');
                 return true;
             } else {
-                creep.moveTo(creep.homeFlag, { reusePath: 50 });
-                creep.say('R move');
+                if (creep.pos.inRangeTo(creep.homeFlag, 3)) {
+                    creep.moveMe(creep.homeFlag, { reusePath: 15 });
+                    creep.sleep(3);
+                } else {
+                    creep.moveMe(creep.homeFlag, { reusePath: 15 });
+                }
+                creep.say('Ra2' + creep.memory.party);
                 return true;
             }
         } else if (partyFlag.memory.waypointFlag !== false) {
@@ -501,7 +537,7 @@ class baseParent {
                 distance += 20;
                 break;
         }
-        
+
         if (creep.ticksToLive < ((3 * creep.body.length) + distance)) {
             require('commands.toCreep').reportDeath(creep);
             creep.memory.reportDeath = true;

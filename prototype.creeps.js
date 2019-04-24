@@ -1,24 +1,122 @@
 module.exports = function() {
 
-    Creep.prototype.pullTargetTo = function(pull,target,opts) {
+    function checkAndSetMatrix(matrix, x, y, weight) {
+        if (matrix.get(x, y) < weight) {
+            matrix.set(x, y, weight);
+        }
+    }
+
+    function f(number) {
+        if (number > 8) return number - 8;
+        if (number < 1) return number + 8;
+        return number;
+    }
+
+    function checkDirectionIsGood(creep, direction) {
+        let lookedResult = creep.room.lookAt(getFormationPos(creep, direction));
+
+        for (let i in lookedResult) {
+            if (lookedResult[i].terrain && lookedResult[i].terrain === 'wall') {
+                return false;
+            }
+            /*            if (lookedResult[i].structure && lookedResult[i].structure.structureType === 'rampart' && !lookedResult[i].structure.isPublic) {
+                            console.log(lookedResult[i].structure.structureType,'false');
+                            return false;
+                        }*/
+            if (lookedResult[i].structure && lookedResult[i].structure.structureType !== 'road' && lookedResult[i].structure.structureType !== 'container' ) { //&& lookedResult[i].structure.structureType !== 'rampart'
+//                console.log(lookedResult[i].structure.structureType, 'false');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //getFormationPos = function(target, formationPos)
+
+    function getDirectionToCrawl(creep, direction, clockwise) {
+        // Pos is current pos? Needed? yes
+        // Direction to start from
+        // Clockwise means which direction is looked at first - if there is a way that should be first looked at.
+
+        var movedir = direction;
+        var spin = 1;
+        if (clockwise === true || clockwise === undefined) {
+            spin = -1;
+        } else {
+            spin = 1;
+        }
+        var newDirection;
+        for (let i = 1; i < 4; i++) {
+            let e = i * spin;
+            newDirection = f(direction + e);
+            if (checkDirectionIsGood(creep, newDirection)) {
+                return newDirection;
+            }
+        }
+/*        spin = spin *-1;
+        for (let i = 1; i < 4; i++) {
+            let e = i * spin;
+            newDirection = f(direction + e);
+            if (checkDirectionIsGood(creep, newDirection)) {
+                return newDirection;
+            }
+        }
+//        return  f(direction + 4);
+        */
+
+
+        return false;
+    }
+
+
+    Creep.prototype.crawlTo = function(target) {
+        let creep = this;
+        var squadMoveDir;
+        // pathfindResult = PathFinder.search(creep.pos, target);
+        // if (pathfindResult) {
+        //     if (pathfindResult.path.length > 0) {
+        if (this.memory.spin === undefined) {
+            this.memory.spin = true;
+        }
+            squadMoveDir = this.pos.getDirectionTo(target);
+
+        if (!checkDirectionIsGood(creep, squadMoveDir)) {
+            var newDirection = getDirectionToCrawl(creep, squadMoveDir, this.memory.spin);
+            if (!newDirection) {
+                if (this.memory.spin) {
+                    this.memory.spin = false;
+                } else {
+                    this.memory.spin = true;
+                }
+                newDirection = getDirectionToCrawl(creep, squadMoveDir, this.memory.spin);
+            }
+
+            squadMoveDir = newDirection;
+        }
+//        console.log(creep, squadMoveDir ,"clockWise?",this.memory.spin);
+
+        return this.move(squadMoveDir);
+    };
+
+    Creep.prototype.pullTargetTo = function(pull, target, opts) {
         // Pull target 
         // So pull needs to be near this.
         // we need to stop pullling of the pull first
         // we need to get near the pull
-        if(!pull){
-            console.log(pull,'!!!#$$');
+        if (!pull) {
+            console.log(pull, '!!!#$$');
             return;
         }
-        if(pull.fatigue > 0){
+        if (pull.fatigue > 0) {
             pull.memory.needPull = true;
-        }  else if(!pull.memory.needPull){
-            return false;  
-        } 
-        if(pull.pos.isNearTo(target)) return false;
-        console.log(roomLink(this.room.name),"DoiNG PUll!!");
-            pull.memory.stopMoving = true;
-            pull.cancelOrder('move');
-        if(!this.pos.isNearTo(pull)){
+        } else if (!pull.memory.needPull) {
+            return false;
+        }
+        if (pull.pos.isNearTo(target)) return false;
+        console.log(roomLink(this.room.name), "DoiNG PUll!!");
+        pull.memory.stopMoving = true;
+        pull.cancelOrder('move');
+        if (!this.pos.isNearTo(pull)) {
             this.moveMe(pull);
             return true;
         }
@@ -26,21 +124,21 @@ module.exports = function() {
         pull.say('0');
         // once we're near, we go to the target 
         pull.move(pull.pos.getDirectionTo(this));
-//return creep.move(creep.pos.getDirectionTo(led));        
+        //return creep.move(creep.pos.getDirectionTo(led));        
         // Once we're nearBy target, we pull one last time, but! we move to the target.
-        if(this.pos.isNearTo(target)){
+        if (this.pos.isNearTo(target)) {
             this.move(this.pos.getDirectionTo(pull));
         } else {
-        this.moveMe(target,opts);
+            this.moveMe(target, opts);
         }
     };
 
     Structure.prototype.isEffected = function(effect) {
         if (!this.effects) return false;
         if (this.effects.length === 0) return false;
-        if(effect !== undefined){
-            for(let i in this.effects){
-                if(this.effects[i].power === effect){
+        if (effect !== undefined) {
+            for (let i in this.effects) {
+                if (this.effects[i].power === effect) {
                     return this.effects[i];
                 }
             }
@@ -48,16 +146,16 @@ module.exports = function() {
         return true;
     };
 
-    PowerCreep.prototype.getStoredOps = function(amount){
-        if(this.room.storage && this.room.storage[RESOURCE_OPS] >= amount){
-        
-            return this.moveToWithdraw(this.room.storage,'ops',amount);
+    PowerCreep.prototype.getStoredOps = function(amount) {
+        if (this.room.storage && this.room.storage[RESOURCE_OPS] >= amount) {
+
+            return this.moveToWithdraw(this.room.storage, 'ops', amount);
         }
-        if(this.room.terminal && this.room.terminal[RESOURCE_OPS] >= amount){
-            return this.moveToWithdraw(this.room.terminal,'ops',amount);
+        if (this.room.terminal && this.room.terminal[RESOURCE_OPS] >= amount) {
+            return this.moveToWithdraw(this.room.terminal, 'ops', amount);
         }
     };
-    PowerCreep.prototype.getActiveBodyparts = function(amount){
+    PowerCreep.prototype.getActiveBodyparts = function(amount) {
         return 0;
     };
 
@@ -298,6 +396,12 @@ module.exports = function() {
             return (this.pos.x <= 1 || this.pos.x >= 48 || this.pos.y <= 1 || this.pos.y >= 48);
         }
     });
+    Object.defineProperty(RoomPosition.prototype, 'isNearEdge', {
+        configurable: true,
+        get: function() {
+            return (this.x <= 1 || this.x >= 48 || this.y <= 1 || this.y >= 48);
+        }
+    });
 
 
     Object.defineProperty(Structure.prototype, "total", {
@@ -344,6 +448,15 @@ module.exports = function() {
             }
         },
     });
+    Object.defineProperty(Tombstone.prototype, "storing", {
+        configurable: true,
+        get: function() {
+            for (var i in this.store) {
+                if (this.store[i] > 0) return i;
+            }
+        },
+    });
+
     Object.defineProperty(Tombstone.prototype, "total", {
         configurable: true,
         get: function() {
@@ -462,10 +575,11 @@ module.exports = function() {
                     this.memory.stats[stat] = this.getActiveBodyparts(WORK);
                     return this.memory.stats[stat];
                 case 'mining':
-                     total = (this.getActiveBodyparts(WORK) * 2) * ((getBodyBoostValue(this, WORK) * 2) - 1);
+                    total = (this.getActiveBodyparts(WORK) * 2) * ((getBodyBoostValue(this, WORK) * 2) - 1);
                     this.memory.stats[stat] = total;
                     return this.memory.stats[stat];
                 case 'building':
+                case 'build':
                     this.memory.stats[stat] = this.getActiveBodyparts(WORK) * 10;
                     switch (getBodyBoostValue(this, WORK)) {
                         case 2:
@@ -480,7 +594,7 @@ module.exports = function() {
                     }
                     return this.memory.stats[stat];
                 case 'mineral':
-                     total = this.getActiveBodyparts(WORK) * ((getBodyBoostValue(this, WORK) * 2) - 1);
+                    total = this.getActiveBodyparts(WORK) * ((getBodyBoostValue(this, WORK) * 2) - 1);
                     this.memory.stats[stat] = total;
                     return this.memory.stats[stat];
                 case 'upgrading':
@@ -505,6 +619,7 @@ module.exports = function() {
                 case 'attack':
                     this.memory.stats[stat] = this.getActiveBodyparts(ATTACK) * 30;
                     return this.memory.stats[stat] * getBodyBoostValue(this, ATTACK);
+                case 'demolish':
                 case 'dismantle':
                     this.memory.stats[stat] = this.getActiveBodyparts(WORK) * 50;
                     return this.memory.stats[stat] * getBodyBoostValue(this, WORK);
@@ -513,7 +628,25 @@ module.exports = function() {
                 case 'ranged Attack':
                     this.memory.stats[stat] = this.getActiveBodyparts(RANGED_ATTACK) * 10;
                     return this.memory.stats[stat] * getBodyBoostValue(this, RANGED_ATTACK);
+                case 'toughHP':
+                    this.memory.stats[stat] = this.getActiveBodyparts(TOUGH) * 100;
+                    return this.memory.stats[stat];
 
+                case 'tough':
+                    this.memory.stats[stat] = this.getActiveBodyparts(TOUGH);
+                    // Tough is just the hit points and boosted increases those hit points
+                    switch (getBodyBoostValue(this, TOUGH)) {
+                        case 2:
+                            this.memory.stats[stat] = this.memory.stats[stat] * 143;
+                            break;
+                        case 3:
+                            this.memory.stats[stat] = this.memory.stats[stat] * 200;
+                            break;
+                        case 4:
+                            this.memory.stats[stat] = this.memory.stats[stat] * 333;
+                            break;
+                    }
+                    return this.memory.stats[stat];
 
                 case 'carry':
                     this.memory.stats[stat] = this.getActiveBodyparts(CARRY) * 50;
@@ -1391,11 +1524,9 @@ module.exports = function() {
         }
         if (this.partyFlag !== undefined) {
             var target = Game.getObjectById(this.partyFlag.memory.target);
-            if (target !== null) {
-                if (this.pos.isNearTo(target)) {
-                    this.dismantle(target);
-                    return true;
-                }
+            if (target !== null && this.pos.isNearTo(target)) {
+                this.dismantle(target);
+                return true;
             }
         }
         var bads;
@@ -1403,47 +1534,102 @@ module.exports = function() {
         bads = _.filter(bads, function(o) {
             return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_TERMINAL && o.structureType !== STRUCTURE_STORAGE;
         });
+        //        console.log('doing smartDimanl',bads.length);
         if (bads.length > 0) {
             this.dismantle(bads[0]);
             return true;
         }
+
+        if (this.partyFlag && this.room.name === this.partyFlag.pos.roomName) {
+            bads = this.pos.findInRange(FIND_STRUCTURES, 1);
+            bads = _.filter(bads, function(o) {
+                return o.structureType !== STRUCTURE_TERMINAL && o.structureType !== STRUCTURE_STORAGE;
+            });
+            if (bads.length > 0) {
+                this.dismantle(bads[0]);
+                return true;
+            }
+        }
+
         if (this.atFlagRoom) {
             this.killRoads();
             return true;
         }
     };
 
-    Creep.prototype.getClearBaseTarget = function() {
-        let strucs = this.room.find(FIND_STRUCTURES);
-        var test2 = _.filter(strucs, function(o) {
-            return o.structureType !== STRUCTURE_RAMPART && o.structureType !== STRUCTURE_ROAD && o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_CONTROLLER && o.structureType !== STRUCTURE_EXTRACTOR;
-        }); // Kill all structures not on rampart. 
-        if (test2.length > 0) {
-            return this.pos.findClosestByRange(test2).id;
-        } else {
-            test2 = _.filter(strucs, function(o) {
-                return o.structureType === STRUCTURE_RAMPART;
-            }); // Kill all structures not on rampart. 
-            if (test2.length > 0) {
-                return this.pos.findClosestByRange(test2).id;
-            } else {
-                test2 = _.filter(strucs, function(o) {
-                    return o.structureType === STRUCTURE_WALL;
-                }); // Kill all structures not on rampart. 
-                if (test2.length > 0) {
-                    return this.pos.findClosestByRange(test2).id;
-                } else {
-                    var site = this.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
-                    site = _.filter(site, function(o) {
-                        return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.progress > 0;
-                    });
-                    if (site.length > 0) {
-                        return this.pos.findClosestByRange(site).id;
-                    }
-                }
-            }
+    Room.prototype.getClearBaseTarget = function(ifAll) {
+
+        let allStructs = this.find(FIND_STRUCTURES);
+        allStructs = _.filter(allStructs, function(o) {
+            return o.structureType !== STRUCTURE_STORAGE && o.structureType !== STRUCTURE_TERMINAL && o.structureType !== STRUCTURE_CONTROLLER; //&& !o.my
+        });
+        /*
+        if(this.controller && this.controller.reservation && this.controller.reservation.username === 'likeafox'){
+            allStructs = _.filter(allStructs, function(o) {
+                return o.structureType !== STRUCTURE_CONTAINER && o.structureType !== STRUCTURE_ROAD;
+            });
         }
-        return false;
+        if(ifAll){
+            return allStructs[Math.floor(Math.random() * allStructs.length)];
+        }*/
+
+        //        let total = 0;
+        let nonRampartStructs = _.filter(allStructs, function(o) {
+            return !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_ROAD && o.structureType !== STRUCTURE_CONTAINER;
+        });
+
+        if (nonRampartStructs.length > 0) {
+            let towers = _.filter(nonRampartStructs, function(o) {
+                return o.structureType === STRUCTURE_TOWER;
+            });
+            if (towers.length > 0) {
+                return towers[Math.floor(Math.random() * towers.length)];
+            }
+            let spawns = _.filter(nonRampartStructs, function(o) {
+                return o.structureType === STRUCTURE_SPAWN;
+            });
+            if (spawns.length > 0) {
+                return spawns[Math.floor(Math.random() * spawns.length)];
+            }
+            return nonRampartStructs[Math.floor(Math.random() * nonRampartStructs.length)];
+        }
+        let rampartPrtecting = _.filter(allStructs, function(o) {
+            return o.structureType === STRUCTURE_RAMPART && (o.pos.lookForStructure(STRUCTURE_TERMINAL) || o.pos.lookForStructure(STRUCTURE_STORAGE));
+        });
+        if (rampartPrtecting.length > 0) {
+            return rampartPrtecting[Math.floor(Math.random() * rampartPrtecting.length)];
+        }
+
+
+        let towers = _.filter(allStructs, function(o) {
+            return o.structureType === STRUCTURE_TOWER;
+        });
+        if (towers.length > 0) {
+            return towers[Math.floor(Math.random() * towers.length)];
+        }
+
+        let spawns = _.filter(allStructs, function(o) {
+            return o.structureType === STRUCTURE_SPAWN;
+        });
+        if (spawns.length > 0) {
+            return spawns[Math.floor(Math.random() * spawns.length)];
+        }
+
+        var protectStructs = _.filter(allStructs, function(o) {
+            return o.pos.lookForStructure(STRUCTURE_RAMPART);
+        });
+        if (protectStructs.length > 0) {
+            return protectStructs[Math.floor(Math.random() * protectStructs.length)];
+        }
+
+        var ramparts = _.filter(allStructs, function(o) {
+            return o.structureType === STRUCTURE_RAMPART;
+        });
+        if (ramparts.length > 0) {
+            return ramparts[Math.floor(Math.random() * ramparts.length)];
+        }
+
+        return allStructs[Math.floor(Math.random() * allStructs.length)];
     };
 
 
@@ -1467,7 +1653,7 @@ module.exports = function() {
         return false;
     };
 
-    Creep.prototype.smartRangedAttack = function() {
+    Creep.prototype.smartRangedAttack = function(targeted) {
         // No moving. 
 
         //        this.say('SRanged');
@@ -1500,6 +1686,16 @@ module.exports = function() {
             }
             this.say('azed');
             return true;
+        }
+        if (targeted) {
+            if (this.pos.isNearTo(targeted) && targeted.structureType !== STRUCTURE_WALL && targeted.structureType !== STRUCTURE_ROAD && targeted.structureType !== STRUCTURE_CONTAINER) {
+                this.rangedMassAttack();
+                return true;
+            } else if (this.pos.inRangeTo(targeted, 3)) {
+                this.rangedAttack(targeted);
+
+                return true;
+            }
         }
 
         if (this.partyFlag !== undefined) {
@@ -1534,6 +1730,8 @@ module.exports = function() {
         }
         return false;
     };
+
+
     Creep.prototype.smartAttack = function() {
         // No moving. 
         //        this.say('SAttack');
@@ -1541,7 +1739,7 @@ module.exports = function() {
             return false;
         }
         var bads;
-            bads = this.pos.findInRange(this.room.notAllies, 1);
+        bads = this.pos.findInRange(this.room.notAllies, 1);
         // 
         if (this.room.name === 'E22S52') {
             bads = _.filter(bads, function(o) {
@@ -1578,14 +1776,25 @@ module.exports = function() {
             this.attack(bads[0]);
             return true;
         }
-
         bads = _.filter(badStr, function(o) {
             return !_.contains(fox.friends, o.owner.username);
         });
+
         if (bads.length > 0) {
             this.attack(bads[0]);
             return true;
         }
+        if (this.partyFlag && this.room.name === this.partyFlag.pos.roomName) {
+            bads = this.pos.findInRange(FIND_STRUCTURES, 1);
+            bads = _.filter(bads, function(o) {
+                return o.structureType !== STRUCTURE_TERMINAL && o.structureType !== STRUCTURE_STORAGE;
+            });
+            if (bads.length > 0) {
+                this.attack(bads[0]);
+                return true;
+            }
+        }
+
         return false;
     };
 
@@ -2745,7 +2954,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
         let status = null;
         let exit_cost = 25;
 
-        if (options.useSKPathing) {
+        if (options.useSKPathing && !this.isAtEdge) {
             /*let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creep.room.name);
             let fMod = parsed[1] % 10;
             let sMod = parsed[2] % 10;
@@ -2758,7 +2967,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 // Use special SK pathing algorithim to avoid hostile SK creeps
 
                 if (creep.memory.role === 'transport' || creep.memory.role === 'miner' || creep.memory.role === 'engineer' || creep.memory.role === 'thief') {
-                    options.swampCost = 4;
+                    //                    options.swampCost = 4;
                     options.costCallback = function(roomName, costMatrix) {
                         //NOTE: roomName is not the same as room_name!
                         let room = Game.rooms[roomName];
@@ -2851,9 +3060,9 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                                     if (ret.sq > aggro_radius) {
                                         break;
                                     } else if (ret.sq === aggro_radius) {
-                                        aggro_cost = 10;
+                                        aggro_cost = 5;
                                     } else {
-                                        aggro_cost = 10;
+                                        aggro_cost = 5;
                                     }
                                     tar_x = c.pos.x + ret.x;
                                     tar_y = c.pos.y + ret.y;
@@ -2862,18 +3071,10 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                                     } else if (tar_y > 49 || tar_y < 0) {
                                         continue;
                                     }
-                                    /*
-                                    terrain = Game.map.getTerrainAt(tar_x, tar_y, c.room.name);
-                                    if (terrain === 'wall') {
-                                        // Don't try to tunnel through game walls!
-                                        costMatrix.set(tar_x, tar_y, 0xff);
-                                    } else {
-                                        costMatrix.set(tar_x, tar_y, aggro_cost);
-                                    }*/
-                                    //terrain = Game.map.getTerrainAt(tar_x, tar_y, c.room.name);
                                     terrain = Game.map.getRoomTerrain(c.room.name);
                                     switch (terrain.get(tar_x, tar_y)) {
                                         case 'wall':
+                                            // Don't try to tunnel through game walls!
                                             costMatrix.set(tar_x, tar_y, 0xff);
                                             break;
                                         default:
@@ -3140,7 +3341,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                 return creep.moveTo(target, options);
             }
             if (creep.memory.cachePath && creep.memory.cachePath.path) {
-                if (creep.memory.stuckCount > 2) {
+                if (creep.memory.stuckCount > 2 || creep.partyFlag.pos.roomName !== creep.room.name) {
                     return creep.moveTo(target, options);
                 }
                 let rsut = creep.moveByPath(creep.memory.cachePath.path);
@@ -3211,7 +3412,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
                     rawData = {};
                 }
 
-                if (rawData[home] === undefined || !rawData[home] ||Game.rooms[home].memory.segmentReset < 0 ) { // False rawdata needs to be refreshed
+                if (rawData[home] === undefined || !rawData[home] || Game.rooms[home].memory.segmentReset < 0) { // False rawdata needs to be refreshed
                     rawData[home] = segment.getRawSegmentRoomData(home);
                 }
 
@@ -3239,8 +3440,7 @@ xxxx yyyyyy yyyy yyyyyy XX yy
 
                     // if (path.length > 0)
                     //creep.memory.cachePath = path;// Room.serializePath(path);
-                    creep.say("💰");
-                    //     return moveStatus;
+                    creep.say("💰" + moveStatus);
                 }
 
             }

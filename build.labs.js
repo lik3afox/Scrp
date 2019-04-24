@@ -1,5 +1,6 @@
 var shiftCount = 1800;
 var _maxMinAmount = 175000;
+var s1LabRooms = [];
 var _maxT3MinAmount = 355000;
 var maxMinerals = {
 
@@ -898,6 +899,13 @@ class buildLab {
             return;
         }
         if (Game.time % 5 === 0) {
+/*        if (!_.contains(s1LabRooms, roomName) && Game.rooms[roomName].controller.owner !== undefined && Game.rooms[roomName].controller.owner.username === 'likeafox') {
+            s1LabRooms.push(roomName);
+            if(!Memory.roomNumber) Memory.roomNumber = 1;
+            if( s1LabRooms.length > Memory.roomNumber ) Memory.roomNumber = s1LabRooms.length;
+            console.log(Memory.roomNumber,"Number of rooms");
+        }*/
+
             if (Game.time % 510 === 0 && Game.shard.name === 'shard1' && Game.rooms[roomName].memory.lab2Mode !== 'none') {
                 console.log(roomLink(roomName), "lab shifting:", Game.rooms[roomName].memory.lab2Mode, "Current Count:", Memory.stats.totalMinerals[Game.rooms[roomName].memory.lab2Mode], "/", maxMinerals[Game.rooms[roomName].memory.lab2Mode], "time:", Game.rooms[roomName].memory.labShift);
             }
@@ -942,8 +950,8 @@ class buildLab {
                     }
 
                     if (roomName === 'E1S11') doMix = true;
-var oneMatMix;
-                    if(!doMix && Game.rooms[roomName].powerLevels && Game.rooms[roomName].powerLevels[PWR_OPERATE_LAB]){
+                    var oneMatMix;
+                    if(!doMix && Game.rooms[roomName].powerLevels && Game.rooms[roomName].powerLevels[PWR_OPERATE_LAB] && !Game.rooms[roomName].memory.labsNeedWork ){
                          oneMatMix = [
                             [3, 1, 2],
                             [4, 1, 2],

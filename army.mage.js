@@ -196,7 +196,6 @@ class mageClass extends roleParent {
         return;
     }
     static run(creep) {
-
         if (super.spawnRecycle(creep)) {
             creep.selfHeal();
             return;
@@ -224,14 +223,22 @@ class mageClass extends roleParent {
         }
 
         //if (
-            creep.smartHeal();
             //) { // IF smartHeal is true - means it's doing a ranged heal.
                  //       creep.rangedMassAttack();
         //} // else {
-        creep.smartRangedAttack();
         // }
-
-
+        let siegeTarget = Game.getObjectById(creep.memory.siegeId);
+      //  if(siegeTarget){
+    //        creep.smartHeal();
+  //          creep.smartRangedAttack(siegeTarget);
+//        } else {
+            creep.smartHeal();
+            if(siegeTarget && creep.pos.isNearTo(siegeTarget)){
+            creep.rangedMassAttack();
+            } else {
+            creep.smartRangedAttack(siegeTarget);
+            }
+       // }
 
         if (creep.hits > creep.hitsMax - 300) {
             if(creep.partyFlag && creep.partyFlag.memory.target){
@@ -241,7 +248,30 @@ class mageClass extends roleParent {
                 }
 
             } else {
-                creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
+                if(creep.partyFlag.pos.roomName === creep.pos.roomName){
+                    if(!siegeTarget){
+                        siegeTarget = creep.room.getClearBaseTarget();
+                    }
+                    if(siegeTarget){
+                        creep.memory.siegeId = siegeTarget.id;
+                        creep.room.visual.text('X',siegeTarget.pos);
+                        if(!creep.pos.isNearTo(siegeTarget)){
+                            let sult = creep.moveTo(siegeTarget,{reusePath:25});
+                            if(sult === -2){
+                                let rsult = _.filter(creep.pos.findInRange(FIND_STRUCTURES,1),function(o){
+                                    return o.structureType === STRUCTURE_WALL ||  o.structureType === STRUCTURE_RAMPART;
+                                });
+                                var minTgt = _.min(rsult, o => o.hits);
+                                creep.memory.siegeId =  minTgt.id;
+                            }
+                        } 
+                        //creep.rangedAttack(siegeTarget);
+                    } else {
+                        creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });    
+                    }
+                } else {
+                    creep.tuskenTo(creep.partyFlag, creep.memory.home, { reusePath: 50 });
+                }
             }
         } else {
             creep.runFrom(creep.partyFlag);

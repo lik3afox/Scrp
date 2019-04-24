@@ -4,6 +4,9 @@
 
 
 var allParty = {
+	testBall:[
+	        ['mage', 4, 0],
+	],
     Issacar:[
         ['fighter', 1, 1]
     ],
@@ -20,7 +23,10 @@ var allParty = {
     reclaimer: [
         ['reclaimer', 1, 0]
     ],
-
+    dismantleRoom: [
+        ['demolisher', 4, 5], // Upgrade Engineer
+        ['thief', 3, 5],
+    ],
     shooter: [
         ['shooter', 1, 4]
     ],
@@ -43,7 +49,18 @@ var allParty = {
         ['engineer', 4, 7], //  Builder Engineer
         ['mule', 5, 9],
     ],
+    demoSuppressor:[
+        ['demolisher', 2, 5],
+//        ['demolisher', 2, 5],
+        ['ranger', 2, 5]
+    ],
 
+
+    suppressor:[
+        ['fighter', 2, 5],
+//        ['demolisher', 2, 5],
+        ['mage', 2, 5]
+    ],
     cleanUp:[
         ['demolisher', 1, 8],
         ['thief', 4, 5],
@@ -97,7 +114,7 @@ var allParty = {
         ['ztransport', 1, 1],
     ],
     thief: [
-        ['thief', 1, 5],
+        ['thief', 3, 5],
     ],
     safemode: [
         ['wallwork', 3, 5]
@@ -136,7 +153,7 @@ var allParty = {
     ],
 
     scout: [
-        ['scout', 0, 0]
+        ['scout', 1, 0]
     ],
     sign: [
         ['scout', 1, 1]
@@ -288,12 +305,23 @@ function getCurrentParty(flag) {
         return allParty.mineral;
 
     }
-    if (flag.name.substr(0, 6) == 'safemode') {
+
+    if (flag.name.substr(0, 4) == 'safe') {
+        flag.memory.musterRoom = 'close';
+        if(!flag.memory.removeFlagCount){
+            flag.memory.removeFlagCount = flag.room.controller.safeMode;
+        }
         return allParty.safemode;
     }
 
     if (flag.memory.party !== undefined) {
         return flag.memory.party;
+    }
+    if(flag.name === 'testBall' && flag.memory.prohibitDirection){
+        flag.memory.rallyFlag = 'home';
+        flag.memory.prohibitDirection = undefined;
+        flag.memory.squadLogic = true;
+        flag.memory.tusken = false;
     }
     if (flag.memory.power || flag.name.substr(0, 5) == 'power') {
         flag.memory.power = true;
@@ -370,9 +398,12 @@ function returnClosestRoom(roomName) {
         if (Game.spawns[e].memory.alphaSpawn) {
             if (Game.spawns[e].room.name !== 'E14S38' && Game.spawns[e].room.name !== 'E54S53' && Game.spawns[e].room.name !== 'E14S37' && Game.spawns[e].room.controller.level === 8) {
                 var tempDis = Game.map.getRoomLinearDistance(roomName, Game.spawns[e].room.name);
-                if (tempDis < distance) {
-                    distance = tempDis;
-                    spawn = Game.spawns[e];
+                if (tempDis < 11) {
+                    var pathDistance = Game.map.findRoute(roomName, Game.spawns[e].room.name).length;
+                    if(pathDistance < distance){
+                            distance = tempDis;
+                            spawn = Game.spawns[e];
+                    }
                 }
             }
         }
@@ -530,7 +561,6 @@ class partyInteract {
         }
 
         static changeRoleCount(flag, role, number,level) {
-            console.log('here?');
             let module = returnRoleModule(flag, role);
             if (module) {
                 module[1] = number;
@@ -608,7 +638,7 @@ class partyInteract {
 //        console.log(flag, "doing rally check @ ", flag.pos, roomLink(rallied.pos.roomName));
         flag.memory.totalNumber = totalParty;
         if(flag.memory.powerCreepFlag){
-                let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 2);
+                let crps = rallied.pos.findInRange(FIND_MY_CREEPS, 3);
 
                 crps = _.filter(crps, function(o) {
                     return o.memory.party == flag.name && (!o.memory.boostNeeded||(o.memory.boostNeeded !== undefined && o.memory.boostNeeded.length === 0));
@@ -657,6 +687,9 @@ class partyInteract {
                 crps = _.filter(crps, function(o) {
                     return o.memory.party == flag.name && (!o.memory.boostNeeded||(o.memory.boostNeeded !== undefined && o.memory.boostNeeded.length === 0));
                 });
+
+                
+                flag.memory.squadID = getIdArray(crps);
 
   //                                console.log( flag,crps.length);
 //                                rallied.room.visual.text("💥" + flag.memory.totalNumber, totalParty, crps.length, rallied.room, 'total# check', rallied.pos.x - 5.5, rallied.pos.y - 5.5, { color: 'green', font: 0.8 });
@@ -829,9 +862,9 @@ class partyInteract {
     }
 
     static create(flag, spawnCount) {
-        var totalParty = findParty(flag, spawnCount);
+        var totalParty = findParty(flag, spawnCount); // This is the current count .
         //        var testParty = findParty2(flag);
-        var currentParty = getCurrentParty(flag);
+        var currentParty = getCurrentParty(flag); // This is how much to muster.
         let totalPartyed = 0;
         for (let e in flag.memory.party) {
             totalPartyed += flag.memory.party[e][1];
@@ -841,13 +874,13 @@ class partyInteract {
             flag.memory.party = currentParty;
         }
         //var e = currentParty.length;
-
-        var allSpawned = true;
+        var allSpawned ;
+        do{
+            allSpawned = true;
         for (var e in currentParty) {
-
             for (var i in totalParty) {
-
-
+  //              if(currentParty[e][_number] === 0) continue;
+//                if(currentParty[e][_name] !== i) continue;
                 if ((currentParty[e][_name] == i) && (totalParty[i] < currentParty[e][_number])) {
                     //Add to stack 
                     allSpawned = false;
@@ -877,27 +910,9 @@ class partyInteract {
                         }
                     };
                     if(flag.memory.power){
-//                        console.log('adding powerParty Memory to creeps');
                         temp.memory.powerParty = true;
                     }
-                    //console.log('Creating a unit',temp.memory.boostNeeded.length,'boost length');
-                    /*                    if (currentParty[e][_name] == 'mule' && (home == 'E38S81')) {
-                                            var terminalStuff;
-                                            terminalStuff = 0;
-                                            let term = Game.rooms[home].terminal;
-                                            for (var eez in term.store) {
-                                                if (eez !== RESOURCE_ENERGY) {
-                                                    terminalStuff += term.store[eez];
-                                                }
-                                            }
-                                            if (terminalStuff > 1250 && Game.rooms[home].energyAvailable === Game.rooms[home].energyCapacityAvailable) {
-                                                let toSpawn = require('commands.toSpawn');
-                                                toSpawn.addToWarStack(temp);
-                                                totalParty[i]++;
-                                            }
-                                        } else */
                     if (currentParty[e][_name] == 'mule') {
-                        //                        console.log('heresz?',toSpawn.pos.roomName);
                         let toSpawn = require('commands.toSpawn');
                         toSpawn.addToExpandStack(temp);
                         totalParty[i]++;
@@ -910,9 +925,6 @@ class partyInteract {
                         toSpawn.addToExpandStack(temp);
                         totalParty[i]++;
                     } else {
-                        //                    if (currentParty[e][_name] === 'healer') {
-                        //                            console.log(temp.build.length);
-                        //                      }
                         let toSpawn = require('commands.toSpawn');
                         toSpawn.addToWarStack(temp);
                         totalParty[i]++;
@@ -920,8 +932,11 @@ class partyInteract {
                 }
             }
         }
+                }while(!allSpawned);
+
+//        console.log(allSpawned,"Is all spawned?");
         if (allSpawned) {
-            //       console.log('all sapned');
+            //       console.log('all spawnedd');
             if (partiedCreeps.length > 0) {
                 let tgt = _.min(partiedCreeps, o => o.ticksToLive);
                 if (flag.memory.totalNumber === partiedCreeps.length) {
@@ -942,6 +957,8 @@ class partyInteract {
             }
 //            console.log('doing create', flag, roomLink(flag.pos.roomName), allSpawned, partiedCreeps.length, flag.memory.rallyCreateCount);
 
+        } else {
+            flag.memory.rallyCreateCount = 0;
         }
 
     }

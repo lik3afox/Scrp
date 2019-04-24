@@ -84,11 +84,18 @@ var classLevels = [
     },
     // Level 10
     {
-        body: [TOUGH, TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, TOUGH, ATTACK, TOUGH, ATTACK, ATTACK,
-            ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+        body: [ TOUGH, TOUGH, TOUGH, TOUGH, ATTACK, 
+                TOUGH, TOUGH, TOUGH, ATTACK, TOUGH, 
+                TOUGH, ATTACK, TOUGH, ATTACK, ATTACK,
+                ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, 
+                ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, 
+                HEAL,HEAL,HEAL,HEAL,HEAL,
+                //ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, //ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
+                HEAL,HEAL,HEAL,HEAL,HEAL,
+                MOVE, MOVE, MOVE, MOVE, MOVE, 
+                MOVE, MOVE, MOVE, MOVE, MOVE
         ],
-        boost: ['XUH2O', 'XGHO2', 'XZHO2'],
+        boost: ['XUH2O', 'XGHO2', 'XZHO2','XLHO2'],
     },
     // Level 11
     {
@@ -232,7 +239,7 @@ class paladinClass extends roleParent {
                     if(bads.owner.username === 'Source Keeper'){
                         creep.moveMe(bads);
                     }
-                    if (bads.pos.isNearTo(creep) && (bads.hitsMax === 1600|| bads.hitsMax === 2100 ) ){
+                    if (bads.pos.isNearTo(creep) && (bads.hitsMax === 1100|| bads.hitsMax === 2100 ) ){
                         creep.attack(bads);
                     } else {
                         creep.attack(consted[0]);
@@ -246,7 +253,7 @@ class paladinClass extends roleParent {
                 bads = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
 
             }
-
+            if(!bads) return;
             if (creep.pos.isNearTo(bads)) {
                 creep.attack(bads);
             } else {

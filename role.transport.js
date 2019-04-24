@@ -200,6 +200,7 @@ function interactContainer(creep) {
                 creep.memory.workContain = undefined;
             }
         } else {
+            
             if (creep.memory.lookForConSite === undefined) {
                 let isBuilt = creep.pos.findInRange(FIND_CONSTRUCTION_SITES, 1, {
                     filter: object => (object.structureType == STRUCTURE_CONTAINER)
@@ -222,6 +223,7 @@ function interactContainer(creep) {
                     creep.memory.lookForConSite = undefined;
                 }
             }
+
         }
     }
 }
@@ -233,7 +235,7 @@ function updateMemory(creep) {
         creep.memory.goHome = true;
     } else if (creep.carryTotal === 0) {
         creep.memory.goHome = false;
-        creep.memory.cachePath = undefined;
+//        creep.memory.cachePath = undefined;
     }
 
     if (creep.memory.goHome) {
@@ -419,6 +421,10 @@ class transport extends roleParent {
     }
 
     static run(creep) {
+        if(creep.memory.home === 'E24S33'){
+            require('role.transport2').run(creep);
+            return;
+        }
         if (creep.memory.goHome === undefined) creep.memory.goHome = false;
 
         super.rebirth(creep);

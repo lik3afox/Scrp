@@ -159,12 +159,17 @@ class scoutClass extends roleParent {
             });
             //              }
         }*/
-
+if(!creep.partyFlag){
+    creep.cleanMe();
+    return;
+}
         if (creep.pos.isEqualTo(creep.partyFlag)) {
 //            creep.sleep(10);
             creep.cleanMe();
         } else{
-            creep.moveMe(creep.partyFlag,{reusePath:50});    
+            
+            creep.crawlTo(creep.partyFlag);
+//            creep.moveMe(creep.partyFlag,{reusePath:50});    
         }
     }
 }

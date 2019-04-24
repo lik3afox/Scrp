@@ -161,6 +161,7 @@ class demolisherClass extends roleParent {
                 clearBase: false,
             };
         }
+        /*
         if(creep.memory.party === 'Flag9'){
             if(creep.partyFlag.pos.roomName !== 'E3S14'){
                 creep.moveMe(creep.partyFlag,{reusePath:50});
@@ -181,10 +182,17 @@ class demolisherClass extends roleParent {
             }
             return;
         }
-
+*/
         if (creep.partyFlag.memory.demolisherOpts.clearBase === true && creep.room.name === creep.partyFlag.pos.roomName) {
-            if (creep.memory.targetID === undefined || Game.time % 128 === 0) {
-                creep.memory.targetID = creep.getClearBaseTarget();
+            if (creep.memory.targetID === undefined) { // || Game.time % 500 === 0
+                    var tgtdd = creep.room.getClearBaseTarget();
+                    if(!tgtdd){
+                        creep.partyFlag.memory.remove = true;
+                        creep.memory.death = true;
+                        return;
+                    }
+                    creep.memory.targetID = tgtdd.id;
+
                 if (creep.memory.targetID === false) {
                     require('commands.toParty').changeRoleCount(creep.partyFlag,creep.memory.role,0);
                     require('commands.toParty').changeRoleCount(creep.partyFlag,'thief',0);
@@ -196,7 +204,16 @@ class demolisherClass extends roleParent {
                 if (creep.pos.isNearTo(tgt)) {
                     creep.dismantle(tgt);
                 } else {
-                    creep.moveMe(tgt, { reusePath: 50,maxRooms:1 });
+                    let sded;
+                    if(creep.room.name === creep.partyFlag.pos.roomName){
+                        sded = creep.moveTo(tgt, { reusePath: 50 });
+                    } else {
+                        sded = creep.moveMe(tgt, { reusePath: 50 });
+                    }
+                	if(sded === -2){
+                		let tgttt = creep.room.getClearBaseTarget(true);
+                		if(tgttt)                		creep.memory.targetID = tgttt.id;
+                	}
                     creep.smartDismantle();
                 }
                 creep.say('G2');

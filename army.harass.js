@@ -223,7 +223,7 @@ function attackCreep(creep, bads) {
     } else {
         creep.smartRangedAttack();
     }
-    if (enemy.getActiveBodyparts(RANGED_ATTACK) > 0 && enemy.getActiveBodyparts(ATTACK) === 0) { //
+    if (enemy.getActiveBodyparts(RANGED_ATTACK) > 0 && enemy.getActiveBodyparts(ATTACK) === 0&& !enemy.isAtEdge) { //
         //creep.say('CHRG');
         creep.chaseTo(enemy, { maxRooms: 1, reusePath: 10 });
 
@@ -231,11 +231,11 @@ function attackCreep(creep, bads) {
         creep.moveToEdge();
     } else if (distance == 3 && (enemy.getActiveBodyparts(ATTACK) > 0)) {
 
-    } else if ((distance > 2 || enemy.getActiveBodyparts(RANGED_ATTACK) > 0) && enemy.getActiveBodyparts(ATTACK) === 0) {
+    } else if ((distance > 2 || enemy.getActiveBodyparts(RANGED_ATTACK) > 0) && enemy.getActiveBodyparts(ATTACK) === 0 && !enemy.isAtEdge) {
         creep.chaseTo(enemy, { maxRooms: 1, reusePath: 10 });
     } else if (distance < 3 && (enemy.getActiveBodyparts(RANGED_ATTACK) > 0 || enemy.getActiveBodyparts(ATTACK) > 0)) {
         creep.moveToEdge();
-    } else {
+    } else if( !enemy.isAtEdge) {
         /*if(distance > 5){
             if(creep.memory.waitMoveTimer){
                 //creep.memory.targetPos = new RoomPosition(enemy.pos.x, enemy.pos.y, enemy.pos.roomName);
@@ -258,6 +258,7 @@ function attackCreep(creep, bads) {
 }
 
 function moveCreep(creep) {
+
     if (creep.memory.targetMoveID === undefined) {
         if (creep.memory.waitTimerSites === undefined || creep.memory.waitTimerSites  < 0) {
             var site = creep.room.find(FIND_HOSTILE_CONSTRUCTION_SITES);
@@ -386,17 +387,22 @@ class roleHarass extends roleParent {
 
             if (creep.partyFlag.memory.harassOpts.clearBase === true && creep.room.name === creep.partyFlag.pos.roomName) {
                 if (creep.memory.targetID === undefined || Game.time % 128 === 0) {
-                    creep.memory.targetID = creep.getClearBaseTarget();
+                    creep.memory.targetID = creep.room.getClearBaseTarget().id;
                 }
                 let tgt = Game.getObjectById(creep.memory.targetID);
                 if (tgt) {
                     if(tgt.progress){
                         creep.moveMe(tgt, { reusePath: 50 }); 
-                    } else if (creep.pos.inRangeTo(tgt, 3)) {
-                        creep.rangedAttack(tgt);
-                    } else {
+                    } else if(!creep.pos.isNearTo(tgt )) {
                         creep.moveMe(tgt, { reusePath: 50 });
                     }
+                    if (creep.pos.inRangeTo(tgt, 3)) {
+                        if(creep.pos.isNearTo(tgt)){
+                            creep.rangedMassAttack();
+                        } else {
+                            creep.rangedAttack(tgt);
+                        }
+                    }  
                     creep.say('G2');
                 } else {
                         //moveCreep(creep);

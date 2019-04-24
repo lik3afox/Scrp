@@ -57,6 +57,11 @@ function doUpgradeIn(creep) {
                 new RoomPosition(24, 21, creep.room.name),
             ];
             break;
+        case 'E24S33':
+            pos = [
+                new RoomPosition(8, 12, creep.room.name),
+            ];
+            break;
         case 'E37S34':
             pos = [
                 new RoomPosition(31, 7, creep.room.name),
@@ -195,7 +200,7 @@ function doUpgradeIn(creep) {
     going = pos[creep.memory.roleID];
     if (going !== undefined) {
         if (!creep.pos.isEqualTo(going)) {
-            creep.moveTo(going, {
+            creep.moveMe(going, {
                 reusePath: 30,
                 visualizePathStyle: {
                     fill: 'transparent',
@@ -205,7 +210,9 @@ function doUpgradeIn(creep) {
                     opacity: 0.5
                 }
             });
-        } else if(creep.room.controller.level === 8){
+        } else if(creep.room.controller.isEffected()){
+            
+        }  else if(creep.room.controller.level === 8){
 
             creep.memory.happy = true;
         }
@@ -228,7 +235,7 @@ class roleUpgrader extends roleParent {
 
     static levels(level,roomName) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        if(roomName === 'E28S42' && Game.rooms[roomName] && Game.rooms[roomName].powerLevels && Game.rooms[roomName].powerLevels[PWR_OPERATE_CONTROLLER]){
+        if(Game.rooms[roomName] && Game.rooms[roomName].powerLevels && Game.rooms[roomName].powerLevels[PWR_OPERATE_CONTROLLER]){
             let level = Game.rooms[roomName].powerLevels[PWR_OPERATE_CONTROLLER].level;
             let perTick = (level*10)+15;
             let _Body = [MOVE,MOVE,CARRY,CARRY,CARRY];//_.clone(classLevels[7].body);
@@ -275,7 +282,7 @@ class roleUpgrader extends roleParent {
 
     /** @param {Creep} creep **/
     static run(creep) {
-        if ( creep.memory.happy && !creep.memory.death ) {
+        /*if ( creep.memory.happy && !creep.memory.death ) {
             if(creep.ticksToLive < 100){
                  creep.memory.happy = undefined;
             }
@@ -291,7 +298,7 @@ class roleUpgrader extends roleParent {
                 creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
             }
             return;
-        }
+        }*/
 
         if( creep.ticksToLive < 100){ //!creep.memory.adjustedModule &&
             require('commands.toSpawn').setModuleRole(creep.room.name, 'upgrader', 0, 7);

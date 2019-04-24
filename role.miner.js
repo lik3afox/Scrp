@@ -4,11 +4,11 @@ var classLevels = [
 
     [MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, CARRY, WORK], // 800
 
-    [WORK, WORK, WORK, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, CARRY], // 1050
+    [WORK, WORK, WORK, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE,MOVE, CARRY], // 1050
     [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY], // 1250 
 
     //6m/12w/1c - 1550 energy
-    [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, MOVE], // 1550
+    [CARRY,CARRY, MOVE, MOVE, MOVE, MOVE, MOVE , MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, WORK,  ], // 1550
     //7m,14w/1c
     [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, ] // 1800
 
@@ -427,6 +427,11 @@ class settler extends roleParent {
     }
 
     static run(creep) {
+        if(creep.memory.home === 'E24S33'){
+            require('role.miner2').run(creep);
+            return;
+        }
+
         shouldDie(creep);
         super.rebirth(creep);
         if (super.movement.runAway(creep)) { return; }

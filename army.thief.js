@@ -291,7 +291,7 @@ class thiefClass extends roleParent {
         } else if (super.isPowerParty(creep)) {
             if (powerAction(creep)) return;
         }
-        if(!creep.partyFlag){
+        if(!creep.partyFlag || creep.partyFlag.color === COLOR_WHITE){
         creep.memory.death = creep.partyFlag === undefined;
         return;
         }
@@ -302,8 +302,8 @@ class thiefClass extends roleParent {
             // Find Minearls.
             let room = Game.rooms[creep.memory.home];
             let target = room.terminal;
-            if (target === undefined || room.terminal.full) target = room.storage;
-
+            if (target === undefined || room.terminal.full) target = room.storage;  
+            creep.countDistance();
             if (!creep.pos.isNearTo(target)) {
                 creep.moveMe(target, { reusePath: 50 });
             } else {
@@ -398,10 +398,14 @@ class thiefClass extends roleParent {
                     }
                 }
                 if (getting === undefined && creep.room.storage.total === 0 && creep.room.terminal.total === 0) {
-                    creep.partyFlag.remove();
-                    if (creep.partyFlag === undefined) {
+                    if(creep.partyFlag.memory.autoSiege){
                         creep.memory.death = true;
+                    } else {
+                        creep.partyFlag.remove();
+                    if (creep.partyFlag === undefined) {
+                            creep.memory.death = true;
                         return;
+                    }
                     }
                 }
             
@@ -418,7 +422,7 @@ class thiefClass extends roleParent {
                 }
                 return;
             } else {
-                creep.moveMe(target, { reusePath: 30 });
+                creep.moveTo(target, { reusePath: 30 });
             }
         }
     }

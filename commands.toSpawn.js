@@ -11,6 +11,18 @@ function getCost(module) {
 }
 
 function getStack(spawn) {
+    if(spawn.room.memory.aSpawnOperated ){ // Meaning that only operated spawns will work.
+        let effects = spawn.isEffected(PWR_OPERATE_SPAWN);
+        if(effects){
+            let alpha = spawn.room.alphaSpawn;
+            if(alpha.memory.warCreate && alpha.memory.warCreate.length > 0 ){
+                return alpha.memory.warCreate;
+            }
+        } else {
+            return [];
+        }
+    }
+    
     spawn = spawn.room.alphaSpawn;
     if(!spawn.memory.create) return;
     if(spawn.room.name === 'E13S18' && spawn.memory.warCreate && spawn.memory.warCreate.length > 0 ){
@@ -229,6 +241,51 @@ function toTransfer2(creep) {
     return foundMore;
 }
 class SpawnInteract {
+    static newSpawnRemote(spawn){
+        spawn.memory.remotes = {
+            '5982ff6bb097071b4adc296d':{
+                // id: disabled cuase the id is the object finding.
+                active: true, // This is how we disable this remote
+                pos: {
+                    x:0,
+                    y:0,
+                    roomName:'E1W1'
+                    },
+                containPos:{
+                    x:0,
+                    y:0,
+                    roomName:'E1W1'
+                },
+                distance:10,
+                controller: false,
+                miner:{
+                    carry:2,
+                    work:12,
+                },
+                transport:{
+                    carry:10,
+                },
+                keeperID: undefined, 
+                /*cachePath: {
+                    toStorage:{
+                        'E24S34':1782104445,
+                        'E28S33':1782104445,
+                    },
+                    toSource:{
+                        roomName:path,
+                    },
+                }*/
+
+            }
+        };
+
+       // spawn.memory.remotes.push()
+
+    }
+
+
+
+
     static addSpawnQuery(spawnCount) {
         var e;
         if (spawnCount !== undefined) {

@@ -81,11 +81,11 @@ if(creep.owner.username === 'Invader'){
     if (rattack >= 3 && tough >= 2) type = 'ranger';
     if (rattack === 1 && attack === 1&& work === 1) type = 'fighter';
 } else {
-    if (attack > 10 && tough >= 10) type = 'fighter';
-    if (heal >= 20 && tough >= 10) type = 'healer';
-    if (rattack > 10 && tough >= 10) type = 'ranger';
-    if (work > 10 && tough >= 10) type = 'demolisher';
-    if (rattack > 10 && heal >= 10) type = 'mage';
+    if (attack > 10 ) type = 'fighter';
+    if (heal >= 10 ) type = 'healer';
+    if (rattack > 10 ) type = 'ranger';
+    if (work > 10 ) type = 'demolisher';
+//    if (rattack > 10 ) type = 'mage';
     if (rattack > 10 && attack >= 10) type = 'mage';
 }
 if(type === 'other') console.log(creep.owner.username,attack,rattack,work,heal,tough,numberOfParts,roomLink(creep.room.name));
@@ -127,6 +127,45 @@ module.exports = function() {
         if(creep.memory.role !== 'transport')
     };
     */
+    global.objsToIds= function (array){
+        let ids =[];
+        for(let i in array){
+            ids.push(array[i].id);
+        }
+        return ids;
+    };
+    global.idsToObjs= function (array){
+        let objects = [];
+        for(let i in array){
+            let rtn = Game.getObjectById(array[i]);
+            if(rtn){
+                objects.push(rtn);
+            }else {
+                array[i] = undefined;
+            }
+        }
+        return objects;
+    };
+
+    global.getIdArray= function (array){
+        let ids =[];
+        for(let i in array){
+            ids.push(array[i].id);
+        }
+        return ids;
+    };
+    global.getObjArray= function (array){
+        let objects = [];
+        for(let i in array){
+            let rtn = Game.getObjectById(array[i]);
+            if(rtn){
+                objects.push(rtn);
+            }else {
+                array[i] = undefined;
+            }
+        }
+        return objects;
+    };
     global.arrayBodyCost = function(array) {
 
         var total = 0;
@@ -608,14 +647,13 @@ module.exports = function() {
 
     global.getFormationPos = function(target, formationPos) {
         // So first we get the target.
-        if (target === undefined || target.pos === undefined || formationPos === undefined) {
+        if (target === undefined || formationPos === undefined) {
             return;
         }
 
         if (!_.isNumber(formationPos)) {
             formationPos = parseInt(formationPos);
         }
-
         let dif = { x: 0, y: 0 };
         switch (formationPos) {
             case 1:

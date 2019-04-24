@@ -35,9 +35,9 @@ class controllerRole extends roleParent {
     static run(creep) {
         var goal = Game.getObjectById(creep.memory.goal);
 
-        if (super.movement.runAway(creep)) {
-            return;
-        }
+    //    if (super.movement.runAway(creep)) {
+  //          return;
+//        }
 
         if (goal !== null && creep.room.name == goal.pos.roomName) {
 

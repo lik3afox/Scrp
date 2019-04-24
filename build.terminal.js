@@ -554,7 +554,7 @@ function maxEnergyTrade(terminal) {
         // so far this only calcuates the distance - and the closest is best so far. 
         // What htis logic below is
         // profit / 1 energy + cost    
-
+        if(Game.rooms[Orders[e].roomName]) continue;
         //// console.log( profit/(1+temp), target.price/(1+target.cost),target.price,temp );
         if (Orders[e].amount > thresh && didTrade[Orders[e].id] === undefined)
             if (profit / (1 + temp) > target.price / (1 + target.cost)) {
@@ -923,6 +923,7 @@ function buyCheapEnergy() {
             return o.price;
         });
         let target = zz[0];
+        if(Game.room[zz[0].roomName])return;
 
         if (amount > zz[0].amount) {
             amount = zz[0].amount;
@@ -962,17 +963,25 @@ function reduceStorage(storage) {
     if(!min) {
     	return;
     }
-    var leastTerm = 1000000;
+    var leastTerm = 10000000;
     var room;
-    for (let ee in s1LabRooms) {
+/*    for (let ee in s1LabRooms) {
         if (s1LabRooms[ee] !== storage.room.name && !Game.rooms[s1LabRooms[ee]].terminal.nearFull && (Game.rooms[s1LabRooms[ee]].terminal.store[min] < 4900 || !Game.rooms[s1LabRooms[ee]].terminal.store[min])) {
             room = s1LabRooms[ee];
             break;
         }
     }
-    if (!room && !Game.rooms.E23S38.storage.almostFull) {
-        room = 'E23S38';
-    }
+    if(!room){*/
+            for (let ee in s1LabRooms) {
+                if (Game.rooms[s1LabRooms[ee]].storage.total < leastTerm && s1LabRooms[ee] !== storage.room.name && !Game.rooms[s1LabRooms[ee]].terminal.nearFull) {
+                    room = s1LabRooms[ee];
+                    leastTerm = Game.rooms[s1LabRooms[ee]].storage.total;
+                }
+            }
+//        }
+  //  if (!room && !Game.rooms.E23S38.storage.almostFull) {
+//        room = 'E23S38';
+  //  }
     /*
     if (!Game.rooms.E23S38.storage.almostFull) { // This is a boosted room
         leastTerm = Game.rooms.E23S38.storage.total;
@@ -987,19 +996,12 @@ function reduceStorage(storage) {
                 }
             }
         } else {
-            for (let ee in s1LabRooms) {
-                if (Game.rooms[s1LabRooms[ee]].storage.total < leastTerm && s1LabRooms[ee] !== storage.room.name && !Game.rooms[s1LabRooms[ee]].terminal.nearFull) {
-                    room = s1LabRooms[ee];
-                    leastTerm = Game.rooms[s1LabRooms[ee]].storage.total;
-                }
-
-            }
         }
     }*/
     // then we get the terminal with the least
     if (room) {
 
-        amnt = amnt - Game.rooms[room].terminal.store[min];
+//        amnt = amnt - Game.rooms[room].terminal.store[min];
         if (amnt < 100) amnt = 100;
 
         let rst = storage.room.terminal.recordSend(min, amnt, room, 'trade');
@@ -1400,7 +1402,7 @@ class roleTerminal {
 
         if (roomName === main) {
             doTrap(roomName);
-            if (terminal.total > 295000 && Game.rooms[roomName].storage.nearFull) {
+            if (terminal.nearFull && Game.rooms[roomName].storage.nearFull) {
                 maxEnergyTrade(Game.rooms[roomName].terminal);
                 return;
             }
@@ -1500,7 +1502,7 @@ class roleTerminal {
             }
         }
 
-        if (Game.rooms[roomName].memory.energyIn && Game.rooms[roomName].storage.nearFull && Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] >= 75000) {
+        if (Game.rooms[roomName].memory.energyIn && Game.rooms[roomName].storage.almostFull && Game.rooms[roomName].terminal.store[RESOURCE_ENERGY] >= 75000) {
                 if (!shareEnergy(terminal)) {
                     maxEnergyTrade(terminal);
                 }

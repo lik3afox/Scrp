@@ -476,6 +476,82 @@
     var _level = 2;
     var spawnCount;
 
+    function createPath(from, to, opts) {
+
+        var result = PathFinder.search(from, to, { roomCallback: roomName => createRoomMatrix4Breach(roomName), range: 1 });
+        //    for(let i in result.path){
+        //      console.log(i,result.path[i] );
+        //    }
+        var path = '';
+        for (let i = 0; i < result.path.length; i++) {
+            //        console.log(i,result.path[i],i+1,result.path[i+1]);
+            if (result.path[i + 1]) {
+                //       console.log(result.path[i], result.path[i].getDirectionTo(result.path[i+1]),result.path[i+1] ) ;
+                path += result.path[i].getDirectionTo(result.path[i + 1]);
+            }
+        }
+        return {
+            startPos: result.path[0],
+            path: path
+        };
+    }
+    var roomBreachMatrix;
+
+    function createRoomMatrix4Breach(roomName) { // This is all flag based, it will be stored in flag.
+        if (roomBreachMatrix === undefined) {
+            roomBreachMatrix = {};
+        }
+        if (!roomBreachMatrix[roomName]) {
+            const terrain = new Room.Terrain(roomName);
+            const matrix = new PathFinder.CostMatrix();
+
+            // Fill CostMatrix with default terrain costs for future analysis:
+            for (let y = 0; y < 50; y++) {
+                for (let x = 0; x < 50; x++) {
+                    const tile = terrain.get(x, y);
+                    var weight = 0;
+                    switch (tile) {
+                        case TERRAIN_MASK_WALL:
+                            weight = 0xff;
+                            break;
+                        case TERRAIN_MASK_SWAMP:
+                            weight = 5; // swamp => weight:  5
+                            break;
+                        default:
+                            weight = 1;
+                            break;
+                    }
+                    matrix.set(x, y, weight);
+                }
+            }
+            if (Game.rooms[roomName]) {
+                var stuff = _.filter(Game.rooms[roomName].find(FIND_STRUCTURES), function(o) {
+                    return o.structureType !== STRUCTURE_ROAD && o.structureType !== STRUCTURE_RAMPART;
+                });
+
+
+                for (let i in stuff) {
+                    if (stuff[i].pos) {
+                        matrix.set(stuff[i].pos.x, stuff[i].pos.y, 255);
+                    }
+                }
+                stuff = _.filter(Game.rooms[roomName].find(FIND_STRUCTURES), function(o) {
+                    return o.structureType === STRUCTURE_ROAD;
+                });
+
+
+                for (let i in stuff) {
+                    if (stuff[i].pos) {
+                        matrix.set(stuff[i].pos.x, stuff[i].pos.y, 0);
+                    }
+                }
+
+            }
+            roomBreachMatrix[roomName] = matrix;
+
+        }
+        return roomBreachMatrix[roomName];
+    }
 
 
     function whiteflag(flag) {
@@ -514,16 +590,16 @@
                 break;
             case COLOR_PURPLE:
                 // Purple will mean that it's setup for low CPU usage.
-        if (flag.memory.checkWhat === undefined) {
-            flag.memory.checkWhat = -10;
-        }
-        if (flag.secondaryColor === COLOR_GREEN || flag.secondaryColor === COLOR_PURPLE) {
-            flag.memory.checkWhat++;
-        }
-        if (flag.memory.checkWhat >= Object.keys(roomer).length) {
-            flag.memory.checkWhat = 0;
-        }
-                
+                if (flag.memory.checkWhat === undefined) {
+                    flag.memory.checkWhat = -10;
+                }
+                if (flag.secondaryColor === COLOR_GREEN || flag.secondaryColor === COLOR_PURPLE) {
+                    flag.memory.checkWhat++;
+                }
+                if (flag.memory.checkWhat >= Object.keys(roomer).length) {
+                    flag.memory.checkWhat = 0;
+                }
+
                 if (Game.time % 10 === 0 && flag.room && flag.pos.roomName === 'E19S49' && Game.shard.name === 'shard3') {
                     let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
                     var target;
@@ -539,7 +615,7 @@
 
 
                 if (flag.room !== undefined) { // 
-                    if (flag.room.controller.level === 8 && Game.time % 1500 === 0  ) {  //
+                    if (flag.room.controller.level === 8 && (Game.time % 1500 === 0 || Memory.firstTick) ) { // 
 
                         flag.memory.module = [];
                         /*          
@@ -645,13 +721,31 @@
                             flag.room.memory.focusWall = undefined;
 
                         }
-if(Memory.threeLowestWalls){
-                            if( _.contains(Memory.threeLowestWalls,flag.pos.roomName) ){
-                                console.log(flag, "gets 3 wallworks",Memory.threeLowestWalls);
-                                flag.memory.module.push(['wallwork', 5, 5]);
+                        if (Memory.threeLowestWalls) {
+                            if (_.contains(Memory.threeLowestWalls, flag.pos.roomName)) {
+                                console.log(flag, "gets 3 wallworks", Memory.threeLowestWalls);
+                                flag.memory.module.push(['wallwork', 2, 5]);
+                            } else {
+                                flag.memory.module.push(['wallwork', 1, 5]);
                             }
-}
-                        
+                        }
+                        if (Game.shard.name === 'shard3' && flag.room.storage) {
+                                if (flag.room.storage.store[RESOURCE_ENERGY] > 950000) {
+                                    flag.memory.module.push(['wallwork', 3, 5]);
+                                } else if (flag.room.storage.store[RESOURCE_ENERGY] > 100000) {
+                                    flag.memory.module.push(['wallwork', 1, 5]);
+                                } else {
+
+                                }
+                            }
+
+            let structs = _.filter(flag.room.find(FIND_STRUCTURES),
+                function(object) {
+                    return object.structureType == STRUCTURE_RAMPART && !object.isPublic;
+                }
+            );
+                                flag.room.memory.weakestWall = _.min(structs, o => o.hits).hits;
+
                         /*
                         if (doWall) {
                             if (Game.shard.name === 'shard3' && flag.room.storage) {
@@ -670,7 +764,7 @@ if(Memory.threeLowestWalls){
                             /* else if(flag.room.powerspawn && flag.room.powerspawn > 0 && Memory.stats.rooms[flag.pos.roomName].wallSize > 200000000&& flag.room.storage.store[RESOURCE_POWER] && flag.room.storage.store[RESOURCE_ENERGY] < 200000 ){
 
                                                         }else*/
-                                                        /*
+                        /*
                             if (Memory.stats.rooms[flag.pos.roomName].wallSize < Memory.empireSettings.maxWallSize) {
                                 flag.memory.module.push(['wallwork', 1, 5]);
                             } else if (lowWall < 100000000 && flag.room.stats.storageEnergy > storageEnergyLimit) {
@@ -682,23 +776,24 @@ if(Memory.threeLowestWalls){
                             }
                             /*else if (flag.pos.roomName === 'E13S18') {
                                                            flag.memory.module.push(['wallwork', 1, 5]);
-                                                       }*//*
-                            else {
-                                let sites = flag.room.find(FIND_CONSTRUCTION_SITES);
-                                if (sites.length > 0) {
-                                    flag.memory.module.push(['wallwork', 1, 5]);
-                                }
-                            }
+                                                       }*/
+                        /*
+                                                    else {
+                                                        let sites = flag.room.find(FIND_CONSTRUCTION_SITES);
+                                                        if (sites.length > 0) {
+                                                            flag.memory.module.push(['wallwork', 1, 5]);
+                                                        }
+                                                    }
 
-                        }*/
+                                                }*/
 
                         let rando = Math.floor(Math.random() * 1500);
                         //                        if (flag.room.memory.energyIn) rando += rando + 1000;
-                        if(flag.room.controller.isEffected() && flag.room.powerLevels[PWR_OPERATE_CONTROLLER] ){
-                            if( flag.room.powerLevels[PWR_OPERATE_CONTROLLER].level > 3 ){
-                            flag.memory.module.push(['upgrader', 2, 7]);
+                        if (flag.room.controller.isEffected() && flag.room.powerLevels[PWR_OPERATE_CONTROLLER]) {
+                            if (flag.room.powerLevels[PWR_OPERATE_CONTROLLER].level > 3) {
+                                flag.memory.module.push(['upgrader', 2, 7]);
                             } else {
-                            flag.memory.module.push(['upgrader', 1, 7]);
+                                flag.memory.module.push(['upgrader', 1, 7]);
                             }
                         } else if (flag.room.controller.ticksToDowngrade < Memory.empireSettings.maxController + rando) {
                             flag.memory.module.push(['upgrader', 1, 7]);
@@ -774,7 +869,7 @@ if(Memory.threeLowestWalls){
                         }
 
                         //require('commands.toSpawn').setModuleRole(powercrp.room.name, 'harvester', powercrp.memory.sourcesID.length, 4);
-                        console.log(flag.pos.roomName, linkNum,"LINKED");
+//                        console.log(flag.pos.roomName, linkNum, "LINKED");
                         flag.memory.module.push(['job', linkNum, 5]);
                         flag.room.memory.maxLinkers = linkNum;
 
@@ -787,71 +882,66 @@ if(Memory.threeLowestWalls){
         }
     }
 
-    function findFlagTarget(flag) {
-        if (flag.room === undefined) return;
-        /*        let constrct = flag.room.find(FIND_CONSTRUCTION_SITES);
-                let builtConstruct = _.filter(constrct, function(o) {
-                    return o.progress > 100 && o.structureType !== STRUCTURE_ROAD;
-                });
-                if (builtConstruct.length > 0) {
-                    flag.memory.target = builtConstruct[0].id;
-                    return;
-                } */
-        let strucs = flag.room.find(FIND_STRUCTURES);
-        let filter = [STRUCTURE_SPAWN, STRUCTURE_TOWER, STRUCTURE_LAB, STRUCTURE_LINK, STRUCTURE_POWER_SPAWN, STRUCTURE_OBSERVER, STRUCTURE_NUKER, STRUCTURE_EXTENSION];
-        var test2 = _.filter(strucs, function(o) {
-            return !o.pos.lookForStructure(STRUCTURE_RAMPART) && _.contains(filter, o.structureType);
-        }); // Kill all structures not on rampart. 
-        if (test2.length > 0) {
-            flag.memory.target = test2[0].id;
-        } else {
-            filter = [STRUCTURE_EXTRACTOR]; // Any towers
-            test2 = _.filter(strucs, function(o) {
-                return !o.pos.lookForStructure(STRUCTURE_RAMPART) && _.contains(filter, o.structureType);
-            });
-            if (test2.length > 0) {
-                flag.memory.target = test2[0].id;
-            } else {
-                let bads = flag.room.notAllies;
-                if (bads.length > 0) {
-                    flag.memory.target = bads[0].id;
-                } else {
-                    test2 = _.filter(strucs, function(o) {
-                        return o.structureType == STRUCTURE_SPAWN || (o.structureType === STRUCTURE_RAMPART && (o.room.storage !== undefined && o.room.storage.pos.isEqualTo(o) || o.room.terminal !== undefined && o.room.terminal.pos.isEqualTo(o)));
-                    });
-                    if (test2.length > 0) {
-                        flag.memory.target = test2[0].id;
-                    } else {
-                        filter = [STRUCTURE_TOWER]; // Any towers
-                        test2 = _.filter(strucs, function(o) {
-                            return _.contains(filter, o.structureType);
-                        });
-                        if (test2.length > 0) {
-                            flag.memory.target = test2[0].id;
-                        } else {
-                            filter = [STRUCTURE_RAMPART, STRUCTURE_ROAD]; // Any ramparts and raods
-                            test2 = _.filter(strucs, function(o) {
-                                return _.contains(filter, o.structureType);
-                            });
-                            if (test2.length > 0) {
-                                flag.memory.target = test2[0].id;
-                            } else {
-                                filter = [STRUCTURE_STORAGE, STRUCTURE_TERMINAL]; // Anything but Storage/terminal
-                                test2 = _.filter(strucs, function(o) {
-                                    return !_.contains(filter, o.structureType);
-                                });
-                                if (test2.length > 0 && test2[0].structureType !== STRUCTURE_CONTROLLER) {
-                                    flag.memory.target = test2[0].id;
-                                } else {
 
-                                }
-                            }
-                        }
-                    }
-                }
+    function adjustThreatLevel(room, autoSiegeSettings) {
+        if (!room) return;
+        var threatLevel = autoSiegeSettings.threatLevel;
+
+        var bads = room.notAllies;
+        // We need to find bad creeps
+        // iF they are have attack/ranged then incrase threatLevel by 2;
+        // if they have work then increase threat level
+        var damageCreeps = [];
+        var buildingCreeps = [];
+        for (let i in bads) {
+            if (bads[i].getActiveBodyparts(ATTACK) > 0 || bads[i].getActiveBodyparts(RANGED_ATTACK) > 0) {
+                damageCreeps.push(bads[i]);
+            } else if (bads[i].getActiveBodyparts(WORK) > 0) {
+                buildingCreeps.push(bads[i]);
             }
         }
+        if (damageCreeps.length > 0) {
+            // We should be looking at boosted here, if so then increase threat level even more!
+            threatLevel += 10;
+        } else {
+            threatLevel -= 2;
+        }
+        if (buildingCreeps.length > 0) {
+            threatLevel += 5;
+        } else {
+            threatLevel -= 2;
+        }
 
+        // if there are constructionSites increase threat level
+        var conSites = room.find(FIND_CONSTRUCTION_SITES);
+        conSites = _.filter(conSites, function(o) {
+            return o.progress > 0;
+        });
+        if (conSites.length > 0) {
+            threatLevel += 5;
+        } else {
+            threatLevel -= 2;
+        }
+
+        // if there are towers/spawn up increase threat level
+        var doneStructs = room.find(FIND_STRUCTURES);
+        doneStructs = _.filter(doneStructs, function(o) {
+            return o.structureType === STRUCTURE_TOWER && o.structureType === STRUCTURE_SPAWN;
+        });
+        if (doneStructs.length > 0) {
+            threatLevel += 25;
+        } else {
+            threatLevel -= 2;
+        }
+        //   autoSiegeSettings.threatLevel
+
+
+        // Threat level is at max 100 and min -100
+        // min - 100 means that you can maximize thieves
+        if (threatLevel > 100) threatLevel = 100;
+        if (threatLevel < -100) threatLevel = -100;
+        console.log('Threat Level analyzed in ', room, "Set to:", threatLevel);
+        return threatLevel;
     }
 
     class buildFlags {
@@ -996,30 +1086,125 @@ if(Memory.threeLowestWalls){
 
             if (Game.flags.remote !== undefined) {
                 flag = Game.flags.remote;
-                if (flag.memory.spawnRoom === undefined) {
-                    var zz;
+                /*
+                               if(flag.color !== COLOR_YELLOW ) {
+                                    flag.memory.setColor = {
+                                        color:COLOR_YELLOW,
+                                        secondaryColor:COLOR_YELLOW,
+                                    };
+                                   flag.memory.musterType = 'scout';
+                                   flag.memory.musterRoom = 'close';
+                               }
 
+                                 */
+                if (flag.memory.maxDelay === undefined) {
+                    flag.memory.maxDelay = 1000;
+                }
+
+                if (flag.memory.spawnRoom === undefined) {
                     flag.memory.spawnRoom = 'none';
                 }
                 if (flag.room === undefined) {
-
                     observer.reqestRoom(flag.pos.roomName, 5);
                 } else {
+
                     if (flag.memory.spawnRoom === 'none') {
                         flag.room.visual.text('SETROOM', flag.pos);
+                    } else if (flag.secondaryColor === COLOR_GREY) {
+                        let room = Game.rooms[flag.memory.spawnRoom];
+                        let spwn = room.alphaSpawn;
+
+                        if (flag.memory.sourceID === undefined) {
+                            let source = flag.room.find(FIND_SOURCES);
+                            flag.memory.sourceID = getIdArray(source);
+                            if (source.length > 2) {
+                                let mineral = flag.room.find(FIND_MINERALS);
+                                flag.memory.sourceID.unshift(mineral[0].id);
+                            }
+                        }
+                        if (Game.time % 50 === 0) {
+                            console.log('Remote Flag up,', flag.room, flag.memory.delay, "/", flag.memory.maxDelay, flag.memory.sourceID);
+                        }
+
+                        let allRemotes = getObjArray(flag.memory.sourceID);
+                        for (let i in allRemotes) {
+                            if (allRemotes[i].mineralType) {
+                                flag.room.visual.text("M", allRemotes[i].pos, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+                            } else {
+                                flag.room.visual.text(i, allRemotes[i].pos, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+                            }
+
+                        }
+                        flag.room.visual.text(flag.memory.delay, flag.pos, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5 });
+
+                        if (flag.memory.delay <= 0 && flag.memory.sourceID.length) {
+                            var targetSource = Game.getObjectById(flag.memory.sourceID[0]);
+                            if (targetSource && spwn) {
+                                let remote = spwn.memory.roadsTo;
+
+                                let has = false;
+                                for (let zzz in remote) {
+                                    if (remote[zzz].source === targetSource.id) {
+                                        has = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!has) {
+
+                                    //var result = createPath(room.storage.pos, source[eee].pos, { ignoreCreeps: true,});
+                                    let result = PathFinder.search(room.storage.pos, targetSource.pos, { roomCallback: roomName => createRoomMatrix4Breach(roomName), range: 1 });
+                                    let path = result.path;
+
+                                    // Here we add info to spwn.
+                                    let BUILD = {
+                                        source: targetSource.id,
+                                        sourcePos: new RoomPosition(targetSource.pos.x, targetSource.pos.y, targetSource.pos.roomName),
+                                        distance: result.path.length,
+                                        expLevel: 2
+                                    };
+                                    if (targetSource.mineralType) {
+                                        BUILD.expLevel = 11;
+                                    }
+                                    if (targetSource.energyCapacity === 4000) {
+                                        BUILD.expLevel = 5;
+                                    }
+
+                                    if (targetSource.room.controller !== undefined) {
+                                        BUILD.controller = false;
+                                    }
+                                    console.log('added remote', BUILD.sourcePos, BUILD.expLevel);
+                                    remote.push(BUILD);
+                                    flag.memory.sourceID.shift();
+                                    flag.memory.delay = flag.memory.maxDelay;
+                                } else {
+                                    console.log('Existing remote removing from query', BUILD.sourcePos, BUILD.expLevel);
+                                    //remote.push(BUILD);
+                                    flag.memory.sourceID.shift();
+                                    flag.memory.delay = 100;
+                                }
+
+
+                            }
+
+                        }
+                        flag.memory.delay--;
+                        if (flag.memory.sourceID.length === 0) {
+                            //                            flag.memory.spawnRoom = 'none';
+                            flag.remove();
+                        }
+
                     } else {
                         let source = flag.room.find(FIND_SOURCES);
                         let room = Game.rooms[flag.memory.spawnRoom];
-                        let spwn = room.find(FIND_STRUCTURES);
-                        spwn = _.filter(spwn, function(o) {
-                            return o.structureType == STRUCTURE_SPAWN && o.memory.alphaSpawn;
-                        });
-                        if (spwn.length === 1 && source.length > 0 && room !== undefined) {
-                            let remote = spwn[0].memory.roadsTo;
-                            let has;
+                        let spwn = room.alphaSpawn;
+
+                        if (spwn && source.length > 0) {
+                            let remote = spwn.memory.roadsTo;
+                            let has = false;
                             for (let eee in source) {
+                                has = false;
                                 for (let zzz in remote) {
-                                    has = false;
                                     if (remote[zzz].source === source[eee].id) {
                                         has = true;
                                         break;
@@ -1028,13 +1213,27 @@ if(Memory.threeLowestWalls){
                                 }
                                 if (!has) {
 
+                                    //var result = createPath(room.storage.pos, source[eee].pos, { ignoreCreeps: true,});
+                                    let result = PathFinder.search(source[eee].pos, room.storage.pos, { roomCallback: roomName => createRoomMatrix4Breach(flag.pos.roomName), range: 1 });
+                                    let path = result.path;
+                                    //console.log(path);
+                                    /*
+                                    for(let i in path){
+                                        let _room = Game.rooms[path[i].roomName];
+                                        console.log(_room,path[i].roomName);
+                                        if(_room){
+                                            let posed = path[i];
+                                            let rst = _room.createConstructionSite(posed.x,posed.y, STRUCTURE_ROAD);
+                                            console.log(rst,posed.x,posed.y, STRUCTURE_ROAD);
+                                        }
+                                    }*/
+
                                     // Here we add info to spwn.
                                     let BUILD = {
                                         source: source[eee].id,
                                         sourcePos: new RoomPosition(source[eee].pos.x, source[eee].pos.y, source[eee].pos.roomName),
-                                        miner: false,
-                                        transport: false,
-                                        expLevel: 8
+                                        distance: result.path.length,
+                                        expLevel: 2
                                     };
                                     if (parseInt(eee) === 0 && source[eee].room.controller !== undefined) {
                                         BUILD.controller = false;
@@ -1043,7 +1242,7 @@ if(Memory.threeLowestWalls){
                                 }
                             }
 
-                            flag.memory.spawnRoom = 'none';
+                            //                            flag.memory.spawnRoom = 'none';
                             flag.remove();
                         }
 
@@ -1136,21 +1335,21 @@ if(Memory.threeLowestWalls){
                 let ze = _.filter(conFlag.room.find(FIND_MY_CREEPS), function(o) {
                     return o.memory.role === 'guard';
                 });
-                if(Game.time % 10 === 0)
-                console.log(roomLink(conFlag.pos.roomName),"Contrlling a guard",ze.length);
+                if (Game.time % 10 === 0)
+                    console.log(roomLink(conFlag.pos.roomName), "Contrlling a guard", ze.length);
                 if (ze.length > 0) {
                     ze[0].memory.dontMove = true;
                     ze[0].memory.follower = true;
                     var bads = ze[0].pos.findInRange(ze[0].room.notAllies, 3);
-                    if(bads.length > 0){
+                    if (bads.length > 0) {
                         ze[0].moveMe(bads[0]);
                         ze[0].attack(bads[0]);
                         return;
                     }
 
-                    
-                        ze[0].smartHeal();
-                    
+
+                    ze[0].smartHeal();
+
 
                     if (!ze[0].pos.isEqualTo(conFlag)) {
                         ze[0].moveMe(conFlag);
@@ -1161,12 +1360,12 @@ if(Memory.threeLowestWalls){
 
                         if (str.length > 0) {
                             // Found the container that wanted to be built.
-                            ze[0].memory.dontMove = undefined;     
-                            conFlag.memory.remove = true;   
+                            ze[0].memory.dontMove = undefined;
+                            conFlag.memory.remove = true;
                             ze[0].memory.follower = undefined;
                         }
                     }
-                    
+
                 }
 
 
@@ -1400,16 +1599,25 @@ if(Memory.threeLowestWalls){
 
             for (let i in zFlags) {
                 flag = zFlags[i];
+
                 // SETTING UP MEMORY
+
                 if (flag.color === COLOR_YELLOW) {
-                if (flag.memory.CachedPathOn === undefined) {
-                    flag.memory.CachedPathOn = false;
-                }
-                     if (flag.memory.delaySpawn === undefined) {
-                        flag.memory.delaySpawn = 0;
+                    if (flag.memory.squadMode) {
+                        flag.memory.squadID = undefined;
+                        flag.memory.pointID = undefined;
+                        flag.memory.groupPoint = undefined;
+                        flag.memory.squadMode = undefined;
+                        flag.memory.targetPos = undefined;
+                        flag.memory.aiSettings = undefined;
+                        flag.memory.targetID = undefined;
+                        flag.memory.enemyTarget = undefined;
+                        flag.memory.enemyTargetStanding = undefined;
+                        flag.memory.enemyTargetStandingDistance = undefined;
                     }
-                    if (flag.memory.spawnCounter === undefined) {
-                        flag.memory.spawnCounter = 0;
+
+                    if (flag.memory.CachedPathOn === undefined) {
+                        flag.memory.CachedPathOn = false;
                     }
                     if (flag.memory.attackDirection === undefined) {
                         flag.memory.attackDirection = false;
@@ -1426,25 +1634,300 @@ if(Memory.threeLowestWalls){
                     if (flag.memory.squadLogic === undefined) {
                         flag.memory.squadLogic = false;
                     }
-                    if (flag.memory.nextTargets === undefined) {
-                        flag.memory.nextTargets = [];
+                    if (flag.memory.autoSiege === undefined) {
+                        flag.memory.autoSiege = false;
+                    }
+                    if (flag.memory.spawningSettings === undefined) {
+                        flag.memory.spawningSettings = {
+                            spawnCounter: 0, // Number of spawns 
+                            spawnRoom: null, // MusterRoom
+                            gameTimeSiege: null, // tick to start siege on.
+                            maxSpawnDelay: 1500, // delay between waves
+                        };
+                    }
+                }
+                let spnSet = flag.memory.spawningSettings;
+                if (spnSet && spnSet.gameTimeSiege) {
+                    if (spnSet.gameTimeSiege < 999999) {
+                        spnSet.gameTimeSiege = Game.time + spnSet.gameTimeSiege;
+                    }
+                    if (Game.time > spnSet.gameTimeSiege) {
+                        if (spnSet.spawnCounter > 0) {
+                            if (!flag.memory.setColor && flag.color !== COLOR_YELLOW && flag.color !== COLOR_ORANGE) {
+                                spnSet.spawnCounter--;
+                                spnSet.gameTimeSiege = spnSet.maxSpawnDelay;
+                                flag.memory.setColor = {
+                                    color: COLOR_YELLOW,
+                                    secondaryColor: COLOR_YELLOW,
+                                };
+                            }
+                        }
+
+                    }
+                }
+                /*                // Flag Delay Spawning Function.
+                                if (flag.memory.spawnCounter && flag.memory.spawnCounter > 0) {
+                                    if (flag.memory.delaySpawnCounter > 0) {
+                                        if (flag.memory.delaySpawnCounter < 100000) {
+                                            flag.memory.delaySpawnCounter--;
+                                        } else if (flag.memory.delaySpawnCounter < Game.time) {
+                                            if (!flag.memory.setColor && flag.color !== COLOR_YELLOW && flag.color !== COLOR_ORANGE) {
+                                                flag.memory.spawnCounter--;
+                                                flag.memory.setColor = {
+                                                    color: COLOR_YELLOW,
+                                                    secondaryColor: COLOR_YELLOW,
+                                                };
+                                            }
+                                        }
+                                    } else {
+                                        if (!flag.memory.setColor && flag.color !== COLOR_YELLOW && flag.color !== COLOR_ORANGE) {
+                                            if (flag.memory.delaySpawn > 0) {
+                                                flag.memory.delaySpawnCounter = flag.memory.delaySpawn;
+                                            }
+                                            flag.memory.spawnCounter--;
+                                            flag.memory.setColor = {
+                                                color: COLOR_YELLOW,
+                                                secondaryColor: COLOR_YELLOW,
+                                            };
+                                        }
+                                    }
+                                }*/
+
+
+                if (flag.memory.autoSiege && flag.room) {
+                    //Autosiege changes from Siege -> Raiding/Supressing -> Suppressing/Demolishing/Decontrolling 
+                    if (flag.memory.autoSiegeSettings === undefined) {
+                        flag.memory.autoSiegeSettings = {};
+                    }
+                    var autoSiegeSettings = flag.memory.autoSiegeSettings;
+                    if (autoSiegeSettings.mode === undefined) {
+                        autoSiegeSettings.mode = 'siege';
+                        autoSiegeSettings.raiding = true; // This means that we don't target storage/terminal and we also raid the storage/terminal
+                        autoSiegeSettings.threatLevel = 0; // The lower the number the less threat the higher the more 
+                    }
+                    let xx = 1;
+                    let yy = 1;
+                    let font = { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT };
+                    flag.room.visual.text("AutoSieged Enabled", xx, yy, font);
+                    flag.room.visual.text("Mode:" + autoSiegeSettings.mode, xx, yy + 1, font);
+                    flag.room.visual.text("raiding Storage/Terminal:" + autoSiegeSettings.raiding, xx, yy + 2, font);
+                    flag.room.visual.text("Threat Level:" + autoSiegeSettings.threatLevel, xx, yy + 3, font);
+
+                    switch (autoSiegeSettings.mode) {
+                        case 'siege':
+                        case 'sieging':
+                            let allStructs = flag.room.find(FIND_STRUCTURES);
+                            allStructs = _.filter(allStructs, function(o) {
+                                return o.structureType === STRUCTURE_TOWER || o.structureType === STRUCTURE_SPAWN;
+                            });
+                            console.log("AutoSeiege adjustment looking for bad structus to turn off siegeMode", allStructs.length, "FOund bads structs");
+                            if (allStructs.length === 0) {
+                                autoSiegeSettings.mode = 'raiding';
+                            }
+
+                            break;
+
+                        case 'raiding':
+                            //Adjusting Threat level
+                            if (Game.time % 250 === 0 && Game.flags.raidingFlag) {
+                                autoSiegeSettings.threatLevel = adjustThreatLevel(flag.room, autoSiegeSettings);
+                                console.log(autoSiegeSettings, "Threat level");
+                                let party = require('commands.toParty');
+                                if (autoSiegeSettings.threatLevel === -100) {
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 8); // 10/40 body
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 8); // 10/40 body
+                                    if (flag.memory.musterType !== 'demoSuppressor') {
+                                        flag.memory.party = [];
+                                        flag.memory.musterType = "demoSuppressor";
+                                    }
+                                    party.changeRoleLevel(flag, 'demolisher', 7);
+                                    party.changeRoleLevel(flag, 'ranger', 7);
+                                } else if (autoSiegeSettings.threatLevel >= -50 && autoSiegeSettings.threatLevel < -10) {
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 6);
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 6);
+                                    if (flag.memory.musterType !== 'demoSuppressor') {
+                                        flag.memory.party = [];
+                                        flag.memory.musterType = "demoSuppressor";
+                                    }
+                                    party.changeRoleLevel(flag, 'demolisher', 6);
+                                    party.changeRoleLevel(flag, 'ranger', 6);
+                                } else if (autoSiegeSettings.threatLevel >= -99 && autoSiegeSettings.threatLevel < -50) {
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 7);
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 7);
+                                    //                                  party.changeRoleLevel(flag, 'fighter', 7);
+                                    //                                    party.changeRoleLevel(flag, 'mage', 7);
+                                    flag.memory.party = [];
+                                    flag.memory.musterType = "demoSuppressor";
+                                } else if (autoSiegeSettings.threatLevel <= 10 && autoSiegeSettings.threatLevel >= -10) {
+                                    //party.changeRoleCount(flag, role, number, level);
+                                    flag.memory.party = [];
+                                    flag.memory.musterType = "suppressor";
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 5);
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 5);
+                                    party.changeRoleLevel(flag, 'fighter', 5);
+                                    party.changeRoleLevel(flag, 'mage', 5);
+                                } else if (autoSiegeSettings.threatLevel <= 50 && autoSiegeSettings.threatLevel > 10) {
+                                    //                      party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 5);
+                                    //                        party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 5);
+                                    party.changeRoleLevel(flag, 'fighter', 6);
+                                    party.changeRoleLevel(flag, 'mage', 6);
+                                } else if (autoSiegeSettings.threatLevel <= 99 && autoSiegeSettings.threatLevel > 50) {
+                                    //                          party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 5);
+                                    //                            party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 5);
+                                    party.changeRoleLevel(flag, 'fighter', 7);
+                                    party.changeRoleLevel(flag, 'mage', 7);
+                                } else if (autoSiegeSettings.threatLevel === 100) {
+                                    //                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 5);
+                                    //                                  party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 5);
+                                    party.changeRoleLevel(flag, 'fighter', 10);
+                                    party.changeRoleLevel(flag, 'mage', 10);
+                                }
+                            }
+
+                            // Threat level is at max 100 and min -100
+                            // min - 100 means that you can maximize thieves
+
+                            // Add thieves too flag. 
+                            // break; Do not break cause raiding also needs suppression.
+                            if (!Game.flags.raidingFlag) {
+                                var bca = new RoomPosition(flag.room.storage.pos.x, flag.room.storage.pos.y, flag.room.name);
+                                var zzz = flag.room.createFlag(bca, 'raidingFlag', COLOR_YELLOW, COLOR_YELLOW);
+                                flag.memory.musterType = 'suppressor';
+                                flag.memory.spawnCounter = 10;
+                                break;
+                            }
+
+                            if (Game.flags.raidingFlag.memory.musterRoom === 'none') {
+                                Game.flags.raidingFlag.memory.musterRoom = 'close';
+                                Game.flags.raidingFlag.memory.musterType = 'dismantleRoom';
+                                Game.flags.raidingFlag.memory.tusken = flag.memory.tusken;
+                                Game.flags.raidingFlag.memory.demolisherOpts.clearBase = true;
+                                Game.flags.raidingFlag.memory.thiefOps.pickUp = false;
+                                Game.flags.raidingFlag.memory.CachedPathOn = true;
+
+                            } else if (Game.flags.raidingFlag.memory.CachedPathOn && Game.flags.raidingFlag.memory.cachedPathInfo.startFlag === null) {
+                                Game.flags.raidingFlag.memory.cachedPathInfo.startFlag = Game.flags.raidingFlag.memory.musterRoom;
+
+                            }
+                            if (!autoSiegeSettings.raiding && Game.time % 50) {
+                                var myDemos;
+                                if (flag.room.terminal) {
+                                    myDemos = flag.room.find(FIND_MY_CREEPS);
+                                    myDemos = _.filter(myDemos, function(o) {
+                                        return o.memory.role === 'demolisher';
+                                    });
+                                    for (let i in myDemos) {
+                                        myDemos[i].memory.targetID = flag.room.terminal.id;
+                                    }
+                                    if (flag.memory.squadMode === 'paired') {
+                                        flag.memory.squadGrouping.one.target = flag.room.terminal.id;
+                                        flag.memory.squadGrouping.two.target = flag.room.terminal.id;
+                                    }
+
+                                } else if (flag.room.storage) {
+                                    myDemos = flag.room.find(FIND_MY_CREEPS);
+                                    myDemos = _.filter(myDemos, function(o) {
+                                        return o.memory.role === 'demolisher';
+                                    });
+                                    for (let i in myDemos) {
+                                        myDemos[i].memory.targetID = flag.room.storage.id;
+                                    }
+                                    if (flag.memory.squadMode === 'paired') {
+                                        flag.memory.squadGrouping.one.target = flag.room.storage.id;
+                                        flag.memory.squadGrouping.two.target = flag.room.storage.id;
+                                    }
+                                }
+                                require('commands.toParty').removeRole(Game.flags.raidingFlag, 'thief');
+                            }
+
+
+                            if ((!flag.room.storage || flag.room.storage.total === 0 || flag.room.storage.store[RESOURCE_ENERGY] === flag.room.storage.total) && (!flag.room.terminal || flag.room.terminal.total === 0 || flag.room.terminal.store[RESOURCE_ENERGY] === flag.room.terminal.total)) {
+                                autoSiegeSettings.mode = 'suppression';
+                                require('commands.toParty').removeRole(Game.flags.raidingFlag, 'thief');
+                            }
+                            break;
+
+                        case 'suppression':
+                            if (flag.memory.spawnCounter === 0) {
+                                flag.memory.spawnCounter = 5;
+                            }
+                            if (Game.time % 250 === 0 && Game.flags.raidingFlag) {
+                                adjustThreatLevel(flag.room, autoSiegeSettings);
+                                let party = require('commands.toParty');
+                                /*if (autoSiegeSettings.threatLevel === -100) {
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 8); // 10/40 body
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 8); // 10/40 body
+  //                                  party.changeRoleLevel(flag, 'fighter', 5);
+//                                    party.changeRoleLevel(flag, 'mage', 5);
+                                }else if (autoSiegeSettings.threatLevel >= -50 && autoSiegeSettings.threatLevel < -10) {
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 6);
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 6);
+      //                              party.changeRoleLevel(flag, 'fighter', 6);
+    //                                party.changeRoleLevel(flag, 'mage', 6);
+                                } else if (autoSiegeSettings.threatLevel >= -99 && autoSiegeSettings.threatLevel < -50) {
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 7);
+                                    party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 7);
+  //                                  party.changeRoleLevel(flag, 'fighter', 7);
+//                                    party.changeRoleLevel(flag, 'mage', 7);
+                                } else*/
+                                if (autoSiegeSettings.threatLevel <= 10 && autoSiegeSettings.threatLevel >= -10) {
+                                    //party.changeRoleCount(flag, role, number, level);
+                                    //                                  party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 5);
+                                    //                                    party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 5);
+                                    party.changeRoleLevel(flag, 'fighter', 5);
+                                    party.changeRoleLevel(flag, 'mage', 5);
+                                } else if (autoSiegeSettings.threatLevel <= 50 && autoSiegeSettings.threatLevel > 10) {
+                                    //                      party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 5);
+                                    //                        party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 5);
+                                    party.changeRoleLevel(flag, 'fighter', 6);
+                                    party.changeRoleLevel(flag, 'mage', 6);
+                                } else if (autoSiegeSettings.threatLevel <= 99 && autoSiegeSettings.threatLevel > 50) {
+                                    //                          party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 5);
+                                    //                            party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 5);
+                                    party.changeRoleLevel(flag, 'fighter', 7);
+                                    party.changeRoleLevel(flag, 'mage', 7);
+                                } else if (autoSiegeSettings.threatLevel === 100) {
+                                    //                                    party.changeRoleLevel(Game.flags.raidingFlag, 'demolisher', 5);
+                                    //                                  party.changeRoleLevel(Game.flags.raidingFlag, 'thief', 5);
+                                    party.changeRoleLevel(flag, 'fighter', 10);
+                                    party.changeRoleLevel(flag, 'mage', 10);
+                                }
+                            }
+
+
+
+                            let nothingLeft = flag.room.find(FIND_STRUCTURES);
+                            nothingLeft = _.filter(nothingLeft, function(o) {
+                                return o.structureType !== STRUCTURE_CONTROLLER;
+                            });
+                            console.log('Suppressing room to clear all strucutrres', nothingLeft.length);
+                            if (nothingLeft.length === 0) {
+                                flag.memory.setColor = {
+                                    color: COLOR_WHITE,
+                                    secondaryColor: COLOR_WHITE,
+                                };
+                                Game.flags.raidingFlag.memory.remove = true;
+                            }
+
+                            break;
                     }
 
                 }
 
+
                 if (flag.memory.powerCreepFlag) {
                     if (flag.memory.doPowerOrder) {
                         if (flag.color !== COLOR_YELLOW && flag.room && Game.powerCreeps[flag.name]) {
-                            flag.room.visual.text(flag.memory.doPowerOrder, flag.pos.x, flag.pos.y-1);
+                            flag.room.visual.text(flag.memory.doPowerOrder, flag.pos.x, flag.pos.y - 1);
                             flag.room.visual.text(Game.powerCreeps[flag.name].memory.currentPowerJob, flag.pos.x, flag.pos.y + 2);
                             flag.room.visual.text(Game.powerCreeps[flag.name].memory.currentJob, flag.pos.x, flag.pos.y + 3);
 
 
-                        } 
-                    }
-                     if(!Game.powerCreeps[flag.name]){
-                            flag.room.memory.powerLevels = undefined;
                         }
+                    }
+                    if (!Game.powerCreeps[flag.name]) {
+                        flag.room.memory.powerLevels = undefined;
+                    }
                 }
 
                 if (flag.memory.reclaimer === true) {
@@ -1595,71 +2078,39 @@ if(Memory.threeLowestWalls){
 
                 // Mineral flag that will turn off when it's fully extracted.
                 if (flag.memory.mineral) {
-                    //                    flag.memory.delaySpawn = 0;
-/*
-                    if (flag.room !== undefined) {
-                        if (flag.room.mineral !== undefined) {
-                            flag.memory.mineralID = flag.room.mineral.id;
-                            flag.memory.mineralType = flag.room.mineral.mineralType;
-                        }
-                        if (flag.room.mineral.mineralAmount === 0) {
-                            flag.memory.delaySpawn = flag.room.mineral.ticksToRegeneration - 150;
-                            flag.memory.spawnCounter = 10;
-                        }
-                    }*/
-                }
-
-                // Flag Delay Spawning Function.
-                if (flag.memory.delaySpawn !== undefined) {
-                    if (flag.memory.delaySpawn < 100000) { // Two different types of timing, if below 100,000 it will count down to 0.
-                        if (flag.memory.delaySpawn > 0) {
-                            flag.memory.delaySpawn--;
-
-                            if (flag.memory.color !== COLOR_BROWN) {
-                                flag.memory.setColor = {
-                                    color: COLOR_BROWN,
-                                    secondaryColor: COLOR_WHITE,
-                                };
-                            }
-                        } else if (flag.color === COLOR_BROWN) {
-                            //                            if (flag.color !== COLOR_YELLOW) {
-                            //                              if (flag.memory.spawnCounter < 0) {
-                            //                                    flag.memory.spawnCounter--;
-                            flag.memory.setColor = {
+                    //flag.memory.mineralType 
+                    /*
+                    if ( Memory.stats.totalMinerals[flag.memory.mineralType] < 50000){
+//                        console.log("Changing Mineral Flag for:",Memory.stats.totalMinerals[flag.memory.mineralType],flag.memory.mineralType);
+                        if(flag.color !== COLOR_YELLOW){
+                            flag.memory.setColor=  {
                                 color: COLOR_YELLOW,
                                 secondaryColor: COLOR_YELLOW,
                             };
-                            //                            }
-                            //                          }
                         }
-                    } else { // Else that means 
-                        console.log('Flag spawnDelay @', flag.pos, flag.memory.delaySpawn, Game.time, flag.color);
-
-                        if (flag.memory.delaySpawn > Game.time) {
-
-                            if (flag.memory.color !== COLOR_BROWN) {
-                                flag.memory.setColor = {
-                                    color: COLOR_BROWN,
-                                    secondaryColor: COLOR_WHITE,
-                                };
-                                //                                flag.memory.delaySpawn = 0;
-
-                            }
-                        } else if (flag.color === COLOR_BROWN && flag.memory.delaySpawn < Game.time) {
-
-                            if (flag.memory.spawnCounter > 0 && flag.memory.setColor === undefined) {
-                                flag.memory.spawnCounter--;
-
-                                if (flag.memory.color !== COLOR_YELLOW) {
-                                    flag.memory.setColor = {
-                                        color: COLOR_YELLOW,
-                                        secondaryColor: COLOR_YELLOW,
-                                    };
-                                }
-                            }
-                        }
+                           //flag.memory.spawnCounter = 1;
+                    } else*/
+                    if (flag.color !== COLOR_WHITE) {
+                        flag.memory.setColor = {
+                            color: COLOR_WHITE,
+                            secondaryColor: COLOR_WHITE,
+                        };
                     }
+                    /*
+                                        if (flag.room !== undefined) {
+                                            if (flag.room.mineral !== undefined) {
+                                                flag.memory.mineralID = flag.room.mineral.id;
+                                                flag.memory.mineralType = flag.room.mineral.mineralType;
+                                            }
+                                            if (flag.room.mineral.mineralAmount === 0) {
+                                                flag.memory.delaySpawn = flag.room.mineral.ticksToRegeneration - 150;
+                                                flag.memory.spawnCounter = 10;
+                                            }
+                                        }*/
                 }
+
+
+
 
                 if (flag.memory.musterType && flag.memory.musterType === 'hmule') {
                     if (flag.memory.rallyCreateCount > 100) {
@@ -1672,6 +2123,8 @@ if(Memory.threeLowestWalls){
                         flag.memory.rallyCreateCount = 100;
                     }
                     flag.room.visual.text(flag.memory.musterType + ":" + flag.memory.rallyCreateCount, flag.pos.x, flag.pos.y);
+                    flag.room.visual.text(flag.memory.squadMode, flag.pos.x, flag.pos.y - 3);
+
                     if (flag.memory.musterType === 'firstWave') {
                         var spwns = flag.room.find(FIND_MY_STRUCTURES);
                         spwns = _.filter(spwns, function(structure) {
@@ -1808,72 +2261,80 @@ if(Memory.threeLowestWalls){
                         break;
 
                     case COLOR_BROWN:
-                        if (flag.room !== undefined) {
-                            if (flag.memory.nextTargets === undefined) flag.memory.nextTargets = [];
-                            if (flag.memory.nextTargets.length === 0) {
-                                let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
-                                if (res.length > 0) {
-                                    for (let ee in res) {
-                                        if (res[ee].structure !== undefined && res[ee].structureType !== STRUCTURE_CONTROLLER && res[ee].structureType !== STRUCTURE_STORAGE && res[ee].structureType !== STRUCTURE_TERMINAL) {
-                                            flag.memory.target = res[ee].structure.id;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            let tgt = Game.getObjectById(flag.memory.target);
-                            if (tgt !== null && tgt.structureType !== undefined && tgt.structureType === STRUCTURE_RAMPART && tgt.hits < 10000 && (tgt.pos.lookForStructure(STRUCTURE_STORAGE) || tgt.pos.lookForStructure(STRUCTURE_TERMINAL))) {
-                                flag.memory.target = undefined;
-                                tgt = null;
-                            }
 
-                            if (tgt !== null && !tgt.pos.isEqualTo(flag)) {
-                                flag.setPosition(tgt.pos);
-                            } else if (tgt === null) {
-                                flag.memory.target = undefined;
-                            }
-
-                            if (flag.memory.nextTargets.length > 0) {
-                                for (let ae in flag.memory.nextTargets) {
-                                    let tgt = Game.getObjectById(flag.memory.nextTargets[ae]);
-                                    if (tgt !== null) {
-                                        tgt.room.visual.text("X", tgt.pos.x, tgt.pos.y);
-                                    }
-                                }
-                            }
-
-                            if (flag.memory.target === undefined && flag.memory.nextTargets.length > 0) {
-                                if (flag.memory.target === undefined) {
-                                    flag.memory.target = flag.memory.nextTargets.shift();
-                                }
-                            } else if (flag.memory.target === undefined || tgt === null) {
-                                findFlagTarget(flag);
-                            }
-                        }
-                        // Lets add some targets to next
                         break;
                     case COLOR_ORANGE: // This color is for squad running, leave empty due to it being to the creep.run role;
                         var squad;
                         //                   if (flag.memory.squadID === undefined || flag.memory.squadID.length !== flag.memory.totalNumber) {
                         // This is setup by the commands.toParty.rally section.
                         ///                      } else {
-                        let potSquad = _.filter(Game.creeps, function(o) {
-                            return o.memory.party === flag.name;
-                        });
-                        squad = _.filter(potSquad, function(o) {
-                            return o.memory.partied;
-                        });
-                        if (potSquad.length !== squad.length) {
-
+                        if (!flag.memory.squadID) {
+                            let potSquad = _.filter(Game.creeps, function(o) {
+                                return o.memory.party === flag.name;
+                            });
+                            squad = _.filter(potSquad, function(o) {
+                                return o.memory.partied;
+                            });
+                            flag.memory.squadID = getIdArray(squad);
+                        } else {
+                            squad = getObjArray(flag.memory.squadID);
                         }
-                        if (squad !== undefined && squad.length > 0) {
+                        if (flag.room) {
+                            var currentPartyNumber = flag.memory.squadID.length;
+                            flag.room.visual.text(flag.memory.squadID.length + "/" + flag.memory.totalNumber, flag.pos.x, flag.pos.y - 1);
+                            flag.room.memory.look4Squad = undefined;
+                        }
 
+                        /*  if(currentPartyNumber < flag.memory.totalNumber){
+                            // if it at 3 it looks
+                            // if it's at 2 it looks and adds it self to found
+                            if(flag.room.memory.look4Squad === undefined){
+                                flag.room.memory.look4Squad = {
+                                    two:[],
+                                    one:[],
+                                };
+                            }
+                            // First it looks, then it adds it self to be found
+                            var addedCreep;
+                            var crp;
+                            if(currentPartyNumber === 3 && flag.room.memory.look4Squad.one.length > 0){
+                                addedCreep = Game.getObjectById(flag.room.memory.look4Squad.one.shift());
+                                addedCreep.memory.party = flag.name;
+                                flag.memory.squadID.push( addedCreep.id );
+                                squad.push( addedCreep );
+
+                            }else if(currentPartyNumber === 2 && flag.room.memory.look4Squad.two.length > 0){
+  //                              addedCreep = flag.room.memory.look4Squad.two[0].shift();
+                                addedCreep = Game.getObjectById(flag.room.memory.look4Squad.two[0].shift());
+                                addedCreep.memory.party = flag.name;
+                                flag.memory.squadID.push( addedCreep.id );
+
+                                squad.push(addedCreep );
+
+//                                addedCreep = flag.room.memory.look4Squad.two[0].shift();
+                                addedCreep = Game.getObjectById(flag.room.memory.look4Squad.two[0].shift());
+                                addedCreep.memory.party = flag.name;
+                                flag.memory.squadID.push( addedCreep );
+                                squad.push( addedCreep );
+                            }else                            // if it's at 1 it looks to be found.
+                            if(currentPartyNumber === 1){
+                                flag.room.memory.look4Squad.one.push(squad[0].id);
+                            }else if(currentPartyNumber === 2){
+                                flag.room.memory.look4Squad.two.push([squad[0].id,squad[1].id]);
+                            }
+                        }*/
+
+
+
+
+                        if (squad !== undefined && squad.length > 0) {
                             require('commands.toSquad').runSquad(squad);
                         } else {
-                            if (flag.memory.spawnCounter === undefined) {
+                            require('commands.toSquad').cleanUpSquadStuff(flag);
+                            if (flag.memory.spawnCounter === 0) {
                                 flag.memory.setColor = {
-                                    color: COLOR_YELLOW,
-                                    secondaryColor: COLOR_YELLOW
+                                    color: COLOR_WHITE,
+                                    secondaryColor: COLOR_WHITE
                                 };
                             } else {
                                 if (flag.memory.spawnCounter > 0) {
@@ -1886,81 +2347,8 @@ if(Memory.threeLowestWalls){
                             }
                         }
 
-                        // Here we determine targets for the flag. 
+                        flag.memory.squadID = getIdArray(squad);
 
-                        flag.memory.killBase = false; // Always false - we don't turn this on until. 
-
-                        if (flag.room !== undefined) {
-
-                            if (flag.memory.nextTargets.length > 0) {
-                                if (flag.memory.target === undefined) {
-                                    flag.memory.target = flag.memory.nextTargets.shift();
-                                }
-                                // Visualization of X's.
-                                let zzzzz = Game.getObjectById(flag.memory.target);
-                                if (zzzzz === null) {
-                                    flag.memory.target = flag.memory.nextTargets.shift();
-                                }
-                                for (let ae in flag.memory.nextTargets) {
-                                    let tgt = Game.getObjectById(flag.memory.nextTargets[ae]);
-                                    if (tgt !== null) {
-                                        tgt.room.visual.text("X", tgt.pos.x, tgt.pos.y);
-                                    }
-                                }
-
-                            }
-                            /*
-                            if (flag.memory.target === undefined && flag.memory.nextTargets.length === 0) {
-                                // Setting up target
-                                let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
-                                if (res.length > 0) {
-                                    for (let ee in res) {
-                                        if (res[ee].structure !== undefined && res[ee].structureType !== STRUCTURE_CONTROLLER) {
-                                            flag.memory.target = res[ee].structure.id;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                // Lets add some targets to next
-                                if (flag.memory.target === undefined) findFlagTarget(flag);
-                            }*/
-                            /*
-                             let bads = flag.room.enemies;
-                                            if (bads.length > 0) {
-                                                flag.memory.target = bads[0].id;
-                                            } */
-
-                            let zz = Game.getObjectById(flag.memory.target);
-                            let strng = "";
-
-                            if (zz === null) {
-                                flag.memory.target = undefined;
-                                flag.memory.attackDirection = false;
-                            } else if (!flag.pos.isEqualTo(zz)) {
-                                flag.setPosition(zz.pos);
-                            } else if (zz !== null) { // Visualization of hp and stuff.
-                                if (zz.structureType !== STRUCTURE_RAMPART && zz.pos.lookForStructure(STRUCTURE_RAMPART)) {
-                                    let res = flag.room.lookAt(flag.pos.x, flag.pos.y);
-                                    if (res.length > 0) {
-                                        for (let ee in res) {
-                                            if (res[ee].structure !== undefined && res[ee].structure.structureType === STRUCTURE_RAMPART) {
-                                                flag.memory.target = res[ee].structure.id;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                if (zz.room !== undefined && zz.room.memory.targetLastHits !== undefined) {
-                                    let tmp = zz.hits - zz.room.memory.targetLastHits;
-                                    strng = zz.hits + "/" + tmp + "=" + (tmp === 0 ? 0 : Math.ceil((zz.hits / (tmp)) * -1));
-                                    zz.room.visual.text(strng, zz.pos.x + 1, zz.pos.y, { color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 0.5, align: LEFT });
-                                }
-                                if (zz.room !== undefined)
-                                    zz.room.memory.targetLastHits = zz.hits;
-                            }
-
-                        }
 
                         break;
                 }
@@ -2072,8 +2460,9 @@ if(Memory.threeLowestWalls){
                             }
 
                             if (rally.memory.rallyCreateCount < 0) { //rallyCreateCount
-                                rally.memory.rallyCreateCount = delayBetweenScan;
+                                //rally.memory.rallyCreateCount = delayBetweenScan;
                                 party.create(flag, spawnCount);
+
                             }
                         }
 

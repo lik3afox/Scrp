@@ -41,17 +41,19 @@ var allModule = [
     //    ['upbuilder', require('role.upbuilder')],
     ['controller', require('role.controller')],
     ['Acontroller', require('army.controller')],
-    ['ztransport', require('role.ztransport')], // Harvester - experiemnt w/o carry
+    ['ztransport', require('role.mTransport')], // Harvester - experiemnt w/o carry
     ['upgrader', require('role.upgrader')],
     ['wallwork', require('role.wallworker')],
     ['guard', require('keeper.guard2')],
     //    ['linker', require('role.linker')],
     ['harvester', require('role.harvester')],
     ['job', require('role.job')],
-    ['transport', require('role.transport')], // Gather and move - just carry 
-    ['miner', require('role.miner')] // Harvester - experiemnt w/o carry
+    ['transport', require('role.transport2')], // Gather and move - just carry 
+    ['miner', require('role.miner2')], // Harvester - experiemnt w/o carry
+  //  ['transport2', require('role.transport2')], // Gather and move - just carry 
+//    ['miner2', require('role.miner2')] // Harvester - experiemnt w/o carry
 ];
-
+//5982ff87b097071b4adc2d57
 var expansionModule = [
     // Zero level is just miner and builder of roadsn
     [], // Kept empty so nothing occurs and this can stay.
@@ -264,8 +266,18 @@ function rebuildCreep(creep) {
                     _module = expansionModule[spawn.memory.roadsTo[type].expLevel];
                     for (var uo in _module) {
                         if (_module[uo][_name] === creep.memory.role) {
-                            _body = getModuleRole(_module[uo][_name]).levels(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room.name);
-                            _boost = getModuleRole(_module[uo][_name]).boosts(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room.name);
+                            /*if((creep.memory.role == 'miner' || creep.memory.role == 'transport') && creep.memory.parent === '5a9609b01fdc475500bd30bd'){
+                                if(creep.memory.role == 'miner'){
+                                    _body = require('role.miner2').levels(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room.name);
+                                    _boost = require('role.miner2').boosts(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room.name);    
+                                } else {
+                                    _body = require('role.transport2').levels(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room.name);
+                                    _boost = require('role.transport2').boosts(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room.name);    
+                                }
+                            } else {*/
+                                _body = getModuleRole(_module[uo][_name]).levels(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room.name);
+                                _boost = getModuleRole(_module[uo][_name]).boosts(_module[uo][_level], spawn.memory.roadsTo[type], spawn.room.name);
+                            //}
                         }
                     }
                 }
@@ -593,6 +605,11 @@ class theSpawn {
             if (remoteInfo.expLevel === 0) {
                 continue;
             }
+            /*
+            if(remoteInfo.expLevel > 8 && remoteInfo.expLevel !== 11 ){
+                console.log('Above Lv 8 remote room',source,spawn,spawn.room.name,remoteInfo.expLevel);
+                remoteInfo.expLevel = 8;
+            } */
             if (source === null) {
                 if (remoteInfo.sourcePos !== undefined) {
                     let obser = require('build.observer');
@@ -604,6 +621,14 @@ class theSpawn {
 
             if (remoteInfo.sourcePos === undefined) {
                 remoteInfo.sourcePos = source.pos;
+            }
+            if (remoteInfo.noTombStone === undefined) {
+                    let parsed = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(remoteInfo.sourcePos.roomName);
+                    if(parsed[2]%5 === 0 && parsed[4] %5 === 0){
+                        remoteInfo.noTombStone = true;
+                    } else {
+                        remoteInfo.noTombStone = false;
+                    }
             }
             if (spawn.memory.remoteStop.length !== 0 && _.contains(spawn.memory.remoteStop, remoteInfo.sourcePos.roomName)) {
                 console.log('REMOTE PROHIBITED ', remoteInfo.sourcePos.roomName);
@@ -643,6 +668,7 @@ class theSpawn {
                             memory: {
                                 role: expandRole[e],
                                 home: spawn.room.name,
+                                
                                 remoteLvl: roleInfo[expandRole[e]].level,
                                 parent: spawn.id,
                                 boostNeeded: getModuleRole(expandRole[e]).boosts(roleInfo[expandRole[e]].level, spawn.room.name),
@@ -664,9 +690,21 @@ class theSpawn {
                                 totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                 spawn.memory.expandCreate.unshift(temp);
                                 break;
+                            case 'mineral':
+                                let mizn = Game.getObjectById(remoteInfo.source);
+                                if (mizn !== null && mizn.mineralAmount > 0 &&
+                                    mizn.room.controller !== undefined && mizn.room.controller.level >= 6) {
+                                    totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
+                                    spawn.memory.expandCreate.push(temp);
+                                } else if (mizn !== null && mizn.mineralAmount > 0 && mizn.room.controller === undefined) {
+                                    totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
+                                    spawn.memory.expandCreate.push(temp);
+                                }
+                                break;
+
                             case 'ztransport':
                                 let min = Game.getObjectById(remoteInfo.source);
-                                if (min && min.pos && (min.pos.roomName == 'E14S38' || min.pos.roomName == 'E59S51')) {
+                                /*if (min && min.pos && (min.pos.roomName == 'E14S38' || min.pos.roomName == 'E59S51')) {
                                     if (min !== null && min.mineralAmount > 0 &&
                                         min.room.controller !== undefined && min.room.controller.level >= 6) {
                                         spawn.memory.expandCreate.push(temp);
@@ -675,11 +713,14 @@ class theSpawn {
                                         totalCreeps[expandRole[e]].count++;
                                         spawn.memory.expandCreate.push(temp);
                                     }
-                                } else {
+                                } */
+                                if(min && min.mineralAmount > 0 && min.room.controller === undefined ){
+                                    totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
+                                    spawn.memory.expandCreate.push(temp);
+                                } else if(remoteInfo.noTombStone === false){
                                     totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
                                     spawn.memory.expandCreate.push(temp);
                                 }
-
                                 break;
                             case 'controller':
 
@@ -702,27 +743,19 @@ class theSpawn {
                                         }
                                         if (controlParts !== undefined) {
                                             temp.build = [];
-                                            for (var i = 0; i <= controlParts; i++) {
-                                                temp.build.push(CLAIM);
+                                            for (let i = 0; i <= controlParts; i++) {
                                                 temp.build.push(MOVE);
                                             }
+                                            for (let i = 0; i <= controlParts; i++) {
+                                                temp.build.push(CLAIM);
+                                            }
+
                                         }
                                         totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
 
                                         spawn.memory.expandCreate.push(temp);
                                         //   return;
                                     }
-                                }
-                                break;
-                            case 'mineral':
-                                let mizn = Game.getObjectById(remoteInfo.source);
-                                if (mizn !== null && mizn.mineralAmount > 0 &&
-                                    mizn.room.controller !== undefined && mizn.room.controller.level >= 6) {
-                                    totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
-                                    spawn.memory.expandCreate.push(temp);
-                                } else if (mizn !== null && mizn.mineralAmount > 0 && mizn.room.controller === undefined) {
-                                    totalCreeps[expandRole[e]].goal.push(remoteInfo.source);
-                                    spawn.memory.expandCreate.push(temp);
                                 }
                                 break;
 
@@ -919,7 +952,7 @@ class theSpawn {
         Memory.creepTotal = 0;
         var totalRoles = {};
         var cpuUsed = {};
-        var countCPU;// = true;
+        var countCPU;
         var roleCount;// = 'homeDefender';
         var roleCPU;
         spawnCount = {};
@@ -944,6 +977,7 @@ class theSpawn {
                     Memory.creepTotal++;
                 }
                 if ((Game.creeps[name].memory.sleeping !== undefined && Game.creeps[name].memory.sleeping > 0)) {
+                    
                     if (Game.creeps[name].memory.sleeping < 1000) {
                         Game.creeps[name].say('💤');
                         Game.creeps[name].memory.sleeping--;
@@ -1046,7 +1080,7 @@ class theSpawn {
                 if (cpuRankings[roleCPUCount[ee].roleName] === undefined) cpuRankings[roleCPUCount[ee].roleName] = [];
                 let cpu = (roleCPUCount[ee].totalCPU / roleCPUCount[ee].totalCreeps) * 100;
                 cpuRankings[roleCPUCount[ee].roleName].push(cpu);
-                if (cpuRankings[roleCPUCount[ee].roleName].length > 30) cpuRankings[roleCPUCount[ee].roleName].shift();
+                if (cpuRankings[roleCPUCount[ee].roleName].length > 100) cpuRankings[roleCPUCount[ee].roleName].shift();
 
 
                 roleCPUCount[ee].sumTotalCPU = _.sum(cpuRankings[roleCPUCount[ee].roleName]);

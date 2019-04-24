@@ -267,16 +267,8 @@ function howIsWallWork(room) {
         if (wall === null) {
             wallworkers[ee] = undefined;
             continue;
-        } else {
-            /*                let targetOfAnyoneElse = _.filter(creep.room.find(FIND_MY_CREEPS),
-                                function(object) {
-                                    return object.memory.wallTargetID === wallworkers[ee] && object.id !== creep.id;
-                                }
-                            );*/
-
-            if (wall.carry[RESOURCE_ENERGY] < wall.carryCapacity >> 1) { //targetOfAnyoneElse.length === 0 &&
-                return true;
-            }
+        } else if(wall.room.name === wall.memory.home && wall.carry[RESOURCE_ENERGY] < wall.carryCapacity >> 1) {
+            return true;
         }
     }
     return false;
@@ -653,7 +645,7 @@ class roleJober extends roleParent {
             super.rebirth(creep);
         }
 
-        if (!creep.isHome && !creep.className) {
+        if (!creep.isHome && !creep.className && creep.memory.job !== FILLWALL) {
             creep.moveMe(Game.flags[creep.memory.home], { reusePath: 50 });
             return;
         }
@@ -745,7 +737,7 @@ class roleJober extends roleParent {
             } else {
                 if (creep.room.storage && creep.room.storage.full && !creep.room.storage.store[RESOURCE_POWER] && !creep.room.terminal.store[RESOURCE_POWER]) { // || creep.room.terminal && creep.room.terminal.full
                     require('commands.toSpawn').setModuleRole(creep.room.name, 'upgrader', 1, 7);
-                    console.log(creep.room.storage.full, !creep.room.storage[RESOURCE_POWER], !creep.room.terminal[RESOURCE_POWER], "ROom added upgrader Whydf?");
+                    console.log(creep.room.storage.full, !creep.room.storage[RESOURCE_POWER], !creep.room.terminal[RESOURCE_POWER], "ROom added upgrader Whydf?",roomLink(creep.room.name));
                 }
             }
             creep.room.visual.text('0', creep.pos);

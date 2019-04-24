@@ -526,7 +526,10 @@ class jobSpawns {
                 creep.moveToTransfer(creep.room.terminal, creep.carrying);
             } else if (creep.carrying === RESOURCE_ENERGY && nuke.energy == nuke.energyCapacity) {
                 creep.moveToTransfer(creep.room.terminal, creep.carrying);
+            } else if(creep.carrying !== 'G' && creep.carrying !== RESOURCE_ENERGY) {
+                creep.moveToTransfer(creep.room.terminal,creep.carrying);
             } else {
+
                 creep.moveToTransfer(nuke, creep.carrying);
                 // if(creep.pos.isNearTo(nuke)){
                 //creep.moveTo(creep.room.storage, { reusePath: 30 });   
@@ -728,7 +731,25 @@ class jobSpawns {
                 }
             } */
 
+            if (creep.room.powerspawn && creep.room.powerspawn.power < 10) {
+                if (creep.room.storage && creep.room.storage.store[RESOURCE_POWER] > 0) {
+                    let amtn = 100 - creep.room.powerspawn.power;
+                    creep.moveToWithdraw(creep.room.storage, RESOURCE_POWER, amtn);
+                    creep.say('pwrS');
+                    return true;
+                } else if (creep.room.terminal && creep.room.terminal.store[RESOURCE_POWER] > 0) {
+                    let amtn = 100 - creep.room.powerspawn.power;
+                    creep.moveToWithdraw(creep.room.terminal, RESOURCE_POWER, amtn);
+                    creep.say('pwrT');
+                    return true;
+                }
 
+                if (Memory.stats.totalMinerals && Memory.stats.totalMinerals.power > 500 && (!creep.room.terminal.store[RESOURCE_POWER] || creep.room.terminal.store[RESOURCE_POWER] < 100)) {
+                    if (!roomRequestMineral(creep.room.name, RESOURCE_POWER, 100)) {
+
+                    }
+                }
+            }
             if (creep.room.controller.level > 5 && storage && terminal && !storage.nearFull && !terminal.nearFull) { //  && creep.carryTotal === 0 
                 let i = RESOURCES_ALL.length;
                 while (i--) { // 43 total -2 * 5000 = 205000 = 95,000 left, energy should be capped at 750000
@@ -852,25 +873,7 @@ class jobSpawns {
                 creep.say('bS');
                 return true;
             }
-            if (creep.room.powerspawn && creep.room.powerspawn.power < 10) {
-                if (creep.room.storage && creep.room.storage.store[RESOURCE_POWER] > 0) {
-                    let amtn = 100 - creep.room.powerspawn.power;
-                    creep.moveToWithdraw(creep.room.storage, RESOURCE_POWER, amtn);
-                    creep.say('pwrS');
-                    return true;
-                } else if (creep.room.terminal && creep.room.terminal.store[RESOURCE_POWER] > 0) {
-                    let amtn = 100 - creep.room.powerspawn.power;
-                    creep.moveToWithdraw(creep.room.terminal, RESOURCE_POWER, amtn);
-                    creep.say('pwrT');
-                    return true;
-                }
 
-                if (Memory.stats.totalMinerals && Memory.stats.totalMinerals.power > 500 && (!creep.room.terminal.store[RESOURCE_POWER] || creep.room.terminal.store[RESOURCE_POWER] < 100)) {
-                    if (!roomRequestMineral(creep.room.name, RESOURCE_POWER, 100)) {
-
-                    }
-                }
-            }
             if (linkPickUpMineral(creep) === OK) {
                 return true;
             }

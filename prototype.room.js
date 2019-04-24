@@ -49,6 +49,20 @@ RoomPosition.prototype.heroStats = function(structureType) {
     return this.memory.heroStats;
 };
 
+RoomPosition.prototype.getNearByHostileStructures = function() {
+    if(!this._returnedHostStructs){
+        var badStr = this.findInRange(FIND_HOSTILE_STRUCTURES, 1);
+        bads = _.filter(badStr, function(o) {
+            return !_.contains(fox.friends, o.owner.username) && o.structureType !== STRUCTURE_WALL && o.structureType !== STRUCTURE_RAMPART && !o.pos.lookForStructure(STRUCTURE_RAMPART) && o.structureType !== STRUCTURE_STORAGE && o.structureType !== STRUCTURE_TERMINAL;
+        });
+        this._returnedHostStructs = badStr[0];
+        return badStr[0];
+    } else {
+        return this._returnedHostStructs;
+    }
+};
+
+
 RoomPosition.prototype.lookForStructure = function(structureType) {
     return _.find(this.lookFor(LOOK_STRUCTURES), { structureType: structureType });
 };
@@ -113,7 +127,7 @@ module.exports = function() {
         get: function() {
             if (this._cachedHurt === undefined) {
                 this._cachedHurt = _.filter(this.find(FIND_MY_CREEPS), function(o) {
-                    return o.hits !== o.hitsMax && _.contains(fox.friends, o.owner.username) && (o.memory && o.memory.noHealing === undefined);
+                    return o.hits !== o.hitsMax;
                 });
             }
             return this._cachedHurt;
@@ -591,6 +605,7 @@ module.exports = function() {
         });
         return total;
     };
+
 
     Creep.prototype.healDone = function(creeps) {
         var total = 0;

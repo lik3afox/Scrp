@@ -183,7 +183,7 @@ function manageMemory(creep) {
     // Death conditions. 
     if (creep.carryTotal !== creep.carryCapacity) {
         if (Game.shard.name === 'shard3' && creep.room.storage.total - creep.room.storage.store[RESOURCE_ENERGY] < 4500) {
-            creep.memory.death = true;
+//            creep.memory.death = true;
         } else if (Game.shard.name === 'shard3' && creep.room.storage.total < 10000) {
             //  creep.memory.death = true;
         }
@@ -362,9 +362,18 @@ function containerInteract(creep) {
                     if (creep.memory.return2Shard === true || creep.memory.party === 'shard3') {
                         creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
                         if (creep.memory.party !== 'shard3') creep.memory.party = 'shard1';
-                    } else {
+                    } //else {
                         //                        creep.memory.death = true;
-                    }
+               //     }
+                }
+                if (!withdraw && Game.shard.name === 'shard3' && creep.room.name === 'E19S49') {
+//                    if (creep.room.storage.store.energy > 990000) {
+               //     if (creep.memory.return2Shard === true || creep.memory.party === 'shard3') {
+                        creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
+                 //       if (creep.memory.party !== 'shard3') creep.memory.party = 'shard1';
+                   // } //else {
+                        //                        creep.memory.death = true;
+  //                  }
                 }
                 if (!withdraw && Game.shard.name === 'shard3') {
                     creep.memory.death = true;

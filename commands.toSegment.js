@@ -7,7 +7,9 @@ var roomSegment = {
 
     // Shard1
     E23S38: 10,
+    E58S51: 10,
     E25S37: 11,
+    E54S53: 11,
     E24S33: 12,
     E55S58: 13,
     E18S32: 13,
@@ -15,11 +17,11 @@ var roomSegment = {
     E25S27: 15,
     E14S43: 24,
     E18S36: 16,
+    E44S59: 15,
     E33S54: 16,
 
     E17S45: 17,
     E52S59: 25,
-
     E14S47: 18,
     E23S42: 19,
     E14S37: 19,
@@ -69,6 +71,7 @@ function makeRequestString() {
             Z: false,
             K: false,
         },
+        messages: [],
         /*
         mineralRequest:{
             room: getShardRoom2(Game.shard.name),
@@ -89,10 +92,14 @@ function makeRequestString() {
     if (Game.flags.request) {
         rtrn.dangerRoom.challenger = Game.flags.request.memory.challenger;
         rtrn.dangerRoom.parts = Game.flags.request.memory.parts;
-        //	if(rtrn.dangerRoom.challenger){
-        //    		console.log('You have requested a fight again: ',rtrn.dangerRoom.challenger,rtrn.dangerRoom.parts);
-        //  	}
+        //  if(rtrn.dangerRoom.challenger){
+        //          console.log('You have requested a fight again: ',rtrn.dangerRoom.challenger,rtrn.dangerRoom.parts);
+        //      }
     }
+    rtrn.messages.push({
+        to: 'all',
+        text: 'basicTrading is up, dangerRoom is setup too, and for those who can request sieges from me',
+    });
 
     for (var e in rtrn.basicTrading) {
         if (e !== 'room' && e !== 'energy') {
@@ -132,7 +139,8 @@ var notSeen;
 
 
 
-function dangerRoomSetup(player, dangerRequest) {
+function dangerRoomSetup(player, obj) {
+    let dangerRequest = obj.dangerRequest;
     let flag = Game.flags.dangerRoom;
     if (flag.memory.rallyCreateCount > 10) flag.memory.rallyCreateCount = 10;
     flag.memory.party = [];
@@ -142,13 +150,13 @@ function dangerRoomSetup(player, dangerRequest) {
         // we send out the bard when we get a challenger.
         if (Game.flags.bard && dangerRequest.parts !== 1) {
             if (Game.flags.bard.color === COLOR_WHITE) {
-                Game.notify(player+" requesting fight for "+ dangerRequest.challenger +" parts:" + dangerRequest.parts + " Time:"+Game.time);
-            	Game.flags.bard.memory.rallyCreateCount = 0;
+                Game.notify(player + " requesting fight for " + dangerRequest.challenger + " parts:" + dangerRequest.parts + " Time:" + Game.time);
+                Game.flags.bard.memory.rallyCreateCount = 0;
                 Game.flags.bard.memory.setColor = {
                     color: COLOR_YELLOW,
                     secondaryColor: COLOR_YELLOW,
                 };
-                Game.flags.bard.setColor(COLOR_YELLOW,COLOR_YELLOW);
+                Game.flags.bard.setColor(COLOR_YELLOW, COLOR_YELLOW);
             }
         }
         // set up flag memory:
@@ -160,10 +168,10 @@ function dangerRoomSetup(player, dangerRequest) {
             case 0:
             case 1:
                 flag.memory.party.push(['thief', 1, 5]);
-            break;
+                break;
             case 44:
                 flag.memory.party.push(['mage', 4, 0]);
-            break;
+                break;
             case 40:
                 flag.memory.party.push(['mage', 4, 1]);
                 flag.memory.squadLogic = true;
@@ -171,15 +179,15 @@ function dangerRoomSetup(player, dangerRequest) {
             case 50:
                 flag.memory.squadLogic = false;
                 flag.memory.party.push(['harass', 1, 5]);
-            break;
+                break;
             case 100:
                 flag.memory.squadLogic = false;
                 flag.memory.party.push(['harass', 2, 5]);
-            break;
+                break;
             case 200:
                 flag.memory.squadLogic = true;
                 flag.memory.party.push(['mage', 4, 5]);
-            break;
+                break;
             default:
                 flag.memory.squadLogic = true;
                 flag.memory.party.push(['mage', 4, 0]);
@@ -190,8 +198,45 @@ function dangerRoomSetup(player, dangerRequest) {
 
 }
 
-function siegeRequest(siegeRequest) {
 
+function siegeRequest(siegeRequest, playerSeg) {
+    if (_.isObject(siegeRequest)) {
+        console.log(playerSeg, "Requesting Siege from ", siegeRequest.playerName, "@", siegeRequest.roomName, "Requesting fight");
+        if (siegeRequest.playerName !== 'likeafox') return false;
+
+        if (playerSeg === 'Geir1983' && siegeRequest.roomName === 'E14S17') {
+            if (Game.flags.Flag7.color !== COLOR_YELLOW && Game.flags.Flag7.color !== COLOR_ORANGE) {
+                Game.flags.Flag7.setColor(COLOR_YELLOW, COLOR_YELLOW);
+                Game.flags.Flag7.memory.setColor = {
+                    color: COLOR_YELLOW,
+                    secondaryColor: COLOR_YELLOW,
+                };
+            }
+        }
+        if (playerSeg === 'admon' && siegeRequest.roomName === 'E13S16') {
+            //Game.flags.Flag3.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);            
+            if (Game.flags.Flag3.color !== COLOR_YELLOW && Game.flags.Flag3.color !== COLOR_ORANGE) {
+                Game.flags.Flag3.setColor(COLOR_YELLOW, COLOR_YELLOW);
+                Game.flags.Flag3.memory.rallyCreateCount = 0;
+                Game.flags.Flag3.memory.setColor = {
+                    color: COLOR_YELLOW,
+                    secondaryColor: COLOR_YELLOW,
+                };
+            }
+        }
+        if (playerSeg === 'Kenji' && siegeRequest.roomName === 'E22S52') {
+            //Game.flags.Flag3.setPosition(hostiles[0].pos.x, hostiles[0].pos.y);            
+            if (Game.flags.Flag19.color !== COLOR_YELLOW && Game.flags.Flag19.color !== COLOR_ORANGE) {
+                Game.flags.Flag19.setColor(COLOR_YELLOW, COLOR_YELLOW);
+                Game.flags.Flag19.memory.rallyCreateCount = 0;
+                Game.flags.Flag19.memory.setColor = {
+                    color: COLOR_YELLOW,
+                    secondaryColor: COLOR_YELLOW,
+                };
+            }
+        }
+
+    }
 }
 
 function analyzeOtherPlayerSegment(alliedList) {
@@ -222,7 +267,7 @@ function analyzeOtherPlayerSegment(alliedList) {
                 acceptNum = 90000;
                 amount = 101;
                 doMineralRequest = true;
-                acceptable = [ 'X', 'O', 'H', 'L', 'U', 'K', 'Z' ]; //"energy", /"XGH2O",
+                acceptable = ['X', 'O', 'H', 'L', 'U', 'K', 'Z']; //"energy", /"XGH2O",
                 if (obj.basicTrading && obj.basicTrading.amount) {
                     amount = obj.basicTrading.amount;
                     if (amount > 101) {
@@ -246,22 +291,32 @@ function analyzeOtherPlayerSegment(alliedList) {
                 acceptNum = 100000;
                 break;
         }
+        if (obj.messages) {
+            for (let i in obj.messages) {
+                if (obj.messages[i].to === 'likeafox') {
+                    console.log(playerSeg,'text:',obj.messages[i].text);
+                    Game.notify(playerSeg+' text: '+obj.messages[i].text);
+                } else if (obj.messages[i].to === 'all') {
+                    console.log(playerSeg,'all:',obj.messages[i].text);
+                }
+            }
+        }
         if (obj.dangerRoom) {
-            dangerRoomSetup(playerSeg, obj.dangerRoom);
+            dangerRoomSetup(playerSeg, obj);
         }
         if (obj.siegeRequest) {
-            siegeRequest(obj.siegeRequest);
+            siegeRequest(obj.siegeRequest, playerSeg);
         }
-        if(doMineralRequest){
+        if (doMineralRequest) {
             var mineralRequest = obj.resourceRequest;
-            if(mineralRequest){
+            if (mineralRequest) {
                 let amount = mineralRequest.amount;
                 let min = mineralRequest.resourceType;
                 let room = mineralRequest.room;
-                if(amount > 1500) amount = 1500;
-                    if(Memory.stats.totalMinerals[min] >200000){
+                if (amount > 1500) amount = 1500;
+                if (Memory.stats.totalMinerals[min] > 200000) {
 
-                    roomRequestMineral(mineralRequest.room,mineralRequest.resourceType,amount);
+                    roomRequestMineral(mineralRequest.room, mineralRequest.resourceType, amount);
                     return;
                 }
             }
@@ -271,12 +326,12 @@ function analyzeOtherPlayerSegment(alliedList) {
         if (basic !== undefined) {
 
             for (var resource in basic) {
-                if (basic[resource] && Memory.stats.totalMinerals[resource] > acceptNum && _.contains(acceptable, resource) ) {
-                        if(basic.room !== 'none'){
-                            let zz = roomRequestMineral(basic.room, resource, amount);
-                            profitReport('E58S57', alliedList[Memory.otherPlayerSegmentCount][0], zz, undefined, amount, resource, 0, basic.room);
-                            break;
-                        }
+                if (basic[resource] && Memory.stats.totalMinerals[resource] > acceptNum && _.contains(acceptable, resource)) {
+                    if (basic.room !== 'none') {
+                        let zz = roomRequestMineral(basic.room, resource, amount);
+                        profitReport('E58S57', alliedList[Memory.otherPlayerSegmentCount][0], zz, undefined, amount, resource, 0, basic.room);
+                        break;
+                    }
                 }
             }
         }
@@ -365,7 +420,7 @@ var instructionCache;
 
 function doInstructions(instructions) {
 
-    if (instructions.length > 0 && Game.shard.name === 'shard1' && Game.time % timer*2 === 0) { //
+    if (instructions.length > 0 && Game.shard.name === 'shard1' && Game.time % timer * 2 === 0) { //
         console.log("CURRENT:", Game.shard.name, "doing instructions #:", instructions.length);
         for (let ii in instructions) {
             console.log("Shard:", instructions[ii].shard, "type:", instructions[ii].type, "mineral", instructions[ii].mineralType, instructions[ii].mineralAmount);
@@ -539,10 +594,10 @@ function doInstructions(instructions) {
                         case 'shard2':
                             partyFlag = 'shard1';
                             if (current.mineralType === RESOURCE_ENERGY) {
-                                if(Game.time%2 === 0){
-                                partyFlag = 'shard1';
-                                }else {
-                                partyFlag = 'shard3';
+                                if (Game.time % 2 === 0) {
+                                    partyFlag = 'shard1';
+                                } else {
+                                    partyFlag = 'shard3';
                                 }
                                 // if Shard2 has more than 990000 energy it sends energy to this place:
                             }
@@ -566,7 +621,7 @@ function doInstructions(instructions) {
                             level: 5,
                         }
                     };
-                    if ((partyFlag === 'shard3'||partyFlag === 'shard1') && Game.shard.name === 'shard2' && current.mineralType === RESOURCE_ENERGY) {
+                    if ((partyFlag === 'shard3' || partyFlag === 'shard1') && Game.shard.name === 'shard2' && current.mineralType === RESOURCE_ENERGY) {
                         temp.build = [RANGED_ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK];
                     }
                     if (Game.shard.name !== 'shard3' && Game.rooms[current.shardRoom] && Game.rooms[current.shardRoom].storage && Game.rooms[current.shardRoom].storage.total < 990000 && Game.rooms[current.shardRoom].storage.total !== Game.rooms[current.shardRoom].storage.store[RESOURCE_ENERGY]) {
@@ -594,7 +649,7 @@ function doInstructions(instructions) {
                 roomCreate = current.order.shardRoom;
                 if (roomCreate === undefined) roomCreate = getShardRoom(Game.shard.name, current.mineralType);
                 if (!Game.rooms[roomCreate] || !Game.rooms[roomCreate].terminal) {
-                    console.log('Trying to ',current.type,roomCreate,Game.shard.name);
+                    console.log('Trying to ', current.type, roomCreate, Game.shard.name);
                     instructions.splice(i, 1);
                     continue;
                 }
@@ -612,14 +667,14 @@ function doInstructions(instructions) {
                 if (order === null || order.amount === 0) {
                     instructions.splice(i, 1);
                     continue;
-                } 
+                }
 
                 var amoutn = current.mineralAmount;
-                if(order.amount < amoutn){
+                if (order.amount < amoutn) {
                     amoutn = order.amount;
-                } 
-                if(Game.rooms[roomCreate].terminal.store[current.mineralType]  < amoutn){
-                    amoutn = Game.rooms[roomCreate].terminal.store[current.mineralType] ;
+                }
+                if (Game.rooms[roomCreate].terminal.store[current.mineralType] < amoutn) {
+                    amoutn = Game.rooms[roomCreate].terminal.store[current.mineralType];
                 }
                 if (amoutn > Game.rooms[roomCreate].terminal.store[RESOURCE_ENERGY]) {
                     amoutn = Game.rooms[roomCreate].terminal.store[RESOURCE_ENERGY];
@@ -643,7 +698,7 @@ function doInstructions(instructions) {
                     continue;
                 }
             }
-            
+
             if (current.type === 'fillSellOrder') { // Filling Sell order - means that we're trying to Obtain Minerals by filling sell orders.
 
                 let order = current.order;
@@ -893,7 +948,7 @@ function analyzeMyMinerals(shardObject) {
 
 
 function getMarketPrices() {
-    console.log('getting Market Prices',Game.time,Game.shard.name);
+    console.log('getting Market Prices', Game.time, Game.shard.name);
     var rtn = {};
     var minerals = [
         "H", "O", "U", "L", "K", "Z", "X", "G", "energy", "power",
@@ -930,14 +985,14 @@ function getMarketPrices() {
                     amount: buyed.amount,
                     price: buyed.price,
                     id: buyed.id
-                    },
+                },
 
                 sell: {
                     remainingAmount: selled.remainingAmount,
                     amount: selled.amount,
                     price: selled.price,
                     id: selled.id
-                    },
+                },
 
             };
 
@@ -1042,7 +1097,7 @@ function copyEmpireData(shardObject) {
 var shard0tax;
 
 function analyzeMarkets(shardObject) {
-    
+
     //    shardObject.instructions= [];
     //[Game.shard.name]
     //if (Game.shard.name === 'shard1') return;
@@ -1057,15 +1112,11 @@ function analyzeMarkets(shardObject) {
 
 
     //    var taxes = [shard0tax, 0, shard0tax];
-    /*
     if (shardObject.empireSettings.market.tier1 && Game.time % timer === 0) { //
         for (let e in shards) {
             let min = "power";
             if (shardObject[shards[e]].marketData[min] && shardObject[shards[e]].marketData[min].sell) {
                 let targetPrice = Memory.empireSettings.buyPower;
-                //                    if(shards[e] === 'shard2'){
-                //                            targetPrice = 0.25;
-                //                      }
                 if (shardObject[shards[e]].marketData[min].sell.price <= targetPrice) {
 
                     let amnt = 2500;
@@ -1089,14 +1140,14 @@ function analyzeMarkets(shardObject) {
                         for (let e in shardObject.instructions) {
                             if ((shardObject.instructions[e].shard === request.shard && shardObject.instructions[e].type === request.type && shardObject.instructions[e].mineralType === request.mineralType)) {
                                 doRequest = false;
-                                break;
+                                continue;
                             }
                         }
                     }
                     if (doRequest) {
                         console.log("ADDING POWER TO BUY YES:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].buy.price);
                         shardObject.instructions.push(request);
-                        return;
+                        continue;
                     }
                 }
 
@@ -1104,11 +1155,11 @@ function analyzeMarkets(shardObject) {
             }
 
         }
-    }*/
+    }
     var energyHigh;
 
     let basic = ["energy", "H", "O", "U", "L", "K", "Z", "X", ];
-    if (Game.time%( timer*4) === 0) {
+    if (Game.time % (timer * 4) === 0) {
 
         for (let ie in basic) {
             let minSellTotal = 0;
@@ -1529,7 +1580,7 @@ function analyzeShards(shardObject) {
                             console.log(ee,':',Memory.shard2Requests[ee]);
                         }*/
 
-        if (Game.time % (timer*2) === 0) {
+        if (Game.time % (timer * 2) === 0) {
             Memory.shard2Requests = {};
             //            }
             //            console.log("shardObject.shard2Requests UPDATING Memory.shard2Requests");
@@ -1670,7 +1721,7 @@ function analyzeShards(shardObject) {
                             console.log(ee,':',Memory.shard3Requests[ee]);
                         }*/
 
-        if (Game.time % (timer*2) === 0) {
+        if (Game.time % (timer * 2) === 0) {
             Memory.shard3Requests = {};
             //            }
             //            console.log("shardObject.shard3Requests UPDATING Memory.shard3Requests");
@@ -1955,7 +2006,7 @@ class segmentCommand {
                 if (Game.rooms[roomName].memory.segmentReset < 0) {
                     Game.rooms[roomName].memory.segmentReset = 100000 + Math.floor(Math.random() * 100000);
                     RawMemory.segments[roomSegment[roomName]] = '+';
-                    console.log(roomName,"Just resetting segments ",roomSegment[roomName]);
+                    console.log(roomName, "Just resetting segments ", roomSegment[roomName]);
                 }
 
                 if (RawMemory.segments[roomSegment[roomName]][0] === undefined) {
@@ -1996,9 +2047,9 @@ class segmentCommand {
         var rawData = RawMemory.interShardSegment;
         var rawObject = JSON.parse(rawData);
 
-            copyEmpireData(rawObject);
-//            console.log(rawObject.terminalRequest);
-//            rawObject.terminalRequest = undefined;
+        copyEmpireData(rawObject);
+        //            console.log(rawObject.terminalRequest);
+        //            rawObject.terminalRequest = undefined;
 
         if (rawObject.instructions === undefined) {
             if (instructionCache !== undefined) {
@@ -2015,7 +2066,7 @@ class segmentCommand {
         }
 
         if (Game.shard.name === 'shard1') {
-            if (Game.time % (timer ) === 0 || rawObject[Game.shard.name] === undefined) {
+            if (Game.time % (timer) === 0 || rawObject[Game.shard.name] === undefined) {
                 rawObject[Game.shard.name].marketData = getMarketPrices();
             }
             analyzeShards(rawObject); // This determines where we send minerals and if they want minerals.
@@ -2064,7 +2115,7 @@ class segmentCommand {
 
 
     static run() {
-        
+
         if (Memory.shardNeed.length > 1) {
             Memory.shardNeed = _.uniq(Memory.shardNeed);
             while (Memory.shardNeed.length > 10) {

@@ -246,6 +246,10 @@ class transportz extends roleParent {
     }
 
     static run(creep) {
+        if(creep.memory.home === 'E24S33'){
+            require('role.mTransport').run(creep);
+            return;
+        }
         var start = Game.cpu.getUsed();
         if (creep.memory.keeperLairID === 'none') {
             creep.memory.keeperLairID = undefined;

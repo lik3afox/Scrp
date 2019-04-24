@@ -4,14 +4,20 @@ var ticksInARow;
 
 function changeEmpireSettings() {
 
-    if (Game.time % 1500 !== 0 && ticksInARow !== undefined) return;
+    if (Game.time % 1500 !== 0 && ticksInARow !== undefined) {
+        Memory.firstTick = false;
+        return;
+    }
+    Memory.firstTick = true;
     if (Game.shard.name !== 'shard1') return;
     Memory.empireSettings = {
         processPower: true, // sellPower:false, stops jobs.spawns, stops commands.topower. 
-        sellPower: 0.75, // if there is 
-        buyPower: 0.30,
+//        sellPower: 0.75, // if there is 
+        buyPower: 0.20,
         maxWallSize: 299000000, // This is the setting for max wall size. 
         maxController: 100000, // When upgrader is made. - 1500
+
+
         // MaxController has a random factor of up to 15000;
         // If room has energy in it's random * 15000 + 10000;
         maxMineralAmount: 600000, // This is the threshold to sell minerals.
@@ -236,6 +242,7 @@ function rampartCheck(spawn) {
     targets = _.filter(targets, function(o) {
         return o.body.length > 5;
     });
+    spawn.room.memory.siege = undefined;
     if (targets.length === 0) return;
     var HardD = [];
     var mediumD = [];
@@ -245,9 +252,9 @@ function rampartCheck(spawn) {
     let structures = spawn.room.find(FIND_STRUCTURES);
 
     var ramp = _.filter(structures, function(o) {
-        return ((o.structureType === STRUCTURE_RAMPART && !o.isPublic) || o.structureType === STRUCTURE_WALL) && o.hits < 500000;
+        return ((o.structureType === STRUCTURE_RAMPART && !o.isPublic) || o.structureType === STRUCTURE_WALL) && o.hits < 500000 && !o.isEffected();
     });
-    if (ramp.length > 1) {
+    if (ramp.length > 1 && spawn.room.name !== 'E13S18') {
         if (!ramp[0].isEffected() && targets.length > 0 && spawn.room.controller.safeModeCooldown === undefined) {
             spawn.room.controller.activateSafeMode();
             flagName = 'safemode' + spawn.room.name;
@@ -258,6 +265,7 @@ function rampartCheck(spawn) {
         }
     }
     let rangerCount = 0;
+    let totalLevelCount = 0;
     flagName = 'wallwork' + spawn.room.name;
     // Defense Against Rangers/Mage isn't to create melee, but it's to create counter repairers. 
     if (!Game.flags[flagName] || !Game.flags[flagName].memory.analyzed) {
@@ -266,6 +274,7 @@ function rampartCheck(spawn) {
             if (ana.type === 'ranger' || ana.type === 'mage') {
                 rangerCount++;
             }
+            totalLevelCount += ana.strength;
         }
         if (rangerCount > 0) {
             let level = 5;
@@ -293,6 +302,47 @@ function rampartCheck(spawn) {
             }
         }
     }
+    spawn.room.visual.text('SIEGE',10,10,{ color: '#FF00FF ', stroke: '#000000 ', strokeWidth: 0.123, font: 3.5, align: LEFT, backgroundColor: '#0F0F0F' });
+    spawn.room.memory.siege = true; // This is used by wallwork and others to determine logic.
+
+    let enemyCount = targets.length;
+    //totalLevelCount
+    let averageStr = Math.ceil(totalLevelCount/enemyCount);
+    if(averageStr === 200 || averageStr > 160 && enemyCount >=2){
+        flagName = 'squadDefender' + spawn.room.name;
+        if( Game.flags[flagName]){
+            let dFlag = Game.flags[flagName];
+            if(dFlag.color !== COLOR_YELLOW ||dFlag.color !== COLOR_ORANGE ){
+                dFlag.memory.setColor = {
+                    color:COLOR_YELLOW,
+                    secondaryColor:COLOR_YELLOW,
+                };
+            } else {
+                if(dFlag.memory.musterRoom === 'none'){
+                    dFlag.memory.musterRoom = 'close';
+                    dFlag.memory.squadLogic = true;
+                    dFlag.memory.rallyFlag = 'home';
+                    dFlag.memory.homeDefense = true;
+                }
+                dFlag.memory.party = [
+                    ['healer', 1, 10], // Healer    
+                    ['mage', 1, 10],
+                    ['ranger', 1, 10],
+                    ['fighter', 1, 10],
+                ];
+            }
+        } else {
+            spawn.room.createFlag(25, 25, flagName, COLOR_YELLOW, COLOR_YELLOW);
+        }
+
+        if(!Game.flags.Techies && spawn.room.controller.isPowerEnabled){
+            spawn.room.createFlag(20, 20, 'Techies',COLOR_WHITE,COLOR_WHITE);   
+        }
+    } else {
+
+    }
+
+
 
     let e = targets.length;
     let named2 = 'RA2' + spawn.room.name;
@@ -377,42 +427,43 @@ function rampartCheck(spawn) {
 
 
 function doRoomReport(room, isTenTime) {
-    var nukes = room.find(FIND_NUKES);
-    let name = 'nukeRepair' + room.name;
-    if (nukes.length === 0) {
-        if (Game.flags[name]) {
-            Game.flags[name].memory.remove = true;
-        }
-    }
-    if (nukes.length > 0) {
-        room.memory.nukeIncoming = true;
-        for (var e in nukes) {
-
-            console.log(nukes.length, 'NUKE INCOMING @', nukes[e].room, ' from:', nukes[e].launchRoomName, name, 'landing time', nukes[e].timeToLand);
-            if (Game.flags[name] === undefined && nukes[e].timeToLand > 1500) {
-                room.createFlag(nukes[e].pos, name, COLOR_YELLOW, COLOR_YELLOW);
-            } else if (Game.flags[name]) {
-                Game.flags[name].memory.musterRoom = room.name;
-                Game.flags[name].memory.party = [
-                    ['wallwork', 1, 6]
-                ];
-            }
-
-            if (nukes[e].timeToLand < 150) {
-                let evacName = 'eva' + room.name;
-                if (Game.flags[evacName] === undefined) {
-                    room.createFlag(nukes[e].pos, evacName, COLOR_WHITE, COLOR_WHITE);
-                } else {
-                    let flag = Game.flags[evacName];
-                    if (flag.memory.evacuateTimer === undefined) flag.memory.evacuateTimer = 102;
-                    flag.memory.evacuate = true;
-                }
-            }
-
-        }
-    }
-
     if (isTenTime === undefined) isTenTime = Game.time % 10;
+    if (Game.time % 50 === 0) {
+        var nukes = room.find(FIND_NUKES);
+        let name = 'nukeRepair' + room.name;
+        if (nukes.length === 0) {
+            if (Game.flags[name]) {
+                Game.flags[name].memory.remove = true;
+            }
+        }
+        if (nukes.length > 0) {
+            room.memory.nukeIncoming = true;
+            for (var e in nukes) {
+                console.log(nukes.length, 'NUKE INCOMING @', roomLink(nukes[e].room.name), ' from:', roomLink(nukes[e].launchRoomName), name, 'landing time', nukes[e].timeToLand);
+                if (Game.flags[name] === undefined && nukes[e].timeToLand > 1500) {
+                    room.createFlag(nukes[e].pos, name, COLOR_YELLOW, COLOR_YELLOW);
+                } else if (Game.flags[name]) {
+                    Game.flags[name].memory.musterRoom = room.name;
+                    Game.flags[name].memory.party = [
+                        ['wallwork', 1, 6]
+                    ];
+                }
+
+                if (nukes[e].timeToLand < 150) {
+                    let evacName = 'eva' + room.name;
+                    if (Game.flags[evacName] === undefined) {
+                        room.createFlag(nukes[e].pos, evacName, COLOR_WHITE, COLOR_WHITE);
+                    } else {
+                        let flag = Game.flags[evacName];
+                        if (flag.memory.evacuateTimer === undefined) flag.memory.evacuateTimer = 102;
+                        flag.memory.evacuate = true;
+                    }
+                }
+
+            }
+        }
+    }
+
 
     switch (isTenTime) {
         case 1:
@@ -637,7 +688,7 @@ module.exports.loop = blackMagic(function() {
     }
     var start = Game.cpu.getUsed();
     var startCpu;
-//    if (Game.shard.name === 'shard1') showCPU = true;
+    //    if (Game.shard.name === 'shard1') showCPU = true;
     if (showCPU) {
         startCpu = Game.cpu.getUsed();
         console.log('----NEW TICK:', Game.time, Game.cpu.bucket);
@@ -670,6 +721,19 @@ module.exports.loop = blackMagic(function() {
                     if (Memory.stats.totalMinerals[mins[i]] > 100000 && (!room.terminal.store[mins[i]] || room.terminal.store[mins[i]] < 10000)) {
                         let rsut = roomRequestMineral('E21S31', mins[i], 2000);
                         break;
+                    }
+                }
+                if (room.storage && Game.flags.Flag10) {
+                    if (room.storage.store[RESOURCE_ENERGY] < 155000 && Game.flags.Flag10.color === COLOR_YELLOW) {
+                        Game.flags.Flag10.memory.setColor = {
+                            color: COLOR_WHITE,
+                            secondaryColor: COLOR_WHITE
+                        };
+                    } else if (room.storage.store[RESOURCE_ENERGY] > 190000 && Game.flags.Flag10.color === COLOR_WHITE) {
+                        Game.flags.Flag10.memory.setColor = {
+                            color: COLOR_YELLOW,
+                            secondaryColor: COLOR_YELLOW
+                        };
                     }
                 }
             }
@@ -777,8 +841,12 @@ module.exports.loop = blackMagic(function() {
 
     for (title in Game.spawns) {
         if (Game.spawns[title].room.energyCapacityAvailable !== 0 && Game.spawns[title].room.controller.level !== 0 && Game.spawns[title].room.name !== 'E14S38') {
+            let spawn = Game.spawns[title];
 
             let roomName = Game.spawns[title].pos.roomName;
+            if (Game.spawns[title].room.memory.roadWork === undefined) {
+                Game.spawns[title].room.memory.roadWork = [];
+            }
             if (Game.spawns[title].room.memory.allGood === undefined) {
                 comSpawn.checkMemory(Game.spawns[title]); // This creates Arrays
                 if (Game.spawns[title].memory.alphaSpawn) {
@@ -791,6 +859,8 @@ module.exports.loop = blackMagic(function() {
                         Game.spawns[title].memory.buildLevel = Game.spawns[title].room.controller.level;
                     }
                 }
+            } else if(Game.time%1000 === 0 && Game.spawns[title].memory.roadsTo){
+                Game.spawns[title].room.memory.energyIn = Game.spawns[title].memory.roadsTo.length > 0;
             }
 
             if (Game.spawns[title].memory.alphaSpawn) {
@@ -810,9 +880,12 @@ module.exports.loop = blackMagic(function() {
                 rampartCheck(Game.spawns[title]);
                 power.roomRun(roomName);
                 labs.roomLab(roomName);
-                link.roomRun(roomName);
+                //             if(roomName !== 'E24S33'){
+                //              link.roomRun(roomName);
+                //                }else {
+                link.roomRun2(roomName);
+                //}
                 tower.roomTower(roomName);
-                let spawn = Game.spawns[title];
 
                 if (Game.cpu.bucket >= creepStopCPU && Game.time % 5 === 0 && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&
                     (Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_GREEN || Game.flags[Game.spawns[title].pos.roomName].secondaryColor === COLOR_PURPLE)) {
@@ -822,6 +895,7 @@ module.exports.loop = blackMagic(function() {
                     Game.spawns[title]._totalParts = (spawnCount[Game.spawns[title].id].bodyCount * 3);
                     Game.spawns[title]._totalCreep = spawnCount[Game.spawns[title].id].creepCount;
                 }
+                if (!spawn.memory.expandCreate) spawn.memory.expandCreate = [];
                 let totalQuery = spawn.memory.expandCreate.length + spawn.memory.create.length + spawn.memory.warCreate.length;
                 spawn.memory.totalQuery = totalQuery;
                 spawn.room.visual.text(totalQuery, spawn.pos, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });
@@ -839,17 +913,20 @@ module.exports.loop = blackMagic(function() {
                     expandQ: totalQuery,
                 };
                 totalEnergy += spawnReport[Game.spawns[title].room.name].storageEnergy + spawnReport[Game.spawns[title].room.name].terminalEnergy;
-                if (spawn.room.memory.alphaSpawnOperated) {
-                    spawn.room.memory.alphaSpawnOperated--;
-                    if (spawn.room.memory.alphaSpawnOperated <= 0) {
-                        spawn.room.memory.alphaSpawnOperated = undefined;
+                if (spawn.room.memory.aSpawnOperated) {
+                    spawn.room.memory.aSpawnOperated--;
+                    if (spawn.room.memory.aSpawnOperated <= 0) {
+                        spawn.room.memory.aSpawnOperated = undefined;
                     }
-                    spawn.room.visual.text(spawn.room.memory.alphaSpawnOperated, spawn.pos.x, spawn.pos.y - 1, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });
+                    //                    spawn.room.visual.text(spawn.room.memory.alphaSpawnOperated, spawn.pos.x, spawn.pos.y - 1, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });
                 }
             }
-            if (!Game.spawns[title].room.memory.alphaSpawnOperated || Game.spawns[title].memory.alphaSpawn || Game.spawns[title].room.powerLevels[PWR_OPERATE_SPAWN].level !== 5) {
-                comSpawn.createFromStack(Game.spawns[title]);
+            let effects = spawn.isEffected(PWR_OPERATE_SPAWN);
+            if (effects) {
+                spawn.room.visual.text(effects.ticksRemaining, spawn.pos.x, spawn.pos.y - 1, { color: '#F0000F ', stroke: '#FFFFFF ', strokeWidth: 0.123, font: 0.5 });
             }
+
+            comSpawn.createFromStack(Game.spawns[title]);
 
         }
 
@@ -879,20 +956,25 @@ module.exports.loop = blackMagic(function() {
     }
 
     consoleLogReport();
-    //    if (Game.time % 10 === 0) {
-    /*        for (var e in Game.constructionSites) {
-                if (Game.constructionSites[e].room !== undefined) {
-                    if (Game.constructionSites[e].progress < 20) {
-                        if (Game.constructionSites[e].room && Game.constructionSites[e].room.controller && Game.constructionSites[e].room.controller.level ) {
+    if (Game.time % 4000 === 0) {
+        for (var e in Game.constructionSites) {
+            //    if (Game.constructionSites[e].room !== undefined) {
+            if (!Game.constructionSites[e].room || !Game.constructionSites[e].room.controller || !Game.constructionSites[e].room.controller.owner || Game.constructionSites[e].room.controller.owner.username !== 'likeafox') {
+                if (Game.constructionSites[e].progress < 20) {
+                    //                      if (Game.constructionSites[e].room && Game.constructionSites[e].room.controller && Game.constructionSites[e].room.controller.level ) {
 
-                        } else if(!Game.constructionSites[e].room.controller || !Game.constructionSites[e].room.controller.owner || Game.constructionSites[e].room.controller.owner.username !== 'likeafox'){
-                         //   Game.constructionSites[e].remove();
-                            console.log(roomLink(Game.constructionSites[e].pos.roomName), Game.constructionSites[e].structureType, Game.constructionSites[e].progress);
-                        }
-                    }
+                    //                    } else 
+                    Game.constructionSites[e].remove();
                 }
-            }*/
-    //  }
+                //            }
+                if (Game.constructionSites[e].pos.x >= 48 || Game.constructionSites[e].pos.y >= 48 || Game.constructionSites[e].pos.x < 2 || Game.constructionSites[e].pos.y < 2) {
+                    Game.constructionSites[e].remove();
+                }
+                console.log(roomLink(Game.constructionSites[e].pos.roomName), Game.constructionSites[e].structureType, Game.constructionSites[e].progress);
+            }
+
+        }
+    }
     if (showCPU) {
         let cnt = Game.cpu.getUsed() - startCpu;
         //        console.log('memoryStatsUpdate Run:', cnt);

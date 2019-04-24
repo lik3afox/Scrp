@@ -182,7 +182,6 @@ function analyzeRampartsToFortifyZz(powercrp) {
 function doShield(powercrp) {
     if (!powercrp.powers[PWR_SHIELD]) return;
     if (powercrp.usePower(PWR_SHIELD) === OK) {
-
     } else {
         console.log('trying to do shiled', roomLink(powercrp.room.name));
     }
@@ -210,7 +209,7 @@ function doOperateStorage(powercrp) {
 
 function getOps(powercrp, amnt) {
     if (powercrp.carry.ops >= amnt) return false;
-    if (!powercrp.room.terminal.store.ops || powercrp.room.terminal.store.ops < amnt) {
+    if (!powercrp.room.terminal || !powercrp.room.terminal.store.ops || powercrp.room.terminal.store.ops < amnt) {
         roomRequestMineral(powercrp.room.name, 'ops', 1000);
     }
 
@@ -241,13 +240,19 @@ function doOperateTerminal(powercrp) {
 
 function doOperateSpawn(powercrp) {
     let spawn = powercrp.room.alphaSpawn;
+    if(powercrp.memory.operateSpawnID){
+        spawn = Game.getObjectById(powercrp.memory.operateSpawnID);
+        if(!spawn){
+            powercrp.memory.operateSpawnID = undefined;
+        }
+    }
     powercrp.say('oPspwn');
     if (getOps(powercrp, 100)) return true;
     if (powercrp.pos.inRangeTo(spawn, 3)) {
         if (powercrp.usePower(PWR_OPERATE_SPAWN, spawn) === OK) {
             powercrp.memory.findJob = true;
             powercrp.memory.currentPowerJob = undefined;
-            powercrp.room.memory.alphaSpawnOperated = 1000;
+            powercrp.room.memory.aSpawnOperated = 1000;
         }
     } else {
         powercrp.moveMe(spawn, { reusePath: 25 });
@@ -417,6 +422,9 @@ function doSleep(powercrp) {
 }
 
 function doRenew(powercrp) {
+    if(powercrp.memory.noRenewRemoveFlag){
+        powercrp.flag.remove = true;
+    }
 
     if (powercrp.pos.isNearTo(powercrp.room.powerspawn)) {
         powercrp.renew(powercrp.room.powerspawn);
@@ -703,7 +711,7 @@ function determineJob(powercrp) {
                         }
                         break;
                     case PWR_OPERATE_POWER:
-                        if (powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0 && powercrp.room.name === 'E25S37' && powercrp.room.powerspawn) { //&& powercrp.room.powerspawn.power > 20
+                        if (powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0 && powercrp.room.name === 'E25Sx37' && powercrp.room.powerspawn) { //&& powercrp.room.powerspawn.power > 20
                             let powerspawn = powercrp.room.powerspawn;
                             /*let perTickProcess = powercrp.powers[PWR_OPERATE_POWER].level + 1;
                             let energyNeed = 50000 * perTickProcess;
@@ -716,16 +724,62 @@ function determineJob(powercrp) {
                         break;
                     case PWR_OPERATE_OBSERVER:
                         if (powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0 && powercrp.room.name === Memory.empireSettings.boostObserverRoom[Game.shard.name] && powercrp.room.observer) {
-                            return flag.memory.doPowerOrder[i];
+                            let affect = powercrp.room.observer.isEffected(PWR_OPERATE_OBSERVER);
+                            if(!affect || affect.ticksRemaining < 10) return flag.memory.doPowerOrder[i];
                         }
 
                         break;
                     case PWR_OPERATE_SPAWN:
+                            if (powercrp.flag.memory.spawnOperateOpts === undefined) {
+                                powercrp.flag.memory.spawnOperateOpts = {
+                                    maxSpawns: 0,
+                                };
+                            }
+                        if(powercrp.flag.memory.spawnOperateOpts.maxSpawns === 0) continue;
+                        if (powercrp.room.name === 'E13S18' && powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0) {
+                            if (powercrp.room.memory.spawnIDs === undefined || powercrp.room.memory.spawnIDs.length !== 3) {
+                                var test2 = _.filter(powercrp.room.find(FIND_STRUCTURES), function(o) {
+                                    return o.structureType === STRUCTURE_SPAWN;
+                                }); // This is something is not on a rampart
+                                powercrp.room.memory.spawnIDs = [];
+                                for (let i in test2) {
+                                    powercrp.room.memory.spawnIDs.push(test2[i].id);
+                                }
+                            }
+
+
+                            let spawns = []; // Array of spawns that want operate.
+                            for (let i in powercrp.room.memory.spawnIDs) {
+                                let zeed = Game.getObjectById(powercrp.room.memory.spawnIDs[i]);
+                                if (zeed) {
+                                    let affect = zeed.isEffected(PWR_OPERATE_SPAWN);
+                                    if (affect) {
+                                        if (affect.ticksRemaining < 20) {
+                                            spawns.push(zeed);
+                                            if (!powercrp.memory.lockPowerJob) powercrp.memory.lockPowerJob = affect.ticksRemaining;
+                                        } else {
+                                        }
+                                    } else {
+                                        spawns.push(zeed);
+                                    }
+                                } else {
+                                    powercrp.room.memory.spawnIDs[i] = undefined;
+                                }
+                            }
+                            let spawnsEffected = 3 - spawns.length;
+
+                            if ( spawns.length > 0 && spawnsEffected < powercrp.flag.memory.spawnOperateOpts.maxSpawns) {
+                                // we determine that we need a spawn to operate on.
+                                powercrp.memory.operateSpawnID = spawns[0].id;
+                                return flag.memory.doPowerOrder[i];
+                            }
+                        }
                         if (powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0 && powercrp.room.name === 'E25S37' && !powercrp.room.alphaSpawn.isEffected(PWR_OPERATE_SPAWN)) {
                             return flag.memory.doPowerOrder[i];
                         } else if (powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0 && powercrp.room.alphaSpawn && !powercrp.room.alphaSpawn.isEffected(PWR_OPERATE_SPAWN) && powercrp.room.alphaSpawn.memory.totalQuery > 5 && powercrp.room.energyAvailable > powercrp.room.energyCapacityAvailable >> 1) {
                             return flag.memory.doPowerOrder[i];
                         }
+
                         break;
                     case PWR_REGEN_MINERAL:
                         let mineral = powercrp.room.mineral;
@@ -769,19 +823,23 @@ function determineJob(powercrp) {
                         }
                         break;
                     case PWR_OPERATE_CONTROLLER:
-                        if (powercrp.room.name === 'E28xxS42') powercrp.room.memory.useControllerOperate = undefined;
-                        if (powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0) {
+                    if(powercrp.powers[flag.memory.doPowerOrder[i]])
+                        if (!powercrp.powers[flag.memory.doPowerOrder[i]].cooldown  || powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0) {
+                            if (powercrp.flag.memory.useControllerOperate === undefined) {
+                                powercrp.flag.memory.useControllerOperate = false;
+                            }
+  //                  console.log(powercrp.powers[flag.memory.doPowerOrder[i]].cooldown,"PwerCrp Control Cooldown?",powercrp.flag.memory.useControllerOperate);
 
-                            if (powercrp.room.memory.useControllerOperate) {
+                            if (powercrp.flag.memory.useControllerOperate) {
                                 let contEffects = powercrp.room.controller.isEffected(PWR_OPERATE_CONTROLLER);
+//console.log(powercrp.powers[flag.memory.doPowerOrder[i]].cooldown,"PwerCrp Control Cooldown?",powercrp.flag.memory.useControllerOperate,contEffects);
                                 if (contEffects.ticksRemaining < 20) {
                                     if (!powercrp.memory.lockPowerJob) powercrp.memory.lockPowerJob = contEffects.ticksRemaining;
                                     return flag.memory.doPowerOrder[i];
                                 }
-                            }
-
-                            if (powercrp.room.memory.useControllerOperate && !powercrp.room.storage.isEffected(PWR_OPERATE_CONTROLLER)) {
-                                return flag.memory.doPowerOrder[i];
+                                if ( !contEffects) {
+                                    return flag.memory.doPowerOrder[i];
+                                }
                             }
                         }
 
@@ -803,7 +861,7 @@ function attackingOps(powercrp) {
 
     // Determine when to Shield here
     if (powercrp.ticksToLive < 4000) {
-        if (powercrp.room.powerspawn) {
+        if (powercrp.room.powerspawn && powercrp.room.powerspawn.my) {
             doRenew(powercrp);
             return;
         }
@@ -841,22 +899,22 @@ function attackingOps(powercrp) {
     var doSquadLogic = true;
 
     // squad stuff now...
-    if (flag.memory.squadID && flag.memory.squadID.length) {
+//    if (flag.memory.squadID && flag.memory.squadID.length) {
         if (powercrp.powers[PWR_DISRUPT_TOWER] && powercrp.room.towers && powercrp.room.towers.length && !powercrp.room.towers[0].my) { //
             for (let i in powercrp.room.towers) {
                 let tower = powercrp.room.towers[i];
-                if (!tower.isEffected(PWR_DISRUPT_TOWER)) {
-                    powercrp.memory.towerID = powercrp.room.towers[0].id;
-                    console.log(powercrp.room.towers[0], powercrp.memory.towerID, "Being disrupted");
+                //console.log(tower.isEffected());
+                if (!tower.isEffected()) {
+                    powercrp.memory.towerID = tower.id;
                     powercrp.memory.currentPowerAction = PWR_DISRUPT_TOWER;
                     break;
                 }
             }
         }
         if (powercrp.memory.currentPowerAction === PWR_SHIELD) doSquadLogic = false;
-    } else {
-        console.log(powercrp.memory.currentPowerAction, "power action Single Action");
-    }
+  //  } else {
+    //    console.log(powercrp.memory.currentPowerAction, "power action Single Action");
+    //}
 
     // Actions tuff
 
@@ -983,11 +1041,11 @@ class PowerInteract {
             if (!powercrp.ticksToLive) {
                 // Here we spawn.
                 if (Game.flags[powercrp.name]) {
-                    console.log(Game.powerCreeps[i].name, Game.flags[Game.powerCreeps[i].name].room, Game.flags[Game.powerCreeps[i].name].room.powerspawn, Game.flags[Game.powerCreeps[i].name].room.powerspawn.my);
 
+                    //console.log(Game.powerCreeps[i].name, Game.flags[Game.powerCreeps[i].name].room, Game.flags[Game.powerCreeps[i].name].room.powerspawn);
                     if (Game.flags[Game.powerCreeps[i].name].room && Game.flags[Game.powerCreeps[i].name].room.powerspawn && Game.flags[Game.powerCreeps[i].name].room.powerspawn.my) {
                         let zz = powercrp.spawn(Game.flags[Game.powerCreeps[i].name].room.powerspawn);
-                        if (zz !== OK) {
+                        if (zz !== OK && Game.time % 150 === 0) {
                             console.log(powercrp, 'POWERSPAWN ERRROR', zz, powercrp.name, Game.flags[Game.powerCreeps[i].name].pos);
                         }
                         Game.flags[powercrp.name].memory.doPowerOrder = undefined;
@@ -1003,7 +1061,7 @@ class PowerInteract {
 
                         if (pSpawn) {
                             let zz = powercrp.spawn(pSpawn);
-                            if (zz !== OK) {
+                            if (zz !== OK && Game.time % 150 === 0 ) {
                                 console.log('SPAWN ERRROR', zz, rName, room, pSpawn);
                             }
                         }
@@ -1017,7 +1075,9 @@ class PowerInteract {
                     continue;
                 }
                 doGenerateOps(powercrp); //  PWR_GENERATE_OPS
-
+                if(!powercrp.flag){
+                    continue;
+                } 
                 if (powercrp.flag.color === COLOR_YELLOW) {
                     // So the room that it's coming from should have at least 1 job.
                     if (Game.flags[powercrp.flag.memory.roomOccupied]) {
@@ -1093,6 +1153,13 @@ class PowerInteract {
                     if (analyzeRampartsToFortifyZz(powercrp)) continue; // Sleeps after fortifying
                     if (doFillTower(powercrp)) continue;
                     bads = true;
+                    powercrp.memory.noRenewRemoveFlag = undefined;
+                }else {
+                    if(powercrp.name === 'Techies'){
+                        // Meaning that this is a type that is responsive;
+                        powercrp.memory.noRenewRemoveFlag = true;
+                      //  console.log('no baddies for Techies to stay Remove flag when below 500 life');
+                    }
                 }
                 /*if(powercrp.room.name === 'E13S18'){
                     if(powercrp.pos.isEqualTo(powercrp.flag)){

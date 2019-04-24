@@ -187,12 +187,12 @@ function moveToSK(creep) {
             });
         } else {
             if (gota.ticksToSpawn !== undefined && gota.ticksToSpawn - 1 > 0 && gota.ticksToSpawn < 200 && creep.hits === creep.hitsMax) {
-                if(creep.ticksToLive < 200){
+                /*if(gota.ticksToSpawn creep.ticksToLive < 200){
                     let amnt = 200 - creep.ticksToLive;
                     creep.sleep(amnt);
-                } else {
+                } else {*/
                     creep.sleep(gota.ticksToSpawn + Game.time - 1);
-                }
+                //}
             }
         }
     }
@@ -323,8 +323,21 @@ class roleGuard extends roleParent {
             attackCreep(creep, bads);
             creep.memory.goTo = undefined;
             return;
-        } else {
-            creep.selfHeal();
+        } else if(creep.hits < creep.hitsMax){
+            var hurtz = _.filter(creep.room.find(FIND_MY_CREEPS),function(o){
+                    return o.hits !== o.hitsMax  && o.id !== creep.id && creep.pos.inRangeTo(o,3);
+                });
+            if(hurtz.length > 0){
+                if(creep.pos.isNearTo(hurtz[0])){
+                    creep.heal(hurtz[0]);    
+                } else {
+                    creep.rangedHeal(hurtz[0]);
+                    creep.moveTo(hurtz[0]);
+                }
+                return;
+            }else {
+                creep.smartHeal();    
+            }
         }
 
 

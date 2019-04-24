@@ -64,6 +64,31 @@ class MoveInteract {
         }
         return 0;
     }
+    static getSourcePath(creep) {
+
+        /*if (creep.memory.getSourcePos !== undefined) {
+            return new RoomPosition(creep.memory.getSourcePos.x,
+                creep.memory.getSourcePos.y,
+                creep.memory.getSourcePos.roomName);
+        }*/
+        let goalID = creep.memory.goal;
+        var spawn = Game.getObjectById(creep.memory.parent);
+        if (spawn !== null) {
+            for (var e in spawn.memory.roadsTo) {
+                if (spawn.memory.roadsTo[e] !== null && spawn.memory.roadsTo[e].source == goalID) {
+                    if (spawn.memory.roadsTo[e].path !== undefined) {
+                        /*creep.memory.getSourcePos = {
+                            x: spawn.memory.roadsTo[e].sourcePos.x,
+                            y: spawn.memory.roadsTo[e].sourcePos.y,
+                            roomName: spawn.memory.roadsTo[e].sourcePos.roomName
+                        }; */
+                        return spawn.memory.roadsTo[e].path;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
 
     static flagMovement(creep) {
         if (!moveToRallyFlag(creep)) {
@@ -170,7 +195,7 @@ class MoveInteract {
             }
             if (creep.memory.role === 'miner') creep.dropEverything();
             if (creep.memory.runFromRoom === undefined) {
-                creep.memory.runFromRoom = creep.room.name; // Game.getObjectById(creep.memory.goal).pos.roomName;
+                creep.memory.runFromRoom = Game.flags[creep.memory.runFrom].pos.roomName;
             }
             creep.memory.cachePath = undefined;
             if (creep.room.name !== creep.memory.runFromRoom && !creep.isAtEdge) {
