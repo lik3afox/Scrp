@@ -412,7 +412,7 @@ function toSourceCacheMove(creep, goalPos) {
     }
     var id = creep.memory.goal;
     if (toSourceCache === undefined) {
-        console.log('Created Base');
+//        console.log('Created Base');
         toSourceCache = {};
     }
     if (toSourceCache[id] === undefined) {

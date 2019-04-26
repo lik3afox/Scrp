@@ -174,7 +174,7 @@ function doNewBoostLab(creep) {
                    let rsult =  roomRequestMineral(creep.room.name, boostMineral, mineralNeed);
                    if(!rsult){
                        if(boostMineral === 'LH' && Memory.stats.totalMinerals[boostMineral] < 180000){
-                        console.log('Shifting LH from boostNeeded',tgt.memory.role);
+//                        console.log('Shifting LH from boostNeeded',tgt.memory.role);
                         tgt.memory.boostNeeded.shift();
                        }
                    }

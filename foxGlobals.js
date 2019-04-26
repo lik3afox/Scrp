@@ -9,15 +9,9 @@ var containers = require('commands.toContainer');
 module.exports = {
     friends: ['admon','Komir','wolffman122','omnomwombat','Issacar','weaves',  'Power Bank', 'likeafox', 'Geir1983'],
     enemies: ['Atavus', 'Trepidimous','Matsura'],
-//    RETREAT: COLOR_BROWN, // Flag that certain creeps use to defend too.
-    DEFEND: COLOR_RED, // Everyone will defend to this.
+    DEFEND: COLOR_RED, // Used for rampart guards, will probably change.
     SQUAD: COLOR_ORANGE, // Squad based AI for creeps of this color. 
-    ATTACK: COLOR_GREEN, // All creeps go to it
-    RISK: COLOR_GREY, // NOt certain if it's in use
     RALLY: COLOR_YELLOW, // If this flag has a name on it will create an party
-    FOCUS: COLOR_CYAN, // This is where transportx and transporty will move too.
-    RAMPART: COLOR_PURPLE,
-//    GUARD: COLOR_BLUE // For guarding a keeper room
 };
 /*
 {color: '#97c39b ',

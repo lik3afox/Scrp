@@ -789,7 +789,10 @@
 
                         let rando = Math.floor(Math.random() * 1500);
                         //                        if (flag.room.memory.energyIn) rando += rando + 1000;
-                        if (flag.room.controller.isEffected() && flag.room.powerLevels[PWR_OPERATE_CONTROLLER]) {
+    //                    if(flag.room.powerLevels){
+  //                      console.log(flag, flag.room.controller.isEffected() , flag.room.powerLevels[PWR_OPERATE_CONTROLLER],"control" );
+//                        }
+                        if (flag.room.controller.isEffected() && flag.room.powerLevels[PWR_OPERATE_CONTROLLER] && Memory.empireSettings.powers.controller ) {
                             if (flag.room.powerLevels[PWR_OPERATE_CONTROLLER].level > 3) {
                                 flag.memory.module.push(['upgrader', 2, 7]);
                             } else {
@@ -2284,6 +2287,14 @@
                             flag.room.visual.text(flag.memory.squadID.length + "/" + flag.memory.totalNumber, flag.pos.x, flag.pos.y - 1);
                             flag.room.memory.look4Squad = undefined;
                         }
+                        if(flag.memory.squadID.length === 0){
+                            require('commands.toSquad').cleanUpSquadStuff(flag);
+                            flag.memory.setColor = {
+                                    color: COLOR_WHITE,
+                                    secondaryColor: COLOR_WHITE
+                            };
+                            flag.memory.death = false;
+                        }
 
                         /*  if(currentPartyNumber < flag.memory.totalNumber){
                             // if it at 3 it looks
@@ -2330,8 +2341,8 @@
                         if (squad !== undefined && squad.length > 0) {
                             require('commands.toSquad').runSquad(squad);
                         } else {
-                            require('commands.toSquad').cleanUpSquadStuff(flag);
-                            if (flag.memory.spawnCounter === 0) {
+                            
+                            /*if (flag.memory.spawnCounter === 0) {
                                 flag.memory.setColor = {
                                     color: COLOR_WHITE,
                                     secondaryColor: COLOR_WHITE
@@ -2344,7 +2355,7 @@
                                         secondaryColor: COLOR_YELLOW
                                     };
                                 }
-                            }
+                            } */
                         }
 
                         flag.memory.squadID = getIdArray(squad);

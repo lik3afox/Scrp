@@ -23,6 +23,7 @@ var allModule = [
     ['harass', require('army.harass')],
     ['assistant', require('role.assistant')],
     ['troll', require('army.troll')],
+    ['tank', require('army.tank')],
     ['paladin', require('army.paladin')],
     ['ranger', require('army.ranger')],
     ['demolisher', require('army.demolisher')],
@@ -31,27 +32,22 @@ var allModule = [
     ['shardMule', require('army.shardMule')],
     ['healer', require('army.healer')], // Gather and move - just carry 
     ['mage', require('army.mage')],
-    //    ['shooter', require('keeper.shooter')],
     ['minHarvest', require('role.mineral')],
     ['mineral', require('keeper.scientist')],
     ['engineer', require('army.engineer')],
     ['scout', require('army.scout')],
     ['homeDefender', require('role.defender2')],
     ['fighter', require('army.fighter')],
-    //    ['upbuilder', require('role.upbuilder')],
     ['controller', require('role.controller')],
     ['Acontroller', require('army.controller')],
     ['ztransport', require('role.mTransport')], // Harvester - experiemnt w/o carry
     ['upgrader', require('role.upgrader')],
     ['wallwork', require('role.wallworker')],
     ['guard', require('keeper.guard2')],
-    //    ['linker', require('role.linker')],
     ['harvester', require('role.harvester')],
     ['job', require('role.job')],
     ['transport', require('role.transport2')], // Gather and move - just carry 
     ['miner', require('role.miner2')], // Harvester - experiemnt w/o carry
-  //  ['transport2', require('role.transport2')], // Gather and move - just carry 
-//    ['miner2', require('role.miner2')] // Harvester - experiemnt w/o carry
 ];
 //5982ff87b097071b4adc2d57
 var expansionModule = [

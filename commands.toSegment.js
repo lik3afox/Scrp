@@ -203,6 +203,21 @@ function siegeRequest(siegeRequest, playerSeg) {
     if (_.isObject(siegeRequest)) {
         console.log(playerSeg, "Requesting Siege from ", siegeRequest.playerName, "@", siegeRequest.roomName, "Requesting fight");
         if (siegeRequest.playerName !== 'likeafox') return false;
+//        var acceptable = true;
+        if(false){
+            var siegeFlagName = siegeRequest.playerName+siegeRequest.roomName;
+            if(Game.flags[siegeFlagName]){
+                let flag = Game.flags[siegeFlagName];
+                flag.memory.party = [];
+
+            }else {
+                if(Game.rooms[siegeRequest.roomName]){
+                    var zzz = Game.rooms[target].createFlag(25,25, siegeFlagName, COLOR_YELLOW, COLOR_YELLOW);                
+                } else {
+                    require('build.observer').reqestRoom(siegeRequest.roomName, 3);                    
+                }
+            }
+        }
 
         if (playerSeg === 'Geir1983' && siegeRequest.roomName === 'E14S17') {
             if (Game.flags.Flag7.color !== COLOR_YELLOW && Game.flags.Flag7.color !== COLOR_ORANGE) {
@@ -948,7 +963,7 @@ function analyzeMyMinerals(shardObject) {
 
 
 function getMarketPrices() {
-    console.log('getting Market Prices', Game.time, Game.shard.name);
+//    console.log('getting Market Prices', Game.time, Game.shard.name);
     var rtn = {};
     var minerals = [
         "H", "O", "U", "L", "K", "Z", "X", "G", "energy", "power",
@@ -1134,7 +1149,7 @@ function analyzeMarkets(shardObject) {
                     };
 
                     let doRequest = true;
-                    console.log("ADDING POWER TO BUY:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].buy.price);
+//                    console.log("ADDING POWER TO BUY:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].buy.price);
                     //                            if (shardObject.instructions.length > 15) doRequest = false;
                     if (doRequest) {
                         for (let e in shardObject.instructions) {
@@ -1145,7 +1160,7 @@ function analyzeMarkets(shardObject) {
                         }
                     }
                     if (doRequest) {
-                        console.log("ADDING POWER TO BUY YES:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].buy.price);
+  //                      console.log("ADDING POWER TO BUY YES:", request.type, request.shard, request.order, request.mineralType, request.shardRoom, request.mineralAmount, shardObject[shards[e]].marketData[min].buy.price);
                         shardObject.instructions.push(request);
                         continue;
                     }

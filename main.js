@@ -12,7 +12,6 @@ function changeEmpireSettings() {
     if (Game.shard.name !== 'shard1') return;
     Memory.empireSettings = {
         processPower: true, // sellPower:false, stops jobs.spawns, stops commands.topower. 
-//        sellPower: 0.75, // if there is 
         buyPower: 0.20,
         maxWallSize: 299000000, // This is the setting for max wall size. 
         maxController: 100000, // When upgrader is made. - 1500
@@ -25,7 +24,9 @@ function changeEmpireSettings() {
         boostObserverRoom: {
             shard1: 'E18S36',
         },
-
+        powers:{
+            controller:false, // Turn this true in order to start upgrade powers.
+        },
 
         // Cheap energy buy, at most is 150000 - we would at most pay 75000 at a max price of 0.005 - so 
         // 0.0075(transferPercent + 1 * maxPrice) = 0.0075
@@ -507,11 +508,9 @@ function doRoomReport(room, isTenTime) {
 }
 
 function consoleLogReport(breakNum) {
-    //    if(Game.shard.name !== 'shard2'){
     if (Game.time % 256 > 0) {
         return;
     }
-    //  }
     let report = "";
     for (let a in Memory.shardNeed) {
         report += " " + Memory.shardNeed[a];
@@ -520,35 +519,25 @@ function consoleLogReport(breakNum) {
     let breakTimed = "";
     if (Game.shard.name === 'shard1') {
         if (breakNum === 0) {
-            //            breakTimed = "X500X";
             console.log("BREAK BREAK XXXX < 500 - no CREEP MOVEMENT");
             Memory.delayCount = 5;
         } else if (breakNum === 1) {
-            //          breakTimed = "Y1000";
             console.log("BREAK BREAK YYYY - NOTHING AFTER CREEPS");
         } else {
-            //        breakTimed = "+++++";
         }
     }
     let color = '<a style="color:#0afaff">';
     let endColor = '</a>';
     let shard = Game.shard.name;
     let segmentNumUsed = Memory.shardNeed.length;
-    //segmentNumUsed = JSON.stringify(segmentNumUsed).padStart(2, "0");
     let powerProcessed = Memory.stats.powerProcessed;
     if (powerProcessed === undefined) powerProcessed = 0;
     let segmentsUsed = report;
     let gameTime = Game.time;
-    //  gameTime = JSON.stringify(gameTime).padStart(8, "0");
     let creepTotal = Memory.creepTotal;
-    //    creepTotal = JSON.stringify(creepTotal).padStart(3, "0");
-    //let cpuUsed = dif;
     let cpuLimit = Game.cpu.limit;
-    //cpuLimit = JSON.stringify(cpuLimit).padStart(3, "0");
     let cpuCeil = Game.cpu.tickLimit;
-    //  cpuCeil = JSON.stringify(cpuCeil).padStart(3, "0");
     let cpuBucket = Game.cpu.bucket;
-    //    cpuBucket = JSON.stringify(cpuBucket).padStart(5, "0");
     let filler = "###" + Game.shard.name + "###";
     switch (Game.shard.name) {
         case "shard0":
@@ -688,7 +677,6 @@ module.exports.loop = blackMagic(function() {
     }
     var start = Game.cpu.getUsed();
     var startCpu;
-    //    if (Game.shard.name === 'shard1') showCPU = true;
     if (showCPU) {
         startCpu = Game.cpu.getUsed();
         console.log('----NEW TICK:', Game.time, Game.cpu.bucket);
@@ -711,6 +699,23 @@ module.exports.loop = blackMagic(function() {
     var isTenTime = Game.time % 10;
 
     if (Game.shard.name === 'shard1') {
+        /*if(Game.time < 17209207  ){
+            let room = Game.rooms.W5N12;
+            if (room === undefined) {
+                require('build.observer').reqestRoom('W5N12', 2);
+            }else {
+                room.visual.text('IC IT',25,25);
+                if(room.terminal.total < 285000){
+                    let sendRoom = Game.rooms.E23S38;
+                    if(sendRoom.storage.store.energy > 4000000 && sendRoom.terminal.store.energy >= 25000){
+                        sendRoom.terminal.recordSend('energy',10000,'W5N12','Trade');
+                        console.log('Looking for Tun9',room,"sent 10k",sendRoom.storage.store.energy,sendRoom.terminal.store.energy);
+                    }
+                }
+            }
+        }*/
+
+
         if (Game.time % 100 < 7) {
             let room = Game.rooms.E21S31;
             if (room === undefined) {
@@ -880,11 +885,7 @@ module.exports.loop = blackMagic(function() {
                 rampartCheck(Game.spawns[title]);
                 power.roomRun(roomName);
                 labs.roomLab(roomName);
-                //             if(roomName !== 'E24S33'){
-                //              link.roomRun(roomName);
-                //                }else {
                 link.roomRun2(roomName);
-                //}
                 tower.roomTower(roomName);
 
                 if (Game.cpu.bucket >= creepStopCPU && Game.time % 5 === 0 && Game.flags[Game.spawns[title].pos.roomName] !== undefined && Game.flags[Game.spawns[title].pos.roomName].color === COLOR_WHITE &&

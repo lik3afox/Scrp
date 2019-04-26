@@ -539,7 +539,7 @@ class SpawnInteract {
             } else if (ee === ERR_NOT_ENOUGH_ENERGY){
                 if(spawn.room.powerLevels && spawn.room.powerLevels[PWR_OPERATE_EXTENSION] && spawn.room.powerLevels[PWR_OPERATE_EXTENSION].ready){
                     spawn.room.memory.DOEXTENSIONPOWER = true;
-                    console.log(spawn.room, "Forcing DOEXTENSIONPOWER");
+//                    console.log(spawn.room, "Forcing DOEXTENSIONPOWER");
                 }
             }else if (ee === ERR_INVALID_ARGS && STACK[0] && STACK[0].build.length > 50) {
                 STACK[0].build = _.clone(STACK[0].build);

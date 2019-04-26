@@ -80,6 +80,10 @@ function setPowerRoomLevel(powercrp) {
 
 function doOperateController(powercrp) {
     powercrp.say('oContr');
+    if(!Memory.empireSettings.powers.controller) {
+        powercrp.memory.currentPowerJob = undefined;
+        return false;
+    }
     if (getOps(powercrp, 200)) return true;
     if (powercrp.pos.inRangeTo(powercrp.room.controller, 3)) {
         if (powercrp.usePower(PWR_OPERATE_CONTROLLER, powercrp.room.controller) === OK) {
@@ -666,7 +670,10 @@ function determineJob(powercrp) {
                         break;
                     case PWR_OPERATE_LAB:
                         //                console.log(powercrp.powers[flag.memory.doPowerOrder[i]].cooldown ,powercrp.powers[flag.memory.doPowerOrder[i]].level , powercrp.room.memory.lab2Mode, powercrp.room.name          );
-                        if (powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0 && powercrp.powers[flag.memory.doPowerOrder[i]].level === 5 && powercrp.room.memory.lab2Mode !== 'none' && powercrp.room && powercrp.room.name === 'E24S33') {
+                        if(powercrp.flag.memory.doLabPower === undefined){
+                            powercrp.flag.memory.doLabPower = true;
+                        }
+                        if (powercrp.flag.memory.doLabPower && powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0 && powercrp.room.memory.lab2Mode !== 'none') {
 
                             //&& Memory.stats && Memory.stats.totalMinerals && Memory.stats.totalMinerals[powercrp.room.memory.lab2Mode] < 200000
                             let labs = powercrp.room.memory.labs;
@@ -725,7 +732,10 @@ function determineJob(powercrp) {
                     case PWR_OPERATE_OBSERVER:
                         if (powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0 && powercrp.room.name === Memory.empireSettings.boostObserverRoom[Game.shard.name] && powercrp.room.observer) {
                             let affect = powercrp.room.observer.isEffected(PWR_OPERATE_OBSERVER);
-                            if(!affect || affect.ticksRemaining < 10) return flag.memory.doPowerOrder[i];
+                            if(!affect || affect.ticksRemaining < 10) {
+                                if (!powercrp.memory.lockPowerJob && affect) powercrp.memory.lockPowerJob = affect.ticksRemaining;
+                                return flag.memory.doPowerOrder[i];
+                            }
                         }
 
                         break;
@@ -823,16 +833,13 @@ function determineJob(powercrp) {
                         }
                         break;
                     case PWR_OPERATE_CONTROLLER:
-                    if(powercrp.powers[flag.memory.doPowerOrder[i]])
+                    if(powercrp.powers[flag.memory.doPowerOrder[i]] && Memory.empireSettings.powers.controller)
                         if (!powercrp.powers[flag.memory.doPowerOrder[i]].cooldown  || powercrp.powers[flag.memory.doPowerOrder[i]].cooldown === 0) {
                             if (powercrp.flag.memory.useControllerOperate === undefined) {
                                 powercrp.flag.memory.useControllerOperate = false;
                             }
-  //                  console.log(powercrp.powers[flag.memory.doPowerOrder[i]].cooldown,"PwerCrp Control Cooldown?",powercrp.flag.memory.useControllerOperate);
-
                             if (powercrp.flag.memory.useControllerOperate) {
                                 let contEffects = powercrp.room.controller.isEffected(PWR_OPERATE_CONTROLLER);
-//console.log(powercrp.powers[flag.memory.doPowerOrder[i]].cooldown,"PwerCrp Control Cooldown?",powercrp.flag.memory.useControllerOperate,contEffects);
                                 if (contEffects.ticksRemaining < 20) {
                                     if (!powercrp.memory.lockPowerJob) powercrp.memory.lockPowerJob = contEffects.ticksRemaining;
                                     return flag.memory.doPowerOrder[i];
@@ -1185,7 +1192,7 @@ class PowerInteract {
                         console.log(powercrp.memory.currentPowerJob);
                     }*/
                     if (powercrp.powers[powercrp.memory.currentPowerJob] && powercrp.powers[powercrp.memory.currentPowerJob].cooldown > 0 && !powercrp.memory.lockPowerJob) {
-                        console.log('this shouldn"t ever happen?', powercrp.memory.currentPowerJob);
+//                        console.log('this shouldn"t ever happen?', powercrp.memory.currentPowerJob);
                         powercrp.memory.currentPowerJob = undefined;
                     }
 
@@ -1194,6 +1201,9 @@ class PowerInteract {
 
                             if (doFillTower(powercrp)) continue;
                             break;
+                        case PWR_FORTIFY:
+                            powercrp.memory.currentPowerJob = undefined;
+                        break;
                         case PWR_OPERATE_OBSERVER:
                             if (doOperateObserver(powercrp)) {
                                 powercrp.memory.currentJob = undefined;
@@ -1260,6 +1270,8 @@ class PowerInteract {
                                 powercrp.memory.currentJob = undefined;
 
                                 continue; // PWR_REGEN_MINERAL
+
+                            } else {
 
                             }
 

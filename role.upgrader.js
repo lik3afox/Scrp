@@ -235,7 +235,7 @@ class roleUpgrader extends roleParent {
 
     static levels(level,roomName) {
         if (level > classLevels.length - 1) level = classLevels.length - 1;
-        if(Game.rooms[roomName] && Game.rooms[roomName].powerLevels && Game.rooms[roomName].powerLevels[PWR_OPERATE_CONTROLLER]){
+        if(Game.rooms[roomName] && Game.rooms[roomName].powerLevels && Game.rooms[roomName].powerLevels[PWR_OPERATE_CONTROLLER] && Memory.empireSettings.powers.controller ){
             let level = Game.rooms[roomName].powerLevels[PWR_OPERATE_CONTROLLER].level;
             let perTick = (level*10)+15;
             let _Body = [MOVE,MOVE,CARRY,CARRY,CARRY];//_.clone(classLevels[7].body);
@@ -300,14 +300,18 @@ class roleUpgrader extends roleParent {
             return;
         }*/
 
-        if( creep.ticksToLive < 100){ //!creep.memory.adjustedModule &&
-            require('commands.toSpawn').setModuleRole(creep.room.name, 'upgrader', 0, 7);
-            creep.memory.adjustedModule = true;
-        }
+      //  if( creep.ticksToLive < 100){ //!creep.memory.adjustedModule &&
+//            require('commands.toSpawn').setModuleRole(creep.room.name, 'upgrader', 0, 7);
+  //          creep.memory.adjustedModule = true;
+    //    }
 
        // if (!creep.memory.boostNeeded && creep.ticksToLive > 1300 && creep.room.controller.level < 8) creep.memory.boostNeeded = ['XGH2O'];
-        if (creep.memory.roleID === 0 && creep.ticksToLive < 150 &&creep.room.controller.isEffected() ) {
-            super.rebirth(creep);
+    //    if (creep.memory.roleID === 0 && creep.ticksToLive < 150 && !creep.room.controller.isEffected() ) {
+  //          super.rebirth(creep);
+//        }
+        if(!creep.room.controller.isEffected() && creep.getActiveBodyparts(WORK) > 15 && !Memory.empireSettings.powers.controller  && creep.room.controller.level == 8){
+            require('commands.toSpawn').setModuleRole(creep.room.name, 'upgrader', 0, 7);            
+            creep.memory.death = true;
         }
         if (super.spawnRecycle(creep)) {
             return;
@@ -323,7 +327,7 @@ class roleUpgrader extends roleParent {
             creep.memory.death = true;
         }
         if (creep.memory.boostNeeded && creep.memory.boostNeeded.length > 0 && creep.ticksToLive < 1300 && creep.room.terminal && creep.room.terminal.store[creep.memory.boostNeeded[0]] === 0) creep.memory.boostNeeded = [];
-        if (super.depositNonEnergy(creep)) return;
+//        if (super.depositNonEnergy(creep)) return;
         going = undefined;
 
         if (!doUpgradeIn(creep)) {
